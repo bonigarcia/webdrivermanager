@@ -36,7 +36,7 @@ public class OperaDriverManager extends BrowserManager {
 	public static void setup() {
 		try {
 			URL driverUrl = new URL(Config.getProperty("operaDriverUrl"));
-			log.debug("Connecting to {} to check lastest ChromeDriver release",
+			log.info("Connecting to {} to check lastest ChromeDriver release",
 					driverUrl);
 
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
@@ -46,7 +46,8 @@ public class OperaDriverManager extends BrowserManager {
 			Gson gson = gsonBuilder.create();
 			GitHubApi[] release = gson.fromJson(reader, GitHubApi[].class);
 
-			log.debug("Latest driver version: {}", release[0].getName());
+			latestVersion = release[0].getName();
+			log.info("Latest driver version: {}", latestVersion);
 
 			List<LinkedTreeMap<String, Object>> assets = release[0].getAssets();
 			List<URL> urls = new ArrayList<URL>();
@@ -60,7 +61,7 @@ public class OperaDriverManager extends BrowserManager {
 			}
 
 			for (URL url : urls) {
-				Downloader.download(url,
+				Downloader.download(url, latestVersion,
 						Config.getProperty("operaDriverExport"));
 			}
 			reader.close();

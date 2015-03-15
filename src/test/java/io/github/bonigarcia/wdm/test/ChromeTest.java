@@ -20,6 +20,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 /**
  * Test with Google Chrome browser.
@@ -32,7 +34,11 @@ public class ChromeTest extends ManagerTest {
 	@Before
 	public void setup() {
 		ChromeDriverManager.setup();
-		driver = new ChromeDriver();
+		DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+		ChromeOptions options = new ChromeOptions();
+		options.addArguments("test-type");
+		capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+		driver = new ChromeDriver(capabilities);
 	}
 
 	@After

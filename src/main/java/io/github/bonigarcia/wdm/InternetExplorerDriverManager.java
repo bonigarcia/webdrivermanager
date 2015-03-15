@@ -40,7 +40,7 @@ public class InternetExplorerDriverManager extends BrowserManager {
 		try {
 			URL driverUrl = new URL(
 					Config.getProperty("internetExplorerDriverUrl"));
-			log.debug("Connecting to {} to check lastest ChromeDriver release",
+			log.info("Connecting to {} to check lastest ChromeDriver release",
 					driverUrl);
 
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
@@ -66,7 +66,7 @@ public class InternetExplorerDriverManager extends BrowserManager {
 			}
 
 			for (URL url : urls) {
-				Downloader.download(url,
+				Downloader.download(url, latestVersion,
 						Config.getProperty("internetExplorerExport"));
 			}
 			reader.close();

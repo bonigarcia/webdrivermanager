@@ -39,12 +39,11 @@ public class ChromeDriverManager extends BrowserManager {
 	public static void setup() {
 		try {
 			URL driverUrl = new URL(Config.getProperty("chromeDriverUrl"));
-			log.debug("Connecting to {} to check lastest ChromeDriver release",
+			log.info("Connecting to {} to check lastest ChromeDriver release",
 					driverUrl);
 
 			BufferedReader reader = new BufferedReader(new InputStreamReader(
 					driverUrl.openStream()));
-
 			Document xml = loadXML(reader);
 
 			List<URL> urls = new ArrayList<URL>();
@@ -66,7 +65,7 @@ public class ChromeDriverManager extends BrowserManager {
 			}
 
 			for (URL url : urls) {
-				Downloader.download(url,
+				Downloader.download(url, latestVersion,
 						Config.getProperty("chromeDriverExport"));
 			}
 			reader.close();

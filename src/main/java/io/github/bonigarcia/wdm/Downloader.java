@@ -39,24 +39,24 @@ public class Downloader {
 
 	private static final String HOME = "~";
 
-	public static void download(URL url, String export) throws IOException {
-		File targetFile = new File(getTarget(url));
+	public static void download(URL url, String version, String export)
+			throws IOException {
+		File targetFile = new File(getTarget(version, url));
 		File binary;
 
 		if (!targetFile.getParentFile().exists()
 				|| Boolean.parseBoolean(Config.getProperty("override"))) {
-			log.debug("Downloading " + url + " to " + targetFile);
+			log.info("Downloading " + url + " to " + targetFile);
 			FileUtils.copyURLToFile(url, targetFile);
 
-			log.debug("Unziping " + targetFile);
 			binary = unZip(targetFile);
 			targetFile.delete();
 		} else {
 			binary = targetFile.getParentFile().listFiles()[0];
-			log.debug("Using binary driver previously downloaded {}", binary);
+			log.info("Using binary driver previously downloaded {}", binary);
 		}
 
-		log.debug("Exporting {} as {}", export, binary.toString());
+		log.info("Exporting {} as {}", export, binary.toString());
 		System.setProperty(export, binary.toString());
 
 	}
@@ -77,7 +77,7 @@ public class Downloader {
 			String name = zipEntry.getName();
 			long size = zipEntry.getSize();
 			long compressedSize = zipEntry.getCompressedSize();
-			log.debug("Unzipping {} (size: {} KB, compressed size: {} KB)",
+			log.info("Unzipping {} (size: {} KB, compressed size: {} KB)",
 					name, size, compressedSize);
 
 			file = new File(folder.getParentFile() + File.separator + name);
@@ -102,8 +102,9 @@ public class Downloader {
 				}
 				is.close();
 				fos.close();
+				file.setExecutable(true);
 			} else {
-				log.debug(file + " already exists");
+				log.info(file + " already exists");
 			}
 
 		}
@@ -112,15 +113,22 @@ public class Downloader {
 		return file.getAbsoluteFile();
 	}
 
-	private static String getTarget(URL url) throws IOException {
+	private static String getTarget(String version, URL url) throws IOException {
 		String zip = url.getFile().substring(url.getFile().lastIndexOf("/"));
-		String folder = zip.replace(".zip", "").replace("_", File.separator);
+
+		int iFirst = zip.indexOf("_");
+		int iLast = iFirst != zip.lastIndexOf("_") ? zip.lastIndexOf("_") : zip
+				.length();
+		String folder = zip.substring(0, iLast).replace(".zip", "")
+				.replace("_", File.separator);
+
 		String targetPath = Config.getProperty("targetPath");
 		if (targetPath.contains(HOME)) {
 			targetPath = targetPath.replace(HOME,
 					System.getProperty("user.home"));
 		}
-		return targetPath + folder + File.separator + zip;
+		return targetPath + folder + File.separator + version + File.separator
+				+ zip;
 	}
 
 }

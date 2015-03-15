@@ -40,6 +40,8 @@ public abstract class BrowserManager {
 
 	private static final String SEPARATOR = "/";
 
+	protected static String latestVersion = null;
+
 	public static List<URL> filter(List<URL> list) {
 		List<URL> out = new ArrayList<URL>();
 		String mySystem = System.getProperty("os.name").toLowerCase();
@@ -68,7 +70,6 @@ public abstract class BrowserManager {
 
 	public static List<URL> getLatest(List<URL> list, String match) {
 		List<URL> out = new ArrayList<URL>();
-		String latestVersion = null;
 		Collections.reverse(list);
 		for (URL url : list) {
 			if (url.getFile().contains(match)) {
@@ -77,7 +78,7 @@ public abstract class BrowserManager {
 						url.getFile().lastIndexOf(SEPARATOR));
 				if (latestVersion == null) {
 					latestVersion = currentVersion;
-					log.debug("Latest driver version: {}", latestVersion);
+					log.info("Latest driver version: {}", latestVersion);
 				}
 				if (url.getFile().contains(latestVersion)) {
 					out.add(url);
