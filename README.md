@@ -84,7 +84,7 @@ The variable ``targetPath`` is the default folder in which WebDriver binaries ar
 About
 -----
 
-DualSub is a personal project of [Boni Garcia] (Copyright &copy; 2015). Licensed under [LGPL License]. Comments, questions and suggestions are always very welcome!
+WebDriverManager is a personal project of [Boni Garcia] (Copyright &copy; 2015). Licensed under [LGPL License]. Comments, questions and suggestions are always very welcome!
 
 [Selenium Webdriver]: http://docs.seleniumhq.org/projects/webdriver/
 [LGPL License]: http://www.gnu.org/licenses/lgpl-2.1.html
