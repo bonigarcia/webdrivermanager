@@ -3,7 +3,7 @@ WebDriverManager
 
 This piece of software is a small library aimed to automate the [Selenium Webdriver] binaries management within a Java project.
 
-If you have ever used [Selenium Webdriver], you are probably know that in order to use some browsers (for example Chrome, Internet Explorer, or Opera) you need to download a binary which allows WebDriver to handle the browser. In addition, the absolute path to this binary must be set as Java variable, as follows:
+If you have ever used [Selenium Webdriver], you probably know that in order to use some browsers (for example Chrome, Internet Explorer, or Opera) you need to download a binary which allows WebDriver to handle the browser. In addition, the absolute path to this binary must be set as Java variables, as follows:
 
 	System.setProperty("webdriver.chrome.driver", "/absolute/path/to/binary/chromedriver");
 	System.setProperty("webdriver.opera.driver", "/absolute/path/to/binary/operadriver");
@@ -25,7 +25,7 @@ In order to use WebDriverManager in a Maven project, first add the following dep
 		<scope>test</scope>
 	</dependency>
 
-Then you can let WebDriverManager to do manage WebDriver binaries for your application/test. Take a look to this example which uses Chrome as browser in Selenium WebDriver:
+Then you can let WebDriverManager to do manage WebDriver binaries for your application/test. Take a look to this example which uses Chrome with Selenium WebDriver:
 
 	public class ChromeTest {
 
@@ -49,13 +49,13 @@ Then you can let WebDriverManager to do manage WebDriver binaries for your appli
 
 	}
 
-Notice that simple adding ``ChromeDriverManager.setup();``, WebDriverManager is going to magic:
+Notice that simple adding ``ChromeDriverManager.setup();`` WebDriverManager does magic for you:
 
-	1. It checks the latest version of Chrome Driver
-	2. If Chrome driver is not present in your operative system then the binary is downloaded.
-	3. The needed Java variable by Selenium WebDriver (in this case ``"webdriver.chrome.driver``) is set.
+1. It checks the latest version of the WebDriver binary file
+2. It download the binary WebDriver if it is not present in your system
+3. It exports the required Java variable by Selenium WebDriver
 
-So far, version 1.0.0 of WebDriverManager supports **Chrome**, **Opera**, and **Internet Explorer**:
+So far, version 1.0.0 of WebDriverManager supports **Chrome**, **Opera**, and **Internet Explorer**, as follows:
 
 	ChromeDriverManager.setup();
 	InternetExplorerDriverManager.setup();
@@ -64,7 +64,7 @@ So far, version 1.0.0 of WebDriverManager supports **Chrome**, **Opera**, and **
 Advanced
 --------
 
-Internal configuration parameters for WebDriverManager are set in the ``wdm.properties`` file:
+Configuration parameters for WebDriverManager are set in the ``wdm.properties`` file:
 
 	targetPath=~/.m2/repository/webdriver
 	override=false
@@ -79,14 +79,14 @@ Internal configuration parameters for WebDriverManager are set in the ``wdm.prop
 	internetExplorerDriverUrl=http://selenium-release.storage.googleapis.com/
 	internetExplorerExport=webdriver.ie.driver
 
-Target path ``targetPath`` is the default folder in which WebDriver binaries are going to be stored (concretely in the Maven local repository). The URLs to check the latest version of Chrome, Opera, and Internet Explorer are set using the variables ``chromeDriverUrl``, ``operaDriverExport``, and ``operaDriverUrl``. 
+The variable ``targetPath`` is the default folder in which WebDriver binaries are going to be stored. Notice that by default the path of the Maven local repository is used. The URLs to check the latest version of Chrome, Opera, and Internet Explorer are set using the variables ``chromeDriverUrl``, ``operaDriverExport``, and ``operaDriverUrl``. 
 
 About
 -----
 
 DualSub is a personal project of [Boni Garcia] (Copyright &copy; 2015). Licensed under [LGPL License]. Comments, questions and suggestions are always very welcome!
 
-[Selenium Webdriver] http://docs.seleniumhq.org/projects/webdriver/
+[Selenium Webdriver]: http://docs.seleniumhq.org/projects/webdriver/
 [LGPL License]: http://www.gnu.org/licenses/lgpl-2.1.html
 [Boni Garcia]: http://bonigarcia.github.io/
 [GitHub Repository]: https://github.com/bonigarcia/webdrivermanager
