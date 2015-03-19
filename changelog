@@ -1,0 +1,10 @@
+webdrivermanager (1.0.0) precise; urgency=low
+
+  * Webdrivermanager 1.0.0 release:
+  + Automated download of WebDriver binaries
+  + Automated export of WebDriver binaries path
+  + Supported WebDriver binaries: Chrome, Opera, Internet Explorer
+  + Customizable configuration parameters using Java system properties
+  + Capability to force WebDriver binary architecture (32/64 bits)
+
+ -- Boni Garcia <boni.gg@gmail.com>  Thu, 19 Mar 2015 20:06:14 +0200
