@@ -39,13 +39,13 @@ public class Downloader {
 
 	private static final String HOME = "~";
 
-	public static void download(URL url, String version, String export)
+	public void download(URL url, String version, String export)
 			throws IOException {
 		File targetFile = new File(getTarget(version, url));
 		File binary;
 
 		if (!targetFile.getParentFile().exists()
-				|| Boolean.parseBoolean(Config.getProperty("override"))) {
+				|| WdmConfig.getBoolean("override")) {
 			log.info("Downloading " + url + " to " + targetFile);
 			FileUtils.copyURLToFile(url, targetFile);
 
@@ -53,20 +53,21 @@ public class Downloader {
 			targetFile.delete();
 		} else {
 			binary = targetFile.getParentFile().listFiles()[0];
-			log.info("Using binary driver previously downloaded {}", binary);
+			log.info("Binary driver previously downloaded {}", binary);
 		}
 
-		log.info("Exporting {} as {}", export, binary.toString());
-		System.setProperty(export, binary.toString());
+		if (export != null) {
+			log.info("Exporting {} as {}", export, binary.toString());
+			System.setProperty(export, binary.toString());
+		}
 
 	}
 
-	public static File unZip(String fileInput, String outputFolder)
-			throws IOException {
+	public File unZip(String fileInput, String outputFolder) throws IOException {
 		return null;
 	}
 
-	public static File unZip(File folder) throws IOException {
+	public File unZip(File folder) throws IOException {
 		ZipFile zipFolder = new ZipFile(folder);
 		Enumeration<?> enu = zipFolder.entries();
 		File file = null;
@@ -81,8 +82,7 @@ public class Downloader {
 					name, size, compressedSize);
 
 			file = new File(folder.getParentFile() + File.separator + name);
-			if (!file.exists()
-					|| Boolean.parseBoolean(Config.getProperty("override"))) {
+			if (!file.exists() || WdmConfig.getBoolean("override")) {
 				if (name.endsWith("/")) {
 					file.mkdirs();
 					continue;
@@ -113,7 +113,7 @@ public class Downloader {
 		return file.getAbsoluteFile();
 	}
 
-	private static String getTarget(String version, URL url) throws IOException {
+	private String getTarget(String version, URL url) throws IOException {
 		String zip = url.getFile().substring(url.getFile().lastIndexOf("/"));
 
 		int iFirst = zip.indexOf("_");
@@ -122,7 +122,7 @@ public class Downloader {
 		String folder = zip.substring(0, iLast).replace(".zip", "")
 				.replace("_", File.separator);
 
-		String targetPath = Config.getProperty("targetPath");
+		String targetPath = WdmConfig.getString("targetPath");
 		if (targetPath.contains(HOME)) {
 			targetPath = targetPath.replace(HOME,
 					System.getProperty("user.home"));

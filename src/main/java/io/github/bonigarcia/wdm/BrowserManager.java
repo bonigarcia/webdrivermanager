@@ -14,6 +14,8 @@
  */
 package io.github.bonigarcia.wdm;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.util.ArrayList;
@@ -22,10 +24,15 @@ import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
 /**
@@ -36,13 +43,34 @@ import org.xml.sax.InputSource;
  */
 public abstract class BrowserManager {
 
-	protected static Logger log = LoggerFactory.getLogger(BrowserManager.class);
+	protected static final Logger log = LoggerFactory
+			.getLogger(BrowserManager.class);
 
-	private static final String SEPARATOR = "/";
+	private final String SEPARATOR = "/";
 
-	protected static String latestVersion = null;
+	protected String latestVersion = null;
 
-	public static List<URL> filter(List<URL> list) {
+	protected abstract List<URL> getDrivers() throws Exception;
+
+	protected abstract String getExportParameter();
+
+	public void manage() {
+		try {
+			List<URL> urls = getDrivers();
+			List<URL> urlFilter = filter(urls);
+
+			for (URL url : urls) {
+				String export = urlFilter.contains(url) ? getExportParameter()
+						: null;
+				new Downloader().download(url, latestVersion, export);
+			}
+
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public List<URL> filter(List<URL> list) {
 		List<URL> out = new ArrayList<URL>();
 		String mySystem = System.getProperty("os.name").toLowerCase();
 
@@ -68,7 +96,7 @@ public abstract class BrowserManager {
 		return out;
 	}
 
-	public static List<URL> getLatest(List<URL> list, String match) {
+	public List<URL> getLatest(List<URL> list, String match) {
 		List<URL> out = new ArrayList<URL>();
 		Collections.reverse(list);
 		for (URL url : list) {
@@ -88,7 +116,36 @@ public abstract class BrowserManager {
 		return out;
 	}
 
-	public static Document loadXML(Reader reader) throws Exception {
+	public List<URL> getDriversFromXml(String driverUrlKey, String driverBinary)
+			throws Exception {
+		URL driverUrl = WdmConfig.getUrl(driverUrlKey);
+		log.info("Connecting to {} to check lastest {} release", driverUrl,
+				driverBinary);
+
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				driverUrl.openStream()));
+		Document xml = loadXML(reader);
+
+		List<URL> urls = new ArrayList<URL>();
+		XPath xPath = XPathFactory.newInstance().newXPath();
+		NodeList nodes = (NodeList) xPath.evaluate("//Contents/Key",
+				xml.getDocumentElement(), XPathConstants.NODESET);
+
+		for (int i = 0; i < nodes.getLength(); ++i) {
+			Element e = (Element) nodes.item(i);
+			String version = e.getChildNodes().item(0).getNodeValue();
+			urls.add(new URL(driverUrl + version));
+		}
+		urls = getLatest(urls, driverBinary);
+
+		if (WdmConfig.getBoolean("downloadJustForMySystem")) {
+			urls = filter(urls);
+		}
+		reader.close();
+		return urls;
+	}
+
+	public Document loadXML(Reader reader) throws Exception {
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		InputSource is = new InputSource(reader);

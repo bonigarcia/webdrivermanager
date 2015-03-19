@@ -14,9 +14,11 @@
  */
 package io.github.bonigarcia.wdm;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Properties;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 
 /**
  * Configuration (wrapper for Java properties).
@@ -24,30 +26,36 @@ import java.util.Properties;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.0.0
  */
-public class Config {
+public class WdmConfig {
 
-	private static Config instance = null;
-	private Properties properties;
+	private static WdmConfig instance = null;
+	private Config conf;
 
-	protected Config() throws IOException {
-		properties = new Properties();
-		InputStream input = null;
-
-		input = Thread.currentThread().getContextClassLoader()
-				.getResourceAsStream("wdm.properties");
-		properties.load(input);
-		input.close();
+	protected WdmConfig() {
+		conf = ConfigFactory.load();
 	}
 
-	public static Config getInstance() throws IOException {
+	public static WdmConfig getInstance() {
 		if (instance == null) {
-			instance = new Config();
+			instance = new WdmConfig();
 		}
 		return instance;
 	}
 
-	public static String getProperty(String key) throws IOException {
-		return Config.getInstance().properties.get(key).toString();
+	public static String getString(String key) {
+		return WdmConfig.getInstance().conf.getString(key);
+	}
+
+	public static int getInt(String key) {
+		return WdmConfig.getInstance().conf.getInt(key);
+	}
+
+	public static boolean getBoolean(String key) {
+		return WdmConfig.getInstance().conf.getBoolean(key);
+	}
+
+	public static URL getUrl(String key) throws MalformedURLException {
+		return new URL(WdmConfig.getInstance().conf.getString(key));
 	}
 
 }

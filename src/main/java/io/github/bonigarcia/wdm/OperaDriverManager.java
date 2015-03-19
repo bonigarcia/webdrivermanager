@@ -15,7 +15,6 @@
 package io.github.bonigarcia.wdm;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
@@ -34,40 +33,40 @@ import com.google.gson.internal.LinkedTreeMap;
 public class OperaDriverManager extends BrowserManager {
 
 	public static void setup() {
-		try {
-			URL driverUrl = new URL(Config.getProperty("operaDriverUrl"));
-			log.info("Connecting to {} to check lastest ChromeDriver release",
-					driverUrl);
+		new OperaDriverManager().manage();
+	}
 
-			BufferedReader reader = new BufferedReader(new InputStreamReader(
-					driverUrl.openStream()));
+	@Override
+	protected List<URL> getDrivers() throws Exception {
+		URL driverUrl = WdmConfig.getUrl("operaDriverUrl");
+		log.info("Connecting to {} to check lastest OperaDriver release",
+				driverUrl);
 
-			GsonBuilder gsonBuilder = new GsonBuilder();
-			Gson gson = gsonBuilder.create();
-			GitHubApi[] release = gson.fromJson(reader, GitHubApi[].class);
+		BufferedReader reader = new BufferedReader(new InputStreamReader(
+				driverUrl.openStream()));
 
-			latestVersion = release[0].getName();
-			log.info("Latest driver version: {}", latestVersion);
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		Gson gson = gsonBuilder.create();
+		GitHubApi[] release = gson.fromJson(reader, GitHubApi[].class);
 
-			List<LinkedTreeMap<String, Object>> assets = release[0].getAssets();
-			List<URL> urls = new ArrayList<URL>();
-			for (LinkedTreeMap<String, Object> asset : assets) {
-				urls.add(new URL(asset.get("browser_download_url").toString()));
-			}
+		latestVersion = release[0].getName();
+		log.info("Latest driver version: {}", latestVersion);
 
-			if (Boolean.parseBoolean(Config
-					.getProperty("downloadJustForMySystem"))) {
-				urls = filter(urls);
-			}
-
-			for (URL url : urls) {
-				Downloader.download(url, latestVersion,
-						Config.getProperty("operaDriverExport"));
-			}
-			reader.close();
-
-		} catch (IOException e) {
-			throw new RuntimeException(e);
+		List<LinkedTreeMap<String, Object>> assets = release[0].getAssets();
+		List<URL> urls = new ArrayList<URL>();
+		for (LinkedTreeMap<String, Object> asset : assets) {
+			urls.add(new URL(asset.get("browser_download_url").toString()));
 		}
+
+		if (WdmConfig.getBoolean("downloadJustForMySystem")) {
+			urls = filter(urls);
+		}
+		reader.close();
+		return urls;
+	}
+
+	@Override
+	protected String getExportParameter() {
+		return WdmConfig.getString("operaDriverExport");
 	}
 }
