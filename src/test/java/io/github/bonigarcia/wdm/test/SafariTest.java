@@ -34,7 +34,9 @@ public class SafariTest extends ManagerTest {
 
 	@After
 	public void teardown() {
-		driver.quit();
+		if (driver != null) {
+			driver.quit();
+		}
 	}
 
 	@Test
