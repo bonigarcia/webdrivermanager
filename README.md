@@ -1,9 +1,4 @@
-<table>
-    <tr style="border: 0px;">
-        <td style="border: 0px;"><img src="http://bonigarcia.github.io/img/webdrivermanager.png"></td>
-        <td style="border: 0px;"><h1>WebDriverManager</h1></td>
-    </tr>
-</table>
+# WebDriverManager [![][Logo]][GitHub Repository]
 
 This piece of software is a small library aimed to automate the [Selenium Webdriver] binaries management within a Java project.
 
@@ -17,8 +12,7 @@ This is quite annoying since it forces you to link directly this binary in your 
 
 WebDriverManager is open source, released under the terms of [LGPL License]. The source code of this project can be cloned from the [GitHub Repository].
 
-Usage
------
+## Usage
 
 In order to use WebDriverManager in a Maven project, first add the following dependency to your `pom.xml`:
 
@@ -65,8 +59,7 @@ So far, version 1.0.0 of WebDriverManager supports **Chrome**, **Opera**, and **
 	InternetExplorerDriverManager.setup();
 	OperaDriverManager.setup();
 
-Advanced
---------
+## Advanced
 
 Configuration parameters for WebDriverManager are set in the ``application.properties`` file:
 
@@ -104,11 +97,11 @@ In addition, the usage of a architecture (32 or 64 bits) can be forced. By defau
 	OperaDriverManager.setup(Architecture.x32);
 	OperaDriverManager.setup(Architecture.x64);
 
-About
------
+## About
 
 WebDriverManager is a personal project of [Boni Garcia] (Copyright &copy; 2015). Licensed under [LGPL License]. Comments, questions and suggestions are always very welcome!
 
+[Logo]: http://bonigarcia.github.io/img/webdrivermanager.png
 [Selenium Webdriver]: http://docs.seleniumhq.org/projects/webdriver/
 [LGPL License]: http://www.gnu.org/licenses/lgpl-2.1.html
 [Boni Garcia]: http://bonigarcia.github.io/
