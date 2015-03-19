@@ -45,7 +45,7 @@ public class Downloader {
 		File binary;
 
 		if (!targetFile.getParentFile().exists()
-				|| WdmConfig.getBoolean("override")) {
+				|| WdmConfig.getBoolean("wdm.override")) {
 			log.info("Downloading " + url + " to " + targetFile);
 			FileUtils.copyURLToFile(url, targetFile);
 
@@ -82,7 +82,7 @@ public class Downloader {
 					name, size, compressedSize);
 
 			file = new File(folder.getParentFile() + File.separator + name);
-			if (!file.exists() || WdmConfig.getBoolean("override")) {
+			if (!file.exists() || WdmConfig.getBoolean("wdm.override")) {
 				if (name.endsWith("/")) {
 					file.mkdirs();
 					continue;
@@ -122,7 +122,7 @@ public class Downloader {
 		String folder = zip.substring(0, iLast).replace(".zip", "")
 				.replace("_", File.separator);
 
-		String targetPath = WdmConfig.getString("targetPath");
+		String targetPath = WdmConfig.getString("wdm.targetPath");
 		if (targetPath.contains(HOME)) {
 			targetPath = targetPath.replace(HOME,
 					System.getProperty("user.home"));

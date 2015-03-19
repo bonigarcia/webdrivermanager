@@ -116,9 +116,8 @@ public abstract class BrowserManager {
 		return out;
 	}
 
-	public List<URL> getDriversFromXml(String driverUrlKey, String driverBinary)
+	public List<URL> getDriversFromXml(URL driverUrl, String driverBinary)
 			throws Exception {
-		URL driverUrl = WdmConfig.getUrl(driverUrlKey);
 		log.info("Connecting to {} to check lastest {} release", driverUrl,
 				driverBinary);
 
@@ -138,7 +137,7 @@ public abstract class BrowserManager {
 		}
 		urls = getLatest(urls, driverBinary);
 
-		if (WdmConfig.getBoolean("downloadJustForMySystem")) {
+		if (WdmConfig.getBoolean("wdm.downloadJustForMySystem")) {
 			urls = filter(urls);
 		}
 		reader.close();

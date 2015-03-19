@@ -31,12 +31,14 @@ public class InternetExplorerDriverManager extends BrowserManager {
 
 	@Override
 	protected List<URL> getDrivers() throws Exception {
-		return getDriversFromXml("internetExplorerDriverUrl", "IEDriverServer");
+		return getDriversFromXml(
+				WdmConfig.getUrl("wdm.internetExplorerDriverUrl"),
+				"IEDriverServer");
 	}
 
 	@Override
 	protected String getExportParameter() {
-		return WdmConfig.getString("internetExplorerExport");
+		return WdmConfig.getString("wdm.internetExplorerExport");
 	}
 
 }

@@ -31,11 +31,12 @@ public class ChromeDriverManager extends BrowserManager {
 
 	@Override
 	protected List<URL> getDrivers() throws Exception {
-		return getDriversFromXml("chromeDriverUrl", "chromedriver");
+		return getDriversFromXml(WdmConfig.getUrl("wdm.chromeDriverUrl"),
+				"chromedriver");
 	}
 
 	@Override
 	protected String getExportParameter() {
-		return WdmConfig.getString("chromeDriverExport");
+		return WdmConfig.getString("wdm.chromeDriverExport");
 	}
 }

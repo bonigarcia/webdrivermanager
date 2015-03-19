@@ -38,7 +38,7 @@ public class OperaDriverManager extends BrowserManager {
 
 	@Override
 	protected List<URL> getDrivers() throws Exception {
-		URL driverUrl = WdmConfig.getUrl("operaDriverUrl");
+		URL driverUrl = WdmConfig.getUrl("wdm.operaDriverUrl");
 		log.info("Connecting to {} to check lastest OperaDriver release",
 				driverUrl);
 
@@ -58,7 +58,7 @@ public class OperaDriverManager extends BrowserManager {
 			urls.add(new URL(asset.get("browser_download_url").toString()));
 		}
 
-		if (WdmConfig.getBoolean("downloadJustForMySystem")) {
+		if (WdmConfig.getBoolean("wdm.downloadJustForMySystem")) {
 			urls = filter(urls);
 		}
 		reader.close();
@@ -67,6 +67,6 @@ public class OperaDriverManager extends BrowserManager {
 
 	@Override
 	protected String getExportParameter() {
-		return WdmConfig.getString("operaDriverExport");
+		return WdmConfig.getString("wdm.operaDriverExport");
 	}
 }
