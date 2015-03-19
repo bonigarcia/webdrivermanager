@@ -32,12 +32,16 @@ import com.google.gson.internal.LinkedTreeMap;
  */
 public class OperaDriverManager extends BrowserManager {
 
+	public static void setup(Architecture arch) {
+		new OperaDriverManager().manage(arch);
+	}
+
 	public static void setup() {
 		new OperaDriverManager().manage();
 	}
 
 	@Override
-	protected List<URL> getDrivers() throws Exception {
+	protected List<URL> getDrivers(Architecture arch) throws Exception {
 		URL driverUrl = WdmConfig.getUrl("wdm.operaDriverUrl");
 		log.info("Connecting to {} to check lastest OperaDriver release",
 				driverUrl);
@@ -59,7 +63,7 @@ public class OperaDriverManager extends BrowserManager {
 		}
 
 		if (WdmConfig.getBoolean("wdm.downloadJustForMySystem")) {
-			urls = filter(urls);
+			urls = filter(arch, urls);
 		}
 		reader.close();
 		return urls;

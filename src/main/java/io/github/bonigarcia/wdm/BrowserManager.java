@@ -50,14 +50,19 @@ public abstract class BrowserManager {
 
 	protected String latestVersion = null;
 
-	protected abstract List<URL> getDrivers() throws Exception;
+	protected abstract List<URL> getDrivers(Architecture arch) throws Exception;
 
 	protected abstract String getExportParameter();
 
 	public void manage() {
+		String myArchitecture = System.getProperty("sun.arch.data.model");
+		manage(Architecture.valueOf("x" + myArchitecture));
+	}
+
+	public void manage(Architecture arch) {
 		try {
-			List<URL> urls = getDrivers();
-			List<URL> urlFilter = filter(urls);
+			List<URL> urls = getDrivers(arch);
+			List<URL> urlFilter = filter(arch, urls);
 
 			for (URL url : urls) {
 				String export = urlFilter.contains(url) ? getExportParameter()
@@ -70,7 +75,7 @@ public abstract class BrowserManager {
 		}
 	}
 
-	public List<URL> filter(List<URL> list) {
+	public List<URL> filter(Architecture arch, List<URL> list) {
 		List<URL> out = new ArrayList<URL>();
 		String mySystem = System.getProperty("os.name").toLowerCase();
 
@@ -85,10 +90,8 @@ public abstract class BrowserManager {
 		}
 		// Round #2 : Filter by architecture (32/64 bits)
 		if (out.size() > 1) {
-			String myArchitecture = System.getProperty("sun.arch.data.model");
 			for (URL url : list) {
-				if (!url.getFile().contains(myArchitecture)
-						&& out.contains(url)) {
+				if (!url.getFile().contains(arch.toString())) {
 					out.remove(url);
 				}
 			}
@@ -116,8 +119,8 @@ public abstract class BrowserManager {
 		return out;
 	}
 
-	public List<URL> getDriversFromXml(URL driverUrl, String driverBinary)
-			throws Exception {
+	public List<URL> getDriversFromXml(Architecture arch, URL driverUrl,
+			String driverBinary) throws Exception {
 		log.info("Connecting to {} to check lastest {} release", driverUrl,
 				driverBinary);
 
@@ -138,7 +141,7 @@ public abstract class BrowserManager {
 		urls = getLatest(urls, driverBinary);
 
 		if (WdmConfig.getBoolean("wdm.downloadJustForMySystem")) {
-			urls = filter(urls);
+			urls = filter(arch, urls);
 		}
 		reader.close();
 		return urls;

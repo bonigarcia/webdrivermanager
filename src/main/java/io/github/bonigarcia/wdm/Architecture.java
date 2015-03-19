@@ -14,35 +14,18 @@
  */
 package io.github.bonigarcia.wdm;
 
-import java.net.URL;
-import java.util.List;
-
 /**
- * Manager for Internet Explorer.
+ * Supported architecture enumeration (32/64 bits).
  *
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.0.0
  */
-public class InternetExplorerDriverManager extends BrowserManager {
-
-	public static void setup(Architecture arch) {
-		new InternetExplorerDriverManager().manage(arch);
-	}
-
-	public static void setup() {
-		new InternetExplorerDriverManager().manage();
-	}
+public enum Architecture {
+	x32, x64;
 
 	@Override
-	protected List<URL> getDrivers(Architecture arch) throws Exception {
-		return getDriversFromXml(arch,
-				WdmConfig.getUrl("wdm.internetExplorerDriverUrl"),
-				"IEDriverServer");
-	}
-
-	@Override
-	protected String getExportParameter() {
-		return WdmConfig.getString("wdm.internetExplorerExport");
+	public String toString() {
+		return this.name().replace("x", "");
 	}
 
 }

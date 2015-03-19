@@ -16,7 +16,6 @@ package io.github.bonigarcia.wdm.test;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -36,14 +35,13 @@ public class ManagerTest {
 		WebDriverWait wait = new WebDriverWait(driver, TIMEOUT);
 		driver.get("http://en.wikipedia.org/wiki/Main_Page");
 
-		WebElement searchInput = driver.findElement(By.id("searchInput"));
-		searchInput.sendKeys("Software");
+		By searchInput = By.id("searchInput");
+		wait.until(ExpectedConditions.presenceOfElementLocated(searchInput));
+		driver.findElement(searchInput).sendKeys("Software");
 
-		// wait.until(ExpectedConditions.elementToBeClickable(By
-		// .id("searchButton")));
-
-		WebElement searchButton = driver.findElement(By.id("searchButton"));
-		searchButton.click();
+		By searchButton = By.id("searchButton");
+		wait.until(ExpectedConditions.elementToBeClickable(searchButton));
+		driver.findElement(searchButton).click();
 
 		wait.until(ExpectedConditions.textToBePresentInElementLocated(
 				By.tagName("body"), "Computer software or simply software"));
