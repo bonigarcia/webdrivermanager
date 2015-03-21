@@ -18,6 +18,7 @@ import io.github.bonigarcia.wdm.OperaDriverManager;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.opera.OperaDriver;
 
@@ -42,6 +43,7 @@ public class OperaTest extends ManagerTest {
 		}
 	}
 
+	@Ignore
 	@Test
 	public void testOpera() {
 		browseWikipedia();

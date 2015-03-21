@@ -16,6 +16,7 @@ package io.github.bonigarcia.wdm.test;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.safari.SafariDriver;
 
@@ -39,6 +40,7 @@ public class SafariTest extends ManagerTest {
 		}
 	}
 
+	@Ignore
 	@Test
 	public void testSafari() {
 		browseWikipedia();

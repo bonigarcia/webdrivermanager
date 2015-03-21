@@ -18,6 +18,7 @@ import io.github.bonigarcia.wdm.InternetExplorerDriverManager;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 
@@ -42,6 +43,7 @@ public class IExplorerTest extends ManagerTest {
 		}
 	}
 
+	@Ignore
 	@Test
 	public void testIExplorer() {
 		browseWikipedia();
