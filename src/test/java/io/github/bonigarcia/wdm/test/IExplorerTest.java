@@ -18,6 +18,7 @@ import io.github.bonigarcia.wdm.InternetExplorerDriverManager;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.ie.InternetExplorerDriver;
@@ -30,9 +31,13 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
  */
 public class IExplorerTest extends ManagerTest {
 
-	@Before
-	public void setup() {
+	@BeforeClass
+	public static void setupClass() {
 		InternetExplorerDriverManager.setup();
+	}
+
+	@Before
+	public void setupTest() {
 		driver = new InternetExplorerDriver();
 	}
 

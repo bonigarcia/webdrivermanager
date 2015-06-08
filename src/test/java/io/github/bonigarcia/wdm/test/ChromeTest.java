@@ -18,10 +18,9 @@ import io.github.bonigarcia.wdm.ChromeDriverManager;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 /**
  * Test with Google Chrome browser.
@@ -31,14 +30,14 @@ import org.openqa.selenium.remote.DesiredCapabilities;
  */
 public class ChromeTest extends ManagerTest {
 
-	@Before
-	public void setup() {
+	@BeforeClass
+	public static void setupClass() {
 		ChromeDriverManager.setup();
-		DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-		ChromeOptions options = new ChromeOptions();
-		options.addArguments("test-type");
-		capabilities.setCapability(ChromeOptions.CAPABILITY, options);
-		driver = new ChromeDriver(capabilities);
+	}
+
+	@Before
+	public void setupTest() {
+		driver = new ChromeDriver();
 	}
 
 	@After

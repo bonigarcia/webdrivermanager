@@ -18,6 +18,7 @@ import io.github.bonigarcia.wdm.OperaDriverManager;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.opera.OperaDriver;
@@ -30,9 +31,13 @@ import org.openqa.selenium.opera.OperaDriver;
  */
 public class OperaTest extends ManagerTest {
 
-	@Before
-	public void setup() {
+	@BeforeClass
+	public static void setupClass() {
 		OperaDriverManager.setup();
+	}
+
+	@Before
+	public void setupTest() {
 		driver = new OperaDriver();
 	}
 
