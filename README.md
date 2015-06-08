@@ -54,7 +54,7 @@ Then you can let WebDriverManager to do manage WebDriver binaries for your appli
 Notice that simple adding ``ChromeDriverManager.setup();`` WebDriverManager does magic for you:
 
 1. It checks the latest version of the WebDriver binary file
-2. It download the binary WebDriver if it is not present in your system
+2. It downloads the binary WebDriver if it is not present in your system
 3. It exports the required Java variable by Selenium WebDriver
 
 So far, version 1.0.1 of WebDriverManager supports **Chrome**, **Opera**, and **Internet Explorer**, as follows:
