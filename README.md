@@ -57,7 +57,7 @@ Notice that simple adding ``ChromeDriverManager.setup();`` WebDriverManager does
 2. It download the binary WebDriver if it is not present in your system
 3. It exports the required Java variable by Selenium WebDriver
 
-So far, version 1.0.0 of WebDriverManager supports **Chrome**, **Opera**, and **Internet Explorer**, as follows:
+So far, version 1.0.1 of WebDriverManager supports **Chrome**, **Opera**, and **Internet Explorer**, as follows:
 
 	ChromeDriverManager.setup();
 	InternetExplorerDriverManager.setup();
