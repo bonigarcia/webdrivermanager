@@ -1,5 +1,13 @@
 webdrivermanager (1.0.0) precise; urgency=low
 
+  * Webdrivermanager 1.0.1 release:
+  + Bug-fix: Wrong chromedriver version downloaded (GitHub issue #1)
+
+ -- Boni Garcia <boni.gg@gmail.com>  Tue, 9 Jun 2015 00:02:31 +0200
+ 
+
+webdrivermanager (1.0.0) precise; urgency=low
+
   * Webdrivermanager 1.0.0 release:
   + Automated download of WebDriver binaries
   + Automated export of WebDriver binaries path
