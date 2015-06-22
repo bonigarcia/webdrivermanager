@@ -25,18 +25,13 @@ import java.util.List;
  */
 public class ChromeDriverManager extends BrowserManager {
 
-	public static void setup(Architecture arch) {
-		new ChromeDriverManager().manage(arch);
-	}
-
-	public static void setup() {
-		new ChromeDriverManager().manage();
-	}
-
 	@Override
-	protected List<URL> getDrivers(Architecture arch) throws Exception {
+	protected List<URL> getDrivers(Architecture arch, String version)
+			throws Exception {
+		String driverVersion = (version == null) ? WdmConfig
+				.getString("wdm.chromeDriverVersion") : version;
 		return getDriversFromXml(arch, WdmConfig.getUrl("wdm.chromeDriverUrl"),
-				"chromedriver");
+				"chromedriver", driverVersion);
 	}
 
 	@Override

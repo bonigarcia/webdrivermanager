@@ -33,7 +33,7 @@ public class OperaTest extends ManagerTest {
 
 	@BeforeClass
 	public static void setupClass() {
-		OperaDriverManager.setup();
+		new OperaDriverManager().setup();
 	}
 
 	@Before

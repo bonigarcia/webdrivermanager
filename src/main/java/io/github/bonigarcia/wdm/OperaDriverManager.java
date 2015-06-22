@@ -15,6 +15,7 @@
 package io.github.bonigarcia.wdm;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
@@ -32,31 +33,36 @@ import com.google.gson.internal.LinkedTreeMap;
  */
 public class OperaDriverManager extends BrowserManager {
 
-	public static void setup(Architecture arch) {
-		new OperaDriverManager().manage(arch);
-	}
-
-	public static void setup() {
-		new OperaDriverManager().manage();
-	}
-
 	@Override
-	protected List<URL> getDrivers(Architecture arch) throws Exception {
+	protected List<URL> getDrivers(Architecture arch, String version) throws IOException {
 		URL driverUrl = WdmConfig.getUrl("wdm.operaDriverUrl");
-		log.info("Connecting to {} to check lastest OperaDriver release",
-				driverUrl);
+		String driverVersion = (version == null) ? WdmConfig
+				.getString("wdm.operaDriverVersion") : version;
 
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				driverUrl.openStream()));
 
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		Gson gson = gsonBuilder.create();
-		GitHubApi[] release = gson.fromJson(reader, GitHubApi[].class);
+		GitHubApi[] releaseArray = gson.fromJson(reader, GitHubApi[].class);
+		GitHubApi release;
+		if (driverVersion == null || driverVersion.isEmpty()
+				|| driverVersion.equalsIgnoreCase(LATEST)) {
+			log.info("Connecting to {} to check lastest OperaDriver release",
+					driverUrl);
+			version = releaseArray[0].getName();
+			log.info("Latest driver version: {}", version);
+			release = releaseArray[0];
+		} else {
+			version = driverVersion;
+			release = getVersion(releaseArray, version);
+		}
+		if (release == null) {
+			throw new RuntimeException("Version " + driverVersion
+					+ " is not available for OperaDriver");
+		}
 
-		latestVersion = release[0].getName();
-		log.info("Latest driver version: {}", latestVersion);
-
-		List<LinkedTreeMap<String, Object>> assets = release[0].getAssets();
+		List<LinkedTreeMap<String, Object>> assets = release.getAssets();
 		List<URL> urls = new ArrayList<URL>();
 		for (LinkedTreeMap<String, Object> asset : assets) {
 			urls.add(new URL(asset.get("browser_download_url").toString()));
@@ -72,5 +78,16 @@ public class OperaDriverManager extends BrowserManager {
 	@Override
 	protected String getExportParameter() {
 		return WdmConfig.getString("wdm.operaDriverExport");
+	}
+
+	private GitHubApi getVersion(GitHubApi[] releaseArray, String version) {
+		GitHubApi out = null;
+		for (GitHubApi release : releaseArray) {
+			if (release.getName().equalsIgnoreCase(version)) {
+				out = release;
+				break;
+			}
+		}
+		return out;
 	}
 }

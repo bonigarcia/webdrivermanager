@@ -33,7 +33,7 @@ public class IExplorerTest extends ManagerTest {
 
 	@BeforeClass
 	public static void setupClass() {
-		InternetExplorerDriverManager.setup();
+		new InternetExplorerDriverManager().setup();
 	}
 
 	@Before

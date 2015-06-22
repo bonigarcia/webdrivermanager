@@ -32,7 +32,7 @@ public class ChromeTest extends ManagerTest {
 
 	@BeforeClass
 	public static void setupClass() {
-		ChromeDriverManager.setup();
+		new ChromeDriverManager().setup();
 	}
 
 	@Before

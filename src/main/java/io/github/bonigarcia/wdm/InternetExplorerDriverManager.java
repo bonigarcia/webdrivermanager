@@ -25,19 +25,14 @@ import java.util.List;
  */
 public class InternetExplorerDriverManager extends BrowserManager {
 
-	public static void setup(Architecture arch) {
-		new InternetExplorerDriverManager().manage(arch);
-	}
-
-	public static void setup() {
-		new InternetExplorerDriverManager().manage();
-	}
-
 	@Override
-	protected List<URL> getDrivers(Architecture arch) throws Exception {
+	protected List<URL> getDrivers(Architecture arch, String version)
+			throws Exception {
+		String driverVersion = (version == null) ? WdmConfig
+				.getString("wdm.internetExplorerVersion") : version;
 		return getDriversFromXml(arch,
 				WdmConfig.getUrl("wdm.internetExplorerDriverUrl"),
-				"IEDriverServer");
+				"IEDriverServer", driverVersion);
 	}
 
 	@Override

@@ -48,28 +48,28 @@ public abstract class BrowserManager {
 
 	private final String SEPARATOR = "/";
 
-	protected String latestVersion = null;
+	public static final String LATEST = "LATEST";
 
-	protected abstract List<URL> getDrivers(Architecture arch) throws Exception;
+	private static final Architecture DEFAULT_ARCH = Architecture.valueOf("x"
+			+ System.getProperty("sun.arch.data.model"));
+
+	protected abstract List<URL> getDrivers(Architecture arch, String version)
+			throws Exception;
 
 	protected abstract String getExportParameter();
 
-	public void manage() {
-		String myArchitecture = System.getProperty("sun.arch.data.model");
-		manage(Architecture.valueOf("x" + myArchitecture));
-	}
-
-	public void manage(Architecture arch) {
+	public void manage(Architecture arch, String version) {
 		try {
-			List<URL> urls = getDrivers(arch);
+			List<URL> urls = getDrivers(arch, version);
 			List<URL> urlFilter = filter(arch, urls);
 
 			for (URL url : urls) {
 				String export = urlFilter.contains(url) ? getExportParameter()
 						: null;
-				new Downloader().download(url, latestVersion, export);
+				new Downloader().download(url, version, export);
 			}
-
+		} catch (RuntimeException re) {
+			throw re;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
@@ -99,9 +99,28 @@ public abstract class BrowserManager {
 		return out;
 	}
 
-	public List<URL> getLatest(List<URL> list, String match) {
+	public List<URL> getVersion(List<URL> list, String match, String version) {
 		List<URL> out = new ArrayList<URL>();
 		Collections.reverse(list);
+		for (URL url : list) {
+			if (url.getFile().contains(match)
+					&& url.getFile().contains(version)) {
+				out.add(url);
+			}
+		}
+		if (out.isEmpty()) {
+			throw new RuntimeException("Version " + version
+					+ " is not available for " + match);
+		}
+		log.info("Using {} {}", match, version);
+		return out;
+	}
+
+	public List<URL> getLatest(List<URL> list, String match) {
+		log.info("Checking the lastest version of {}", match);
+		List<URL> out = new ArrayList<URL>();
+		Collections.reverse(list);
+		String latestVersion = null;
 		for (URL url : list) {
 			if (url.getFile().contains(match)) {
 				String currentVersion = url.getFile().substring(
@@ -119,7 +138,7 @@ public abstract class BrowserManager {
 				}
 			}
 		}
-		log.info("Latest driver version: {}", latestVersion);
+		log.info("Using {} {}", match, latestVersion);
 		return out;
 	}
 
@@ -141,10 +160,7 @@ public abstract class BrowserManager {
 	}
 
 	public List<URL> getDriversFromXml(Architecture arch, URL driverUrl,
-			String driverBinary) throws Exception {
-		log.info("Connecting to {} to check lastest {} release", driverUrl,
-				driverBinary);
-
+			String driverBinary, String driverVersion) throws Exception {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				driverUrl.openStream()));
 		Document xml = loadXML(reader);
@@ -159,7 +175,13 @@ public abstract class BrowserManager {
 			String version = e.getChildNodes().item(0).getNodeValue();
 			urls.add(new URL(driverUrl + version));
 		}
-		urls = getLatest(urls, driverBinary);
+
+		if (driverVersion == null || driverVersion.isEmpty()
+				|| driverVersion.equalsIgnoreCase(LATEST)) {
+			urls = getLatest(urls, driverBinary);
+		} else {
+			urls = getVersion(urls, driverBinary, driverVersion);
+		}
 
 		if (WdmConfig.getBoolean("wdm.downloadJustForMySystem")) {
 			urls = filter(arch, urls);
@@ -173,5 +195,37 @@ public abstract class BrowserManager {
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		InputSource is = new InputSource(reader);
 		return builder.parse(is);
+	}
+
+	public void setup() {
+		try {
+			this.getClass().newInstance().manage(DEFAULT_ARCH, LATEST);
+		} catch (InstantiationException | IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public void setup(Architecture arch, String version) {
+		try {
+			this.getClass().newInstance().manage(DEFAULT_ARCH, version);
+		} catch (InstantiationException | IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public void setup(String version) {
+		try {
+			this.getClass().newInstance().manage(DEFAULT_ARCH, version);
+		} catch (InstantiationException | IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public void setup(Architecture arch) {
+		try {
+			this.getClass().newInstance().manage(arch, LATEST);
+		} catch (InstantiationException | IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
 	}
 }
