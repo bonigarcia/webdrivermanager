@@ -1,6 +1,14 @@
-webdrivermanager (1.0.0) precise; urgency=low
+webdrivermanager (1.1.0) precise; urgency=low
 
-  * Webdrivermanager 1.0.1 release:
+  + Changed log dependency from slf4j-log4j12 to slf4j-simple
+  + Changed setup from static method to instantiation of *DriverManager
+  + Added parameter to force the use of a concrete WebDriver binary version
+
+ -- Boni Garcia <boni.gg@gmail.com>  Tue, 23 Jun 2015 00:44:11 +0200
+
+
+webdrivermanager (1.0.1) precise; urgency=low
+
   + Bug-fix: Wrong chromedriver version downloaded (GitHub issue #1)
 
  -- Boni Garcia <boni.gg@gmail.com>  Tue, 9 Jun 2015 00:02:31 +0200
@@ -8,7 +16,6 @@ webdrivermanager (1.0.0) precise; urgency=low
 
 webdrivermanager (1.0.0) precise; urgency=low
 
-  * Webdrivermanager 1.0.0 release:
   + Automated download of WebDriver binaries
   + Automated export of WebDriver binaries path
   + Supported WebDriver binaries: Chrome, Opera, Internet Explorer

@@ -1,6 +1,6 @@
 # WebDriverManager [![][Logo]][GitHub Repository]
 
-This piece of software is a small library aimed to automate the [Selenium Webdriver] binaries management within a Java project.
+This piece of software is a small library aimed to automate the [Selenium Webdriver] binaries management within a Java project in runtime.
 
 If you have ever used [Selenium Webdriver], you probably know that in order to use some browsers (for example Chrome, Internet Explorer, or Opera) you need to download a binary which allows WebDriver to handle the browser. In addition, the absolute path to this binary must be set as Java variables, as follows:
 
@@ -19,11 +19,11 @@ In order to use WebDriverManager in a Maven project, first add the following dep
 	<dependency>
 		<groupId>io.github.bonigarcia</groupId>
 		<artifactId>webdrivermanager</artifactId>
-		<version>1.0.1</version>
+		<version>1.1.0</version>
 		<scope>test</scope>
 	</dependency>
 
-Then you can let WebDriverManager to do manage WebDriver binaries for your application/test. Take a look to this example which uses Chrome with Selenium WebDriver:
+Then you can let WebDriverManager to do manage WebDriver binaries for your application/test. Take a look to this JUnit example which uses Chrome with Selenium WebDriver:
 
 	public class ChromeTest {
 
@@ -31,7 +31,7 @@ Then you can let WebDriverManager to do manage WebDriver binaries for your appli
 
 		@BeforeClass
 		public void setupClass() {
-			ChromeDriverManager.setup();
+			new ChromeDriverManager().setup();
 		}
 
 		@Before
@@ -51,17 +51,17 @@ Then you can let WebDriverManager to do manage WebDriver binaries for your appli
 
 	}
 
-Notice that simple adding ``ChromeDriverManager.setup();`` WebDriverManager does magic for you:
+Notice that simple adding ``new ChromeDriverManager().setup();`` WebDriverManager does magic for you:
 
 1. It checks the latest version of the WebDriver binary file
 2. It downloads the binary WebDriver if it is not present in your system
 3. It exports the required Java variable by Selenium WebDriver
 
-So far, version 1.0.1 of WebDriverManager supports **Chrome**, **Opera**, and **Internet Explorer**, as follows:
+So far, WebDriverManager supports **Chrome**, **Opera**, and **Internet Explorer**, as follows:
 
-	ChromeDriverManager.setup();
-	InternetExplorerDriverManager.setup();
-	OperaDriverManager.setup();
+	new ChromeDriverManager().setup();
+	new InternetExplorerDriverManager().setup();
+	new OperaDriverManager().setup();
 
 ## Advanced
 
@@ -73,12 +73,15 @@ Configuration parameters for WebDriverManager are set in the ``application.prope
 
 	wdm.chromeDriverUrl=http://chromedriver.storage.googleapis.com/
 	wdm.chromeDriverExport=webdriver.chrome.driver
+	wdm.chromeDriverVersion=LATEST
 
 	wdm.operaDriverUrl=https://api.github.com/repos/operasoftware/operachromiumdriver/releases
 	wdm.operaDriverExport=webdriver.opera.driver
+	wdm.operaDriverVersion=LATEST
 
 	wdm.internetExplorerDriverUrl=http://selenium-release.storage.googleapis.com/
 	wdm.internetExplorerExport=webdriver.ie.driver
+	wdm.internetExplorerVersion=LATEST
 
 The variable ``wdm.targetPath`` is the default folder in which WebDriver binaries are going to be stored. Notice that by default the path of the Maven local repository is used. The URLs to check the latest version of Chrome, Opera, and Internet Explorer are set using the variables ``wdm.chromeDriverUrl``, ``wdm.operaDriverExport``, and ``wdm.operaDriverUrl``. 
 
@@ -90,16 +93,30 @@ This properties can be overwritten with Java system properties. For example:
 
 	-Dwdm.override=true
 
-In addition, the usage of a architecture (32 or 64 bits) can be forced. By default, the most suitable binary version for your system and architecture is downloaded and used. The architecture can be forced as follows:
+In addition, the usage of a architecture (32 or 64 bits) can be forced. By default, the suitable binary version for your system and architecture is downloaded and used. The architecture can be forced as follows:
 
-	ChromeDriverManager.setup(Architecture.x32);
-	ChromeDriverManager.setup(Architecture.x64);
+	new ChromeDriverManager().setup(Architecture.x32);
+	new ChromeDriverManager().setup(Architecture.x64);
 
-	InternetExplorerDriverManager.setup(Architecture.x32);
-	InternetExplorerDriverManager.setup(Architecture.x64);
+	new InternetExplorerDriverManager().setup(Architecture.x32);
+	new InternetExplorerDriverManager().setup(Architecture.x64);
 
-	OperaDriverManager.setup(Architecture.x32);
-	OperaDriverManager.setup(Architecture.x64);
+	new OperaDriverManager().setup(Architecture.x32);
+	new OperaDriverManager().setup(Architecture.x64);
+
+By default, WebDriverManager downloads the latest version of the WebDriver binary. A concrete version of the WebDriver binary can be forced. For example, in order to use the version ``2.15`` of ``chromedriver``, the version ``2.45`` of ``IEDriverServer``, and the version ``0.2.1`` of ``operadriver`` respectively, you need to use WebDriverManager as follows: 
+
+	new ChromeDriverManager().setup("2.15");
+
+	new InternetExplorerDriverManager().setup("2.45");
+
+	new OperaDriverManager().setup("0.2.1");
+
+This can also be done by changing the value of the variables ``wdm.chromeDriverVersion``, ``wdm.operaDriverVersion``, or ``wdm.internetExplorerVersion``, from its default value (``LATEST``) to a concrete version. For instance:
+
+	-Dwdm.chromeDriverVersion=2.15
+	-Dwdm.internetExplorerVersion=2.45
+	-Dwdm.operaDriverVersion=0.2.1
 
 ## About
 
