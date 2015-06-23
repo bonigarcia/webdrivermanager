@@ -1,3 +1,10 @@
+webdrivermanager (1.1.1) precise; urgency=low
+
+  + Added provided scope to slf4j-simple
+  + Bug-fix: store binary in path using version instead of LATEST
+
+ -- Boni Garcia <boni.gg@gmail.com>  Tue, 23 Jun 2015 11:42:01 +0200
+
 webdrivermanager (1.1.0) precise; urgency=low
 
   + Changed log dependency from slf4j-log4j12 to slf4j-simple
