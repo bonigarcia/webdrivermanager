@@ -58,6 +58,8 @@ public abstract class BrowserManager {
 
 	protected abstract String getExportParameter();
 
+	protected String versionToDownload;
+
 	public void manage(Architecture arch, String version) {
 		try {
 			List<URL> urls = getDrivers(arch, version);
@@ -66,7 +68,7 @@ public abstract class BrowserManager {
 			for (URL url : urls) {
 				String export = urlFilter.contains(url) ? getExportParameter()
 						: null;
-				new Downloader().download(url, version, export);
+				new Downloader().download(url, versionToDownload, export);
 			}
 		} catch (RuntimeException re) {
 			throw re;
@@ -112,6 +114,7 @@ public abstract class BrowserManager {
 			throw new RuntimeException("Version " + version
 					+ " is not available for " + match);
 		}
+		versionToDownload = version;
 		log.info("Using {} {}", match, version);
 		return out;
 	}
@@ -120,25 +123,24 @@ public abstract class BrowserManager {
 		log.info("Checking the lastest version of {}", match);
 		List<URL> out = new ArrayList<URL>();
 		Collections.reverse(list);
-		String latestVersion = null;
 		for (URL url : list) {
 			if (url.getFile().contains(match)) {
 				String currentVersion = url.getFile().substring(
 						url.getFile().indexOf(SEPARATOR) + 1,
 						url.getFile().lastIndexOf(SEPARATOR));
-				if (latestVersion == null) {
-					latestVersion = currentVersion;
+				if (versionToDownload == null) {
+					versionToDownload = currentVersion;
 				}
-				if (versionCompare(currentVersion, latestVersion) > 0) {
-					latestVersion = currentVersion;
+				if (versionCompare(currentVersion, versionToDownload) > 0) {
+					versionToDownload = currentVersion;
 					out.clear();
 				}
-				if (url.getFile().contains(latestVersion)) {
+				if (url.getFile().contains(versionToDownload)) {
 					out.add(url);
 				}
 			}
 		}
-		log.info("Using {} {}", match, latestVersion);
+		log.info("Using {} {}", match, versionToDownload);
 		return out;
 	}
 
