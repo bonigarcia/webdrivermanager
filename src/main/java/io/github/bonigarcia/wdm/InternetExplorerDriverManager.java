@@ -25,14 +25,23 @@ import java.util.List;
  */
 public class InternetExplorerDriverManager extends BrowserManager {
 
+	private static InternetExplorerDriverManager instance = null;
+
+	protected InternetExplorerDriverManager() {
+	}
+
+	public static InternetExplorerDriverManager getInstance() {
+		if (instance == null) {
+			instance = new InternetExplorerDriverManager();
+		}
+		return instance;
+	}
+
 	@Override
-	protected List<URL> getDrivers(Architecture arch, String version)
-			throws Exception {
-		String driverVersion = (version == null) ? WdmConfig
-				.getString("wdm.internetExplorerVersion") : version;
-		return getDriversFromXml(arch,
-				WdmConfig.getUrl("wdm.internetExplorerDriverUrl"),
-				"IEDriverServer", driverVersion);
+	protected List<URL> getDrivers(Architecture arch, String version) throws Exception {
+		String driverVersion = (version == null) ? WdmConfig.getString("wdm.internetExplorerVersion") : version;
+		return getDriversFromXml(arch, WdmConfig.getUrl("wdm.internetExplorerDriverUrl"), "IEDriverServer",
+				driverVersion);
 	}
 
 	@Override

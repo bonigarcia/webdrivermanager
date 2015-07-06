@@ -33,23 +33,31 @@ import com.google.gson.internal.LinkedTreeMap;
  */
 public class OperaDriverManager extends BrowserManager {
 
+	private static OperaDriverManager instance = null;
+
+	protected OperaDriverManager() {
+	}
+
+	public static OperaDriverManager getInstance() {
+		if (instance == null) {
+			instance = new OperaDriverManager();
+		}
+		return instance;
+	}
+
 	@Override
 	protected List<URL> getDrivers(Architecture arch, String version) throws IOException {
 		URL driverUrl = WdmConfig.getUrl("wdm.operaDriverUrl");
-		String driverVersion = (version == null) ? WdmConfig
-				.getString("wdm.operaDriverVersion") : version;
+		String driverVersion = (version == null) ? WdmConfig.getString("wdm.operaDriverVersion") : version;
 
-		BufferedReader reader = new BufferedReader(new InputStreamReader(
-				driverUrl.openStream()));
+		BufferedReader reader = new BufferedReader(new InputStreamReader(driverUrl.openStream()));
 
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		Gson gson = gsonBuilder.create();
 		GitHubApi[] releaseArray = gson.fromJson(reader, GitHubApi[].class);
 		GitHubApi release;
-		if (driverVersion == null || driverVersion.isEmpty()
-				|| driverVersion.equalsIgnoreCase(LATEST)) {
-			log.info("Connecting to {} to check lastest OperaDriver release",
-					driverUrl);
+		if (driverVersion == null || driverVersion.isEmpty() || driverVersion.equalsIgnoreCase(LATEST)) {
+			log.info("Connecting to {} to check lastest OperaDriver release", driverUrl);
 			version = releaseArray[0].getName();
 			log.info("Latest driver version: {}", version);
 			release = releaseArray[0];
@@ -58,8 +66,7 @@ public class OperaDriverManager extends BrowserManager {
 			release = getVersion(releaseArray, version);
 		}
 		if (release == null) {
-			throw new RuntimeException("Version " + driverVersion
-					+ " is not available for OperaDriver");
+			throw new RuntimeException("Version " + driverVersion + " is not available for OperaDriver");
 		}
 
 		List<LinkedTreeMap<String, Object>> assets = release.getAssets();

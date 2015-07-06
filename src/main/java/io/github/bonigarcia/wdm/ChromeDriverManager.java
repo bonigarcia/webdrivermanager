@@ -25,13 +25,22 @@ import java.util.List;
  */
 public class ChromeDriverManager extends BrowserManager {
 
+	private static ChromeDriverManager instance = null;
+
+	protected ChromeDriverManager() {
+	}
+
+	public static ChromeDriverManager getInstance() {
+		if (instance == null) {
+			instance = new ChromeDriverManager();
+		}
+		return instance;
+	}
+
 	@Override
-	protected List<URL> getDrivers(Architecture arch, String version)
-			throws Exception {
-		String driverVersion = (version == null) ? WdmConfig
-				.getString("wdm.chromeDriverVersion") : version;
-		return getDriversFromXml(arch, WdmConfig.getUrl("wdm.chromeDriverUrl"),
-				"chromedriver", driverVersion);
+	protected List<URL> getDrivers(Architecture arch, String version) throws Exception {
+		String driverVersion = (version == null) ? WdmConfig.getString("wdm.chromeDriverVersion") : version;
+		return getDriversFromXml(arch, WdmConfig.getUrl("wdm.chromeDriverUrl"), "chromedriver", driverVersion);
 	}
 
 	@Override

@@ -14,14 +14,14 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import io.github.bonigarcia.wdm.OperaDriverManager;
-
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.opera.OperaDriver;
+
+import io.github.bonigarcia.wdm.OperaDriverManager;
 
 /**
  * Test with Opera browser.
@@ -33,7 +33,7 @@ public class OperaTest extends ManagerTest {
 
 	@BeforeClass
 	public static void setupClass() {
-		new OperaDriverManager().setup();
+		OperaDriverManager.getInstance().setup();
 	}
 
 	@Before
