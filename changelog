@@ -1,3 +1,9 @@
+webdrivermanager (1.1.2) precise; urgency=low
+
+  + Manager classes as singlentons
+
+ -- Boni Garcia <boni.gg@gmail.com>  Mon, 6 Jul 2015 15:02:15 +0200
+
 webdrivermanager (1.1.1) precise; urgency=low
 
   + Added provided scope to slf4j-simple

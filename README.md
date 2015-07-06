@@ -10,7 +10,7 @@ If you have ever used [Selenium Webdriver], you probably know that in order to u
 
 This is quite annoying since it forces you to link directly this binary in your source code. In addition, you have to check manually when new versions of the binaries are released. This library comes to the rescue, performing in an automated way all this dirty job for you.
 
-WebDriverManager is open source, released under the terms of [LGPL License]. The source code of this project can be cloned from the [GitHub Repository].
+WebDriverManager is open source, released under the terms of [LGPL License].
 
 ## Usage
 
@@ -19,8 +19,7 @@ In order to use WebDriverManager in a Maven project, first add the following dep
 	<dependency>
 		<groupId>io.github.bonigarcia</groupId>
 		<artifactId>webdrivermanager</artifactId>
-		<version>1.1.1</version>
-		<scope>test</scope>
+		<version>1.1.2</version>
 	</dependency>
 
 Then you can let WebDriverManager to do manage WebDriver binaries for your application/test. Take a look to this JUnit example which uses Chrome with Selenium WebDriver:
@@ -31,7 +30,7 @@ Then you can let WebDriverManager to do manage WebDriver binaries for your appli
 
 		@BeforeClass
 		public void setupClass() {
-			new ChromeDriverManager().setup();
+			ChromeDriverManager.getInstance().setup();
 		}
 
 		@Before
@@ -51,7 +50,7 @@ Then you can let WebDriverManager to do manage WebDriver binaries for your appli
 
 	}
 
-Notice that simple adding ``new ChromeDriverManager().setup();`` WebDriverManager does magic for you:
+Notice that simple adding ``ChromeDriverManager.getInstance().setup();`` WebDriverManager does magic for you:
 
 1. It checks the latest version of the WebDriver binary file
 2. It downloads the binary WebDriver if it is not present in your system
@@ -59,9 +58,9 @@ Notice that simple adding ``new ChromeDriverManager().setup();`` WebDriverManage
 
 So far, WebDriverManager supports **Chrome**, **Opera**, and **Internet Explorer**, as follows:
 
-	new ChromeDriverManager().setup();
-	new InternetExplorerDriverManager().setup();
-	new OperaDriverManager().setup();
+	ChromeDriverManager.getInstance().setup();
+	InternetExplorerDriverManager.getInstance().setup();
+	OperaDriverManager.getInstance().setup();
 
 ## Advanced
 
@@ -120,10 +119,9 @@ This can also be done by changing the value of the variables ``wdm.chromeDriverV
 
 ## About
 
-WebDriverManager is a personal project of [Boni Garcia] (Copyright &copy; 2015). Licensed under [LGPL License]. Comments, questions and suggestions are always very welcome!
+WebDriverManager (Copyright &copy; 2015) is a personal project of [Boni Garcia] licensed under [LGPL License]. Comments, questions and suggestions are always very welcome!
 
 [Logo]: http://bonigarcia.github.io/img/webdrivermanager.png
 [Selenium Webdriver]: http://docs.seleniumhq.org/projects/webdriver/
 [LGPL License]: http://www.gnu.org/licenses/lgpl-2.1.html
 [Boni Garcia]: http://bonigarcia.github.io/
-[GitHub Repository]: https://github.com/bonigarcia/webdrivermanager
