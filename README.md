@@ -125,3 +125,4 @@ WebDriverManager (Copyright &copy; 2015) is a personal project of [Boni Garcia] 
 [Selenium Webdriver]: http://docs.seleniumhq.org/projects/webdriver/
 [LGPL License]: http://www.gnu.org/licenses/lgpl-2.1.html
 [Boni Garcia]: http://bonigarcia.github.io/
+[GitHub Repository]: https://github.com/bonigarcia/webdrivermanager
