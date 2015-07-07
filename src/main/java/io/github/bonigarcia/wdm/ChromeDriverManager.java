@@ -24,15 +24,19 @@ import java.util.List;
  * @since 1.0.0
  */
 public class ChromeDriverManager extends BrowserManager {
-
-	private static ChromeDriverManager instance = null;
-
+	
+	public static ChromeDriverManager instance;
+	
 	protected ChromeDriverManager() {
 	}
 
 	public static ChromeDriverManager getInstance() {
 		if (instance == null) {
-			instance = new ChromeDriverManager();
+			synchronized(ChromeDriverManager.class)  {
+				if (instance == null) {
+					instance = new ChromeDriverManager();
+				}
+			}
 		}
 		return instance;
 	}
