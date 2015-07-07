@@ -68,7 +68,7 @@ public abstract class BrowserManager {
 			for (URL url : urls) {
 				String export = urlFilter.contains(url) ? getExportParameter()
 						: null;
-				new Downloader().download(url, versionToDownload, export);
+				Downloader.download(url, versionToDownload, export);
 			}
 		} catch (RuntimeException re) {
 			throw re;

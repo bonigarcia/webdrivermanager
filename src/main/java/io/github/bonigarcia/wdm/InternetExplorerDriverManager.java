@@ -25,17 +25,22 @@ import java.util.List;
  */
 public class InternetExplorerDriverManager extends BrowserManager {
 
-	private static InternetExplorerDriverManager instance = null;
+	private static InternetExplorerDriverManager instance;
 
 	protected InternetExplorerDriverManager() {
 	}
 
 	public static InternetExplorerDriverManager getInstance() {
 		if (instance == null) {
-			instance = new InternetExplorerDriverManager();
+			synchronized(InternetExplorerDriverManager.class)  {
+				if (instance == null) {
+					instance = new InternetExplorerDriverManager();
+				}
+			}
 		}
 		return instance;
 	}
+
 
 	@Override
 	protected List<URL> getDrivers(Architecture arch, String version) throws Exception {

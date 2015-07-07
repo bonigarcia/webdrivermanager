@@ -39,14 +39,14 @@ public class Downloader {
 
 	private static final String HOME = "~";
 
-	public void download(URL url, String version, String export)
+	public static final synchronized void download(URL url, String version, String export)
 			throws IOException {
 		File targetFile = new File(getTarget(version, url));
 		File binary;
 
 		if (!targetFile.getParentFile().exists()
 				|| WdmConfig.getBoolean("wdm.override")) {
-			log.info("Downloading " + url + " to " + targetFile);
+			log.info("Downloading {} to {}", url, targetFile);
 			FileUtils.copyURLToFile(url, targetFile);
 
 			binary = unZip(targetFile);
@@ -63,11 +63,11 @@ public class Downloader {
 
 	}
 
-	public File unZip(String fileInput, String outputFolder) throws IOException {
+	public static final File unZip(String fileInput, String outputFolder) throws IOException {
 		return null;
 	}
 
-	public File unZip(File folder) throws IOException {
+	public static final File unZip(File folder) throws IOException {
 		ZipFile zipFolder = new ZipFile(folder);
 		Enumeration<?> enu = zipFolder.entries();
 		File file = null;
@@ -113,7 +113,7 @@ public class Downloader {
 		return file.getAbsoluteFile();
 	}
 
-	private String getTarget(String version, URL url) throws IOException {
+	private static final String getTarget(String version, URL url) throws IOException {
 		String zip = url.getFile().substring(url.getFile().lastIndexOf("/"));
 
 		int iFirst = zip.indexOf("_");

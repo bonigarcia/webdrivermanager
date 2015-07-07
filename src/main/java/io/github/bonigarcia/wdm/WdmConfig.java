@@ -28,7 +28,7 @@ import com.typesafe.config.ConfigFactory;
  */
 public class WdmConfig {
 
-	private static WdmConfig instance = null;
+	private static WdmConfig instance;
 	private Config conf;
 
 	protected WdmConfig() {
@@ -37,7 +37,12 @@ public class WdmConfig {
 
 	public static WdmConfig getInstance() {
 		if (instance == null) {
-			instance = new WdmConfig();
+			synchronized(WdmConfig.class) {
+				if (instance == null) {
+					instance = new WdmConfig();
+				}
+			}
+			
 		}
 		return instance;
 	}
