@@ -1,17 +1,23 @@
-webdrivermanager (1.1.2) precise; urgency=low
+webdrivermanager (1.2.0)
+
+  + Thread safe download. Pull request thanks to Ivan Gracia (izanmail@gmail.com)
+
+ -- Boni Garcia <boni.gg@gmail.com>  Tue, 7 Jul 2015 13:18:40 +0200
+
+webdrivermanager (1.1.2)
 
   + Manager classes as singlentons
 
  -- Boni Garcia <boni.gg@gmail.com>  Mon, 6 Jul 2015 15:02:15 +0200
 
-webdrivermanager (1.1.1) precise; urgency=low
+webdrivermanager (1.1.1)
 
   + Added provided scope to slf4j-simple
   + Bug-fix: store binary in path using version instead of LATEST
 
  -- Boni Garcia <boni.gg@gmail.com>  Tue, 23 Jun 2015 11:42:01 +0200
 
-webdrivermanager (1.1.0) precise; urgency=low
+webdrivermanager (1.1.0)
 
   + Changed log dependency from slf4j-log4j12 to slf4j-simple
   + Changed setup from static method to instantiation of *DriverManager
@@ -20,14 +26,14 @@ webdrivermanager (1.1.0) precise; urgency=low
  -- Boni Garcia <boni.gg@gmail.com>  Tue, 23 Jun 2015 00:44:11 +0200
 
 
-webdrivermanager (1.0.1) precise; urgency=low
+webdrivermanager (1.0.1)
 
   + Bug-fix: Wrong chromedriver version downloaded (GitHub issue #1)
 
  -- Boni Garcia <boni.gg@gmail.com>  Tue, 9 Jun 2015 00:02:31 +0200
  
 
-webdrivermanager (1.0.0) precise; urgency=low
+webdrivermanager (1.0.0)
 
   + Automated download of WebDriver binaries
   + Automated export of WebDriver binaries path
