@@ -35,14 +35,9 @@ public class WdmConfig {
 		conf = ConfigFactory.load();
 	}
 
-	public static WdmConfig getInstance() {
+	public static synchronized WdmConfig getInstance() {
 		if (instance == null) {
-			synchronized(WdmConfig.class) {
-				if (instance == null) {
-					instance = new WdmConfig();
-				}
-			}
-			
+			instance = new WdmConfig();
 		}
 		return instance;
 	}
