@@ -30,13 +30,9 @@ public class InternetExplorerDriverManager extends BrowserManager {
 	protected InternetExplorerDriverManager() {
 	}
 
-	public static InternetExplorerDriverManager getInstance() {
+	public static synchronized InternetExplorerDriverManager getInstance() {
 		if (instance == null) {
-			synchronized(InternetExplorerDriverManager.class)  {
-				if (instance == null) {
-					instance = new InternetExplorerDriverManager();
-				}
-			}
+			instance = new InternetExplorerDriverManager();
 		}
 		return instance;
 	}
