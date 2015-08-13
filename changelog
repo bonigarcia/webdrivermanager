@@ -1,3 +1,9 @@
+webdrivermanager (1.2.1)
+
+  + Improved driver version management
+
+ -- Boni Garcia <boni.gg@gmail.com>  Thu, 13 Aug 2015 21:02:00 +0200
+
 webdrivermanager (1.2.0)
 
   + Thread safe download. Pull request thanks to Ivan Gracia (izanmail@gmail.com)
