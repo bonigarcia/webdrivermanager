@@ -43,22 +43,22 @@ import org.xml.sax.InputSource;
  */
 public abstract class BrowserManager {
 
-	protected static final Logger log = LoggerFactory
-			.getLogger(BrowserManager.class);
+	protected static final Logger log = LoggerFactory.getLogger(BrowserManager.class);
 
 	private final String SEPARATOR = "/";
-
-	public static final String LATEST = "LATEST";
 
 	private static final Architecture DEFAULT_ARCH = Architecture.valueOf("x"
 			+ System.getProperty("sun.arch.data.model"));
 
-	protected abstract List<URL> getDrivers(Architecture arch, String version)
-			throws Exception;
+	protected abstract List<URL> getDrivers(Architecture arch, String version) throws Exception;
 
 	protected abstract String getExportParameter();
 
 	protected String versionToDownload;
+
+	public void manage(Architecture arch, DriverVersion version) {
+		manage(arch, version.name());
+	}
 
 	public void manage(Architecture arch, String version) {
 		try {
@@ -66,8 +66,7 @@ public abstract class BrowserManager {
 			List<URL> urlFilter = filter(arch, urls);
 
 			for (URL url : urls) {
-				String export = urlFilter.contains(url) ? getExportParameter()
-						: null;
+				String export = urlFilter.contains(url) ? getExportParameter() : null;
 				Downloader.download(url, versionToDownload, export);
 			}
 		} catch (RuntimeException re) {
@@ -84,8 +83,7 @@ public abstract class BrowserManager {
 		// Round #1 : Filter by OS
 		for (URL url : list) {
 			for (OperativeSystem os : OperativeSystem.values()) {
-				if (mySystem.contains(os.name())
-						&& url.getFile().toLowerCase().contains(os.name())) {
+				if (mySystem.contains(os.name()) && url.getFile().toLowerCase().contains(os.name())) {
 					out.add(url);
 				}
 			}
@@ -105,14 +103,12 @@ public abstract class BrowserManager {
 		List<URL> out = new ArrayList<URL>();
 		Collections.reverse(list);
 		for (URL url : list) {
-			if (url.getFile().contains(match)
-					&& url.getFile().contains(version)) {
+			if (url.getFile().contains(match) && url.getFile().contains(version)) {
 				out.add(url);
 			}
 		}
 		if (out.isEmpty()) {
-			throw new RuntimeException("Version " + version
-					+ " is not available for " + match);
+			throw new RuntimeException("Version " + version + " is not available for " + match);
 		}
 		versionToDownload = version;
 		log.info("Using {} {}", match, version);
@@ -125,8 +121,7 @@ public abstract class BrowserManager {
 		Collections.reverse(list);
 		for (URL url : list) {
 			if (url.getFile().contains(match)) {
-				String currentVersion = url.getFile().substring(
-						url.getFile().indexOf(SEPARATOR) + 1,
+				String currentVersion = url.getFile().substring(url.getFile().indexOf(SEPARATOR) + 1,
 						url.getFile().lastIndexOf(SEPARATOR));
 				if (versionToDownload == null) {
 					versionToDownload = currentVersion;
@@ -148,29 +143,25 @@ public abstract class BrowserManager {
 		String[] vals1 = str1.split("\\.");
 		String[] vals2 = str2.split("\\.");
 		int i = 0;
-		while (i < vals1.length && i < vals2.length
-				&& vals1[i].equals(vals2[i])) {
+		while (i < vals1.length && i < vals2.length && vals1[i].equals(vals2[i])) {
 			i++;
 		}
 		if (i < vals1.length && i < vals2.length) {
-			int diff = Integer.valueOf(vals1[i]).compareTo(
-					Integer.valueOf(vals2[i]));
+			int diff = Integer.valueOf(vals1[i]).compareTo(Integer.valueOf(vals2[i]));
 			return Integer.signum(diff);
 		} else {
 			return Integer.signum(vals1.length - vals2.length);
 		}
 	}
 
-	public List<URL> getDriversFromXml(Architecture arch, URL driverUrl,
-			String driverBinary, String driverVersion) throws Exception {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(
-				driverUrl.openStream()));
+	public List<URL> getDriversFromXml(Architecture arch, URL driverUrl, String driverBinary, String driverVersion)
+			throws Exception {
+		BufferedReader reader = new BufferedReader(new InputStreamReader(driverUrl.openStream()));
 		Document xml = loadXML(reader);
 
 		List<URL> urls = new ArrayList<URL>();
 		XPath xPath = XPathFactory.newInstance().newXPath();
-		NodeList nodes = (NodeList) xPath.evaluate("//Contents/Key",
-				xml.getDocumentElement(), XPathConstants.NODESET);
+		NodeList nodes = (NodeList) xPath.evaluate("//Contents/Key", xml.getDocumentElement(), XPathConstants.NODESET);
 
 		for (int i = 0; i < nodes.getLength(); ++i) {
 			Element e = (Element) nodes.item(i);
@@ -179,7 +170,7 @@ public abstract class BrowserManager {
 		}
 
 		if (driverVersion == null || driverVersion.isEmpty()
-				|| driverVersion.equalsIgnoreCase(LATEST)) {
+				|| driverVersion.equalsIgnoreCase(DriverVersion.LATEST.name())) {
 			urls = getLatest(urls, driverBinary);
 		} else {
 			urls = getVersion(urls, driverBinary, driverVersion);
@@ -201,7 +192,7 @@ public abstract class BrowserManager {
 
 	public void setup() {
 		try {
-			this.getClass().newInstance().manage(DEFAULT_ARCH, LATEST);
+			this.getClass().newInstance().manage(DEFAULT_ARCH, DriverVersion.NOT_SPECIFIED);
 		} catch (InstantiationException | IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
@@ -209,7 +200,7 @@ public abstract class BrowserManager {
 
 	public void setup(Architecture arch, String version) {
 		try {
-			this.getClass().newInstance().manage(DEFAULT_ARCH, version);
+			this.getClass().newInstance().manage(arch, version);
 		} catch (InstantiationException | IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
@@ -225,7 +216,7 @@ public abstract class BrowserManager {
 
 	public void setup(Architecture arch) {
 		try {
-			this.getClass().newInstance().manage(arch, LATEST);
+			this.getClass().newInstance().manage(arch, DriverVersion.NOT_SPECIFIED);
 		} catch (InstantiationException | IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}

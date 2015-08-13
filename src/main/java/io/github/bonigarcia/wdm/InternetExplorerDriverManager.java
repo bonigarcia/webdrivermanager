@@ -37,10 +37,10 @@ public class InternetExplorerDriverManager extends BrowserManager {
 		return instance;
 	}
 
-
 	@Override
 	protected List<URL> getDrivers(Architecture arch, String version) throws Exception {
-		String driverVersion = (version == null) ? WdmConfig.getString("wdm.internetExplorerVersion") : version;
+		String driverVersion = version.equals(DriverVersion.NOT_SPECIFIED.name()) ? WdmConfig
+				.getString("wdm.internetExplorerVersion") : version;
 		return getDriversFromXml(arch, WdmConfig.getUrl("wdm.internetExplorerDriverUrl"), "IEDriverServer",
 				driverVersion);
 	}

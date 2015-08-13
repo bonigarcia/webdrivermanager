@@ -48,7 +48,8 @@ public class OperaDriverManager extends BrowserManager {
 	@Override
 	protected List<URL> getDrivers(Architecture arch, String version) throws IOException {
 		URL driverUrl = WdmConfig.getUrl("wdm.operaDriverUrl");
-		String driverVersion = (version == null) ? WdmConfig.getString("wdm.operaDriverVersion") : version;
+		String driverVersion = version.equals(DriverVersion.NOT_SPECIFIED.name()) ? WdmConfig
+				.getString("wdm.operaDriverVersion") : version;
 
 		BufferedReader reader = new BufferedReader(new InputStreamReader(driverUrl.openStream()));
 
@@ -56,7 +57,8 @@ public class OperaDriverManager extends BrowserManager {
 		Gson gson = gsonBuilder.create();
 		GitHubApi[] releaseArray = gson.fromJson(reader, GitHubApi[].class);
 		GitHubApi release;
-		if (driverVersion == null || driverVersion.isEmpty() || driverVersion.equalsIgnoreCase(LATEST)) {
+		if (driverVersion == null || driverVersion.isEmpty()
+				|| driverVersion.equalsIgnoreCase(DriverVersion.LATEST.name())) {
 			log.info("Connecting to {} to check lastest OperaDriver release", driverUrl);
 			version = releaseArray[0].getName();
 			log.info("Latest driver version: {}", version);
