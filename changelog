@@ -1,8 +1,10 @@
 webdrivermanager (1.2.1)
 
   + Improved driver version management
+  + Added getter to read the downloaded version
 
- -- Boni Garcia <boni.gg@gmail.com>  Thu, 13 Aug 2015 21:02:00 +0200
+ -- Boni Garcia <boni.gg@gmail.com>  Fri, 14 Aug 2015 01:18:00 +0200
+
 
 webdrivermanager (1.2.0)
 
@@ -10,11 +12,13 @@ webdrivermanager (1.2.0)
 
  -- Boni Garcia <boni.gg@gmail.com>  Tue, 7 Jul 2015 13:18:40 +0200
 
+
 webdrivermanager (1.1.2)
 
   + Manager classes as singlentons
 
  -- Boni Garcia <boni.gg@gmail.com>  Mon, 6 Jul 2015 15:02:15 +0200
+
 
 webdrivermanager (1.1.1)
 
@@ -23,10 +27,11 @@ webdrivermanager (1.1.1)
 
  -- Boni Garcia <boni.gg@gmail.com>  Tue, 23 Jun 2015 11:42:01 +0200
 
+
 webdrivermanager (1.1.0)
 
   + Changed log dependency from slf4j-log4j12 to slf4j-simple
-  + Changed setup from static method to instantiation of *DriverManager
+  + Changed setup from static method to instantiation of DriverManager
   + Added parameter to force the use of a concrete WebDriver binary version
 
  -- Boni Garcia <boni.gg@gmail.com>  Tue, 23 Jun 2015 00:44:11 +0200

@@ -47,6 +47,8 @@ public abstract class BrowserManager {
 
 	private final String SEPARATOR = "/";
 
+	private static final String VERSION_PROPERTY = "wdm.driverVersion";
+
 	private static final Architecture DEFAULT_ARCH = Architecture.valueOf("x"
 			+ System.getProperty("sun.arch.data.model"));
 
@@ -111,6 +113,7 @@ public abstract class BrowserManager {
 			throw new RuntimeException("Version " + version + " is not available for " + match);
 		}
 		versionToDownload = version;
+		System.setProperty(VERSION_PROPERTY, versionToDownload);
 		log.info("Using {} {}", match, version);
 		return out;
 	}
@@ -135,6 +138,7 @@ public abstract class BrowserManager {
 				}
 			}
 		}
+		System.setProperty(VERSION_PROPERTY, versionToDownload);
 		log.info("Using {} {}", match, versionToDownload);
 		return out;
 	}
@@ -221,4 +225,9 @@ public abstract class BrowserManager {
 			throw new RuntimeException(e);
 		}
 	}
+
+	public String getDriverVersion() {
+		return System.getProperty(VERSION_PROPERTY);
+	}
+
 }
