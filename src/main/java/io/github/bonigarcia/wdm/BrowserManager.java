@@ -17,6 +17,7 @@ package io.github.bonigarcia.wdm;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,6 +29,7 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
+import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -45,18 +47,56 @@ public abstract class BrowserManager {
 
 	protected static final Logger log = LoggerFactory.getLogger(BrowserManager.class);
 
-	private final String SEPARATOR = "/";
-
-	private static final String VERSION_PROPERTY = "wdm.driverVersion";
-
+	private static final String SEPARATOR = "/";
 	private static final Architecture DEFAULT_ARCH = Architecture.valueOf("x"
 			+ System.getProperty("sun.arch.data.model"));
+	private static final String MY_OS_NAME = getOsName();
+	private static final String VERSION_PROPERTY = "wdm.driverVersion";
 
-	protected abstract List<URL> getDrivers(Architecture arch, String version) throws Exception;
+	protected abstract List<URL> getDrivers(String version) throws Exception;
 
 	protected abstract String getExportParameter();
 
+	protected abstract String getDriverVersion();
+
+	protected abstract String getDriverName();
+
+	protected abstract URL getDriverUrl() throws MalformedURLException;
+
 	protected String versionToDownload;
+
+	public void setup() {
+		try {
+			this.getClass().newInstance().manage(DEFAULT_ARCH, DriverVersion.NOT_SPECIFIED);
+		} catch (InstantiationException | IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public void setup(String version) {
+		try {
+			this.getClass().newInstance().manage(DEFAULT_ARCH, version);
+		} catch (InstantiationException | IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public void setup(Architecture arch) {
+		try {
+			this.getClass().newInstance().manage(arch, DriverVersion.NOT_SPECIFIED);
+		} catch (InstantiationException | IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public void setup(Architecture arch, String version) {
+		try {
+			this.getClass().newInstance()
+					.manage(arch, version.equals(DriverVersion.NOT_SPECIFIED.name()) ? getDriverVersion() : version);
+		} catch (InstantiationException | IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
 	public void manage(Architecture arch, DriverVersion version) {
 		manage(arch, version.name());
@@ -64,38 +104,94 @@ public abstract class BrowserManager {
 
 	public void manage(Architecture arch, String version) {
 		try {
-			List<URL> urls = getDrivers(arch, version);
-			List<URL> urlFilter = filter(arch, urls);
+			boolean getLatest = version == null || version.isEmpty()
+					|| version.equalsIgnoreCase(DriverVersion.LATEST.name())
+					|| version.equalsIgnoreCase(DriverVersion.NOT_SPECIFIED.name());
 
-			for (URL url : urls) {
-				String export = urlFilter.contains(url) ? getExportParameter() : null;
+			// Get the complete list of URLs
+			List<URL> urls = getDrivers(version);
+			List<URL> candidateUrls;
+			boolean continueSearchingVersion;
+
+			do {
+				// Get the latest or concrete version
+				if (getLatest) {
+					candidateUrls = getLatest(urls, getDriverName());
+				} else {
+					candidateUrls = getVersion(urls, getDriverName(), version);
+				}
+				if (versionToDownload == null) {
+					break;
+				}
+
+				// Filter by architecture and OS
+				candidateUrls = filter(candidateUrls, arch);
+
+				// Find out if driver version has been found or not
+				continueSearchingVersion = candidateUrls.isEmpty() && getLatest;
+				if (continueSearchingVersion) {
+					log.debug("No valid binary found for {} {}", getDriverName(), versionToDownload);
+					urls = removeFromList(urls, versionToDownload);
+					versionToDownload = null;
+				}
+
+			} while (continueSearchingVersion);
+
+			if (candidateUrls.isEmpty()) {
+				String versionStr = getLatest ? "(latest version)" : version;
+				String errMessage = getDriverName() + " " + versionStr + " for " + MY_OS_NAME + arch.toString()
+						+ " not found in " + getDriverUrl();
+				log.error(errMessage);
+				throw new RuntimeException(errMessage);
+			}
+
+			for (URL url : candidateUrls) {
+				String export = candidateUrls.contains(url) ? getExportParameter() : null;
+				System.setProperty(VERSION_PROPERTY, versionToDownload);
 				Downloader.download(url, versionToDownload, export);
 			}
-		} catch (RuntimeException re) {
-			throw re;
+
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
 
-	public List<URL> filter(Architecture arch, List<URL> list) {
+	public List<URL> filter(List<URL> list, Architecture arch) {
+		log.trace("{} {} - URLs before filtering: {}", getDriverName(), versionToDownload, list);
+
 		List<URL> out = new ArrayList<URL>();
-		String mySystem = System.getProperty("os.name").toLowerCase();
 
 		// Round #1 : Filter by OS
 		for (URL url : list) {
 			for (OperativeSystem os : OperativeSystem.values()) {
-				if (mySystem.contains(os.name()) && url.getFile().toLowerCase().contains(os.name())) {
+				if (MY_OS_NAME.contains(os.name()) && url.getFile().toLowerCase().contains(os.name())) {
 					out.add(url);
 				}
 			}
 		}
+
+		log.trace("{} {} - URLs after filtering by OS ({}): {}", getDriverName(), versionToDownload, MY_OS_NAME, out);
+
 		// Round #2 : Filter by architecture (32/64 bits)
 		if (out.size() > 1) {
 			for (URL url : list) {
 				if (!url.getFile().contains(arch.toString())) {
 					out.remove(url);
 				}
+			}
+		}
+
+		log.trace("{} {} - URLs after filtering by architecture ({}): {}", getDriverName(), versionToDownload, arch,
+				out);
+
+		return out;
+	}
+
+	public List<URL> removeFromList(List<URL> list, String version) {
+		List<URL> out = new ArrayList<URL>(list);
+		for (URL url : list) {
+			if (url.getFile().contains(version)) {
+				out.remove(url);
 			}
 		}
 		return out;
@@ -109,11 +205,7 @@ public abstract class BrowserManager {
 				out.add(url);
 			}
 		}
-		if (out.isEmpty()) {
-			throw new RuntimeException("Version " + version + " is not available for " + match);
-		}
 		versionToDownload = version;
-		System.setProperty(VERSION_PROPERTY, versionToDownload);
 		log.debug("Using {} {}", match, version);
 		return out;
 	}
@@ -138,7 +230,6 @@ public abstract class BrowserManager {
 				}
 			}
 		}
-		System.setProperty(VERSION_PROPERTY, versionToDownload);
 		log.debug("Latest version of {} is {}", match, versionToDownload);
 		return out;
 	}
@@ -158,8 +249,7 @@ public abstract class BrowserManager {
 		}
 	}
 
-	public List<URL> getDriversFromXml(Architecture arch, URL driverUrl, String driverBinary, String driverVersion)
-			throws Exception {
+	public List<URL> getDriversFromXml(URL driverUrl, String driverBinary) throws Exception {
 		BufferedReader reader = new BufferedReader(new InputStreamReader(driverUrl.openStream()));
 		Document xml = loadXML(reader);
 
@@ -172,18 +262,8 @@ public abstract class BrowserManager {
 			String version = e.getChildNodes().item(0).getNodeValue();
 			urls.add(new URL(driverUrl + version));
 		}
-
-		if (driverVersion == null || driverVersion.isEmpty()
-				|| driverVersion.equalsIgnoreCase(DriverVersion.LATEST.name())) {
-			urls = getLatest(urls, driverBinary);
-		} else {
-			urls = getVersion(urls, driverBinary, driverVersion);
-		}
-
-		if (WdmConfig.getBoolean("wdm.downloadJustForMySystem")) {
-			urls = filter(arch, urls);
-		}
 		reader.close();
+
 		return urls;
 	}
 
@@ -194,40 +274,21 @@ public abstract class BrowserManager {
 		return builder.parse(is);
 	}
 
-	public void setup() {
-		try {
-			this.getClass().newInstance().manage(DEFAULT_ARCH, DriverVersion.NOT_SPECIFIED);
-		} catch (InstantiationException | IllegalAccessException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	public void setup(Architecture arch, String version) {
-		try {
-			this.getClass().newInstance().manage(arch, version);
-		} catch (InstantiationException | IllegalAccessException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	public void setup(String version) {
-		try {
-			this.getClass().newInstance().manage(DEFAULT_ARCH, version);
-		} catch (InstantiationException | IllegalAccessException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	public void setup(Architecture arch) {
-		try {
-			this.getClass().newInstance().manage(arch, DriverVersion.NOT_SPECIFIED);
-		} catch (InstantiationException | IllegalAccessException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	public String getDriverVersion() {
+	public String getDownloadedVersion() {
 		return System.getProperty(VERSION_PROPERTY);
+	}
+
+	private static String getOsName() {
+		String os = System.getProperty("os.name").toLowerCase();
+
+		if (SystemUtils.IS_OS_WINDOWS) {
+			os = "win";
+		} else if (SystemUtils.IS_OS_LINUX) {
+			os = "linux";
+		} else if (SystemUtils.IS_OS_MAC) {
+			os = "mac";
+		}
+		return os;
 	}
 
 }

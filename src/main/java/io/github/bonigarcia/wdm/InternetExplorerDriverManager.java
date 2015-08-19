@@ -14,6 +14,7 @@
  */
 package io.github.bonigarcia.wdm;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
@@ -38,16 +39,28 @@ public class InternetExplorerDriverManager extends BrowserManager {
 	}
 
 	@Override
-	protected List<URL> getDrivers(Architecture arch, String version) throws Exception {
-		String driverVersion = version.equals(DriverVersion.NOT_SPECIFIED.name()) ? WdmConfig
-				.getString("wdm.internetExplorerVersion") : version;
-		return getDriversFromXml(arch, WdmConfig.getUrl("wdm.internetExplorerDriverUrl"), "IEDriverServer",
-				driverVersion);
+	protected List<URL> getDrivers(String version) throws Exception {
+		return getDriversFromXml(WdmConfig.getUrl("wdm.internetExplorerDriverUrl"), getDriverName());
 	}
 
 	@Override
 	protected String getExportParameter() {
 		return WdmConfig.getString("wdm.internetExplorerExport");
+	}
+
+	@Override
+	protected String getDriverVersion() {
+		return WdmConfig.getString("wdm.internetExplorerVersion");
+	}
+
+	@Override
+	protected URL getDriverUrl() throws MalformedURLException {
+		return WdmConfig.getUrl("wdm.internetExplorerDriverUrl");
+	}
+
+	@Override
+	protected String getDriverName() {
+		return "IEDriverServer";
 	}
 
 }

@@ -17,6 +17,7 @@ package io.github.bonigarcia.wdm;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -46,10 +47,9 @@ public class OperaDriverManager extends BrowserManager {
 	}
 
 	@Override
-	protected List<URL> getDrivers(Architecture arch, String version) throws IOException {
-		URL driverUrl = WdmConfig.getUrl("wdm.operaDriverUrl");
-		String driverVersion = version.equals(DriverVersion.NOT_SPECIFIED.name())
-				? WdmConfig.getString("wdm.operaDriverVersion") : version;
+	protected List<URL> getDrivers(String version) throws IOException {
+		URL driverUrl = getDriverUrl();
+		String driverVersion = version.equals(DriverVersion.NOT_SPECIFIED.name()) ? getDriverVersion() : version;
 
 		BufferedReader reader = new BufferedReader(new InputStreamReader(driverUrl.openStream()));
 
@@ -77,9 +77,6 @@ public class OperaDriverManager extends BrowserManager {
 			urls.add(new URL(asset.get("browser_download_url").toString()));
 		}
 
-		if (WdmConfig.getBoolean("wdm.downloadJustForMySystem")) {
-			urls = filter(arch, urls);
-		}
 		reader.close();
 		return urls;
 	}
@@ -98,5 +95,20 @@ public class OperaDriverManager extends BrowserManager {
 			}
 		}
 		return out;
+	}
+
+	@Override
+	protected String getDriverName() {
+		return "operadriver";
+	}
+
+	@Override
+	protected String getDriverVersion() {
+		return WdmConfig.getString("wdm.operaDriverVersion");
+	}
+
+	@Override
+	protected URL getDriverUrl() throws MalformedURLException {
+		return WdmConfig.getUrl("wdm.operaDriverUrl");
 	}
 }

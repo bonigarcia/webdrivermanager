@@ -19,7 +19,7 @@ In order to use WebDriverManager in a Maven project, first add the following dep
 	<dependency>
 		<groupId>io.github.bonigarcia</groupId>
 		<artifactId>webdrivermanager</artifactId>
-		<version>1.2.1</version>
+		<version>1.2.2</version>
 	</dependency>
 
 Then you can let WebDriverManager to do manage WebDriver binaries for your application/test. Take a look to this JUnit example which uses Chrome with Selenium WebDriver:
@@ -68,7 +68,6 @@ Configuration parameters for WebDriverManager are set in the ``application.prope
 
 	wdm.targetPath=~/.m2/repository/webdriver
 	wdm.override=false
-	wdm.downloadJustForMySystem=true
 
 	wdm.chromeDriverUrl=http://chromedriver.storage.googleapis.com/
 	wdm.chromeDriverExport=webdriver.chrome.driver
@@ -103,19 +102,19 @@ In addition, the usage of a architecture (32 or 64 bits) can be forced. By defau
 	new OperaDriverManager().setup(Architecture.x32);
 	new OperaDriverManager().setup(Architecture.x64);
 
-By default, WebDriverManager downloads the latest version of the WebDriver binary. A concrete version of the WebDriver binary can be forced. For example, in order to use the version ``2.15`` of ``chromedriver``, the version ``2.45`` of ``IEDriverServer``, and the version ``0.2.1`` of ``operadriver`` respectively, you need to use WebDriverManager as follows: 
+By default, WebDriverManager downloads the latest version of the WebDriver binary. A concrete version of the WebDriver binary can be forced. For example, in order to use the version ``2.17`` of ``chromedriver``, the version ``2.46`` of ``IEDriverServer``, and the version ``0.2.0`` of ``operadriver`` respectively, you need to use WebDriverManager as follows: 
 
-	new ChromeDriverManager().setup("2.15");
+	new ChromeDriverManager().setup("2.17");
 
-	new InternetExplorerDriverManager().setup("2.45");
+	new InternetExplorerDriverManager().setup("2.46");
 
-	new OperaDriverManager().setup("0.2.1");
+	new OperaDriverManager().setup("0.2.0");
 
 This can also be done by changing the value of the variables ``wdm.chromeDriverVersion``, ``wdm.operaDriverVersion``, or ``wdm.internetExplorerVersion``, from its default value (``LATEST``) to a concrete version. For instance:
 
-	-Dwdm.chromeDriverVersion=2.15
-	-Dwdm.internetExplorerVersion=2.45
-	-Dwdm.operaDriverVersion=0.2.1
+	-Dwdm.chromeDriverVersion=2.17
+	-Dwdm.internetExplorerVersion=2.46
+	-Dwdm.operaDriverVersion=0.2.0
 
 ## About
 

@@ -1,5 +1,6 @@
 webdrivermanager (1.2.2)
 
+  + Improved automatic discover of latest version to be downloaded (GitHub issue #5)
   + Improved test coverage
   + Changed log level to DEBUG
 

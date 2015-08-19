@@ -14,6 +14,7 @@
  */
 package io.github.bonigarcia.wdm;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
@@ -38,14 +39,28 @@ public class ChromeDriverManager extends BrowserManager {
 	}
 
 	@Override
-	protected List<URL> getDrivers(Architecture arch, String version) throws Exception {
-		String driverVersion = version.equals(DriverVersion.NOT_SPECIFIED.name()) ? WdmConfig
-				.getString("wdm.chromeDriverVersion") : version;
-		return getDriversFromXml(arch, WdmConfig.getUrl("wdm.chromeDriverUrl"), "chromedriver", driverVersion);
+	protected List<URL> getDrivers(String version) throws Exception {
+		return getDriversFromXml(getDriverUrl(), getDriverName());
 	}
 
 	@Override
 	protected String getExportParameter() {
 		return WdmConfig.getString("wdm.chromeDriverExport");
 	}
+
+	@Override
+	protected String getDriverVersion() {
+		return WdmConfig.getString("wdm.chromeDriverVersion");
+	}
+
+	@Override
+	protected URL getDriverUrl() throws MalformedURLException {
+		return WdmConfig.getUrl("wdm.chromeDriverUrl");
+	}
+
+	@Override
+	protected String getDriverName() {
+		return "chromedriver";
+	}
+
 }
