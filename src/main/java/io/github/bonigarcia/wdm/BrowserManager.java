@@ -114,12 +114,12 @@ public abstract class BrowserManager {
 		}
 		versionToDownload = version;
 		System.setProperty(VERSION_PROPERTY, versionToDownload);
-		log.info("Using {} {}", match, version);
+		log.debug("Using {} {}", match, version);
 		return out;
 	}
 
 	public List<URL> getLatest(List<URL> list, String match) {
-		log.info("Checking the lastest version of {}", match);
+		log.debug("Checking the lastest version of {}", match);
 		List<URL> out = new ArrayList<URL>();
 		Collections.reverse(list);
 		for (URL url : list) {
@@ -139,7 +139,7 @@ public abstract class BrowserManager {
 			}
 		}
 		System.setProperty(VERSION_PROPERTY, versionToDownload);
-		log.info("Using {} {}", match, versionToDownload);
+		log.debug("Latest version of {} is {}", match, versionToDownload);
 		return out;
 	}
 

@@ -46,18 +46,18 @@ public class Downloader {
 
 		if (!targetFile.getParentFile().exists()
 				|| WdmConfig.getBoolean("wdm.override")) {
-			log.info("Downloading {} to {}", url, targetFile);
+			log.debug("Downloading {} to {}", url, targetFile);
 			FileUtils.copyURLToFile(url, targetFile);
 
 			binary = unZip(targetFile);
 			targetFile.delete();
 		} else {
 			binary = targetFile.getParentFile().listFiles()[0];
-			log.info("Binary driver previously downloaded {}", binary);
+			log.debug("Using binary driver previously downloaded {}", binary);
 		}
 
 		if (export != null) {
-			log.info("Exporting {} as {}", export, binary.toString());
+			log.debug("Exporting {} as {}", export, binary.toString());
 			System.setProperty(export, binary.toString());
 		}
 
@@ -78,7 +78,7 @@ public class Downloader {
 			String name = zipEntry.getName();
 			long size = zipEntry.getSize();
 			long compressedSize = zipEntry.getCompressedSize();
-			log.info("Unzipping {} (size: {} KB, compressed size: {} KB)",
+			log.debug("Unzipping {} (size: {} KB, compressed size: {} KB)",
 					name, size, compressedSize);
 
 			file = new File(folder.getParentFile() + File.separator + name);
@@ -104,7 +104,7 @@ public class Downloader {
 				fos.close();
 				file.setExecutable(true);
 			} else {
-				log.info(file + " already exists");
+				log.debug(file + " already exists");
 			}
 
 		}
