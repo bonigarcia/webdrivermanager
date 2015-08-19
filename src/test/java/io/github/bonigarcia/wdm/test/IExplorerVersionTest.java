@@ -14,35 +14,40 @@
  */
 package io.github.bonigarcia.wdm.test;
 
+import io.github.bonigarcia.wdm.InternetExplorerDriverManager;
+
+import org.apache.commons.lang3.SystemUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
-import io.github.bonigarcia.wdm.ChromeDriverManager;
-
 /**
- * Test asserting chromedriver versions.
+ * Test asserting IEDriverServer versions.
  *
  * @author Boni Garcia (boni.gg@gmail.com)
- * @since 1.2.1
+ * @since 1.2.2
  */
-public class ChromeVersionTest {
+public class IExplorerVersionTest {
 
 	@Test
 	public void testLatestVersion() throws Exception {
-		ChromeDriverManager.getInstance().setup();
-		String driverVersion = ChromeDriverManager.getInstance().getDownloadedVersion();
-		Assert.assertNotNull(driverVersion);
+		if (SystemUtils.IS_OS_WINDOWS) {
+			InternetExplorerDriverManager.getInstance().setup();
+			String driverVersion = InternetExplorerDriverManager.getInstance().getDownloadedVersion();
+			Assert.assertNotNull(driverVersion);
+		}
 	}
 
 	@Test
 	public void testSpecificVersions() throws Exception {
-		String[] specificVersions = { "2.10", "2.11", "2.12", "2.13", "2.14", "2.15", "2.16", "2.17" };
+		if (SystemUtils.IS_OS_WINDOWS) {
+			String[] specificVersions = { "2.39", "2.40", "2.41", "2.42", "2.43", "2.44", "2.45", "2.47" };
 
-		for (String specificVersion : specificVersions) {
-			ChromeDriverManager.getInstance().setup(specificVersion);
-			String driverVersion = ChromeDriverManager.getInstance().getDownloadedVersion();
+			for (String specificVersion : specificVersions) {
+				InternetExplorerDriverManager.getInstance().setup(specificVersion);
+				String driverVersion = InternetExplorerDriverManager.getInstance().getDownloadedVersion();
 
-			Assert.assertEquals(specificVersion, driverVersion);
+				Assert.assertEquals(specificVersion, driverVersion);
+			}
 		}
 	}
 

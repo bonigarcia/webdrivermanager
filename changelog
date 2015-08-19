@@ -1,5 +1,6 @@
 webdrivermanager (1.2.2)
 
+  + Improved test coverage
   + Changed log level to DEBUG
 
  -- Boni Garcia <boni.gg@gmail.com>  Wen, 19 Aug 2015 10:29:00 +0200

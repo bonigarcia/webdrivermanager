@@ -14,12 +14,16 @@
  */
 package io.github.bonigarcia.wdm.test;
 
+import java.io.File;
+
+import org.apache.commons.lang3.SystemUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.opera.OperaDriver;
+import org.openqa.selenium.opera.OperaOptions;
+import org.openqa.selenium.remote.DesiredCapabilities;
 
 import io.github.bonigarcia.wdm.OperaDriverManager;
 
@@ -38,7 +42,13 @@ public class OperaTest extends ManagerTest {
 
 	@Before
 	public void setupTest() {
-		driver = new OperaDriver();
+		DesiredCapabilities capabilities = DesiredCapabilities.operaBlink();
+		if (SystemUtils.IS_OS_LINUX) {
+			OperaOptions options = new OperaOptions();
+			options.setBinary(new File("/usr/bin/opera"));
+			capabilities.setCapability(OperaOptions.CAPABILITY, options);
+		}
+		driver = new OperaDriver(capabilities);
 	}
 
 	@After
@@ -48,7 +58,6 @@ public class OperaTest extends ManagerTest {
 		}
 	}
 
-	@Ignore
 	@Test
 	public void testOpera() {
 		browseWikipedia();

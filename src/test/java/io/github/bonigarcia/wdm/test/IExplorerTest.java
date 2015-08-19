@@ -16,10 +16,10 @@ package io.github.bonigarcia.wdm.test;
 
 import io.github.bonigarcia.wdm.InternetExplorerDriverManager;
 
+import org.apache.commons.lang3.SystemUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 
@@ -33,12 +33,16 @@ public class IExplorerTest extends ManagerTest {
 
 	@BeforeClass
 	public static void setupClass() {
-		InternetExplorerDriverManager.getInstance().setup();
+		if (SystemUtils.IS_OS_WINDOWS) {
+			InternetExplorerDriverManager.getInstance().setup();
+		}
 	}
 
 	@Before
 	public void setupTest() {
-		driver = new InternetExplorerDriver();
+		if (SystemUtils.IS_OS_WINDOWS) {
+			driver = new InternetExplorerDriver();
+		}
 	}
 
 	@After
@@ -48,10 +52,11 @@ public class IExplorerTest extends ManagerTest {
 		}
 	}
 
-	@Ignore
 	@Test
 	public void testIExplorer() {
-		browseWikipedia();
+		if (SystemUtils.IS_OS_WINDOWS) {
+			browseWikipedia();
+		}
 	}
 
 }
