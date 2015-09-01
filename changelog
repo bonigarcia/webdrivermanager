@@ -1,10 +1,16 @@
+webdrivermanager (1.2.3)
+
+  + Bug-fix: redirection of setup call to the proper method
+
+ -- Boni Garcia <boni.gg@gmail.com>  Tue, 01 Sep 2015 10:52:00 +0200
+
 webdrivermanager (1.2.2)
 
   + Improved automatic discover of latest version to be downloaded (GitHub issue #5)
   + Improved test coverage
   + Changed log level to DEBUG
 
- -- Boni Garcia <boni.gg@gmail.com>  Wen, 19 Aug 2015 10:29:00 +0200
+ -- Boni Garcia <boni.gg@gmail.com>  Wed, 19 Aug 2015 10:29:00 +0200
 
 
 webdrivermanager (1.2.1)

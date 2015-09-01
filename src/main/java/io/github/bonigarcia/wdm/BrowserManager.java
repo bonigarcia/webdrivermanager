@@ -66,27 +66,15 @@ public abstract class BrowserManager {
 	protected String versionToDownload;
 
 	public void setup() {
-		try {
-			this.getClass().newInstance().manage(DEFAULT_ARCH, DriverVersion.NOT_SPECIFIED);
-		} catch (InstantiationException | IllegalAccessException e) {
-			throw new RuntimeException(e);
-		}
+		setup(DEFAULT_ARCH, DriverVersion.NOT_SPECIFIED.name());
 	}
 
 	public void setup(String version) {
-		try {
-			this.getClass().newInstance().manage(DEFAULT_ARCH, version);
-		} catch (InstantiationException | IllegalAccessException e) {
-			throw new RuntimeException(e);
-		}
+		setup(DEFAULT_ARCH, version);
 	}
 
 	public void setup(Architecture arch) {
-		try {
-			this.getClass().newInstance().manage(arch, DriverVersion.NOT_SPECIFIED);
-		} catch (InstantiationException | IllegalAccessException e) {
-			throw new RuntimeException(e);
-		}
+		setup(arch, DriverVersion.NOT_SPECIFIED.name());
 	}
 
 	public void setup(Architecture arch, String version) {
