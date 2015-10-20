@@ -1,8 +1,16 @@
+webdrivermanager (1.2.4)
+
+  + Assess that binary exists in cache to avoid seeking remote server
+
+ -- Boni Garcia <boni.gg@gmail.com>  Tue, 20 Oct 2015 15:03:00 +0200
+
+
 webdrivermanager (1.2.3)
 
   + Bug-fix: redirection of setup call to the proper method
 
  -- Boni Garcia <boni.gg@gmail.com>  Tue, 01 Sep 2015 10:52:00 +0200
+
 
 webdrivermanager (1.2.2)
 

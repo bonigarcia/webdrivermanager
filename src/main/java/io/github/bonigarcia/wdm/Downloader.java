@@ -39,8 +39,8 @@ public class Downloader {
 
 	private static final String HOME = "~";
 
-	public static final synchronized void download(URL url, String version, String export)
-			throws IOException {
+	public static final synchronized void download(URL url, String version,
+			String export) throws IOException {
 		File targetFile = new File(getTarget(version, url));
 		File binary;
 
@@ -57,13 +57,13 @@ public class Downloader {
 		}
 
 		if (export != null) {
-			log.debug("Exporting {} as {}", export, binary.toString());
-			System.setProperty(export, binary.toString());
+			BrowserManager.exportDriver(export, binary.toString());
 		}
 
 	}
 
-	public static final File unZip(String fileInput, String outputFolder) throws IOException {
+	public static final File unZip(String fileInput, String outputFolder)
+			throws IOException {
 		return null;
 	}
 
@@ -113,22 +113,27 @@ public class Downloader {
 		return file.getAbsoluteFile();
 	}
 
-	private static final String getTarget(String version, URL url) throws IOException {
+	private static final String getTarget(String version, URL url)
+			throws IOException {
 		String zip = url.getFile().substring(url.getFile().lastIndexOf("/"));
 
 		int iFirst = zip.indexOf("_");
-		int iLast = iFirst != zip.lastIndexOf("_") ? zip.lastIndexOf("_") : zip
-				.length();
-		String folder = zip.substring(0, iLast).replace(".zip", "")
-				.replace("_", File.separator);
+		int iLast = iFirst != zip.lastIndexOf("_") ? zip.lastIndexOf("_")
+				: zip.length();
+		String folder = zip.substring(0, iLast).replace(".zip", "").replace("_",
+				File.separator);
 
+		return getTargetPath() + folder + File.separator + version
+				+ File.separator + zip;
+	}
+
+	protected static String getTargetPath() {
 		String targetPath = WdmConfig.getString("wdm.targetPath");
 		if (targetPath.contains(HOME)) {
 			targetPath = targetPath.replace(HOME,
 					System.getProperty("user.home"));
 		}
-		return targetPath + folder + File.separator + version + File.separator
-				+ zip;
+		return targetPath;
 	}
 
 }
