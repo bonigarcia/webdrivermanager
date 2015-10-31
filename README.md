@@ -29,7 +29,7 @@ Then you can let WebDriverManager to do manage WebDriver binaries for your appli
 		protected WebDriver driver;
 
 		@BeforeClass
-		public void setupClass() {
+		public static void setupClass() {
 			ChromeDriverManager.getInstance().setup();
 		}
 
