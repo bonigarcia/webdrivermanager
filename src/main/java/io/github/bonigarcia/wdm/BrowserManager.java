@@ -267,7 +267,7 @@ public abstract class BrowserManager {
 	}
 
 	public List<URL> getLatest(List<URL> list, String match) {
-		log.debug("Checking the lastest version of {}", match);
+		log.trace("Checking the lastest version of {}", match);
 		List<URL> out = new ArrayList<URL>();
 		Collections.reverse(list);
 		for (URL url : list) {
@@ -287,7 +287,7 @@ public abstract class BrowserManager {
 				}
 			}
 		}
-		log.debug("Latest version of {} is {}", match, versionToDownload);
+		log.info("Latest version of {} is {}", match, versionToDownload);
 		return out;
 	}
 
@@ -310,7 +310,7 @@ public abstract class BrowserManager {
 
 	public List<URL> getDriversFromXml(URL driverUrl, String driverBinary)
 			throws Exception {
-		log.debug("Reading {} to seek {}", driverUrl, getDriverName());
+		log.info("Reading {} to seek {}", driverUrl, getDriverName());
 
 		BufferedReader reader = new BufferedReader(new InputStreamReader(
 				driverUrl.openStream()));
@@ -356,7 +356,7 @@ public abstract class BrowserManager {
 	}
 
 	protected static void exportDriver(String variableName, String variableValue) {
-		log.debug("Exporting {} as {}", variableName, variableValue);
+		log.info("Exporting {} as {}", variableName, variableValue);
 		System.setProperty(variableName, variableValue);
 	}
 

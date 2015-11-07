@@ -68,7 +68,7 @@ public class Downloader {
 		}
 
 		if (download) {
-			log.debug("Downloading {} to {}", url, targetFile);
+			log.info("Downloading {} to {}", url, targetFile);
 			FileUtils.copyURLToFile(url, targetFile);
 
 			if (export.contains("edge")) {
@@ -119,7 +119,7 @@ public class Downloader {
 			String name = zipEntry.getName();
 			long size = zipEntry.getSize();
 			long compressedSize = zipEntry.getCompressedSize();
-			log.debug("Unzipping {} (size: {} KB, compressed size: {} KB)",
+			log.trace("Unzipping {} (size: {} KB, compressed size: {} KB)",
 					name, size, compressedSize);
 
 			file = new File(folder.getParentFile() + File.separator + name);
