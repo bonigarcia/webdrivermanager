@@ -198,7 +198,8 @@ public abstract class BrowserManager {
 					String export = candidateUrls.contains(url) ? getExportParameter()
 							: null;
 					System.setProperty(VERSION_PROPERTY, versionToDownload);
-					Downloader.download(url, versionToDownload, export);
+					Downloader.download(url, versionToDownload, export,
+							getDriverName());
 				}
 			}
 

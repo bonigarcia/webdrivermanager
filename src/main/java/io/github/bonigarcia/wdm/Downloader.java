@@ -43,12 +43,31 @@ public class Downloader {
 	private static final String HOME = "~";
 
 	public static final synchronized void download(URL url, String version,
-			String export) throws IOException {
+			String export, String driverName) throws IOException {
 		File targetFile = new File(getTarget(version, url));
-		File binary;
+		File binary = null;
 
-		if (!targetFile.getParentFile().exists()
-				|| WdmConfig.getBoolean("wdm.override")) {
+		// Check if binary exists
+		boolean download = !targetFile.getParentFile().exists()
+				|| WdmConfig.getBoolean("wdm.override");
+
+		if (!download) {
+			// Check if existing binary is valid
+			Collection<File> listFiles = FileUtils.listFiles(
+					targetFile.getParentFile(), null, true);
+			for (File file : listFiles) {
+				if (file.getName().startsWith(driverName) && file.canExecute()) {
+					binary = file;
+					log.debug("Using binary driver previously downloaded {}",
+							binary);
+					break;
+				} else {
+					download = true;
+				}
+			}
+		}
+
+		if (download) {
 			log.debug("Downloading {} to {}", url, targetFile);
 			FileUtils.copyURLToFile(url, targetFile);
 
@@ -58,13 +77,7 @@ public class Downloader {
 				binary = unZip(targetFile);
 			}
 			targetFile.delete();
-		} else {
-			binary = FileUtils
-					.listFiles(targetFile.getParentFile(), null, true)
-					.iterator().next();
-			log.debug("Using binary driver previously downloaded {}", binary);
 		}
-
 		if (export != null) {
 			BrowserManager.exportDriver(export, binary.toString());
 		}
