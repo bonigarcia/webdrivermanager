@@ -18,7 +18,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
 
 import io.github.bonigarcia.wdm.ChromeDriverManager;
 
@@ -37,7 +37,8 @@ public class ChromeTest extends ManagerTest {
 
 	@Before
 	public void setupTest() {
-		driver = new ChromeDriver();
+		// driver = new ChromeDriver();
+		driver = new FirefoxDriver();
 	}
 
 	@After

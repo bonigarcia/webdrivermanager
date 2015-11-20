@@ -47,28 +47,30 @@ public class OperaDriverManager extends BrowserManager {
 	}
 
 	@Override
-	protected List<URL> getDrivers(String version) throws IOException {
+	protected List<URL> getDrivers() throws IOException {
 		URL driverUrl = getDriverUrl();
-		String driverVersion = version.equals(DriverVersion.NOT_SPECIFIED.name()) ? getDriverVersion() : version;
+		String driverVersion = getDriverVersion();
 
-		BufferedReader reader = new BufferedReader(new InputStreamReader(driverUrl.openStream()));
+		BufferedReader reader = new BufferedReader(
+				new InputStreamReader(driverUrl.openStream()));
 
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		Gson gson = gsonBuilder.create();
 		GitHubApi[] releaseArray = gson.fromJson(reader, GitHubApi[].class);
 		GitHubApi release;
-		if (driverVersion == null || driverVersion.isEmpty()
-				|| driverVersion.equalsIgnoreCase(DriverVersion.LATEST.name())) {
-			log.debug("Connecting to {} to check lastest OperaDriver release", driverUrl);
-			version = releaseArray[0].getName();
-			log.debug("Latest driver version: {}", version);
+		if (driverVersion == null || driverVersion.isEmpty() || driverVersion
+				.equalsIgnoreCase(DriverVersion.LATEST.name())) {
+			log.debug("Connecting to {} to check lastest OperaDriver release",
+					driverUrl);
+			driverVersion = releaseArray[0].getName();
+			log.debug("Latest driver version: {}", driverVersion);
 			release = releaseArray[0];
 		} else {
-			version = driverVersion;
-			release = getVersion(releaseArray, version);
+			release = getVersion(releaseArray, driverVersion);
 		}
 		if (release == null) {
-			throw new RuntimeException("Version " + driverVersion + " is not available for OperaDriver");
+			throw new RuntimeException("Version " + driverVersion
+					+ " is not available for OperaDriver");
 		}
 
 		List<LinkedTreeMap<String, Object>> assets = release.getAssets();

@@ -47,7 +47,7 @@ public class EdgeDriverManager extends BrowserManager {
 	}
 
 	@Override
-	protected List<URL> getDrivers(String version) throws Exception {
+	protected List<URL> getDrivers() throws Exception {
 		String edgeDriverUrl = WdmConfig.getString("wdm.edgeDriverUrl");
 		log.debug("Reading {} to find out the latest version of Edge driver",
 				edgeDriverUrl);
@@ -62,10 +62,8 @@ public class EdgeDriverManager extends BrowserManager {
 
 		// Using HtmlUnitDriver to read MSI package URL
 		HtmlUnitDriver driver = new HtmlUnitDriver();
-		driver.manage()
-				.timeouts()
-				.implicitlyWait(WdmConfig.getInt("wdm.timeout"),
-						TimeUnit.SECONDS);
+		driver.manage().timeouts().implicitlyWait(
+				WdmConfig.getInt("wdm.timeout"), TimeUnit.SECONDS);
 		driver.get(edgeDriverUrl);
 		driver.findElement(By.linkText("Download")).click();
 		WebElement clickHere = driver.findElement(By.linkText("Click here"));

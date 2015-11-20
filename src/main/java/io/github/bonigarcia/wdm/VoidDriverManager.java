@@ -16,53 +16,52 @@ package io.github.bonigarcia.wdm;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collections;
 import java.util.List;
 
 /**
- * Manager for Internet Explorer.
+ * Void manager.
  *
  * @author Boni Garcia (boni.gg@gmail.com)
- * @since 1.0.0
+ * @since 1.3.1
  */
-public class InternetExplorerDriverManager extends BrowserManager {
+public class VoidDriverManager extends BrowserManager {
 
-	private static InternetExplorerDriverManager instance;
+	private static VoidDriverManager instance;
 
-	protected InternetExplorerDriverManager() {
+	protected VoidDriverManager() {
 	}
 
-	public static synchronized InternetExplorerDriverManager getInstance() {
+	public static synchronized VoidDriverManager getInstance() {
 		if (instance == null) {
-			instance = new InternetExplorerDriverManager();
+			instance = new VoidDriverManager();
 		}
 		return instance;
 	}
 
 	@Override
 	protected List<URL> getDrivers() throws Exception {
-		return getDriversFromXml(
-				WdmConfig.getUrl("wdm.internetExplorerDriverUrl"),
-				getDriverName());
+		return Collections.emptyList();
 	}
 
 	@Override
 	protected String getExportParameter() {
-		return WdmConfig.getString("wdm.internetExplorerExport");
+		return "";
 	}
 
 	@Override
 	protected String getDriverVersion() {
-		return WdmConfig.getString("wdm.internetExplorerVersion");
+		return "";
 	}
 
 	@Override
 	protected URL getDriverUrl() throws MalformedURLException {
-		return WdmConfig.getUrl("wdm.internetExplorerDriverUrl");
+		return null;
 	}
 
 	@Override
 	protected String getDriverName() {
-		return "IEDriverServer";
+		return "";
 	}
 
 }

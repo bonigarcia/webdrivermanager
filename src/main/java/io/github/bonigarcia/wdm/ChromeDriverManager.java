@@ -39,7 +39,7 @@ public class ChromeDriverManager extends BrowserManager {
 	}
 
 	@Override
-	protected List<URL> getDrivers(String version) throws Exception {
+	protected List<URL> getDrivers() throws Exception {
 		return getDriversFromXml(getDriverUrl(), getDriverName());
 	}
 

@@ -52,12 +52,12 @@ public abstract class BrowserManager {
 			.getLogger(BrowserManager.class);
 
 	private static final String SEPARATOR = "/";
-	private static final Architecture DEFAULT_ARCH = Architecture.valueOf("x"
-			+ System.getProperty("sun.arch.data.model"));
+	private static final Architecture DEFAULT_ARCH = Architecture
+			.valueOf("x" + System.getProperty("sun.arch.data.model"));
 	private static final String MY_OS_NAME = getOsName();
 	private static final String VERSION_PROPERTY = "wdm.driverVersion";
 
-	protected abstract List<URL> getDrivers(String version) throws Exception;
+	protected abstract List<URL> getDrivers() throws Exception;
 
 	protected abstract String getExportParameter();
 
@@ -83,11 +83,9 @@ public abstract class BrowserManager {
 
 	public void setup(Architecture arch, String version) {
 		try {
-			this.getClass()
-					.newInstance()
-					.manage(arch,
-							version.equals(DriverVersion.NOT_SPECIFIED.name()) ? getDriverVersion()
-									: version);
+			this.getClass().newInstance().manage(arch,
+					version.equals(DriverVersion.NOT_SPECIFIED.name())
+							? getDriverVersion() : version);
 		} catch (InstantiationException | IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
@@ -102,8 +100,8 @@ public abstract class BrowserManager {
 		log.trace("Checking if {} {} exists in cache {}", driverName,
 				driverVersion, repository);
 
-		Iterator<File> iterateFiles = FileUtils.iterateFiles(new File(
-				repository), null, true);
+		Iterator<File> iterateFiles = FileUtils
+				.iterateFiles(new File(repository), null, true);
 
 		String driverInCache = null;
 		while (iterateFiles.hasNext()) {
@@ -127,11 +125,10 @@ public abstract class BrowserManager {
 
 	public void manage(Architecture arch, String version) {
 		try {
-			boolean getLatest = version == null
-					|| version.isEmpty()
+			boolean getLatest = version == null || version.isEmpty()
 					|| version.equalsIgnoreCase(DriverVersion.LATEST.name())
-					|| version.equalsIgnoreCase(DriverVersion.NOT_SPECIFIED
-							.name());
+					|| version.equalsIgnoreCase(
+							DriverVersion.NOT_SPECIFIED.name());
 
 			String driverInCache = null;
 			if (!getLatest) {
@@ -145,61 +142,61 @@ public abstract class BrowserManager {
 
 			} else {
 
-				getDriverName();
-
 				// Get the complete list of URLs
-				List<URL> urls = getDrivers(version);
-				List<URL> candidateUrls;
-				boolean continueSearchingVersion;
+				List<URL> urls = getDrivers();
+				if (!urls.isEmpty()) {
+					List<URL> candidateUrls;
+					boolean continueSearchingVersion;
 
-				do {
-					// Get the latest or concrete version
-					if (getLatest) {
-						candidateUrls = getLatest(urls, getDriverName());
-					} else {
-						candidateUrls = getVersion(urls, getDriverName(),
-								version);
-					}
-					if (versionToDownload == null) {
-						break;
-					}
-
-					if (this.getClass().equals(EdgeDriverManager.class)) {
-						// Microsoft Edge binaries are different
-						continueSearchingVersion = false;
-					} else {
-						// Filter by architecture and OS
-						candidateUrls = filter(candidateUrls, arch);
-
-						// Find out if driver version has been found or not
-						continueSearchingVersion = candidateUrls.isEmpty()
-								&& getLatest;
-						if (continueSearchingVersion) {
-							log.debug("No valid binary found for {} {}",
-									getDriverName(), versionToDownload);
-							urls = removeFromList(urls, versionToDownload);
-							versionToDownload = null;
+					do {
+						// Get the latest or concrete version
+						if (getLatest) {
+							candidateUrls = getLatest(urls, getDriverName());
+						} else {
+							candidateUrls = getVersion(urls, getDriverName(),
+									version);
 						}
+						if (versionToDownload == null) {
+							break;
+						}
+
+						if (this.getClass().equals(EdgeDriverManager.class)) {
+							// Microsoft Edge binaries are different
+							continueSearchingVersion = false;
+						} else {
+							// Filter by architecture and OS
+							candidateUrls = filter(candidateUrls, arch);
+
+							// Find out if driver version has been found or not
+							continueSearchingVersion = candidateUrls.isEmpty()
+									&& getLatest;
+							if (continueSearchingVersion) {
+								log.debug("No valid binary found for {} {}",
+										getDriverName(), versionToDownload);
+								urls = removeFromList(urls, versionToDownload);
+								versionToDownload = null;
+							}
+						}
+
+					} while (continueSearchingVersion);
+
+					if (candidateUrls.isEmpty()) {
+						String versionStr = getLatest ? "(latest version)"
+								: version;
+						String errMessage = getDriverName() + " " + versionStr
+								+ " for " + MY_OS_NAME + arch.toString()
+								+ " not found in " + getDriverUrl();
+						log.error(errMessage);
+						throw new RuntimeException(errMessage);
 					}
 
-				} while (continueSearchingVersion);
-
-				if (candidateUrls.isEmpty()) {
-					String versionStr = getLatest ? "(latest version)"
-							: version;
-					String errMessage = getDriverName() + " " + versionStr
-							+ " for " + MY_OS_NAME + arch.toString()
-							+ " not found in " + getDriverUrl();
-					log.error(errMessage);
-					throw new RuntimeException(errMessage);
-				}
-
-				for (URL url : candidateUrls) {
-					String export = candidateUrls.contains(url) ? getExportParameter()
-							: null;
-					System.setProperty(VERSION_PROPERTY, versionToDownload);
-					Downloader.download(url, versionToDownload, export,
-							getDriverName());
+					for (URL url : candidateUrls) {
+						String export = candidateUrls.contains(url)
+								? getExportParameter() : null;
+						System.setProperty(VERSION_PROPERTY, versionToDownload);
+						Downloader.download(url, versionToDownload, export,
+								getDriverName());
+					}
 				}
 			}
 
@@ -300,8 +297,8 @@ public abstract class BrowserManager {
 			i++;
 		}
 		if (i < vals1.length && i < vals2.length) {
-			int diff = Integer.valueOf(vals1[i]).compareTo(
-					Integer.valueOf(vals2[i]));
+			int diff = Integer.valueOf(vals1[i])
+					.compareTo(Integer.valueOf(vals2[i]));
 			return Integer.signum(diff);
 		} else {
 			return Integer.signum(vals1.length - vals2.length);
@@ -312,8 +309,8 @@ public abstract class BrowserManager {
 			throws Exception {
 		log.info("Reading {} to seek {}", driverUrl, getDriverName());
 
-		BufferedReader reader = new BufferedReader(new InputStreamReader(
-				driverUrl.openStream()));
+		BufferedReader reader = new BufferedReader(
+				new InputStreamReader(driverUrl.openStream()));
 		Document xml = loadXML(reader);
 
 		List<URL> urls = new ArrayList<URL>();
@@ -355,7 +352,8 @@ public abstract class BrowserManager {
 		return os;
 	}
 
-	protected static void exportDriver(String variableName, String variableValue) {
+	protected static void exportDriver(String variableName,
+			String variableValue) {
 		log.info("Exporting {} as {}", variableName, variableValue);
 		System.setProperty(variableName, variableValue);
 	}

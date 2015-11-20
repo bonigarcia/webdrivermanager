@@ -53,10 +53,11 @@ public class Downloader {
 
 		if (!download) {
 			// Check if existing binary is valid
-			Collection<File> listFiles = FileUtils.listFiles(
-					targetFile.getParentFile(), null, true);
+			Collection<File> listFiles = FileUtils
+					.listFiles(targetFile.getParentFile(), null, true);
 			for (File file : listFiles) {
-				if (file.getName().startsWith(driverName) && file.canExecute()) {
+				if (file.getName().startsWith(driverName)
+						&& file.canExecute()) {
 					binary = file;
 					log.debug("Using binary driver previously downloaded {}",
 							binary);
@@ -90,8 +91,8 @@ public class Downloader {
 		Files.move(msi, tmpMsi);
 		log.trace("Temporal msi file: {}", tmpMsi);
 
-		Process process = Runtime.getRuntime().exec(
-				new String[] { "msiexec", "/a", tmpMsi.toString(), "/qb",
+		Process process = Runtime.getRuntime()
+				.exec(new String[] { "msiexec", "/a", tmpMsi.toString(), "/qb",
 						"TARGETDIR=" + msi.getParent() });
 		try {
 			process.waitFor();
@@ -159,8 +160,8 @@ public class Downloader {
 		String zip = url.getFile().substring(url.getFile().lastIndexOf("/"));
 
 		int iFirst = zip.indexOf("_");
-		int iLast = iFirst != zip.lastIndexOf("_") ? zip.lastIndexOf("_") : zip
-				.length();
+		int iLast = iFirst != zip.lastIndexOf("_") ? zip.lastIndexOf("_")
+				: zip.length();
 		String folder = zip.substring(0, iLast).replace(".zip", "")
 				.replace(".msi", "").replace("_", File.separator);
 
