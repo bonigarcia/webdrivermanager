@@ -2,6 +2,7 @@ webdrivermanager (1.3.1)
 
   + Check that existing binaries are valid before exporting variable
   + Change log level of important messages to INFO
+  + Retries when seeking remote URL to find out latest version of binaries
 
  -- Boni Garcia <boni.gg@gmail.com>  Sat, 07 Nov 2015 18:03:00 +0200
 

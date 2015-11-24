@@ -309,21 +309,37 @@ public abstract class BrowserManager {
 			throws Exception {
 		log.info("Reading {} to seek {}", driverUrl, getDriverName());
 
-		BufferedReader reader = new BufferedReader(
-				new InputStreamReader(driverUrl.openStream()));
-		Document xml = loadXML(reader);
-
 		List<URL> urls = new ArrayList<URL>();
-		XPath xPath = XPathFactory.newInstance().newXPath();
-		NodeList nodes = (NodeList) xPath.evaluate("//Contents/Key",
-				xml.getDocumentElement(), XPathConstants.NODESET);
 
-		for (int i = 0; i < nodes.getLength(); ++i) {
-			Element e = (Element) nodes.item(i);
-			String version = e.getChildNodes().item(0).getNodeValue();
-			urls.add(new URL(driverUrl + version));
-		}
-		reader.close();
+		int retries = 1;
+		int maxRetries = WdmConfig.getInt("wdm.seekErrorRetries");
+		do {
+			try {
+				BufferedReader reader = new BufferedReader(
+						new InputStreamReader(driverUrl.openStream()));
+				Document xml = loadXML(reader);
+
+				XPath xPath = XPathFactory.newInstance().newXPath();
+				NodeList nodes = (NodeList) xPath.evaluate("//Contents/Key",
+						xml.getDocumentElement(), XPathConstants.NODESET);
+
+				for (int i = 0; i < nodes.getLength(); ++i) {
+					Element e = (Element) nodes.item(i);
+					String version = e.getChildNodes().item(0).getNodeValue();
+					urls.add(new URL(driverUrl + version));
+				}
+				reader.close();
+				break;
+			} catch (Throwable e) {
+				log.warn("[{}/{}] Exception reading {} to seek {}: {} {}",
+						retries, maxRetries, driverUrl, getDriverName(),
+						e.getClass().getName(), e.getMessage(), e);
+				retries++;
+				if (retries > maxRetries) {
+					throw e;
+				}
+			}
+		} while (true);
 
 		return urls;
 	}
