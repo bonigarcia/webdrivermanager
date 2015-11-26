@@ -20,7 +20,7 @@ In order to use WebDriverManager in a Maven project, first add the following dep
 	<dependency>
 		<groupId>io.github.bonigarcia</groupId>
 		<artifactId>webdrivermanager</artifactId>
-		<version>1.3.0</version>
+		<version>1.3.1</version>
 	</dependency>
 
 Then you can let WebDriverManager to do manage WebDriver binaries for your application/test. Take a look to this JUnit example which uses Chrome with Selenium WebDriver:
