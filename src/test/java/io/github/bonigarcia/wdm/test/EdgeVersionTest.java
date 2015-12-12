@@ -14,12 +14,11 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import io.github.bonigarcia.wdm.EdgeDriverManager;
-import io.github.bonigarcia.wdm.InternetExplorerDriverManager;
-
 import org.apache.commons.lang3.SystemUtils;
 import org.junit.Assert;
 import org.junit.Test;
+
+import io.github.bonigarcia.wdm.EdgeDriverManager;
 
 /**
  * Test asserting MicrosoftWebDriver Edge versions.
@@ -33,7 +32,7 @@ public class EdgeVersionTest {
 	public void testLatestVersion() throws Exception {
 		if (SystemUtils.IS_OS_WINDOWS) {
 			EdgeDriverManager.getInstance().setup();
-			String driverVersion = InternetExplorerDriverManager.getInstance()
+			String driverVersion = EdgeDriverManager.getInstance()
 					.getDownloadedVersion();
 			Assert.assertNotNull(driverVersion);
 		}
@@ -42,12 +41,13 @@ public class EdgeVersionTest {
 	@Test
 	public void testSpecificVersions() throws Exception {
 		if (SystemUtils.IS_OS_WINDOWS) {
-			String[] specificVersions = { "8D0D08CF-790D-4586-B726-C6469A9ED49C" };
+			String[] specificVersions = {
+					"8D0D08CF-790D-4586-B726-C6469A9ED49C" };
 
 			for (String specificVersion : specificVersions) {
 				EdgeDriverManager.getInstance().setup(specificVersion);
-				String driverVersion = InternetExplorerDriverManager
-						.getInstance().getDownloadedVersion();
+				String driverVersion = EdgeDriverManager.getInstance()
+						.getDownloadedVersion();
 
 				Assert.assertEquals(specificVersion, driverVersion);
 			}
