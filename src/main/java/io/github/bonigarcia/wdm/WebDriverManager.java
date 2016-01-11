@@ -23,6 +23,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.opera.OperaDriver;
+import org.openqa.selenium.phantomjs.PhantomJSDriver;
 
 /**
  * Generic manager.
@@ -53,6 +54,9 @@ public class WebDriverManager extends BrowserManager {
 
 			} else if (webDriverClass.equals(EdgeDriver.class)) {
 				browserManagerClass = EdgeDriverManager.class;
+
+			} else if (webDriverClass.equals(PhantomJSDriver.class)) {
+				browserManagerClass = PhantomJsDriverManager.class;
 
 			} else {
 				browserManagerClass = VoidDriverManager.class;

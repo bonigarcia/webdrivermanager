@@ -225,7 +225,7 @@ public abstract class BrowserManager {
 				getDriverName(), versionToDownload, MY_OS_NAME, out);
 
 		// Round #2 : Filter by architecture (32/64 bits)
-		if (out.size() > 1) {
+		if (out.size() > 1 && arch != null) {
 			for (URL url : list) {
 				if (!url.getFile().contains(arch.toString())) {
 					out.remove(url);
@@ -269,9 +269,20 @@ public abstract class BrowserManager {
 		Collections.reverse(list);
 		for (URL url : list) {
 			if (url.getFile().contains(match)) {
-				String currentVersion = url.getFile().substring(
+				String currentVersion;
+				if (getDriverName().equals("phantomjs")) {
+					String file = url.getFile();
+					file = url.getFile().substring(file.lastIndexOf(SEPARATOR), file.length());
+					final int matchIndex = file.indexOf(match);
+					currentVersion = file.substring(matchIndex + match.length() + 1, file.length());
+					final int dashIndex = currentVersion.indexOf('-');
+					currentVersion = currentVersion.substring(0, dashIndex);
+				}
+				else {
+					currentVersion = url.getFile().substring(
 						url.getFile().indexOf(SEPARATOR) + 1,
 						url.getFile().lastIndexOf(SEPARATOR));
+				}
 				if (versionToDownload == null) {
 					versionToDownload = currentVersion;
 				}
