@@ -13,6 +13,7 @@
 
 		<junit.version>4.12</junit.version>
 		<selenium-java.version>2.48.2</selenium-java.version>
+		<phantomjsdriver.version>1.2.1</phantomjsdriver.version>
 
 		<maven-release-plugin.version>2.5.1</maven-release-plugin.version>
 		<maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
@@ -103,6 +104,16 @@
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-java</artifactId>
 			<version>${selenium-java.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-api</artifactId>
+			<version>${selenium-java.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.codeborne</groupId>
+			<artifactId>phantomjsdriver</artifactId>
+			<version>${phantomjsdriver.version}</version>
 		</dependency>
 	</dependencies>
 

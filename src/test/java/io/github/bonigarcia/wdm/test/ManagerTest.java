@@ -33,7 +33,7 @@ public class ManagerTest {
 
 	public void browseWikipedia() {
 		WebDriverWait wait = new WebDriverWait(driver, TIMEOUT);
-		driver.get("http://en.wikipedia.org/wiki/Main_Page");
+		driver.get("https://en.wikipedia.org/wiki/Main_Page");
 
 		By searchInput = By.id("searchInput");
 		wait.until(ExpectedConditions.presenceOfElementLocated(searchInput));
