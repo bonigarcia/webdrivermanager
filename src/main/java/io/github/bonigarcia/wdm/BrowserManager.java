@@ -272,16 +272,17 @@ public abstract class BrowserManager {
 				String currentVersion;
 				if (getDriverName().equals("phantomjs")) {
 					String file = url.getFile();
-					file = url.getFile().substring(file.lastIndexOf(SEPARATOR), file.length());
+					file = url.getFile().substring(file.lastIndexOf(SEPARATOR),
+							file.length());
 					final int matchIndex = file.indexOf(match);
-					currentVersion = file.substring(matchIndex + match.length() + 1, file.length());
+					currentVersion = file.substring(
+							matchIndex + match.length() + 1, file.length());
 					final int dashIndex = currentVersion.indexOf('-');
 					currentVersion = currentVersion.substring(0, dashIndex);
-				}
-				else {
+				} else {
 					currentVersion = url.getFile().substring(
-						url.getFile().indexOf(SEPARATOR) + 1,
-						url.getFile().lastIndexOf(SEPARATOR));
+							url.getFile().indexOf(SEPARATOR) + 1,
+							url.getFile().lastIndexOf(SEPARATOR));
 				}
 				if (versionToDownload == null) {
 					versionToDownload = currentVersion;

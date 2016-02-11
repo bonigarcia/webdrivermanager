@@ -25,6 +25,10 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import org.apache.commons.io.FileUtils;
+import org.rauschig.jarchivelib.ArchiveFormat;
+import org.rauschig.jarchivelib.Archiver;
+import org.rauschig.jarchivelib.ArchiverFactory;
+import org.rauschig.jarchivelib.CompressionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -75,7 +79,7 @@ public class Downloader {
 			if (export.contains("edge")) {
 				binary = extractMsi(targetFile);
 			} else {
-				binary = unZip(targetFile);
+				binary = extract(targetFile);
 			}
 			targetFile.delete();
 		}
@@ -109,50 +113,72 @@ public class Downloader {
 		return listFiles.iterator().next();
 	}
 
-	public static final File unZip(File folder) throws IOException {
-		ZipFile zipFolder = new ZipFile(folder);
-		Enumeration<?> enu = zipFolder.entries();
+	public static final File extract(File compressedFile) throws IOException {
+		log.trace("Compressed file {}", compressedFile);
+
 		File file = null;
+		if (compressedFile.getName().toLowerCase().endsWith("tar.bz2")) {
+			file = unBZip2(compressedFile);
+		} else {
 
-		while (enu.hasMoreElements()) {
-			ZipEntry zipEntry = (ZipEntry) enu.nextElement();
+			ZipFile zipFolder = new ZipFile(compressedFile);
+			Enumeration<?> enu = zipFolder.entries();
 
-			String name = zipEntry.getName();
-			long size = zipEntry.getSize();
-			long compressedSize = zipEntry.getCompressedSize();
-			log.trace("Unzipping {} (size: {} KB, compressed size: {} KB)",
-					name, size, compressedSize);
+			while (enu.hasMoreElements()) {
+				ZipEntry zipEntry = (ZipEntry) enu.nextElement();
 
-			file = new File(folder.getParentFile() + File.separator + name);
-			if (!file.exists() || WdmConfig.getBoolean("wdm.override")) {
-				if (name.endsWith("/")) {
-					file.mkdirs();
-					continue;
+				String name = zipEntry.getName();
+				long size = zipEntry.getSize();
+				long compressedSize = zipEntry.getCompressedSize();
+				log.trace("Unzipping {} (size: {} KB, compressed size: {} KB)",
+						name, size, compressedSize);
+
+				file = new File(
+						compressedFile.getParentFile() + File.separator + name);
+				if (!file.exists() || WdmConfig.getBoolean("wdm.override")) {
+					if (name.endsWith("/")) {
+						file.mkdirs();
+						continue;
+					}
+
+					File parent = file.getParentFile();
+					if (parent != null) {
+						parent.mkdirs();
+					}
+
+					InputStream is = zipFolder.getInputStream(zipEntry);
+					FileOutputStream fos = new FileOutputStream(file);
+					byte[] bytes = new byte[1024];
+					int length;
+					while ((length = is.read(bytes)) >= 0) {
+						fos.write(bytes, 0, length);
+					}
+					is.close();
+					fos.close();
+					file.setExecutable(true);
+				} else {
+					log.debug(file + " already exists");
 				}
 
-				File parent = file.getParentFile();
-				if (parent != null) {
-					parent.mkdirs();
-				}
-
-				InputStream is = zipFolder.getInputStream(zipEntry);
-				FileOutputStream fos = new FileOutputStream(file);
-				byte[] bytes = new byte[1024];
-				int length;
-				while ((length = is.read(bytes)) >= 0) {
-					fos.write(bytes, 0, length);
-				}
-				is.close();
-				fos.close();
-				file.setExecutable(true);
-			} else {
-				log.debug(file + " already exists");
 			}
-
+			zipFolder.close();
 		}
-		zipFolder.close();
 
+		log.trace("Resulting binary file {}", file.getAbsoluteFile());
 		return file.getAbsoluteFile();
+	}
+
+	// TODO
+	public static File unBZip2(File archive) throws IOException {
+		Archiver archiver = ArchiverFactory.createArchiver(ArchiveFormat.TAR,
+				CompressionType.BZIP2);
+		archiver.extract(archive, archive.getParentFile());
+		log.trace("Unbzip2 {}", archive);
+
+		String fileNoExtension = archive.getName().replace(".tar.bz2", "");
+		return new File(archive.getParentFile().getAbsolutePath()
+				+ File.separator + fileNoExtension + File.separator + "bin"
+				+ File.separator + "phantomjs");
 	}
 
 	private static final String getTarget(String version, URL url)
@@ -176,6 +202,18 @@ public class Downloader {
 					System.getProperty("user.home"));
 		}
 		return targetPath;
+	}
+
+	public static void main(String[] args) throws Exception {
+		File archive = new File(
+				"/home/boni/.m2/repository/webdriver/phantomjs-2.1.1-linux-x86/64.tar.bz2/2.1.1/phantomjs-2.1.1-linux-x86_64.tar.bz2");
+		File destination = new File(
+				"/home/boni/.m2/repository/webdriver/phantomjs-2.1.1-linux-x86/64.tar.bz2/2.1.1");
+
+		Archiver archiver = ArchiverFactory.createArchiver(ArchiveFormat.TAR,
+				CompressionType.BZIP2);
+		archiver.extract(archive, destination);
+
 	}
 
 }
