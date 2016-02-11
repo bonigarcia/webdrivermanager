@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015 Boni Garcia (http://bonigarcia.github.io/)
+ * (C) Copyright 2016 Boni Garcia (http://bonigarcia.github.io/)
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser General Public License
@@ -14,9 +14,6 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import io.github.bonigarcia.wdm.Architecture;
-import io.github.bonigarcia.wdm.PhantomJsDriverManager;
-
 import java.nio.file.Paths;
 
 import org.junit.After;
@@ -27,29 +24,32 @@ import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
+import io.github.bonigarcia.wdm.PhantomJsDriverManager;
+
 /**
  * Test with Google Chrome browser.
  *
  * @author Boni Garcia (boni.gg@gmail.com)
- * @since 1.0.0
+ * @since 1.3.2
  */
 public class PhantomJsTest extends ManagerTest {
 
 	@BeforeClass
 	public static void setupClass() {
-		PhantomJsDriverManager.getInstance().setup((Architecture) null);
+		PhantomJsDriverManager.getInstance().setup();
 	}
 
 	@Before
 	public void setupTest() {
 		PhantomJSDriverService service = new PhantomJSDriverService.Builder()
-			.usingAnyFreePort()
-			.usingPhantomJSExecutable(
-				Paths.get(System.getProperty("phantomjs.binary.path")).toFile())
-			.usingCommandLineArguments(new String[]{
-				"--ignore-ssl-errors=true", "--ssl-protocol=tlsv1", "--web-security=false",
-				"--webdriver-loglevel=INFO"})
-			.build();
+				.usingAnyFreePort()
+				.usingPhantomJSExecutable(
+						Paths.get(System.getProperty("phantomjs.binary.path"))
+								.toFile())
+				.usingCommandLineArguments(new String[] {
+						"--ignore-ssl-errors=true", "--ssl-protocol=tlsv1",
+						"--web-security=false", "--webdriver-loglevel=INFO" })
+				.build();
 		DesiredCapabilities desireCaps = new DesiredCapabilities();
 		driver = new PhantomJSDriver(service, desireCaps);
 	}
