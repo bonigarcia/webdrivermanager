@@ -40,7 +40,7 @@ public class VoidDriverManager extends BrowserManager {
 	}
 
 	@Override
-	protected List<URL> getDrivers() throws Exception {
+	public List<URL> getDrivers() throws Exception {
 		return Collections.emptyList();
 	}
 

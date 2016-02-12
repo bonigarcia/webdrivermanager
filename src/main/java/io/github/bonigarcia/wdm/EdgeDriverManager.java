@@ -47,7 +47,7 @@ public class EdgeDriverManager extends BrowserManager {
 	}
 
 	@Override
-	protected List<URL> getDrivers() throws Exception {
+	public List<URL> getDrivers() throws Exception {
 		String edgeDriverUrl = WdmConfig.getString("wdm.edgeDriverUrl");
 		log.debug("Reading {} to find out the latest version of Edge driver",
 				edgeDriverUrl);

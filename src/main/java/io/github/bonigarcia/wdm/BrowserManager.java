@@ -57,7 +57,7 @@ public abstract class BrowserManager {
 	private static final String MY_OS_NAME = getOsName();
 	private static final String VERSION_PROPERTY = "wdm.driverVersion";
 
-	protected abstract List<URL> getDrivers() throws Exception;
+	public abstract List<URL> getDrivers() throws Exception;
 
 	protected abstract String getExportParameter();
 

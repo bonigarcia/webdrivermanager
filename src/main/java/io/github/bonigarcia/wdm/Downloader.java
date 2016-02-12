@@ -79,7 +79,7 @@ public class Downloader {
 			if (export.contains("edge")) {
 				binary = extractMsi(targetFile);
 			} else {
-				binary = extract(targetFile);
+				binary = extract(targetFile, export);
 			}
 			targetFile.delete();
 		}
@@ -113,12 +113,13 @@ public class Downloader {
 		return listFiles.iterator().next();
 	}
 
-	public static final File extract(File compressedFile) throws IOException {
+	public static final File extract(File compressedFile, String export)
+			throws IOException {
 		log.trace("Compressed file {}", compressedFile);
 
 		File file = null;
 		if (compressedFile.getName().toLowerCase().endsWith("tar.bz2")) {
-			file = unBZip2(compressedFile);
+			file = unBZip2(compressedFile, export);
 		} else {
 
 			ZipFile zipFolder = new ZipFile(compressedFile);
@@ -168,17 +169,32 @@ public class Downloader {
 		return file.getAbsoluteFile();
 	}
 
-	// TODO
-	public static File unBZip2(File archive) throws IOException {
+	public static File unBZip2(File archive, String export) throws IOException {
 		Archiver archiver = ArchiverFactory.createArchiver(ArchiveFormat.TAR,
 				CompressionType.BZIP2);
 		archiver.extract(archive, archive.getParentFile());
 		log.trace("Unbzip2 {}", archive);
+		File target;
 
-		String fileNoExtension = archive.getName().replace(".tar.bz2", "");
-		return new File(archive.getParentFile().getAbsolutePath()
-				+ File.separator + fileNoExtension + File.separator + "bin"
-				+ File.separator + "phantomjs");
+		String phantomjsName = "phantomjs";
+		if (export.contains(phantomjsName)) {
+			String fileNoExtension = archive.getName().replace(".tar.bz2", "");
+			File phantomjs = new File(archive.getParentFile().getAbsolutePath()
+					+ File.separator + fileNoExtension + File.separator + "bin"
+					+ File.separator + phantomjsName);
+			target = new File(archive.getParentFile().getAbsolutePath()
+					+ File.separator + phantomjsName);
+			phantomjs.renameTo(target);
+
+			File delete = new File(archive.getParentFile().getAbsolutePath()
+					+ File.separator + fileNoExtension);
+			log.trace("Folder to be deleted: {}", delete);
+			FileUtils.deleteDirectory(delete);
+		} else {
+			target = archive.getParentFile().listFiles()[0];
+		}
+
+		return target;
 	}
 
 	private static final String getTarget(String version, URL url)
@@ -186,9 +202,11 @@ public class Downloader {
 		String zip = url.getFile().substring(url.getFile().lastIndexOf("/"));
 
 		int iFirst = zip.indexOf("_");
+		int iSecond = zip.indexOf("-");
 		int iLast = iFirst != zip.lastIndexOf("_") ? zip.lastIndexOf("_")
-				: zip.length();
+				: iSecond != -1 ? iSecond : zip.length();
 		String folder = zip.substring(0, iLast).replace(".zip", "")
+				.replace(".tar.bz2", "").replace(".tar.gz", "")
 				.replace(".msi", "").replace("_", File.separator);
 
 		return getTargetPath() + folder + File.separator + version
@@ -202,18 +220,6 @@ public class Downloader {
 					System.getProperty("user.home"));
 		}
 		return targetPath;
-	}
-
-	public static void main(String[] args) throws Exception {
-		File archive = new File(
-				"/home/boni/.m2/repository/webdriver/phantomjs-2.1.1-linux-x86/64.tar.bz2/2.1.1/phantomjs-2.1.1-linux-x86_64.tar.bz2");
-		File destination = new File(
-				"/home/boni/.m2/repository/webdriver/phantomjs-2.1.1-linux-x86/64.tar.bz2/2.1.1");
-
-		Archiver archiver = ArchiverFactory.createArchiver(ArchiveFormat.TAR,
-				CompressionType.BZIP2);
-		archiver.extract(archive, destination);
-
 	}
 
 }

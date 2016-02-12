@@ -47,7 +47,7 @@ public class OperaDriverManager extends BrowserManager {
 	}
 
 	@Override
-	protected List<URL> getDrivers() throws IOException {
+	public List<URL> getDrivers() throws IOException {
 		URL driverUrl = getDriverUrl();
 		String driverVersion = getDriverVersion();
 

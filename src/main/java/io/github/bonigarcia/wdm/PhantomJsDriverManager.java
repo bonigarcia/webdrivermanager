@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015 Boni Garcia (http://bonigarcia.github.io/)
+ * (C) Copyright 2016 Boni Garcia (http://bonigarcia.github.io/)
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser General Public License
@@ -28,10 +28,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 
 /**
- * Manager for Chrome.
+ * Manager for PhantomJs.
  *
  * @author Boni Garcia (boni.gg@gmail.com)
- * @since 1.0.0
+ * @since 1.3.2
  */
 public class PhantomJsDriverManager extends BrowserManager {
 
@@ -48,33 +48,34 @@ public class PhantomJsDriverManager extends BrowserManager {
 	}
 
 	@Override
-	protected List<URL> getDrivers() throws Exception {
-		String phantomjsDriverUrl = WdmConfig.getString("wdm.phantomjsDriverUrl");
-		log.debug("Reading {} to find out the latest version of PhantomJS driver",
-			phantomjsDriverUrl);
+	public List<URL> getDrivers() throws Exception {
+		String phantomjsDriverUrl = WdmConfig
+				.getString("wdm.phantomjsDriverUrl");
+		log.debug(
+				"Reading {} to find out the latest version of PhantomJS driver",
+				phantomjsDriverUrl);
 
 		// Switch off HtmlUnit logging
 		LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log",
-			"org.apache.commons.logging.impl.NoOpLog");
+				"org.apache.commons.logging.impl.NoOpLog");
 		java.util.logging.Logger.getLogger("com.gargoylesoftware.htmlunit")
-			.setLevel(Level.OFF);
+				.setLevel(Level.OFF);
 		java.util.logging.Logger.getLogger("org.apache.commons.httpclient")
-			.setLevel(Level.OFF);
+				.setLevel(Level.OFF);
 
-		// Using HtmlUnitDriver to read MSI package URL
+		// Using HtmlUnitDriver to read package URL
 		WebDriver driver = new HtmlUnitDriver();
 		driver.manage().timeouts().implicitlyWait(
-			WdmConfig.getInt("wdm.timeout"), TimeUnit.SECONDS);
+				WdmConfig.getInt("wdm.timeout"), TimeUnit.SECONDS);
 		driver.get(phantomjsDriverUrl);
-		WebElement downloadsTable = driver.findElement(By.id("available-downloads"));
-		List<WebElement> links = downloadsTable.findElements(
-			By.xpath(
-				"//table[@id='uploaded-files']/tbody/tr[@class='iterable-item']/td[@class='name']"
-					+ "/a"));
+		WebElement downloadsTable = driver
+				.findElement(By.id("available-downloads"));
+		List<WebElement> links = downloadsTable.findElements(By
+				.xpath("//table[@id='uploaded-files']/tbody/tr[@class='iterable-item']/td[@class='name']"
+						+ "/a"));
 		List<URL> urlList = new ArrayList<>(links.size());
 		for (WebElement element : links) {
 			String href = element.getAttribute("href");
-			//File file = new File(href);
 			urlList.add(new URL(href));
 		}
 		return urlList;

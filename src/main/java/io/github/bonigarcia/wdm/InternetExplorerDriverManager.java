@@ -39,7 +39,7 @@ public class InternetExplorerDriverManager extends BrowserManager {
 	}
 
 	@Override
-	protected List<URL> getDrivers() throws Exception {
+	public List<URL> getDrivers() throws Exception {
 		return getDriversFromXml(
 				WdmConfig.getUrl("wdm.internetExplorerDriverUrl"),
 				getDriverName());
