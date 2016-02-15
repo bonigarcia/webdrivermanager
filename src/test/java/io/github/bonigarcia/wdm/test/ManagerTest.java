@@ -44,6 +44,6 @@ public class ManagerTest {
 		driver.findElement(searchButton).click();
 
 		wait.until(ExpectedConditions.textToBePresentInElementLocated(
-				By.tagName("body"), "Computer software or simply software"));
+				By.tagName("body"), "Computer software"));
 	}
 }
