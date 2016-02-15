@@ -14,9 +14,8 @@
 		<jarchivelib>0.7.1</jarchivelib>
 
 		<junit.version>4.12</junit.version>
-		<selenium-java.version>2.48.2</selenium-java.version>
+		<selenium-java.version>2.52.0</selenium-java.version>
 		<phantomjsdriver.version>1.2.1</phantomjsdriver.version>
-
 		<maven-release-plugin.version>2.5.1</maven-release-plugin.version>
 		<maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
 
