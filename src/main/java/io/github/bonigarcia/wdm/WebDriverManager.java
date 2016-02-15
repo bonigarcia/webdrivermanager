@@ -58,6 +58,9 @@ public class WebDriverManager extends BrowserManager {
 			} else if (webDriverClass.equals(PhantomJSDriver.class)) {
 				browserManagerClass = PhantomJsDriverManager.class;
 
+			} else if (webDriverClass.equals(MarionetteDriverManager.class)) {
+				browserManagerClass = MarionetteDriverManager.class;
+
 			} else {
 				browserManagerClass = VoidDriverManager.class;
 			}
