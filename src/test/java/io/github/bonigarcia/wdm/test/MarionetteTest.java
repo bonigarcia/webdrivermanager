@@ -24,7 +24,7 @@ import org.openqa.selenium.firefox.MarionetteDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 /**
- * Test with Opera browser.
+ * Test with Marionette browser.
  *
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.3.2
@@ -40,7 +40,7 @@ public class MarionetteTest extends ManagerTest{
     public void setupTest() {
         DesiredCapabilities capabilities = DesiredCapabilities.firefox();
         capabilities.setCapability("marionette", true);
-        // This capability set need for dev\nightly(version 45+)firefox because this driver is target on it
+        // This capability set need for beta\dev\nightly(version 45+) firefox because this driver is target on it
         if (SystemUtils.IS_OS_LINUX) {
             capabilities.setCapability("binary", "/usr/bin/firefox");
         } else if (SystemUtils.IS_OS_WINDOWS) {

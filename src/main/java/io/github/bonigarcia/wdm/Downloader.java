@@ -15,15 +15,18 @@
 package io.github.bonigarcia.wdm;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import com.google.common.io.Files;
 import org.apache.commons.io.FileUtils;
 import org.rauschig.jarchivelib.ArchiveFormat;
 import org.rauschig.jarchivelib.Archiver;
@@ -31,8 +34,6 @@ import org.rauschig.jarchivelib.ArchiverFactory;
 import org.rauschig.jarchivelib.CompressionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.google.common.io.Files;
 
 /**
  * Downloader class.
@@ -120,6 +121,8 @@ public class Downloader {
 		File file = null;
 		if (compressedFile.getName().toLowerCase().endsWith("tar.bz2")) {
 			file = unBZip2(compressedFile, export);
+		} else if (compressedFile.getName().toLowerCase().endsWith("gz")) {
+			file = unGzip(compressedFile);
 		} else {
 
 			ZipFile zipFolder = new ZipFile(compressedFile);
@@ -167,6 +170,25 @@ public class Downloader {
 
 		log.trace("Resulting binary file {}", file.getAbsoluteFile());
 		return file.getAbsoluteFile();
+	}
+
+	public static File unGzip(File archive) throws IOException {
+
+		log.trace("UnGzip {}", archive);
+		File target = new File(archive.getParentFile() + File.separator + "wires");
+
+		try (GZIPInputStream in = new GZIPInputStream(new FileInputStream(archive))) {
+			try (FileOutputStream out = new FileOutputStream(target)) {
+				for (int c = in.read(); c != -1; c = in.read()) {
+					out.write(c);
+				}
+			}
+		}
+
+		if (!target.getName().toLowerCase().contains(".exe") && target.exists())
+			target.setExecutable(true);
+
+		return target;
 	}
 
 	public static File unBZip2(File archive, String export) throws IOException {

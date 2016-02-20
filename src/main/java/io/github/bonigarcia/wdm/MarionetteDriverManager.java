@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Manager for Opera.
+ * Manager for Marionette.
  *
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.3.2
