@@ -253,8 +253,8 @@ public abstract class BrowserManager {
 		List<URL> out = new ArrayList<URL>();
 		Collections.reverse(list);
 		for (URL url : list) {
-			if (url.getFile().contains(match)
-					&& url.getFile().contains(version)) {
+			if (url.getFile().contains(match) && url.getFile().contains(version)
+					&& !url.getFile().contains("-symbols")) {
 				out.add(url);
 			}
 		}
