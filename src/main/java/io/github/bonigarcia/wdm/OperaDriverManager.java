@@ -60,7 +60,7 @@ public class OperaDriverManager extends BrowserManager {
 		GitHubApi release;
 		if (driverVersion == null || driverVersion.isEmpty() || driverVersion
 				.equalsIgnoreCase(DriverVersion.LATEST.name())) {
-			log.debug("Connecting to {} to check lastest OperaDriver release",
+			log.debug("Connecting to {} to check latest OperaDriver release",
 					driverUrl);
 			driverVersion = releaseArray[0].getName();
 			log.debug("Latest driver version: {}", driverVersion);
@@ -74,7 +74,7 @@ public class OperaDriverManager extends BrowserManager {
 		}
 
 		List<LinkedTreeMap<String, Object>> assets = release.getAssets();
-		List<URL> urls = new ArrayList<URL>();
+		List<URL> urls = new ArrayList<>();
 		for (LinkedTreeMap<String, Object> asset : assets) {
 			urls.add(new URL(asset.get("browser_download_url").toString()));
 		}

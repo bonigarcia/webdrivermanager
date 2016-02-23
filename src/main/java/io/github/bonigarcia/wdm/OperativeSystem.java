@@ -21,5 +21,5 @@ package io.github.bonigarcia.wdm;
  * @since 1.0.0
  */
 public enum OperativeSystem {
-	win, linux, mac;
+	win, linux, mac
 }
