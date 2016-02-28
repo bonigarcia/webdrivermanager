@@ -14,6 +14,15 @@
  */
 package io.github.bonigarcia.wdm;
 
+import com.google.common.io.Files;
+import org.apache.commons.io.FileUtils;
+import org.rauschig.jarchivelib.ArchiveFormat;
+import org.rauschig.jarchivelib.Archiver;
+import org.rauschig.jarchivelib.ArchiverFactory;
+import org.rauschig.jarchivelib.CompressionType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -25,15 +34,6 @@ import java.util.Enumeration;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
-
-import com.google.common.io.Files;
-import org.apache.commons.io.FileUtils;
-import org.rauschig.jarchivelib.ArchiveFormat;
-import org.rauschig.jarchivelib.Archiver;
-import org.rauschig.jarchivelib.ArchiverFactory;
-import org.rauschig.jarchivelib.CompressionType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Downloader class.
@@ -49,12 +49,10 @@ public class Downloader {
 
 	public static final synchronized void download(URL url, String version,
 			String export, String driverName) throws IOException {
-		File targetFile = new File(getTarget(version, url));
+		File targetFile = new File(getTargetBinaryName(version, url));
 		File binary = null;
 
-		// Check if binary exists
-		boolean download = !targetFile.getParentFile().exists()
-				|| WdmConfig.getBoolean("wdm.override");
+		boolean download = isDownloadBinaryAgain(version, url, driverName);
 
 		if (!download) {
 			// Check if existing binary is valid
@@ -97,8 +95,8 @@ public class Downloader {
 		log.trace("Temporal msi file: {}", tmpMsi);
 
 		Process process = Runtime.getRuntime()
-				.exec(new String[] { "msiexec", "/a", tmpMsi.toString(), "/qb",
-						"TARGETDIR=" + msi.getParent() });
+				.exec(new String[]{"msiexec", "/a", tmpMsi.toString(), "/qb",
+						"TARGETDIR=" + msi.getParent()});
 		try {
 			process.waitFor();
 		} catch (InterruptedException e) {
@@ -219,6 +217,22 @@ public class Downloader {
 		return target;
 	}
 
+	private static final boolean isDownloadBinaryAgain(String version, URL url, String driverName) throws IOException {
+		String downloadedBinaryExpectedPath = getTargetArchiveName(version, url, driverName);
+		return !new File(downloadedBinaryExpectedPath).exists()|| WdmConfig.getBoolean("wdm.override");
+	}
+
+	private static final String getTargetArchiveName(String version, URL url, String driverName)
+			throws IOException {
+		return getTarget(version, url) + driverName;
+	}
+
+	private static final String getTargetBinaryName(String version, URL url)
+			throws IOException {
+		String zipFileName = url.getFile().substring(url.getFile().lastIndexOf("/"));
+		return getTarget(version, url) + zipFileName;
+	}
+
 	private static final String getTarget(String version, URL url)
 			throws IOException {
 		String zip = url.getFile().substring(url.getFile().lastIndexOf("/"));
@@ -232,7 +246,7 @@ public class Downloader {
 				.replace(".msi", "").replace("_", File.separator);
 
 		return getTargetPath() + folder + File.separator + version
-				+ File.separator + zip;
+				+ File.separator;
 	}
 
 	protected static String getTargetPath() {
