@@ -32,85 +32,85 @@ import java.util.List;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.3.2
  */
-public class MarionetteDriverManager extends BrowserManager{
+public class MarionetteDriverManager extends BrowserManager {
 
-    private static MarionetteDriverManager instance;
+	private static MarionetteDriverManager instance;
 
-    protected MarionetteDriverManager() {
-    }
+	protected MarionetteDriverManager() {
+	}
 
-    public static synchronized MarionetteDriverManager getInstance() {
-        if (instance == null) {
-            instance = new MarionetteDriverManager();
-        }
-        return instance;
-    }
+	public static synchronized MarionetteDriverManager getInstance() {
+		if (instance == null) {
+			instance = new MarionetteDriverManager();
+		}
+		return instance;
+	}
 
-    @Override
-    public List<URL> getDrivers() throws IOException {
-        URL driverUrl = getDriverUrl();
-        String driverVersion = getDriverVersion();
+	@Override
+	public List<URL> getDrivers() throws IOException {
+		URL driverUrl = getDriverUrl();
+		String driverVersion = getDriverVersion();
 
-        BufferedReader reader = new BufferedReader(
-                new InputStreamReader(driverUrl.openStream()));
+		BufferedReader reader = new BufferedReader(
+				new InputStreamReader(driverUrl.openStream()));
 
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        Gson gson = gsonBuilder.create();
-        GitHubApi[] releaseArray = gson.fromJson(reader, GitHubApi[].class);
-        GitHubApi release;
-        if (driverVersion == null || driverVersion.isEmpty() || driverVersion
-                .equalsIgnoreCase(DriverVersion.LATEST.name())) {
-            log.debug("Connecting to {} to check latest MarionetteDriver release",
-                    driverUrl);
-            driverVersion = releaseArray[0].getName();
-            log.debug("Latest driver version: {}", driverVersion);
-            release = releaseArray[0];
-        } else {
-            release = getVersion(releaseArray, driverVersion);
-        }
-        if (release == null) {
-            throw new RuntimeException("Version " + driverVersion
-                    + " is not available for MarionetteDriver");
-        }
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		Gson gson = gsonBuilder.create();
+		GitHubApi[] releaseArray = gson.fromJson(reader, GitHubApi[].class);
+		GitHubApi release;
+		if (driverVersion == null || driverVersion.isEmpty() || driverVersion
+				.equalsIgnoreCase(DriverVersion.LATEST.name())) {
+			log.debug(
+					"Connecting to {} to check latest MarionetteDriver release",
+					driverUrl);
+			driverVersion = releaseArray[0].getName();
+			release = releaseArray[0];
+		} else {
+			release = getVersion(releaseArray, driverVersion);
+		}
+		if (release == null) {
+			throw new RuntimeException("Version " + driverVersion
+					+ " is not available for MarionetteDriver");
+		}
 
-        List<LinkedTreeMap<String, Object>> assets = release.getAssets();
-        List<URL> urls = new ArrayList<>();
-        for (LinkedTreeMap<String, Object> asset : assets) {
-            urls.add(new URL(asset.get("browser_download_url").toString()));
-        }
+		List<LinkedTreeMap<String, Object>> assets = release.getAssets();
+		List<URL> urls = new ArrayList<>();
+		for (LinkedTreeMap<String, Object> asset : assets) {
+			urls.add(new URL(asset.get("browser_download_url").toString()));
+		}
 
-        reader.close();
-        return urls;
-    }
+		reader.close();
+		return urls;
+	}
 
-    private GitHubApi getVersion(GitHubApi[] releaseArray, String version) {
-        GitHubApi out = null;
-        for (GitHubApi release : releaseArray) {
-            if (release.getName().equalsIgnoreCase(version)) {
-                out = release;
-                break;
-            }
-        }
-        return out;
-    }
+	private GitHubApi getVersion(GitHubApi[] releaseArray, String version) {
+		GitHubApi out = null;
+		for (GitHubApi release : releaseArray) {
+			if (release.getName().equalsIgnoreCase(version)) {
+				out = release;
+				break;
+			}
+		}
+		return out;
+	}
 
-    @Override
-    protected String getExportParameter() {
-        return WdmConfig.getString("wdm.marionetteDriverExport");
-    }
+	@Override
+	protected String getExportParameter() {
+		return WdmConfig.getString("wdm.marionetteDriverExport");
+	}
 
-    @Override
-    protected String getDriverVersion() {
-        return WdmConfig.getString("wdm.marionetteDriverVersion");
-    }
+	@Override
+	protected String getDriverVersion() {
+		return WdmConfig.getString("wdm.marionetteDriverVersion");
+	}
 
-    @Override
-    protected String getDriverName() {
-        return "wires";
-    }
+	@Override
+	protected String getDriverName() {
+		return "wires";
+	}
 
-    @Override
-    protected URL getDriverUrl() throws MalformedURLException {
-        return WdmConfig.getUrl("wdm.marionetteDriverUrl");
-    }
+	@Override
+	protected URL getDriverUrl() throws MalformedURLException {
+		return WdmConfig.getUrl("wdm.marionetteDriverUrl");
+	}
 }
