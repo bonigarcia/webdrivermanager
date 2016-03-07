@@ -22,6 +22,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -38,12 +39,8 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 @RunWith(Parameterized.class)
 public class WebDriverTest extends ManagerTest {
 
-	private Class<? extends WebDriver> driverClass;
-
-	public WebDriverTest(Class<? extends WebDriver> driverClass)
-			throws InstantiationException, IllegalAccessException {
-		this.driverClass = driverClass;
-	}
+	@Parameter
+	public Class<? extends WebDriver> driverClass;
 
 	@Parameters(name = "{index}: {0}")
 	public static Collection<Object[]> data() {
@@ -55,7 +52,7 @@ public class WebDriverTest extends ManagerTest {
 	public void setupTest()
 			throws InstantiationException, IllegalAccessException {
 		WebDriverManager.getInstance(driverClass).setup();
-		this.driver = driverClass.newInstance();
+		driver = driverClass.newInstance();
 	}
 
 	@After
@@ -66,7 +63,7 @@ public class WebDriverTest extends ManagerTest {
 	}
 
 	@Test
-	public void testChrome() {
+	public void test() {
 		browseWikipedia();
 	}
 
