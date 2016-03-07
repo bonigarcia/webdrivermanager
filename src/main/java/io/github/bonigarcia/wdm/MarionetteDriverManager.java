@@ -49,7 +49,7 @@ public class MarionetteDriverManager extends BrowserManager {
 	@Override
 	public List<URL> getDrivers() throws IOException {
 		URL driverUrl = getDriverUrl();
-		String driverVersion = getDriverVersion();
+		String driverVersion = versionToDownload;
 
 		BufferedReader reader = new BufferedReader(
 				new InputStreamReader(driverUrl.openStream()));
@@ -58,6 +58,7 @@ public class MarionetteDriverManager extends BrowserManager {
 		Gson gson = gsonBuilder.create();
 		GitHubApi[] releaseArray = gson.fromJson(reader, GitHubApi[].class);
 		GitHubApi release;
+
 		if (driverVersion == null || driverVersion.isEmpty() || driverVersion
 				.equalsIgnoreCase(DriverVersion.LATEST.name())) {
 			log.debug(
@@ -86,7 +87,7 @@ public class MarionetteDriverManager extends BrowserManager {
 	private GitHubApi getVersion(GitHubApi[] releaseArray, String version) {
 		GitHubApi out = null;
 		for (GitHubApi release : releaseArray) {
-			if (release.getName().equalsIgnoreCase(version)) {
+			if (release.getName().contains(version)) {
 				out = release;
 				break;
 			}

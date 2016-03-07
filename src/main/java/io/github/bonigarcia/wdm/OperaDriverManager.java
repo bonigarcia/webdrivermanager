@@ -49,7 +49,7 @@ public class OperaDriverManager extends BrowserManager {
 	@Override
 	public List<URL> getDrivers() throws IOException {
 		URL driverUrl = getDriverUrl();
-		String driverVersion = getDriverVersion();
+		String driverVersion = versionToDownload;
 
 		BufferedReader reader = new BufferedReader(
 				new InputStreamReader(driverUrl.openStream()));

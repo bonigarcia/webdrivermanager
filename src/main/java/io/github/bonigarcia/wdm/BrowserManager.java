@@ -132,6 +132,7 @@ public abstract class BrowserManager {
 
 			String driverInCache = null;
 			if (!getLatest) {
+				versionToDownload = version;
 				driverInCache = existsDriverInCache(Downloader.getTargetPath(),
 						getDriverName(), version);
 			}
@@ -159,6 +160,9 @@ public abstract class BrowserManager {
 						if (versionToDownload == null) {
 							break;
 						}
+
+						log.trace("All URLS: {}", urls);
+						log.trace("Candidate URLS: {}", candidateUrls);
 
 						if (this.getClass().equals(EdgeDriverManager.class)) {
 							// Microsoft Edge binaries are different

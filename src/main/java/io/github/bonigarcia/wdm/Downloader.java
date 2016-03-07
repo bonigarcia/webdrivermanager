@@ -55,6 +55,8 @@ public class Downloader {
 
 		// Check if binary exists
 		boolean download = !targetFile.getParentFile().exists()
+				|| (targetFile.getParentFile().exists()
+						&& targetFile.getParentFile().list().length == 0)
 				|| WdmConfig.getBoolean("wdm.override");
 
 		if (!download) {
