@@ -269,6 +269,7 @@ public abstract class BrowserManager {
 		Collections.reverse(list);
 		for (URL url : list) {
 			if (url.getFile().contains(match)) {
+				log.trace("URL {} match with {}", url, match);
 				String currentVersion;
 				if (getDriverName().equals("phantomjs")) {
 					String file = url.getFile();
@@ -279,6 +280,10 @@ public abstract class BrowserManager {
 							matchIndex + match.length() + 1, file.length());
 					final int dashIndex = currentVersion.indexOf('-');
 					currentVersion = currentVersion.substring(0, dashIndex);
+				} else if (getDriverName().equals("wires")) {
+					currentVersion = url.getFile().substring(
+							url.getFile().indexOf("-") + 1,
+							url.getFile().lastIndexOf("-"));
 				} else {
 					currentVersion = url.getFile().substring(
 							url.getFile().indexOf(SEPARATOR) + 1,
@@ -296,6 +301,7 @@ public abstract class BrowserManager {
 				}
 			}
 		}
+
 		log.info("Latest version of {} is {}", match, versionToDownload);
 		return out;
 	}

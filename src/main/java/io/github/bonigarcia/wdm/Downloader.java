@@ -26,7 +26,6 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import com.google.common.io.Files;
 import org.apache.commons.io.FileUtils;
 import org.rauschig.jarchivelib.ArchiveFormat;
 import org.rauschig.jarchivelib.Archiver;
@@ -34,6 +33,8 @@ import org.rauschig.jarchivelib.ArchiverFactory;
 import org.rauschig.jarchivelib.CompressionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.google.common.io.Files;
 
 /**
  * Downloader class.
@@ -175,9 +176,11 @@ public class Downloader {
 	public static File unGzip(File archive) throws IOException {
 
 		log.trace("UnGzip {}", archive);
-		File target = new File(archive.getParentFile() + File.separator + "wires");
+		File target = new File(
+				archive.getParentFile() + File.separator + "wires");
 
-		try (GZIPInputStream in = new GZIPInputStream(new FileInputStream(archive))) {
+		try (GZIPInputStream in = new GZIPInputStream(
+				new FileInputStream(archive))) {
 			try (FileOutputStream out = new FileOutputStream(target)) {
 				for (int c = in.read(); c != -1; c = in.read()) {
 					out.write(c);
@@ -231,8 +234,12 @@ public class Downloader {
 				.replace(".tar.bz2", "").replace(".tar.gz", "")
 				.replace(".msi", "").replace("_", File.separator);
 
-		return getTargetPath() + folder + File.separator + version
+		String target = getTargetPath() + folder + File.separator + version
 				+ File.separator + zip;
+		log.trace("Target file for URL {} version {} = {}", url, version,
+				target);
+
+		return target;
 	}
 
 	protected static String getTargetPath() {
