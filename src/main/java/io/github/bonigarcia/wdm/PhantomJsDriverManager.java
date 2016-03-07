@@ -31,7 +31,7 @@ import org.openqa.selenium.htmlunit.HtmlUnitDriver;
  * Manager for PhantomJs.
  *
  * @author Boni Garcia (boni.gg@gmail.com)
- * @since 1.3.2
+ * @since 1.4.0
  */
 public class PhantomJsDriverManager extends BrowserManager {
 

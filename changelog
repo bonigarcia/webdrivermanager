@@ -1,6 +1,8 @@
-webdrivermanager (1.3.2)
+webdrivermanager (1.4.0)
 
   + Add PhantomJS support (pull request #13 from wilx/master-phantomjs)
+  + Add Marionette support (pull request #14 from rosolko:master)
+  + Improve tests
 
  -- Boni Garcia <boni.gg@gmail.com>  Wen, 13 Jan 2016 20:09:00 +0200
 

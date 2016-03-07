@@ -30,7 +30,8 @@ public class OperaVersionTest {
 	@Test
 	public void testLatestVersion() throws Exception {
 		OperaDriverManager.getInstance().setup();
-		String driverVersion = OperaDriverManager.getInstance().getDownloadedVersion();
+		String driverVersion = OperaDriverManager.getInstance()
+				.getDownloadedVersion();
 		Assert.assertNotNull(driverVersion);
 	}
 
@@ -40,7 +41,8 @@ public class OperaVersionTest {
 
 		for (String specificVersion : specificVersions) {
 			OperaDriverManager.getInstance().setup(specificVersion);
-			String driverVersion = OperaDriverManager.getInstance().getDownloadedVersion();
+			String driverVersion = OperaDriverManager.getInstance()
+					.getDownloadedVersion();
 
 			Assert.assertEquals(specificVersion, driverVersion);
 		}

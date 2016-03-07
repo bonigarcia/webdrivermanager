@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015 Boni Garcia (http://bonigarcia.github.io/)
+ * (C) Copyright 2016 Boni Garcia (http://bonigarcia.github.io/)
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser General Public License
@@ -30,7 +30,7 @@ import java.util.List;
  * Manager for Marionette.
  *
  * @author Boni Garcia (boni.gg@gmail.com)
- * @since 1.3.2
+ * @since 1.4.0
  */
 public class MarionetteDriverManager extends BrowserManager {
 

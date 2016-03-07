@@ -31,7 +31,7 @@ import io.github.bonigarcia.wdm.PhantomJsDriverManager;
  * Filter verifications for phantomjs.
  *
  * @author Boni Garcia (boni.gg@gmail.com)
- * @since 1.3.2
+ * @since 1.4.0
  */
 public class PhantomJsFilterTest {
 

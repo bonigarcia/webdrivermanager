@@ -24,7 +24,7 @@ import io.github.bonigarcia.wdm.OperaDriverManager;
  * Test asserting Marionette versions.
  *
  * @author Boni Garcia (boni.gg@gmail.com)
- * @since 1.3.2
+ * @since 1.4.0
  */
 public class MarionetteVersionTest {
 
@@ -38,8 +38,8 @@ public class MarionetteVersionTest {
 
 	@Test
 	public void testSpecificVersions() throws Exception {
-		String[] specificVersions = { "0.6.2", "0.5.0", "0.4.2", "0.4.0",
-				"0.3.0", "0.2.0", "0.1.0" };
+		String[] specificVersions = { "0.6.2", "0.5.0", "0.4.0", "0.3.0",
+				"0.2.0", "0.1.0" };
 
 		for (String specificVersion : specificVersions) {
 			MarionetteDriverManager.getInstance().setup(specificVersion);
