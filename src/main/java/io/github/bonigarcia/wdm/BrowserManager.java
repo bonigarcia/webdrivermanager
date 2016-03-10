@@ -269,6 +269,7 @@ public abstract class BrowserManager {
 
 	public List<URL> getLatest(List<URL> list, String match) {
 		log.trace("Checking the lastest version of {}", match);
+		log.trace("Input URL list {}", list);
 		List<URL> out = new ArrayList<URL>();
 		Collections.reverse(list);
 		for (URL url : list) {
@@ -284,10 +285,17 @@ public abstract class BrowserManager {
 							matchIndex + match.length() + 1, file.length());
 					final int dashIndex = currentVersion.indexOf('-');
 					currentVersion = currentVersion.substring(0, dashIndex);
+
 				} else if (getDriverName().equals("wires")) {
 					currentVersion = url.getFile().substring(
 							url.getFile().indexOf("-") + 1,
 							url.getFile().lastIndexOf("-"));
+
+				} else if (getDriverName().equals("operadriver")) {
+					currentVersion = url.getFile().substring(
+							url.getFile().indexOf(SEPARATOR + "v") + 2,
+							url.getFile().lastIndexOf(SEPARATOR));
+
 				} else {
 					currentVersion = url.getFile().substring(
 							url.getFile().indexOf(SEPARATOR) + 1,

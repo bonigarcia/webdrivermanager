@@ -224,8 +224,11 @@ public class Downloader {
 		return target;
 	}
 
-	private static final String getTarget(String version, URL url)
+	public static final String getTarget(String version, URL url)
 			throws IOException {
+
+		log.trace("getTarget {} {}", version, url);
+
 		String zip = url.getFile().substring(url.getFile().lastIndexOf("/"));
 
 		int iFirst = zip.indexOf("_");
@@ -237,14 +240,14 @@ public class Downloader {
 				.replace(".msi", "").replace("_", File.separator);
 
 		String target = getTargetPath() + folder + File.separator + version
-				+ File.separator + zip;
+				+ zip;
 		log.trace("Target file for URL {} version {} = {}", url, version,
 				target);
 
 		return target;
 	}
 
-	protected static String getTargetPath() {
+	public static String getTargetPath() {
 		String targetPath = WdmConfig.getString("wdm.targetPath");
 		if (targetPath.contains(HOME)) {
 			targetPath = targetPath.replace(HOME,
