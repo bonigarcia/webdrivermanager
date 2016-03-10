@@ -18,7 +18,6 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collection;
@@ -49,7 +48,7 @@ public class TargetTest {
 	public String version;
 
 	@Parameter(1)
-	public URL url;
+	public String url;
 
 	@Parameter(2)
 	public String target;
@@ -57,19 +56,30 @@ public class TargetTest {
 	private static String targetPath = Downloader.getTargetPath();
 
 	@Parameters(name = "{index}: {0}")
-	public static Collection<Object[]> data() throws MalformedURLException {
+	public static Collection<Object[]> data() {
 		return Arrays.asList(new Object[][] {
+				// Chrome
 				{ "2.21",
-						new URL("http://chromedriver.storage.googleapis.com/2.21/chromedriver_linux64.zip"),
+						"http://chromedriver.storage.googleapis.com/2.21/chromedriver_linux64.zip",
 						"/chromedriver/linux64/2.21/chromedriver_linux64.zip" },
+
+				// Opera
 				{ "0.2.2",
-						new URL("https://github.com/operasoftware/operachromiumdriver/releases/download/v0.2.2/operadriver_linux64.zip"),
-						"/operadriver/linux64/0.2.2/operadriver_linux64.zip" } });
+						"https://github.com/operasoftware/operachromiumdriver/releases/download/v0.2.2/operadriver_linux64.zip",
+						"/operadriver/linux64/0.2.2/operadriver_linux64.zip" },
+
+				// PhantomJS
+				{ "2.1.1",
+						"https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2",
+						"/phantomjs/2.1.1/linux-x86_64/phantomjs-2.1.1-linux-x86_64.tar.bz2" }
+
+		});
+
 	}
 
 	@Test
 	public void testTarget() throws IOException {
-		String result = Downloader.getTarget(version, url);
+		String result = Downloader.getTarget(version, new URL(url));
 		log.info(result);
 		log.info(targetPath + target);
 

@@ -241,6 +241,17 @@ public class Downloader {
 
 		String target = getTargetPath() + folder + File.separator + version
 				+ zip;
+
+		// Exception for PhantomJS
+		if (target.contains("phantomjs")) {
+			int iSeparator = target.lastIndexOf("/");
+			int iDash = target.lastIndexOf(version) + version.length();
+			int iPoint = target.lastIndexOf(".tar");
+			target = target.substring(0, iSeparator + 1)
+					+ target.substring(iDash + 1, iPoint)
+					+ target.substring(iSeparator);
+		}
+
 		log.trace("Target file for URL {} version {} = {}", url, version,
 				target);
 
