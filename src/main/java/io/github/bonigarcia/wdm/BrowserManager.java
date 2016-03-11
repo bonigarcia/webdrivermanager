@@ -14,6 +14,8 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
@@ -39,7 +41,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
-
 /**
  * Generic manager.
  *
@@ -222,7 +223,8 @@ public abstract class BrowserManager {
 			for (OperativeSystem os : OperativeSystem.values()) {
 				if (((MY_OS_NAME.contains(os.name())
 						&& url.getFile().toLowerCase().contains(os.name()))
-						|| getDriverName().equals("IEDriverServer"))
+						|| getDriverName().equals("IEDriverServer")
+						|| (IS_OS_MAC && url.getFile().toLowerCase().contains("osx")))
 						&& !out.contains(url)) {
 					out.add(url);
 				}

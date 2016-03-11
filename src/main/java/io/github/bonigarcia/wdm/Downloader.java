@@ -71,6 +71,7 @@ public class Downloader {
 					binary = file;
 					log.debug("Using binary driver previously downloaded {}",
 							binary);
+					download = false;
 					break;
 				} else {
 					download = true;
