@@ -96,9 +96,9 @@ public abstract class BrowserManager {
 	}
 
 	public String existsDriverInCache(String repository, String driverName,
-			String driverVersion) {
-		log.trace("Checking if {} {} exists in cache {}", driverName,
-				driverVersion, repository);
+			String driverVersion, Architecture arch) {
+		log.trace("Checking if {} {} ({} bits) exists in cache {}", driverName,
+				driverVersion, arch, repository);
 
 		Iterator<File> iterateFiles = FileUtils
 				.iterateFiles(new File(repository), null, true);
@@ -107,9 +107,10 @@ public abstract class BrowserManager {
 		while (iterateFiles.hasNext()) {
 			driverInCache = iterateFiles.next().toString();
 			if (driverInCache.contains(driverName)
-					&& driverInCache.contains(driverVersion)) {
-				log.debug("Found {} {} in cache: {} ", driverName,
-						driverVersion, driverInCache);
+					&& driverInCache.contains(driverVersion)
+					&& driverInCache.contains(arch.name())) {
+				log.debug("Found {} {} ({} bits) in cache: {} ", driverName,
+						driverVersion, arch, driverInCache);
 				break;
 			} else {
 				driverInCache = null;
@@ -117,8 +118,8 @@ public abstract class BrowserManager {
 		}
 
 		if (driverInCache == null) {
-			log.trace("{} {} do not exist in cache {}", driverName,
-					driverVersion, repository);
+			log.trace("{} {} ({} bits) do not exist in cache {}", driverName,
+					driverVersion, arch, repository);
 		}
 		return driverInCache;
 	}
@@ -134,7 +135,7 @@ public abstract class BrowserManager {
 			if (!getLatest) {
 				versionToDownload = version;
 				driverInCache = existsDriverInCache(Downloader.getTargetPath(),
-						getDriverName(), version);
+						getDriverName(), version, arch);
 			}
 
 			if (driverInCache != null) {
@@ -231,6 +232,11 @@ public abstract class BrowserManager {
 		// Round #2 : Filter by architecture (32/64 bits)
 		if (out.size() > 1 && arch != null) {
 			for (URL url : list) {
+				// Exception: 32 bits (sometimes referred as x86)
+				if (arch == Architecture.x32 && url.getFile().contains("x86")) {
+					continue;
+				}
+
 				if (!url.getFile().contains(arch.toString())) {
 					out.remove(url);
 				}
