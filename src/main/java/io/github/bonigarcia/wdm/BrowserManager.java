@@ -211,6 +211,7 @@ public abstract class BrowserManager {
 	}
 
 	public List<URL> filter(List<URL> list, Architecture arch) {
+
 		log.trace("{} {} - URLs before filtering: {}", getDriverName(),
 				versionToDownload, list);
 
@@ -219,8 +220,10 @@ public abstract class BrowserManager {
 		// Round #1 : Filter by OS
 		for (URL url : list) {
 			for (OperativeSystem os : OperativeSystem.values()) {
-				if (MY_OS_NAME.contains(os.name())
-						&& url.getFile().toLowerCase().contains(os.name())) {
+				if (((MY_OS_NAME.contains(os.name())
+						&& url.getFile().toLowerCase().contains(os.name()))
+						|| getDriverName().equals("IEDriverServer"))
+						&& !out.contains(url)) {
 					out.add(url);
 				}
 			}
@@ -307,6 +310,12 @@ public abstract class BrowserManager {
 							url.getFile().indexOf(SEPARATOR) + 1,
 							url.getFile().lastIndexOf(SEPARATOR));
 				}
+
+				if (getDriverName().equals("MicrosoftWebDriver")) {
+					currentVersion = currentVersion.substring(
+							currentVersion.lastIndexOf(SEPARATOR) + 1);
+				}
+
 				if (versionToDownload == null) {
 					versionToDownload = currentVersion;
 				}

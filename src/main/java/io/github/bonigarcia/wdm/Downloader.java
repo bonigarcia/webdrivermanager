@@ -14,6 +14,8 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -80,12 +82,13 @@ public class Downloader {
 			log.info("Downloading {} to {}", url, targetFile);
 			FileUtils.copyURLToFile(url, targetFile);
 
-			if (export.contains("edge")) {
-				binary = extractMsi(targetFile);
-			} else {
+			if (!export.contains("edge")) {
 				binary = extract(targetFile, export);
+				targetFile.delete();
+			} else {
+				binary = targetFile;
 			}
-			targetFile.delete();
+
 		}
 		if (export != null) {
 			BrowserManager.exportDriver(export, binary.toString());
@@ -171,6 +174,8 @@ public class Downloader {
 			zipFolder.close();
 		}
 
+		file = checkPhantom(compressedFile, export);
+
 		log.trace("Resulting binary file {}", file.getAbsoluteFile());
 		return file.getAbsoluteFile();
 	}
@@ -201,16 +206,33 @@ public class Downloader {
 				CompressionType.BZIP2);
 		archiver.extract(archive, archive.getParentFile());
 		log.trace("Unbzip2 {}", archive);
-		File target;
+		File target = checkPhantom(archive, export);
 
-		String phantomjsName = "phantomjs";
-		if (export.contains(phantomjsName)) {
-			String fileNoExtension = archive.getName().replace(".tar.bz2", "");
-			File phantomjs = new File(archive.getParentFile().getAbsolutePath()
-					+ File.separator + fileNoExtension + File.separator + "bin"
-					+ File.separator + phantomjsName);
+		return target;
+	}
+
+	private static File checkPhantom(File archive, String export)
+			throws IOException {
+		File target;
+		String phantomName = "phantomjs";
+		if (export.contains(phantomName)) {
+			String fileNoExtension = archive.getName().replace(".tar.bz2", "")
+					.replace(".zip", "");
+
+			File phantomjs = null;
+			try {
+				phantomjs = new File(archive.getParentFile().getAbsolutePath()
+						+ File.separator + fileNoExtension + File.separator
+						+ "bin" + File.separator).listFiles()[0];
+			} catch (Exception e) {
+				String extension = IS_OS_WINDOWS ? ".exe" : "";
+				phantomjs = new File(archive.getParentFile().getAbsolutePath()
+						+ File.separator + fileNoExtension + File.separator
+						+ phantomName + extension);
+			}
+
 			target = new File(archive.getParentFile().getAbsolutePath()
-					+ File.separator + phantomjsName);
+					+ File.separator + phantomjs.getName());
 			phantomjs.renameTo(target);
 
 			File delete = new File(archive.getParentFile().getAbsolutePath()
@@ -237,7 +259,8 @@ public class Downloader {
 				: iSecond != -1 ? iSecond : zip.length();
 		String folder = zip.substring(0, iLast).replace(".zip", "")
 				.replace(".tar.bz2", "").replace(".tar.gz", "")
-				.replace(".msi", "").replace("_", File.separator);
+				.replace(".msi", "").replace(".exe", "")
+				.replace("_", File.separator);
 
 		String target = getTargetPath() + folder + File.separator + version
 				+ zip;
@@ -246,7 +269,8 @@ public class Downloader {
 		if (target.contains("phantomjs")) {
 			int iSeparator = target.indexOf(version) - 1;
 			int iDash = target.lastIndexOf(version) + version.length();
-			int iPoint = target.lastIndexOf(".tar");
+			int iPoint = target.lastIndexOf(".tar") != -1
+					? target.lastIndexOf(".tar") : target.lastIndexOf(".zip");
 			target = target.substring(0, iSeparator + 1)
 					+ target.substring(iDash + 1, iPoint)
 					+ target.substring(iSeparator);
@@ -256,7 +280,8 @@ public class Downloader {
 		else if (target.contains("wires")) {
 			int iSeparator = target.indexOf(version) - 1;
 			int iDash = target.lastIndexOf(version) + version.length();
-			int iPoint = target.lastIndexOf(".gz");
+			int iPoint = target.lastIndexOf(".gz") != -1
+					? target.lastIndexOf(".gz") : target.lastIndexOf(".zip");
 			target = target.substring(0, iSeparator + 1)
 					+ target.substring(iDash + 1, iPoint)
 					+ target.substring(iSeparator);

@@ -17,6 +17,7 @@ package io.github.bonigarcia.wdm.test;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
@@ -58,22 +59,32 @@ public class TargetTest {
 	@Parameters(name = "{index}: {0}")
 	public static Collection<Object[]> data() {
 		return Arrays.asList(new Object[][] {
-				// Chrome
+				// Chrome Linux
 				{ "2.21",
 						"http://chromedriver.storage.googleapis.com/2.21/chromedriver_linux64.zip",
 						"/chromedriver/linux64/2.21/chromedriver_linux64.zip" },
 
-				// Opera
+				// Opera Linux
 				{ "0.2.2",
 						"https://github.com/operasoftware/operachromiumdriver/releases/download/v0.2.2/operadriver_linux64.zip",
 						"/operadriver/linux64/0.2.2/operadriver_linux64.zip" },
 
-				// PhantomJS
+				// PhantomJS Linux
 				{ "2.1.1",
 						"https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2",
 						"/phantomjs/linux-x86_64/2.1.1/phantomjs-2.1.1-linux-x86_64.tar.bz2" },
 
-				// Marionette
+				// PhantomJS Windows
+				{ "2.1.1",
+						"https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-windows.zip",
+						"/phantomjs/windows/2.1.1/phantomjs-2.1.1-windows.zip" },
+
+				// Edge Windows
+				{ "8D0D08CF-790D-4586-B726-C6469A9ED49C",
+						"https://download.microsoft.com/download/1/4/1/14156DA0-D40F-460A-B14D-1B264CA081A5/MicrosoftWebDriver.exe",
+						"/MicrosoftWebDriver/8D0D08CF-790D-4586-B726-C6469A9ED49C/MicrosoftWebDriver.exe" },
+
+				// Marionette Linux
 				{ "0.6.2",
 						"https://github.com/jgraham/wires/releases/download/v0.6.2/wires-0.6.2-linux64.gz",
 						"/wires/linux64/0.6.2/wires-0.6.2-linux64.gz" }
@@ -88,7 +99,10 @@ public class TargetTest {
 		log.info(result);
 		log.info(targetPath + target);
 
-		assertThat(result, equalTo(targetPath + target));
+		File fileResult = new File(result);
+		File fileReal = new File(targetPath + target);
+
+		assertThat(fileResult, equalTo(fileReal));
 	}
 
 }
