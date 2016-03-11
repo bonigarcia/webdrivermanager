@@ -16,15 +16,14 @@ package io.github.bonigarcia.wdm.test;
 
 import java.nio.file.Paths;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import io.github.bonigarcia.wdm.PhantomJsDriverManager;
+import io.github.bonigarcia.wdm.base.BaseBrowserTst;
 
 /**
  * Test with PhatomJS.
@@ -32,7 +31,7 @@ import io.github.bonigarcia.wdm.PhantomJsDriverManager;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.4.0
  */
-public class PhantomJsTest extends ManagerTest {
+public class PhantomJsTest extends BaseBrowserTst {
 
 	@BeforeClass
 	public static void setupClass() {
@@ -52,18 +51,6 @@ public class PhantomJsTest extends ManagerTest {
 				.build();
 		DesiredCapabilities desireCaps = new DesiredCapabilities();
 		driver = new PhantomJSDriver(service, desireCaps);
-	}
-
-	@After
-	public void teardown() {
-		if (driver != null) {
-			driver.quit();
-		}
-	}
-
-	@Test
-	public void testPhantom() {
-		browseWikipedia();
 	}
 
 }

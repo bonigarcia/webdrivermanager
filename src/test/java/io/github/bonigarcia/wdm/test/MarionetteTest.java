@@ -14,16 +14,17 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import org.apache.commons.lang3.SystemUtils;
-import org.junit.After;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_LINUX;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC_OSX;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
+
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
 import org.openqa.selenium.firefox.MarionetteDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import io.github.bonigarcia.wdm.MarionetteDriverManager;
+import io.github.bonigarcia.wdm.base.BaseBrowserTst;
 
 /**
  * Test with Marionette browser.
@@ -31,40 +32,37 @@ import io.github.bonigarcia.wdm.MarionetteDriverManager;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.4.0
  */
-public class MarionetteTest extends ManagerTest {
+public class MarionetteTest extends BaseBrowserTst {
 
 	@BeforeClass
 	public static void setupClass() {
-		MarionetteDriverManager.getInstance().setup();
+		// FIXME: Marionette cannot be executed with other tests
+		validOS = false;
+
+		if (validOS) {
+			MarionetteDriverManager.getInstance().setup();
+		}
 	}
 
 	@Before
 	public void setupTest() {
-		DesiredCapabilities capabilities = DesiredCapabilities.firefox();
-		capabilities.setCapability("marionette", true);
-		// This capability set need for beta\dev\nightly(version 45+) firefox
-		// because this driver is target on it
-		if (SystemUtils.IS_OS_LINUX) {
-			capabilities.setCapability("binary", "/usr/bin/firefox");
-		} else if (SystemUtils.IS_OS_WINDOWS) {
-			capabilities.setCapability("binary",
-					"C:\\Program Files\\Mozilla Firefox\\firefox.exe");
-		} else if (SystemUtils.IS_OS_MAC_OSX) {
-			capabilities.setCapability("binary", "/Applications/Firefox.app");
-		}
-		driver = new MarionetteDriver(capabilities);
-	}
-
-	@After
-	public void tearDown() {
-		if (driver != null) {
-			driver.quit();
+		if (validOS) {
+			DesiredCapabilities capabilities = DesiredCapabilities.firefox();
+			capabilities.setCapability("marionette", true);
+			// This capability set need for beta\dev\nightly(version 45+)
+			// firefox
+			// because this driver is target on it
+			if (IS_OS_LINUX) {
+				capabilities.setCapability("binary", "/usr/bin/firefox");
+			} else if (IS_OS_WINDOWS) {
+				capabilities.setCapability("binary",
+						"C:\\Program Files\\Mozilla Firefox\\firefox.exe");
+			} else if (IS_OS_MAC_OSX) {
+				capabilities.setCapability("binary",
+						"/Applications/Firefox.app");
+			}
+			driver = new MarionetteDriver(capabilities);
 		}
 	}
 
-	@Ignore
-	@Test
-	public void testMarionette() {
-		browseWikipedia();
-	}
 }

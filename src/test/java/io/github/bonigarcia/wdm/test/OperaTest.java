@@ -14,18 +14,18 @@
  */
 package io.github.bonigarcia.wdm.test;
 
+import static org.apache.commons.lang3.SystemUtils.IS_OS_LINUX;
+
 import java.io.File;
 
-import org.apache.commons.lang3.SystemUtils;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
 import org.openqa.selenium.opera.OperaDriver;
 import org.openqa.selenium.opera.OperaOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
 import io.github.bonigarcia.wdm.OperaDriverManager;
+import io.github.bonigarcia.wdm.base.BaseBrowserTst;
 
 /**
  * Test with Opera browser.
@@ -33,7 +33,7 @@ import io.github.bonigarcia.wdm.OperaDriverManager;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.0.0
  */
-public class OperaTest extends ManagerTest {
+public class OperaTest extends BaseBrowserTst {
 
 	@BeforeClass
 	public static void setupClass() {
@@ -43,24 +43,12 @@ public class OperaTest extends ManagerTest {
 	@Before
 	public void setupTest() {
 		DesiredCapabilities capabilities = DesiredCapabilities.operaBlink();
-		if (SystemUtils.IS_OS_LINUX) {
+		if (IS_OS_LINUX) {
 			OperaOptions options = new OperaOptions();
 			options.setBinary(new File("/usr/bin/opera"));
 			capabilities.setCapability(OperaOptions.CAPABILITY, options);
 		}
 		driver = new OperaDriver(capabilities);
-	}
-
-	@After
-	public void teardown() {
-		if (driver != null) {
-			driver.quit();
-		}
-	}
-
-	@Test
-	public void testOpera() {
-		browseWikipedia();
 	}
 
 }

@@ -71,7 +71,12 @@ public class TargetTest {
 				// PhantomJS
 				{ "2.1.1",
 						"https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-linux-x86_64.tar.bz2",
-						"/phantomjs/2.1.1/linux-x86_64/phantomjs-2.1.1-linux-x86_64.tar.bz2" }
+						"/phantomjs/linux-x86_64/2.1.1/phantomjs-2.1.1-linux-x86_64.tar.bz2" },
+
+				// Marionette
+				{ "0.6.2",
+						"https://github.com/jgraham/wires/releases/download/v0.6.2/wires-0.6.2-linux64.gz",
+						"/wires/linux64/0.6.2/wires-0.6.2-linux64.gz" }
 
 		});
 

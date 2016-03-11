@@ -17,9 +17,7 @@ package io.github.bonigarcia.wdm.test;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
@@ -29,6 +27,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import io.github.bonigarcia.wdm.base.BaseBrowserTst;
 
 /**
  * Parameterized test with several browsers.
@@ -37,7 +36,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @since 1.3.1
  */
 @RunWith(Parameterized.class)
-public class WebDriverTest extends ManagerTest {
+public class WebDriverTest extends BaseBrowserTst {
 
 	@Parameter
 	public Class<? extends WebDriver> driverClass;
@@ -53,18 +52,6 @@ public class WebDriverTest extends ManagerTest {
 			throws InstantiationException, IllegalAccessException {
 		WebDriverManager.getInstance(driverClass).setup();
 		driver = driverClass.newInstance();
-	}
-
-	@After
-	public void teardown() {
-		if (driver != null) {
-			driver.quit();
-		}
-	}
-
-	@Test
-	public void test() {
-		browseWikipedia();
 	}
 
 }

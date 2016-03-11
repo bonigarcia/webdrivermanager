@@ -14,11 +14,12 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import io.github.bonigarcia.wdm.InternetExplorerDriverManager;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 
-import org.apache.commons.lang3.SystemUtils;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.Before;
+
+import io.github.bonigarcia.wdm.InternetExplorerDriverManager;
+import io.github.bonigarcia.wdm.base.BaseVersionTst;
 
 /**
  * Test asserting IEDriverServer versions.
@@ -26,29 +27,14 @@ import org.junit.Test;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.2.2
  */
-public class IExplorerVersionTest {
+public class IExplorerVersionTest extends BaseVersionTst {
 
-	@Test
-	public void testLatestVersion() throws Exception {
-		if (SystemUtils.IS_OS_WINDOWS) {
-			InternetExplorerDriverManager.getInstance().setup();
-			String driverVersion = InternetExplorerDriverManager.getInstance().getDownloadedVersion();
-			Assert.assertNotNull(driverVersion);
-		}
-	}
-
-	@Test
-	public void testSpecificVersions() throws Exception {
-		if (SystemUtils.IS_OS_WINDOWS) {
-			String[] specificVersions = { "2.39", "2.40", "2.41", "2.42", "2.43", "2.44", "2.45", "2.47" };
-
-			for (String specificVersion : specificVersions) {
-				InternetExplorerDriverManager.getInstance().setup(specificVersion);
-				String driverVersion = InternetExplorerDriverManager.getInstance().getDownloadedVersion();
-
-				Assert.assertEquals(specificVersion, driverVersion);
-			}
-		}
+	@Before
+	public void setup() {
+		browserManager = InternetExplorerDriverManager.getInstance();
+		specificVersions = new String[] { "2.39", "2.40", "2.41", "2.42",
+				"2.43", "2.44", "2.45", "2.47" };
+		validOS = IS_OS_WINDOWS;
 	}
 
 }

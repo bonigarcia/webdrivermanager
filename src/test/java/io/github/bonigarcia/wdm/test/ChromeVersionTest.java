@@ -14,10 +14,10 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.Before;
 
 import io.github.bonigarcia.wdm.ChromeDriverManager;
+import io.github.bonigarcia.wdm.base.BaseVersionTst;
 
 /**
  * Test asserting chromedriver versions.
@@ -25,28 +25,14 @@ import io.github.bonigarcia.wdm.ChromeDriverManager;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.2.1
  */
-public class ChromeVersionTest {
+public class ChromeVersionTest extends BaseVersionTst {
 
-	@Test
-	public void testLatestVersion() throws Exception {
-		ChromeDriverManager.getInstance().setup();
-		String driverVersion = ChromeDriverManager.getInstance()
-				.getDownloadedVersion();
-		Assert.assertNotNull(driverVersion);
-	}
-
-	@Test
-	public void testSpecificVersions() throws Exception {
-		String[] specificVersions = { "2.10", "2.11", "2.12", "2.13", "2.14",
-				"2.15", "2.16", "2.17", "2.18", "2.19", "2.20", "2.21" };
-
-		for (String specificVersion : specificVersions) {
-			ChromeDriverManager.getInstance().setup(specificVersion);
-			String driverVersion = ChromeDriverManager.getInstance()
-					.getDownloadedVersion();
-
-			Assert.assertEquals(specificVersion, driverVersion);
-		}
+	@Before
+	public void setup() {
+		browserManager = ChromeDriverManager.getInstance();
+		specificVersions = new String[] { "2.10", "2.11", "2.12", "2.13",
+				"2.14", "2.15", "2.16", "2.17", "2.18", "2.19", "2.20",
+				"2.21" };
 	}
 
 }

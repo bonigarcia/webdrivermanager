@@ -14,11 +14,10 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.Before;
 
 import io.github.bonigarcia.wdm.MarionetteDriverManager;
-import io.github.bonigarcia.wdm.OperaDriverManager;
+import io.github.bonigarcia.wdm.base.BaseVersionTst;
 
 /**
  * Test asserting Marionette versions.
@@ -26,28 +25,13 @@ import io.github.bonigarcia.wdm.OperaDriverManager;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.4.0
  */
-public class MarionetteVersionTest {
+public class MarionetteVersionTest extends BaseVersionTst {
 
-	@Test
-	public void testLatestVersion() throws Exception {
-		MarionetteDriverManager.getInstance().setup();
-		String driverVersion = OperaDriverManager.getInstance()
-				.getDownloadedVersion();
-		Assert.assertNotNull(driverVersion);
-	}
-
-	@Test
-	public void testSpecificVersions() throws Exception {
-		String[] specificVersions = { "0.6.2", "0.5.0", "0.4.0", "0.3.0",
+	@Before
+	public void setup() {
+		browserManager = MarionetteDriverManager.getInstance();
+		specificVersions = new String[] { "0.6.2", "0.5.0", "0.4.0", "0.3.0",
 				"0.2.0", "0.1.0" };
-
-		for (String specificVersion : specificVersions) {
-			MarionetteDriverManager.getInstance().setup(specificVersion);
-			String driverVersion = MarionetteDriverManager.getInstance()
-					.getDownloadedVersion();
-
-			Assert.assertEquals(specificVersion, driverVersion);
-		}
 	}
 
 }

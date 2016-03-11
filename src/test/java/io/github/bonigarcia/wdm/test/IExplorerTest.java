@@ -14,14 +14,14 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import io.github.bonigarcia.wdm.InternetExplorerDriverManager;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 
-import org.apache.commons.lang3.SystemUtils;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+
+import io.github.bonigarcia.wdm.InternetExplorerDriverManager;
+import io.github.bonigarcia.wdm.base.BaseBrowserTst;
 
 /**
  * Test with Internet Explorer browser.
@@ -29,33 +29,21 @@ import org.openqa.selenium.ie.InternetExplorerDriver;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.0.0
  */
-public class IExplorerTest extends ManagerTest {
+public class IExplorerTest extends BaseBrowserTst {
 
 	@BeforeClass
 	public static void setupClass() {
-		if (SystemUtils.IS_OS_WINDOWS) {
+		validOS = IS_OS_WINDOWS;
+
+		if (validOS) {
 			InternetExplorerDriverManager.getInstance().setup();
 		}
 	}
 
 	@Before
 	public void setupTest() {
-		if (SystemUtils.IS_OS_WINDOWS) {
+		if (validOS) {
 			driver = new InternetExplorerDriver();
-		}
-	}
-
-	@After
-	public void teardown() {
-		if (driver != null) {
-			driver.quit();
-		}
-	}
-
-	@Test
-	public void testIExplorer() {
-		if (SystemUtils.IS_OS_WINDOWS) {
-			browseWikipedia();
 		}
 	}
 

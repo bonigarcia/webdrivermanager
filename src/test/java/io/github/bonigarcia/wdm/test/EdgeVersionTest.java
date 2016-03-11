@@ -14,11 +14,12 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import org.apache.commons.lang3.SystemUtils;
-import org.junit.Assert;
-import org.junit.Test;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
+
+import org.junit.Before;
 
 import io.github.bonigarcia.wdm.EdgeDriverManager;
+import io.github.bonigarcia.wdm.base.BaseVersionTst;
 
 /**
  * Test asserting MicrosoftWebDriver Edge versions.
@@ -26,32 +27,14 @@ import io.github.bonigarcia.wdm.EdgeDriverManager;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.3.0
  */
-public class EdgeVersionTest {
+public class EdgeVersionTest extends BaseVersionTst {
 
-	@Test
-	public void testLatestVersion() throws Exception {
-		if (SystemUtils.IS_OS_WINDOWS) {
-			EdgeDriverManager.getInstance().setup();
-			String driverVersion = EdgeDriverManager.getInstance()
-					.getDownloadedVersion();
-			Assert.assertNotNull(driverVersion);
-		}
-	}
-
-	@Test
-	public void testSpecificVersions() throws Exception {
-		if (SystemUtils.IS_OS_WINDOWS) {
-			String[] specificVersions = {
-					"8D0D08CF-790D-4586-B726-C6469A9ED49C" };
-
-			for (String specificVersion : specificVersions) {
-				EdgeDriverManager.getInstance().setup(specificVersion);
-				String driverVersion = EdgeDriverManager.getInstance()
-						.getDownloadedVersion();
-
-				Assert.assertEquals(specificVersion, driverVersion);
-			}
-		}
+	@Before
+	public void setup() {
+		browserManager = EdgeDriverManager.getInstance();
+		specificVersions = new String[] {
+				"8D0D08CF-790D-4586-B726-C6469A9ED49C" };
+		validOS = IS_OS_WINDOWS;
 	}
 
 }

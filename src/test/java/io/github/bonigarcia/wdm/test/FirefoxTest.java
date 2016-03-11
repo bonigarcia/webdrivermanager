@@ -14,10 +14,10 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import org.junit.After;
 import org.junit.Before;
-import org.junit.Test;
 import org.openqa.selenium.firefox.FirefoxDriver;
+
+import io.github.bonigarcia.wdm.base.BaseBrowserTst;
 
 /**
  * Test with Firefox browser.
@@ -25,23 +25,11 @@ import org.openqa.selenium.firefox.FirefoxDriver;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.0.0
  */
-public class FirefoxTest extends ManagerTest {
+public class FirefoxTest extends BaseBrowserTst {
 
 	@Before
 	public void setup() {
 		driver = new FirefoxDriver();
-	}
-
-	@After
-	public void teardown() {
-		if (driver != null) {
-			driver.quit();
-		}
-	}
-
-	@Test
-	public void testFirefox() {
-		browseWikipedia();
 	}
 
 }

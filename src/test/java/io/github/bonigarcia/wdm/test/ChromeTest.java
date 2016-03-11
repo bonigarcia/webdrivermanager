@@ -14,13 +14,13 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import io.github.bonigarcia.wdm.ChromeDriverManager;
-
-import org.junit.After;
 import org.junit.Before;
+
 import org.junit.BeforeClass;
-import org.junit.Test;
 import org.openqa.selenium.chrome.ChromeDriver;
+
+import io.github.bonigarcia.wdm.ChromeDriverManager;
+import io.github.bonigarcia.wdm.base.BaseBrowserTst;
 
 /**
  * Test with Google Chrome browser.
@@ -28,7 +28,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.0.0
  */
-public class ChromeTest extends ManagerTest {
+public class ChromeTest extends BaseBrowserTst {
 
 	@BeforeClass
 	public static void setupClass() {
@@ -38,18 +38,6 @@ public class ChromeTest extends ManagerTest {
 	@Before
 	public void setupTest() {
 		driver = new ChromeDriver();
-	}
-
-	@After
-	public void teardown() {
-		if (driver != null) {
-			driver.quit();
-		}
-	}
-
-	@Test
-	public void testChrome() {
-		browseWikipedia();
 	}
 
 }

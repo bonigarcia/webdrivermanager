@@ -14,10 +14,10 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.Before;
 
 import io.github.bonigarcia.wdm.OperaDriverManager;
+import io.github.bonigarcia.wdm.base.BaseVersionTst;
 
 /**
  * Test asserting operadriver versions.
@@ -25,27 +25,12 @@ import io.github.bonigarcia.wdm.OperaDriverManager;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.2.2
  */
-public class OperaVersionTest {
+public class OperaVersionTest extends BaseVersionTst {
 
-	@Test
-	public void testLatestVersion() throws Exception {
-		OperaDriverManager.getInstance().setup();
-		String driverVersion = OperaDriverManager.getInstance()
-				.getDownloadedVersion();
-		Assert.assertNotNull(driverVersion);
-	}
-
-	@Test
-	public void testSpecificVersions() throws Exception {
-		String[] specificVersions = { "0.2.2", "0.2.0", "0.1.0" };
-
-		for (String specificVersion : specificVersions) {
-			OperaDriverManager.getInstance().setup(specificVersion);
-			String driverVersion = OperaDriverManager.getInstance()
-					.getDownloadedVersion();
-
-			Assert.assertEquals(specificVersion, driverVersion);
-		}
+	@Before
+	public void setup() {
+		browserManager = OperaDriverManager.getInstance();
+		specificVersions = new String[] { "0.2.2", "0.2.0", "0.1.0" };
 	}
 
 }

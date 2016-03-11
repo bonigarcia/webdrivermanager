@@ -14,14 +14,14 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import io.github.bonigarcia.wdm.EdgeDriverManager;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 
-import org.apache.commons.lang3.SystemUtils;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
 import org.openqa.selenium.edge.EdgeDriver;
+
+import io.github.bonigarcia.wdm.EdgeDriverManager;
+import io.github.bonigarcia.wdm.base.BaseBrowserTst;
 
 /**
  * Test with Microsoft Edge.
@@ -29,33 +29,20 @@ import org.openqa.selenium.edge.EdgeDriver;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.3.0
  */
-public class EdgeTest extends ManagerTest {
+public class EdgeTest extends BaseBrowserTst {
 
 	@BeforeClass
 	public static void setupClass() {
-		if (SystemUtils.IS_OS_WINDOWS) {
+		validOS = IS_OS_WINDOWS;
+		if (validOS) {
 			EdgeDriverManager.getInstance().setup();
 		}
 	}
 
 	@Before
 	public void setupTest() {
-		if (SystemUtils.IS_OS_WINDOWS) {
+		if (validOS) {
 			driver = new EdgeDriver();
-		}
-	}
-
-	@After
-	public void teardown() {
-		if (driver != null) {
-			driver.quit();
-		}
-	}
-
-	@Test
-	public void testEdge() {
-		if (SystemUtils.IS_OS_WINDOWS) {
-			browseWikipedia();
 		}
 	}
 

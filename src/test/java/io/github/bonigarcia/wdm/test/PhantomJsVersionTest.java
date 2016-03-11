@@ -14,11 +14,10 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.Before;
 
-import io.github.bonigarcia.wdm.OperaDriverManager;
 import io.github.bonigarcia.wdm.PhantomJsDriverManager;
+import io.github.bonigarcia.wdm.base.BaseVersionTst;
 
 /**
  * Test asserting PhatomJS versions.
@@ -26,27 +25,12 @@ import io.github.bonigarcia.wdm.PhantomJsDriverManager;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.4.0
  */
-public class PhantomJsVersionTest {
+public class PhantomJsVersionTest extends BaseVersionTst {
 
-	@Test
-	public void testLatestVersion() throws Exception {
-		PhantomJsDriverManager.getInstance().setup();
-		String driverVersion = OperaDriverManager.getInstance()
-				.getDownloadedVersion();
-		Assert.assertNotNull(driverVersion);
-	}
-
-	@Test
-	public void testSpecificVersions() throws Exception {
-		String[] specificVersions = { "1.9.6", "1.9.7", "1.9.8", "2.1.1" };
-
-		for (String specificVersion : specificVersions) {
-			PhantomJsDriverManager.getInstance().setup(specificVersion);
-			String driverVersion = PhantomJsDriverManager.getInstance()
-					.getDownloadedVersion();
-
-			Assert.assertEquals(specificVersion, driverVersion);
-		}
+	@Before
+	public void setup() {
+		browserManager = PhantomJsDriverManager.getInstance();
+		specificVersions = new String[] { "1.9.6", "1.9.7", "1.9.8", "2.1.1" };
 	}
 
 }
