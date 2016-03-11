@@ -281,10 +281,13 @@ public class Downloader {
 		else if (target.contains("wires")) {
 			int iSeparator = target.indexOf(version) - 1;
 			int iDash = target.lastIndexOf(version) + version.length();
-			int iPoint = target.lastIndexOf(".gz") != -1
-					? target.lastIndexOf(".gz") : target.lastIndexOf(".zip");
+			int iPoint = target.lastIndexOf("tar.gz") != -1
+					? target.lastIndexOf(".tar.gz")
+					: target.lastIndexOf(".gz") != -1
+							? target.lastIndexOf(".gz")
+							: target.lastIndexOf(".zip");
 			target = target.substring(0, iSeparator + 1)
-					+ target.substring(iDash + 1, iPoint)
+					+ target.substring(iDash + 1, iPoint).toLowerCase()
 					+ target.substring(iSeparator);
 		}
 

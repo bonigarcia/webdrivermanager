@@ -84,6 +84,14 @@ public class TargetTest {
 						"https://download.microsoft.com/download/1/4/1/14156DA0-D40F-460A-B14D-1B264CA081A5/MicrosoftWebDriver.exe",
 						"/MicrosoftWebDriver/8D0D08CF-790D-4586-B726-C6469A9ED49C/MicrosoftWebDriver.exe" },
 
+				// Marionette Mac OS X
+				{ "0.6.2",
+						"https://github.com/jgraham/wires/releases/download/v0.6.2/wires-0.6.2-OSX.gz",
+						"/wires/osx/0.6.2/wires-0.6.2-OSX.gz" },
+				{ "0.3.0",
+						"https://github.com/jgraham/wires/releases/download/0.3.0/wires-0.3.0-osx.tar.gz",
+						"/wires/osx/0.3.0/wires-0.3.0-osx.tar.gz" },
+
 				// Marionette Linux
 				{ "0.6.2",
 						"https://github.com/jgraham/wires/releases/download/v0.6.2/wires-0.6.2-linux64.gz",
