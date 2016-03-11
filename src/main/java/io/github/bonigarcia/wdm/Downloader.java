@@ -244,9 +244,19 @@ public class Downloader {
 
 		// Exception for PhantomJS
 		if (target.contains("phantomjs")) {
-			int iSeparator = target.lastIndexOf("/");
+			int iSeparator = target.indexOf(version) - 1;
 			int iDash = target.lastIndexOf(version) + version.length();
 			int iPoint = target.lastIndexOf(".tar");
+			target = target.substring(0, iSeparator + 1)
+					+ target.substring(iDash + 1, iPoint)
+					+ target.substring(iSeparator);
+		}
+
+		// Exception for Marionette
+		else if (target.contains("wires")) {
+			int iSeparator = target.indexOf(version) - 1;
+			int iDash = target.lastIndexOf(version) + version.length();
+			int iPoint = target.lastIndexOf(".gz");
 			target = target.substring(0, iSeparator + 1)
 					+ target.substring(iDash + 1, iPoint)
 					+ target.substring(iSeparator);
