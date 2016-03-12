@@ -22,7 +22,7 @@ In order to use WebDriverManager in a Maven project, first add the following dep
 	<dependency>
 		<groupId>io.github.bonigarcia</groupId>
 		<artifactId>webdrivermanager</artifactId>
-		<version>1.4.0</version>
+		<version>1.4.1</version>
 	</dependency>
 
 Then you can let WebDriverManager to do manage WebDriver binaries for your application/test. Take a look to this JUnit example which uses Chrome with Selenium WebDriver:
@@ -77,6 +77,7 @@ Configuration parameters for WebDriverManager are set in the ``application.prope
 	wdm.targetPath=~/.m2/repository/webdriver
 	wdm.override=false
 	wdm.timeout=30
+	wdm.seekErrorRetries=3
 
 	wdm.chromeDriverUrl=http://chromedriver.storage.googleapis.com/
 	wdm.chromeDriverExport=webdriver.chrome.driver
@@ -90,7 +91,7 @@ Configuration parameters for WebDriverManager are set in the ``application.prope
 	wdm.internetExplorerExport=webdriver.ie.driver
 	wdm.internetExplorerVersion=LATEST
 
-	wdm.edgeDriverUrl=https://www.microsoft.com/en-us/download/details.aspx?id=48212
+	wdm.edgeDriverUrl=http://www.microsoft.com/en-us/download/details.aspx?id=48740
 	wdm.edgeExport=webdriver.edge.driver
 	wdm.edgeVersion=LATEST
 	
@@ -131,7 +132,7 @@ By default, WebDriverManager downloads the latest version of the WebDriver binar
 
 	OperaDriverManager.getInstance().setup("0.2.0");
 	
-	EdgeDriverManager.getInstance().setup("8D0D08CF-790D-4586-B726-C6469A9ED49C");
+	EdgeDriverManager.getInstance().setup("14156DA0-D40F-460A-B14D-1B264CA081A5");
 
 	PhantomJsDriverManager.getInstance().setup("2.1.1");
 
@@ -145,7 +146,7 @@ This can also be done by changing the value of the variables ``wdm.chromeDriverV
 
 	-Dwdm.operaDriverVersion=0.2.0
 
-	-Dwdm.edgeVersion=8D0D08CF-790D-4586-B726-C6469A9ED49C
+	-Dwdm.edgeVersion=14156DA0-D40F-460A-B14D-1B264CA081A5
 
 	-Dwdm.phantomjsDriverVersion=2.1.1
 
