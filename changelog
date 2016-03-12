@@ -2,7 +2,9 @@ webdrivermanager (1.4.1)
 
   + Bug-fix issue #19: WDM is unable to download the 64-bit IEDriverServer
   + Bug-fix issue #20: PhantomJsDriverManager exception
+  + Change URL to download Edge driver (exe instead of msi)
   + Improve compatibility with Microsoft Windows and Mac OS X
+  + Improve test coverage
 
  -- Boni Garcia <boni.gg@gmail.com>  Wen, 12 Mar 2016 16:03:00 +0200
 
