@@ -303,6 +303,12 @@ public class Downloader {
 			targetPath = targetPath.replace(HOME,
 					System.getProperty("user.home"));
 		}
+
+		// Create repository folder if not exits
+		File repository = new File(targetPath);
+		if (!repository.exists()) {
+			repository.mkdirs();
+		}
 		return targetPath;
 	}
 
