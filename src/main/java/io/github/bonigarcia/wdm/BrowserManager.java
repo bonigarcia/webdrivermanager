@@ -41,6 +41,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+
 /**
  * Generic manager.
  *
@@ -84,9 +85,15 @@ public abstract class BrowserManager {
 
 	public void setup(Architecture arch, String version) {
 		try {
-			this.getClass().newInstance().manage(arch,
-					version.equals(DriverVersion.NOT_SPECIFIED.name())
-							? getDriverVersion() : version);
+
+			// Honor property if available (even when version is present)
+			String driverVersion = getDriverVersion();
+			if (!driverVersion.equalsIgnoreCase(DriverVersion.LATEST.name())
+					|| version.equals(DriverVersion.NOT_SPECIFIED.name())) {
+				version = driverVersion;
+			}
+
+			this.getClass().newInstance().manage(arch, version);
 		} catch (InstantiationException | IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
