@@ -114,9 +114,10 @@ public abstract class BrowserManager {
 		String driverInCache = null;
 		while (iterateFiles.hasNext()) {
 			driverInCache = iterateFiles.next().toString();
+
 			if (driverInCache.contains(driverName)
 					&& driverInCache.contains(driverVersion)
-					&& driverInCache.contains(arch.name())) {
+					&& driverInCache.contains(arch.toString())) {
 				log.debug("Found {} {} ({} bits) in cache: {} ", driverName,
 						driverVersion, arch, driverInCache);
 				break;
