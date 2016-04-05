@@ -49,7 +49,7 @@ public class IExplorerTest extends BaseBrowserTst {
 	}
 
 	@AfterClass
-	public void teardownClass() {
+	public static void teardownClass() {
 		validOS = true;
 	}
 

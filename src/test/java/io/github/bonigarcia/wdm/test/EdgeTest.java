@@ -48,7 +48,7 @@ public class EdgeTest extends BaseBrowserTst {
 	}
 
 	@AfterClass
-	public void teardownClass() {
+	public static void teardownClass() {
 		validOS = true;
 	}
 
