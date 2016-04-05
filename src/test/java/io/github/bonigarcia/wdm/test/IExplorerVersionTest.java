@@ -16,6 +16,7 @@ package io.github.bonigarcia.wdm.test;
 
 import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 
+import org.junit.After;
 import org.junit.Before;
 
 import io.github.bonigarcia.wdm.InternetExplorerDriverManager;
@@ -35,6 +36,11 @@ public class IExplorerVersionTest extends BaseVersionTst {
 		specificVersions = new String[] { "2.39", "2.40", "2.41", "2.42",
 				"2.43", "2.44", "2.45", "2.47" };
 		validOS = IS_OS_WINDOWS;
+	}
+
+	@After
+	public void end() {
+		validOS = true;
 	}
 
 }

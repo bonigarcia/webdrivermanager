@@ -16,6 +16,7 @@ package io.github.bonigarcia.wdm.test;
 
 import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.openqa.selenium.edge.EdgeDriver;
@@ -44,6 +45,11 @@ public class EdgeTest extends BaseBrowserTst {
 		if (validOS) {
 			driver = new EdgeDriver();
 		}
+	}
+
+	@AfterClass
+	public void teardownClass() {
+		validOS = true;
 	}
 
 }
