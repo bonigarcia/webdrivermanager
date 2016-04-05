@@ -1,3 +1,12 @@
+webdrivermanager (1.4.2)
+
+  + Check that repository target folder exits (otherwise create)
+  + Honor property (wdm.*Url) if available for driver version
+  + Bug-fix issue #24: search driver in cache by architecture
+
+ -- Boni Garcia <boni.gg@gmail.com>  Tue, 5 Apr 2016 20:25:00 +0200
+
+
 webdrivermanager (1.4.1)
 
   + Bug-fix issue #19: WDM is unable to download the 64-bit IEDriverServer
