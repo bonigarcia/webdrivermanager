@@ -103,10 +103,10 @@ public abstract class BrowserManager {
 		manage(arch, version.name());
 	}
 
-	public String existsDriverInCache(String repository, String driverName,
+	public String existsDriverInCache(String repository, String driverVersion,
 			Architecture arch) {
 
-		String driverVersion = getDriverName();
+		String driverName = getDriverName();
 		log.trace("Checking if {} {} ({} bits) exists in cache {}", driverName,
 				driverVersion, arch, repository);
 
@@ -117,11 +117,15 @@ public abstract class BrowserManager {
 		while (iterateFiles.hasNext()) {
 			driverInCache = iterateFiles.next().toString();
 
-			if (driverInCache.contains(driverName)
-					&& driverInCache.contains(driverVersion)
-					&& driverInCache.contains(arch.toString())) {
-				log.debug("Found {} {} ({} bits) in cache: {} ", driverName,
-						driverVersion, arch, driverInCache);
+			// Exception for phantomjs
+			boolean architecture = driverName.equals("phantomjs")
+					|| driverInCache.contains(arch.toString());
+			log.trace("Checking {}", driverInCache);
+
+			if (driverInCache.contains(driverVersion)
+					&& driverInCache.contains(driverName) && architecture) {
+				log.debug("Found {} {} ({} bits) in cache: {} ", driverVersion,
+						driverName, arch, driverInCache);
 				break;
 			} else {
 				driverInCache = null;
@@ -129,8 +133,8 @@ public abstract class BrowserManager {
 		}
 
 		if (driverInCache == null) {
-			log.trace("{} {} ({} bits) do not exist in cache {}", driverName,
-					driverVersion, arch, repository);
+			log.trace("{} {} ({} bits) do not exist in cache {}", driverVersion,
+					driverName, arch, repository);
 		}
 		return driverInCache;
 	}
