@@ -79,6 +79,10 @@ public class TargetTest {
 						"https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-windows.zip",
 						"/phantomjs/windows/2.1.1/phantomjs-2.1.1-windows.zip" },
 
+				// PhantomJS Mac OS X
+				{ "2.1.1", "https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-macosx.zip",
+						"/phantomjs/macosx/2.1.1/phantomjs-2.1.1-macosx.zip" },
+
 				// Edge Windows
 				{ "8D0D08CF-790D-4586-B726-C6469A9ED49C",
 						"https://download.microsoft.com/download/1/4/1/14156DA0-D40F-460A-B14D-1B264CA081A5/MicrosoftWebDriver.exe",
