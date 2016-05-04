@@ -104,7 +104,9 @@ public abstract class BrowserManager {
 	}
 
 	public String existsDriverInCache(String repository, String driverName,
-			String driverVersion, Architecture arch) {
+			Architecture arch) {
+
+		String driverVersion = getDriverName();
 		log.trace("Checking if {} {} ({} bits) exists in cache {}", driverName,
 				driverVersion, arch, repository);
 
@@ -144,7 +146,7 @@ public abstract class BrowserManager {
 			if (!getLatest) {
 				versionToDownload = version;
 				driverInCache = existsDriverInCache(Downloader.getTargetPath(),
-						getDriverName(), version, arch);
+						version, arch);
 			}
 
 			if (driverInCache != null) {
