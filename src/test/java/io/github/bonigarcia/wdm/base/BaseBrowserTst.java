@@ -15,6 +15,7 @@
 package io.github.bonigarcia.wdm.base;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -60,5 +61,10 @@ public class BaseBrowserTst {
 			wait.until(ExpectedConditions.textToBePresentInElementLocated(
 					By.tagName("body"), "Computer software"));
 		}
+	}
+
+	@AfterClass
+	public static void teardownClass() {
+		validOS = true;
 	}
 }
