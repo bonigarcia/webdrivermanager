@@ -1,3 +1,10 @@
+webdrivermanager (1.4.3)
+
+  + Exception for seeking PhantomJS in the binary cache
+
+ -- Boni Garcia <boni.gg@gmail.com>  Tue, 10 May 2016 10:11:00 +0200
+
+
 webdrivermanager (1.4.2)
 
   + Check that repository target folder exits (otherwise create)
