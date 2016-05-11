@@ -22,6 +22,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.zip.GZIPInputStream;
@@ -81,7 +82,10 @@ public class Downloader {
 
 		if (download) {
 			log.info("Downloading {} to {}", url, targetFile);
-			FileUtils.copyURLToFile(url, targetFile);
+			URLConnection conn = url.openConnection();
+			conn.setRequestProperty("User-Agent", "Mozilla/5.0");
+			conn.connect();
+			FileUtils.copyInputStreamToFile(conn.getInputStream(), targetFile);
 
 			if (!export.contains("edge")) {
 				binary = extract(targetFile, export);
