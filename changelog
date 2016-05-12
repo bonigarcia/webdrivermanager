@@ -1,3 +1,10 @@
+webdrivermanager (1.4.4)
+
+  + Include User-Agent header to connect with server in downloads
+
+ -- Boni Garcia <boni.gg@gmail.com>  Sun, 5 Jun 2016 19:56:00 +0200
+
+
 webdrivermanager (1.4.3)
 
   + Exception for seeking PhantomJS in the binary cache
