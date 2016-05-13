@@ -1,6 +1,6 @@
 webdrivermanager (1.4.4)
 
-  + Include User-Agent header to connect with server in downloads
+  + Include several HTTP headers to connect with server in downloads
 
  -- Boni Garcia <boni.gg@gmail.com>  Sun, 5 Jun 2016 19:56:00 +0200
 

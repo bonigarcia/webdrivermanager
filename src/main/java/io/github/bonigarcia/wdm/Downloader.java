@@ -84,6 +84,7 @@ public class Downloader {
 			log.info("Downloading {} to {}", url, targetFile);
 			URLConnection conn = url.openConnection();
 			conn.setRequestProperty("User-Agent", "Mozilla/5.0");
+			conn.addRequestProperty("Connection", "keep-alive");
 			conn.connect();
 			FileUtils.copyInputStreamToFile(conn.getInputStream(), targetFile);
 
