@@ -14,10 +14,6 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import static org.apache.commons.lang3.SystemUtils.IS_OS_LINUX;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC_OSX;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
-
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.openqa.selenium.firefox.MarionetteDriver;
@@ -36,9 +32,6 @@ public class MarionetteTest extends BaseBrowserTst {
 
 	@BeforeClass
 	public static void setupClass() {
-		// FIXME: Marionette cannot be executed with other tests
-		validOS = false;
-
 		if (validOS) {
 			MarionetteDriverManager.getInstance().setup();
 		}
@@ -49,18 +42,6 @@ public class MarionetteTest extends BaseBrowserTst {
 		if (validOS) {
 			DesiredCapabilities capabilities = DesiredCapabilities.firefox();
 			capabilities.setCapability("marionette", true);
-			// This capability set need for beta\dev\nightly(version 45+)
-			// firefox
-			// because this driver is target on it
-			if (IS_OS_LINUX) {
-				capabilities.setCapability("binary", "/usr/bin/firefox");
-			} else if (IS_OS_WINDOWS) {
-				capabilities.setCapability("binary",
-						"C:\\Program Files\\Mozilla Firefox\\firefox.exe");
-			} else if (IS_OS_MAC_OSX) {
-				capabilities.setCapability("binary",
-						"/Applications/Firefox.app");
-			}
 			driver = new MarionetteDriver(capabilities);
 		}
 	}
