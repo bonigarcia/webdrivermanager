@@ -32,6 +32,8 @@ public class MarionetteTest extends BaseBrowserTst {
 
 	@BeforeClass
 	public static void setupClass() {
+		validOS = false;
+
 		if (validOS) {
 			MarionetteDriverManager.getInstance().setup();
 		}
