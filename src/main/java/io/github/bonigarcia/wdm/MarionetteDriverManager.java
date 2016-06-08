@@ -52,7 +52,7 @@ public class MarionetteDriverManager extends BrowserManager {
 		String driverVersion = versionToDownload;
 
 		BufferedReader reader = new BufferedReader(
-				new InputStreamReader(driverUrl.openStream()));
+				new InputStreamReader(openGitHubConnection(driverUrl)));
 
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		Gson gson = gsonBuilder.create();
