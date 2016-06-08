@@ -358,8 +358,11 @@ public abstract class BrowserManager {
 			i++;
 		}
 		if (i < vals1.length && i < vals2.length) {
-			int diff = Integer.valueOf(vals1[i])
-					.compareTo(Integer.valueOf(vals2[i]));
+			String v2 = vals2[i];
+			if (v2.startsWith("v")) {
+				v2 = v2.substring(1);
+			}
+			int diff = Integer.valueOf(vals1[i]).compareTo(Integer.valueOf(v2));
 			return Integer.signum(diff);
 		} else {
 			return Integer.signum(vals1.length - vals2.length);
