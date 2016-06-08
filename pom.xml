@@ -156,11 +156,6 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-release-plugin</artifactId>
 				<version>${maven-release-plugin.version}</version>
-				<configuration>
-					<arguments>-Dgpg.passphrase=${gpg.passphrase}</arguments>
-					<arguments>-Dwdm.gitHubTokenName=${gitHubTokenName}</arguments>
-					<arguments>-Dwdm.gitHubTokenSecret=${gitHubTokenSecret}</arguments>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
