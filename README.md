@@ -188,7 +188,7 @@ Caused by: java.io.IOException: Server returned HTTP response code: 403 for URL:
 	at io.github.bonigarcia.wdm.BrowserManager.manage(BrowserManager.java:163)
 ```
 
-In order to avoid this problem, [authenticated requests] should be done). The procedure is the following:
+In order to avoid this problem, [authenticated requests] should be done. The procedure is the following:
 
 1. Create a pair token/secret in your [GitHub account]
 2. Tell WebDriverManager the value of this pair token/secret. To do that you should use the configuration keys ``wdm.gitHubTokenName`` and ``wdm.gitHubTokenSecret``. You can pass them as command line Java parameters as follows:
