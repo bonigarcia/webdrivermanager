@@ -17,7 +17,6 @@ package io.github.bonigarcia.wdm.test;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.openqa.selenium.firefox.MarionetteDriver;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import io.github.bonigarcia.wdm.MarionetteDriverManager;
 import io.github.bonigarcia.wdm.base.BaseBrowserTst;
@@ -42,9 +41,7 @@ public class MarionetteTest extends BaseBrowserTst {
 	@Before
 	public void setupTest() {
 		if (validOS) {
-			DesiredCapabilities capabilities = DesiredCapabilities.firefox();
-			capabilities.setCapability("marionette", true);
-			driver = new MarionetteDriver(capabilities);
+			driver = new MarionetteDriver();
 		}
 	}
 
