@@ -30,7 +30,7 @@ public class VoidDriverManager extends BrowserManager {
 
 	private static VoidDriverManager instance;
 
-	protected VoidDriverManager() {
+	public VoidDriverManager() {
 	}
 
 	public static synchronized VoidDriverManager getInstance() {

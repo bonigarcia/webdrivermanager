@@ -37,7 +37,7 @@ public class EdgeDriverManager extends BrowserManager {
 
 	private static EdgeDriverManager instance;
 
-	protected EdgeDriverManager() {
+	public EdgeDriverManager() {
 	}
 
 	public static synchronized EdgeDriverManager getInstance() {

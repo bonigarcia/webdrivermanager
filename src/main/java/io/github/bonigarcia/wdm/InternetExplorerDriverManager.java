@@ -29,7 +29,7 @@ public class InternetExplorerDriverManager extends BrowserManager {
 
 	private static InternetExplorerDriverManager instance;
 
-	protected InternetExplorerDriverManager() {
+	public InternetExplorerDriverManager() {
 	}
 
 	public static synchronized InternetExplorerDriverManager getInstance() {

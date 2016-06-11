@@ -29,7 +29,7 @@ public class ChromeDriverManager extends BrowserManager {
 
 	private static ChromeDriverManager instance;
 
-	protected ChromeDriverManager() {
+	public ChromeDriverManager() {
 	}
 
 	public static synchronized ChromeDriverManager getInstance() {

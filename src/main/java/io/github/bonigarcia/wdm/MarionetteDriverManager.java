@@ -37,7 +37,7 @@ public class MarionetteDriverManager extends BrowserManager {
 
 	private static MarionetteDriverManager instance;
 
-	protected MarionetteDriverManager() {
+	public MarionetteDriverManager() {
 	}
 
 	public static synchronized MarionetteDriverManager getInstance() {

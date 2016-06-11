@@ -38,7 +38,7 @@ public class PhantomJsDriverManager extends BrowserManager {
 
 	private static PhantomJsDriverManager instance;
 
-	protected PhantomJsDriverManager() {
+	public PhantomJsDriverManager() {
 	}
 
 	public static synchronized PhantomJsDriverManager getInstance() {

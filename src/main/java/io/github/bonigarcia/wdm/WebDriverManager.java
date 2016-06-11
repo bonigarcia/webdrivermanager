@@ -38,7 +38,7 @@ public class WebDriverManager extends BrowserManager {
 
 	private static Class<? extends BrowserManager> browserManagerClass;
 
-	protected WebDriverManager() {
+	public WebDriverManager() {
 	}
 
 	public static synchronized BrowserManager getInstance(

@@ -37,7 +37,7 @@ public class OperaDriverManager extends BrowserManager {
 
 	private static OperaDriverManager instance;
 
-	protected OperaDriverManager() {
+	public OperaDriverManager() {
 	}
 
 	public static synchronized OperaDriverManager getInstance() {
