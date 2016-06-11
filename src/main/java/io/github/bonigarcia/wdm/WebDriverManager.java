@@ -21,6 +21,7 @@ import java.util.List;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.firefox.MarionetteDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.opera.OperaDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
@@ -42,36 +43,35 @@ public class WebDriverManager extends BrowserManager {
 
 	public static synchronized BrowserManager getInstance(
 			Class<? extends WebDriver> webDriverClass) {
-		if (instance == null) {
-			if (webDriverClass.equals(ChromeDriver.class)) {
-				browserManagerClass = ChromeDriverManager.class;
+		if (webDriverClass.equals(ChromeDriver.class)) {
+			browserManagerClass = ChromeDriverManager.class;
 
-			} else if (webDriverClass.equals(OperaDriver.class)) {
-				browserManagerClass = OperaDriverManager.class;
+		} else if (webDriverClass.equals(OperaDriver.class)) {
+			browserManagerClass = OperaDriverManager.class;
 
-			} else if (webDriverClass.equals(InternetExplorerDriver.class)) {
-				browserManagerClass = InternetExplorerDriverManager.class;
+		} else if (webDriverClass.equals(InternetExplorerDriver.class)) {
+			browserManagerClass = InternetExplorerDriverManager.class;
 
-			} else if (webDriverClass.equals(EdgeDriver.class)) {
-				browserManagerClass = EdgeDriverManager.class;
+		} else if (webDriverClass.equals(EdgeDriver.class)) {
+			browserManagerClass = EdgeDriverManager.class;
 
-			} else if (webDriverClass.equals(PhantomJSDriver.class)) {
-				browserManagerClass = PhantomJsDriverManager.class;
+		} else if (webDriverClass.equals(PhantomJSDriver.class)) {
+			browserManagerClass = PhantomJsDriverManager.class;
 
-			} else if (webDriverClass.equals(MarionetteDriverManager.class)) {
-				browserManagerClass = MarionetteDriverManager.class;
+		} else if (webDriverClass.equals(MarionetteDriver.class)) {
+			browserManagerClass = MarionetteDriverManager.class;
 
-			} else {
-				browserManagerClass = VoidDriverManager.class;
-			}
+		} else {
+			browserManagerClass = VoidDriverManager.class;
+		}
 
-			try {
-				instance = browserManagerClass.newInstance();
-			} catch (Throwable e) {
-				String errMessage = "Error creating WebDriverManager";
-				log.error(errMessage, e);
-				throw new RuntimeException(errMessage, e);
-			}
+		try {
+			log.debug("Creating instance of {}", browserManagerClass);
+			instance = browserManagerClass.newInstance();
+		} catch (Throwable e) {
+			String errMessage = "Error creating WebDriverManager";
+			log.error(errMessage, e);
+			throw new RuntimeException(errMessage, e);
 		}
 		return instance;
 	}
