@@ -15,6 +15,7 @@
 package io.github.bonigarcia.wdm.test;
 
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Assert;
@@ -51,7 +52,7 @@ public class PhantomJsFilterTest {
 	@Test
 	public void testFilterPhantomJs() {
 		List<URL> latestUrls = phatomJsManager.getLatest(driversUrls,
-				phantomJsBinaryName);
+				Arrays.asList(phantomJsBinaryName));
 		List<URL> filteredLatestUrls = phatomJsManager.filter(latestUrls,
 				Architecture.x64);
 		log.info("Filtered URLS for LATEST version {} : {}",
@@ -64,7 +65,7 @@ public class PhantomJsFilterTest {
 	public void testFilterVersionPhantomJs() {
 		String specificVersion = "1.9.6";
 		List<URL> specificVersionUrls = phatomJsManager.getVersion(driversUrls,
-				phantomJsBinaryName, specificVersion);
+				Arrays.asList(phantomJsBinaryName), specificVersion);
 		List<URL> filteredVersionUrls = phatomJsManager
 				.filter(specificVersionUrls, Architecture.x64);
 		log.info("Filtered URLS for {} version {}: {}", phantomJsBinaryName,

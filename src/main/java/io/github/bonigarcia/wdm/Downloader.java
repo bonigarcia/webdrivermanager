@@ -25,6 +25,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -52,7 +53,7 @@ public class Downloader {
 	private static final String HOME = "~";
 
 	public static final synchronized void download(URL url, String version,
-			String export, String driverName) throws IOException {
+			String export, List<String> driverName) throws IOException {
 		File targetFile = new File(getTarget(version, url));
 		File binary = null;
 
@@ -67,15 +68,20 @@ public class Downloader {
 			Collection<File> listFiles = FileUtils
 					.listFiles(targetFile.getParentFile(), null, true);
 			for (File file : listFiles) {
-				if (file.getName().startsWith(driverName)
-						&& file.canExecute()) {
-					binary = file;
-					log.debug("Using binary driver previously downloaded {}",
-							binary);
-					download = false;
+				for (String s : driverName) {
+					if (file.getName().startsWith(s) && file.canExecute()) {
+						binary = file;
+						log.debug(
+								"Using binary driver previously downloaded {}",
+								binary);
+						download = false;
+						break;
+					} else {
+						download = true;
+					}
+				}
+				if (!download) {
 					break;
-				} else {
-					download = true;
 				}
 			}
 		}
@@ -189,8 +195,17 @@ public class Downloader {
 	public static File unGzip(File archive) throws IOException {
 
 		log.trace("UnGzip {}", archive);
+		String fileName = archive.getName();
+		int iDash = fileName.indexOf("-");
+		if (iDash != -1) {
+			fileName = fileName.substring(0, iDash);
+		}
+		int iDot = fileName.indexOf(".");
+		if (iDot != -1) {
+			fileName = fileName.substring(0, iDot);
+		}
 		File target = new File(
-				archive.getParentFile() + File.separator + "wires");
+				archive.getParentFile() + File.separator + fileName);
 
 		try (GZIPInputStream in = new GZIPInputStream(
 				new FileInputStream(archive))) {
@@ -201,8 +216,10 @@ public class Downloader {
 			}
 		}
 
-		if (!target.getName().toLowerCase().contains(".exe") && target.exists())
+		if (!target.getName().toLowerCase().contains(".exe")
+				&& target.exists()) {
 			target.setExecutable(true);
+		}
 
 		return target;
 	}
@@ -219,7 +236,7 @@ public class Downloader {
 
 	private static File checkPhantom(File archive, String export)
 			throws IOException {
-		File target;
+		File target = null;
 		String phantomName = "phantomjs";
 		if (export.contains(phantomName)) {
 			String fileNoExtension = archive.getName().replace(".tar.bz2", "")
@@ -246,9 +263,14 @@ public class Downloader {
 			log.trace("Folder to be deleted: {}", delete);
 			FileUtils.deleteDirectory(delete);
 		} else {
-			target = archive.getParentFile().listFiles()[0];
+			File[] ls = archive.getParentFile().listFiles();
+			for (File f : ls) {
+				if (f.canExecute()) {
+					target = f;
+					break;
+				}
+			}
 		}
-
 		return target;
 	}
 
@@ -271,6 +293,8 @@ public class Downloader {
 		String target = getTargetPath() + folder + File.separator + version
 				+ zip;
 
+		System.out.println(target);
+
 		// Exception for PhantomJS
 		if (target.contains("phantomjs")) {
 			int iSeparator = target.indexOf(version) - 1;
@@ -283,7 +307,7 @@ public class Downloader {
 		}
 
 		// Exception for Marionette
-		else if (target.contains("wires")) {
+		else if (target.contains("wires") || target.contains("geckodriver")) {
 			int iSeparator = target.indexOf(version) - 1;
 			int iDash = target.lastIndexOf(version) + version.length();
 			int iPoint = target.lastIndexOf("tar.gz") != -1

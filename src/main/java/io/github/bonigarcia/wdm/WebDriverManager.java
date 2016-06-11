@@ -97,7 +97,7 @@ public class WebDriverManager extends BrowserManager {
 	}
 
 	@Override
-	protected String getDriverName() {
+	protected List<String> getDriverName() {
 		return instance.getDriverName();
 	}
 

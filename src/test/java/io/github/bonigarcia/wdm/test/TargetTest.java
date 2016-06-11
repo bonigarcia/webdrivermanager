@@ -80,7 +80,8 @@ public class TargetTest {
 						"/phantomjs/windows/2.1.1/phantomjs-2.1.1-windows.zip" },
 
 				// PhantomJS Mac OS X
-				{ "2.1.1", "https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-macosx.zip",
+				{ "2.1.1",
+						"https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.1.1-macosx.zip",
 						"/phantomjs/macosx/2.1.1/phantomjs-2.1.1-macosx.zip" },
 
 				// Edge Windows
@@ -99,9 +100,12 @@ public class TargetTest {
 				// Marionette Linux
 				{ "0.6.2",
 						"https://github.com/jgraham/wires/releases/download/v0.6.2/wires-0.6.2-linux64.gz",
-						"/wires/linux64/0.6.2/wires-0.6.2-linux64.gz" }
+						"/wires/linux64/0.6.2/wires-0.6.2-linux64.gz" },
 
-		});
+				// Marionette Linux #2
+				{ "0.8.0",
+						"https://github.com/mozilla/geckodriver/releases/download/v0.8.0/geckodriver-0.8.0-linux64.gz",
+						"/geckodriver/linux64/0.8.0/geckodriver-0.8.0-linux64.gz" } });
 
 	}
 

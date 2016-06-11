@@ -17,6 +17,7 @@ package io.github.bonigarcia.wdm;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -89,8 +90,8 @@ public class EdgeDriverManager extends BrowserManager {
 	}
 
 	@Override
-	protected String getDriverName() {
-		return "MicrosoftWebDriver";
+	protected List<String> getDriverName() {
+		return Arrays.asList("MicrosoftWebDriver");
 	}
 
 }

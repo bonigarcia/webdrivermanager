@@ -20,6 +20,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import com.google.gson.Gson;
@@ -100,8 +101,8 @@ public class OperaDriverManager extends BrowserManager {
 	}
 
 	@Override
-	protected String getDriverName() {
-		return "operadriver";
+	protected List<String> getDriverName() {
+		return Arrays.asList("operadriver");
 	}
 
 	@Override

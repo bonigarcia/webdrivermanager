@@ -14,17 +14,18 @@
  */
 package io.github.bonigarcia.wdm;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.internal.LinkedTreeMap;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.internal.LinkedTreeMap;
 
 /**
  * Manager for Marionette.
@@ -106,8 +107,8 @@ public class MarionetteDriverManager extends BrowserManager {
 	}
 
 	@Override
-	protected String getDriverName() {
-		return "wires";
+	protected List<String> getDriverName() {
+		return Arrays.asList("wires", "geckodriver");
 	}
 
 	@Override

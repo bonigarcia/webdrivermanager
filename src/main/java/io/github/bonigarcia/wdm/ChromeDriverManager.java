@@ -16,6 +16,7 @@ package io.github.bonigarcia.wdm;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -59,8 +60,8 @@ public class ChromeDriverManager extends BrowserManager {
 	}
 
 	@Override
-	protected String getDriverName() {
-		return "chromedriver";
+	protected List<String> getDriverName() {
+		return Arrays.asList("chromedriver");
 	}
 
 }
