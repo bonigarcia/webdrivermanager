@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>io.github.bonigarcia</groupId>
 	<artifactId>webdrivermanager</artifactId>
-	<version>1.4.5</version>
+	<version>1.4.6-SNAPSHOT</version>
 
 	<properties>
 		<slf4j.version>1.7.12</slf4j.version>
@@ -56,7 +56,7 @@
 		<connection>scm:git:git://github.com/bonigarcia/webdrivermanager.git</connection>
 		<developerConnection>scm:git:git@github.com:bonigarcia/webdrivermanager.git</developerConnection>
 		<url>https://github.com/bonigarcia/webdrivermanager</url>
-		<tag>webdrivermanager-1.4.5</tag>
+		<tag>develop</tag>
 	</scm>
 
 	<issueManagement>
