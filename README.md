@@ -10,7 +10,7 @@ System.setProperty("webdriver.opera.driver", "/absolute/path/to/binary/operadriv
 System.setProperty("webdriver.ie.driver", "C:/absolute/path/to/binary/IEDriverServer.exe");
 System.setProperty("webdriver.edge.driver", "C:/absolute/path/to/binary/MicrosoftWebDriver.exe");
 System.setProperty("phantomjs.binary.path", "/absolute/path/to/binary/phantomjs");
-System.setProperty("webdriver.gecko.driver", "/absolute/path/to/binary/wires");
+System.setProperty("webdriver.gecko.driver", "/absolute/path/to/binary/geckodriver");
 ```
 
 This is quite annoying since it forces you to link directly this binary in your source code. In addition, you have to check manually when new versions of the binaries are released. This library comes to the rescue, performing in an automated way all this dirty job for you.
@@ -25,7 +25,7 @@ In order to use WebDriverManager in a Maven project, first add the following dep
 <dependency>
 	<groupId>io.github.bonigarcia</groupId>
 	<artifactId>webdrivermanager</artifactId>
-	<version>1.4.4</version>
+	<version>1.4.5</version>
 </dependency>
 ```
 
@@ -84,6 +84,7 @@ Configuration parameters for WebDriverManager are set in the ``application.prope
 
 ```properties
 wdm.targetPath=~/.m2/repository/webdriver
+wdm.forceCache=false
 wdm.override=false
 wdm.timeout=30
 wdm.seekErrorRetries=3
@@ -108,7 +109,7 @@ wdm.phantomjsDriverUrl=https://bitbucket.org/ariya/phantomjs/downloads/
 wdm.phantomjsDriverExport=phantomjs.binary.path
 wdm.phantomjsDriverVersion=LATEST
 
-wdm.marionetteDriverUrl=https://api.github.com/repos/jgraham/wires/releases
+wdm.marionetteDriverUrl=https://api.github.com/repos/mozilla/geckodriver/releases
 wdm.marionetteDriverExport=webdriver.gecko.driver
 wdm.marionetteDriverVersion=LATEST
 
@@ -165,6 +166,8 @@ This can also be done by changing the value of the variables ``wdm.chromeDriverV
 -Dwdm.marionetteDriverVersion=0.6.2
 ```
 
+If no version is specified, WebDriverManager sends a request to the server hosting the binary. In order to avoid this request and check if any binary has been previously downloaded, the key `wdm.forceCache` can be used.
+
 ### Known Issues
 
 Some of the binaries (Opera and Marionette) are hosted on GitHub. When several consecutive requests are made by WebDriverManager, GitHub servers return an **HTTP 403 error** response as follows:
@@ -180,7 +183,7 @@ Caused by: java.io.IOException: Server returned HTTP response code: 403 for URL:
 ```
 
 ```
-Caused by: java.io.IOException: Server returned HTTP response code: 403 for URL: https://api.github.com/repos/jgraham/wires/releases
+Caused by: java.io.IOException: Server returned HTTP response code: 403 for URL: https://api.github.com/repos/mozilla/geckodriver/releases
 	at sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1840)
 	at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1441)
 	at sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:254)
