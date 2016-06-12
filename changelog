@@ -1,3 +1,13 @@
+webdrivermanager (1.4.5)
+
+  + Support for multiple binary names (caused by geckodriver)
+  + Bug-fix: correct support for Marionette in generic manager
+  + Improve the way of handling the version number of Edge driver
+  + Key wdm.forceCache to force using the latest version of binaries in cache
+
+ -- Boni Garcia <boni.gg@gmail.com>  Sun, 12 Jun 2016 06:38:00 +0200
+
+
 webdrivermanager (1.4.4)
 
   + Include several HTTP headers to connect with server in downloads
