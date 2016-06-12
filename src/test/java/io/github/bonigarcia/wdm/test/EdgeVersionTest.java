@@ -33,8 +33,7 @@ public class EdgeVersionTest extends BaseVersionTst {
 	@Before
 	public void setup() {
 		browserManager = EdgeDriverManager.getInstance();
-		specificVersions = new String[] {
-				"14156DA0-D40F-460A-B14D-1B264CA081A5" };
+		specificVersions = new String[] { "3.14361" };
 		validOS = IS_OS_WINDOWS;
 	}
 

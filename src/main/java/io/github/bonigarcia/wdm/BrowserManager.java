@@ -174,8 +174,10 @@ public abstract class BrowserManager {
 					boolean continueSearchingVersion;
 
 					do {
-						// Get the latest or concrete version
-						if (getLatest) {
+						// Get the latest or concrete version or Edge (the only
+						// version that can be downloaded is the latest)
+						if (getLatest || getDriverName()
+								.contains("MicrosoftWebDriver")) {
 							candidateUrls = getLatest(urls, getDriverName());
 						} else {
 							candidateUrls = getVersion(urls, getDriverName(),
@@ -185,8 +187,8 @@ public abstract class BrowserManager {
 							break;
 						}
 
-						log.trace("All URLS: {}", urls);
-						log.trace("Candidate URLS: {}", candidateUrls);
+						log.trace("All URLs: {}", urls);
+						log.trace("Candidate URLs: {}", candidateUrls);
 
 						if (this.getClass().equals(EdgeDriverManager.class)) {
 							// Microsoft Edge binaries are different
@@ -341,9 +343,9 @@ public abstract class BrowserManager {
 								url.getFile().lastIndexOf(SEPARATOR));
 					}
 
-					if (getDriverName().equals("MicrosoftWebDriver")) {
-						currentVersion = currentVersion.substring(
-								currentVersion.lastIndexOf(SEPARATOR) + 1);
+					if (getDriverName().contains("MicrosoftWebDriver")) {
+						out.add(url);
+						break;
 					}
 
 					if (versionToDownload == null) {

@@ -61,16 +61,23 @@ public class EdgeDriverManager extends BrowserManager {
 		java.util.logging.Logger.getLogger("org.apache.commons.httpclient")
 				.setLevel(Level.OFF);
 
-		// Using HtmlUnitDriver to read MSI package URL
+		// Using HtmlUnitDriver to read URL and version
 		HtmlUnitDriver driver = new HtmlUnitDriver();
 		driver.manage().timeouts().implicitlyWait(
 				WdmConfig.getInt("wdm.timeout"), TimeUnit.SECONDS);
 		driver.get(edgeDriverUrl);
+
+		driver.findElement(By.linkText("Details")).click();
+		WebElement versionElement = driver.findElement(By.xpath(
+				"//*[contains(text(), 'Version:')]/parent::*/following-sibling::*"));
+		versionToDownload = versionElement.getText();
+
 		driver.findElement(By.linkText("Download")).click();
 		WebElement clickHere = driver.findElement(By.linkText("Click here"));
 		String downloadLink = clickHere.getAttribute("href");
 		List<URL> urlList = new ArrayList<>();
 		urlList.add(new URL(downloadLink));
+
 		return urlList;
 	}
 
