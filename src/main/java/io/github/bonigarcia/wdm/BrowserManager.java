@@ -27,6 +27,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -108,6 +110,39 @@ public abstract class BrowserManager {
 		manage(arch, version.name());
 	}
 
+	public String forceCache(String repository) {
+		String driverInCache = null;
+		for (String driverName : getDriverName()) {
+			log.trace("Checking if {} exists in cache {}", driverName,
+					repository);
+
+			Collection<File> listFiles = FileUtils
+					.listFiles(new File(repository), null, true);
+			Object[] array = listFiles.toArray();
+			Arrays.sort(array, Collections.reverseOrder());
+
+			for (Object f : array) {
+				driverInCache = f.toString();
+				log.trace("Checking {}", driverInCache);
+				if (driverInCache.contains(driverName)) {
+					log.info("Found {} in cache: {} ", driverName,
+							driverInCache);
+					break;
+				} else {
+					driverInCache = null;
+				}
+			}
+
+			if (driverInCache == null) {
+				log.trace("{} do not exist in cache {}", driverName,
+						repository);
+			} else {
+				break;
+			}
+		}
+		return driverInCache;
+	}
+
 	public String existsDriverInCache(String repository, String driverVersion,
 			Architecture arch) {
 
@@ -154,8 +189,11 @@ public abstract class BrowserManager {
 					|| version.equalsIgnoreCase(
 							DriverVersion.NOT_SPECIFIED.name());
 
+			boolean forceCache = WdmConfig.getBoolean("wdm.forceCache");
 			String driverInCache = null;
-			if (!getLatest) {
+			if (forceCache) {
+				driverInCache = forceCache(Downloader.getTargetPath());
+			} else if (!getLatest) {
 				versionToDownload = version;
 				driverInCache = existsDriverInCache(Downloader.getTargetPath(),
 						version, arch);
