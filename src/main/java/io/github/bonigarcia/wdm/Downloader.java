@@ -265,7 +265,12 @@ public class Downloader {
 		} else {
 			File[] ls = archive.getParentFile().listFiles();
 			for (File f : ls) {
-				if (f.canExecute()) {
+				if (IS_OS_WINDOWS) {
+					if (f.getName().endsWith(".exe")) {
+						target = f;
+						break;
+					}
+				} else if (f.canExecute()) {
 					target = f;
 					break;
 				}
