@@ -24,7 +24,7 @@ import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.MarionetteDriver;
+import org.openqa.selenium.phantomjs.PhantomJSDriver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.base.BaseBrowserTst;
@@ -43,7 +43,7 @@ public class WebDriverTest extends BaseBrowserTst {
 
 	@Parameters(name = "{index}: {0}")
 	public static Collection<Object[]> data() {
-		return Arrays.asList(new Object[][] { { MarionetteDriver.class },
+		return Arrays.asList(new Object[][] { { PhantomJSDriver.class },
 				{ ChromeDriver.class } });
 	}
 
