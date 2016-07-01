@@ -408,19 +408,16 @@ public abstract class BrowserManager {
 	}
 
 	public Integer versionCompare(String str1, String str2) {
-		String[] vals1 = str1.split("\\.");
-		String[] vals2 = str2.split("\\.");
+		String[] vals1 = str1.replaceAll("v", "").split("\\.");
+		String[] vals2 = str2.replaceAll("v", "").split("\\.");
 		int i = 0;
 		while (i < vals1.length && i < vals2.length
 				&& vals1[i].equals(vals2[i])) {
 			i++;
 		}
 		if (i < vals1.length && i < vals2.length) {
-			String v2 = vals2[i];
-			if (v2.startsWith("v")) {
-				v2 = v2.substring(1);
-			}
-			int diff = Integer.valueOf(vals1[i]).compareTo(Integer.valueOf(v2));
+			int diff = Integer.valueOf(vals1[i])
+					.compareTo(Integer.valueOf(vals2[i]));
 			return Integer.signum(diff);
 		} else {
 			return Integer.signum(vals1.length - vals2.length);

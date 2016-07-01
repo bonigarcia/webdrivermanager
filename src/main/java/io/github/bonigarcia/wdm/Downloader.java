@@ -138,11 +138,12 @@ public class Downloader {
 
 		File file = null;
 		if (compressedFile.getName().toLowerCase().endsWith("tar.bz2")) {
-			file = unBZip2(compressedFile, export);
+			file = unBZip2(compressedFile);
+		} else if (compressedFile.getName().toLowerCase().endsWith("tar.gz")) {
+			file = unTarGz(compressedFile);
 		} else if (compressedFile.getName().toLowerCase().endsWith("gz")) {
 			file = unGzip(compressedFile);
 		} else {
-
 			ZipFile zipFolder = new ZipFile(compressedFile);
 			Enumeration<?> enu = zipFolder.entries();
 
@@ -224,14 +225,22 @@ public class Downloader {
 		return target;
 	}
 
-	public static File unBZip2(File archive, String export) throws IOException {
+	public static File unTarGz(File archive) throws IOException {
+		Archiver archiver = ArchiverFactory.createArchiver(ArchiveFormat.TAR,
+				CompressionType.GZIP);
+		archiver.extract(archive, archive.getParentFile());
+		log.trace("unTarGz {}", archive);
+
+		return archive;
+	}
+
+	public static File unBZip2(File archive) throws IOException {
 		Archiver archiver = ArchiverFactory.createArchiver(ArchiveFormat.TAR,
 				CompressionType.BZIP2);
 		archiver.extract(archive, archive.getParentFile());
 		log.trace("Unbzip2 {}", archive);
-		File target = checkPhantom(archive, export);
 
-		return target;
+		return archive;
 	}
 
 	private static File checkPhantom(File archive, String export)
@@ -297,8 +306,6 @@ public class Downloader {
 
 		String target = getTargetPath() + folder + File.separator + version
 				+ zip;
-
-		System.out.println(target);
 
 		// Exception for PhantomJS
 		if (target.contains("phantomjs")) {
