@@ -349,56 +349,68 @@ public abstract class BrowserManager {
 		log.trace("Input URL list {}", list);
 		List<URL> out = new ArrayList<URL>();
 		Collections.reverse(list);
-		for (URL url : list) {
+
+		List<URL> copyOfList = new ArrayList<>(list);
+		for (URL url : copyOfList) {
 			for (String s : match) {
-				if (url.getFile().contains(s)) {
-					log.trace("URL {} match with {}", url, s);
-					String currentVersion;
-					if (getDriverName().contains("phantomjs")) {
-						String file = url.getFile();
-						file = url.getFile().substring(
-								file.lastIndexOf(SEPARATOR), file.length());
-						final int matchIndex = file.indexOf(s);
-						currentVersion = file.substring(
-								matchIndex + s.length() + 1, file.length());
-						final int dashIndex = currentVersion.indexOf('-');
-						currentVersion = currentVersion.substring(0, dashIndex);
+				try {
+					if (url.getFile().contains(s)) {
+						log.trace("URL {} match with {}", url, s);
+						String currentVersion;
+						if (getDriverName().contains("phantomjs")) {
+							String file = url.getFile();
+							file = url.getFile().substring(
+									file.lastIndexOf(SEPARATOR), file.length());
+							final int matchIndex = file.indexOf(s);
+							currentVersion = file.substring(
+									matchIndex + s.length() + 1, file.length());
+							final int dashIndex = currentVersion.indexOf('-');
+							currentVersion = currentVersion.substring(0,
+									dashIndex);
 
-					} else if (getDriverName().contains("wires")
-							|| getDriverName().contains("geckodriver")) {
-						currentVersion = url.getFile().substring(
-								url.getFile().indexOf("-") + 1,
-								url.getFile().lastIndexOf("-"));
+						} else if (getDriverName().contains("wires")
+								|| getDriverName().contains("geckodriver")) {
+							currentVersion = url.getFile().substring(
+									url.getFile().indexOf("-") + 1,
+									url.getFile().lastIndexOf("-"));
 
-					} else if (getDriverName().contains("operadriver")) {
-						currentVersion = url.getFile().substring(
-								url.getFile().indexOf(SEPARATOR + "v") + 2,
-								url.getFile().lastIndexOf(SEPARATOR));
+						} else if (getDriverName().contains("operadriver")) {
+							currentVersion = url.getFile().substring(
+									url.getFile().indexOf(SEPARATOR + "v") + 2,
+									url.getFile().lastIndexOf(SEPARATOR));
 
-					} else {
-						currentVersion = url.getFile().substring(
-								url.getFile().indexOf(SEPARATOR) + 1,
-								url.getFile().lastIndexOf(SEPARATOR));
+						} else {
+							currentVersion = url.getFile().substring(
+									url.getFile().indexOf(SEPARATOR) + 1,
+									url.getFile().lastIndexOf(SEPARATOR));
+						}
+
+						if (getDriverName().contains("MicrosoftWebDriver")) {
+							out.add(url);
+							break;
+						}
+
+						if (versionToDownload == null) {
+							versionToDownload = currentVersion;
+						}
+						if (versionCompare(currentVersion,
+								versionToDownload) > 0) {
+							versionToDownload = currentVersion;
+							out.clear();
+						}
+						if (url.getFile().contains(versionToDownload)) {
+							out.add(url);
+						}
+						if (versionToDownload.startsWith("v")) {
+							versionToDownload = versionToDownload.substring(1);
+						}
 					}
 
-					if (getDriverName().contains("MicrosoftWebDriver")) {
-						out.add(url);
-						break;
-					}
-
-					if (versionToDownload == null) {
-						versionToDownload = currentVersion;
-					}
-					if (versionCompare(currentVersion, versionToDownload) > 0) {
-						versionToDownload = currentVersion;
-						out.clear();
-					}
-					if (url.getFile().contains(versionToDownload)) {
-						out.add(url);
-					}
-					if (versionToDownload.startsWith("v")) {
-						versionToDownload = versionToDownload.substring(1);
-					}
+				} catch (Exception e) {
+					log.warn("There was been a problem with URL {} : {}",
+							url.toString(), e.getMessage());
+					list.remove(url);
+					continue;
 				}
 			}
 		}
