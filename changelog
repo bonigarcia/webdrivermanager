@@ -1,3 +1,11 @@
+webdrivermanager (1.4.6)
+
+  + Handle exceptions when parsing URLs, reading next if necessary
+  + Use unTarGz method if needed
+
+ -- Boni Garcia <boni.gg@gmail.com>  Fri, 1 Jul 2016 19:22:00 +0200
+
+
 webdrivermanager (1.4.5)
 
   + Support for multiple binary names (caused by geckodriver)
