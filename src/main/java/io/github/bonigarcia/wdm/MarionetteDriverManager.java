@@ -58,27 +58,22 @@ public class MarionetteDriverManager extends BrowserManager {
 		GsonBuilder gsonBuilder = new GsonBuilder();
 		Gson gson = gsonBuilder.create();
 		GitHubApi[] releaseArray = gson.fromJson(reader, GitHubApi[].class);
-		GitHubApi release;
 
-		if (driverVersion == null || driverVersion.isEmpty() || driverVersion
-				.equalsIgnoreCase(DriverVersion.LATEST.name())) {
-			log.debug(
-					"Connecting to {} to check latest MarionetteDriver release",
-					driverUrl);
-			driverVersion = releaseArray[0].getName();
-			release = releaseArray[0];
-		} else {
-			release = getVersion(releaseArray, driverVersion);
-		}
-		if (release == null) {
-			throw new RuntimeException("Version " + driverVersion
-					+ " is not available for MarionetteDriver");
+		if (driverVersion != null) {
+			releaseArray = new GitHubApi[] {
+					getVersion(releaseArray, driverVersion) };
 		}
 
-		List<LinkedTreeMap<String, Object>> assets = release.getAssets();
 		List<URL> urls = new ArrayList<>();
-		for (LinkedTreeMap<String, Object> asset : assets) {
-			urls.add(new URL(asset.get("browser_download_url").toString()));
+		for (GitHubApi release : releaseArray) {
+			if (release != null) {
+				List<LinkedTreeMap<String, Object>> assets = release
+						.getAssets();
+				for (LinkedTreeMap<String, Object> asset : assets) {
+					urls.add(new URL(
+							asset.get("browser_download_url").toString()));
+				}
+			}
 		}
 
 		reader.close();
@@ -88,7 +83,8 @@ public class MarionetteDriverManager extends BrowserManager {
 	private GitHubApi getVersion(GitHubApi[] releaseArray, String version) {
 		GitHubApi out = null;
 		for (GitHubApi release : releaseArray) {
-			if (release.getName().contains(version)) {
+			if (release.getName() != null
+					&& release.getName().contains(version)) {
 				out = release;
 				break;
 			}
