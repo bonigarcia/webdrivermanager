@@ -1,3 +1,10 @@
+webdrivermanager (1.4.7)
+
+  + Bug-fix issue #44: Fixed PhantomJS downloads page change (PR #45 from ndtreviv)
+
+ -- Boni Garcia <boni.gg@gmail.com>  Mon, 1 Aug 2016 15:50:00 +0200
+
+
 webdrivermanager (1.4.6)
 
   + Handle exceptions when parsing URLs, reading next if necessary
