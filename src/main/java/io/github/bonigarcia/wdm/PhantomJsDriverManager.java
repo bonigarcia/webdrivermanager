@@ -70,7 +70,7 @@ public class PhantomJsDriverManager extends BrowserManager {
 				WdmConfig.getInt("wdm.timeout"), TimeUnit.SECONDS);
 		driver.get(phantomjsDriverUrl);
 		WebElement downloadsTable = driver
-				.findElement(By.id("available-downloads"));
+				.findElement(By.id("uploaded-files"));
 		List<WebElement> links = downloadsTable.findElements(By
 				.xpath("//table[@id='uploaded-files']/tbody/tr[@class='iterable-item']/td[@class='name']"
 						+ "/a"));
