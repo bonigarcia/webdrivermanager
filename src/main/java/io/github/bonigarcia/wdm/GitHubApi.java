@@ -29,6 +29,7 @@ import com.google.gson.internal.LinkedTreeMap;
 public class GitHubApi {
 
 	private String name;
+	private String tag_name;
 	private List<LinkedTreeMap<String, Object>> assets;
 
 	public GitHubApi() {
@@ -40,6 +41,14 @@ public class GitHubApi {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public String getTagName() {
+		return tag_name;
+	}
+
+	public void setTagName(String tagName) {
+		this.tag_name = tagName;
 	}
 
 	public List<LinkedTreeMap<String, Object>> getAssets() {

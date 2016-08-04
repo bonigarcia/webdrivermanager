@@ -83,8 +83,8 @@ public class MarionetteDriverManager extends BrowserManager {
 	private GitHubApi getVersion(GitHubApi[] releaseArray, String version) {
 		GitHubApi out = null;
 		for (GitHubApi release : releaseArray) {
-			if (release.getName() != null
-					&& release.getName().contains(version)) {
+			if ((release.getName() != null && release.getName().contains(version))
+					|| (release.getTagName() != null && release.getTagName().contains(version))) {
 				out = release;
 				break;
 			}
