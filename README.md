@@ -150,20 +150,20 @@ By default, WebDriverManager downloads the latest version of the WebDriver binar
 ChromeDriverManager.getInstance().setup("2.21");
 InternetExplorerDriverManager.getInstance().setup("2.46");
 OperaDriverManager.getInstance().setup("0.2.0");
-EdgeDriverManager.getInstance().setup("14156DA0-D40F-460A-B14D-1B264CA081A5");
+EdgeDriverManager.getInstance().setup("3.14366");
 PhantomJsDriverManager.getInstance().setup("2.1.1");
-MarionetteDriverManager.getInstance().setup("0.6.2");
+MarionetteDriverManager.getInstance().setup("0.10.0");
 ```
 
 This can also be done by changing the value of the variables ``wdm.chromeDriverVersion``, ``wdm.operaDriverVersion``,  ``wdm.internetExplorerVersion``, or  ``wdm.edgeVersion`` from its default value (``LATEST``) to a concrete version. For instance:
 
 ```properties
--Dwdm.chromeDriverVersion=2.20
+-Dwdm.chromeDriverVersion=2.21
 -Dwdm.internetExplorerVersion=2.46
 -Dwdm.operaDriverVersion=0.2.0
--Dwdm.edgeVersion=14156DA0-D40F-460A-B14D-1B264CA081A5
+-Dwdm.edgeVersion=3.14366
 -Dwdm.phantomjsDriverVersion=2.1.1
--Dwdm.marionetteDriverVersion=0.6.2
+-Dwdm.marionetteDriverVersion=0.10.0
 ```
 
 If no version is specified, WebDriverManager sends a request to the server hosting the binary. In order to avoid this request and check if any binary has been previously downloaded, the key `wdm.forceCache` can be used.
