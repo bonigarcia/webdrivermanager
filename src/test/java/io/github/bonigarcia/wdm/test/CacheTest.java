@@ -61,7 +61,7 @@ public class CacheTest {
 						{ OperaDriverManager.class, "0.2.2", x32 },
 						{ OperaDriverManager.class, "0.2.2", x64 },
 						{ PhantomJsDriverManager.class, "2.1.1", x64 },
-						{ MarionetteDriverManager.class, "0.8.0", x64 } });
+						{ MarionetteDriverManager.class, "0.10.0", x64 } });
 	}
 
 	@Test
