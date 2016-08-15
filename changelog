@@ -1,3 +1,10 @@
+webdrivermanager (1.4.8)
+
+  + Bug-fix issue #51: Determine correct gecko driver to download (PR #48 from phillcunnington)
+
+ -- Boni Garcia <boni.gg@gmail.com>  Mon, 15 Aug 2016 19:05:00 +0200
+
+
 webdrivermanager (1.4.7)
 
   + Bug-fix issue #44: Fixed PhantomJS downloads page change (PR #45 from ndtreviv)
