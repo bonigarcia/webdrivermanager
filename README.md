@@ -1,5 +1,7 @@
 # WebDriverManager [![][Logo]][GitHub Repository]
 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.bonigarcia/webdrivermanager/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.bonigarcia/webdrivermanager)
+
 This piece of software is a small library aimed to automate the [Selenium Webdriver] binaries management within a Java project in runtime.
 
 If you have ever used [Selenium Webdriver], you probably know that in order to use some browsers (for example **Chrome**, **Internet Explorer**, **Opera**, **Microsoft Edge**, **PhantomJS**, or **Marionette**) you need to download a binary which allows WebDriver to handle the browser. In addition, the absolute path to this binary must be set as Java variables, as follows:
