@@ -5,3 +5,4 @@ target
 .settings
 /.idea
 *.iml
+phantomjsdriver.log
