@@ -49,6 +49,9 @@ public class OperaTest extends BaseBrowserTst {
 
 	@Before
 	public void setupTest() {
+        if (headlessMode) {
+            return;
+        }
 		DesiredCapabilities capabilities = DesiredCapabilities.operaBlink();
 		if (IS_OS_LINUX) {
 			OperaOptions options = new OperaOptions();
