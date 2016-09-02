@@ -36,11 +36,13 @@ import io.github.bonigarcia.wdm.base.BaseBrowserTst;
  */
 public class OperaTest extends BaseBrowserTst {
 
-	static boolean headlessMode = "true".equals(System.getProperty("headless"));
+	// opera does not work with xvfb which is used on the ci server
+	// see: https://github.com/operasoftware/operachromiumdriver/issues/26
+	private static boolean ignoreTestInHeadlessEnvironment = "true".equals(System.getProperty("headlessEnvironment"));
 
 	@BeforeClass
 	public static void setupClass() {
-		if (headlessMode) {
+		if (ignoreTestInHeadlessEnvironment) {
 			validOS = false;
 			assumeTrue(false);
 		}
@@ -49,7 +51,7 @@ public class OperaTest extends BaseBrowserTst {
 
 	@Before
 	public void setupTest() {
-        if (headlessMode) {
+        if (ignoreTestInHeadlessEnvironment) {
             return;
         }
 		DesiredCapabilities capabilities = DesiredCapabilities.operaBlink();

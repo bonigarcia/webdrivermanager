@@ -19,5 +19,4 @@ before_install:
     - sleep 3 # give xvfb some time to start
 
 install:
-    # operachromiumdriver does not work with xvfb, see: https://github.com/operasoftware/operachromiumdriver/issues/26
-    - mvn -Dheadless=true clean verify
+    - mvn -DheadlessEnvironment=true clean verify
