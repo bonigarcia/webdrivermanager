@@ -15,6 +15,7 @@
 package io.github.bonigarcia.wdm.test;
 
 import static org.apache.commons.lang3.SystemUtils.IS_OS_LINUX;
+import static org.junit.Assume.assumeTrue;
 
 import java.io.File;
 
@@ -35,13 +36,24 @@ import io.github.bonigarcia.wdm.base.BaseBrowserTst;
  */
 public class OperaTest extends BaseBrowserTst {
 
+	// opera does not work with xvfb which is used on the ci server
+	// see: https://github.com/operasoftware/operachromiumdriver/issues/26
+	private static boolean ignoreTestInHeadlessEnvironment = "true".equals(System.getProperty("headlessEnvironment"));
+
 	@BeforeClass
 	public static void setupClass() {
+		if (ignoreTestInHeadlessEnvironment) {
+			validOS = false;
+			assumeTrue(false);
+		}
 		OperaDriverManager.getInstance().setup();
 	}
 
 	@Before
 	public void setupTest() {
+        if (ignoreTestInHeadlessEnvironment) {
+            return;
+        }
 		DesiredCapabilities capabilities = DesiredCapabilities.operaBlink();
 		if (IS_OS_LINUX) {
 			OperaOptions options = new OperaOptions();
