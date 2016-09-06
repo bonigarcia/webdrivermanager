@@ -1,7 +1,7 @@
 # WebDriverManager [![][Logo]][GitHub Repository]
 
-[![Build Status](https://travis-ci.org/bonigarcia/webdrivermanager.svg?branch=master)](https://travis-ci.org/bonigarcia/webdrivermanager)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.bonigarcia/webdrivermanager/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.bonigarcia/webdrivermanager)
+[![Build Status](https://travis-ci.org/bonigarcia/webdrivermanager.svg?branch=master)](https://travis-ci.org/bonigarcia/webdrivermanager)
 
 This piece of software is a small library aimed to automate the [Selenium Webdriver] binaries management within a Java project in runtime.
 
