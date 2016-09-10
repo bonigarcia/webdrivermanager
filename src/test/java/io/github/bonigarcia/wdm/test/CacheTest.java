@@ -57,8 +57,7 @@ public class CacheTest {
 	@Parameters(name = "{index}: {0} {1} {2}")
 	public static Collection<Object[]> data() {
 		return Arrays.asList(
-				new Object[][] { { ChromeDriverManager.class, "2.21", x32 },
-						{ OperaDriverManager.class, "0.2.2", x32 },
+				new Object[][] { { ChromeDriverManager.class, "2.23", x32 },
 						{ OperaDriverManager.class, "0.2.2", x64 },
 						{ PhantomJsDriverManager.class, "2.1.1", x64 },
 						{ MarionetteDriverManager.class, "0.10.0", x64 } });
