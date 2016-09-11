@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -56,7 +57,10 @@ public class PhantomJsDriverManager extends BrowserManager {
 		URL phantomjsDriverUrl = new URL(phantomjsDriverStr);
 		String phantomjsDriverUrlContent = phantomjsDriverUrl.getPath();
 
-		Document doc = Jsoup.connect(phantomjsDriverStr).get();
+		Document doc = Jsoup.connect(phantomjsDriverStr)
+				.timeout((int) TimeUnit.SECONDS
+						.toMillis(WdmConfig.getInt("wdm.timeout")))
+				.get();
 		Iterator<Element> iterator = doc.select("a").iterator();
 		List<URL> urlList = new ArrayList<>();
 		while (iterator.hasNext()) {
