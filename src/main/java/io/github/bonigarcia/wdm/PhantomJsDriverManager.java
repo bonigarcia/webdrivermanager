@@ -18,15 +18,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 
-import org.apache.commons.logging.LogFactory;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 
 /**
  * Manager for PhantomJs.
@@ -50,35 +47,26 @@ public class PhantomJsDriverManager extends BrowserManager {
 
 	@Override
 	public List<URL> getDrivers() throws Exception {
-		String phantomjsDriverUrl = WdmConfig
+		String phantomjsDriverStr = WdmConfig
 				.getString("wdm.phantomjsDriverUrl");
 		log.debug(
 				"Reading {} to find out the latest version of PhantomJS driver",
-				phantomjsDriverUrl);
+				phantomjsDriverStr);
 
-		// Switch off HtmlUnit logging
-		LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log",
-				"org.apache.commons.logging.impl.NoOpLog");
-		java.util.logging.Logger.getLogger("com.gargoylesoftware.htmlunit")
-				.setLevel(Level.OFF);
-		java.util.logging.Logger.getLogger("org.apache.commons.httpclient")
-				.setLevel(Level.OFF);
+		URL phantomjsDriverUrl = new URL(phantomjsDriverStr);
+		String phantomjsDriverUrlContent = phantomjsDriverUrl.getPath();
 
-		// Using HtmlUnitDriver to read package URL
-		WebDriver driver = new HtmlUnitDriver();
-		driver.manage().timeouts().implicitlyWait(
-				WdmConfig.getInt("wdm.timeout"), TimeUnit.SECONDS);
-		driver.get(phantomjsDriverUrl);
-		WebElement downloadsTable = driver
-				.findElement(By.id("uploaded-files"));
-		List<WebElement> links = downloadsTable.findElements(By
-				.xpath("//table[@id='uploaded-files']/tbody/tr[@class='iterable-item']/td[@class='name']"
-						+ "/a"));
-		List<URL> urlList = new ArrayList<>(links.size());
-		for (WebElement element : links) {
-			String href = element.getAttribute("href");
-			urlList.add(new URL(href));
+		Document doc = Jsoup.connect(phantomjsDriverStr).get();
+		Iterator<Element> iterator = doc.select("a").iterator();
+		List<URL> urlList = new ArrayList<>();
+		while (iterator.hasNext()) {
+			String link = iterator.next().attr("href");
+			if (link.startsWith(phantomjsDriverUrlContent)) {
+				urlList.add(new URL(phantomjsDriverStr
+						+ link.replace(phantomjsDriverUrlContent, "")));
+			}
 		}
+
 		return urlList;
 	}
 
