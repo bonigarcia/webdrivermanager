@@ -21,8 +21,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
@@ -88,10 +88,18 @@ public class Downloader {
 
 		if (download) {
 			log.info("Downloading {} to {}", url, targetFile);
-			URLConnection conn = url.openConnection();
-			conn.setRequestProperty("User-Agent", "Mozilla/5.0");
-			conn.addRequestProperty("Connection", "keep-alive");
-			conn.connect();
+			HttpURLConnection conn = getConnection(url);
+			int responseCode = conn.getResponseCode();
+			log.debug("Response HTTP {}", responseCode);
+			if (responseCode == HttpURLConnection.HTTP_MOVED_TEMP
+					|| responseCode == HttpURLConnection.HTTP_MOVED_PERM
+					|| responseCode == HttpURLConnection.HTTP_SEE_OTHER) {
+				// HTTP Redirect
+				URL newUrl = new URL(conn.getHeaderField("Location"));
+				log.debug("Redirect to {}", newUrl);
+				conn = getConnection(newUrl);
+			}
+
 			FileUtils.copyInputStreamToFile(conn.getInputStream(), targetFile);
 
 			if (!export.contains("edge")) {
@@ -106,6 +114,16 @@ public class Downloader {
 			BrowserManager.exportDriver(export, binary.toString());
 		}
 
+	}
+
+	private static HttpURLConnection getConnection(URL url) throws IOException {
+		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		conn.setRequestProperty("User-Agent", "Mozilla/5.0");
+		conn.addRequestProperty("Connection", "keep-alive");
+		conn.setInstanceFollowRedirects(true);
+		HttpURLConnection.setFollowRedirects(true);
+		conn.connect();
+		return conn;
 	}
 
 	public static final File extractMsi(File msi) throws IOException {
