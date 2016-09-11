@@ -2,6 +2,7 @@
 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.bonigarcia/webdrivermanager/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.bonigarcia/webdrivermanager)
 [![Build Status](https://travis-ci.org/bonigarcia/webdrivermanager.svg?branch=master)](https://travis-ci.org/bonigarcia/webdrivermanager)
+[![License (LGPL version 2.1)](https://img.shields.io/badge/license-GNU%20LGPL%20version%202.1-brightgreen.svg?style=flat-square)](http://opensource.org/licenses/LGPL-2.1)
 
 This piece of software is a small library aimed to automate the [Selenium Webdriver] binaries management within a Java project in runtime.
 
@@ -18,7 +19,7 @@ System.setProperty("webdriver.gecko.driver", "/absolute/path/to/binary/geckodriv
 
 This is quite annoying since it forces you to link directly this binary in your source code. In addition, you have to check manually when new versions of the binaries are released. This library comes to the rescue, performing in an automated way all this dirty job for you.
 
-WebDriverManager is open source, released under the terms of [LGPL License].
+WebDriverManager is open source, released under the terms of [LGPL License 2.1].
 
 ## Usage
 
@@ -210,7 +211,7 @@ WebDriverManager (Copyright &copy; 2015-2016) is a personal project of [Boni Gar
 
 [Logo]: http://bonigarcia.github.io/img/webdrivermanager.png
 [Selenium Webdriver]: http://docs.seleniumhq.org/projects/webdriver/
-[LGPL License]: http://www.gnu.org/licenses/lgpl-2.1.html
+[LGPL License 2.1]: http://www.gnu.org/licenses/lgpl-2.1.html
 [Boni Garcia]: http://bonigarcia.github.io/
 [GitHub Repository]: https://github.com/bonigarcia/webdrivermanager
 [authenticated requests]: https://developer.github.com/v3/#rate-limiting
