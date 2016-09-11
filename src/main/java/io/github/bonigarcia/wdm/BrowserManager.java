@@ -189,7 +189,8 @@ public abstract class BrowserManager {
 					|| version.equalsIgnoreCase(
 							DriverVersion.NOT_SPECIFIED.name());
 
-			boolean forceCache = WdmConfig.getBoolean("wdm.forceCache");
+			boolean forceCache = WdmConfig.getBoolean("wdm.forceCache")
+					|| !isNetAvailable();
 			String driverInCache = null;
 			if (forceCache) {
 				driverInCache = forceCache(Downloader.getTargetPath());
@@ -270,6 +271,18 @@ public abstract class BrowserManager {
 
 		} catch (Exception e) {
 			throw new RuntimeException(e);
+		}
+	}
+
+	private boolean isNetAvailable() {
+		try {
+			URL url = getDriverUrl();
+			URLConnection conn = url.openConnection();
+			conn.connect();
+			return true;
+		} catch (Exception e) {
+			log.warn("Network not available. Forcing the use of cache");
+			return false;
 		}
 	}
 
