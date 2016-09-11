@@ -5,7 +5,7 @@
 
 This piece of software is a small library aimed to automate the [Selenium Webdriver] binaries management within a Java project in runtime.
 
-If you have ever used [Selenium Webdriver], you probably know that in order to use some browsers (for example **Chrome**, **Internet Explorer**, **Opera**, **Microsoft Edge**, **PhantomJS**, or **Marionette**) you need to download a binary which allows WebDriver to handle the browser. In addition, the absolute path to this binary must be set as Java variables, as follows:
+If you have ever used [Selenium Webdriver], you probably know that in order to use some browsers such as **Chrome**, **Internet Explorer**, **Opera**, **Microsoft Edge**, **PhantomJS**, or **Firefox** (using **Marionette**) you need to download a binary which allows WebDriver to handle the browser. In addition, the absolute path to this binary must be set as Java variables, as follows:
 
 ```java
 System.setProperty("webdriver.chrome.driver", "/absolute/path/to/binary/chromedriver");
