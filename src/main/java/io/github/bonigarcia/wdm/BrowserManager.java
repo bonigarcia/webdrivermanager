@@ -285,7 +285,7 @@ public abstract class BrowserManager {
 			for (OperativeSystem os : OperativeSystem.values()) {
 				if (((MY_OS_NAME.contains(os.name())
 						&& url.getFile().toLowerCase().contains(os.name()))
-						|| getDriverName().equals("IEDriverServer")
+						|| getDriverName().contains("IEDriverServer")
 						|| (IS_OS_MAC
 								&& url.getFile().toLowerCase().contains("osx")))
 						&& !out.contains(url)) {
