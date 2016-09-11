@@ -1,3 +1,13 @@
+webdrivermanager (1.4.9)
+
+  + Bug-fix issue #19 (regression): getDriverName returns a list of string
+  + Issue #40 and #56: Replace bitbucket PhantomJS source by mirror using jsoup instead HtmlUnit
+  + Issue #52: Force the use of cache when network is not available
+  + Add Travis support (thanks to PR #57, #58, #59 by hennr)
+
+ -- Boni Garcia <boni.gg@gmail.com>  Mon, 11 Sep 2016 19:02:00 +0200
+
+
 webdrivermanager (1.4.8)
 
   + Bug-fix issue #51: Determine correct gecko driver to download (PR #48 from phillcunnington)
