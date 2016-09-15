@@ -14,19 +14,18 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import static org.apache.commons.lang3.SystemUtils.IS_OS_LINUX;
-import static org.junit.Assume.assumeTrue;
-
-import java.io.File;
-
+import io.github.bonigarcia.wdm.OperaDriverManager;
+import io.github.bonigarcia.wdm.base.BaseBrowserTst;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.openqa.selenium.opera.OperaDriver;
 import org.openqa.selenium.opera.OperaOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 
-import io.github.bonigarcia.wdm.OperaDriverManager;
-import io.github.bonigarcia.wdm.base.BaseBrowserTst;
+import java.io.File;
+
+import static org.apache.commons.lang3.SystemUtils.IS_OS_LINUX;
+import static org.junit.Assume.assumeTrue;
 
 /**
  * Test with Opera browser.
@@ -56,6 +55,7 @@ public class OperaTest extends BaseBrowserTst {
         }
 		DesiredCapabilities capabilities = DesiredCapabilities.operaBlink();
 		if (IS_OS_LINUX) {
+			assumeTrue("no Opera installed on Linux; well ... :-)", new File("/usr/bin/opera").exists());
 			OperaOptions options = new OperaOptions();
 			options.setBinary(new File("/usr/bin/opera"));
 			capabilities.setCapability(OperaOptions.CAPABILITY, options);

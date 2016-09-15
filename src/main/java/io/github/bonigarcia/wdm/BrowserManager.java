@@ -14,31 +14,6 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathFactory;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.SystemUtils;
@@ -48,6 +23,32 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.net.MalformedURLException;
+import java.net.Proxy;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+
+import static com.google.common.base.Strings.isNullOrEmpty;
+import static io.github.bonigarcia.wdm.Downloader.createProxy;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
 
 /**
  * Generic manager.
@@ -459,8 +460,9 @@ public abstract class BrowserManager {
 		int maxRetries = WdmConfig.getInt("wdm.seekErrorRetries");
 		do {
 			try {
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(driverUrl.openStream()));
+				Proxy proxy = createProxy();
+				URLConnection conn = proxy != null ? driverUrl.openConnection(proxy) : driverUrl.openConnection();
+				BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 				Document xml = loadXML(reader);
 
 				XPath xPath = XPathFactory.newInstance().newXPath();
@@ -520,7 +522,8 @@ public abstract class BrowserManager {
 
 	protected InputStream openGitHubConnection(URL driverUrl)
 			throws IOException {
-		URLConnection conn = driverUrl.openConnection();
+		Proxy proxy = createProxy();
+		URLConnection conn = proxy != null ? driverUrl.openConnection(proxy) : driverUrl.openConnection();
 		conn.setRequestProperty("User-Agent", "Mozilla/5.0");
 		conn.addRequestProperty("Connection", "keep-alive");
 

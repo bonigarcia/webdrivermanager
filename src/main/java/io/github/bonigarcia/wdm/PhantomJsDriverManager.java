@@ -14,6 +14,10 @@
  */
 package io.github.bonigarcia.wdm;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -22,9 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
+import static io.github.bonigarcia.wdm.Downloader.createProxy;
 
 /**
  * Manager for PhantomJs.
@@ -60,6 +62,7 @@ public class PhantomJsDriverManager extends BrowserManager {
 		Document doc = Jsoup.connect(phantomjsDriverStr)
 				.timeout((int) TimeUnit.SECONDS
 						.toMillis(WdmConfig.getInt("wdm.timeout")))
+				.proxy(createProxy())
 				.get();
 		Iterator<Element> iterator = doc.select("a").iterator();
 		List<URL> urlList = new ArrayList<>();

@@ -14,22 +14,7 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Collection;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.zip.GZIPInputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-
+import com.google.common.io.Files;
 import org.apache.commons.io.FileUtils;
 import org.rauschig.jarchivelib.ArchiveFormat;
 import org.rauschig.jarchivelib.Archiver;
@@ -38,7 +23,25 @@ import org.rauschig.jarchivelib.CompressionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.google.common.io.Files;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.StringTokenizer;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+
+import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 
 /**
  * Downloader class.
@@ -51,6 +54,27 @@ public class Downloader {
 			.getLogger(Downloader.class);
 
 	private static final String HOME = "~";
+
+
+	public static Proxy createProxy() {
+		String proxyString = System.getenv("HTTPS_PROXY");
+		if (proxyString == null || proxyString.length() < 1)
+			proxyString = System.getenv("HTTP_PROXY");
+		if (proxyString == null || proxyString.length() < 1 ) {
+			return null;
+		}
+		StringTokenizer st = new StringTokenizer(proxyString, ":");
+		if (st.countTokens() != 2)
+			return null;
+		String host = st.nextToken();
+		String portString = st.nextToken();
+		try {
+			int port = Integer.parseInt(portString);
+			return new Proxy(Proxy.Type.HTTP, new InetSocketAddress(host, port));
+		} catch (NumberFormatException e) {
+			return null;
+		}
+	}
 
 	public static final synchronized void download(URL url, String version,
 			String export, List<String> driverName) throws IOException {
@@ -117,7 +141,9 @@ public class Downloader {
 	}
 
 	private static HttpURLConnection getConnection(URL url) throws IOException {
-		HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        Proxy proxy = createProxy();
+        URLConnection conn1 = proxy != null ? url.openConnection(proxy) : url.openConnection();
+		HttpURLConnection conn = (HttpURLConnection) conn1;
 		conn.setRequestProperty("User-Agent", "Mozilla/5.0");
 		conn.addRequestProperty("Connection", "keep-alive");
 		conn.setInstanceFollowRedirects(true);
