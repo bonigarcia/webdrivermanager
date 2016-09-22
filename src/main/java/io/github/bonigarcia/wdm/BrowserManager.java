@@ -15,6 +15,7 @@
 package io.github.bonigarcia.wdm;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
+import static io.github.bonigarcia.wdm.Downloader.createProxy;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
 
 import java.io.BufferedReader;
@@ -24,6 +25,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.MalformedURLException;
+import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -459,8 +461,12 @@ public abstract class BrowserManager {
 		int maxRetries = WdmConfig.getInt("wdm.seekErrorRetries");
 		do {
 			try {
+				Proxy proxy = createProxy();
+				URLConnection conn = proxy != null
+						? driverUrl.openConnection(proxy)
+						: driverUrl.openConnection();
 				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(driverUrl.openStream()));
+						new InputStreamReader(conn.getInputStream()));
 				Document xml = loadXML(reader);
 
 				XPath xPath = XPathFactory.newInstance().newXPath();
@@ -520,7 +526,9 @@ public abstract class BrowserManager {
 
 	protected InputStream openGitHubConnection(URL driverUrl)
 			throws IOException {
-		URLConnection conn = driverUrl.openConnection();
+		Proxy proxy = createProxy();
+		URLConnection conn = proxy != null ? driverUrl.openConnection(proxy)
+				: driverUrl.openConnection();
 		conn.setRequestProperty("User-Agent", "Mozilla/5.0");
 		conn.addRequestProperty("Connection", "keep-alive");
 

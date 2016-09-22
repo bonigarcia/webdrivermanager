@@ -14,6 +14,8 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static io.github.bonigarcia.wdm.Downloader.createProxy;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -60,7 +62,7 @@ public class PhantomJsDriverManager extends BrowserManager {
 		Document doc = Jsoup.connect(phantomjsDriverStr)
 				.timeout((int) TimeUnit.SECONDS
 						.toMillis(WdmConfig.getInt("wdm.timeout")))
-				.get();
+				.proxy(createProxy()).get();
 		Iterator<Element> iterator = doc.select("a").iterator();
 		List<URL> urlList = new ArrayList<>();
 		while (iterator.hasNext()) {
