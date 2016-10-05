@@ -14,18 +14,18 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static io.github.bonigarcia.wdm.Downloader.createProxy;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 
-import org.apache.commons.logging.LogFactory;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
 /**
  * Manager for Microsoft Edge.
@@ -53,31 +53,29 @@ public class EdgeDriverManager extends BrowserManager {
 		log.debug("Reading {} to find out the latest version of Edge driver",
 				edgeDriverUrl);
 
-		// Switch off HtmlUnit logging
-		LogFactory.getFactory().setAttribute("org.apache.commons.logging.Log",
-				"org.apache.commons.logging.impl.NoOpLog");
-		java.util.logging.Logger.getLogger("com.gargoylesoftware.htmlunit")
-				.setLevel(Level.OFF);
-		java.util.logging.Logger.getLogger("org.apache.commons.httpclient")
-				.setLevel(Level.OFF);
+		Document doc = Jsoup.connect(edgeDriverUrl)
+				.timeout((int) TimeUnit.SECONDS
+						.toMillis(WdmConfig.getInt("wdm.timeout")))
+				.proxy(createProxy()).get();
 
-		// Using HtmlUnitDriver to read URL and version
-		HtmlUnitDriver driver = new HtmlUnitDriver();
-		driver.manage().timeouts().implicitlyWait(
-				WdmConfig.getInt("wdm.timeout"), TimeUnit.SECONDS);
-		driver.get(edgeDriverUrl);
+		Elements downloadLink = doc.select(".mscom-link.download-button.dl");
+		Elements versionParagraph = doc.select("div:nth-child(1) > div > p");
 
-		driver.findElement(By.linkText("Details")).click();
-		WebElement versionElement = driver.findElement(By.xpath(
-				"//*[contains(text(), 'Version:')]/parent::*/following-sibling::*"));
-		versionToDownload = versionElement.getText();
+		versionToDownload = versionParagraph.get(0).text();
 
-		driver.findElement(By.linkText("Download")).click();
-		WebElement clickHere = driver.findElement(By.linkText("Click here"));
-		String downloadLink = clickHere.getAttribute("href");
+		String secondPage = edgeDriverUrl.substring(0,
+				edgeDriverUrl.lastIndexOf("/") + 1)
+				+ downloadLink.get(0).attr("href");
+
+		doc = Jsoup.connect(secondPage)
+				.timeout((int) TimeUnit.SECONDS
+						.toMillis(WdmConfig.getInt("wdm.timeout")))
+				.proxy(createProxy()).get();
+
+		Elements binaryLink = doc.select(".mscom-link.failoverLink");
+
 		List<URL> urlList = new ArrayList<>();
-		urlList.add(new URL(downloadLink));
-
+		urlList.add(new URL(binaryLink.attr("href")));
 		return urlList;
 	}
 

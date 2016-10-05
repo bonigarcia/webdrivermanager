@@ -18,14 +18,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.edge.EdgeDriver;
-import org.openqa.selenium.firefox.MarionetteDriver;
-import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.opera.OperaDriver;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
-
 /**
  * Generic manager.
  *
@@ -42,27 +34,30 @@ public class WebDriverManager extends BrowserManager {
 	}
 
 	public static synchronized BrowserManager getInstance(
-			Class<? extends WebDriver> webDriverClass) {
-		if (webDriverClass.equals(ChromeDriver.class)) {
+			Class<?> webDriverClass) {
+
+		switch (webDriverClass.getName()) {
+		case "org.openqa.selenium.chrome.ChromeDriver":
 			browserManagerClass = ChromeDriverManager.class;
-
-		} else if (webDriverClass.equals(OperaDriver.class)) {
+			break;
+		case "org.openqa.selenium.opera.OperaDriver":
 			browserManagerClass = OperaDriverManager.class;
-
-		} else if (webDriverClass.equals(InternetExplorerDriver.class)) {
+			break;
+		case "org.openqa.selenium.ie.InternetExplorerDriver":
 			browserManagerClass = InternetExplorerDriverManager.class;
-
-		} else if (webDriverClass.equals(EdgeDriver.class)) {
+			break;
+		case "org.openqa.selenium.edge.EdgeDriver":
 			browserManagerClass = EdgeDriverManager.class;
-
-		} else if (webDriverClass.equals(PhantomJSDriver.class)) {
+			break;
+		case "org.openqa.selenium.phantomjs.PhantomJSDriver":
 			browserManagerClass = PhantomJsDriverManager.class;
-
-		} else if (webDriverClass.equals(MarionetteDriver.class)) {
+			break;
+		case "org.openqa.selenium.firefox.MarionetteDriver":
 			browserManagerClass = MarionetteDriverManager.class;
-
-		} else {
+			break;
+		default:
 			browserManagerClass = VoidDriverManager.class;
+			break;
 		}
 
 		try {
