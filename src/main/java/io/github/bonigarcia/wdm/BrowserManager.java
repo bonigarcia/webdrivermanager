@@ -63,6 +63,7 @@ public abstract class BrowserManager {
 
 	protected static final Logger log = LoggerFactory
 			.getLogger(BrowserManager.class);
+	protected static final String TAOBAO_MIRROR = "npm.taobao.org";
 
 	private static final String SEPARATOR = "/";
 	private static final Architecture DEFAULT_ARCH = Architecture
@@ -374,6 +375,7 @@ public abstract class BrowserManager {
 					if (url.getFile().contains(s)) {
 						log.trace("URL {} match with {}", url, s);
 						String currentVersion;
+
 						if (getDriverName().contains("phantomjs")) {
 							String file = url.getFile();
 							file = url.getFile().substring(
@@ -395,6 +397,17 @@ public abstract class BrowserManager {
 							currentVersion = url.getFile().substring(
 									url.getFile().indexOf(SEPARATOR + "v") + 2,
 									url.getFile().lastIndexOf(SEPARATOR));
+
+						} else if (getDriverName().contains("chromedriver")
+								&& isUsingTaobaoMirror()) {
+							currentVersion = url.getFile()
+									.substring(
+											url.getFile().indexOf(SEPARATOR,
+													url.getFile().indexOf(
+															"chromedriver"))
+													+ 1,
+											url.getFile()
+													.lastIndexOf(SEPARATOR));
 
 						} else {
 							currentVersion = url.getFile().substring(
@@ -436,6 +449,10 @@ public abstract class BrowserManager {
 		return out;
 	}
 
+	public boolean isUsingTaobaoMirror() throws MalformedURLException {
+		return getDriverUrl().getHost().equalsIgnoreCase(TAOBAO_MIRROR);
+	}
+
 	public Integer versionCompare(String str1, String str2) {
 		String[] vals1 = str1.replaceAll("v", "").split("\\.");
 		String[] vals2 = str2.replaceAll("v", "").split("\\.");
@@ -453,9 +470,9 @@ public abstract class BrowserManager {
 		}
 	}
 
-	public List<URL> getDriversFromTaobao(String phantomjsDriverStr)
+	public List<URL> getDriversFromTaobao(URL phantomjsDriverUrl)
 			throws IOException {
-		URL phantomjsDriverUrl = new URL(phantomjsDriverStr);
+		String phantomjsDriverStr = phantomjsDriverUrl.toString();
 		String phantomjsDriverUrlContent = phantomjsDriverUrl.getPath();
 
 		org.jsoup.nodes.Document doc = Jsoup.connect(phantomjsDriverStr)
@@ -464,6 +481,8 @@ public abstract class BrowserManager {
 				.proxy(createProxy()).get();
 		Iterator<org.jsoup.nodes.Element> iterator = doc.select("a").iterator();
 		List<URL> urlList = new ArrayList<>();
+
+		// TODO check it is not a folder
 		while (iterator.hasNext()) {
 			String link = iterator.next().attr("href");
 			if (link.startsWith(phantomjsDriverUrlContent)) {

@@ -41,13 +41,7 @@ public class PhantomJsDriverManager extends BrowserManager {
 
 	@Override
 	public List<URL> getDrivers() throws Exception {
-		String phantomjsDriverStr = WdmConfig
-				.getString("wdm.phantomjsDriverUrl");
-		log.debug(
-				"Reading {} to find out the latest version of PhantomJS driver",
-				phantomjsDriverStr);
-
-		return getDriversFromTaobao(phantomjsDriverStr);
+		return getDriversFromTaobao(getDriverUrl());
 	}
 
 	@Override

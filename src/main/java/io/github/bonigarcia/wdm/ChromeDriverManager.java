@@ -41,7 +41,17 @@ public class ChromeDriverManager extends BrowserManager {
 
 	@Override
 	public List<URL> getDrivers() throws Exception {
-		return getDriversFromXml(getDriverUrl(), getDriverName());
+		URL driverUrl = getDriverUrl();
+		List<String> driverName = getDriverName();
+		List<URL> drivers = null;
+		if (isUsingTaobaoMirror()) {
+			log.info("Using {} mirror to download {}", TAOBAO_MIRROR,
+					driverName);
+			drivers = getDriversFromTaobao(driverUrl);
+		} else {
+			drivers = getDriversFromXml(driverUrl, driverName);
+		}
+		return drivers;
 	}
 
 	@Override
