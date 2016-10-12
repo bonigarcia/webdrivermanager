@@ -482,10 +482,13 @@ public abstract class BrowserManager {
 		Iterator<org.jsoup.nodes.Element> iterator = doc.select("a").iterator();
 		List<URL> urlList = new ArrayList<>();
 
-		// TODO check it is not a folder
 		while (iterator.hasNext()) {
 			String link = iterator.next().attr("href");
-			if (link.startsWith(phantomjsDriverUrlContent)) {
+			if (link.contains("mirror") && link.endsWith(SEPARATOR)) {
+				urlList.addAll(getDriversFromTaobao(new URL(phantomjsDriverStr
+						+ link.replace(phantomjsDriverUrlContent, ""))));
+			} else if (link.startsWith(phantomjsDriverUrlContent)
+					&& !link.contains("icons")) {
 				urlList.add(new URL(phantomjsDriverStr
 						+ link.replace(phantomjsDriverUrlContent, "")));
 			}
