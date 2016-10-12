@@ -34,6 +34,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -44,6 +45,7 @@ import javax.xml.xpath.XPathFactory;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.SystemUtils;
+import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
@@ -449,6 +451,27 @@ public abstract class BrowserManager {
 		} else {
 			return Integer.signum(vals1.length - vals2.length);
 		}
+	}
+
+	public List<URL> getDriversFromTaobao(String phantomjsDriverStr)
+			throws IOException {
+		URL phantomjsDriverUrl = new URL(phantomjsDriverStr);
+		String phantomjsDriverUrlContent = phantomjsDriverUrl.getPath();
+
+		org.jsoup.nodes.Document doc = Jsoup.connect(phantomjsDriverStr)
+				.timeout((int) TimeUnit.SECONDS
+						.toMillis(WdmConfig.getInt("wdm.timeout")))
+				.proxy(createProxy()).get();
+		Iterator<org.jsoup.nodes.Element> iterator = doc.select("a").iterator();
+		List<URL> urlList = new ArrayList<>();
+		while (iterator.hasNext()) {
+			String link = iterator.next().attr("href");
+			if (link.startsWith(phantomjsDriverUrlContent)) {
+				urlList.add(new URL(phantomjsDriverStr
+						+ link.replace(phantomjsDriverUrlContent, "")));
+			}
+		}
+		return urlList;
 	}
 
 	public List<URL> getDriversFromXml(URL driverUrl, List<String> driverBinary)

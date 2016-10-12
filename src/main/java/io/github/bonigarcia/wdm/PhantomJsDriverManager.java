@@ -14,19 +14,10 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static io.github.bonigarcia.wdm.Downloader.createProxy;
-
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
 
 /**
  * Manager for PhantomJs.
@@ -56,24 +47,7 @@ public class PhantomJsDriverManager extends BrowserManager {
 				"Reading {} to find out the latest version of PhantomJS driver",
 				phantomjsDriverStr);
 
-		URL phantomjsDriverUrl = new URL(phantomjsDriverStr);
-		String phantomjsDriverUrlContent = phantomjsDriverUrl.getPath();
-
-		Document doc = Jsoup.connect(phantomjsDriverStr)
-				.timeout((int) TimeUnit.SECONDS
-						.toMillis(WdmConfig.getInt("wdm.timeout")))
-				.proxy(createProxy()).get();
-		Iterator<Element> iterator = doc.select("a").iterator();
-		List<URL> urlList = new ArrayList<>();
-		while (iterator.hasNext()) {
-			String link = iterator.next().attr("href");
-			if (link.startsWith(phantomjsDriverUrlContent)) {
-				urlList.add(new URL(phantomjsDriverStr
-						+ link.replace(phantomjsDriverUrlContent, "")));
-			}
-		}
-
-		return urlList;
+		return getDriversFromTaobao(phantomjsDriverStr);
 	}
 
 	@Override
