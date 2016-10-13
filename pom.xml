@@ -39,7 +39,7 @@
 
 	<name>Webdriver Manager</name>
 	<description>
-		This piece of software is a small library aimed to automate the Selenium Webdriver binary management in Java. 
+		This library is aimed to automate the Selenium Webdriver binary management in Java.
 	</description>
 	<url>https://github.com/bonigarcia/webdrivermanager</url>
 

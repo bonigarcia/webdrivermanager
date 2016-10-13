@@ -1,3 +1,14 @@
+webdrivermanager (1.4.10)
+
+  + Issue #61: Support HTTP proxy by means of env var HTTP_PROXY or HTTPS_PROXY (PR #62 from Sebl29)
+  + Stop using htmlunit to download edge binaries (jsoup instead)
+  + Compatibility with Selenium 3
+  + Support for taobao mirror for chromedriver and  (wdm.chromeDriverUrl=https://npm.taobao.org/mirrors/chromedriver/)
+  + Support for taobao mirror for operadriver (wdm.operaDriverUrl=https://npm.taobao.org/mirrors/operadriver/)
+
+ -- Boni Garcia <boni.gg@gmail.com>  Thu, 13 Oct 2016 02:50:00 +0200
+
+
 webdrivermanager (1.4.9)
 
   + Bug-fix issue #19 (regression): getDriverName returns a list of string

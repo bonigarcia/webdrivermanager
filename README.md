@@ -4,7 +4,7 @@
 [![Build Status](https://travis-ci.org/bonigarcia/webdrivermanager.svg?branch=master)](https://travis-ci.org/bonigarcia/webdrivermanager)
 [![License (LGPL version 2.1)](https://img.shields.io/badge/license-GNU%20LGPL%20version%202.1-brightgreen.svg?style=flat-square)](http://opensource.org/licenses/LGPL-2.1)
 
-This piece of software is a small library aimed to automate the [Selenium Webdriver] binaries management within a Java project in runtime.
+This library is aimed to automate the [Selenium Webdriver] binaries management within a Java project in runtime.
 
 If you have ever used [Selenium Webdriver], you probably know that in order to use some browsers such as **Chrome**, **Internet Explorer**, **Opera**, **Microsoft Edge**, **PhantomJS**, or **Firefox** (using **Marionette**) you need to download a binary which allows WebDriver to handle the browser. In addition, the absolute path to this binary must be set as Java variables, as follows:
 
@@ -29,7 +29,7 @@ In order to use WebDriverManager in a Maven project, first add the following dep
 <dependency>
 	<groupId>io.github.bonigarcia</groupId>
 	<artifactId>webdrivermanager</artifactId>
-	<version>1.4.9</version>
+	<version>1.4.10</version>
 </dependency>
 ```
 
@@ -151,7 +151,7 @@ new OperaDriverManager().setup(Architecture.x64);
 By default, WebDriverManager downloads the latest version of the WebDriver binary. Concrete versions of WebDriver binaries can be forced, for instance: 
 
 ```java
-ChromeDriverManager.getInstance().setup("2.21");
+ChromeDriverManager.getInstance().setup("2.24");
 InternetExplorerDriverManager.getInstance().setup("2.46");
 OperaDriverManager.getInstance().setup("0.2.0");
 EdgeDriverManager.getInstance().setup("3.14366");
@@ -162,7 +162,7 @@ MarionetteDriverManager.getInstance().setup("0.10.0");
 This can also be done by changing the value of the variables ``wdm.chromeDriverVersion``, ``wdm.operaDriverVersion``,  ``wdm.internetExplorerVersion``, or  ``wdm.edgeVersion`` from its default value (``LATEST``) to a concrete version. For instance:
 
 ```properties
--Dwdm.chromeDriverVersion=2.21
+-Dwdm.chromeDriverVersion=2.24
 -Dwdm.internetExplorerVersion=2.46
 -Dwdm.operaDriverVersion=0.2.0
 -Dwdm.edgeVersion=3.14366
@@ -171,6 +171,10 @@ This can also be done by changing the value of the variables ``wdm.chromeDriverV
 ```
 
 If no version is specified, WebDriverManager sends a request to the server hosting the binary. In order to avoid this request and check if any binary has been previously downloaded, the key `wdm.forceCache` can be used.
+
+### HTTP Proxy
+
+If you use an HTTP Proxy in your Internet connection, you can configure your settings exporting the Java environment variable ``HTTP_PROXY`` or ``HTTPS_PROXY`` using the following notation: ``my.http.proxy:1234``.  
 
 ### Known Issues
 
