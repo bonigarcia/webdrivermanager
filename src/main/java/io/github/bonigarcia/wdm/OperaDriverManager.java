@@ -50,32 +50,37 @@ public class OperaDriverManager extends BrowserManager {
 	@Override
 	public List<URL> getDrivers() throws IOException {
 		URL driverUrl = getDriverUrl();
-		String driverVersion = versionToDownload;
+		List<URL> urls;
+		if (isUsingTaobaoMirror()) {
+			urls = getDriversFromTaobao(driverUrl);
 
-		BufferedReader reader = new BufferedReader(
-				new InputStreamReader(openGitHubConnection(driverUrl)));
+		} else {
+			String driverVersion = versionToDownload;
 
-		GsonBuilder gsonBuilder = new GsonBuilder();
-		Gson gson = gsonBuilder.create();
-		GitHubApi[] releaseArray = gson.fromJson(reader, GitHubApi[].class);
-		if (driverVersion != null) {
-			releaseArray = new GitHubApi[] {
-					getVersion(releaseArray, driverVersion) };
-		}
+			BufferedReader reader = new BufferedReader(
+					new InputStreamReader(openGitHubConnection(driverUrl)));
 
-		List<URL> urls = new ArrayList<>();
-		for (GitHubApi release : releaseArray) {
-			if (release != null) {
-				List<LinkedTreeMap<String, Object>> assets = release
-						.getAssets();
-				for (LinkedTreeMap<String, Object> asset : assets) {
-					urls.add(new URL(
-							asset.get("browser_download_url").toString()));
+			GsonBuilder gsonBuilder = new GsonBuilder();
+			Gson gson = gsonBuilder.create();
+			GitHubApi[] releaseArray = gson.fromJson(reader, GitHubApi[].class);
+			if (driverVersion != null) {
+				releaseArray = new GitHubApi[] {
+						getVersion(releaseArray, driverVersion) };
+			}
+
+			urls = new ArrayList<>();
+			for (GitHubApi release : releaseArray) {
+				if (release != null) {
+					List<LinkedTreeMap<String, Object>> assets = release
+							.getAssets();
+					for (LinkedTreeMap<String, Object> asset : assets) {
+						urls.add(new URL(
+								asset.get("browser_download_url").toString()));
+					}
 				}
 			}
+			reader.close();
 		}
-
-		reader.close();
 		return urls;
 	}
 

@@ -393,21 +393,16 @@ public abstract class BrowserManager {
 									url.getFile().indexOf("-") + 1,
 									url.getFile().lastIndexOf("-"));
 
+						} else if (isUsingTaobaoMirror()) {
+							int i = url.getFile().lastIndexOf(SEPARATOR);
+							int j = url.getFile().substring(0, i)
+									.lastIndexOf(SEPARATOR) + 1;
+							currentVersion = url.getFile().substring(j, i);
+
 						} else if (getDriverName().contains("operadriver")) {
 							currentVersion = url.getFile().substring(
 									url.getFile().indexOf(SEPARATOR + "v") + 2,
 									url.getFile().lastIndexOf(SEPARATOR));
-
-						} else if (getDriverName().contains("chromedriver")
-								&& isUsingTaobaoMirror()) {
-							currentVersion = url.getFile()
-									.substring(
-											url.getFile().indexOf(SEPARATOR,
-													url.getFile().indexOf(
-															"chromedriver"))
-													+ 1,
-											url.getFile()
-													.lastIndexOf(SEPARATOR));
 
 						} else {
 							currentVersion = url.getFile().substring(
@@ -419,10 +414,14 @@ public abstract class BrowserManager {
 							out.add(url);
 							break;
 						}
+						if (currentVersion.equalsIgnoreCase("chromedriver")) {
+							continue;
+						}
 
 						if (versionToDownload == null) {
 							versionToDownload = currentVersion;
 						}
+
 						if (versionCompare(currentVersion,
 								versionToDownload) > 0) {
 							versionToDownload = currentVersion;
@@ -437,7 +436,7 @@ public abstract class BrowserManager {
 					}
 
 				} catch (Exception e) {
-					log.warn("There was been a problem with URL {} : {}",
+					log.warn("There was a problem with URL {} : {}",
 							url.toString(), e.getMessage());
 					list.remove(url);
 					continue;
