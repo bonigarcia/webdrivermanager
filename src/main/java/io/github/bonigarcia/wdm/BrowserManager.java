@@ -64,8 +64,8 @@ public abstract class BrowserManager {
 	protected static final Logger log = LoggerFactory
 			.getLogger(BrowserManager.class);
 	protected static final String TAOBAO_MIRROR = "npm.taobao.org";
+	protected static final String SEPARATOR = "/";
 
-	private static final String SEPARATOR = "/";
 	private static final Architecture DEFAULT_ARCH = Architecture
 			.valueOf("x" + System.getProperty("sun.arch.data.model"));
 	private static final String MY_OS_NAME = getOsName();
@@ -113,6 +113,11 @@ public abstract class BrowserManager {
 
 	public void manage(Architecture arch, DriverVersion version) {
 		manage(arch, version.name());
+	}
+
+	public String getCurrentVersion(URL url) throws MalformedURLException {
+		return url.getFile().substring(url.getFile().indexOf(SEPARATOR) + 1,
+				url.getFile().lastIndexOf(SEPARATOR));
 	}
 
 	public String forceCache(String repository) {

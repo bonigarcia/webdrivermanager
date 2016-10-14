@@ -41,17 +41,7 @@ public class ChromeDriverManager extends BrowserManager {
 
 	@Override
 	public List<URL> getDrivers() throws Exception {
-		URL driverUrl = getDriverUrl();
-		List<String> driverName = getDriverName();
-		List<URL> drivers = null;
-		if (isUsingTaobaoMirror()) {
-			log.info("Using {} mirror to download {}", TAOBAO_MIRROR,
-					driverName);
-			drivers = getDriversFromTaobao(driverUrl);
-		} else {
-			drivers = getDriversFromXml(driverUrl, driverName);
-		}
-		return drivers;
+		return getDriversFromXml(getDriverUrl(), getDriverName());
 	}
 
 	@Override
@@ -72,6 +62,17 @@ public class ChromeDriverManager extends BrowserManager {
 	@Override
 	protected List<String> getDriverName() {
 		return Arrays.asList("chromedriver");
+	}
+
+	@Override
+	public String getCurrentVersion(URL url) throws MalformedURLException {
+		if (isUsingTaobaoMirror()) {
+			int i = url.getFile().lastIndexOf(SEPARATOR);
+			int j = url.getFile().substring(0, i).lastIndexOf(SEPARATOR) + 1;
+			return url.getFile().substring(j, i);
+		} else {
+			return super.getCurrentVersion(url);
+		}
 	}
 
 }

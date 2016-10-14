@@ -115,4 +115,17 @@ public class OperaDriverManager extends BrowserManager {
 	protected URL getDriverUrl() throws MalformedURLException {
 		return WdmConfig.getUrl("wdm.operaDriverUrl");
 	}
+
+	@Override
+	public String getCurrentVersion(URL url) throws MalformedURLException {
+		if (isUsingTaobaoMirror()) {
+			int i = url.getFile().lastIndexOf(SEPARATOR);
+			int j = url.getFile().substring(0, i).lastIndexOf(SEPARATOR) + 1;
+			return url.getFile().substring(j, i);
+		} else {
+			return url.getFile().substring(
+					url.getFile().indexOf(SEPARATOR + "v") + 2,
+					url.getFile().lastIndexOf(SEPARATOR));
+		}
+	}
 }

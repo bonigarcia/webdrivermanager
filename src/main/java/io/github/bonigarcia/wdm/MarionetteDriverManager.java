@@ -83,8 +83,10 @@ public class MarionetteDriverManager extends BrowserManager {
 	private GitHubApi getVersion(GitHubApi[] releaseArray, String version) {
 		GitHubApi out = null;
 		for (GitHubApi release : releaseArray) {
-			if ((release.getName() != null && release.getName().contains(version))
-					|| (release.getTagName() != null && release.getTagName().contains(version))) {
+			if ((release.getName() != null
+					&& release.getName().contains(version))
+					|| (release.getTagName() != null
+							&& release.getTagName().contains(version))) {
 				out = release;
 				break;
 			}
@@ -110,5 +112,11 @@ public class MarionetteDriverManager extends BrowserManager {
 	@Override
 	protected URL getDriverUrl() throws MalformedURLException {
 		return WdmConfig.getUrl("wdm.marionetteDriverUrl");
+	}
+
+	@Override
+	public String getCurrentVersion(URL url) throws MalformedURLException {
+		return url.getFile().substring(url.getFile().indexOf("-") + 1,
+				url.getFile().lastIndexOf("-"));
 	}
 }
