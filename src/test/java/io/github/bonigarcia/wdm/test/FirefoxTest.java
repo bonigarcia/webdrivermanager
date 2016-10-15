@@ -15,6 +15,7 @@
 package io.github.bonigarcia.wdm.test;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import io.github.bonigarcia.wdm.base.BaseBrowserTst;
@@ -25,6 +26,7 @@ import io.github.bonigarcia.wdm.base.BaseBrowserTst;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.0.0
  */
+@Ignore
 public class FirefoxTest extends BaseBrowserTst {
 
 	@Before
