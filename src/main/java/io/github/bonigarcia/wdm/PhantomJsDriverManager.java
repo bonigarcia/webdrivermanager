@@ -63,4 +63,18 @@ public class PhantomJsDriverManager extends BrowserManager {
 	protected List<String> getDriverName() {
 		return Arrays.asList("phantomjs");
 	}
+
+	@Override
+	public String getCurrentVersion(URL url, String driverName)
+			throws MalformedURLException {
+		String file = url.getFile();
+		file = url.getFile().substring(file.lastIndexOf(SEPARATOR),
+				file.length());
+		final int matchIndex = file.indexOf(driverName);
+		String currentVersion = file
+				.substring(matchIndex + driverName.length() + 1, file.length());
+		final int dashIndex = currentVersion.indexOf('-');
+		currentVersion = currentVersion.substring(0, dashIndex);
+		return currentVersion;
+	}
 }

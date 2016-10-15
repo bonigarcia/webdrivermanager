@@ -65,13 +65,14 @@ public class ChromeDriverManager extends BrowserManager {
 	}
 
 	@Override
-	public String getCurrentVersion(URL url) throws MalformedURLException {
+	public String getCurrentVersion(URL url, String driverName)
+			throws MalformedURLException {
 		if (isUsingTaobaoMirror()) {
 			int i = url.getFile().lastIndexOf(SEPARATOR);
 			int j = url.getFile().substring(0, i).lastIndexOf(SEPARATOR) + 1;
 			return url.getFile().substring(j, i);
 		} else {
-			return super.getCurrentVersion(url);
+			return super.getCurrentVersion(url, driverName);
 		}
 	}
 

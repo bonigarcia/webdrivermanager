@@ -115,8 +115,13 @@ public class MarionetteDriverManager extends BrowserManager {
 	}
 
 	@Override
-	public String getCurrentVersion(URL url) throws MalformedURLException {
-		return url.getFile().substring(url.getFile().indexOf("-") + 1,
-				url.getFile().lastIndexOf("-"));
+	public String getCurrentVersion(URL url, String driverName)
+			throws MalformedURLException {
+		String currentVersion = url.getFile().substring(
+				url.getFile().indexOf("-") + 1, url.getFile().lastIndexOf("-"));
+		if (currentVersion.startsWith("v")) {
+			currentVersion = currentVersion.substring(1);
+		}
+		return currentVersion;
 	}
 }

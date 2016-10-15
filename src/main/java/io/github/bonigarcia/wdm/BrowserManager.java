@@ -115,7 +115,8 @@ public abstract class BrowserManager {
 		manage(arch, version.name());
 	}
 
-	public String getCurrentVersion(URL url) throws MalformedURLException {
+	public String getCurrentVersion(URL url, String driverName)
+			throws MalformedURLException {
 		return url.getFile().substring(url.getFile().indexOf(SEPARATOR) + 1,
 				url.getFile().lastIndexOf(SEPARATOR));
 	}
@@ -375,51 +376,18 @@ public abstract class BrowserManager {
 
 		List<URL> copyOfList = new ArrayList<>(list);
 		for (URL url : copyOfList) {
-			for (String s : match) {
+			for (String driverName : match) {
 				try {
-					if (url.getFile().contains(s)) {
-						log.trace("URL {} match with {}", url, s);
-						String currentVersion;
-
-						if (getDriverName().contains("phantomjs")) {
-							String file = url.getFile();
-							file = url.getFile().substring(
-									file.lastIndexOf(SEPARATOR), file.length());
-							final int matchIndex = file.indexOf(s);
-							currentVersion = file.substring(
-									matchIndex + s.length() + 1, file.length());
-							final int dashIndex = currentVersion.indexOf('-');
-							currentVersion = currentVersion.substring(0,
-									dashIndex);
-
-						} else if (getDriverName().contains("wires")
-								|| getDriverName().contains("geckodriver")) {
-							currentVersion = url.getFile().substring(
-									url.getFile().indexOf("-") + 1,
-									url.getFile().lastIndexOf("-"));
-
-						} else if (isUsingTaobaoMirror()) {
-							int i = url.getFile().lastIndexOf(SEPARATOR);
-							int j = url.getFile().substring(0, i)
-									.lastIndexOf(SEPARATOR) + 1;
-							currentVersion = url.getFile().substring(j, i);
-
-						} else if (getDriverName().contains("operadriver")) {
-							currentVersion = url.getFile().substring(
-									url.getFile().indexOf(SEPARATOR + "v") + 2,
-									url.getFile().lastIndexOf(SEPARATOR));
-
-						} else {
-							currentVersion = url.getFile().substring(
-									url.getFile().indexOf(SEPARATOR) + 1,
-									url.getFile().lastIndexOf(SEPARATOR));
-						}
+					if (url.getFile().contains(driverName)) {
+						log.trace("URL {} match with {}", url, driverName);
+						String currentVersion = getCurrentVersion(url,
+								driverName);
 
 						if (getDriverName().contains("MicrosoftWebDriver")) {
 							out.add(url);
 							break;
 						}
-						if (currentVersion.equalsIgnoreCase("chromedriver")) {
+						if (currentVersion.equalsIgnoreCase(driverName)) {
 							continue;
 						}
 
@@ -434,9 +402,6 @@ public abstract class BrowserManager {
 						}
 						if (url.getFile().contains(versionToDownload)) {
 							out.add(url);
-						}
-						if (versionToDownload.startsWith("v")) {
-							versionToDownload = versionToDownload.substring(1);
 						}
 					}
 
