@@ -93,7 +93,7 @@ wdm.override=false
 wdm.timeout=30
 wdm.seekErrorRetries=3
 
-wdm.chromeDriverUrl=http://chromedriver.storage.googleapis.com/
+wdm.chromeDriverUrl=https://chromedriver.storage.googleapis.com/
 wdm.chromeDriverExport=webdriver.chrome.driver
 wdm.chromeDriverVersion=LATEST
 
@@ -101,11 +101,11 @@ wdm.operaDriverUrl=https://api.github.com/repos/operasoftware/operachromiumdrive
 wdm.operaDriverExport=webdriver.opera.driver
 wdm.operaDriverVersion=LATEST
 
-wdm.internetExplorerDriverUrl=http://selenium-release.storage.googleapis.com/
+wdm.internetExplorerDriverUrl=https://selenium-release.storage.googleapis.com/
 wdm.internetExplorerExport=webdriver.ie.driver
 wdm.internetExplorerVersion=LATEST
 
-wdm.edgeDriverUrl=http://www.microsoft.com/en-us/download/details.aspx?id=48740
+wdm.edgeDriverUrl=https://www.microsoft.com/en-us/download/details.aspx?id=48740
 wdm.edgeExport=webdriver.edge.driver
 wdm.edgeVersion=LATEST
 	
