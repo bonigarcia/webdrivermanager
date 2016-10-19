@@ -53,6 +53,7 @@ public class WebDriverManager extends BrowserManager {
 			browserManagerClass = PhantomJsDriverManager.class;
 			break;
 		case "org.openqa.selenium.firefox.MarionetteDriver":
+		case "org.openqa.selenium.firefox.FirefoxDriver":
 			browserManagerClass = MarionetteDriverManager.class;
 			break;
 		default:
