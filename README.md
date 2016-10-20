@@ -211,7 +211,7 @@ In order to avoid this problem, [authenticated requests] should be done. The pro
 
 ## About
 
-WebDriverManager (Copyright &copy; 2015-2016) is a personal project of [Boni Garcia] licensed under [LGPL License]. Comments, questions and suggestions are always very welcome!
+WebDriverManager (Copyright &copy; 2015-2016) is a personal project of [Boni Garcia] licensed under [LGPL License 2.1]. Comments, questions and suggestions are always very [welcome][WebDriverManager issues]!
 
 [Logo]: http://bonigarcia.github.io/img/webdrivermanager.png
 [Selenium Webdriver]: http://docs.seleniumhq.org/projects/webdriver/
@@ -220,3 +220,4 @@ WebDriverManager (Copyright &copy; 2015-2016) is a personal project of [Boni Gar
 [GitHub Repository]: https://github.com/bonigarcia/webdrivermanager
 [authenticated requests]: https://developer.github.com/v3/#rate-limiting
 [GitHub account]: https://github.com/settings/tokens
+[WebDriverManager issues]: https://github.com/bonigarcia/webdrivermanager/issues
