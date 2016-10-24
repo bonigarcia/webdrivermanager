@@ -31,7 +31,7 @@ public class WdmConfig {
 	private static WdmConfig instance;
 	private Config conf;
 
-	public static final String propertyFileName = System.getProperty("wdm.prop.file","application.properties");
+	public static final String propertyFileName = System.getProperty("wdm.prop.filename","application.properties");
 
 	protected WdmConfig() {
 		conf = ConfigFactory.load(propertyFileName);
