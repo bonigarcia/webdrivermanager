@@ -31,10 +31,9 @@ public class WdmConfig {
 	private static WdmConfig instance;
 	private Config conf;
 
-	public static final String propertyFileName = System.getProperty("wdm.prop.filename","application.properties");
-
 	protected WdmConfig() {
-		conf = ConfigFactory.load(propertyFileName);
+		conf = ConfigFactory.load(System.getProperty("wdm.properties",
+				"webdrivermanager.properties"));
 	}
 
 	public static synchronized WdmConfig getInstance() {
