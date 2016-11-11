@@ -324,8 +324,10 @@ public abstract class BrowserManager {
 		// Round #2 : Filter by architecture (32/64 bits)
 		if (out.size() > 1 && arch != null) {
 			for (URL url : list) {
-				// Exception: 32 bits (sometimes referred as x86)
-				if (arch == Architecture.x32 && url.getFile().contains("x86")) {
+				// Exception: 32 bits (sometimes referred as x86 or i686)
+				if (arch == Architecture.x32 && ((url.getFile().contains("x86")
+						&& !url.getFile().contains("64"))
+						|| url.getFile().contains("i686"))) {
 					continue;
 				}
 
