@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015 Boni Garcia (http://bonigarcia.github.io/)
+ * (C) Copyright 2016 Boni Garcia (http://bonigarcia.github.io/)
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the GNU Lesser General Public License
@@ -15,22 +15,27 @@
 package io.github.bonigarcia.wdm.test;
 
 import org.junit.Before;
-import org.junit.Ignore;
+import org.junit.BeforeClass;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
+import io.github.bonigarcia.wdm.FirefoxDriverManager;
 import io.github.bonigarcia.wdm.base.BaseBrowserTst;
 
 /**
- * Test with Firefox browser.
+ * Test with Firefox browser (Marionette driver).
  *
  * @author Boni Garcia (boni.gg@gmail.com)
- * @since 1.0.0
+ * @since 1.5.0
  */
-@Ignore
 public class FirefoxTest extends BaseBrowserTst {
 
+	@BeforeClass
+	public static void setupClass() {
+		FirefoxDriverManager.getInstance().setup();
+	}
+
 	@Before
-	public void setup() {
+	public void setupTest() {
 		driver = new FirefoxDriver();
 	}
 

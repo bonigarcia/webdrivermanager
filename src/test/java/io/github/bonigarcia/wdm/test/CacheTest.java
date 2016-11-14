@@ -32,7 +32,7 @@ import io.github.bonigarcia.wdm.Architecture;
 import io.github.bonigarcia.wdm.BrowserManager;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
 import io.github.bonigarcia.wdm.Downloader;
-import io.github.bonigarcia.wdm.MarionetteDriverManager;
+import io.github.bonigarcia.wdm.FirefoxDriverManager;
 import io.github.bonigarcia.wdm.OperaDriverManager;
 import io.github.bonigarcia.wdm.PhantomJsDriverManager;
 
@@ -60,7 +60,7 @@ public class CacheTest {
 				new Object[][] { { ChromeDriverManager.class, "2.23", x32 },
 						{ OperaDriverManager.class, "0.2.2", x64 },
 						{ PhantomJsDriverManager.class, "2.1.1", x64 },
-						{ MarionetteDriverManager.class, "0.10.0", x64 } });
+						{ FirefoxDriverManager.class, "0.10.0", x64 } });
 	}
 
 	@Test

@@ -15,34 +15,23 @@
 package io.github.bonigarcia.wdm.test;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
-import org.openqa.selenium.firefox.MarionetteDriver;
 
-import io.github.bonigarcia.wdm.MarionetteDriverManager;
-import io.github.bonigarcia.wdm.base.BaseBrowserTst;
+import io.github.bonigarcia.wdm.FirefoxDriverManager;
+import io.github.bonigarcia.wdm.base.BaseVersionTst;
 
 /**
- * Test with Marionette browser.
+ * Test asserting Marionette versions.
  *
  * @author Boni Garcia (boni.gg@gmail.com)
- * @since 1.4.0
+ * @since 1.5.0
  */
-public class MarionetteTest extends BaseBrowserTst {
-
-	@BeforeClass
-	public static void setupClass() {
-		validOS = false;
-
-		if (validOS) {
-			MarionetteDriverManager.getInstance().setup();
-		}
-	}
+public class FirefoxVersionTest extends BaseVersionTst {
 
 	@Before
-	public void setupTest() {
-		if (validOS) {
-			driver = new MarionetteDriver();
-		}
+	public void setup() {
+		browserManager = FirefoxDriverManager.getInstance();
+		specificVersions = new String[] { "0.10.0", "0.9.0", "0.8.0", "0.6.2",
+				"0.5.0", "0.4.0", "0.3.0" };
 	}
 
 }

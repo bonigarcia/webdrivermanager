@@ -54,7 +54,7 @@ public class WebDriverManager extends BrowserManager {
 			break;
 		case "org.openqa.selenium.firefox.MarionetteDriver":
 		case "org.openqa.selenium.firefox.FirefoxDriver":
-			browserManagerClass = MarionetteDriverManager.class;
+			browserManagerClass = FirefoxDriverManager.class;
 			break;
 		default:
 			browserManagerClass = VoidDriverManager.class;
