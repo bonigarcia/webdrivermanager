@@ -96,12 +96,12 @@ public class FirefoxDriverManager extends BrowserManager {
 
 	@Override
 	protected String getExportParameter() {
-		return WdmConfig.getString("wdm.marionetteDriverExport");
+		return WdmConfig.getString("wdm.geckoDriverExport");
 	}
 
 	@Override
 	protected String getDriverVersion() {
-		return WdmConfig.getString("wdm.marionetteDriverVersion");
+		return WdmConfig.getString("wdm.geckoDriverVersion");
 	}
 
 	@Override
@@ -111,7 +111,7 @@ public class FirefoxDriverManager extends BrowserManager {
 
 	@Override
 	protected URL getDriverUrl() throws MalformedURLException {
-		return WdmConfig.getUrl("wdm.marionetteDriverUrl");
+		return WdmConfig.getUrl("wdm.geckoDriverUrl");
 	}
 
 	@Override
