@@ -178,7 +178,7 @@ If you use an HTTP Proxy in your Internet connection, you can configure your set
 
 ### Known Issues
 
-Some of the binaries (Opera and Marionette) are hosted on GitHub. When several consecutive requests are made by WebDriverManager, GitHub servers return an **HTTP 403 error** response as follows:
+Some of the binaries (for Opera and Firefox) are hosted on GitHub. When several consecutive requests are made by WebDriverManager, GitHub servers return an **HTTP 403 error** response as follows:
 
 ```
 Caused by: java.io.IOException: Server returned HTTP response code: 403 for URL: https://api.github.com/repos/operasoftware/operachromiumdriver/releases
@@ -195,7 +195,7 @@ Caused by: java.io.IOException: Server returned HTTP response code: 403 for URL:
 	at sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1840)
 	at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1441)
 	at sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:254)
-	at io.github.bonigarcia.wdm.MarionetteDriverManager.getDrivers(MarionetteDriverManager.java:61)
+	at io.github.bonigarcia.wdm.FirefoxDriverManager.getDrivers(FirefoxDriverManager.java:61)
 	at io.github.bonigarcia.wdm.BrowserManager.manage(BrowserManager.java:163)
 ```
 
