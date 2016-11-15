@@ -6,7 +6,7 @@
 
 This library is aimed to automate the [Selenium Webdriver] binaries management within a Java project in runtime.
 
-If you have ever used [Selenium Webdriver], you probably know that in order to use some browsers such as **Chrome**, **Internet Explorer**, **Opera**, **Microsoft Edge**, **PhantomJS**, or **Firefox** (using **Marionette**) you need to download a binary which allows WebDriver to handle the browser. In addition, the absolute path to this binary must be set as Java variables, as follows:
+If you have ever used [Selenium Webdriver], you probably know that in order to use some browsers such as **Chrome**, **Internet Explorer**, **Opera**, **Microsoft Edge**, **PhantomJS**, or **Firefox** (using *Marionette*) you need to download a binary which allows WebDriver to handle the browser. In addition, the absolute path to this binary must be set as Java variables, as follows:
 
 ```java
 System.setProperty("webdriver.chrome.driver", "/absolute/path/to/binary/chromedriver");
@@ -29,7 +29,7 @@ In order to use WebDriverManager in a Maven project, first add the following dep
 <dependency>
 	<groupId>io.github.bonigarcia</groupId>
 	<artifactId>webdrivermanager</artifactId>
-	<version>1.4.10</version>
+	<version>1.5.0</version>
 </dependency>
 ```
 
@@ -71,7 +71,7 @@ Notice that simple adding ``ChromeDriverManager.getInstance().setup();`` WebDriv
 2. It downloads the binary WebDriver if it is not present in your system
 3. It exports the required Java variable by Selenium WebDriver
 
-So far, WebDriverManager supports **Chrome**, **Opera**, **Internet Explorer**, **Microsoft Edge**,  **PhantomJS**, or **Marionette** as follows:
+So far, WebDriverManager supports **Chrome**, **Opera**, **Internet Explorer**, **Microsoft Edge**,  **PhantomJS**, or **Firefox** as follows:
 
 ```java
 ChromeDriverManager.getInstance().setup();
@@ -79,7 +79,7 @@ InternetExplorerDriverManager.getInstance().setup();
 OperaDriverManager.getInstance().setup();
 EdgeDriverManager.getInstance().setup();
 PhantomJsDriverManager.getInstance().setup();
-MarionetteDriverManager.getInstance().setup();
+FirefoxDriverManager.getInstance().setup();
 ```
 
 ## Advanced
@@ -113,15 +113,15 @@ wdm.phantomjsDriverUrl=https://npm.taobao.org/mirrors/phantomjs/
 wdm.phantomjsDriverExport=phantomjs.binary.path
 wdm.phantomjsDriverVersion=LATEST
 
-wdm.marionetteDriverUrl=https://api.github.com/repos/mozilla/geckodriver/releases
-wdm.marionetteDriverExport=webdriver.gecko.driver
-wdm.marionetteDriverVersion=LATEST
+wdm.geckoDriverUrl=https://api.github.com/repos/mozilla/geckodriver/releases
+wdm.geckoDriverExport=webdriver.gecko.driver
+wdm.geckoDriverVersion=LATEST
 
 wdm.gitHubTokenName=
 wdm.gitHubTokenSecret=
 ```
 
-The variable ``wdm.targetPath`` is the default folder in which WebDriver binaries are going to be stored. Notice that by default the path of the Maven local repository is used. The URLs to check the latest version of Chrome, Opera, Internet Explorer, Edge, PhantomJS, and Marionette are set using the variables ``wdm.chromeDriverUrl``, ``wdm.operaDriverExport``, ``wdm.operaDriverUrl``, ``wdm.edgeDriverUrl``, ``wdm.phantomjsDriverUrl``, and ``wdm.marionetteDriverUrl``. 
+The variable ``wdm.targetPath`` is the default folder in which WebDriver binaries are going to be stored. Notice that by default the path of the Maven local repository is used. The URLs to check the latest version of Chrome, Opera, Internet Explorer, Edge, PhantomJS, and Marionette (the driver for Firefox, a.k.a the gecko driver) are set using the variables ``wdm.chromeDriverUrl``, ``wdm.operaDriverExport``, ``wdm.operaDriverUrl``, ``wdm.edgeDriverUrl``, ``wdm.phantomjsDriverUrl``, and ``wdm.geckoDriverUrl``. 
 
 This properties can be overwritten with Java system properties. For example:
 
@@ -151,23 +151,23 @@ new OperaDriverManager().setup(Architecture.x64);
 By default, WebDriverManager downloads the latest version of the WebDriver binary. Concrete versions of WebDriver binaries can be forced, for instance: 
 
 ```java
-ChromeDriverManager.getInstance().setup("2.24");
+ChromeDriverManager.getInstance().setup("2.25");
 InternetExplorerDriverManager.getInstance().setup("2.46");
 OperaDriverManager.getInstance().setup("0.2.0");
 EdgeDriverManager.getInstance().setup("3.14366");
 PhantomJsDriverManager.getInstance().setup("2.1.1");
-MarionetteDriverManager.getInstance().setup("0.10.0");
+FirefoxDriverManager.getInstance().setup("0.11.1");
 ```
 
 This can also be done by changing the value of the variables ``wdm.chromeDriverVersion``, ``wdm.operaDriverVersion``,  ``wdm.internetExplorerVersion``, or  ``wdm.edgeVersion`` from its default value (``LATEST``) to a concrete version. For instance:
 
 ```properties
--Dwdm.chromeDriverVersion=2.24
+-Dwdm.chromeDriverVersion=2.25
 -Dwdm.internetExplorerVersion=2.46
 -Dwdm.operaDriverVersion=0.2.0
 -Dwdm.edgeVersion=3.14366
 -Dwdm.phantomjsDriverVersion=2.1.1
--Dwdm.marionetteDriverVersion=0.10.0
+-Dwdm.geckoDriverVersion=0.11.1
 ```
 
 If no version is specified, WebDriverManager sends a request to the server hosting the binary. In order to avoid this request and check if any binary has been previously downloaded, the key `wdm.forceCache` can be used.
