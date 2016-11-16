@@ -135,6 +135,8 @@ System.setProperty("wdm.targetPath", "/my/custom/path/to/driver/binaries");
 -Dwdm.override=true
 ```
 
+... or by placing a `webdrivermanager.properties` file in the classpath (eg: `src/test/resources`).
+
 In addition, the usage of a architecture (32 or 64 bits) can be forced (except for Edge driver). By default, the suitable binary version for your system and architecture is downloaded and used. The architecture can be forced as follows:
 
 ```java
