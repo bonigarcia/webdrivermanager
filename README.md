@@ -23,7 +23,7 @@ WebDriverManager is open source, released under the terms of [LGPL License 2.1].
 
 ## Usage
 
-In order to use WebDriverManager in a Maven project, first add the following dependency to your `pom.xml`:
+In order to use WebDriverManager in a Maven project, first add the following dependency to your `pom.xml` (Java 7 or upper required):
 
 ```xml
 <dependency>
@@ -38,7 +38,7 @@ Then you can let WebDriverManager to do manage WebDriver binaries for your appli
 ```java
 public class ChromeTest {
 
-	protected WebDriver driver;
+	private WebDriver driver;
 
 	@BeforeClass
 	public static void setupClass() {
@@ -59,7 +59,7 @@ public class ChromeTest {
 
 	@Test
 	public void test() {
-		// Using Selenium WebDriver to carry out automated web testing
+		// Your test code here
 	}
 
 }
