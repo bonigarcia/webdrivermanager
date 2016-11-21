@@ -82,6 +82,11 @@ PhantomJsDriverManager.getInstance().setup();
 FirefoxDriverManager.getInstance().setup();
 ```
 
+## Examples
+
+A GitHub repository with running examples of JUnit test cases using WebDriverManger has been created. Check out [here][WebDriverManager Examples].
+
+
 ## Advanced
 
 Configuration parameters for WebDriverManager are set in the ``application.properties`` file:
@@ -223,3 +228,4 @@ WebDriverManager (Copyright &copy; 2015-2016) is a personal project of [Boni Gar
 [authenticated requests]: https://developer.github.com/v3/#rate-limiting
 [GitHub account]: https://github.com/settings/tokens
 [WebDriverManager issues]: https://github.com/bonigarcia/webdrivermanager/issues
+[WebDriverManager Examples]: https://github.com/bonigarcia/webdrivermanager-examples
