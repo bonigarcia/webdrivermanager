@@ -59,8 +59,6 @@ public class EdgeDriverManager extends BrowserManager {
 				.proxy(createProxy()).get();
 
 		Elements downloadLink = doc.select(".mscom-link.download-button.dl");
-		Elements versionParagraph = doc.select("div:nth-child(1) > div > p");
-
 		versionToDownload = versionParagraph.get(0).text();
 
 		String secondPage = edgeDriverUrl.substring(0,
@@ -98,5 +96,7 @@ public class EdgeDriverManager extends BrowserManager {
 	protected List<String> getDriverName() {
 		return Arrays.asList("MicrosoftWebDriver");
 	}
+        Elements versionParagraph = doc.select("div.fileinfo p");
+
 
 }
