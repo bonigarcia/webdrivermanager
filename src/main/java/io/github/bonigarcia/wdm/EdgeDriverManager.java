@@ -49,32 +49,20 @@ public class EdgeDriverManager extends BrowserManager {
 
 	@Override
 	public List<URL> getDrivers() throws Exception {
-		String edgeDriverUrl = WdmConfig.getString("wdm.edgeDriverUrl");
-		log.debug("Reading {} to find out the latest version of Edge driver",
-				edgeDriverUrl);
+                String edgeDriverUrl = WdmConfig.getString("wdm.edgeDriverUrl");
+                log.debug("Reading {} to find out the latest version of Edge driver", edgeDriverUrl);
 
-		Document doc = Jsoup.connect(edgeDriverUrl)
-				.timeout((int) TimeUnit.SECONDS
-						.toMillis(WdmConfig.getInt("wdm.timeout")))
-				.proxy(createProxy()).get();
+                Document doc = Jsoup.connect(edgeDriverUrl).timeout((int) TimeUnit.SECONDS.toMillis(WdmConfig.getInt("wdm.timeout"))).proxy(createProxy()).get();
 
-		Elements downloadLink = doc.select(".mscom-link.download-button.dl");
-		versionToDownload = versionParagraph.get(0).text();
+                Elements downloadLink = doc.select("ul.driver-downloads li.driver-download > a");
+                Elements versionParagraph = doc.select("ul.driver-downloads li.driver-download p.driver-download__meta");
+                String[] latestVersion = versionParagraph.get(0).text().split(" ");
 
-		String secondPage = edgeDriverUrl.substring(0,
-				edgeDriverUrl.lastIndexOf("/") + 1)
-				+ downloadLink.get(0).attr("href");
+                versionToDownload = latestVersion[1];
 
-		doc = Jsoup.connect(secondPage)
-				.timeout((int) TimeUnit.SECONDS
-						.toMillis(WdmConfig.getInt("wdm.timeout")))
-				.proxy(createProxy()).get();
-
-		Elements binaryLink = doc.select(".mscom-link.failoverLink");
-
-		List<URL> urlList = new ArrayList<>();
-		urlList.add(new URL(binaryLink.attr("href")));
-		return urlList;
+                List<URL> urlList = new ArrayList<>();
+                urlList.add(new URL(downloadLink.get(0).attr("href")));
+                return urlList;
 	}
 
 	@Override
@@ -96,7 +84,4 @@ public class EdgeDriverManager extends BrowserManager {
 	protected List<String> getDriverName() {
 		return Arrays.asList("MicrosoftWebDriver");
 	}
-        Elements versionParagraph = doc.select("div.fileinfo p");
-
-
 }
