@@ -49,20 +49,26 @@ public class EdgeDriverManager extends BrowserManager {
 
 	@Override
 	public List<URL> getDrivers() throws Exception {
-                String edgeDriverUrl = WdmConfig.getString("wdm.edgeDriverUrl");
-                log.debug("Reading {} to find out the latest version of Edge driver", edgeDriverUrl);
+		String edgeDriverUrl = WdmConfig.getString("wdm.edgeDriverUrl");
+		log.debug("Reading {} to find out the latest version of Edge driver",
+				edgeDriverUrl);
 
-                Document doc = Jsoup.connect(edgeDriverUrl).timeout((int) TimeUnit.SECONDS.toMillis(WdmConfig.getInt("wdm.timeout"))).proxy(createProxy()).get();
+		Document doc = Jsoup.connect(edgeDriverUrl)
+				.timeout((int) TimeUnit.SECONDS
+						.toMillis(WdmConfig.getInt("wdm.timeout")))
+				.proxy(createProxy()).get();
 
-                Elements downloadLink = doc.select("ul.driver-downloads li.driver-download > a");
-                Elements versionParagraph = doc.select("ul.driver-downloads li.driver-download p.driver-download__meta");
-                String[] latestVersion = versionParagraph.get(0).text().split(" ");
+		Elements downloadLink = doc
+				.select("ul.driver-downloads li.driver-download > a");
+		Elements versionParagraph = doc.select(
+				"ul.driver-downloads li.driver-download p.driver-download__meta");
+		String[] latestVersion = versionParagraph.get(0).text().split(" ");
 
-                versionToDownload = latestVersion[1];
+		versionToDownload = latestVersion[1];
 
-                List<URL> urlList = new ArrayList<>();
-                urlList.add(new URL(downloadLink.get(0).attr("href")));
-                return urlList;
+		List<URL> urlList = new ArrayList<>();
+		urlList.add(new URL(downloadLink.get(0).attr("href")));
+		return urlList;
 	}
 
 	@Override
