@@ -1,3 +1,10 @@
+webdrivermanager (1.5.1)
+
+  + Allow running in separate classloader (PR #83 from phillcunnington)
+  + Bug-fix: update EdgeDriverManager (PR #87 from oscarcarlsson)
+
+ -- Boni Garcia <boni.gg@gmail.com>
+
 webdrivermanager (1.5.0)
 
   + Deprecate MarionetteDriverManager (use instead FirefoxDriverManager)
