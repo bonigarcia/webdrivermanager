@@ -288,10 +288,14 @@ public abstract class BrowserManager {
 	private boolean isNetAvailable() {
 		try {
 			URL url = getDriverUrl();
-			URLConnection conn = url.openConnection();
+			Proxy proxy = createProxy();
+			URLConnection conn = proxy != null
+					? url.openConnection(proxy)
+					: url.openConnection();
+
 			conn.connect();
 			return true;
-		} catch (Exception e) {
+		} catch (IOException e) {
 			log.warn("Network not available. Forcing the use of cache");
 			return false;
 		}
