@@ -63,6 +63,8 @@ public class Downloader {
 		if (proxyString == null || proxyString.length() < 1) {
 			return null;
 		}
+		proxyString = proxyString.replace("http://", "");
+		proxyString = proxyString.replace("https://", "");
 		StringTokenizer st = new StringTokenizer(proxyString, ":");
 		if (st.countTokens() != 2)
 			return null;
