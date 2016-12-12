@@ -14,18 +14,18 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import static io.github.bonigarcia.wdm.Downloader.createProxy;
-import static org.junit.Assert.assertTrue;
-
-import java.net.Proxy;
-
+import mockit.Mock;
+import mockit.MockUp;
+import mockit.integration.junit4.JMockit;
+import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import mockit.Mock;
-import mockit.MockUp;
-import mockit.integration.junit4.JMockit;
+import java.net.Proxy;
+
+import static io.github.bonigarcia.wdm.Downloader.createProxy;
+import static org.junit.Assert.assertThat;
 
 /**
  * Test for proxy.
@@ -36,10 +36,20 @@ import mockit.integration.junit4.JMockit;
 @RunWith(JMockit.class)
 public class ProxyTest {
 
+	private static final String HTTP_PROXY = "HTTP_PROXY";
+	private static final String PROXY_URL = "my.http.proxy";
+	private static final String PROXY_PORT = "1234";
+
+	private static final String[] PROXYS_TEST_STRINGS = {
+			PROXY_URL + ":" + PROXY_PORT,
+			"http://" + PROXY_URL + ":" + PROXY_PORT,
+			"https://" + PROXY_URL + ":" + PROXY_PORT
+	};
+
 	@Test
 	public void testRealEnvProxyToNull() {
 		Proxy proxy = createProxy();
-		String exp = System.getenv("HTTP_PROXY");
+		String exp = System.getenv(HTTP_PROXY);
 		if (exp != null && exp.length() > 0) {
 			Assert.assertNotNull(proxy);
 		} else {
@@ -49,15 +59,25 @@ public class ProxyTest {
 
 	@Test
 	public void testMockedEnvProxy() {
-		new MockUp<System>() {
+		MockUp<System> mockUp;
+		for (String proxyTestString: PROXYS_TEST_STRINGS) {
+			mockUp = setSystemGetEnvMock(proxyTestString);;
+			System.out.println("proxyTestString=" + proxyTestString);
+			Proxy proxy = createProxy();
+			assertThat(proxy.toString(), CoreMatchers.containsString(PROXY_URL));
+			assertThat(proxy.toString(), CoreMatchers.containsString(PROXY_URL));
+			mockUp.tearDown();
+		}
+	}
+
+	private MockUp<System> setSystemGetEnvMock(final String httpProxyString) {
+		MockUp mockUp = new MockUp<System>() {
 			@Mock
 			public String getenv(final String string) {
-				return "my.http.proxy:1234";
+				return httpProxyString;
 			}
 		};
-		Proxy proxy = createProxy();
-		assertTrue(proxy.toString().contains("my.http.proxy"));
-		assertTrue(proxy.toString().contains("1234"));
+		return mockUp;
 	}
 
 }
