@@ -145,14 +145,23 @@ System.setProperty("wdm.targetPath", "/my/custom/path/to/driver/binaries");
 In addition, the usage of a architecture (32 or 64 bits) can be forced (except for Edge driver). By default, the suitable binary version for your system and architecture is downloaded and used. The architecture can be forced as follows:
 
 ```java
-new ChromeDriverManager().setup(Architecture.x32);
-new ChromeDriverManager().setup(Architecture.x64);
+ChromeDriverManager().getInstance().setup(Architecture.x32);
+ChromeDriverManager().getInstance().setup(Architecture.x64);
 
-new InternetExplorerDriverManager().setup(Architecture.x32);
-new InternetExplorerDriverManager().setup(Architecture.x64);
+InternetExplorerDriverManager().getInstance().setup(Architecture.x32);
+InternetExplorerDriverManager().getInstance().setup(Architecture.x64);
 
-new OperaDriverManager().setup(Architecture.x32);
-new OperaDriverManager().setup(Architecture.x64);
+OperaDriverManager().getInstance().setup(Architecture.x32);
+OperaDriverManager().getInstance().setup(Architecture.x64);
+
+EdgeDriverManager().getInstance().setup(Architecture.x32);
+EdgeDriverManager().getInstance().setup(Architecture.x64);
+
+PhantomJsDriverManager().getInstance().setup(Architecture.x32);
+PhantomJsDriverManager().getInstance().setup(Architecture.x64);
+
+FirefoxDriverManager().getInstance().setup(Architecture.x32);
+FirefoxDriverManager().getInstance().setup(Architecture.x64);
 ```
 
 By default, WebDriverManager downloads the latest version of the WebDriver binary. Concrete versions of WebDriver binaries can be forced, for instance: 
