@@ -58,6 +58,7 @@ public class ProxyTest {
 	}
 
 	@Test
+	@SuppressWarnings("deprecation")
 	public void testMockedEnvProxy() {
 		MockUp<System> mockUp;
 		for (String proxyTestString: PROXYS_TEST_STRINGS) {
@@ -71,7 +72,7 @@ public class ProxyTest {
 	}
 
 	private MockUp<System> setSystemGetEnvMock(final String httpProxyString) {
-		MockUp mockUp = new MockUp<System>() {
+		MockUp<System> mockUp = new MockUp<System>() {
 			@Mock
 			public String getenv(final String string) {
 				return httpProxyString;
