@@ -33,7 +33,7 @@ public class WdmConfig {
 
 	protected WdmConfig() {
 		conf = ConfigFactory.load(WdmConfig.class.getClassLoader(),
-				System.getProperty("wdm.properties","webdrivermanager.properties"));
+				System.getProperty("wdm.properties", "webdrivermanager.properties"));
 	}
 
 	public static synchronized WdmConfig getInstance() {
