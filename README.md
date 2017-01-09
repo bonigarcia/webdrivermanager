@@ -114,7 +114,7 @@ wdm.edgeDriverUrl=https://www.microsoft.com/en-us/download/details.aspx?id=48740
 wdm.edgeExport=webdriver.edge.driver
 wdm.edgeVersion=LATEST
 	
-wdm.phantomjsDriverUrl=https://npm.taobao.org/mirrors/phantomjs/
+wdm.phantomjsDriverUrl=https://bitbucket.org/ariya/phantomjs/downloads/
 wdm.phantomjsDriverExport=phantomjs.binary.path
 wdm.phantomjsDriverVersion=LATEST
 
