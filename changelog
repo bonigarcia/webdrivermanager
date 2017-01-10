@@ -8,6 +8,7 @@ webdrivermanager (1.5.1)
 
 webdrivermanager (1.5.0)
 
+  + Change default name of properties file to webdrivermanager.properties
   + Deprecate MarionetteDriverManager (use instead FirefoxDriverManager)
   + Use of Selenium 3 in internal tests
   + Issue #77: bug-fix for phantomjs 32-bit artifact
