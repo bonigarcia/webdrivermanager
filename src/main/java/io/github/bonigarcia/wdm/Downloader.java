@@ -297,7 +297,7 @@ public class Downloader {
 		String phantomName = "phantomjs";
 		if (export.contains(phantomName)) {
 			String fileNoExtension = archive.getName().replace(".tar.bz2", "")
-					.replace(".zip", "");
+					.replace(".zip", "").replace("-beta", ".beta");
 
 			File phantomjs = null;
 			try {
@@ -309,6 +309,7 @@ public class Downloader {
 				phantomjs = new File(archive.getParentFile().getAbsolutePath()
 						+ File.separator + fileNoExtension + File.separator
 						+ phantomName + extension);
+
 			}
 
 			target = new File(archive.getParentFile().getAbsolutePath()
