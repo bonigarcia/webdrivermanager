@@ -14,8 +14,6 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -79,8 +77,8 @@ public class Downloader {
 		}
 	}
 
-	public static final synchronized void download(URL url, String version,
-			String export, List<String> driverName) throws IOException {
+	public static final synchronized void download(URL url, String version, String export, List<String> driverName,
+			BrowserManager browserManager) throws IOException {
 		File targetFile = new File(getTarget(version, url));
 		File binary = null;
 
@@ -130,7 +128,7 @@ public class Downloader {
 			FileUtils.copyInputStreamToFile(conn.getInputStream(), targetFile);
 
 			if (!export.contains("edge")) {
-				binary = extract(targetFile, export);
+				binary = extract(targetFile, export, browserManager);
 				targetFile.delete();
 			} else {
 				binary = targetFile;
@@ -180,7 +178,7 @@ public class Downloader {
 		return listFiles.iterator().next();
 	}
 
-	public static final File extract(File compressedFile, String export)
+	public static final File extract(File compressedFile, String export, BrowserManager browserManager)
 			throws IOException {
 		log.trace("Compressed file {}", compressedFile);
 
@@ -235,7 +233,7 @@ public class Downloader {
 			zipFolder.close();
 		}
 
-		file = checkPhantom(compressedFile, export);
+		file = browserManager.postDownload(compressedFile, export);
 
 		log.trace("Resulting binary file {}", file.getAbsoluteFile());
 		return file.getAbsoluteFile();
@@ -289,55 +287,6 @@ public class Downloader {
 		log.trace("Unbzip2 {}", archive);
 
 		return archive;
-	}
-
-	private static File checkPhantom(File archive, String export)
-			throws IOException {
-		File target = null;
-		String phantomName = "phantomjs";
-		if (export.contains(phantomName)) {
-			String fileNoExtension = archive.getName().replace(".tar.bz2", "").replace(".zip", "")
-					.replace(".tar.gz", "").replace("-beta", ".beta");
-
-			log.trace("PhatomJS package name: {}", archive);
-			log.trace("PhatomJS package name (parsed): {}", fileNoExtension);
-
-			File phantomjs = null;
-			try {
-				phantomjs = new File(archive.getParentFile().getAbsolutePath()
-						+ File.separator + fileNoExtension + File.separator
-						+ "bin" + File.separator).listFiles()[0];
-			} catch (Exception e) {
-				String extension = IS_OS_WINDOWS ? ".exe" : "";
-				phantomjs = new File(archive.getParentFile().getAbsolutePath()
-						+ File.separator + fileNoExtension + File.separator
-						+ phantomName + extension);
-
-			}
-
-			target = new File(archive.getParentFile().getAbsolutePath()
-					+ File.separator + phantomjs.getName());
-			phantomjs.renameTo(target);
-
-			File delete = new File(archive.getParentFile().getAbsolutePath()
-					+ File.separator + fileNoExtension);
-			log.trace("Folder to be deleted: {}", delete);
-			FileUtils.deleteDirectory(delete);
-		} else {
-			File[] ls = archive.getParentFile().listFiles();
-			for (File f : ls) {
-				if (IS_OS_WINDOWS) {
-					if (f.getName().endsWith(".exe")) {
-						target = f;
-						break;
-					}
-				} else if (f.canExecute()) {
-					target = f;
-					break;
-				}
-			}
-		}
-		return target;
 	}
 
 	public static final String getTarget(String version, URL url)

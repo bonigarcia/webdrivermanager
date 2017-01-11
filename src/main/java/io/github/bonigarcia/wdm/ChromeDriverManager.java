@@ -14,6 +14,8 @@
  */
 package io.github.bonigarcia.wdm;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
@@ -76,4 +78,8 @@ public class ChromeDriverManager extends BrowserManager {
 		}
 	}
 
+	@Override
+	protected File postDownload(File archive, String export) throws IOException {
+		return archive;
+	}
 }

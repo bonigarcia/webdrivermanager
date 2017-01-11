@@ -81,6 +81,8 @@ public abstract class BrowserManager {
 
 	protected abstract URL getDriverUrl() throws MalformedURLException;
 
+	protected abstract File postDownload(File archive, String export) throws IOException;
+
 	protected String versionToDownload;
 
 	public void setup() {
@@ -275,7 +277,7 @@ public abstract class BrowserManager {
 								? getExportParameter() : null;
 						System.setProperty(VERSION_PROPERTY, versionToDownload);
 						Downloader.download(url, versionToDownload, export,
-								getDriverName());
+								getDriverName(), this);
 					}
 				}
 			}

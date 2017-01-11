@@ -14,10 +14,16 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
+
+import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
+
+import org.apache.commons.io.FileUtils;
 
 /**
  * Manager for PhantomJs.
@@ -76,5 +82,54 @@ public class PhantomJsDriverManager extends BrowserManager {
 		final int dashIndex = currentVersion.indexOf('-');
 		currentVersion = currentVersion.substring(0, dashIndex);
 		return currentVersion;
+	}
+
+	@Override
+	protected File postDownload(File archive, String export) throws IOException {
+		File target = null;
+		String phantomName = "phantomjs";
+		if (export.contains(phantomName)) {
+			String fileNoExtension = archive.getName().replace(".tar.bz2", "").replace(".zip", "")
+					.replace(".tar.gz", "").replace("-beta", ".beta");
+
+			log.trace("PhatomJS package name: {}", archive);
+			log.trace("PhatomJS package name (parsed): {}", fileNoExtension);
+
+			File phantomjs = null;
+			try {
+				phantomjs = new File(archive.getParentFile().getAbsolutePath()
+						+ File.separator + fileNoExtension + File.separator
+						+ "bin" + File.separator).listFiles()[0];
+			} catch (Exception e) {
+				String extension = IS_OS_WINDOWS ? ".exe" : "";
+				phantomjs = new File(archive.getParentFile().getAbsolutePath()
+						+ File.separator + fileNoExtension + File.separator
+						+ phantomName + extension);
+
+			}
+
+			target = new File(archive.getParentFile().getAbsolutePath()
+					+ File.separator + phantomjs.getName());
+			phantomjs.renameTo(target);
+
+			File delete = new File(archive.getParentFile().getAbsolutePath()
+					+ File.separator + fileNoExtension);
+			log.trace("Folder to be deleted: {}", delete);
+			FileUtils.deleteDirectory(delete);
+		} else {
+			File[] ls = archive.getParentFile().listFiles();
+			for (File f : ls) {
+				if (IS_OS_WINDOWS) {
+					if (f.getName().endsWith(".exe")) {
+						target = f;
+						break;
+					}
+				} else if (f.canExecute()) {
+					target = f;
+					break;
+				}
+			}
+		}
+		return target;
 	}
 }

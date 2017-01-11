@@ -14,6 +14,8 @@
  */
 package io.github.bonigarcia.wdm;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
@@ -97,4 +99,8 @@ public class WebDriverManager extends BrowserManager {
 		return instance.getDriverName();
 	}
 
+	@Override
+	protected File postDownload(File archive, String export) throws IOException {
+		return archive;
+	}
 }

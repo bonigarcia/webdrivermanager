@@ -15,6 +15,7 @@
 package io.github.bonigarcia.wdm;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
@@ -128,5 +129,10 @@ public class OperaDriverManager extends BrowserManager {
 					url.getFile().indexOf(SEPARATOR + "v") + 2,
 					url.getFile().lastIndexOf(SEPARATOR));
 		}
+	}
+
+	@Override
+	protected File postDownload(File archive, String export) throws IOException {
+		return archive;
 	}
 }
