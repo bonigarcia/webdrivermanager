@@ -296,8 +296,11 @@ public class Downloader {
 		File target = null;
 		String phantomName = "phantomjs";
 		if (export.contains(phantomName)) {
-			String fileNoExtension = archive.getName().replace(".tar.bz2", "")
-					.replace(".zip", "").replace("-beta", ".beta");
+			String fileNoExtension = archive.getName().replace(".tar.bz2", "").replace(".zip", "")
+					.replace(".tar.gz", "").replace("-beta", ".beta");
+
+			log.trace("PhatomJS package name: {}", archive);
+			log.trace("PhatomJS package name (parsed): {}", fileNoExtension);
 
 			File phantomjs = null;
 			try {
