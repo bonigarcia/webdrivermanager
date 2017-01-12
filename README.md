@@ -225,6 +225,10 @@ In order to avoid this problem, [authenticated requests] should be done. The pro
 -Dwdm.gitHubTokenSecret=<your-token-secret>
 ```
 
+## Help
+
+If you have questions on how to use WebDriverManager properly with a special configuration or suchlike, please consider asking a question on [stackoverflow](https://stackoverflow.com/questions/tagged/webdrivermanager) and tag it with  *webdrivermanager*.
+
 ## About
 
 WebDriverManager (Copyright &copy; 2015-2017) is a personal project of [Boni Garcia] licensed under [LGPL License 2.1]. Comments, questions and suggestions are always very [welcome][WebDriverManager issues]!
