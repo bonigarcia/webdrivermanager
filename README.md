@@ -33,7 +33,7 @@ In order to use WebDriverManager in a Maven project, first add the following dep
 </dependency>
 ```
 
-Then you can let WebDriverManager to do manage WebDriver binaries for your application/test. Take a look to this JUnit example which uses Chrome with Selenium WebDriver:
+Then you can let WebDriverManager manage the WebDriver binaries for your application/test. Take a look at this JUnit example which uses Chrome with Selenium WebDriver:
 
 ```java
 public class ChromeTest {
@@ -65,13 +65,13 @@ public class ChromeTest {
 }
 ```
 
-Notice that simple adding ``ChromeDriverManager.getInstance().setup();`` WebDriverManager does magic for you:
+Notice that simply adding ``ChromeDriverManager.getInstance().setup();`` WebDriverManager does magic for you:
 
-1. It checks the latest version of the WebDriver binary file
-2. It downloads the binary WebDriver if it is not present in your system
-3. It exports the required Java variable by Selenium WebDriver
+1. It checks for the latest version of the WebDriver binary
+2. It downloads the WebDriver binary if it's not present on your system
+3. It exports the required WebDriver Java environment variables needed by Selenium
 
-So far, WebDriverManager supports **Chrome**, **Opera**, **Internet Explorer**, **Microsoft Edge**,  **PhantomJS**, or **Firefox** as follows:
+So far, WebDriverManager supports **Chrome**, **Opera**, **Internet Explorer**, **Microsoft Edge**,  **PhantomJS**, and **Firefox** as follows:
 
 ```java
 ChromeDriverManager.getInstance().setup();
@@ -84,7 +84,7 @@ FirefoxDriverManager.getInstance().setup();
 
 ## Examples
 
-A GitHub repository with running examples of JUnit test cases using WebDriverManger has been created. Check out [here][WebDriverManager Examples].
+Check out [WebDriverManager Examples][WebDriverManager Examples] for some JUnit tests utilizing WebDriverManager.
 
 
 ## Advanced
@@ -128,7 +128,7 @@ wdm.gitHubTokenSecret=
 
 The variable ``wdm.targetPath`` is the default folder in which WebDriver binaries are going to be stored. Notice that by default the path of the Maven local repository is used. The URLs to check the latest version of Chrome, Opera, Internet Explorer, Edge, PhantomJS, and Marionette (the driver for Firefox, a.k.a the gecko driver) are set using the variables ``wdm.chromeDriverUrl``, ``wdm.operaDriverExport``, ``wdm.operaDriverUrl``, ``wdm.edgeDriverUrl``, ``wdm.phantomjsDriverUrl``, and ``wdm.geckoDriverUrl``. 
 
-This properties can be overwritten with Java system properties. For example:
+These properties can be overwritten by Java system properties, for example:
 
 ```java
 System.setProperty("wdm.targetPath", "/my/custom/path/to/driver/binaries");
@@ -142,7 +142,7 @@ System.setProperty("wdm.targetPath", "/my/custom/path/to/driver/binaries");
 
 ... or by placing a `webdrivermanager.properties` file in the classpath (eg: `src/test/resources`).
 
-In addition, the usage of a architecture (32 or 64 bits) can be forced (except for Edge driver). By default, the suitable binary version for your system and architecture is downloaded and used. The architecture can be forced as follows:
+In addition, the usage of an architecture (32/64 bit) can be forced (except for Edge driver). By default, the suitable binary version for your system and architecture is downloaded and used. The architecture can be forced as follows:
 
 ```java
 ChromeDriverManager().getInstance().setup(Architecture.x32);
@@ -164,7 +164,7 @@ FirefoxDriverManager().getInstance().setup(Architecture.x32);
 FirefoxDriverManager().getInstance().setup(Architecture.x64);
 ```
 
-By default, WebDriverManager downloads the latest version of the WebDriver binary. Concrete versions of WebDriver binaries can be forced, for instance: 
+By default, WebDriverManager downloads the latest version of the WebDriver binary. But concrete versions of WebDriver binaries can be forced as well:
 
 ```java
 ChromeDriverManager.getInstance().setup("2.25");
@@ -190,7 +190,7 @@ If no version is specified, WebDriverManager sends a request to the server hosti
 
 ### HTTP Proxy
 
-If you use an HTTP Proxy in your Internet connection, you can configure your settings exporting the Java environment variable ``HTTP_PROXY`` or ``HTTPS_PROXY`` using the following notation: ``my.http.proxy:1234``.  
+If you use an HTTP Proxy in your Internet connection, you can configure your settings by exporting the Java environment variable ``HTTP_PROXY`` or ``HTTPS_PROXY`` using the following notation: ``my.http.proxy:1234``.  
 
 ### Known Issues
 
@@ -217,7 +217,7 @@ Caused by: java.io.IOException: Server returned HTTP response code: 403 for URL:
 
 In order to avoid this problem, [authenticated requests] should be done. The procedure is the following:
 
-1. Create a pair token/secret in your [GitHub account]
+1. Create a token/secret pair in your [GitHub account]
 2. Tell WebDriverManager the value of this pair token/secret. To do that you should use the configuration keys ``wdm.gitHubTokenName`` and ``wdm.gitHubTokenSecret``. You can pass them as command line Java parameters as follows:
 
 ```properties
@@ -227,7 +227,7 @@ In order to avoid this problem, [authenticated requests] should be done. The pro
 
 ## About
 
-WebDriverManager (Copyright &copy; 2015-2016) is a personal project of [Boni Garcia] licensed under [LGPL License 2.1]. Comments, questions and suggestions are always very [welcome][WebDriverManager issues]!
+WebDriverManager (Copyright &copy; 2015-2017) is a personal project of [Boni Garcia] licensed under [LGPL License 2.1]. Comments, questions and suggestions are always very [welcome][WebDriverManager issues]!
 
 [Logo]: http://bonigarcia.github.io/img/webdrivermanager.png
 [Selenium Webdriver]: http://docs.seleniumhq.org/projects/webdriver/
