@@ -87,9 +87,9 @@ FirefoxDriverManager.getInstance().setup();
 Check out [WebDriverManager Examples][WebDriverManager Examples] for some JUnit tests utilizing WebDriverManager.
 
 
-## Advanced
+## Configuration
 
-Configuration parameters for WebDriverManager are set in the ``application.properties`` file:
+Configuration parameters for WebDriverManager are set in the ``webdrivermanager.properties`` file:
 
 ```properties
 wdm.targetPath=~/.m2/repository/webdriver
@@ -139,8 +139,6 @@ System.setProperty("wdm.targetPath", "/my/custom/path/to/driver/binaries");
 ```properties
 -Dwdm.override=true
 ```
-
-... or by placing a `webdrivermanager.properties` file in the classpath (eg: `src/test/resources`).
 
 In addition, the usage of an architecture (32/64 bit) can be forced (except for Edge driver). By default, the suitable binary version for your system and architecture is downloaded and used. The architecture can be forced as follows:
 
