@@ -17,10 +17,13 @@ package io.github.bonigarcia.wdm;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static io.github.bonigarcia.wdm.Downloader.createProxy;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_LINUX;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -270,6 +273,13 @@ public abstract class BrowserManager {
 							// Filter by architecture and OS
 							candidateUrls = filter(candidateUrls, arch);
 
+							// Exception for phantomjs 2.5.0 in Linux
+							if (IS_OS_LINUX
+									&& getDriverName().contains("phantomjs")) {
+								candidateUrls = filterByDistro(candidateUrls,
+										getDistroName(), "2.5.0");
+							}
+
 							// Find out if driver version has been found or not
 							continueSearchingVersion = candidateUrls.isEmpty()
 									&& getLatest;
@@ -362,9 +372,59 @@ public abstract class BrowserManager {
 				}
 			}
 		}
-
 		log.trace("{} {} - URLs after filtering by architecture ({}): {}",
 				getDriverName(), versionToDownload, arch, out);
+
+		return out;
+	}
+
+	public List<URL> filterByDistro(List<URL> list, String distro,
+			String version) throws IOException {
+		log.trace("{} {} - URLs before filtering by distro: {}",
+				getDriverName(), versionToDownload, list);
+
+		List<URL> out = new ArrayList<URL>(list);
+		// Round #3 : Filter by distribution (for Linux)
+		for (URL url : list) {
+			if (url.getFile().contains(version)
+					&& !url.getFile().contains(distro)) {
+				out.remove(url);
+			}
+		}
+		log.trace("{} {} - URLs after filtering by Linux distribution ({}): {}",
+				getDriverName(), versionToDownload, distro, out);
+
+		return out;
+	}
+
+	private String getDistroName() throws IOException {
+		String out = "";
+		final String key = "UBUNTU_CODENAME";
+		File dir = new File("/etc/");
+		File fileList[] = new File[0];
+		if (dir.exists()) {
+			fileList = dir.listFiles(new FilenameFilter() {
+				public boolean accept(File dir, String filename) {
+					return filename.endsWith("-release");
+				}
+			});
+		}
+		File fileVersion = new File("/proc/version");
+		if (fileVersion.exists()) {
+			fileList = Arrays.copyOf(fileList, fileList.length + 1);
+			fileList[fileList.length - 1] = fileVersion;
+		}
+		for (File f : fileList) {
+			BufferedReader myReader = new BufferedReader(new FileReader(f));
+			String strLine = null;
+			while ((strLine = myReader.readLine()) != null) {
+				if (strLine.contains(key)) {
+					int beginIndex = key.length();
+					out = strLine.substring(beginIndex + 1);
+				}
+			}
+			myReader.close();
+		}
 
 		return out;
 	}
