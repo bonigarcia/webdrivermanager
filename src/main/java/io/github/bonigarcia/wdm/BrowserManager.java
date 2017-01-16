@@ -81,7 +81,7 @@ public abstract class BrowserManager {
 
 	protected abstract URL getDriverUrl() throws MalformedURLException;
 
-	protected abstract File postDownload(File archive, String export) throws IOException;
+	protected abstract File postDownload(File archive) throws IOException;
 
 	protected String versionToDownload;
 

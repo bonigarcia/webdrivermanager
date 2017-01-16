@@ -233,7 +233,7 @@ public class Downloader {
 			zipFolder.close();
 		}
 
-		file = browserManager.postDownload(compressedFile, export);
+		file = browserManager.postDownload(compressedFile);
 
 		log.trace("Resulting binary file {}", file.getAbsoluteFile());
 		return file.getAbsoluteFile();
@@ -317,6 +317,7 @@ public class Downloader {
 			target = target.substring(0, iSeparator + 1)
 					+ target.substring(iDash + 1, iPoint)
 					+ target.substring(iSeparator);
+			target = target.replace("beta-", "");
 		}
 
 		// Exception for Marionette
