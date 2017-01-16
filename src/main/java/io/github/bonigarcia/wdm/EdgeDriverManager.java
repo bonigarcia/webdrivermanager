@@ -94,6 +94,12 @@ public class EdgeDriverManager extends BrowserManager {
 	}
 
 	@Override
+	protected String preDownload(String target, String version)
+			throws IOException {
+		return target;
+	}
+
+	@Override
 	protected File postDownload(File archive) throws IOException {
 		return archive;
 	}

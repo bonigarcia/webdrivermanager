@@ -77,9 +77,10 @@ public class Downloader {
 		}
 	}
 
-	public static final synchronized void download(URL url, String version, String export, List<String> driverName,
+	public static final synchronized void download(URL url, String version,
+			String export, List<String> driverName,
 			BrowserManager browserManager) throws IOException {
-		File targetFile = new File(getTarget(version, url));
+		File targetFile = new File(getTarget(version, url, browserManager));
 		File binary = null;
 
 		// Check if binary exists
@@ -178,8 +179,8 @@ public class Downloader {
 		return listFiles.iterator().next();
 	}
 
-	public static final File extract(File compressedFile, String export, BrowserManager browserManager)
-			throws IOException {
+	public static final File extract(File compressedFile, String export,
+			BrowserManager browserManager) throws IOException {
 		log.trace("Compressed file {}", compressedFile);
 
 		File file = null;
@@ -289,8 +290,8 @@ public class Downloader {
 		return archive;
 	}
 
-	public static final String getTarget(String version, URL url)
-			throws IOException {
+	public static final String getTarget(String version, URL url,
+			BrowserManager browserManager) throws IOException {
 
 		log.trace("getTarget {} {}", version, url);
 
@@ -305,35 +306,9 @@ public class Downloader {
 				.replace(".msi", "").replace(".exe", "")
 				.replace("_", File.separator);
 
-		String target = getTargetPath() + folder + File.separator + version
-				+ zip;
-
-		// Exception for PhantomJS
-		if (target.contains("phantomjs")) {
-			int iSeparator = target.indexOf(version) - 1;
-			int iDash = target.lastIndexOf(version) + version.length();
-			int iPoint = target.lastIndexOf(".tar") != -1
-					? target.lastIndexOf(".tar") : target.lastIndexOf(".zip");
-			target = target.substring(0, iSeparator + 1)
-					+ target.substring(iDash + 1, iPoint)
-					+ target.substring(iSeparator);
-			target = target.replace("beta-", "");
-		}
-
-		// Exception for Marionette
-		else if (target.contains("wires") || target.contains("geckodriver")) {
-			int iSeparator = target.indexOf(version) - 1;
-			int iDash = target.lastIndexOf(version) + version.length();
-			int iPoint = target.lastIndexOf("tar.gz") != -1
-					? target.lastIndexOf(".tar.gz")
-					: target.lastIndexOf(".gz") != -1
-							? target.lastIndexOf(".gz")
-							: target.lastIndexOf(".zip");
-			target = target.substring(0, iSeparator + 1)
-					+ target.substring(iDash + 1, iPoint).toLowerCase()
-					+ target.substring(iSeparator);
-		}
-
+		String target = browserManager.preDownload(
+				getTargetPath() + folder + File.separator + version + zip,
+				version);
 		log.trace("Target file for URL {} version {} = {}", url, version,
 				target);
 

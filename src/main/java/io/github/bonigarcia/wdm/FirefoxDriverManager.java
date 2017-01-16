@@ -127,6 +127,21 @@ public class FirefoxDriverManager extends BrowserManager {
 	}
 
 	@Override
+	protected String preDownload(String target, String version)
+			throws IOException {
+		int iSeparator = target.indexOf(version) - 1;
+		int iDash = target.lastIndexOf(version) + version.length();
+		int iPoint = target.lastIndexOf("tar.gz") != -1
+				? target.lastIndexOf(".tar.gz")
+				: target.lastIndexOf(".gz") != -1 ? target.lastIndexOf(".gz")
+						: target.lastIndexOf(".zip");
+		target = target.substring(0, iSeparator + 1)
+				+ target.substring(iDash + 1, iPoint).toLowerCase()
+				+ target.substring(iSeparator);
+		return target;
+	}
+
+	@Override
 	protected File postDownload(File archive) throws IOException {
 		return archive;
 	}

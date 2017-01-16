@@ -81,6 +81,8 @@ public abstract class BrowserManager {
 
 	protected abstract URL getDriverUrl() throws MalformedURLException;
 
+	protected abstract String preDownload(String target, String version) throws IOException;
+
 	protected abstract File postDownload(File archive) throws IOException;
 
 	protected String versionToDownload;
@@ -291,8 +293,7 @@ public abstract class BrowserManager {
 		try {
 			URL url = getDriverUrl();
 			Proxy proxy = createProxy();
-			URLConnection conn = proxy != null
-					? url.openConnection(proxy)
+			URLConnection conn = proxy != null ? url.openConnection(proxy)
 					: url.openConnection();
 
 			conn.connect();

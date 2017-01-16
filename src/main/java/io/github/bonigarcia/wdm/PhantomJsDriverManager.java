@@ -83,6 +83,20 @@ public class PhantomJsDriverManager extends BrowserManager {
 	}
 
 	@Override
+	protected String preDownload(String target, String version)
+			throws IOException {
+		int iSeparator = target.indexOf(version) - 1;
+		int iDash = target.lastIndexOf(version) + version.length();
+		int iPoint = target.lastIndexOf(".tar") != -1
+				? target.lastIndexOf(".tar") : target.lastIndexOf(".zip");
+		target = target.substring(0, iSeparator + 1)
+				+ target.substring(iDash + 1, iPoint)
+				+ target.substring(iSeparator);
+		target = target.replace("beta-", "");
+		return target;
+	}
+
+	@Override
 	protected File postDownload(File archive) throws IOException {
 		File extractFolder = archive.getParentFile().listFiles()[1];
 		File binFolder = new File(
