@@ -17,6 +17,7 @@ package io.github.bonigarcia.wdm;
 import static com.google.common.base.Strings.isNullOrEmpty;
 import static io.github.bonigarcia.wdm.Downloader.createProxy;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -81,10 +82,6 @@ public abstract class BrowserManager {
 
 	protected abstract URL getDriverUrl() throws MalformedURLException;
 
-	protected abstract String preDownload(String target, String version) throws IOException;
-
-	protected abstract File postDownload(File archive) throws IOException;
-
 	protected String versionToDownload;
 
 	public void setup() {
@@ -117,6 +114,28 @@ public abstract class BrowserManager {
 
 	public void manage(Architecture arch, DriverVersion version) {
 		manage(arch, version.name());
+	}
+
+	protected String preDownload(String target, String version)
+			throws IOException {
+		return target;
+	}
+
+	protected File postDownload(File archive) throws IOException {
+		File target = archive;
+		File[] ls = archive.getParentFile().listFiles();
+		for (File f : ls) {
+			if (IS_OS_WINDOWS) {
+				if (f.getName().endsWith(".exe")) {
+					target = f;
+					break;
+				}
+			} else if (f.canExecute()) {
+				target = f;
+				break;
+			}
+		}
+		return target;
 	}
 
 	public String getCurrentVersion(URL url, String driverName)

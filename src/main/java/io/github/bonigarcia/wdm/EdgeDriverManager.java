@@ -16,8 +16,6 @@ package io.github.bonigarcia.wdm;
 
 import static io.github.bonigarcia.wdm.Downloader.createProxy;
 
-import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -91,16 +89,5 @@ public class EdgeDriverManager extends BrowserManager {
 	@Override
 	protected List<String> getDriverName() {
 		return Arrays.asList("MicrosoftWebDriver");
-	}
-
-	@Override
-	protected String preDownload(String target, String version)
-			throws IOException {
-		return target;
-	}
-
-	@Override
-	protected File postDownload(File archive) throws IOException {
-		return archive;
 	}
 }
