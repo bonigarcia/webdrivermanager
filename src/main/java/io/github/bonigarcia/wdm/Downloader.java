@@ -236,8 +236,11 @@ public class Downloader {
 		compressedFile.delete();
 		file = browserManager.postDownload(compressedFile);
 
-		log.trace("Resulting binary file {}", file.getAbsoluteFile());
-		return file.getAbsoluteFile();
+		File result = file.getAbsoluteFile();
+		result.setExecutable(true);
+		log.trace("Resulting binary file {}", result);
+
+		return result;
 	}
 
 	public static File unGzip(File archive) throws IOException {
