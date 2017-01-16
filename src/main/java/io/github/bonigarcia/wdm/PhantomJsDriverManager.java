@@ -98,16 +98,27 @@ public class PhantomJsDriverManager extends BrowserManager {
 
 	@Override
 	protected File postDownload(File archive) throws IOException {
-		File extractFolder = archive.getParentFile().listFiles()[1];
+		log.trace("PhatomJS package name: {}", archive);
+
+		File extractFolder = archive.getParentFile().listFiles()[0];
+		log.trace("PhatomJS extract folder (to be deleted): {}", extractFolder);
+
 		File binFolder = new File(
 				extractFolder.getAbsoluteFile() + File.separator + "bin");
-		File phantomjs = binFolder.listFiles()[0];
+		// Exception for older version of PhantomJS
+		int binaryIndex = 0;
+		if (!binFolder.exists()) {
+			binFolder = extractFolder;
+			binaryIndex = 3;
+		}
+
+		log.trace("PhatomJS bin folder: {} (index {})", binFolder, binaryIndex);
+
+		File phantomjs = binFolder.listFiles()[binaryIndex];
+		log.trace("PhatomJS binary: {}", phantomjs);
+
 		File target = new File(archive.getParentFile().getAbsolutePath()
 				+ File.separator + phantomjs.getName());
-
-		log.trace("PhatomJS package name: {}", archive);
-		log.trace("PhatomJS extract folder (to be deleted): {}", extractFolder);
-		log.trace("PhatomJS binary: {}", phantomjs);
 		log.trace("PhatomJS target: {}", target);
 
 		phantomjs.renameTo(target);

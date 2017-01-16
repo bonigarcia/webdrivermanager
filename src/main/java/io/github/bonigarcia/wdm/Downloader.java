@@ -130,7 +130,6 @@ public class Downloader {
 
 			if (!export.contains("edge")) {
 				binary = extract(targetFile, export, browserManager);
-				targetFile.delete();
 			} else {
 				binary = targetFile;
 			}
@@ -234,6 +233,7 @@ public class Downloader {
 			zipFolder.close();
 		}
 
+		compressedFile.delete();
 		file = browserManager.postDownload(compressedFile);
 
 		log.trace("Resulting binary file {}", file.getAbsoluteFile());
