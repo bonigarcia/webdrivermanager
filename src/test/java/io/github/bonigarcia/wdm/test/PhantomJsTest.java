@@ -18,6 +18,7 @@ import java.nio.file.Paths;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriverService;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -31,6 +32,8 @@ import io.github.bonigarcia.wdm.base.BaseBrowserTst;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.4.0
  */
+
+@Ignore("Latest PhantomJS version (2.5.0-beta) is buggy for Linux at this moment")
 public class PhantomJsTest extends BaseBrowserTst {
 
 	@BeforeClass
