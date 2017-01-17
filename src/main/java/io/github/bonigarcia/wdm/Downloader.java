@@ -190,47 +190,7 @@ public class Downloader {
 		} else if (compressedFile.getName().toLowerCase().endsWith("gz")) {
 			file = unGzip(compressedFile);
 		} else {
-			ZipFile zipFolder = new ZipFile(compressedFile);
-			Enumeration<?> enu = zipFolder.entries();
-
-			while (enu.hasMoreElements()) {
-				ZipEntry zipEntry = (ZipEntry) enu.nextElement();
-
-				String name = zipEntry.getName();
-				long size = zipEntry.getSize();
-				long compressedSize = zipEntry.getCompressedSize();
-				log.trace("Unzipping {} (size: {} KB, compressed size: {} KB)",
-						name, size, compressedSize);
-
-				file = new File(
-						compressedFile.getParentFile() + File.separator + name);
-				if (!file.exists() || WdmConfig.getBoolean("wdm.override")) {
-					if (name.endsWith("/")) {
-						file.mkdirs();
-						continue;
-					}
-
-					File parent = file.getParentFile();
-					if (parent != null) {
-						parent.mkdirs();
-					}
-
-					InputStream is = zipFolder.getInputStream(zipEntry);
-					FileOutputStream fos = new FileOutputStream(file);
-					byte[] bytes = new byte[1024];
-					int length;
-					while ((length = is.read(bytes)) >= 0) {
-						fos.write(bytes, 0, length);
-					}
-					is.close();
-					fos.close();
-					file.setExecutable(true);
-				} else {
-					log.debug(file + " already exists");
-				}
-
-			}
-			zipFolder.close();
+			file = unZip(compressedFile);
 		}
 
 		compressedFile.delete();
@@ -243,8 +203,54 @@ public class Downloader {
 		return result;
 	}
 
-	public static File unGzip(File archive) throws IOException {
+	public static File unZip(File compressedFile) throws IOException {
+		File file = null;
+		ZipFile zipFolder = new ZipFile(compressedFile);
+		Enumeration<?> enu = zipFolder.entries();
 
+		while (enu.hasMoreElements()) {
+			ZipEntry zipEntry = (ZipEntry) enu.nextElement();
+
+			String name = zipEntry.getName();
+			long size = zipEntry.getSize();
+			long compressedSize = zipEntry.getCompressedSize();
+			log.trace("Unzipping {} (size: {} KB, compressed size: {} KB)",
+					name, size, compressedSize);
+
+			file = new File(
+					compressedFile.getParentFile() + File.separator + name);
+			if (!file.exists() || WdmConfig.getBoolean("wdm.override")) {
+				if (name.endsWith("/")) {
+					file.mkdirs();
+					continue;
+				}
+
+				File parent = file.getParentFile();
+				if (parent != null) {
+					parent.mkdirs();
+				}
+
+				InputStream is = zipFolder.getInputStream(zipEntry);
+				FileOutputStream fos = new FileOutputStream(file);
+				byte[] bytes = new byte[1024];
+				int length;
+				while ((length = is.read(bytes)) >= 0) {
+					fos.write(bytes, 0, length);
+				}
+				is.close();
+				fos.close();
+				file.setExecutable(true);
+			} else {
+				log.debug(file + " already exists");
+			}
+
+		}
+		zipFolder.close();
+
+		return file;
+	}
+
+	public static File unGzip(File archive) throws IOException {
 		log.trace("UnGzip {}", archive);
 		String fileName = archive.getName();
 		int iDash = fileName.indexOf("-");
