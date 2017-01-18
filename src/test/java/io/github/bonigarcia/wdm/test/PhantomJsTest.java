@@ -14,14 +14,10 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import java.nio.file.Paths;
-
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
-import org.openqa.selenium.phantomjs.PhantomJSDriverService;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import io.github.bonigarcia.wdm.PhantomJsDriverManager;
 import io.github.bonigarcia.wdm.base.BaseBrowserTst;
@@ -43,17 +39,7 @@ public class PhantomJsTest extends BaseBrowserTst {
 
 	@Before
 	public void setupTest() {
-		PhantomJSDriverService service = new PhantomJSDriverService.Builder()
-				.usingAnyFreePort()
-				.usingPhantomJSExecutable(
-						Paths.get(System.getProperty("phantomjs.binary.path"))
-								.toFile())
-				.usingCommandLineArguments(new String[] {
-						"--ignore-ssl-errors=true", "--ssl-protocol=tlsv1",
-						"--web-security=false", "--webdriver-loglevel=INFO" })
-				.build();
-		DesiredCapabilities desireCaps = new DesiredCapabilities();
-		driver = new PhantomJSDriver(service, desireCaps);
+		driver = new PhantomJSDriver();
 	}
 
 }
