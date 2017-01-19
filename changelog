@@ -3,6 +3,9 @@ webdrivermanager (1.5.1)
   + Change default URL for PhantomJS from npm.taobao.org to bitbucket.org
   + Allow running in separate classloader (PR #83 from phillcunnington)
   + Bug-fix: update EdgeDriverManager (PR #87 from oscarcarlsson)
+  + Change default URL for PhantomJS from npm.taobao.org to bitbucket.org
+  + Improve download internal logic (add pre/post download methods)
+  + Bug-fix: support for PhantomJS 2.5.0-beta (issue #96)
 
  -- Boni Garcia <boni.gg@gmail.com>
 
