@@ -110,7 +110,7 @@ wdm.internetExplorerDriverUrl=https://selenium-release.storage.googleapis.com/
 wdm.internetExplorerExport=webdriver.ie.driver
 wdm.internetExplorerVersion=LATEST
 
-wdm.edgeDriverUrl=https://www.microsoft.com/en-us/download/details.aspx?id=48740
+wdm.edgeDriverUrl=https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/
 wdm.edgeExport=webdriver.edge.driver
 wdm.edgeVersion=LATEST
 	
