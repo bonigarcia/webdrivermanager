@@ -494,7 +494,7 @@ public abstract class BrowserManager {
 					}
 
 				} catch (Exception e) {
-					log.warn("There was a problem with URL {} : {}",
+					log.trace("There was a problem with URL {} : {}",
 							url.toString(), e.getMessage());
 					list.remove(url);
 					continue;
