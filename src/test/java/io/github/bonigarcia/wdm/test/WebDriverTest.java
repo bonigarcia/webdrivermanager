@@ -18,6 +18,7 @@ import java.util.Arrays;
 import java.util.Collection;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
@@ -36,6 +37,7 @@ import io.github.bonigarcia.wdm.base.BaseBrowserTst;
  * @since 1.3.1
  */
 @RunWith(Parameterized.class)
+@Ignore
 public class WebDriverTest extends BaseBrowserTst {
 
 	@Parameter
