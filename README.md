@@ -226,7 +226,7 @@ In order to avoid this problem, [authenticated requests] should be done. The pro
 
 ## Help
 
-If you have questions on how to use WebDriverManager properly with a special configuration or suchlike, please consider asking a question on [stackoverflow](https://stackoverflow.com/questions/tagged/webdrivermanager) and tag it with  *webdrivermanager*.
+If you have questions on how to use WebDriverManager properly with a special configuration or suchlike, please consider asking a question on [stackoverflow](https://stackoverflow.com/questions/tagged/webdrivermanager) and tag it with  *webdrivermanager-java*.
 
 ## About
 
