@@ -5,7 +5,7 @@
 [![Support badge]( https://img.shields.io/badge/support-sof-green.svg)](http://stackoverflow.com/questions/tagged/webdrivermanager)
 [![License (LGPL version 2.1)](https://img.shields.io/badge/license-GNU%20LGPL%20version%202.1-brightgreen.svg?style=flat-square)](http://opensource.org/licenses/LGPL-2.1)
 
-This library is aimed to automate the [Selenium Webdriver] binaries management within a Java project in runtime.
+This library is aimed to automate the [Selenium Webdriver] binaries management in runtime for Java.
 
 If you have ever used [Selenium Webdriver], you probably know that in order to use some browsers such as **Chrome**, **Internet Explorer**, **Opera**, **Microsoft Edge**, **PhantomJS**, or **Firefox** (using *Marionette*) you need to download a binary which allows WebDriver to handle the browser. In addition, the absolute path to this binary must be set as Java variables, as follows:
 
