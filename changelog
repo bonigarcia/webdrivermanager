@@ -1,3 +1,10 @@
+webdrivermanager (1.5.2)
+
+  + Support for taobao.org mirror in FirefoxDriverManager
+
+ -- Boni Garcia <boni.gg@gmail.com>
+
+
 webdrivermanager (1.5.1)
 
   + Change default URL for PhantomJS from npm.taobao.org to bitbucket.org
