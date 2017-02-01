@@ -1,6 +1,7 @@
 webdrivermanager (1.5.2)
 
   + Support for taobao.org mirror in FirefoxDriverManager
+  + Support for taobao.org mirror in ChromeDriverManager
 
  -- Boni Garcia <boni.gg@gmail.com>
 
@@ -14,7 +15,7 @@ webdrivermanager (1.5.1)
   + Improve download internal logic (add pre/post download methods)
   + Bug-fix: support for PhantomJS 2.5.0-beta (issue #96)
 
- -- Boni Garcia <boni.gg@gmail.com>
+ -- Boni Garcia <boni.gg@gmail.com>  Thu, 19 Jan 2017 23:12:00 +0200
 
 webdrivermanager (1.5.0)
 
