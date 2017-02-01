@@ -56,6 +56,8 @@ public class FirefoxDriverManager extends BrowserManager {
 
 		} else {
 
+			log.info("Reading {} to seek {}", driverUrl, getDriverName());
+
 			String driverVersion = versionToDownload;
 
 			BufferedReader reader = new BufferedReader(
