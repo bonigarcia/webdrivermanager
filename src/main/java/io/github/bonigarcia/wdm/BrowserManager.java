@@ -87,6 +87,8 @@ public abstract class BrowserManager {
 
 	protected String versionToDownload;
 
+	protected boolean taobaoLog = false;
+
 	public void setup() {
 		setup(DEFAULT_ARCH, DriverVersion.NOT_SPECIFIED.name());
 	}
@@ -527,12 +529,20 @@ public abstract class BrowserManager {
 		}
 	}
 
-	public List<URL> getDriversFromTaobao(URL phantomjsDriverUrl)
-			throws IOException {
-		String phantomjsDriverStr = phantomjsDriverUrl.toString();
-		String phantomjsDriverUrlContent = phantomjsDriverUrl.getPath();
+	public List<URL> getDriversFromTaobao(URL driverUrl) throws IOException {
 
-		org.jsoup.nodes.Document doc = Jsoup.connect(phantomjsDriverStr)
+		if (!taobaoLog) {
+			log.info("Crawling driver list from mirror {}", driverUrl);
+			taobaoLog = true;
+		} else {
+			log.trace("[Recursive call] Crawling driver list from mirror {}",
+					driverUrl);
+		}
+
+		String driverStr = driverUrl.toString();
+		String driverUrlContent = driverUrl.getPath();
+
+		org.jsoup.nodes.Document doc = Jsoup.connect(driverStr)
 				.timeout((int) TimeUnit.SECONDS
 						.toMillis(WdmConfig.getInt("wdm.timeout")))
 				.proxy(createProxy()).get();
@@ -542,12 +552,12 @@ public abstract class BrowserManager {
 		while (iterator.hasNext()) {
 			String link = iterator.next().attr("href");
 			if (link.contains("mirror") && link.endsWith(SEPARATOR)) {
-				urlList.addAll(getDriversFromTaobao(new URL(phantomjsDriverStr
-						+ link.replace(phantomjsDriverUrlContent, ""))));
-			} else if (link.startsWith(phantomjsDriverUrlContent)
+				urlList.addAll(getDriversFromTaobao(new URL(
+						driverStr + link.replace(driverUrlContent, ""))));
+			} else if (link.startsWith(driverUrlContent)
 					&& !link.contains("icons")) {
-				urlList.add(new URL(phantomjsDriverStr
-						+ link.replace(phantomjsDriverUrlContent, "")));
+				urlList.add(new URL(
+						driverStr + link.replace(driverUrlContent, "")));
 			}
 		}
 		return urlList;
