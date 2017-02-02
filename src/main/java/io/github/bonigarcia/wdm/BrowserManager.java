@@ -661,4 +661,9 @@ public abstract class BrowserManager {
 		return conn.getInputStream();
 	}
 
+	public BrowserManager version(String version) {
+		System.setProperty(getDriverVersionKey(), version);
+		return this;
+	}
+
 }
