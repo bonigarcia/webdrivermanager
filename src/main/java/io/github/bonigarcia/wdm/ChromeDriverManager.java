@@ -83,4 +83,9 @@ public class ChromeDriverManager extends BrowserManager {
 		}
 	}
 
+	public BrowserManager useTaobaoMirror() {
+		System.setProperty("wdm.chromeDriverUrl",
+				"http://npm.taobao.org/mirrors/chromedriver");
+		return instance;
+	}
 }

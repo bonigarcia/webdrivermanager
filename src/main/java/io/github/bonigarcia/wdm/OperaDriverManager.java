@@ -130,4 +130,9 @@ public class OperaDriverManager extends BrowserManager {
 		}
 	}
 
+	public BrowserManager useTaobaoMirror() {
+		System.setProperty("wdm.operaDriverUrl",
+				"http://npm.taobao.org/mirrors/operadriver");
+		return instance;
+	}
 }
