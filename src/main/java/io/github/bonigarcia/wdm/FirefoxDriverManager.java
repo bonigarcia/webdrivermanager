@@ -52,7 +52,7 @@ public class FirefoxDriverManager extends BrowserManager {
 		URL driverUrl = getDriverUrl();
 		List<URL> urls;
 		if (isUsingTaobaoMirror()) {
-			urls = getDriversFromTaobao(driverUrl);
+			urls = getDriversFromMirror(driverUrl);
 
 		} else {
 

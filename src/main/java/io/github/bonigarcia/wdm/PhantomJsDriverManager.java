@@ -45,7 +45,7 @@ public class PhantomJsDriverManager extends BrowserManager {
 
 	@Override
 	public List<URL> getDrivers() throws Exception {
-		return getDriversFromTaobao(getDriverUrl());
+		return getDriversFromMirror(getDriverUrl());
 	}
 
 	@Override

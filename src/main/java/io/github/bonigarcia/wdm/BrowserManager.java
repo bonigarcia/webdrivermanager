@@ -87,7 +87,7 @@ public abstract class BrowserManager {
 
 	protected String versionToDownload;
 
-	protected boolean taobaoLog = false;
+	protected boolean mirrorLog = false;
 
 	public void setup() {
 		setup(DEFAULT_ARCH, DriverVersion.NOT_SPECIFIED.name());
@@ -103,7 +103,6 @@ public abstract class BrowserManager {
 
 	public void setup(Architecture arch, String version) {
 		try {
-
 			// Honor property if available (even when version is present)
 			String driverVersion = getDriverVersion();
 			if (!driverVersion.equalsIgnoreCase(DriverVersion.LATEST.name())
@@ -184,7 +183,6 @@ public abstract class BrowserManager {
 
 	public String existsDriverInCache(String repository, String driverVersion,
 			Architecture arch) {
-
 		String driverInCache = null;
 		for (String driverName : getDriverName()) {
 			log.trace("Checking if {} {} ({} bits) exists in cache {}",
@@ -336,7 +334,6 @@ public abstract class BrowserManager {
 	}
 
 	public List<URL> filter(List<URL> list, Architecture arch) {
-
 		log.trace("{} {} - URLs before filtering: {}", getDriverName(),
 				versionToDownload, list);
 
@@ -529,11 +526,15 @@ public abstract class BrowserManager {
 		}
 	}
 
-	public List<URL> getDriversFromTaobao(URL driverUrl) throws IOException {
-
-		if (!taobaoLog) {
+	/**
+	 * This method works also for http://npm.taobao.org/ and
+	 * https://bitbucket.org/ mirrors.
+	 *
+	 */
+	public List<URL> getDriversFromMirror(URL driverUrl) throws IOException {
+		if (!mirrorLog) {
 			log.info("Crawling driver list from mirror {}", driverUrl);
-			taobaoLog = true;
+			mirrorLog = true;
 		} else {
 			log.trace("[Recursive call] Crawling driver list from mirror {}",
 					driverUrl);
@@ -552,7 +553,7 @@ public abstract class BrowserManager {
 		while (iterator.hasNext()) {
 			String link = iterator.next().attr("href");
 			if (link.contains("mirror") && link.endsWith(SEPARATOR)) {
-				urlList.addAll(getDriversFromTaobao(new URL(
+				urlList.addAll(getDriversFromMirror(new URL(
 						driverStr + link.replace(driverUrlContent, ""))));
 			} else if (link.startsWith(driverUrlContent)
 					&& !link.contains("icons")) {
