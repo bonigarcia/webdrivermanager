@@ -77,8 +77,13 @@ public class EdgeDriverManager extends BrowserManager {
 	}
 
 	@Override
+	protected String getDriverVersionKey() {
+		return "wdm.edgeVersion";
+	}
+
+	@Override
 	protected String getDriverVersion() {
-		return WdmConfig.getString("wdm.edgeVersion");
+		return WdmConfig.getString(getDriverVersionKey());
 	}
 
 	@Override

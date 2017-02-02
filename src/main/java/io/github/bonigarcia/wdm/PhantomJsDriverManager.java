@@ -54,8 +54,13 @@ public class PhantomJsDriverManager extends BrowserManager {
 	}
 
 	@Override
+	protected String getDriverVersionKey() {
+		return "wdm.phantomjsDriverVersion";
+	}
+
+	@Override
 	protected String getDriverVersion() {
-		return WdmConfig.getString("wdm.phantomjsDriverVersion");
+		return WdmConfig.getString(getDriverVersionKey());
 	}
 
 	@Override

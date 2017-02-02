@@ -81,6 +81,8 @@ public abstract class BrowserManager {
 
 	protected abstract String getDriverVersion();
 
+	protected abstract String getDriverVersionKey();
+
 	protected abstract List<String> getDriverName();
 
 	protected abstract URL getDriverUrl() throws MalformedURLException;

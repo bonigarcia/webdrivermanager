@@ -57,8 +57,13 @@ public class ChromeDriverManager extends BrowserManager {
 	}
 
 	@Override
+	protected String getDriverVersionKey() {
+		return "wdm.chromeDriverVersion";
+	}
+
+	@Override
 	protected String getDriverVersion() {
-		return WdmConfig.getString("wdm.chromeDriverVersion");
+		return WdmConfig.getString(getDriverVersionKey());
 	}
 
 	@Override
@@ -88,4 +93,5 @@ public class ChromeDriverManager extends BrowserManager {
 				"http://npm.taobao.org/mirrors/chromedriver");
 		return instance;
 	}
+
 }

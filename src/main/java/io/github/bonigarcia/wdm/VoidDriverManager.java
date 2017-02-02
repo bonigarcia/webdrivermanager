@@ -51,6 +51,11 @@ public class VoidDriverManager extends BrowserManager {
 	}
 
 	@Override
+	protected String getDriverVersionKey() {
+		return "";
+	}
+
+	@Override
 	protected String getDriverVersion() {
 		return "";
 	}

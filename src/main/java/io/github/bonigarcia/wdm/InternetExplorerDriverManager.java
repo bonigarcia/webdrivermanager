@@ -52,8 +52,13 @@ public class InternetExplorerDriverManager extends BrowserManager {
 	}
 
 	@Override
+	protected String getDriverVersionKey() {
+		return "wdm.internetExplorerVersion";
+	}
+
+	@Override
 	protected String getDriverVersion() {
-		return WdmConfig.getString("wdm.internetExplorerVersion");
+		return WdmConfig.getString(getDriverVersionKey());
 	}
 
 	@Override

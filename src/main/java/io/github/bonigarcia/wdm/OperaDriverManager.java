@@ -107,8 +107,13 @@ public class OperaDriverManager extends BrowserManager {
 	}
 
 	@Override
+	protected String getDriverVersionKey() {
+		return "wdm.operaDriverVersion";
+	}
+
+	@Override
 	protected String getDriverVersion() {
-		return WdmConfig.getString("wdm.operaDriverVersion");
+		return WdmConfig.getString(getDriverVersionKey());
 	}
 
 	@Override

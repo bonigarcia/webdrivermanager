@@ -83,6 +83,11 @@ public class WebDriverManager extends BrowserManager {
 	}
 
 	@Override
+	protected String getDriverVersionKey() {
+		return instance.getDriverVersionKey();
+	}
+
+	@Override
 	protected String getDriverVersion() {
 		return instance.getDriverVersion();
 	}
