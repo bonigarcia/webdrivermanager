@@ -25,6 +25,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.github.bonigarcia.wdm.Architecture;
 import io.github.bonigarcia.wdm.BrowserManager;
@@ -45,6 +47,9 @@ public class BaseVersionTst {
 	protected BrowserManager browserManager;
 	protected String[] specificVersions;
 	protected boolean validOS = true;
+
+	protected static final Logger log = LoggerFactory
+			.getLogger(BaseVersionTst.class);
 
 	@Parameters(name = "{index}: {0}")
 	public static Collection<Object[]> data() {
@@ -70,6 +75,8 @@ public class BaseVersionTst {
 	public void testSpecificVersions() throws Exception {
 		if (validOS) {
 			for (String specificVersion : specificVersions) {
+				log.info("Test specific version arch={} version={}",
+						architecture, specificVersion);
 				if (architecture != DEFAULT) {
 					browserManager.setup(architecture, specificVersion);
 				} else {

@@ -132,6 +132,7 @@ public abstract class BrowserManager {
 
 			boolean forceCache = WdmConfig.getBoolean("wdm.forceCache")
 					|| !isNetAvailable();
+
 			String driverInCache = null;
 			if (forceCache) {
 				driverInCache = forceCache(Downloader.getTargetPath());
@@ -143,6 +144,8 @@ public abstract class BrowserManager {
 
 			if (driverInCache != null) {
 				System.setProperty(VERSION_PROPERTY, version);
+				log.debug("Driver for {} {} found in cache {}", getDriverName(),
+						versionToDownload, driverInCache);
 				exportDriver(getExportParameter(), driverInCache);
 
 			} else {
