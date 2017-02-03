@@ -14,6 +14,8 @@
  */
 package io.github.bonigarcia.wdm.test;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
@@ -44,17 +46,32 @@ public class PhantomJsFilterTest {
 	protected final String phantomJsBinaryName = "phantomjs";
 
 	@Before
+	@SuppressWarnings("unchecked")
 	public void setup() throws Exception {
 		phatomJsManager = PhantomJsDriverManager.getInstance();
-		driversUrls = phatomJsManager.getDrivers();
+
+		Method method = BrowserManager.class.getDeclaredMethod("getDrivers");
+		method.setAccessible(true);
+		driversUrls = (List<URL>) method.invoke(phatomJsManager);
 	}
 
 	@Test
-	public void testFilterPhantomJs() {
-		List<URL> latestUrls = phatomJsManager.getLatest(driversUrls,
-				Arrays.asList(phantomJsBinaryName));
-		List<URL> filteredLatestUrls = phatomJsManager.filter(latestUrls,
-				Architecture.x64);
+	@SuppressWarnings("unchecked")
+	public void testFilterPhantomJs() throws NoSuchMethodException,
+			SecurityException, IllegalAccessException, IllegalArgumentException,
+			InvocationTargetException {
+		Method method = BrowserManager.class.getDeclaredMethod("getLatest",
+				List.class, List.class);
+		method.setAccessible(true);
+		List<URL> latestUrls = (List<URL>) method.invoke(phatomJsManager,
+				driversUrls, Arrays.asList(phantomJsBinaryName));
+
+		method = BrowserManager.class.getDeclaredMethod("filter", List.class,
+				Architecture.class);
+		method.setAccessible(true);
+		List<URL> filteredLatestUrls = (List<URL>) method
+				.invoke(phatomJsManager, latestUrls, Architecture.x64);
+
 		log.info("Filtered URLS for LATEST version {} : {}",
 				phantomJsBinaryName, filteredLatestUrls);
 		Assert.assertTrue(!filteredLatestUrls.isEmpty());
@@ -62,12 +79,24 @@ public class PhantomJsFilterTest {
 	}
 
 	@Test
-	public void testFilterVersionPhantomJs() {
+	@SuppressWarnings("unchecked")
+	public void testFilterVersionPhantomJs() throws NoSuchMethodException,
+			SecurityException, IllegalAccessException, IllegalArgumentException,
+			InvocationTargetException {
 		String specificVersion = "1.9.6";
-		List<URL> specificVersionUrls = phatomJsManager.getVersion(driversUrls,
+		Method method = BrowserManager.class.getDeclaredMethod("getVersion",
+				List.class, List.class, String.class);
+		method.setAccessible(true);
+		List<URL> specificVersionUrls = (List<URL>) method.invoke(
+				phatomJsManager, driversUrls,
 				Arrays.asList(phantomJsBinaryName), specificVersion);
-		List<URL> filteredVersionUrls = phatomJsManager
-				.filter(specificVersionUrls, Architecture.x64);
+
+		method = BrowserManager.class.getDeclaredMethod("filter", List.class,
+				Architecture.class);
+		method.setAccessible(true);
+		List<URL> filteredVersionUrls = (List<URL>) method
+				.invoke(phatomJsManager, specificVersionUrls, Architecture.x64);
+
 		log.info("Filtered URLS for {} version {}: {}", phantomJsBinaryName,
 				specificVersion, filteredVersionUrls);
 		Assert.assertTrue(!filteredVersionUrls.isEmpty());

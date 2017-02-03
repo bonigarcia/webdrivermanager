@@ -19,6 +19,7 @@ import static io.github.bonigarcia.wdm.Architecture.x64;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 
@@ -67,7 +68,12 @@ public class CacheTest {
 	public void testCache() throws Exception {
 		BrowserManager browserManager = browserManagerClass.newInstance();
 		browserManager.setup(architecture, driverVersion);
-		String driverInChachePath = browserManager.existsDriverInCache(
+
+		Method method = BrowserManager.class.getDeclaredMethod(
+				"existsDriverInCache", String.class, String.class,
+				Architecture.class);
+		method.setAccessible(true);
+		String driverInChachePath = (String) method.invoke(browserManager,
 				Downloader.getTargetPath(), driverVersion, architecture);
 
 		assertThat(driverInChachePath, notNullValue());

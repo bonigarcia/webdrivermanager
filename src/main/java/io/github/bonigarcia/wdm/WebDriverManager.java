@@ -73,7 +73,7 @@ public class WebDriverManager extends BrowserManager {
 	}
 
 	@Override
-	public List<URL> getDrivers() throws Exception {
+	protected List<URL> getDrivers() throws Exception {
 		return instance.getDrivers();
 	}
 

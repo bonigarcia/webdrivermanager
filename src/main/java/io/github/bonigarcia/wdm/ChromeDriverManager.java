@@ -40,7 +40,7 @@ public class ChromeDriverManager extends BrowserManager {
 	}
 
 	@Override
-	public List<URL> getDrivers() throws Exception {
+	protected List<URL> getDrivers() throws Exception {
 		URL driverUrl = getDriverUrl();
 		List<URL> urls;
 		if (isUsingTaobaoMirror()) {
@@ -77,7 +77,7 @@ public class ChromeDriverManager extends BrowserManager {
 	}
 
 	@Override
-	public String getCurrentVersion(URL url, String driverName)
+	protected String getCurrentVersion(URL url, String driverName)
 			throws MalformedURLException {
 		if (isUsingTaobaoMirror()) {
 			int i = url.getFile().lastIndexOf(SEPARATOR);

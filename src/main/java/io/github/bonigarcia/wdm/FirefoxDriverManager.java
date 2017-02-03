@@ -88,7 +88,7 @@ public class FirefoxDriverManager extends BrowserManager {
 		return urls;
 	}
 
-	private GitHubApi getVersion(GitHubApi[] releaseArray, String version) {
+	protected GitHubApi getVersion(GitHubApi[] releaseArray, String version) {
 		GitHubApi out = null;
 		for (GitHubApi release : releaseArray) {
 			if ((release.getName() != null
@@ -128,7 +128,7 @@ public class FirefoxDriverManager extends BrowserManager {
 	}
 
 	@Override
-	public String getCurrentVersion(URL url, String driverName)
+	protected String getCurrentVersion(URL url, String driverName)
 			throws MalformedURLException {
 		String currentVersion = url.getFile().substring(
 				url.getFile().indexOf("-") + 1, url.getFile().lastIndexOf("-"));

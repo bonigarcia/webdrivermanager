@@ -48,7 +48,7 @@ public class OperaDriverManager extends BrowserManager {
 	}
 
 	@Override
-	public List<URL> getDrivers() throws IOException {
+	protected List<URL> getDrivers() throws IOException {
 		URL driverUrl = getDriverUrl();
 		List<URL> urls;
 		if (isUsingTaobaoMirror()) {
@@ -89,7 +89,7 @@ public class OperaDriverManager extends BrowserManager {
 		return WdmConfig.getString("wdm.operaDriverExport");
 	}
 
-	private GitHubApi getVersion(GitHubApi[] releaseArray, String version) {
+	protected GitHubApi getVersion(GitHubApi[] releaseArray, String version) {
 		GitHubApi out = null;
 		for (GitHubApi release : releaseArray) {
 			if (release.getName() != null
@@ -122,7 +122,7 @@ public class OperaDriverManager extends BrowserManager {
 	}
 
 	@Override
-	public String getCurrentVersion(URL url, String driverName)
+	protected String getCurrentVersion(URL url, String driverName)
 			throws MalformedURLException {
 		if (isUsingTaobaoMirror()) {
 			int i = url.getFile().lastIndexOf(SEPARATOR);

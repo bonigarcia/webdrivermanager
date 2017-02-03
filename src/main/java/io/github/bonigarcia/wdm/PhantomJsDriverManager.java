@@ -44,7 +44,7 @@ public class PhantomJsDriverManager extends BrowserManager {
 	}
 
 	@Override
-	public List<URL> getDrivers() throws Exception {
+	protected List<URL> getDrivers() throws Exception {
 		return getDriversFromMirror(getDriverUrl());
 	}
 
@@ -74,7 +74,7 @@ public class PhantomJsDriverManager extends BrowserManager {
 	}
 
 	@Override
-	public String getCurrentVersion(URL url, String driverName)
+	protected String getCurrentVersion(URL url, String driverName)
 			throws MalformedURLException {
 		String file = url.getFile();
 		file = url.getFile().substring(file.lastIndexOf(SEPARATOR),
