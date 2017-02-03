@@ -2,6 +2,9 @@ language: java
 sudo: true
 dist: trusty
 
+addons:
+    firefox: latest
+
 install:
     # Add repos
     - sudo apt-add-repository "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main"
@@ -9,7 +12,7 @@ install:
     - sudo sed -i s/deb-src.*google.*//g /etc/apt/sources.list
     # Add apt-keys for checking the packages
     - wget -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
-    # Mke sure
+    # Update
     - sudo apt-get update -qq
     # Install the browsers
     - sudo apt-get install -y google-chrome-stable

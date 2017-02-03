@@ -37,7 +37,6 @@ import io.github.bonigarcia.wdm.base.BaseBrowserTst;
  * @since 1.3.1
  */
 @RunWith(Parameterized.class)
-@Ignore
 public class WebDriverTest extends BaseBrowserTst {
 
 	@Parameter
