@@ -80,8 +80,6 @@ public abstract class BrowserManager {
 
 	protected abstract String getExportParameter();
 
-	protected abstract String getDriverVersion();
-
 	protected abstract String getDriverVersionKey();
 
 	protected abstract List<String> getDriverName();
@@ -91,6 +89,10 @@ public abstract class BrowserManager {
 	protected String versionToDownload;
 
 	protected boolean mirrorLog = false;
+
+	protected String getDriverVersion() {
+		return WdmConfig.getString(getDriverVersionKey());
+	}
 
 	protected String preDownload(String target, String version)
 			throws IOException {

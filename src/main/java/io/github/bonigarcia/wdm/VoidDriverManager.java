@@ -56,11 +56,6 @@ public class VoidDriverManager extends BrowserManager {
 	}
 
 	@Override
-	protected String getDriverVersion() {
-		return "";
-	}
-
-	@Override
 	protected URL getDriverUrl() throws MalformedURLException {
 		return null;
 	}

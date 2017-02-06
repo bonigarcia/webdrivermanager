@@ -113,11 +113,6 @@ public class FirefoxDriverManager extends BrowserManager {
 	}
 
 	@Override
-	protected String getDriverVersion() {
-		return WdmConfig.getString(getDriverVersionKey());
-	}
-
-	@Override
 	protected List<String> getDriverName() {
 		return Arrays.asList("wires", "geckodriver");
 	}

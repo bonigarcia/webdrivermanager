@@ -88,11 +88,6 @@ public class WebDriverManager extends BrowserManager {
 	}
 
 	@Override
-	protected String getDriverVersion() {
-		return instance.getDriverVersion();
-	}
-
-	@Override
 	protected URL getDriverUrl() throws MalformedURLException {
 		return instance.getDriverUrl();
 	}
