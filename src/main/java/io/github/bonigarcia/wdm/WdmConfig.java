@@ -14,6 +14,8 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -32,8 +34,8 @@ public class WdmConfig {
 	private Config conf;
 
 	protected WdmConfig() {
-		conf = ConfigFactory.load(WdmConfig.class.getClassLoader(),
-				System.getProperty("wdm.properties", "webdrivermanager.properties"));
+		conf = ConfigFactory.load(WdmConfig.class.getClassLoader(), System
+				.getProperty("wdm.properties", "webdrivermanager.properties"));
 	}
 
 	public static synchronized WdmConfig getInstance() {
@@ -44,7 +46,9 @@ public class WdmConfig {
 	}
 
 	public static String getString(String key) {
-		return WdmConfig.getInstance().conf.getString(key);
+		String envProp = System.getProperty(key);
+		return isNullOrEmpty(envProp)
+				? WdmConfig.getInstance().conf.getString(key) : envProp;
 	}
 
 	public static int getInt(String key) {
