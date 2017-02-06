@@ -67,7 +67,8 @@ public class CacheTest {
 	@Test
 	public void testCache() throws Exception {
 		BrowserManager browserManager = browserManagerClass.newInstance();
-		browserManager.setup(architecture, driverVersion);
+		browserManager.architecture(architecture).version(driverVersion)
+				.setup();
 
 		Method method = BrowserManager.class.getDeclaredMethod(
 				"existsDriverInCache", String.class, String.class,

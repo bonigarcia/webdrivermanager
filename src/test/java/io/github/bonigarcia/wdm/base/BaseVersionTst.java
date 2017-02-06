@@ -61,7 +61,7 @@ public class BaseVersionTst {
 	public void testLatestVersion() throws Exception {
 		if (validOS) {
 			if (architecture != DEFAULT) {
-				browserManager.setup(architecture);
+				browserManager.architecture(architecture).setup();
 			} else {
 				browserManager.setup();
 			}
@@ -78,9 +78,10 @@ public class BaseVersionTst {
 				log.info("Test specific version arch={} version={}",
 						architecture, specificVersion);
 				if (architecture != DEFAULT) {
-					browserManager.setup(architecture, specificVersion);
+					browserManager.architecture(architecture)
+							.version(specificVersion).setup();
 				} else {
-					browserManager.setup(specificVersion);
+					browserManager.version(specificVersion).setup();
 				}
 				String driverVersion = ChromeDriverManager.getInstance()
 						.getDownloadedVersion();

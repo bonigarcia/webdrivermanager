@@ -74,6 +74,7 @@ public abstract class BrowserManager {
 			.valueOf("x" + System.getProperty("sun.arch.data.model"));
 	private static final String MY_OS_NAME = getOsName();
 	private static final String VERSION_PROPERTY = "wdm.driverVersion";
+	private static final String ARCHITECTURE_PROPERTY = "wdm.achitecture";
 
 	protected abstract List<URL> getDrivers() throws Exception;
 
@@ -638,18 +639,46 @@ public abstract class BrowserManager {
 	// *************************************
 
 	public void setup() {
-		setup(DEFAULT_ARCH, DriverVersion.NOT_SPECIFIED.name());
+		String archProperty = System.getProperty(ARCHITECTURE_PROPERTY);
+		Architecture architecture = isNullOrEmpty(archProperty) ? DEFAULT_ARCH
+				: Architecture.valueOf(archProperty);
+		String driverVersion = getDriverVersion();
+		String version = isNullOrEmpty(driverVersion)
+				? DriverVersion.NOT_SPECIFIED.name() : driverVersion;
+		setup(architecture, version);
 	}
 
+	/**
+	 *
+	 * @deprecated use {@link #version(String)} instead.
+	 */
+	@Deprecated
 	public void setup(String version) {
-		setup(DEFAULT_ARCH, version);
+		String archProperty = System.getProperty(ARCHITECTURE_PROPERTY);
+		Architecture architecture = isNullOrEmpty(archProperty) ? DEFAULT_ARCH
+				: Architecture.valueOf(archProperty);
+		setup(architecture, version);
 	}
 
-	public void setup(Architecture arch) {
-		setup(arch, DriverVersion.NOT_SPECIFIED.name());
+	/**
+	 *
+	 * @deprecated use {@link #architecture(Architecture)} instead.
+	 */
+	@Deprecated
+	public void setup(Architecture architecture) {
+		String driverVersion = getDriverVersion();
+		String version = isNullOrEmpty(driverVersion)
+				? DriverVersion.NOT_SPECIFIED.name() : driverVersion;
+		setup(architecture, version);
 	}
 
-	public void setup(Architecture arch, String version) {
+	/**
+	 *
+	 * @deprecated use {@link #version(String)} and
+	 *             {@link #architecture(Architecture)} instead.
+	 */
+	@Deprecated
+	public void setup(Architecture architecture, String version) {
 		try {
 			// Honor property if available (even when version is present)
 			String driverVersion = getDriverVersion();
@@ -658,7 +687,7 @@ public abstract class BrowserManager {
 				version = driverVersion;
 			}
 
-			this.getClass().newInstance().manage(arch, version);
+			this.getClass().newInstance().manage(architecture, version);
 		} catch (InstantiationException | IllegalAccessException e) {
 			throw new RuntimeException(e);
 		}
@@ -670,6 +699,26 @@ public abstract class BrowserManager {
 
 	public BrowserManager version(String version) {
 		System.setProperty(getDriverVersionKey(), version);
+		return this;
+	}
+
+	public BrowserManager architecture(Architecture architecture) {
+		System.setProperty(ARCHITECTURE_PROPERTY, architecture.name());
+		return this;
+	}
+
+	public BrowserManager arch32() {
+		System.setProperty(ARCHITECTURE_PROPERTY, Architecture.x32.name());
+		return this;
+	}
+
+	public BrowserManager arch64() {
+		System.setProperty(ARCHITECTURE_PROPERTY, Architecture.x64.name());
+		return this;
+	}
+
+	public BrowserManager forceCache() {
+		System.setProperty("wdm.forceCache", "true");
 		return this;
 	}
 
