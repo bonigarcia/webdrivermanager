@@ -30,7 +30,7 @@ In order to use WebDriverManager in a Maven project, first add the following dep
 <dependency>
 	<groupId>io.github.bonigarcia</groupId>
 	<artifactId>webdrivermanager</artifactId>
-	<version>1.5.1</version>
+	<version>1.6.0</version>
 </dependency>
 ```
 
@@ -88,6 +88,28 @@ FirefoxDriverManager.getInstance().setup();
 Check out [WebDriverManager Examples][WebDriverManager Examples] for some JUnit tests utilizing WebDriverManager.
 
 
+## WebDriverManager API
+
+As of version 1.6.0, WebDriverManager exposes its API by means of the **builder pattern**. This means that given a *DriverManger* instance (e.g. ``ChromeDriverManager``, ``FirefoxDriverManager``, and so on), their capabilities can be tuned using different methods, namely:
+
+-  ``version()`` : By default, WebDriverManager tries to download the latest version of a given driver binary. An specific version can be specified using this method. 
+-  ``forceCache()`` : By default, WebDriverManager connects to the specific driver repository URL to find out what is the latest version of the binary. This can be avoided forcing to use the latest version form the local repository.
+-  ``architecture(Architecture arch)`` : By default, WebDriverManager would try to use the proper binary for the platform running the test case (i.e. 32-bit or 64-bit). This behavior can be changed by forcing a given architecture: 32-bits (``Architecture.x32``) or 64-bits (``Architecture.x64``);   
+-  ``arch32()`` : Force to use the 32-bit version of a given driver binary.
+-  ``arch64()`` : Force to use the 64-bit version of a given driver binary.
+-  ``driverRepositoryUrl(URL url)`` : This method allows to change the repository URL in which the binaries are hosted (see next section for default values).
+-  ``useTaobaoMirror()`` :  The [npm.taobao.org] site is a mirror which hosts different software assets. Among them, it hosts *chromedriver*, *geckodriver*,  *operadriver*, and *phantomjs* driver. Therefore, this method can be used in ``ChromeDriverManager``, ```FirefoxDriverManager``, ``OperaDriverManager``, and ```PhantomJsDriverManager`` to force to use the taobao.org mirror.
+
+The following table contains some examples:
+
+| Example                                                             | Description                                                       |
+|---------------------------------------------------------------------|-------------------------------------------------------------------|
+| ``ChromeDriverManager().getInstance().version("2.26").setup();``    | Force to use version 2.26 of  *chromedriver*                      |
+| ``FirefoxDriverManager().getInstance().arch32().setup();``          | Force to use the 32-bit version of *geckodriver*                  |
+| ``OperaDriverManager.getInstance().forceCache().setup();``          | Force to use the cache version of *operadriver*                   |
+| ``PhantomJsDriverManager.getInstance().useTaobaoMirror().setup();`` | Force to use the taobao.org mirror to download *phantomjs* driver |
+
+
 ## Configuration
 
 Configuration parameters for WebDriverManager are set in the ``webdrivermanager.properties`` file:
@@ -141,40 +163,7 @@ System.setProperty("wdm.targetPath", "/my/custom/path/to/driver/binaries");
 -Dwdm.override=true
 ```
 
-In addition, the usage of an architecture (32/64 bit) can be forced (except for Edge driver). By default, the suitable binary version for your system and architecture is downloaded and used. The architecture can be forced as follows:
-
-```java
-ChromeDriverManager().getInstance().setup(Architecture.x32);
-ChromeDriverManager().getInstance().setup(Architecture.x64);
-
-InternetExplorerDriverManager().getInstance().setup(Architecture.x32);
-InternetExplorerDriverManager().getInstance().setup(Architecture.x64);
-
-OperaDriverManager().getInstance().setup(Architecture.x32);
-OperaDriverManager().getInstance().setup(Architecture.x64);
-
-EdgeDriverManager().getInstance().setup(Architecture.x32);
-EdgeDriverManager().getInstance().setup(Architecture.x64);
-
-PhantomJsDriverManager().getInstance().setup(Architecture.x32);
-PhantomJsDriverManager().getInstance().setup(Architecture.x64);
-
-FirefoxDriverManager().getInstance().setup(Architecture.x32);
-FirefoxDriverManager().getInstance().setup(Architecture.x64);
-```
-
-By default, WebDriverManager downloads the latest version of the WebDriver binary. But concrete versions of WebDriver binaries can be forced as well:
-
-```java
-ChromeDriverManager.getInstance().setup("2.25");
-InternetExplorerDriverManager.getInstance().setup("2.46");
-OperaDriverManager.getInstance().setup("0.2.0");
-EdgeDriverManager.getInstance().setup("3.14366");
-PhantomJsDriverManager.getInstance().setup("2.1.1");
-FirefoxDriverManager.getInstance().setup("0.11.1");
-```
-
-This can also be done by changing the value of the variables ``wdm.chromeDriverVersion``, ``wdm.operaDriverVersion``,  ``wdm.internetExplorerVersion``, or  ``wdm.edgeVersion`` from its default value (``LATEST``) to a concrete version. For instance:
+By default, WebDriverManager downloads the latest version of the WebDriver binary. But concrete versions of WebDriver binaries can be forced by changing the value of the variables ``wdm.chromeDriverVersion``, ``wdm.operaDriverVersion``,  ``wdm.internetExplorerVersion``, or  ``wdm.edgeVersion`` from its default value (``LATEST``) to a concrete version. For instance:
 
 ```properties
 -Dwdm.chromeDriverVersion=2.25
@@ -241,3 +230,4 @@ WebDriverManager (Copyright &copy; 2015-2017) is a personal project of [Boni Gar
 [GitHub account]: https://github.com/settings/tokens
 [WebDriverManager issues]: https://github.com/bonigarcia/webdrivermanager/issues
 [WebDriverManager Examples]: https://github.com/bonigarcia/webdrivermanager-examples
+[npm.taobao.org]: http://npm.taobao.org/mirrors/
