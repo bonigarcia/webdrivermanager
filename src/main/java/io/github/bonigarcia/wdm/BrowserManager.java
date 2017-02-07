@@ -74,7 +74,6 @@ public abstract class BrowserManager {
 			.valueOf("x" + System.getProperty("sun.arch.data.model"));
 	private static final String MY_OS_NAME = getOsName();
 	private static final String VERSION_PROPERTY = "wdm.driverVersion";
-	private static final String ARCHITECTURE_PROPERTY = "wdm.achitecture";
 
 	protected abstract List<URL> getDrivers() throws Exception;
 
@@ -90,8 +89,15 @@ public abstract class BrowserManager {
 
 	protected boolean mirrorLog = false;
 
+	protected String version;
+
+	protected Architecture architecture;
+
+	protected boolean forceCache = false;
+
 	protected String getDriverVersion() {
-		return WdmConfig.getString(getDriverVersionKey());
+		return version == null ? WdmConfig.getString(getDriverVersionKey())
+				: version;
 	}
 
 	protected URL getDriverUrl() throws MalformedURLException {
@@ -137,7 +143,8 @@ public abstract class BrowserManager {
 					|| version.equalsIgnoreCase(
 							DriverVersion.NOT_SPECIFIED.name());
 
-			boolean forceCache = WdmConfig.getBoolean("wdm.forceCache")
+			boolean forceCache = this.forceCache
+					|| WdmConfig.getBoolean("wdm.forceCache")
 					|| !isNetAvailable();
 
 			String driverInCache = null;
@@ -272,11 +279,13 @@ public abstract class BrowserManager {
 			log.trace("Checking if {} {} ({} bits) exists in cache {}",
 					driverName, driverVersion, arch, repository);
 
-			Iterator<File> iterateFiles = FileUtils
-					.iterateFiles(new File(repository), null, true);
+			Collection<File> listFiles = FileUtils
+					.listFiles(new File(repository), null, true);
+			Object[] array = listFiles.toArray();
+			Arrays.sort(array, Collections.reverseOrder());
 
-			while (iterateFiles.hasNext()) {
-				driverInCache = iterateFiles.next().toString();
+			for (Object f : array) {
+				driverInCache = f.toString();
 
 				// Exception for phantomjs
 				boolean architecture = driverName.equals("phantomjs")
@@ -645,9 +654,8 @@ public abstract class BrowserManager {
 	// *************************************
 
 	public void setup() {
-		String archProperty = System.getProperty(ARCHITECTURE_PROPERTY);
-		Architecture architecture = isNullOrEmpty(archProperty) ? DEFAULT_ARCH
-				: Architecture.valueOf(archProperty);
+		Architecture architecture = this.architecture == null ? DEFAULT_ARCH
+				: this.architecture;
 		String driverVersion = getDriverVersion();
 		String version = isNullOrEmpty(driverVersion)
 				? DriverVersion.NOT_SPECIFIED.name() : driverVersion;
@@ -660,9 +668,8 @@ public abstract class BrowserManager {
 	 */
 	@Deprecated
 	public void setup(String version) {
-		String archProperty = System.getProperty(ARCHITECTURE_PROPERTY);
-		Architecture architecture = isNullOrEmpty(archProperty) ? DEFAULT_ARCH
-				: Architecture.valueOf(archProperty);
+		Architecture architecture = this.architecture == null ? DEFAULT_ARCH
+				: this.architecture;
 		setup(architecture, version);
 	}
 
@@ -704,27 +711,27 @@ public abstract class BrowserManager {
 	}
 
 	public BrowserManager version(String version) {
-		System.setProperty(getDriverVersionKey(), version);
+		this.version = version;
 		return this;
 	}
 
 	public BrowserManager architecture(Architecture architecture) {
-		System.setProperty(ARCHITECTURE_PROPERTY, architecture.name());
+		this.architecture = architecture;
 		return this;
 	}
 
 	public BrowserManager arch32() {
-		System.setProperty(ARCHITECTURE_PROPERTY, Architecture.x32.name());
+		this.architecture = Architecture.x32;
 		return this;
 	}
 
 	public BrowserManager arch64() {
-		System.setProperty(ARCHITECTURE_PROPERTY, Architecture.x64.name());
+		this.architecture = Architecture.x64;
 		return this;
 	}
 
 	public BrowserManager forceCache() {
-		System.setProperty("wdm.forceCache", "true");
+		this.forceCache = true;
 		return this;
 	}
 
