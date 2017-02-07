@@ -62,8 +62,8 @@ public class ChromeDriverManager extends BrowserManager {
 	}
 
 	@Override
-	protected URL getDriverUrl() throws MalformedURLException {
-		return WdmConfig.getUrl("wdm.chromeDriverUrl");
+	protected String getDriverUrlKey() {
+		return "wdm.chromeDriverUrl";
 	}
 
 	@Override

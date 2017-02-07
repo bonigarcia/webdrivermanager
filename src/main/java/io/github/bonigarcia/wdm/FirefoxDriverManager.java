@@ -118,8 +118,8 @@ public class FirefoxDriverManager extends BrowserManager {
 	}
 
 	@Override
-	protected URL getDriverUrl() throws MalformedURLException {
-		return WdmConfig.getUrl("wdm.geckoDriverUrl");
+	protected String getDriverUrlKey() {
+		return "wdm.geckoDriverUrl";
 	}
 
 	@Override

@@ -3,7 +3,8 @@ webdrivermanager (1.6.0)
   + Support for taobao.org mirror in FirefoxDriverManager
   + Support for taobao.org mirror in ChromeDriverManager
   + Expose BrowserManager API following the builder pattern
-  + New methods in BrowserManager API: version(), architecture(), arch32(), arch64(), useTaobaoMirror(), forceCache()
+  + New methods in BrowserManager API: version(), architecture(), arch32(),
+    arch64(), useTaobaoMirror(), forceCache(), driverRepositoryUrl(URL)
   + Deprecate setup method with parameters (now builder pattern is used)
 
  -- Boni Garcia <boni.gg@gmail.com>

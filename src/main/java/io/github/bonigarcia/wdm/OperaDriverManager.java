@@ -112,8 +112,8 @@ public class OperaDriverManager extends BrowserManager {
 	}
 
 	@Override
-	protected URL getDriverUrl() throws MalformedURLException {
-		return WdmConfig.getUrl("wdm.operaDriverUrl");
+	protected String getDriverUrlKey() {
+		return "wdm.operaDriverUrl";
 	}
 
 	@Override

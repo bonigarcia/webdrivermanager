@@ -59,8 +59,8 @@ public class PhantomJsDriverManager extends BrowserManager {
 	}
 
 	@Override
-	protected URL getDriverUrl() throws MalformedURLException {
-		return WdmConfig.getUrl("wdm.phantomjsDriverUrl");
+	protected String getDriverUrlKey() {
+		return "wdm.phantomjsDriverUrl";
 	}
 
 	@Override

@@ -16,7 +16,6 @@ package io.github.bonigarcia.wdm;
 
 import static io.github.bonigarcia.wdm.Downloader.createProxy;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -82,8 +81,8 @@ public class EdgeDriverManager extends BrowserManager {
 	}
 
 	@Override
-	protected URL getDriverUrl() throws MalformedURLException {
-		return WdmConfig.getUrl("wdm.edgeDriverUrl");
+	protected String getDriverUrlKey() {
+		return "wdm.edgeDriverUrl";
 	}
 
 	@Override

@@ -14,7 +14,6 @@
  */
 package io.github.bonigarcia.wdm;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.Collections;
@@ -56,7 +55,7 @@ public class VoidDriverManager extends BrowserManager {
 	}
 
 	@Override
-	protected URL getDriverUrl() throws MalformedURLException {
+	protected String getDriverUrlKey() {
 		return null;
 	}
 

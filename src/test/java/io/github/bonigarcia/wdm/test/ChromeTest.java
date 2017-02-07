@@ -15,7 +15,6 @@
 package io.github.bonigarcia.wdm.test;
 
 import org.junit.Before;
-
 import org.junit.BeforeClass;
 import org.openqa.selenium.chrome.ChromeDriver;
 
