@@ -118,7 +118,6 @@ public class Downloader {
 		if (export != null) {
 			BrowserManager.exportDriver(export, binary.toString());
 		}
-
 	}
 
 	private HttpURLConnection getConnection(URL url) throws IOException {
@@ -279,7 +278,6 @@ public class Downloader {
 	}
 
 	public String getTarget(String version, URL url) throws IOException {
-
 		log.trace("getTarget {} {}", version, url);
 
 		String zip = url.getFile().substring(url.getFile().lastIndexOf("/"));

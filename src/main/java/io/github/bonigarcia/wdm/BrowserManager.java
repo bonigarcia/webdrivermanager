@@ -96,13 +96,16 @@ public abstract class BrowserManager {
 
 	protected boolean forceCache = false;
 
+	protected URL driverUrl;
+
 	protected String getDriverVersion() {
 		return version == null ? WdmConfig.getString(getDriverVersionKey())
 				: version;
 	}
 
 	protected URL getDriverUrl() throws MalformedURLException {
-		return WdmConfig.getUrl(getDriverUrlKey());
+		return driverUrl == null ? WdmConfig.getUrl(getDriverUrlKey())
+				: driverUrl;
 	}
 
 	protected String preDownload(String target, String version)
@@ -761,7 +764,7 @@ public abstract class BrowserManager {
 	}
 
 	public BrowserManager driverRepositoryUrl(URL url) {
-		System.setProperty(getDriverUrlKey(), url.toString());
+		this.driverUrl = url;
 		return this;
 	}
 
