@@ -63,8 +63,6 @@ public class TargetTest {
 	@Parameter(3)
 	public BrowserManager manager;
 
-	private static String targetPath = Downloader.getTargetPath();
-
 	@Parameters(name = "{index}: {0}")
 	public static Collection<Object[]> data() {
 		return Arrays.asList(new Object[][] {
@@ -136,7 +134,10 @@ public class TargetTest {
 
 	@Test
 	public void testTarget() throws IOException {
-		String result = Downloader.getTarget(version, new URL(url), manager);
+		Downloader downloader = new Downloader(manager);
+		String targetPath = downloader.getTargetPath();
+
+		String result = downloader.getTarget(version, new URL(url));
 		log.info(result);
 		log.info(targetPath + target);
 

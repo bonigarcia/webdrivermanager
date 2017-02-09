@@ -15,7 +15,6 @@
 package io.github.bonigarcia.wdm;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
-import static io.github.bonigarcia.wdm.Downloader.createProxy;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_LINUX;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
@@ -28,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
@@ -38,6 +38,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.StringTokenizer;
 import java.util.concurrent.TimeUnit;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -138,6 +139,7 @@ public abstract class BrowserManager {
 
 	protected void manage(Architecture arch, String version) {
 		try {
+			Downloader downloader = new Downloader(this);
 			boolean getLatest = version == null || version.isEmpty()
 					|| version.equalsIgnoreCase(DriverVersion.LATEST.name())
 					|| version.equalsIgnoreCase(
@@ -149,10 +151,10 @@ public abstract class BrowserManager {
 
 			String driverInCache = null;
 			if (forceCache) {
-				driverInCache = forceCache(Downloader.getTargetPath());
+				driverInCache = forceCache(downloader.getTargetPath());
 			} else if (!getLatest) {
 				versionToDownload = version;
-				driverInCache = existsDriverInCache(Downloader.getTargetPath(),
+				driverInCache = existsDriverInCache(downloader.getTargetPath(),
 						version, arch);
 			}
 
@@ -228,8 +230,8 @@ public abstract class BrowserManager {
 						String export = candidateUrls.contains(url)
 								? getExportParameter() : null;
 						System.setProperty(VERSION_PROPERTY, versionToDownload);
-						Downloader.download(url, versionToDownload, export,
-								getDriverName(), this);
+						downloader.download(url, versionToDownload, export,
+								getDriverName());
 					}
 				}
 			}
@@ -647,6 +649,29 @@ public abstract class BrowserManager {
 		conn.connect();
 
 		return conn.getInputStream();
+	}
+
+	protected Proxy createProxy() {
+		String proxyString = System.getenv("HTTPS_PROXY");
+		if (proxyString == null || proxyString.length() < 1)
+			proxyString = System.getenv("HTTP_PROXY");
+		if (proxyString == null || proxyString.length() < 1) {
+			return null;
+		}
+		proxyString = proxyString.replace("http://", "");
+		proxyString = proxyString.replace("https://", "");
+		StringTokenizer st = new StringTokenizer(proxyString, ":");
+		if (st.countTokens() != 2)
+			return null;
+		String host = st.nextToken();
+		String portString = st.nextToken();
+		try {
+			int port = Integer.parseInt(portString);
+			return new Proxy(Proxy.Type.HTTP,
+					new InetSocketAddress(host, port));
+		} catch (NumberFormatException e) {
+			return null;
+		}
 	}
 
 	// *************************************

@@ -20,14 +20,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.StringTokenizer;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -54,33 +52,15 @@ public class Downloader {
 
 	private static final String HOME = "~";
 
-	public static Proxy createProxy() {
-		String proxyString = System.getenv("HTTPS_PROXY");
-		if (proxyString == null || proxyString.length() < 1)
-			proxyString = System.getenv("HTTP_PROXY");
-		if (proxyString == null || proxyString.length() < 1) {
-			return null;
-		}
-		proxyString = proxyString.replace("http://", "");
-		proxyString = proxyString.replace("https://", "");
-		StringTokenizer st = new StringTokenizer(proxyString, ":");
-		if (st.countTokens() != 2)
-			return null;
-		String host = st.nextToken();
-		String portString = st.nextToken();
-		try {
-			int port = Integer.parseInt(portString);
-			return new Proxy(Proxy.Type.HTTP,
-					new InetSocketAddress(host, port));
-		} catch (NumberFormatException e) {
-			return null;
-		}
+	private BrowserManager browserManager;
+
+	public Downloader(BrowserManager browserManager) {
+		this.browserManager = browserManager;
 	}
 
-	public static final synchronized void download(URL url, String version,
-			String export, List<String> driverName,
-			BrowserManager browserManager) throws IOException {
-		File targetFile = new File(getTarget(version, url, browserManager));
+	public synchronized void download(URL url, String version, String export,
+			List<String> driverName) throws IOException {
+		File targetFile = new File(getTarget(version, url));
 		File binary = null;
 
 		// Check if binary exists
@@ -129,7 +109,7 @@ public class Downloader {
 			FileUtils.copyInputStreamToFile(conn.getInputStream(), targetFile);
 
 			if (!export.contains("edge")) {
-				binary = extract(targetFile, export, browserManager);
+				binary = extract(targetFile, export);
 			} else {
 				binary = targetFile;
 			}
@@ -141,8 +121,8 @@ public class Downloader {
 
 	}
 
-	private static HttpURLConnection getConnection(URL url) throws IOException {
-		Proxy proxy = createProxy();
+	private HttpURLConnection getConnection(URL url) throws IOException {
+		Proxy proxy = browserManager.createProxy();
 		URLConnection conn1 = proxy != null ? url.openConnection(proxy)
 				: url.openConnection();
 		HttpURLConnection conn = (HttpURLConnection) conn1;
@@ -154,7 +134,7 @@ public class Downloader {
 		return conn;
 	}
 
-	public static final File extractMsi(File msi) throws IOException {
+	public File extractMsi(File msi) throws IOException {
 		File tmpMsi = new File(Files.createTempDir().getAbsoluteFile()
 				+ File.separator + msi.getName());
 		Files.move(msi, tmpMsi);
@@ -178,8 +158,7 @@ public class Downloader {
 		return listFiles.iterator().next();
 	}
 
-	public static final File extract(File compressedFile, String export,
-			BrowserManager browserManager) throws IOException {
+	public File extract(File compressedFile, String export) throws IOException {
 		log.trace("Compressed file {}", compressedFile);
 
 		File file = null;
@@ -203,7 +182,7 @@ public class Downloader {
 		return result;
 	}
 
-	public static File unZip(File compressedFile) throws IOException {
+	public File unZip(File compressedFile) throws IOException {
 		File file = null;
 		ZipFile zipFolder = new ZipFile(compressedFile);
 		Enumeration<?> enu = zipFolder.entries();
@@ -250,7 +229,7 @@ public class Downloader {
 		return file;
 	}
 
-	public static File unGzip(File archive) throws IOException {
+	public File unGzip(File archive) throws IOException {
 		log.trace("UnGzip {}", archive);
 		String fileName = archive.getName();
 		int iDash = fileName.indexOf("-");
@@ -281,7 +260,7 @@ public class Downloader {
 		return target;
 	}
 
-	public static File unTarGz(File archive) throws IOException {
+	public File unTarGz(File archive) throws IOException {
 		Archiver archiver = ArchiverFactory.createArchiver(ArchiveFormat.TAR,
 				CompressionType.GZIP);
 		archiver.extract(archive, archive.getParentFile());
@@ -290,7 +269,7 @@ public class Downloader {
 		return archive;
 	}
 
-	public static File unBZip2(File archive) throws IOException {
+	public File unBZip2(File archive) throws IOException {
 		Archiver archiver = ArchiverFactory.createArchiver(ArchiveFormat.TAR,
 				CompressionType.BZIP2);
 		archiver.extract(archive, archive.getParentFile());
@@ -299,8 +278,7 @@ public class Downloader {
 		return archive;
 	}
 
-	public static final String getTarget(String version, URL url,
-			BrowserManager browserManager) throws IOException {
+	public String getTarget(String version, URL url) throws IOException {
 
 		log.trace("getTarget {} {}", version, url);
 
@@ -324,7 +302,7 @@ public class Downloader {
 		return target;
 	}
 
-	public static String getTargetPath() {
+	public String getTargetPath() {
 		String targetPath = WdmConfig.getString("wdm.targetPath");
 		if (targetPath.contains(HOME)) {
 			targetPath = targetPath.replace(HOME,
