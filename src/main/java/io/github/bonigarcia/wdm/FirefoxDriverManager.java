@@ -35,18 +35,16 @@ import com.google.gson.internal.LinkedTreeMap;
  */
 public class FirefoxDriverManager extends BrowserManager {
 
-	public FirefoxDriverManager() {
-	}
-
 	public static synchronized BrowserManager getInstance() {
-		if (instance == null) {
+		if (instance == null
+				|| !instance.getClass().equals(FirefoxDriverManager.class)) {
 			instance = new FirefoxDriverManager();
 		}
 		return instance;
 	}
 
 	@Override
-	public List<URL> getDrivers() throws IOException {
+	protected List<URL> getDrivers() throws IOException {
 		URL driverUrl = getDriverUrl();
 		List<URL> urls;
 		if (isUsingTaobaoMirror()) {

@@ -31,11 +31,9 @@ import org.apache.commons.io.FileUtils;
  */
 public class PhantomJsDriverManager extends BrowserManager {
 
-	public PhantomJsDriverManager() {
-	}
-
 	public static synchronized BrowserManager getInstance() {
-		if (instance == null) {
+		if (instance == null
+				|| !instance.getClass().equals(PhantomJsDriverManager.class)) {
 			instance = new PhantomJsDriverManager();
 		}
 		return instance;

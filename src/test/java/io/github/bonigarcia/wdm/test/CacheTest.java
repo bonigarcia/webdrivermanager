@@ -66,7 +66,17 @@ public class CacheTest {
 
 	@Test
 	public void testCache() throws Exception {
-		BrowserManager browserManager = browserManagerClass.newInstance();
+		BrowserManager browserManager = null;
+		if (browserManagerClass.equals(ChromeDriverManager.class)) {
+			browserManager = ChromeDriverManager.getInstance();
+		} else if (browserManagerClass.equals(OperaDriverManager.class)) {
+			browserManager = OperaDriverManager.getInstance();
+		} else if (browserManagerClass.equals(PhantomJsDriverManager.class)) {
+			browserManager = PhantomJsDriverManager.getInstance();
+		} else if (browserManagerClass.equals(FirefoxDriverManager.class)) {
+			browserManager = FirefoxDriverManager.getInstance();
+		}
+
 		browserManager.architecture(architecture).version(driverVersion)
 				.setup();
 		Downloader downloader = new Downloader(browserManager);
