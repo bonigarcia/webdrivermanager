@@ -98,7 +98,7 @@ As of version 1.6.0, WebDriverManager exposes its API by means of the **builder 
 -  ``arch32()`` : Force to use the 32-bit version of a given driver binary.
 -  ``arch64()`` : Force to use the 64-bit version of a given driver binary.
 -  ``driverRepositoryUrl(URL url)`` : This method allows to change the repository URL in which the binaries are hosted (see next section for default values).
--  ``useTaobaoMirror()`` :  The [npm.taobao.org] site is a mirror which hosts different software assets. Among them, it hosts *chromedriver*, *geckodriver*,  *operadriver*, and *phantomjs* driver. Therefore, this method can be used in ``ChromeDriverManager``, ```FirefoxDriverManager``, ``OperaDriverManager``, and ```PhantomJsDriverManager`` to force to use the taobao.org mirror.
+-  ``useTaobaoMirror()`` :  The [npm.taobao.org] site is a mirror which hosts different software assets. Among them, it hosts *chromedriver*, *geckodriver*,  *operadriver*, and *phantomjs* driver. Therefore, this method can be used in ``ChromeDriverManager``, ``FirefoxDriverManager``, ``OperaDriverManager``, and ``PhantomJsDriverManager`` to force to use the taobao.org mirror.
 
 The following table contains some examples:
 
