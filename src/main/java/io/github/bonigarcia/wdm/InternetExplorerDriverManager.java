@@ -26,12 +26,10 @@ import java.util.List;
  */
 public class InternetExplorerDriverManager extends BrowserManager {
 
-	private static InternetExplorerDriverManager instance;
-
 	public InternetExplorerDriverManager() {
 	}
 
-	public static synchronized InternetExplorerDriverManager getInstance() {
+	public static synchronized BrowserManager getInstance() {
 		if (instance == null) {
 			instance = new InternetExplorerDriverManager();
 		}

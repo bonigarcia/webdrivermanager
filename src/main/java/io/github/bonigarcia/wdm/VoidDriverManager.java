@@ -27,12 +27,10 @@ import java.util.List;
  */
 public class VoidDriverManager extends BrowserManager {
 
-	private static VoidDriverManager instance;
-
 	public VoidDriverManager() {
 	}
 
-	public static synchronized VoidDriverManager getInstance() {
+	public static synchronized BrowserManager getInstance() {
 		if (instance == null) {
 			instance = new VoidDriverManager();
 		}

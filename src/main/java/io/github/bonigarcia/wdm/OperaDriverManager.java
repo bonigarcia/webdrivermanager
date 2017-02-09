@@ -35,12 +35,10 @@ import com.google.gson.internal.LinkedTreeMap;
  */
 public class OperaDriverManager extends BrowserManager {
 
-	private static OperaDriverManager instance;
-
 	public OperaDriverManager() {
 	}
 
-	public static synchronized OperaDriverManager getInstance() {
+	public static synchronized BrowserManager getInstance() {
 		if (instance == null) {
 			instance = new OperaDriverManager();
 		}

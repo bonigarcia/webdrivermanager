@@ -32,12 +32,10 @@ import org.jsoup.select.Elements;
  */
 public class EdgeDriverManager extends BrowserManager {
 
-	private static EdgeDriverManager instance;
-
 	public EdgeDriverManager() {
 	}
 
-	public static synchronized EdgeDriverManager getInstance() {
+	public static synchronized BrowserManager getInstance() {
 		if (instance == null) {
 			instance = new EdgeDriverManager();
 		}

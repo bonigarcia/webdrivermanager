@@ -74,7 +74,6 @@ public abstract class BrowserManager {
 	private static final Architecture DEFAULT_ARCH = Architecture
 			.valueOf("x" + System.getProperty("sun.arch.data.model"));
 	private static final String MY_OS_NAME = getOsName();
-	private static final String VERSION_PROPERTY = "wdm.driverVersion";
 
 	protected abstract List<URL> getDrivers() throws Exception;
 
@@ -85,6 +84,8 @@ public abstract class BrowserManager {
 	protected abstract List<String> getDriverName();
 
 	protected abstract String getDriverUrlKey();
+
+	protected static BrowserManager instance;
 
 	protected String versionToDownload;
 
@@ -162,13 +163,12 @@ public abstract class BrowserManager {
 			}
 
 			if (driverInCache != null) {
-				System.setProperty(VERSION_PROPERTY, version);
+				versionToDownload = version;
 				log.debug("Driver for {} {} found in cache {}", getDriverName(),
 						versionToDownload, driverInCache);
 				exportDriver(getExportParameter(), driverInCache);
 
 			} else {
-
 				// Get the complete list of URLs
 				List<URL> urls = getDrivers();
 				if (!urls.isEmpty()) {
@@ -232,7 +232,6 @@ public abstract class BrowserManager {
 					for (URL url : candidateUrls) {
 						String export = candidateUrls.contains(url)
 								? getExportParameter() : null;
-						System.setProperty(VERSION_PROPERTY, versionToDownload);
 						downloader.download(url, versionToDownload, export,
 								getDriverName());
 					}
@@ -720,22 +719,18 @@ public abstract class BrowserManager {
 	 */
 	@Deprecated
 	public void setup(Architecture architecture, String version) {
-		try {
-			// Honor property if available (even when version is present)
-			String driverVersion = getDriverVersion();
-			if (!driverVersion.equalsIgnoreCase(DriverVersion.LATEST.name())
-					|| version.equals(DriverVersion.NOT_SPECIFIED.name())) {
-				version = driverVersion;
-			}
-
-			this.getClass().newInstance().manage(architecture, version);
-		} catch (InstantiationException | IllegalAccessException e) {
-			throw new RuntimeException(e);
+		// Honor property if available (even when version is present)
+		String driverVersion = getDriverVersion();
+		if (!driverVersion.equalsIgnoreCase(DriverVersion.LATEST.name())
+				|| version.equals(DriverVersion.NOT_SPECIFIED.name())) {
+			version = driverVersion;
 		}
+
+		instance.manage(architecture, version);
 	}
 
 	public String getDownloadedVersion() {
-		return System.getProperty(VERSION_PROPERTY);
+		return versionToDownload;
 	}
 
 	public BrowserManager version(String version) {

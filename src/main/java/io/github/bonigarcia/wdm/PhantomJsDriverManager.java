@@ -31,12 +31,10 @@ import org.apache.commons.io.FileUtils;
  */
 public class PhantomJsDriverManager extends BrowserManager {
 
-	private static PhantomJsDriverManager instance;
-
 	public PhantomJsDriverManager() {
 	}
 
-	public static synchronized PhantomJsDriverManager getInstance() {
+	public static synchronized BrowserManager getInstance() {
 		if (instance == null) {
 			instance = new PhantomJsDriverManager();
 		}

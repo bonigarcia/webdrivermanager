@@ -25,8 +25,6 @@ import java.util.List;
  */
 public class WebDriverManager extends BrowserManager {
 
-	private static BrowserManager instance;
-
 	private static Class<? extends BrowserManager> browserManagerClass;
 
 	public WebDriverManager() {

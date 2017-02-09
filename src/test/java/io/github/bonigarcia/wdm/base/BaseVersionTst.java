@@ -30,7 +30,6 @@ import org.slf4j.LoggerFactory;
 
 import io.github.bonigarcia.wdm.Architecture;
 import io.github.bonigarcia.wdm.BrowserManager;
-import io.github.bonigarcia.wdm.ChromeDriverManager;
 
 /**
  * Parent class for version based tests.
@@ -65,8 +64,8 @@ public class BaseVersionTst {
 			} else {
 				browserManager.setup();
 			}
-			String driverVersion = ChromeDriverManager.getInstance()
-					.getDownloadedVersion();
+
+			String driverVersion = browserManager.getDownloadedVersion();
 			Assert.assertNotNull(driverVersion);
 		}
 	}
@@ -83,8 +82,7 @@ public class BaseVersionTst {
 				} else {
 					browserManager.version(specificVersion).setup();
 				}
-				String driverVersion = ChromeDriverManager.getInstance()
-						.getDownloadedVersion();
+				String driverVersion = browserManager.getDownloadedVersion();
 
 				Assert.assertEquals(specificVersion, driverVersion);
 			}

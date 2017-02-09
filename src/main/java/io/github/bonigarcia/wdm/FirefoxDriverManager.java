@@ -35,12 +35,10 @@ import com.google.gson.internal.LinkedTreeMap;
  */
 public class FirefoxDriverManager extends BrowserManager {
 
-	private static FirefoxDriverManager instance;
-
 	public FirefoxDriverManager() {
 	}
 
-	public static synchronized FirefoxDriverManager getInstance() {
+	public static synchronized BrowserManager getInstance() {
 		if (instance == null) {
 			instance = new FirefoxDriverManager();
 		}
