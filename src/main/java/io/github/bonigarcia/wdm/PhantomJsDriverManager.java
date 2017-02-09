@@ -122,6 +122,7 @@ public class PhantomJsDriverManager extends BrowserManager {
 		return target;
 	}
 
+	@Override
 	public BrowserManager useTaobaoMirror() {
 		System.setProperty("wdm.phantomjsDriverUrl",
 				"http://npm.taobao.org/mirrors/phantomjs");

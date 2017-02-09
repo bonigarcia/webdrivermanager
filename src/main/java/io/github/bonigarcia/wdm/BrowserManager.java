@@ -763,4 +763,9 @@ public abstract class BrowserManager {
 		return this;
 	}
 
+	public BrowserManager useTaobaoMirror() {
+		throw new RuntimeException("Binaries for " + getDriverName()
+				+ " not available in taobao.org mirror (http://npm.taobao.org/mirrors/)");
+	}
+
 }
