@@ -99,6 +99,8 @@ public abstract class BrowserManager {
 
 	protected URL driverUrl;
 
+	protected String proxy;
+
 	protected String getDriverVersion() {
 		return version == null ? WdmConfig.getString(getDriverVersionKey())
 				: version;
@@ -654,24 +656,26 @@ public abstract class BrowserManager {
 	}
 
 	protected Proxy createProxy() {
-		String proxyString = System.getenv("HTTPS_PROXY");
-		if (proxyString == null || proxyString.length() < 1)
-			proxyString = System.getenv("HTTP_PROXY");
-		if (proxyString == null || proxyString.length() < 1) {
+		String proxyInput = isNullOrEmpty(proxy) ? System.getenv("HTTPS_PROXY")
+				: proxy;
+		if (isNullOrEmpty(proxyInput)) {
 			return null;
 		}
-		proxyString = proxyString.replace("http://", "");
-		proxyString = proxyString.replace("https://", "");
+		String proxyString = proxyInput.replace("http://", "")
+				.replace("https://", "");
 		StringTokenizer st = new StringTokenizer(proxyString, ":");
-		if (st.countTokens() != 2)
-			return null;
-		String host = st.nextToken();
-		String portString = st.nextToken();
+		String host = st.hasMoreTokens() ? st.nextToken() : "";
+		String portString = st.hasMoreTokens() ? st.nextToken() : "80";
+
 		try {
 			int port = Integer.parseInt(portString);
+			log.info("Using proxy {} (host={}, port={})", proxyInput, host,
+					port);
+
 			return new Proxy(Proxy.Type.HTTP,
 					new InetSocketAddress(host, port));
 		} catch (NumberFormatException e) {
+			log.error("Number format exception parsing {}", portString, e);
 			return null;
 		}
 	}
@@ -765,7 +769,13 @@ public abstract class BrowserManager {
 
 	public BrowserManager useTaobaoMirror() {
 		throw new RuntimeException("Binaries for " + getDriverName()
-				+ " not available in taobao.org mirror (http://npm.taobao.org/mirrors/)");
+				+ " not available in taobao.org mirror"
+				+ " (http://npm.taobao.org/mirrors/)");
+	}
+
+	public BrowserManager proxy(String proxy) {
+		this.proxy = proxy;
+		return this;
 	}
 
 }
