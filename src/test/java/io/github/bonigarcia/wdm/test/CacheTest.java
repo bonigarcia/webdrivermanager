@@ -28,14 +28,16 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.opera.OperaDriver;
+import org.openqa.selenium.phantomjs.PhantomJSDriver;
 
 import io.github.bonigarcia.wdm.Architecture;
 import io.github.bonigarcia.wdm.BrowserManager;
-import io.github.bonigarcia.wdm.ChromeDriverManager;
 import io.github.bonigarcia.wdm.Downloader;
-import io.github.bonigarcia.wdm.FirefoxDriverManager;
-import io.github.bonigarcia.wdm.OperaDriverManager;
-import io.github.bonigarcia.wdm.PhantomJsDriverManager;
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 /**
  * Test for driver cache.
@@ -47,7 +49,7 @@ import io.github.bonigarcia.wdm.PhantomJsDriverManager;
 public class CacheTest {
 
 	@Parameter(0)
-	public Class<? extends BrowserManager> browserManagerClass;
+	public Class<? extends WebDriver> driverClass;
 
 	@Parameter(1)
 	public String driverVersion;
@@ -57,26 +59,17 @@ public class CacheTest {
 
 	@Parameters(name = "{index}: {0} {1} {2}")
 	public static Collection<Object[]> data() {
-		return Arrays.asList(
-				new Object[][] { { ChromeDriverManager.class, "2.23", x32 },
-						{ OperaDriverManager.class, "0.2.2", x64 },
-						{ PhantomJsDriverManager.class, "2.1.1", x64 },
-						{ FirefoxDriverManager.class, "0.10.0", x64 } });
+		return Arrays
+				.asList(new Object[][] { { ChromeDriver.class, "2.27", x32 },
+						{ OperaDriver.class, "0.2.2", x64 },
+						{ PhantomJSDriver.class, "2.1.1", x64 },
+						{ FirefoxDriver.class, "0.14.0", x64 } });
 	}
 
 	@Test
 	public void testCache() throws Exception {
-		BrowserManager browserManager = null;
-		if (browserManagerClass.equals(ChromeDriverManager.class)) {
-			browserManager = ChromeDriverManager.getInstance();
-		} else if (browserManagerClass.equals(OperaDriverManager.class)) {
-			browserManager = OperaDriverManager.getInstance();
-		} else if (browserManagerClass.equals(PhantomJsDriverManager.class)) {
-			browserManager = PhantomJsDriverManager.getInstance();
-		} else if (browserManagerClass.equals(FirefoxDriverManager.class)) {
-			browserManager = FirefoxDriverManager.getInstance();
-		}
-
+		BrowserManager browserManager = WebDriverManager
+				.getInstance(driverClass);
 		browserManager.architecture(architecture).version(driverVersion)
 				.setup();
 		Downloader downloader = new Downloader(browserManager);
