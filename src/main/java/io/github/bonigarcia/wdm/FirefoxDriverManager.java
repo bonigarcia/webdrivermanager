@@ -146,8 +146,12 @@ public class FirefoxDriverManager extends BrowserManager {
 
 	@Override
 	public BrowserManager useTaobaoMirror() {
-		System.setProperty("wdm.geckoDriverUrl",
-				"http://npm.taobao.org/mirrors/geckodriver");
+		try {
+			driverUrl = new URL("http://npm.taobao.org/mirrors/geckodriver");
+		} catch (MalformedURLException e) {
+			log.error("Malformed URL", e);
+			throw new RuntimeException(e);
+		}
 		return instance;
 	}
 

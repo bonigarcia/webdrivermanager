@@ -14,8 +14,6 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
-
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -46,9 +44,7 @@ public class WdmConfig {
 	}
 
 	public static String getString(String key) {
-		String envProp = System.getProperty(key);
-		return isNullOrEmpty(envProp)
-				? WdmConfig.getInstance().conf.getString(key) : envProp;
+		return WdmConfig.getInstance().conf.getString(key);
 	}
 
 	public static int getInt(String key) {

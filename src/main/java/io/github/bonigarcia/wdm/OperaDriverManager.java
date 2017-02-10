@@ -128,8 +128,12 @@ public class OperaDriverManager extends BrowserManager {
 
 	@Override
 	public BrowserManager useTaobaoMirror() {
-		System.setProperty("wdm.operaDriverUrl",
-				"http://npm.taobao.org/mirrors/operadriver");
+		try {
+			driverUrl = new URL("http://npm.taobao.org/mirrors/operadriver");
+		} catch (MalformedURLException e) {
+			log.error("Malformed URL", e);
+			throw new RuntimeException(e);
+		}
 		return instance;
 	}
 }
