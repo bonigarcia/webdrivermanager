@@ -19,7 +19,7 @@
 		<junit.version>4.12</junit.version>
 		<hamcrest.version>1.3</hamcrest.version>
 		<jmockit.version>1.27</jmockit.version>
-		<selenium-java.version>3.0.1</selenium-java.version>
+		<selenium-java.version>3.1.0</selenium-java.version>
 		<htmlunit-driver.version>2.20</htmlunit-driver.version>
 		<phantomjsdriver.version>1.2.1</phantomjsdriver.version>
 		<maven-release-plugin.version>2.5.1</maven-release-plugin.version>
