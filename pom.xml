@@ -13,7 +13,7 @@
 		<commons-lang3.version>3.4</commons-lang3.version>
 		<jarchivelib.version>0.7.1</jarchivelib.version>
 		<jsoup.version>1.9.2</jsoup.version>
-		<guava.version>19.0</guava.version>
+		<guava.version>21.0</guava.version>
 		<commons-codec.version>1.10</commons-codec.version>
 
 		<junit.version>4.12</junit.version>
