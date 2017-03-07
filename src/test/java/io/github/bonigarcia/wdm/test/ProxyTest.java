@@ -68,11 +68,9 @@ public class ProxyTest {
 	}
 
 	@Test
-	@SuppressWarnings("deprecation")
 	public void testMockedEnvProxy() throws Exception {
-		MockUp<System> mockUp;
 		for (String proxyTestString : PROXYS_TEST_STRINGS) {
-			mockUp = setSystemGetEnvMock(proxyTestString);
+			setSystemGetEnvMock(proxyTestString);
 
 			log.info("Testing proxy {}", proxyTestString);
 
@@ -86,7 +84,6 @@ public class ProxyTest {
 					CoreMatchers.containsString(PROXY_URL));
 			assertThat(proxy.toString(),
 					CoreMatchers.containsString(PROXY_URL));
-			mockUp.tearDown();
 		}
 	}
 
