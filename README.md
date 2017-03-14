@@ -124,10 +124,12 @@ wdm.timeout=30
 wdm.seekErrorRetries=3
 
 wdm.chromeDriverUrl=https://chromedriver.storage.googleapis.com/
+wdm.chromeDriverTaobaoUrl=http://npm.taobao.org/mirrors/chromedriver
 wdm.chromeDriverExport=webdriver.chrome.driver
 wdm.chromeDriverVersion=LATEST
 
 wdm.operaDriverUrl=https://api.github.com/repos/operasoftware/operachromiumdriver/releases
+wdm.operaDriverTaobaoUrl=http://npm.taobao.org/mirrors/operadriver
 wdm.operaDriverExport=webdriver.opera.driver
 wdm.operaDriverVersion=LATEST
 
@@ -138,12 +140,14 @@ wdm.internetExplorerVersion=LATEST
 wdm.edgeDriverUrl=https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/
 wdm.edgeExport=webdriver.edge.driver
 wdm.edgeVersion=LATEST
-	
+
 wdm.phantomjsDriverUrl=https://bitbucket.org/ariya/phantomjs/downloads/
+wdm.phantomjsDriverTaobaoUrl=http://npm.taobao.org/mirrors/phantomjs
 wdm.phantomjsDriverExport=phantomjs.binary.path
 wdm.phantomjsDriverVersion=LATEST
 
 wdm.geckoDriverUrl=https://api.github.com/repos/mozilla/geckodriver/releases
+wdm.geckoDriverTaobaoUrl=http://npm.taobao.org/mirrors/geckodriver
 wdm.geckoDriverExport=webdriver.gecko.driver
 wdm.geckoDriverVersion=LATEST
 
