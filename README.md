@@ -7,7 +7,7 @@
 
 This library is aimed to automate the [Selenium Webdriver] binaries management in runtime for Java.
 
-If you have ever used [Selenium Webdriver], you probably know that in order to use some browsers such as **Chrome**, **Internet Explorer**, **Opera**, **Microsoft Edge**, **PhantomJS**, or **Firefox** (using *Marionette*) you need to download a binary which allows WebDriver to handle the browser. In addition, the absolute path to this binary must be set as Java variables, as follows:
+If you have ever used [Selenium Webdriver], you probably know that in order to use some browsers such as **Chrome**, **Internet Explorer**, **Opera**, **Microsoft Edge**, **PhantomJS**, or **Firefox** you need to download a binary which allows WebDriver to handle the browser. In addition, the absolute path to this binary must be set as Java variables, as follows:
 
 ```java
 System.setProperty("webdriver.chrome.driver", "/absolute/path/to/binary/chromedriver");
@@ -151,7 +151,7 @@ wdm.gitHubTokenName=
 wdm.gitHubTokenSecret=
 ```
 
-The variable ``wdm.targetPath`` is the default folder in which WebDriver binaries are going to be stored. Notice that by default the path of the Maven local repository is used. The URLs to check the latest version of Chrome, Opera, Internet Explorer, Edge, PhantomJS, and Marionette (the driver for Firefox, a.k.a the gecko driver) are set using the variables ``wdm.chromeDriverUrl``, ``wdm.operaDriverExport``, ``wdm.operaDriverUrl``, ``wdm.edgeDriverUrl``, ``wdm.phantomjsDriverUrl``, and ``wdm.geckoDriverUrl``. 
+The variable ``wdm.targetPath`` is the default folder in which WebDriver binaries are going to be stored. Notice that by default the path of the Maven local repository is used. The URLs to check the latest version of Chrome, Opera, Internet Explorer, Edge, PhantomJS, and Firefox are set using the variables ``wdm.chromeDriverUrl``, ``wdm.operaDriverExport``, ``wdm.operaDriverUrl``, ``wdm.edgeDriverUrl``, ``wdm.phantomjsDriverUrl``, and ``wdm.geckoDriverUrl``.
 
 These properties can be overwritten by Java system properties, for example:
 
