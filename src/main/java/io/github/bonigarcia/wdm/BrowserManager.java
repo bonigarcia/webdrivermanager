@@ -97,6 +97,8 @@ public abstract class BrowserManager {
 
 	protected boolean forceCache = false;
 
+	protected boolean forceDownload = false;
+
 	protected URL driverUrl;
 
 	protected String proxy;
@@ -146,6 +148,10 @@ public abstract class BrowserManager {
 	protected void manage(Architecture arch, String version) {
 		try {
 			Downloader downloader = new Downloader(this);
+			if (forceDownload) {
+				downloader.forceDownload();
+			}
+
 			boolean getLatest = version == null || version.isEmpty()
 					|| version.equalsIgnoreCase(DriverVersion.LATEST.name())
 					|| version.equalsIgnoreCase(
@@ -759,6 +765,11 @@ public abstract class BrowserManager {
 
 	public BrowserManager forceCache() {
 		this.forceCache = true;
+		return this;
+	}
+
+	public BrowserManager forceDownload() {
+		this.forceDownload = true;
 		return this;
 	}
 

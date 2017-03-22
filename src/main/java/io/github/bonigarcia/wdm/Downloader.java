@@ -54,6 +54,8 @@ public class Downloader {
 
 	private BrowserManager browserManager;
 
+	private boolean override = WdmConfig.getBoolean("wdm.override");
+
 	public Downloader(BrowserManager browserManager) {
 		this.browserManager = browserManager;
 	}
@@ -67,7 +69,7 @@ public class Downloader {
 		boolean download = !targetFile.getParentFile().exists()
 				|| (targetFile.getParentFile().exists()
 						&& targetFile.getParentFile().list().length == 0)
-				|| WdmConfig.getBoolean("wdm.override");
+				|| override;
 
 		if (!download) {
 			// Check if existing binary is valid
@@ -197,7 +199,7 @@ public class Downloader {
 
 			file = new File(
 					compressedFile.getParentFile() + File.separator + name);
-			if (!file.exists() || WdmConfig.getBoolean("wdm.override")) {
+			if (!file.exists() || override) {
 				if (name.endsWith("/")) {
 					file.mkdirs();
 					continue;
@@ -313,6 +315,10 @@ public class Downloader {
 			repository.mkdirs();
 		}
 		return targetPath;
+	}
+
+	public void forceDownload() {
+		this.override = true;
 	}
 
 }
