@@ -1,6 +1,14 @@
+webdrivermanager (1.6.2)
+
+  + Downgrade com.typesafe:config to 1.2.1 (for Java 7 compliance)
+  + New method in BrowserManager API: forceDownload()
+
+ -- Boni Garcia <boni.gg@gmail.com>
+
+
 webdrivermanager (1.6.1)
 
-  + New methods in BrowserManager API: proxy()
+  + New method in BrowserManager API: proxy()
   + Bug-fix: forceCache() method was not working properly
 
  -- Boni Garcia <boni.gg@gmail.com>  Wen, 8 Mar 2017 17:20:00 +0200
