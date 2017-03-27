@@ -218,7 +218,7 @@ public abstract class BrowserManager {
 							continueSearchingVersion = candidateUrls.isEmpty()
 									&& getLatest;
 							if (continueSearchingVersion) {
-								log.debug("No valid binary found for {} {}",
+								log.info("No valid binary found for {} {}",
 										getDriverName(), versionToDownload);
 								urls = removeFromList(urls, versionToDownload);
 								versionToDownload = null;
@@ -518,11 +518,20 @@ public abstract class BrowserManager {
 	protected Integer versionCompare(String str1, String str2) {
 		String[] vals1 = str1.replaceAll("v", "").split("\\.");
 		String[] vals2 = str2.replaceAll("v", "").split("\\.");
+
+		if (str2.toLowerCase().contains("beta")) {
+			return 0;
+		}
+
 		int i = 0;
 		while (i < vals1.length && i < vals2.length
 				&& vals1[i].equals(vals2[i])) {
 			i++;
 		}
+
+		log.trace("Version 1 {}", Arrays.toString(vals1));
+		log.trace("Version 2 {}", Arrays.toString(vals2));
+
 		if (i < vals1.length && i < vals2.length) {
 			int diff = Integer.valueOf(vals1[i])
 					.compareTo(Integer.valueOf(vals2[i]));

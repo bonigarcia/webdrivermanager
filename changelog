@@ -2,6 +2,7 @@ webdrivermanager (1.6.2)
 
   + Downgrade com.typesafe:config to 1.2.1 (for Java 7 compliance)
   + New method in BrowserManager API: forceDownload()
+  + Bug-fix: issue #115 number format exception due to IEDriver beta
 
  -- Boni Garcia <boni.gg@gmail.com>
 
