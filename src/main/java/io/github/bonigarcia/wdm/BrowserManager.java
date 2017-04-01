@@ -21,7 +21,6 @@ import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
@@ -123,12 +122,7 @@ public abstract class BrowserManager {
 		File target = archive;
 		File[] ls = archive.getParentFile().listFiles();
 		for (File f : ls) {
-			if (IS_OS_WINDOWS) {
-				if (f.getName().endsWith(".exe")) {
-					target = f;
-					break;
-				}
-			} else if (f.canExecute()) {
+			if (isExecutable(f)) {
 				target = f;
 				break;
 			}
@@ -267,7 +261,7 @@ public abstract class BrowserManager {
 				driverInCache = f.toString();
 				log.trace("Checking {}", driverInCache);
 				if (driverInCache.contains(driverName)) {
-					if (!isExecutable(driverName)) {
+					if (!isExecutable(new File(driverName))) {
 						continue;
 					}
 
@@ -311,7 +305,7 @@ public abstract class BrowserManager {
 
 				if (driverInCache.contains(driverVersion)
 						&& driverInCache.contains(driverName) && architecture) {
-					if (!isExecutable(driverInCache)) {
+					if (!isExecutable(new File(driverInCache))) {
 						continue;
 					}
 					log.debug("Found {} {} ({} bits) in cache: {}",
@@ -332,19 +326,9 @@ public abstract class BrowserManager {
 		return driverInCache;
 	}
 
-	public boolean isExecutable(String input) throws IOException {
-		byte[] firstBytes = new byte[4];
-		File file = new File(input);
-		boolean isExec = file.canExecute();
-		if (!isExec) {
-			try (FileInputStream fileInputStream = new FileInputStream(file)) {
-				fileInputStream.read(firstBytes);
-				isExec = firstBytes[0] == 0x4d && firstBytes[1] == 0x5a;
-
-			}
-		}
-		log.trace("{} is executable {}", input, isExec);
-		return isExec;
+	public boolean isExecutable(File file) {
+		return IS_OS_WINDOWS ? file.getName().toLowerCase().endsWith(".exe")
+				: file.canExecute();
 	}
 
 	protected boolean isNetAvailable() {
