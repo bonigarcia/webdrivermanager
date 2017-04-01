@@ -16,10 +16,13 @@ package io.github.bonigarcia.wdm.test;
 
 import static org.junit.Assert.assertThat;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.net.InetSocketAddress;
 import java.net.Proxy;
 
-import org.hamcrest.CoreMatchers;
+import io.github.bonigarcia.wdm.WdmHttpClient;
+import org.hamcrest.core.Is;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -43,29 +46,49 @@ public class ProxyTest {
 	protected static final Logger log = LoggerFactory
 			.getLogger(ProxyTest.class);
 
-	private static final String HTTP_PROXY = "HTTP_PROXY";
 	private static final String PROXY_URL = "my.http.proxy";
 	private static final String PROXY_PORT = "1234";
 
 	private static final String[] PROXYS_TEST_STRINGS = {
 			PROXY_URL + ":" + PROXY_PORT, PROXY_URL, "http://" + PROXY_URL,
 			"http://" + PROXY_URL + ":" + PROXY_PORT,
-			"https://" + PROXY_URL + ":" + PROXY_PORT };
+			"https://" + PROXY_URL + ":" + PROXY_PORT,
+			"https://test:test@" + PROXY_URL + ":" + PROXY_PORT,
+	};
 
 	@Test
 	public void testRealEnvProxyToNull() throws Exception {
 		BrowserManager browserManager = ChromeDriverManager.getInstance();
+		Field field = BrowserManager.class.getDeclaredField("httpClient");
+		field.setAccessible(true);
+		field.set(browserManager, new WdmHttpClient.Builder().build());
+
+		setSystemGetEnvMock(null);
+
 		Method method = BrowserManager.class.getDeclaredMethod("createProxy");
 		method.setAccessible(true);
 		Proxy proxy = (Proxy) method.invoke(browserManager);
 
-		String exp = System.getenv(HTTP_PROXY);
-		if (exp != null && exp.length() > 0) {
-			Assert.assertNotNull(proxy);
-		} else {
-			Assert.assertNull(proxy);
-		}
+		Assert.assertNull(proxy);
 	}
+
+	@Test
+	public void testRealEnvProxyToNotNull() throws Exception {
+		BrowserManager browserManager = ChromeDriverManager.getInstance();
+		Field field = BrowserManager.class.getDeclaredField("httpClient");
+		field.setAccessible(true);
+		field.set(browserManager, new WdmHttpClient.Builder().build());
+
+		setSystemGetEnvMock(PROXY_URL);
+
+		Method method = BrowserManager.class.getDeclaredMethod("createProxy");
+		method.setAccessible(true);
+		Proxy proxy = (Proxy) method.invoke(browserManager);
+
+		InetSocketAddress address = (InetSocketAddress) proxy.address();
+		assertThat(address.getHostName(), Is.is(PROXY_URL));
+	}
+
 
 	@Test
 	public void testMockedEnvProxy() throws Exception {
@@ -75,15 +98,17 @@ public class ProxyTest {
 			log.info("Testing proxy {}", proxyTestString);
 
 			BrowserManager browserManager = ChromeDriverManager.getInstance();
+			Field field = BrowserManager.class.getDeclaredField("httpClient");
+			field.setAccessible(true);
+			field.set(browserManager, new WdmHttpClient.Builder().build());
+
 			Method method = BrowserManager.class
 					.getDeclaredMethod("createProxy");
 			method.setAccessible(true);
 			Proxy proxy = (Proxy) method.invoke(browserManager);
+			InetSocketAddress address = (InetSocketAddress) proxy.address();
 
-			assertThat(proxy.toString(),
-					CoreMatchers.containsString(PROXY_URL));
-			assertThat(proxy.toString(),
-					CoreMatchers.containsString(PROXY_URL));
+			assertThat(address.getHostName(), Is.is(PROXY_URL));
 		}
 	}
 

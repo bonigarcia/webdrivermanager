@@ -28,7 +28,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.4.1
  */
-public class BaseBrowserTst {
+public abstract class BaseBrowserTst {
 
 	protected static final int TIMEOUT = 30; // seconds
 
