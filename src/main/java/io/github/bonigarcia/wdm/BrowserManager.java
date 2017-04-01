@@ -28,18 +28,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.StringTokenizer;
 import java.util.concurrent.TimeUnit;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -69,12 +66,12 @@ public abstract class BrowserManager {
 
 	protected static final Logger log = LoggerFactory
 			.getLogger(BrowserManager.class);
-	protected static final String TAOBAO_MIRROR = "npm.taobao.org";
-	protected static final String SEPARATOR = "/";
+	public static final String TAOBAO_MIRROR = "npm.taobao.org";
+	public static final String SEPARATOR = "/";
 
-	private static final Architecture DEFAULT_ARCH = Architecture
+	public static final Architecture DEFAULT_ARCH = Architecture
 			.valueOf("x" + System.getProperty("sun.arch.data.model"));
-	private static final String MY_OS_NAME = getOsName();
+	public static final String MY_OS_NAME = getOsName();
 
 	protected abstract List<URL> getDrivers() throws Exception;
 
@@ -103,6 +100,21 @@ public abstract class BrowserManager {
 	protected URL driverUrl;
 
 	protected String proxy;
+
+	/**
+	 * @since 1.6.2
+	 */
+	protected String proxyUser;
+
+	/**
+	 * @since 1.6.2
+	 */
+	protected String proxyPass;
+
+	/**
+	 * @since 1.6.2
+	 */
+	protected WdmHttpClient httpClient;
 
 	protected String getDriverVersion() {
 		return version == null ? WdmConfig.getString(getDriverVersionKey())
@@ -147,8 +159,13 @@ public abstract class BrowserManager {
 	}
 
 	protected void manage(Architecture arch, String version) {
-		try {
-			Downloader downloader = new Downloader(this);
+
+		this.httpClient = new WdmHttpClient.Builder()
+			.proxy(proxy).proxyUser(proxyUser).proxyPass(proxyPass).build();
+
+		try (WdmHttpClient httpClient = this.httpClient) {
+
+			Downloader downloader = new Downloader(this, httpClient);
 			if (forceDownload) {
 				downloader.forceDownload();
 			}
@@ -305,7 +322,7 @@ public abstract class BrowserManager {
 				driverInCache = f.toString();
 
 				// Exception for phantomjs
-				boolean architecture = driverName.equals("phantomjs")
+				boolean architecture = !shouldCheckArchitecture(driverName)
 						|| driverInCache.contains(arch.toString());
 				log.trace("Checking {}", driverInCache);
 
@@ -332,6 +349,13 @@ public abstract class BrowserManager {
 		return driverInCache;
 	}
 
+	/**
+	 * @since 1.6.2
+	 */
+	protected boolean shouldCheckArchitecture(String driverName) {
+		return true;
+	}
+
 	public boolean isExecutable(String input) throws IOException {
 		byte[] firstBytes = new byte[4];
 		try (FileInputStream fileInputStream = new FileInputStream(
@@ -343,12 +367,7 @@ public abstract class BrowserManager {
 
 	protected boolean isNetAvailable() {
 		try {
-			URL url = getDriverUrl();
-			Proxy proxy = createProxy();
-			URLConnection conn = proxy != null ? url.openConnection(proxy)
-					: url.openConnection();
-
-			conn.connect();
+			httpClient.execute(new WdmHttpClient.Options(getDriverUrl()));
 			return true;
 		} catch (IOException e) {
 			log.warn("Network not available. Forcing the use of cache");
@@ -574,26 +593,27 @@ public abstract class BrowserManager {
 
 		String driverStr = driverUrl.toString();
 		String driverUrlContent = driverUrl.getPath();
+		int timeout = (int) TimeUnit.SECONDS.toMillis(WdmConfig.getInt("wdm.timeout"));
 
-		org.jsoup.nodes.Document doc = Jsoup.connect(driverStr)
-				.timeout((int) TimeUnit.SECONDS
-						.toMillis(WdmConfig.getInt("wdm.timeout")))
-				.proxy(createProxy()).get();
-		Iterator<org.jsoup.nodes.Element> iterator = doc.select("a").iterator();
-		List<URL> urlList = new ArrayList<>();
+		WdmHttpClient.Response response = httpClient.execute(new WdmHttpClient.Get(driverStr, timeout));
+		try (InputStream in = response.getContent()) {
+			org.jsoup.nodes.Document doc = Jsoup.parse(in, null, "");
+			Iterator<org.jsoup.nodes.Element> iterator = doc.select("a").iterator();
+			List<URL> urlList = new ArrayList<>();
 
-		while (iterator.hasNext()) {
-			String link = iterator.next().attr("href");
-			if (link.contains("mirror") && link.endsWith(SEPARATOR)) {
-				urlList.addAll(getDriversFromMirror(new URL(
-						driverStr + link.replace(driverUrlContent, ""))));
-			} else if (link.startsWith(driverUrlContent)
-					&& !link.contains("icons")) {
-				urlList.add(new URL(
-						driverStr + link.replace(driverUrlContent, "")));
+			while (iterator.hasNext()) {
+				String link = iterator.next().attr("href");
+				if (link.contains("mirror") && link.endsWith(SEPARATOR)) {
+					urlList.addAll(getDriversFromMirror(new URL(
+							driverStr + link.replace(driverUrlContent, ""))));
+				} else if (link.startsWith(driverUrlContent)
+						&& !link.contains("icons")) {
+					urlList.add(new URL(
+							driverStr + link.replace(driverUrlContent, "")));
+				}
 			}
+			return urlList;
 		}
-		return urlList;
 	}
 
 	protected List<URL> getDriversFromXml(URL driverUrl,
@@ -606,24 +626,21 @@ public abstract class BrowserManager {
 		int maxRetries = WdmConfig.getInt("wdm.seekErrorRetries");
 		do {
 			try {
-				Proxy proxy = createProxy();
-				URLConnection conn = proxy != null
-						? driverUrl.openConnection(proxy)
-						: driverUrl.openConnection();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(conn.getInputStream()));
-				Document xml = loadXML(reader);
+				WdmHttpClient.Response response = httpClient.execute(new WdmHttpClient.Get(driverUrl));
+				try (BufferedReader reader = new BufferedReader(
+						new InputStreamReader(response.getContent()))) {
+					Document xml = loadXML(reader);
 
-				XPath xPath = XPathFactory.newInstance().newXPath();
-				NodeList nodes = (NodeList) xPath.evaluate("//Contents/Key",
+					XPath xPath = XPathFactory.newInstance().newXPath();
+					NodeList nodes = (NodeList) xPath.evaluate("//Contents/Key",
 						xml.getDocumentElement(), XPathConstants.NODESET);
 
-				for (int i = 0; i < nodes.getLength(); ++i) {
-					Element e = (Element) nodes.item(i);
-					String version = e.getChildNodes().item(0).getNodeValue();
-					urls.add(new URL(driverUrl + version));
+					for (int i = 0; i < nodes.getLength(); ++i) {
+						Element e = (Element) nodes.item(i);
+						String version = e.getChildNodes().item(0).getNodeValue();
+						urls.add(new URL(driverUrl + version));
+					}
 				}
-				reader.close();
 				break;
 			} catch (Throwable e) {
 				log.warn("[{}/{}] Exception reading {} to seek {}: {} {}",
@@ -666,12 +683,10 @@ public abstract class BrowserManager {
 	}
 
 	protected InputStream openGitHubConnection(URL driverUrl)
-			throws IOException {
-		Proxy proxy = createProxy();
-		URLConnection conn = proxy != null ? driverUrl.openConnection(proxy)
-				: driverUrl.openConnection();
-		conn.setRequestProperty("User-Agent", "Mozilla/5.0");
-		conn.addRequestProperty("Connection", "keep-alive");
+		throws IOException {
+		WdmHttpClient.Get get = new WdmHttpClient.Get(driverUrl)
+			.addHeader("User-Agent", "Mozilla/5.0")
+			.addHeader("Connection", "keep-alive");
 
 		String gitHubTokenName = WdmConfig.getString("wdm.gitHubTokenName");
 		String gitHubTokenSecret = WdmConfig.getString("wdm.gitHubTokenSecret");
@@ -680,36 +695,18 @@ public abstract class BrowserManager {
 			String userpass = gitHubTokenName + ":" + gitHubTokenSecret;
 			String basicAuth = "Basic "
 					+ new String(new Base64().encode(userpass.getBytes()));
-			conn.setRequestProperty("Authorization", basicAuth);
+			get.addHeader("Authorization", basicAuth);
 		}
-		conn.connect();
 
-		return conn.getInputStream();
+		return httpClient.execute(get).getContent();
 	}
 
+	/**
+	 * @deprecated Since 1.6.2. This method remain to keep a backward compatibility(gh-118).
+	 */
+	@Deprecated
 	protected Proxy createProxy() {
-		String proxyInput = isNullOrEmpty(proxy) ? System.getenv("HTTPS_PROXY")
-				: proxy;
-		if (isNullOrEmpty(proxyInput)) {
-			return null;
-		}
-		String proxyString = proxyInput.replace("http://", "")
-				.replace("https://", "");
-		StringTokenizer st = new StringTokenizer(proxyString, ":");
-		String host = st.hasMoreTokens() ? st.nextToken() : "";
-		String portString = st.hasMoreTokens() ? st.nextToken() : "80";
-
-		try {
-			int port = Integer.parseInt(portString);
-			log.info("Using proxy {} (host={}, port={})", proxyInput, host,
-					port);
-
-			return new Proxy(Proxy.Type.HTTP,
-					new InetSocketAddress(host, port));
-		} catch (NumberFormatException e) {
-			log.error("Number format exception parsing {}", portString, e);
-			return null;
-		}
+		return httpClient.createProxy(proxy);
 	}
 
 	// *************************************
@@ -812,6 +809,22 @@ public abstract class BrowserManager {
 
 	public BrowserManager proxy(String proxy) {
 		this.proxy = proxy;
+		return this;
+	}
+
+	/**
+	 * @since 1.6.2
+	 */
+	public BrowserManager proxyUser(String proxyUser) {
+		this.proxyUser = proxyUser;
+		return this;
+	}
+
+	/**
+	 * @since 1.6.2
+	 */
+	public BrowserManager proxyPass(String proxyPass) {
+		this.proxyPass = proxyPass;
 		return this;
 	}
 

@@ -53,29 +53,29 @@ public class OperaDriverManager extends BrowserManager {
 		} else {
 			String driverVersion = versionToDownload;
 
-			BufferedReader reader = new BufferedReader(
-					new InputStreamReader(openGitHubConnection(driverUrl)));
+			try (BufferedReader reader = new BufferedReader(
+					new InputStreamReader(openGitHubConnection(driverUrl)))) {
 
-			GsonBuilder gsonBuilder = new GsonBuilder();
-			Gson gson = gsonBuilder.create();
-			GitHubApi[] releaseArray = gson.fromJson(reader, GitHubApi[].class);
-			if (driverVersion != null) {
-				releaseArray = new GitHubApi[] {
-						getVersion(releaseArray, driverVersion) };
-			}
+				GsonBuilder gsonBuilder = new GsonBuilder();
+				Gson gson = gsonBuilder.create();
+				GitHubApi[] releaseArray = gson.fromJson(reader, GitHubApi[].class);
+				if (driverVersion != null) {
+					releaseArray = new GitHubApi[]{
+						getVersion(releaseArray, driverVersion)};
+				}
 
-			urls = new ArrayList<>();
-			for (GitHubApi release : releaseArray) {
-				if (release != null) {
-					List<LinkedTreeMap<String, Object>> assets = release
+				urls = new ArrayList<>();
+				for (GitHubApi release : releaseArray) {
+					if (release != null) {
+						List<LinkedTreeMap<String, Object>> assets = release
 							.getAssets();
-					for (LinkedTreeMap<String, Object> asset : assets) {
-						urls.add(new URL(
+						for (LinkedTreeMap<String, Object> asset : assets) {
+							urls.add(new URL(
 								asset.get("browser_download_url").toString()));
+						}
 					}
 				}
 			}
-			reader.close();
 		}
 		return urls;
 	}

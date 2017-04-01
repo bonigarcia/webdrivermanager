@@ -19,10 +19,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.Proxy;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
@@ -52,12 +49,21 @@ public class Downloader {
 
 	private static final String HOME = "~";
 
-	private BrowserManager browserManager;
+	private final BrowserManager browserManager;
+	private final WdmHttpClient httpClient;
 
 	private boolean override = WdmConfig.getBoolean("wdm.override");
 
 	public Downloader(BrowserManager browserManager) {
+		this(browserManager, new WdmHttpClient.Builder().build());
+	}
+
+	/**
+	 * @since 1.6.2
+	 */
+	public Downloader(BrowserManager browserManager, WdmHttpClient httpClient) {
 		this.browserManager = browserManager;
+		this.httpClient = httpClient;
 	}
 
 	public synchronized void download(URL url, String version, String export,
@@ -96,19 +102,11 @@ public class Downloader {
 
 		if (download) {
 			log.info("Downloading {} to {}", url, targetFile);
-			HttpURLConnection conn = getConnection(url);
-			int responseCode = conn.getResponseCode();
-			log.debug("Response HTTP {}", responseCode);
-			if (responseCode == HttpURLConnection.HTTP_MOVED_TEMP
-					|| responseCode == HttpURLConnection.HTTP_MOVED_PERM
-					|| responseCode == HttpURLConnection.HTTP_SEE_OTHER) {
-				// HTTP Redirect
-				URL newUrl = new URL(conn.getHeaderField("Location"));
-				log.debug("Redirect to {}", newUrl);
-				conn = getConnection(newUrl);
-			}
+			WdmHttpClient.Get get = new WdmHttpClient.Get(url)
+				.addHeader("User-Agent", "Mozilla/5.0")
+				.addHeader("Connection", "keep-alive");
 
-			FileUtils.copyInputStreamToFile(conn.getInputStream(), targetFile);
+			FileUtils.copyInputStreamToFile(httpClient.execute(get).getContent(), targetFile);
 
 			if (!export.contains("edge")) {
 				binary = extract(targetFile, export);
@@ -120,19 +118,6 @@ public class Downloader {
 		if (export != null) {
 			BrowserManager.exportDriver(export, binary.toString());
 		}
-	}
-
-	private HttpURLConnection getConnection(URL url) throws IOException {
-		Proxy proxy = browserManager.createProxy();
-		URLConnection conn1 = proxy != null ? url.openConnection(proxy)
-				: url.openConnection();
-		HttpURLConnection conn = (HttpURLConnection) conn1;
-		conn.setRequestProperty("User-Agent", "Mozilla/5.0");
-		conn.addRequestProperty("Connection", "keep-alive");
-		conn.setInstanceFollowRedirects(true);
-		HttpURLConnection.setFollowRedirects(true);
-		conn.connect();
-		return conn;
 	}
 
 	public File extractMsi(File msi) throws IOException {
