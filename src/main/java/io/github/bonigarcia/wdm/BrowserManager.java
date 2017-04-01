@@ -334,11 +334,17 @@ public abstract class BrowserManager {
 
 	public boolean isExecutable(String input) throws IOException {
 		byte[] firstBytes = new byte[4];
-		try (FileInputStream fileInputStream = new FileInputStream(
-				new File(input))) {
-			fileInputStream.read(firstBytes);
-			return (firstBytes[0] == 0x4d && firstBytes[1] == 0x5a);
+		File file = new File(input);
+		boolean isExec = file.canExecute();
+		if (!isExec) {
+			try (FileInputStream fileInputStream = new FileInputStream(file)) {
+				fileInputStream.read(firstBytes);
+				isExec = firstBytes[0] == 0x4d && firstBytes[1] == 0x5a;
+
+			}
 		}
+		log.trace("{} is executable {}", input, isExec);
+		return isExec;
 	}
 
 	protected boolean isNetAvailable() {
