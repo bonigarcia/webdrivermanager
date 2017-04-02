@@ -261,7 +261,7 @@ public abstract class BrowserManager {
 				driverInCache = f.toString();
 				log.trace("Checking {}", driverInCache);
 				if (driverInCache.contains(driverName)) {
-					if (!isExecutable(new File(driverName))) {
+					if (!isExecutable(new File(driverInCache))) {
 						continue;
 					}
 
