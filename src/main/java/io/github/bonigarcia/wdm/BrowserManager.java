@@ -154,8 +154,8 @@ public abstract class BrowserManager {
 
 	protected void manage(Architecture arch, String version) {
 
-		this.httpClient = new WdmHttpClient.Builder()
-			.proxy(proxy).proxyUser(proxyUser).proxyPass(proxyPass).build();
+		this.httpClient = new WdmHttpClient.Builder().proxy(proxy)
+				.proxyUser(proxyUser).proxyPass(proxyPass).build();
 
 		try (WdmHttpClient httpClient = this.httpClient) {
 
@@ -449,15 +449,19 @@ public abstract class BrowserManager {
 			fileList[fileList.length - 1] = fileVersion;
 		}
 		for (File f : fileList) {
-			BufferedReader myReader = new BufferedReader(new FileReader(f));
-			String strLine = null;
-			while ((strLine = myReader.readLine()) != null) {
-				if (strLine.contains(key)) {
-					int beginIndex = key.length();
-					out = strLine.substring(beginIndex + 1);
+			if (f.isDirectory()) {
+				continue;
+			}
+			try (BufferedReader myReader = new BufferedReader(
+					new FileReader(f))) {
+				String strLine = null;
+				while ((strLine = myReader.readLine()) != null) {
+					if (strLine.contains(key)) {
+						int beginIndex = key.length();
+						out = strLine.substring(beginIndex + 1);
+					}
 				}
 			}
-			myReader.close();
 		}
 
 		return out;
@@ -586,12 +590,15 @@ public abstract class BrowserManager {
 
 		String driverStr = driverUrl.toString();
 		String driverUrlContent = driverUrl.getPath();
-		int timeout = (int) TimeUnit.SECONDS.toMillis(WdmConfig.getInt("wdm.timeout"));
+		int timeout = (int) TimeUnit.SECONDS
+				.toMillis(WdmConfig.getInt("wdm.timeout"));
 
-		WdmHttpClient.Response response = httpClient.execute(new WdmHttpClient.Get(driverStr, timeout));
+		WdmHttpClient.Response response = httpClient
+				.execute(new WdmHttpClient.Get(driverStr, timeout));
 		try (InputStream in = response.getContent()) {
 			org.jsoup.nodes.Document doc = Jsoup.parse(in, null, "");
-			Iterator<org.jsoup.nodes.Element> iterator = doc.select("a").iterator();
+			Iterator<org.jsoup.nodes.Element> iterator = doc.select("a")
+					.iterator();
 			List<URL> urlList = new ArrayList<>();
 
 			while (iterator.hasNext()) {
@@ -619,18 +626,20 @@ public abstract class BrowserManager {
 		int maxRetries = WdmConfig.getInt("wdm.seekErrorRetries");
 		do {
 			try {
-				WdmHttpClient.Response response = httpClient.execute(new WdmHttpClient.Get(driverUrl));
+				WdmHttpClient.Response response = httpClient
+						.execute(new WdmHttpClient.Get(driverUrl));
 				try (BufferedReader reader = new BufferedReader(
 						new InputStreamReader(response.getContent()))) {
 					Document xml = loadXML(reader);
 
 					XPath xPath = XPathFactory.newInstance().newXPath();
 					NodeList nodes = (NodeList) xPath.evaluate("//Contents/Key",
-						xml.getDocumentElement(), XPathConstants.NODESET);
+							xml.getDocumentElement(), XPathConstants.NODESET);
 
 					for (int i = 0; i < nodes.getLength(); ++i) {
 						Element e = (Element) nodes.item(i);
-						String version = e.getChildNodes().item(0).getNodeValue();
+						String version = e.getChildNodes().item(0)
+								.getNodeValue();
 						urls.add(new URL(driverUrl + version));
 					}
 				}
@@ -676,10 +685,10 @@ public abstract class BrowserManager {
 	}
 
 	protected InputStream openGitHubConnection(URL driverUrl)
-		throws IOException {
+			throws IOException {
 		WdmHttpClient.Get get = new WdmHttpClient.Get(driverUrl)
-			.addHeader("User-Agent", "Mozilla/5.0")
-			.addHeader("Connection", "keep-alive");
+				.addHeader("User-Agent", "Mozilla/5.0")
+				.addHeader("Connection", "keep-alive");
 
 		String gitHubTokenName = WdmConfig.getString("wdm.gitHubTokenName");
 		String gitHubTokenSecret = WdmConfig.getString("wdm.gitHubTokenSecret");
@@ -695,7 +704,8 @@ public abstract class BrowserManager {
 	}
 
 	/**
-	 * @deprecated Since 1.6.2. This method remain to keep a backward compatibility(gh-118).
+	 * @deprecated Since 1.6.2. This method remain to keep a backward
+	 *             compatibility(gh-118).
 	 */
 	@Deprecated
 	protected Proxy createProxy() {
