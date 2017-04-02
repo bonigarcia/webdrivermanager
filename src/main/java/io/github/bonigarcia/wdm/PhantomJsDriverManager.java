@@ -133,4 +133,12 @@ public class PhantomJsDriverManager extends BrowserManager {
 		}
 		return instance;
 	}
+
+	/**
+	 * @since 1.6.2
+	 */
+	@Override
+	protected boolean shouldCheckArchitecture(String driverName) {
+		return false;
+	}
 }

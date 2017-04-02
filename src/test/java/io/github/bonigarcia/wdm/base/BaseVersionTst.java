@@ -38,7 +38,7 @@ import io.github.bonigarcia.wdm.BrowserManager;
  * @since 1.4.1
  */
 @RunWith(Parameterized.class)
-public class BaseVersionTst {
+public abstract class BaseVersionTst {
 
 	@Parameter
 	public Architecture architecture;

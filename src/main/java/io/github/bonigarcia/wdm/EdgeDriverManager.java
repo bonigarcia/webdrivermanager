@@ -14,6 +14,7 @@
  */
 package io.github.bonigarcia.wdm;
 
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,22 +47,23 @@ public class EdgeDriverManager extends BrowserManager {
 		log.debug("Reading {} to find out the latest version of Edge driver",
 				edgeDriverUrl);
 
-		Document doc = Jsoup.connect(edgeDriverUrl)
-				.timeout((int) TimeUnit.SECONDS
-						.toMillis(WdmConfig.getInt("wdm.timeout")))
-				.proxy(createProxy()).get();
+		int timeout = (int) TimeUnit.SECONDS.toMillis(WdmConfig.getInt("wdm.timeout"));
 
-		Elements downloadLink = doc
-				.select("ul.driver-downloads li.driver-download > a");
-		Elements versionParagraph = doc.select(
-				"ul.driver-downloads li.driver-download p.driver-download__meta");
-		String[] latestVersion = versionParagraph.get(0).text().split(" ");
+		try (InputStream in = httpClient.execute(new WdmHttpClient.Get(edgeDriverUrl, timeout)).getContent()) {
+			Document doc = Jsoup.parse(in, null, "");
 
-		versionToDownload = latestVersion[1];
+			Elements downloadLink = doc
+					.select("ul.driver-downloads li.driver-download > a");
+			Elements versionParagraph = doc.select(
+					"ul.driver-downloads li.driver-download p.driver-download__meta");
+			String[] latestVersion = versionParagraph.get(0).text().split(" ");
 
-		List<URL> urlList = new ArrayList<>();
-		urlList.add(new URL(downloadLink.get(0).attr("href")));
-		return urlList;
+			versionToDownload = latestVersion[1];
+
+			List<URL> urlList = new ArrayList<>();
+			urlList.add(new URL(downloadLink.get(0).attr("href")));
+			return urlList;
+		}
 	}
 
 	@Override
