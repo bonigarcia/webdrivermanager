@@ -14,12 +14,14 @@
  */
 package io.github.bonigarcia.wdm.test;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
+import io.github.bonigarcia.wdm.WdmHttpClient;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -49,6 +51,9 @@ public class PhantomJsFilterTest {
 	@SuppressWarnings("unchecked")
 	public void setup() throws Exception {
 		phatomJsManager = PhantomJsDriverManager.getInstance();
+		Field field = BrowserManager.class.getDeclaredField("httpClient");
+		field.setAccessible(true);
+		field.set(phatomJsManager, new WdmHttpClient.Builder().build());
 
 		Method method = BrowserManager.class.getDeclaredMethod("getDrivers");
 		method.setAccessible(true);
