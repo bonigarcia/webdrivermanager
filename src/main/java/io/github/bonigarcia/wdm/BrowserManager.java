@@ -691,7 +691,13 @@ public abstract class BrowserManager {
 				.addHeader("Connection", "keep-alive");
 
 		String gitHubTokenName = WdmConfig.getString("wdm.gitHubTokenName");
+		gitHubTokenName = isNullOrEmpty(gitHubTokenName) ?
+				System.getenv("WDM_GIT_HUB_TOKEN_NAME") : gitHubTokenName;
+
 		String gitHubTokenSecret = WdmConfig.getString("wdm.gitHubTokenSecret");
+		gitHubTokenSecret = isNullOrEmpty(gitHubTokenSecret) ?
+				System.getenv("WDM_GIT_HUB_TOKEN_SECRET") : gitHubTokenSecret;
+
 		if (!isNullOrEmpty(gitHubTokenName)
 				&& !isNullOrEmpty(gitHubTokenSecret)) {
 			String userpass = gitHubTokenName + ":" + gitHubTokenSecret;
