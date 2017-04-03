@@ -102,6 +102,8 @@ As of version 1.6.0, WebDriverManager exposes its API by means of the **builder 
 -  ``driverRepositoryUrl(URL url)`` : This method allows to change the repository URL in which the binaries are hosted (see next section for default values).
 -  ``useTaobaoMirror()`` :  The [npm.taobao.org] site is a mirror which hosts different software assets. Among them, it hosts *chromedriver*, *geckodriver*,  *operadriver*, and *phantomjs* driver. Therefore, this method can be used in ``ChromeDriverManager``, ``FirefoxDriverManager``, ``OperaDriverManager``, and ``PhantomJsDriverManager`` to force to use the taobao.org mirror.
 -  ``proxy(String proxy)`` : Use a HTTP proxy for the Internet connection.
+-  ``proxyUser(String username)`` : Specify a username for HTTP proxy.
+-  ``proxyPass(String password)`` : Specify a password for HTTP proxy.
 
 The following table contains some examples:
 
@@ -186,7 +188,8 @@ If no version is specified, WebDriverManager sends a request to the server hosti
 
 ### HTTP Proxy
 
-If you use an HTTP Proxy in your Internet connection, you can configure your settings by exporting the Java environment variable ``HTTP_PROXY`` or ``HTTPS_PROXY`` using the following notation: ``my.http.proxy:1234``.  
+If you use an HTTP Proxy in your Internet connection, you can configure your settings by exporting the Java environment variable ``HTTPS_PROXY`` using the following notation: ``my.http.proxy:1234`` or ``username:password@my.http.proxy:1234``.
+Also you can configure username and password using environment variables (``HTTPS_PROXY_USER`` and ``HTTPS_PROXY_PASS``).
 
 ### Known Issues
 
