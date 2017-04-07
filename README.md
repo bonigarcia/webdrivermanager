@@ -95,7 +95,7 @@ As of version 1.6.0, WebDriverManager exposes its API by means of the **builder 
 
 -  ``version()`` : By default, WebDriverManager tries to download the latest version of a given driver binary. An specific version can be specified using this method. 
 -  ``forceCache()`` : By default, WebDriverManager connects to the specific driver repository URL to find out what is the latest version of the binary. This can be avoided forcing to use the latest version form the local repository.
--  ``forceDownload()`` : By default, after WebDriverManager verifies the latest version of the binary, it use the cached version (if exists). This opcion forces to download again the binary even if it has been previously cached.
+-  ``forceDownload()`` : By default, after WebDriverManager verifies the latest version of the binary, and then it uses the cached version if exists. This opcion forces to download again the binary even if it has been previously cached.
 -  ``architecture(Architecture arch)`` : By default, WebDriverManager would try to use the proper binary for the platform running the test case (i.e. 32-bit or 64-bit). This behavior can be changed by forcing a given architecture: 32-bits (``Architecture.x32``) or 64-bits (``Architecture.x64``);   
 -  ``arch32()`` : Force to use the 32-bit version of a given driver binary.
 -  ``arch64()`` : Force to use the 64-bit version of a given driver binary.
