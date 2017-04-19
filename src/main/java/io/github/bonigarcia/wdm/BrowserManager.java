@@ -100,6 +100,8 @@ public abstract class BrowserManager {
 
 	protected String proxy;
 
+	protected String binaryPath;
+
 	/**
 	 * @since 1.6.2
 	 */
@@ -678,9 +680,9 @@ public abstract class BrowserManager {
 		return os;
 	}
 
-	protected static void exportDriver(String variableName,
-			String variableValue) {
+	protected void exportDriver(String variableName, String variableValue) {
 		log.info("Exporting {} as {}", variableName, variableValue);
+		binaryPath = variableValue;
 		System.setProperty(variableName, variableValue);
 	}
 
@@ -829,6 +831,10 @@ public abstract class BrowserManager {
 	public BrowserManager proxyPass(String proxyPass) {
 		this.proxyPass = proxyPass;
 		return this;
+	}
+
+	public String getBinaryPath() {
+		return binaryPath;
 	}
 
 }

@@ -116,7 +116,7 @@ public class Downloader {
 
 		}
 		if (export != null) {
-			BrowserManager.exportDriver(export, binary.toString());
+			browserManager.exportDriver(export, binary.toString());
 		}
 	}
 
