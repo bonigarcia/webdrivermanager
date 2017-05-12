@@ -88,9 +88,7 @@ public class WdmHttpClient implements Closeable {
 	public boolean isValid(URL url) throws IOException {
 		HttpResponse response = httpClient.execute(new WdmHttpClient.Options(url).toHttpUriRequest());
 		if (response.getStatusLine().getStatusCode() >= HttpStatus.SC_BAD_REQUEST) {
-			if (log.isDebugEnabled()) {
-				log.debug("A response error is detected. {}", response.getStatusLine());
-			}
+			log.debug("A response error is detected. {}", response.getStatusLine());
 			return false;
 		}
 		return true;

@@ -360,7 +360,7 @@ public abstract class BrowserManager {
 	protected boolean isNetAvailable() {
 		try {
 			if (!httpClient.isValid(getDriverUrl())) {
-				log.warn("Page no available. Forcing the use of cache");
+				log.warn("Page not available. Forcing the use of cache");
 				return false;
 			}
 		} catch (IOException e) {
