@@ -74,15 +74,17 @@ Notice that simply adding ``ChromeDriverManager.getInstance().setup();`` WebDriv
 2. It downloads the WebDriver binary if it's not present on your system
 3. It exports the required WebDriver Java environment variables needed by Selenium
 
-So far, WebDriverManager supports **Chrome**, **Opera**, **Internet Explorer**, **Microsoft Edge**,  **PhantomJS**, and **Firefox** as follows:
+So far, WebDriverManager supports **Chrome**, **Opera**, **Internet Explorer**, **Microsoft Edge**,  **PhantomJS**, and **Firefox**. For that, it provides several *drivers managers* for these browsers, i.e. `ChromeDriverManager`, `FirefoxDriverManager`, `OperaDriverManager`, `PhantomJsDriverManager`, `EdgeDriverManager`, and `InternetExplorerDriverManager`. These *drivers managers* can be used as follows:
 
 ```java
 ChromeDriverManager.getInstance().setup();
-InternetExplorerDriverManager.getInstance().setup();
-OperaDriverManager.getInstance().setup();
-EdgeDriverManager.getInstance().setup();
-PhantomJsDriverManager.getInstance().setup();
 FirefoxDriverManager.getInstance().setup();
+OperaDriverManager.getInstance().setup();
+PhantomJsDriverManager.getInstance().setup();
+EdgeDriverManager.getInstance().setup();
+InternetExplorerDriverManager.getInstance().setup();
+```
+
 ```
 
 ## Examples
