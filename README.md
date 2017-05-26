@@ -85,6 +85,18 @@ EdgeDriverManager.getInstance().setup();
 InternetExplorerDriverManager.getInstance().setup();
 ```
 
+Moreover, WebDriverManager provides a generic *driver manager* called `WebDriverManager`. This manager which can be parameterized using Selenium driver classes (e.g. `org.openqa.selenium.chrome.ChromeDriver`, `org.openqa.selenium.firefox.FirefoxDriver`, etc), as follows: 
+
+```java
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+// ...
+
+Class<? extends WebDriver> driverClass = ChromeDriver.class;
+WebDriverManager.getInstance(driverClass).setup();
+WebDriver driver = driverClass.newInstance();
 ```
 
 ## Examples
