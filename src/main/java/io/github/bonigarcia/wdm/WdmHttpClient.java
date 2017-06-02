@@ -57,7 +57,7 @@ public class WdmHttpClient implements Closeable {
 
 	private WdmHttpClient(String proxyUrl, String proxyUser, String proxyPass) {
 		HttpHost proxyHost = createProxyHttpHost(proxyUrl);
-		HttpClientBuilder builder = HttpClientBuilder.create();
+		HttpClientBuilder builder = HttpClientBuilder.create().setConnectionManagerShared(true);
 		if (proxyHost != null) {
 			builder.setProxy(proxyHost);
 			BasicCredentialsProvider credentialsProvider = createBasicCredentialsProvider(proxyUrl, proxyUser, proxyPass,
