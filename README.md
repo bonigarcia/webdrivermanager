@@ -124,11 +124,11 @@ The following table contains some examples:
 
 | Example                                                                | Description                                                       |
 |------------------------------------------------------------------------|-------------------------------------------------------------------|
-| ``ChromeDriverManager().getInstance().version("2.26").setup();``       | Force to use version 2.26 of *chromedriver*                       |
-| ``FirefoxDriverManager().getInstance().arch32().setup();``             | Force to use the 32-bit version of *geckodriver*                  |
+| ``ChromeDriverManager.getInstance().version("2.26").setup();``       | Force to use version 2.26 of *chromedriver*                       |
+| ``FirefoxDriverManager.getInstance().arch32().setup();``             | Force to use the 32-bit version of *geckodriver*                  |
 | ``OperaDriverManager.getInstance().forceCache().setup();``             | Force to use the cache version of *operadriver*                   |
 | ``PhantomJsDriverManager.getInstance().useTaobaoMirror().setup();``    | Force to use the taobao.org mirror to download *phantomjs* driver |
-| ``ChromeDriverManager().getInstance().proxy("server:port").setup();``  | Using proxy *server:port* for the connection                      |
+| ``ChromeDriverManager.getInstance().proxy("server:port").setup();``  | Using proxy *server:port* for the connection                      |
 
 
 ## Configuration
