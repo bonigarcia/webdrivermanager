@@ -14,13 +14,13 @@
  */
 package io.github.bonigarcia.wdm.base;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
+
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 /**
  * Parent class for browser based tests.
@@ -46,20 +46,14 @@ public abstract class BaseBrowserTst {
     @Test
     public void test() {
         if (validOS) {
-            WebDriverWait wait = new WebDriverWait(driver, TIMEOUT);
+            driver.manage().timeouts().implicitlyWait(TIMEOUT, SECONDS);
             driver.get("https://en.wikipedia.org/wiki/Main_Page");
 
             By searchInput = By.id("searchInput");
-            wait.until(
-                    ExpectedConditions.presenceOfElementLocated(searchInput));
             driver.findElement(searchInput).sendKeys("Software");
 
             By searchButton = By.id("searchButton");
-            wait.until(ExpectedConditions.elementToBeClickable(searchButton));
             driver.findElement(searchButton).click();
-
-            wait.until(ExpectedConditions.textToBePresentInElementLocated(
-                    By.tagName("body"), "Computer software"));
         }
     }
 
