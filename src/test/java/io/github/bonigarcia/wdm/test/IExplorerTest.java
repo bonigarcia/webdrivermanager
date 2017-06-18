@@ -16,13 +16,16 @@ package io.github.bonigarcia.wdm.test;
 
 import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 
-import org.junit.AfterClass;
+import java.io.IOException;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Test;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 
 import io.github.bonigarcia.wdm.InternetExplorerDriverManager;
-import io.github.bonigarcia.wdm.base.BaseBrowserTst;
 
 /**
  * Test with Internet Explorer browser.
@@ -30,7 +33,11 @@ import io.github.bonigarcia.wdm.base.BaseBrowserTst;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.0.0
  */
-public class IExplorerTest extends BaseBrowserTst {
+public class IExplorerTest {
+
+    protected static boolean validOS = true;
+
+    protected WebDriver driver;
 
     @BeforeClass
     public static void setupClass() {
@@ -48,9 +55,21 @@ public class IExplorerTest extends BaseBrowserTst {
         }
     }
 
-    @AfterClass
-    public static void teardownClass() {
-        validOS = true;
+    @Test
+    public void test() {
+        if (validOS) {
+            driver.get("https://en.wikipedia.org/wiki/Main_Page");
+        }
+    }
+
+    @After
+    public void teardown() throws IOException {
+        Runtime.getRuntime().exec("taskkill /F /IM IEDriverServer.exe");
+        Runtime.getRuntime().exec("taskkill /F /IM iexplore.exe");
+
+        if (driver != null) {
+            driver.close();
+        }
     }
 
 }
