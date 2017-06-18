@@ -1,3 +1,18 @@
+webdrivermanager (1.7.0)
+
+  + Bug-fix: added connection manager shared (PR #140 from tharakadesilva)
+  + Bug-fix: Improve support for Edge (issue #135)
+  + Bug-fix: Support for latest version of operadriver (issues #134 and #146)
+  + Automatic retry forcing the use of cache on exception (issue #125)
+  + Skip beta versions by default (issue #127 and #136)
+  + Added getBinaryPath() method to BrowserManager API
+  + Prevent non-executable files being picked as driver executables (PR #133 from Konfuzzyus)
+  + Remove guava, commons-codec dependencies
+  + Format code with spaces instead of tabs
+
+ -- Boni Garcia <boni.gg@gmail.com>  Sun, 18 Jun 2017 19:50:00 +0200
+
+
 webdrivermanager (1.6.2)
 
   + Downgrade com.typesafe:config to 1.2.1 (for Java 7 compliance)
