@@ -16,7 +16,6 @@ package io.github.bonigarcia.wdm.test;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 
 import io.github.bonigarcia.wdm.PhantomJsDriverManager;
@@ -29,7 +28,6 @@ import io.github.bonigarcia.wdm.base.BaseBrowserTst;
  * @since 1.4.0
  */
 
-@Ignore("Latest PhantomJS version (2.5.0-beta) is buggy for Linux at this moment")
 public class PhantomJsTest extends BaseBrowserTst {
 
     @BeforeClass

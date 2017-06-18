@@ -96,6 +96,9 @@ public abstract class BrowserManager {
 
     protected boolean forceDownload = false;
 
+    protected boolean useBetaVersions = WdmConfig
+            .getBoolean("wdm.useBetaVersions");
+
     protected URL driverUrl;
 
     protected String proxy;
@@ -522,6 +525,11 @@ public abstract class BrowserManager {
         for (URL url : copyOfList) {
             for (String driverName : match) {
                 try {
+                    // Beta versions
+                    if (!useBetaVersions
+                            && url.getFile().toLowerCase().contains("beta")) {
+                        continue;
+                    }
                     if (url.getFile().contains(driverName)) {
                         log.trace("URL {} match with {}", url, driverName);
                         String currentVersion = getCurrentVersion(url,
@@ -573,10 +581,6 @@ public abstract class BrowserManager {
         }
         if (vals2[0].equals("")) {
             vals2[0] = "0";
-        }
-
-        if (str2.toLowerCase().contains("beta")) {
-            return 0;
         }
 
         int i = 0;
@@ -866,6 +870,11 @@ public abstract class BrowserManager {
 
     public String getBinaryPath() {
         return binaryPath;
+    }
+
+    public BrowserManager useBetaVersions() {
+        this.useBetaVersions = true;
+        return this;
     }
 
 }
