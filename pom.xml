@@ -14,7 +14,6 @@
 		<commons-lang3.version>3.5</commons-lang3.version>
 		<jarchivelib.version>0.7.1</jarchivelib.version>
 		<jsoup.version>1.10.2</jsoup.version>
-		<guava.version>21.0</guava.version>
 		<commons-codec.version>1.10</commons-codec.version>
 		<httpclient.version>4.5.3</httpclient.version>
 
@@ -115,11 +114,6 @@
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
 			<version>${jsoup.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>${guava.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-codec</groupId>
