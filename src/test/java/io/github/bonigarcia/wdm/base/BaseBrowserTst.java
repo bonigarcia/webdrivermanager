@@ -48,12 +48,8 @@ public abstract class BaseBrowserTst {
         if (validOS) {
             driver.manage().timeouts().implicitlyWait(TIMEOUT, SECONDS);
             driver.get("https://en.wikipedia.org/wiki/Main_Page");
-
-            By searchInput = By.id("searchInput");
-            driver.findElement(searchInput).sendKeys("Software");
-
-            By searchButton = By.id("searchButton");
-            driver.findElement(searchButton).click();
+            driver.findElement(By.id("searchInput")).sendKeys("Software");
+            driver.findElement(By.id("searchButton")).click();
         }
     }
 

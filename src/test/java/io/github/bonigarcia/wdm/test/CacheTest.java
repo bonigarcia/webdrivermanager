@@ -69,7 +69,7 @@ public class CacheTest {
                 { ChromeDriver.class, "2.27", isMac ? x64 : x32 },
                 { OperaDriver.class, "0.2.2", x64 },
                 { PhantomJSDriver.class, "2.1.1", x64 },
-                { FirefoxDriver.class, "0.14.0", x64 } });
+                { FirefoxDriver.class, "0.17.0", x64 } });
     }
 
     @Before
