@@ -64,11 +64,13 @@ public class IExplorerTest {
 
     @After
     public void teardown() throws IOException {
-        Runtime.getRuntime().exec("taskkill /F /IM IEDriverServer.exe");
-        Runtime.getRuntime().exec("taskkill /F /IM iexplore.exe");
+        if (validOS) {
+            Runtime.getRuntime().exec("taskkill /F /IM IEDriverServer.exe");
+            Runtime.getRuntime().exec("taskkill /F /IM iexplore.exe");
 
-        if (driver != null) {
-            driver.close();
+            if (driver != null) {
+                driver.close();
+            }
         }
     }
 
