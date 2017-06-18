@@ -30,16 +30,16 @@ import io.github.bonigarcia.wdm.base.BaseVersionTst;
  */
 public class EdgeVersionTest extends BaseVersionTst {
 
-	@Before
-	public void setup() {
-		browserManager = EdgeDriverManager.getInstance();
-		specificVersions = new String[] { "3.14393" };
-		validOS = IS_OS_WINDOWS;
-	}
+    @Before
+    public void setup() {
+        browserManager = EdgeDriverManager.getInstance();
+        specificVersions = new String[] { "3.14393" };
+        validOS = IS_OS_WINDOWS;
+    }
 
-	@After
-	public void end() {
-		validOS = true;
-	}
+    @After
+    public void end() {
+        validOS = true;
+    }
 
 }

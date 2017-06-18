@@ -33,56 +33,59 @@ import org.jsoup.select.Elements;
  */
 public class EdgeDriverManager extends BrowserManager {
 
-	public static synchronized BrowserManager getInstance() {
-		if (instance == null
-				|| !instance.getClass().equals(EdgeDriverManager.class)) {
-			instance = new EdgeDriverManager();
-		}
-		return instance;
-	}
+    public static synchronized BrowserManager getInstance() {
+        if (instance == null
+                || !instance.getClass().equals(EdgeDriverManager.class)) {
+            instance = new EdgeDriverManager();
+        }
+        return instance;
+    }
 
-	@Override
-	public List<URL> getDrivers() throws Exception {
-		String edgeDriverUrl = WdmConfig.getString("wdm.edgeDriverUrl");
-		log.debug("Reading {} to find out the latest version of Edge driver",
-				edgeDriverUrl);
+    @Override
+    public List<URL> getDrivers() throws Exception {
+        String edgeDriverUrl = WdmConfig.getString("wdm.edgeDriverUrl");
+        log.debug("Reading {} to find out the latest version of Edge driver",
+                edgeDriverUrl);
 
-		int timeout = (int) TimeUnit.SECONDS.toMillis(WdmConfig.getInt("wdm.timeout"));
+        int timeout = (int) TimeUnit.SECONDS
+                .toMillis(WdmConfig.getInt("wdm.timeout"));
 
-		try (InputStream in = httpClient.execute(new WdmHttpClient.Get(edgeDriverUrl, timeout)).getContent()) {
-			Document doc = Jsoup.parse(in, null, "");
+        try (InputStream in = httpClient
+                .execute(new WdmHttpClient.Get(edgeDriverUrl, timeout))
+                .getContent()) {
+            Document doc = Jsoup.parse(in, null, "");
 
-			Elements downloadLink = doc
-					.select("ul.driver-downloads li.driver-download > a");
-			Elements versionParagraph = doc.select(
-					"ul.driver-downloads li.driver-download p.driver-download__meta");
-			String[] latestVersion = versionParagraph.get(0).text().split(" ");
+            Elements downloadLink = doc
+                    .select("ul.driver-downloads li.driver-download > a");
+            Elements versionParagraph = doc.select(
+                    "ul.driver-downloads li.driver-download p.driver-download__meta");
+            String[] latestVersion = versionParagraph.get(0).text().split(" ");
 
-			versionToDownload = latestVersion[1];
+            versionToDownload = latestVersion[1];
 
-			List<URL> urlList = new ArrayList<>();
-			urlList.add(new URL(downloadLink.get(0).attr("href")));
-			return urlList;
-		}
-	}
+            List<URL> urlList = new ArrayList<>();
+            urlList.add(new URL(downloadLink.get(0).attr("href")));
+            return urlList;
+        }
+    }
 
-	@Override
-	protected String getExportParameter() {
-		return WdmConfig.getString("wdm.edgeExport");
-	}
+    @Override
+    protected String getExportParameter() {
+        return WdmConfig.getString("wdm.edgeExport");
+    }
 
-	@Override
-	protected String getDriverVersionKey() {
-		return "wdm.edgeVersion";
-	}
+    @Override
+    protected String getDriverVersionKey() {
+        return "wdm.edgeVersion";
+    }
 
-	@Override
-	protected String getDriverUrlKey() {
-		return "wdm.edgeDriverUrl";
-	}
+    @Override
+    protected String getDriverUrlKey() {
+        return "wdm.edgeDriverUrl";
+    }
 
-	@Override
-	protected List<String> getDriverName() {
-		return Arrays.asList("MicrosoftWebDriver");
-	}
+    @Override
+    protected List<String> getDriverName() {
+        return Arrays.asList("MicrosoftWebDriver");
+    }
 }

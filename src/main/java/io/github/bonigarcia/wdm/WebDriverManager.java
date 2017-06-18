@@ -25,70 +25,70 @@ import java.util.List;
  */
 public class WebDriverManager extends BrowserManager {
 
-	private static Class<? extends BrowserManager> browserManagerClass;
+    private static Class<? extends BrowserManager> browserManagerClass;
 
-	public static synchronized BrowserManager getInstance(
-			Class<?> webDriverClass) {
+    public static synchronized BrowserManager getInstance(
+            Class<?> webDriverClass) {
 
-		switch (webDriverClass.getName()) {
-		case "org.openqa.selenium.chrome.ChromeDriver":
-			browserManagerClass = ChromeDriverManager.class;
-			break;
-		case "org.openqa.selenium.opera.OperaDriver":
-			browserManagerClass = OperaDriverManager.class;
-			break;
-		case "org.openqa.selenium.ie.InternetExplorerDriver":
-			browserManagerClass = InternetExplorerDriverManager.class;
-			break;
-		case "org.openqa.selenium.edge.EdgeDriver":
-			browserManagerClass = EdgeDriverManager.class;
-			break;
-		case "org.openqa.selenium.phantomjs.PhantomJSDriver":
-			browserManagerClass = PhantomJsDriverManager.class;
-			break;
-		case "org.openqa.selenium.firefox.MarionetteDriver":
-		case "org.openqa.selenium.firefox.FirefoxDriver":
-			browserManagerClass = FirefoxDriverManager.class;
-			break;
-		default:
-			browserManagerClass = VoidDriverManager.class;
-			break;
-		}
+        switch (webDriverClass.getName()) {
+        case "org.openqa.selenium.chrome.ChromeDriver":
+            browserManagerClass = ChromeDriverManager.class;
+            break;
+        case "org.openqa.selenium.opera.OperaDriver":
+            browserManagerClass = OperaDriverManager.class;
+            break;
+        case "org.openqa.selenium.ie.InternetExplorerDriver":
+            browserManagerClass = InternetExplorerDriverManager.class;
+            break;
+        case "org.openqa.selenium.edge.EdgeDriver":
+            browserManagerClass = EdgeDriverManager.class;
+            break;
+        case "org.openqa.selenium.phantomjs.PhantomJSDriver":
+            browserManagerClass = PhantomJsDriverManager.class;
+            break;
+        case "org.openqa.selenium.firefox.MarionetteDriver":
+        case "org.openqa.selenium.firefox.FirefoxDriver":
+            browserManagerClass = FirefoxDriverManager.class;
+            break;
+        default:
+            browserManagerClass = VoidDriverManager.class;
+            break;
+        }
 
-		try {
-			log.debug("Creating instance of {}", browserManagerClass);
-			instance = browserManagerClass.newInstance();
-		} catch (Throwable e) {
-			String errMessage = "Error creating WebDriverManager";
-			log.error(errMessage, e);
-			throw new RuntimeException(errMessage, e);
-		}
-		return instance;
-	}
+        try {
+            log.debug("Creating instance of {}", browserManagerClass);
+            instance = browserManagerClass.newInstance();
+        } catch (Throwable e) {
+            String errMessage = "Error creating WebDriverManager";
+            log.error(errMessage, e);
+            throw new RuntimeException(errMessage, e);
+        }
+        return instance;
+    }
 
-	@Override
-	protected List<URL> getDrivers() throws Exception {
-		return instance.getDrivers();
-	}
+    @Override
+    protected List<URL> getDrivers() throws Exception {
+        return instance.getDrivers();
+    }
 
-	@Override
-	protected String getExportParameter() {
-		return instance.getExportParameter();
-	}
+    @Override
+    protected String getExportParameter() {
+        return instance.getExportParameter();
+    }
 
-	@Override
-	protected String getDriverVersionKey() {
-		return instance.getDriverVersionKey();
-	}
+    @Override
+    protected String getDriverVersionKey() {
+        return instance.getDriverVersionKey();
+    }
 
-	@Override
-	protected String getDriverUrlKey() {
-		return instance.getDriverUrlKey();
-	}
+    @Override
+    protected String getDriverUrlKey() {
+        return instance.getDriverUrlKey();
+    }
 
-	@Override
-	protected List<String> getDriverName() {
-		return instance.getDriverName();
-	}
+    @Override
+    protected List<String> getDriverName() {
+        return instance.getDriverName();
+    }
 
 }

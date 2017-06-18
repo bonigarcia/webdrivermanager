@@ -40,71 +40,71 @@ import io.github.bonigarcia.wdm.PhantomJsDriverManager;
  */
 public class PhantomJsFilterTest {
 
-	protected static final Logger log = LoggerFactory
-			.getLogger(PhantomJsFilterTest.class);
+    protected static final Logger log = LoggerFactory
+            .getLogger(PhantomJsFilterTest.class);
 
-	protected BrowserManager phatomJsManager;
-	protected List<URL> driversUrls;
-	protected final String phantomJsBinaryName = "phantomjs";
+    protected BrowserManager phatomJsManager;
+    protected List<URL> driversUrls;
+    protected final String phantomJsBinaryName = "phantomjs";
 
-	@Before
-	@SuppressWarnings("unchecked")
-	public void setup() throws Exception {
-		phatomJsManager = PhantomJsDriverManager.getInstance();
-		Field field = BrowserManager.class.getDeclaredField("httpClient");
-		field.setAccessible(true);
-		field.set(phatomJsManager, new WdmHttpClient.Builder().build());
+    @Before
+    @SuppressWarnings("unchecked")
+    public void setup() throws Exception {
+        phatomJsManager = PhantomJsDriverManager.getInstance();
+        Field field = BrowserManager.class.getDeclaredField("httpClient");
+        field.setAccessible(true);
+        field.set(phatomJsManager, new WdmHttpClient.Builder().build());
 
-		Method method = BrowserManager.class.getDeclaredMethod("getDrivers");
-		method.setAccessible(true);
-		driversUrls = (List<URL>) method.invoke(phatomJsManager);
-	}
+        Method method = BrowserManager.class.getDeclaredMethod("getDrivers");
+        method.setAccessible(true);
+        driversUrls = (List<URL>) method.invoke(phatomJsManager);
+    }
 
-	@Test
-	@SuppressWarnings("unchecked")
-	public void testFilterPhantomJs() throws NoSuchMethodException,
-			SecurityException, IllegalAccessException, IllegalArgumentException,
-			InvocationTargetException {
-		Method method = BrowserManager.class.getDeclaredMethod("getLatest",
-				List.class, List.class);
-		method.setAccessible(true);
-		List<URL> latestUrls = (List<URL>) method.invoke(phatomJsManager,
-				driversUrls, Arrays.asList(phantomJsBinaryName));
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testFilterPhantomJs() throws NoSuchMethodException,
+            SecurityException, IllegalAccessException, IllegalArgumentException,
+            InvocationTargetException {
+        Method method = BrowserManager.class.getDeclaredMethod("getLatest",
+                List.class, List.class);
+        method.setAccessible(true);
+        List<URL> latestUrls = (List<URL>) method.invoke(phatomJsManager,
+                driversUrls, Arrays.asList(phantomJsBinaryName));
 
-		method = BrowserManager.class.getDeclaredMethod("filter", List.class,
-				Architecture.class);
-		method.setAccessible(true);
-		List<URL> filteredLatestUrls = (List<URL>) method
-				.invoke(phatomJsManager, latestUrls, Architecture.x64);
+        method = BrowserManager.class.getDeclaredMethod("filter", List.class,
+                Architecture.class);
+        method.setAccessible(true);
+        List<URL> filteredLatestUrls = (List<URL>) method
+                .invoke(phatomJsManager, latestUrls, Architecture.x64);
 
-		log.info("Filtered URLS for LATEST version {} : {}",
-				phantomJsBinaryName, filteredLatestUrls);
-		Assert.assertTrue(!filteredLatestUrls.isEmpty());
+        log.info("Filtered URLS for LATEST version {} : {}",
+                phantomJsBinaryName, filteredLatestUrls);
+        Assert.assertTrue(!filteredLatestUrls.isEmpty());
 
-	}
+    }
 
-	@Test
-	@SuppressWarnings("unchecked")
-	public void testFilterVersionPhantomJs() throws NoSuchMethodException,
-			SecurityException, IllegalAccessException, IllegalArgumentException,
-			InvocationTargetException {
-		String specificVersion = "1.9.6";
-		Method method = BrowserManager.class.getDeclaredMethod("getVersion",
-				List.class, List.class, String.class);
-		method.setAccessible(true);
-		List<URL> specificVersionUrls = (List<URL>) method.invoke(
-				phatomJsManager, driversUrls,
-				Arrays.asList(phantomJsBinaryName), specificVersion);
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testFilterVersionPhantomJs() throws NoSuchMethodException,
+            SecurityException, IllegalAccessException, IllegalArgumentException,
+            InvocationTargetException {
+        String specificVersion = "1.9.6";
+        Method method = BrowserManager.class.getDeclaredMethod("getVersion",
+                List.class, List.class, String.class);
+        method.setAccessible(true);
+        List<URL> specificVersionUrls = (List<URL>) method.invoke(
+                phatomJsManager, driversUrls,
+                Arrays.asList(phantomJsBinaryName), specificVersion);
 
-		method = BrowserManager.class.getDeclaredMethod("filter", List.class,
-				Architecture.class);
-		method.setAccessible(true);
-		List<URL> filteredVersionUrls = (List<URL>) method
-				.invoke(phatomJsManager, specificVersionUrls, Architecture.x64);
+        method = BrowserManager.class.getDeclaredMethod("filter", List.class,
+                Architecture.class);
+        method.setAccessible(true);
+        List<URL> filteredVersionUrls = (List<URL>) method
+                .invoke(phatomJsManager, specificVersionUrls, Architecture.x64);
 
-		log.info("Filtered URLS for {} version {}: {}", phantomJsBinaryName,
-				specificVersion, filteredVersionUrls);
-		Assert.assertTrue(!filteredVersionUrls.isEmpty());
-	}
+        log.info("Filtered URLS for {} version {}: {}", phantomJsBinaryName,
+                specificVersion, filteredVersionUrls);
+        Assert.assertTrue(!filteredVersionUrls.isEmpty());
+    }
 
 }

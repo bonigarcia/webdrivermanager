@@ -30,41 +30,41 @@ import org.openqa.selenium.support.ui.WebDriverWait;
  */
 public abstract class BaseBrowserTst {
 
-	protected static final int TIMEOUT = 30; // seconds
+    protected static final int TIMEOUT = 30; // seconds
 
-	protected static boolean validOS = true;
+    protected static boolean validOS = true;
 
-	protected WebDriver driver;
+    protected WebDriver driver;
 
-	@After
-	public void teardown() {
-		if (driver != null) {
-			driver.quit();
-		}
-	}
+    @After
+    public void teardown() {
+        if (driver != null) {
+            driver.quit();
+        }
+    }
 
-	@Test
-	public void test() {
-		if (validOS) {
-			WebDriverWait wait = new WebDriverWait(driver, TIMEOUT);
-			driver.get("https://en.wikipedia.org/wiki/Main_Page");
+    @Test
+    public void test() {
+        if (validOS) {
+            WebDriverWait wait = new WebDriverWait(driver, TIMEOUT);
+            driver.get("https://en.wikipedia.org/wiki/Main_Page");
 
-			By searchInput = By.id("searchInput");
-			wait.until(
-					ExpectedConditions.presenceOfElementLocated(searchInput));
-			driver.findElement(searchInput).sendKeys("Software");
+            By searchInput = By.id("searchInput");
+            wait.until(
+                    ExpectedConditions.presenceOfElementLocated(searchInput));
+            driver.findElement(searchInput).sendKeys("Software");
 
-			By searchButton = By.id("searchButton");
-			wait.until(ExpectedConditions.elementToBeClickable(searchButton));
-			driver.findElement(searchButton).click();
+            By searchButton = By.id("searchButton");
+            wait.until(ExpectedConditions.elementToBeClickable(searchButton));
+            driver.findElement(searchButton).click();
 
-			wait.until(ExpectedConditions.textToBePresentInElementLocated(
-					By.tagName("body"), "Computer software"));
-		}
-	}
+            wait.until(ExpectedConditions.textToBePresentInElementLocated(
+                    By.tagName("body"), "Computer software"));
+        }
+    }
 
-	@AfterClass
-	public static void teardownClass() {
-		validOS = true;
-	}
+    @AfterClass
+    public static void teardownClass() {
+        validOS = true;
+    }
 }

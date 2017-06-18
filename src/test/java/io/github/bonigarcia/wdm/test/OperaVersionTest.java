@@ -27,10 +27,10 @@ import io.github.bonigarcia.wdm.base.BaseVersionTst;
  */
 public class OperaVersionTest extends BaseVersionTst {
 
-	@Before
-	public void setup() {
-		browserManager = OperaDriverManager.getInstance();
-		specificVersions = new String[] { "0.2.2", "0.2.0", "0.1.0" };
-	}
+    @Before
+    public void setup() {
+        browserManager = OperaDriverManager.getInstance();
+        specificVersions = new String[] { "0.2.2", "0.2.0", "0.1.0" };
+    }
 
 }

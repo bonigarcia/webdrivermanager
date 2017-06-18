@@ -29,14 +29,14 @@ import io.github.bonigarcia.wdm.base.BaseBrowserTst;
  */
 public class ChromeTest extends BaseBrowserTst {
 
-	@BeforeClass
-	public static void setupClass() {
-		ChromeDriverManager.getInstance().setup();
-	}
+    @BeforeClass
+    public static void setupClass() {
+        ChromeDriverManager.getInstance().setup();
+    }
 
-	@Before
-	public void setupTest() {
-		driver = new ChromeDriver();
-	}
+    @Before
+    public void setupTest() {
+        driver = new ChromeDriver();
+    }
 
 }

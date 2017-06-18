@@ -32,24 +32,24 @@ import io.github.bonigarcia.wdm.base.BaseBrowserTst;
  */
 public class EdgeTest extends BaseBrowserTst {
 
-	@BeforeClass
-	public static void setupClass() {
-		validOS = IS_OS_WINDOWS;
-		if (validOS) {
-			EdgeDriverManager.getInstance().setup();
-		}
-	}
+    @BeforeClass
+    public static void setupClass() {
+        validOS = IS_OS_WINDOWS;
+        if (validOS) {
+            EdgeDriverManager.getInstance().setup();
+        }
+    }
 
-	@Before
-	public void setupTest() {
-		if (validOS) {
-			driver = new EdgeDriver();
-		}
-	}
+    @Before
+    public void setupTest() {
+        if (validOS) {
+            driver = new EdgeDriver();
+        }
+    }
 
-	@AfterClass
-	public static void teardownClass() {
-		validOS = true;
-	}
+    @AfterClass
+    public static void teardownClass() {
+        validOS = true;
+    }
 
 }

@@ -43,83 +43,81 @@ import mockit.integration.junit4.JMockit;
 @RunWith(JMockit.class)
 public class ProxyTest {
 
-	protected static final Logger log = LoggerFactory
-			.getLogger(ProxyTest.class);
+    protected static final Logger log = LoggerFactory
+            .getLogger(ProxyTest.class);
 
-	private static final String PROXY_URL = "my.http.proxy";
-	private static final String PROXY_PORT = "1234";
+    private static final String PROXY_URL = "my.http.proxy";
+    private static final String PROXY_PORT = "1234";
 
-	private static final String[] PROXYS_TEST_STRINGS = {
-			PROXY_URL + ":" + PROXY_PORT, PROXY_URL, "http://" + PROXY_URL,
-			"http://" + PROXY_URL + ":" + PROXY_PORT,
-			"https://" + PROXY_URL + ":" + PROXY_PORT,
-			"https://test:test@" + PROXY_URL + ":" + PROXY_PORT,
-	};
+    private static final String[] PROXYS_TEST_STRINGS = {
+            PROXY_URL + ":" + PROXY_PORT, PROXY_URL, "http://" + PROXY_URL,
+            "http://" + PROXY_URL + ":" + PROXY_PORT,
+            "https://" + PROXY_URL + ":" + PROXY_PORT,
+            "https://test:test@" + PROXY_URL + ":" + PROXY_PORT, };
 
-	@Test
-	public void testRealEnvProxyToNull() throws Exception {
-		BrowserManager browserManager = ChromeDriverManager.getInstance();
-		Field field = BrowserManager.class.getDeclaredField("httpClient");
-		field.setAccessible(true);
-		field.set(browserManager, new WdmHttpClient.Builder().build());
+    @Test
+    public void testRealEnvProxyToNull() throws Exception {
+        BrowserManager browserManager = ChromeDriverManager.getInstance();
+        Field field = BrowserManager.class.getDeclaredField("httpClient");
+        field.setAccessible(true);
+        field.set(browserManager, new WdmHttpClient.Builder().build());
 
-		setSystemGetEnvMock(null);
+        setSystemGetEnvMock(null);
 
-		Method method = BrowserManager.class.getDeclaredMethod("createProxy");
-		method.setAccessible(true);
-		Proxy proxy = (Proxy) method.invoke(browserManager);
+        Method method = BrowserManager.class.getDeclaredMethod("createProxy");
+        method.setAccessible(true);
+        Proxy proxy = (Proxy) method.invoke(browserManager);
 
-		Assert.assertNull(proxy);
-	}
+        Assert.assertNull(proxy);
+    }
 
-	@Test
-	public void testRealEnvProxyToNotNull() throws Exception {
-		BrowserManager browserManager = ChromeDriverManager.getInstance();
-		Field field = BrowserManager.class.getDeclaredField("httpClient");
-		field.setAccessible(true);
-		field.set(browserManager, new WdmHttpClient.Builder().build());
+    @Test
+    public void testRealEnvProxyToNotNull() throws Exception {
+        BrowserManager browserManager = ChromeDriverManager.getInstance();
+        Field field = BrowserManager.class.getDeclaredField("httpClient");
+        field.setAccessible(true);
+        field.set(browserManager, new WdmHttpClient.Builder().build());
 
-		setSystemGetEnvMock(PROXY_URL);
+        setSystemGetEnvMock(PROXY_URL);
 
-		Method method = BrowserManager.class.getDeclaredMethod("createProxy");
-		method.setAccessible(true);
-		Proxy proxy = (Proxy) method.invoke(browserManager);
+        Method method = BrowserManager.class.getDeclaredMethod("createProxy");
+        method.setAccessible(true);
+        Proxy proxy = (Proxy) method.invoke(browserManager);
 
-		InetSocketAddress address = (InetSocketAddress) proxy.address();
-		assertThat(address.getHostName(), Is.is(PROXY_URL));
-	}
+        InetSocketAddress address = (InetSocketAddress) proxy.address();
+        assertThat(address.getHostName(), Is.is(PROXY_URL));
+    }
 
+    @Test
+    public void testMockedEnvProxy() throws Exception {
+        for (String proxyTestString : PROXYS_TEST_STRINGS) {
+            setSystemGetEnvMock(proxyTestString);
 
-	@Test
-	public void testMockedEnvProxy() throws Exception {
-		for (String proxyTestString : PROXYS_TEST_STRINGS) {
-			setSystemGetEnvMock(proxyTestString);
+            log.info("Testing proxy {}", proxyTestString);
 
-			log.info("Testing proxy {}", proxyTestString);
+            BrowserManager browserManager = ChromeDriverManager.getInstance();
+            Field field = BrowserManager.class.getDeclaredField("httpClient");
+            field.setAccessible(true);
+            field.set(browserManager, new WdmHttpClient.Builder().build());
 
-			BrowserManager browserManager = ChromeDriverManager.getInstance();
-			Field field = BrowserManager.class.getDeclaredField("httpClient");
-			field.setAccessible(true);
-			field.set(browserManager, new WdmHttpClient.Builder().build());
+            Method method = BrowserManager.class
+                    .getDeclaredMethod("createProxy");
+            method.setAccessible(true);
+            Proxy proxy = (Proxy) method.invoke(browserManager);
+            InetSocketAddress address = (InetSocketAddress) proxy.address();
 
-			Method method = BrowserManager.class
-					.getDeclaredMethod("createProxy");
-			method.setAccessible(true);
-			Proxy proxy = (Proxy) method.invoke(browserManager);
-			InetSocketAddress address = (InetSocketAddress) proxy.address();
+            assertThat(address.getHostName(), Is.is(PROXY_URL));
+        }
+    }
 
-			assertThat(address.getHostName(), Is.is(PROXY_URL));
-		}
-	}
-
-	private MockUp<System> setSystemGetEnvMock(final String httpProxyString) {
-		MockUp<System> mockUp = new MockUp<System>() {
-			@Mock
-			public String getenv(final String string) {
-				return httpProxyString;
-			}
-		};
-		return mockUp;
-	}
+    private MockUp<System> setSystemGetEnvMock(final String httpProxyString) {
+        MockUp<System> mockUp = new MockUp<System>() {
+            @Mock
+            public String getenv(final String string) {
+                return httpProxyString;
+            }
+        };
+        return mockUp;
+    }
 
 }

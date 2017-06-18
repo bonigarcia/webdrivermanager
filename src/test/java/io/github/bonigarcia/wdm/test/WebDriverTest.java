@@ -38,20 +38,20 @@ import io.github.bonigarcia.wdm.base.BaseBrowserTst;
 @RunWith(Parameterized.class)
 public class WebDriverTest extends BaseBrowserTst {
 
-	@Parameter
-	public Class<? extends WebDriver> driverClass;
+    @Parameter
+    public Class<? extends WebDriver> driverClass;
 
-	@Parameters(name = "{index}: {0}")
-	public static Collection<Object[]> data() {
-		return Arrays.asList(new Object[][] { { ChromeDriver.class },
-				{ FirefoxDriver.class } });
-	}
+    @Parameters(name = "{index}: {0}")
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[][] { { ChromeDriver.class },
+                { FirefoxDriver.class } });
+    }
 
-	@Before
-	public void setupTest()
-			throws InstantiationException, IllegalAccessException {
-		WebDriverManager.getInstance(driverClass).setup();
-		driver = driverClass.newInstance();
-	}
+    @Before
+    public void setupTest()
+            throws InstantiationException, IllegalAccessException {
+        WebDriverManager.getInstance(driverClass).setup();
+        driver = driverClass.newInstance();
+    }
 
 }

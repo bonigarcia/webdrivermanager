@@ -22,7 +22,7 @@ package io.github.bonigarcia.wdm;
  */
 public class WdmUtils {
 
-	public static boolean isNullOrEmpty(String string) {
-		return string == null || string.isEmpty();
-	}
+    public static boolean isNullOrEmpty(String string) {
+        return string == null || string.isEmpty();
+    }
 }

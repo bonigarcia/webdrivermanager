@@ -40,53 +40,53 @@ import io.github.bonigarcia.wdm.BrowserManager;
 @RunWith(Parameterized.class)
 public abstract class BaseVersionTst {
 
-	@Parameter
-	public Architecture architecture;
+    @Parameter
+    public Architecture architecture;
 
-	protected BrowserManager browserManager;
-	protected String[] specificVersions;
-	protected boolean validOS = true;
+    protected BrowserManager browserManager;
+    protected String[] specificVersions;
+    protected boolean validOS = true;
 
-	protected static final Logger log = LoggerFactory
-			.getLogger(BaseVersionTst.class);
+    protected static final Logger log = LoggerFactory
+            .getLogger(BaseVersionTst.class);
 
-	@Parameters(name = "{index}: {0}")
-	public static Collection<Object[]> data() {
-		return Arrays.asList(new Object[][] { { Architecture.DEFAULT },
-				{ Architecture.x32 }, { Architecture.x64 } });
-	}
+    @Parameters(name = "{index}: {0}")
+    public static Collection<Object[]> data() {
+        return Arrays.asList(new Object[][] { { Architecture.DEFAULT },
+                { Architecture.x32 }, { Architecture.x64 } });
+    }
 
-	@Test
-	public void testLatestVersion() throws Exception {
-		if (validOS) {
-			if (architecture != DEFAULT) {
-				browserManager.architecture(architecture).setup();
-			} else {
-				browserManager.setup();
-			}
+    @Test
+    public void testLatestVersion() throws Exception {
+        if (validOS) {
+            if (architecture != DEFAULT) {
+                browserManager.architecture(architecture).setup();
+            } else {
+                browserManager.setup();
+            }
 
-			String driverVersion = browserManager.getDownloadedVersion();
-			Assert.assertNotNull(driverVersion);
-		}
-	}
+            String driverVersion = browserManager.getDownloadedVersion();
+            Assert.assertNotNull(driverVersion);
+        }
+    }
 
-	@Test
-	public void testSpecificVersions() throws Exception {
-		if (validOS) {
-			for (String specificVersion : specificVersions) {
-				log.info("Test specific version arch={} version={}",
-						architecture, specificVersion);
-				if (architecture != DEFAULT) {
-					browserManager.architecture(architecture)
-							.version(specificVersion).setup();
-				} else {
-					browserManager.version(specificVersion).setup();
-				}
-				String driverVersion = browserManager.getDownloadedVersion();
+    @Test
+    public void testSpecificVersions() throws Exception {
+        if (validOS) {
+            for (String specificVersion : specificVersions) {
+                log.info("Test specific version arch={} version={}",
+                        architecture, specificVersion);
+                if (architecture != DEFAULT) {
+                    browserManager.architecture(architecture)
+                            .version(specificVersion).setup();
+                } else {
+                    browserManager.version(specificVersion).setup();
+                }
+                String driverVersion = browserManager.getDownloadedVersion();
 
-				Assert.assertEquals(specificVersion, driverVersion);
-			}
-		}
-	}
+                Assert.assertEquals(specificVersion, driverVersion);
+            }
+        }
+    }
 
 }

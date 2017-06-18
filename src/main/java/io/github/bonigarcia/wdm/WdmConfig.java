@@ -28,35 +28,35 @@ import com.typesafe.config.ConfigFactory;
  */
 public class WdmConfig {
 
-	private static WdmConfig instance;
-	private Config conf;
+    private static WdmConfig instance;
+    private Config conf;
 
-	protected WdmConfig() {
-		conf = ConfigFactory.load(WdmConfig.class.getClassLoader(), System
-				.getProperty("wdm.properties", "webdrivermanager.properties"));
-	}
+    protected WdmConfig() {
+        conf = ConfigFactory.load(WdmConfig.class.getClassLoader(), System
+                .getProperty("wdm.properties", "webdrivermanager.properties"));
+    }
 
-	public static synchronized WdmConfig getInstance() {
-		if (instance == null) {
-			instance = new WdmConfig();
-		}
-		return instance;
-	}
+    public static synchronized WdmConfig getInstance() {
+        if (instance == null) {
+            instance = new WdmConfig();
+        }
+        return instance;
+    }
 
-	public static String getString(String key) {
-		return WdmConfig.getInstance().conf.getString(key);
-	}
+    public static String getString(String key) {
+        return WdmConfig.getInstance().conf.getString(key);
+    }
 
-	public static int getInt(String key) {
-		return WdmConfig.getInstance().conf.getInt(key);
-	}
+    public static int getInt(String key) {
+        return WdmConfig.getInstance().conf.getInt(key);
+    }
 
-	public static boolean getBoolean(String key) {
-		return WdmConfig.getInstance().conf.getBoolean(key);
-	}
+    public static boolean getBoolean(String key) {
+        return WdmConfig.getInstance().conf.getBoolean(key);
+    }
 
-	public static URL getUrl(String key) throws MalformedURLException {
-		return new URL(WdmConfig.getInstance().conf.getString(key));
-	}
+    public static URL getUrl(String key) throws MalformedURLException {
+        return new URL(WdmConfig.getInstance().conf.getString(key));
+    }
 
 }

@@ -32,25 +32,25 @@ import io.github.bonigarcia.wdm.base.BaseBrowserTst;
  */
 public class IExplorerTest extends BaseBrowserTst {
 
-	@BeforeClass
-	public static void setupClass() {
-		validOS = IS_OS_WINDOWS;
+    @BeforeClass
+    public static void setupClass() {
+        validOS = IS_OS_WINDOWS;
 
-		if (validOS) {
-			InternetExplorerDriverManager.getInstance().setup();
-		}
-	}
+        if (validOS) {
+            InternetExplorerDriverManager.getInstance().setup();
+        }
+    }
 
-	@Before
-	public void setupTest() {
-		if (validOS) {
-			driver = new InternetExplorerDriver();
-		}
-	}
+    @Before
+    public void setupTest() {
+        if (validOS) {
+            driver = new InternetExplorerDriver();
+        }
+    }
 
-	@AfterClass
-	public static void teardownClass() {
-		validOS = true;
-	}
+    @AfterClass
+    public static void teardownClass() {
+        validOS = true;
+    }
 
 }

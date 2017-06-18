@@ -52,46 +52,48 @@ import org.openqa.selenium.phantomjs.PhantomJSDriver;
 @RunWith(Parameterized.class)
 public class CacheTest {
 
-	@Parameter(0)
-	public Class<? extends WebDriver> driverClass;
+    @Parameter(0)
+    public Class<? extends WebDriver> driverClass;
 
-	@Parameter(1)
-	public String driverVersion;
+    @Parameter(1)
+    public String driverVersion;
 
-	@Parameter(2)
-	public Architecture architecture;
+    @Parameter(2)
+    public Architecture architecture;
 
-	@Parameters(name = "{index}: {0} {1} {2}")
-	public static Collection<Object[]> data() {
-		boolean isMac = BrowserManager.MY_OS_NAME.contains(OperativeSystem.mac.name());
-		return Arrays
-				.asList(new Object[][] { { ChromeDriver.class, "2.27", isMac ? x64 : x32 },
-						{ OperaDriver.class, "0.2.2", x64 },
-						{ PhantomJSDriver.class, "2.1.1", x64 },
-						{ FirefoxDriver.class, "0.14.0", x64 } });
-	}
+    @Parameters(name = "{index}: {0} {1} {2}")
+    public static Collection<Object[]> data() {
+        boolean isMac = BrowserManager.MY_OS_NAME
+                .contains(OperativeSystem.mac.name());
+        return Arrays.asList(new Object[][] {
+                { ChromeDriver.class, "2.27", isMac ? x64 : x32 },
+                { OperaDriver.class, "0.2.2", x64 },
+                { PhantomJSDriver.class, "2.1.1", x64 },
+                { FirefoxDriver.class, "0.14.0", x64 } });
+    }
 
-	@Before
-	public void deleteDownloadedFiles() throws IOException {
-		FileUtils.cleanDirectory(new File(new Downloader(null).getTargetPath()));
-	}
+    @Before
+    public void deleteDownloadedFiles() throws IOException {
+        FileUtils
+                .cleanDirectory(new File(new Downloader(null).getTargetPath()));
+    }
 
-	@Test
-	public void testCache() throws Exception {
-		BrowserManager browserManager = WebDriverManager
-				.getInstance(driverClass);
-		browserManager.architecture(architecture).version(driverVersion)
-				.setup();
-		Downloader downloader = new Downloader(browserManager);
+    @Test
+    public void testCache() throws Exception {
+        BrowserManager browserManager = WebDriverManager
+                .getInstance(driverClass);
+        browserManager.architecture(architecture).version(driverVersion)
+                .setup();
+        Downloader downloader = new Downloader(browserManager);
 
-		Method method = BrowserManager.class.getDeclaredMethod(
-				"existsDriverInCache", String.class, String.class,
-				Architecture.class);
-		method.setAccessible(true);
-		String driverInChachePath = (String) method.invoke(browserManager,
-				downloader.getTargetPath(), driverVersion, architecture);
+        Method method = BrowserManager.class.getDeclaredMethod(
+                "existsDriverInCache", String.class, String.class,
+                Architecture.class);
+        method.setAccessible(true);
+        String driverInChachePath = (String) method.invoke(browserManager,
+                downloader.getTargetPath(), driverVersion, architecture);
 
-		assertThat(driverInChachePath, notNullValue());
-	}
+        assertThat(driverInChachePath, notNullValue());
+    }
 
 }

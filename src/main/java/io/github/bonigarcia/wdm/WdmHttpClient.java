@@ -51,204 +51,220 @@ import org.slf4j.LoggerFactory;
  */
 public class WdmHttpClient implements Closeable {
 
-	protected static final Logger log = LoggerFactory.getLogger(BrowserManager.class);
+    protected static final Logger log = LoggerFactory
+            .getLogger(BrowserManager.class);
 
-	private final CloseableHttpClient httpClient;
+    private final CloseableHttpClient httpClient;
 
-	private WdmHttpClient(String proxyUrl, String proxyUser, String proxyPass) {
-		HttpHost proxyHost = createProxyHttpHost(proxyUrl);
-		HttpClientBuilder builder = HttpClientBuilder.create().setConnectionManagerShared(true);
-		if (proxyHost != null) {
-			builder.setProxy(proxyHost);
-			BasicCredentialsProvider credentialsProvider = createBasicCredentialsProvider(proxyUrl, proxyUser,
-					proxyPass, proxyHost);
-			builder.setDefaultCredentialsProvider(credentialsProvider);
-		}
-		this.httpClient = builder.build();
-	}
+    private WdmHttpClient(String proxyUrl, String proxyUser, String proxyPass) {
+        HttpHost proxyHost = createProxyHttpHost(proxyUrl);
+        HttpClientBuilder builder = HttpClientBuilder.create()
+                .setConnectionManagerShared(true);
+        if (proxyHost != null) {
+            builder.setProxy(proxyHost);
+            BasicCredentialsProvider credentialsProvider = createBasicCredentialsProvider(
+                    proxyUrl, proxyUser, proxyPass, proxyHost);
+            builder.setDefaultCredentialsProvider(credentialsProvider);
+        }
+        this.httpClient = builder.build();
+    }
 
-	Proxy createProxy(String proxyUrl) {
-		URL url = determineProxyUrl(proxyUrl);
-		if (url == null) {
-			return null;
-		}
-		String proxyHost = url.getHost();
-		int proxyPort = url.getPort() == -1 ? 80 : url.getPort();
-		return new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyHost, proxyPort));
-	}
+    Proxy createProxy(String proxyUrl) {
+        URL url = determineProxyUrl(proxyUrl);
+        if (url == null) {
+            return null;
+        }
+        String proxyHost = url.getHost();
+        int proxyPort = url.getPort() == -1 ? 80 : url.getPort();
+        return new Proxy(Proxy.Type.HTTP,
+                new InetSocketAddress(proxyHost, proxyPort));
+    }
 
-	public Response execute(Method method) throws IOException {
-		HttpResponse response = httpClient.execute(method.toHttpUriRequest());
-		if (response.getStatusLine().getStatusCode() >= HttpStatus.SC_BAD_REQUEST) {
-			throw new RuntimeException("A response error is detected. " + response.getStatusLine());
-		}
-		return new Response(response);
-	}
+    public Response execute(Method method) throws IOException {
+        HttpResponse response = httpClient.execute(method.toHttpUriRequest());
+        if (response.getStatusLine()
+                .getStatusCode() >= HttpStatus.SC_BAD_REQUEST) {
+            throw new RuntimeException("A response error is detected. "
+                    + response.getStatusLine());
+        }
+        return new Response(response);
+    }
 
-	public boolean isValid(URL url) throws IOException {
-		HttpResponse response = httpClient.execute(new WdmHttpClient.Options(url).toHttpUriRequest());
-		if (response.getStatusLine().getStatusCode() >= HttpStatus.SC_BAD_REQUEST) {
-			log.debug("A response error is detected. {}", response.getStatusLine());
-			return false;
-		}
-		return true;
-	}
+    public boolean isValid(URL url) throws IOException {
+        HttpResponse response = httpClient
+                .execute(new WdmHttpClient.Options(url).toHttpUriRequest());
+        if (response.getStatusLine()
+                .getStatusCode() >= HttpStatus.SC_BAD_REQUEST) {
+            log.debug("A response error is detected. {}",
+                    response.getStatusLine());
+            return false;
+        }
+        return true;
+    }
 
-	private URL determineProxyUrl(String proxy) {
-		String proxyInput = isNullOrEmpty(proxy) ? System.getenv("HTTPS_PROXY") : proxy;
-		if (isNullOrEmpty(proxyInput)) {
-			return null;
-		}
-		try {
-			return new URL(proxyInput.matches("^http[s]?://.*$") ? proxyInput : "http://" + proxyInput);
-		} catch (MalformedURLException e) {
-			log.error("Invalid proxy url {}", proxyInput, e);
-			return null;
-		}
-	}
+    private URL determineProxyUrl(String proxy) {
+        String proxyInput = isNullOrEmpty(proxy) ? System.getenv("HTTPS_PROXY")
+                : proxy;
+        if (isNullOrEmpty(proxyInput)) {
+            return null;
+        }
+        try {
+            return new URL(proxyInput.matches("^http[s]?://.*$") ? proxyInput
+                    : "http://" + proxyInput);
+        } catch (MalformedURLException e) {
+            log.error("Invalid proxy url {}", proxyInput, e);
+            return null;
+        }
+    }
 
-	private final HttpHost createProxyHttpHost(String proxyUrl) {
-		Proxy proxy = createProxy(proxyUrl);
-		if (proxy == null || proxy.address() == null) {
-			return null;
-		}
-		if (!(proxy.address() instanceof InetSocketAddress)) {
-			throw new RuntimeException(
-					"Detect an unsupported subclass of SocketAddress. Please use the InetSocketAddress or subclass. Actual:"
-							+ proxy.address().getClass());
-		}
-		InetSocketAddress proxyAddress = (InetSocketAddress) proxy.address();
-		return new HttpHost(proxyAddress.getHostName(), proxyAddress.getPort());
-	}
+    private final HttpHost createProxyHttpHost(String proxyUrl) {
+        Proxy proxy = createProxy(proxyUrl);
+        if (proxy == null || proxy.address() == null) {
+            return null;
+        }
+        if (!(proxy.address() instanceof InetSocketAddress)) {
+            throw new RuntimeException(
+                    "Detect an unsupported subclass of SocketAddress. Please use the InetSocketAddress or subclass. Actual:"
+                            + proxy.address().getClass());
+        }
+        InetSocketAddress proxyAddress = (InetSocketAddress) proxy.address();
+        return new HttpHost(proxyAddress.getHostName(), proxyAddress.getPort());
+    }
 
-	private final BasicCredentialsProvider createBasicCredentialsProvider(String proxy, String proxyUser,
-			String proxyPass, HttpHost proxyHost) {
-		URL proxyUrl = determineProxyUrl(proxy);
-		if (proxyUrl == null) {
-			return null;
-		}
-		try {
-			String username = null;
-			String password = null;
+    private final BasicCredentialsProvider createBasicCredentialsProvider(
+            String proxy, String proxyUser, String proxyPass,
+            HttpHost proxyHost) {
+        URL proxyUrl = determineProxyUrl(proxy);
+        if (proxyUrl == null) {
+            return null;
+        }
+        try {
+            String username = null;
+            String password = null;
 
-			// apply env value
-			String userInfo = proxyUrl.getUserInfo();
-			if (userInfo != null) {
-				StringTokenizer st = new StringTokenizer(userInfo, ":");
-				username = st.hasMoreTokens() ? URLDecoder.decode(st.nextToken(), StandardCharsets.UTF_8.name()) : null;
-				password = st.hasMoreTokens() ? URLDecoder.decode(st.nextToken(), StandardCharsets.UTF_8.name()) : null;
-			}
-			String envProxyUser = System.getenv("HTTPS_PROXY_USER");
-			String envProxyPass = System.getenv("HTTPS_PROXY_PASS");
-			username = (envProxyUser != null) ? envProxyUser : username;
-			password = (envProxyPass != null) ? envProxyPass : password;
+            // apply env value
+            String userInfo = proxyUrl.getUserInfo();
+            if (userInfo != null) {
+                StringTokenizer st = new StringTokenizer(userInfo, ":");
+                username = st.hasMoreTokens() ? URLDecoder.decode(
+                        st.nextToken(), StandardCharsets.UTF_8.name()) : null;
+                password = st.hasMoreTokens() ? URLDecoder.decode(
+                        st.nextToken(), StandardCharsets.UTF_8.name()) : null;
+            }
+            String envProxyUser = System.getenv("HTTPS_PROXY_USER");
+            String envProxyPass = System.getenv("HTTPS_PROXY_PASS");
+            username = (envProxyUser != null) ? envProxyUser : username;
+            password = (envProxyPass != null) ? envProxyPass : password;
 
-			// apply option value
-			username = (proxyUser != null) ? proxyUser : username;
-			password = (proxyPass != null) ? proxyPass : password;
+            // apply option value
+            username = (proxyUser != null) ? proxyUser : username;
+            password = (proxyPass != null) ? proxyPass : password;
 
-			if (username == null) {
-				return null;
-			}
+            if (username == null) {
+                return null;
+            }
 
-			BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-			credentialsProvider.setCredentials(new AuthScope(proxyHost.getHostName(), proxyHost.getPort()),
-					new UsernamePasswordCredentials(username, password));
-			return credentialsProvider;
-		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException("Invalid encoding.", e);
-		}
-	}
+            BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+            credentialsProvider.setCredentials(
+                    new AuthScope(proxyHost.getHostName(), proxyHost.getPort()),
+                    new UsernamePasswordCredentials(username, password));
+            return credentialsProvider;
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("Invalid encoding.", e);
+        }
+    }
 
-	@Override
-	public void close() throws IOException {
-		this.httpClient.close();
-	}
+    @Override
+    public void close() throws IOException {
+        this.httpClient.close();
+    }
 
-	public static class Builder {
+    public static class Builder {
 
-		private String proxy;
-		private String proxyUser;
-		private String proxyPass;
+        private String proxy;
+        private String proxyUser;
+        private String proxyPass;
 
-		public Builder proxy(String proxy) {
-			this.proxy = proxy;
-			return this;
-		}
+        public Builder proxy(String proxy) {
+            this.proxy = proxy;
+            return this;
+        }
 
-		public Builder proxyUser(String proxyUser) {
-			this.proxyUser = proxyUser;
-			return this;
-		}
+        public Builder proxyUser(String proxyUser) {
+            this.proxyUser = proxyUser;
+            return this;
+        }
 
-		public Builder proxyPass(String proxyPass) {
-			this.proxyPass = proxyPass;
-			return this;
-		}
+        public Builder proxyPass(String proxyPass) {
+            this.proxyPass = proxyPass;
+            return this;
+        }
 
-		public WdmHttpClient build() {
-			return new WdmHttpClient(this.proxy, this.proxyUser, this.proxyPass);
-		}
+        public WdmHttpClient build() {
+            return new WdmHttpClient(this.proxy, this.proxyUser,
+                    this.proxyPass);
+        }
 
-	}
+    }
 
-	private interface Method {
-		HttpUriRequest toHttpUriRequest();
-	}
+    private interface Method {
+        HttpUriRequest toHttpUriRequest();
+    }
 
-	public final static class Get implements Method {
-		private final HttpGet get;
-		private final RequestConfig config;
+    public final static class Get implements Method {
+        private final HttpGet get;
+        private final RequestConfig config;
 
-		public Get(URL url) {
-			this.get = new HttpGet(url.toString());
-			this.config = null;
-		}
+        public Get(URL url) {
+            this.get = new HttpGet(url.toString());
+            this.config = null;
+        }
 
-		public Get(String url, int socketTimeout) {
-			this.get = new HttpGet(url);
-			this.config = RequestConfig.custom().setSocketTimeout(socketTimeout).build();
-		}
+        public Get(String url, int socketTimeout) {
+            this.get = new HttpGet(url);
+            this.config = RequestConfig.custom().setSocketTimeout(socketTimeout)
+                    .build();
+        }
 
-		public Get addHeader(String name, String value) {
-			this.get.addHeader(name, value);
-			return this;
-		}
+        public Get addHeader(String name, String value) {
+            this.get.addHeader(name, value);
+            return this;
+        }
 
-		@Override
-		public HttpUriRequest toHttpUriRequest() {
-			if (config != null) {
-				get.setConfig(config);
-			}
-			return this.get;
-		}
+        @Override
+        public HttpUriRequest toHttpUriRequest() {
+            if (config != null) {
+                get.setConfig(config);
+            }
+            return this.get;
+        }
 
-	}
+    }
 
-	public final static class Options implements Method {
-		private final HttpOptions options;
+    public final static class Options implements Method {
+        private final HttpOptions options;
 
-		public Options(URL url) {
-			this.options = new HttpOptions(url.toString());
-		}
+        public Options(URL url) {
+            this.options = new HttpOptions(url.toString());
+        }
 
-		@Override
-		public HttpUriRequest toHttpUriRequest() {
-			return this.options;
-		}
-	}
+        @Override
+        public HttpUriRequest toHttpUriRequest() {
+            return this.options;
+        }
+    }
 
-	public final static class Response {
-		private final HttpResponse response;
+    public final static class Response {
+        private final HttpResponse response;
 
-		public Response(HttpResponse response) {
-			this.response = response;
-		}
+        public Response(HttpResponse response) {
+            this.response = response;
+        }
 
-		public InputStream getContent() throws IOException {
-			return this.response.getEntity().getContent();
-		}
+        public InputStream getContent() throws IOException {
+            return this.response.getEntity().getContent();
+        }
 
-	}
+    }
 
 }

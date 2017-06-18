@@ -32,14 +32,14 @@ import io.github.bonigarcia.wdm.base.BaseBrowserTst;
 @Ignore("Latest PhantomJS version (2.5.0-beta) is buggy for Linux at this moment")
 public class PhantomJsTest extends BaseBrowserTst {
 
-	@BeforeClass
-	public static void setupClass() {
-		PhantomJsDriverManager.getInstance().setup();
-	}
+    @BeforeClass
+    public static void setupClass() {
+        PhantomJsDriverManager.getInstance().setup();
+    }
 
-	@Before
-	public void setupTest() {
-		driver = new PhantomJSDriver();
-	}
+    @Before
+    public void setupTest() {
+        driver = new PhantomJSDriver();
+    }
 
 }

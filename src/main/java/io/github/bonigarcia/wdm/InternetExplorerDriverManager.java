@@ -26,39 +26,39 @@ import java.util.List;
  */
 public class InternetExplorerDriverManager extends BrowserManager {
 
-	public static synchronized BrowserManager getInstance() {
-		if (instance == null || !instance.getClass()
-				.equals(InternetExplorerDriverManager.class)) {
-			instance = new InternetExplorerDriverManager();
-		}
-		return instance;
-	}
+    public static synchronized BrowserManager getInstance() {
+        if (instance == null || !instance.getClass()
+                .equals(InternetExplorerDriverManager.class)) {
+            instance = new InternetExplorerDriverManager();
+        }
+        return instance;
+    }
 
-	@Override
-	protected List<URL> getDrivers() throws Exception {
-		return getDriversFromXml(
-				WdmConfig.getUrl("wdm.internetExplorerDriverUrl"),
-				getDriverName());
-	}
+    @Override
+    protected List<URL> getDrivers() throws Exception {
+        return getDriversFromXml(
+                WdmConfig.getUrl("wdm.internetExplorerDriverUrl"),
+                getDriverName());
+    }
 
-	@Override
-	protected String getExportParameter() {
-		return WdmConfig.getString("wdm.internetExplorerExport");
-	}
+    @Override
+    protected String getExportParameter() {
+        return WdmConfig.getString("wdm.internetExplorerExport");
+    }
 
-	@Override
-	protected String getDriverVersionKey() {
-		return "wdm.internetExplorerVersion";
-	}
+    @Override
+    protected String getDriverVersionKey() {
+        return "wdm.internetExplorerVersion";
+    }
 
-	@Override
-	protected String getDriverUrlKey() {
-		return "wdm.internetExplorerDriverUrl";
-	}
+    @Override
+    protected String getDriverUrlKey() {
+        return "wdm.internetExplorerDriverUrl";
+    }
 
-	@Override
-	protected List<String> getDriverName() {
-		return Arrays.asList("IEDriverServer");
-	}
+    @Override
+    protected List<String> getDriverName() {
+        return Arrays.asList("IEDriverServer");
+    }
 
 }

@@ -29,14 +29,14 @@ import io.github.bonigarcia.wdm.base.BaseBrowserTst;
  */
 public class FirefoxTest extends BaseBrowserTst {
 
-	@BeforeClass
-	public static void setupClass() {
-		FirefoxDriverManager.getInstance().setup();
-	}
+    @BeforeClass
+    public static void setupClass() {
+        FirefoxDriverManager.getInstance().setup();
+    }
 
-	@Before
-	public void setupTest() {
-		driver = new FirefoxDriver();
-	}
+    @Before
+    public void setupTest() {
+        driver = new FirefoxDriver();
+    }
 
 }

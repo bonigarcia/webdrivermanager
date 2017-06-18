@@ -46,28 +46,28 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 @RunWith(Parameterized.class)
 public class TaobaoTest {
 
-	@Parameter
-	public Class<? extends WebDriver> driverClass;
+    @Parameter
+    public Class<? extends WebDriver> driverClass;
 
-	@Parameters(name = "{index}: {0}")
-	public static Collection<Object[]> data() {
-		return Arrays.asList(
-				new Object[][] { { ChromeDriver.class }, { OperaDriver.class },
-						{ PhantomJSDriver.class }, { FirefoxDriver.class } });
-	}
+    @Parameters(name = "{index}: {0}")
+    public static Collection<Object[]> data() {
+        return Arrays.asList(
+                new Object[][] { { ChromeDriver.class }, { OperaDriver.class },
+                        { PhantomJSDriver.class }, { FirefoxDriver.class } });
+    }
 
-	@Test
-	@Ignore("Taobao mirror sometimes raises a 'Connection reset' error")
-	public void testCache() throws Exception {
-		BrowserManager browserManager = WebDriverManager
-				.getInstance(driverClass);
-		browserManager.useTaobaoMirror().setup();
+    @Test
+    @Ignore("Taobao mirror sometimes raises a 'Connection reset' error")
+    public void testCache() throws Exception {
+        BrowserManager browserManager = WebDriverManager
+                .getInstance(driverClass);
+        browserManager.useTaobaoMirror().setup();
 
-		Method method = BrowserManager.class.getDeclaredMethod("getDriverUrl");
-		method.setAccessible(true);
-		URL driverUrl = (URL) method.invoke(browserManager);
+        Method method = BrowserManager.class.getDeclaredMethod("getDriverUrl");
+        method.setAccessible(true);
+        URL driverUrl = (URL) method.invoke(browserManager);
 
-		assertThat(driverUrl.toString(), containsString("taobao.org"));
-	}
+        assertThat(driverUrl.toString(), containsString("taobao.org"));
+    }
 
 }

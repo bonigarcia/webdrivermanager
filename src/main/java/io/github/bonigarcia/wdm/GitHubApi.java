@@ -28,35 +28,35 @@ import com.google.gson.internal.LinkedTreeMap;
  */
 public class GitHubApi {
 
-	private String name;
-	private String tag_name;
-	private List<LinkedTreeMap<String, Object>> assets;
+    private String name;
+    private String tag_name;
+    private List<LinkedTreeMap<String, Object>> assets;
 
-	public GitHubApi() {
-	}
+    public GitHubApi() {
+    }
 
-	public String getName() {
-		return name;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getTagName() {
-		return tag_name;
-	}
+    public String getTagName() {
+        return tag_name;
+    }
 
-	public void setTagName(String tagName) {
-		this.tag_name = tagName;
-	}
+    public void setTagName(String tagName) {
+        this.tag_name = tagName;
+    }
 
-	public List<LinkedTreeMap<String, Object>> getAssets() {
-		return assets;
-	}
+    public List<LinkedTreeMap<String, Object>> getAssets() {
+        return assets;
+    }
 
-	public void setAssets(List<LinkedTreeMap<String, Object>> assets) {
-		this.assets = assets;
-	}
+    public void setAssets(List<LinkedTreeMap<String, Object>> assets) {
+        this.assets = assets;
+    }
 
 }

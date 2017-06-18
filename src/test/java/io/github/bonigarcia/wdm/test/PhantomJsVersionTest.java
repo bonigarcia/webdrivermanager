@@ -27,10 +27,10 @@ import io.github.bonigarcia.wdm.base.BaseVersionTst;
  */
 public class PhantomJsVersionTest extends BaseVersionTst {
 
-	@Before
-	public void setup() {
-		browserManager = PhantomJsDriverManager.getInstance();
-		specificVersions = new String[] { "1.9.7", "1.9.8", "2.1.1", "2.5.0" };
-	}
+    @Before
+    public void setup() {
+        browserManager = PhantomJsDriverManager.getInstance();
+        specificVersions = new String[] { "1.9.7", "1.9.8", "2.1.1", "2.5.0" };
+    }
 
 }

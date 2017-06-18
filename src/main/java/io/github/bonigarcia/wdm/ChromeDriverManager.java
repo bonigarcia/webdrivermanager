@@ -27,69 +27,69 @@ import java.util.List;
  */
 public class ChromeDriverManager extends BrowserManager {
 
-	public static synchronized BrowserManager getInstance() {
-		if (instance == null
-				|| !instance.getClass().equals(ChromeDriverManager.class)) {
+    public static synchronized BrowserManager getInstance() {
+        if (instance == null
+                || !instance.getClass().equals(ChromeDriverManager.class)) {
 
-			instance = new ChromeDriverManager();
-		}
-		return instance;
-	}
+            instance = new ChromeDriverManager();
+        }
+        return instance;
+    }
 
-	@Override
-	protected List<URL> getDrivers() throws Exception {
-		URL driverUrl = getDriverUrl();
-		List<URL> urls;
-		if (isUsingTaobaoMirror()) {
-			urls = getDriversFromMirror(driverUrl);
-		} else {
-			urls = getDriversFromXml(getDriverUrl(), getDriverName());
-		}
-		return urls;
-	}
+    @Override
+    protected List<URL> getDrivers() throws Exception {
+        URL driverUrl = getDriverUrl();
+        List<URL> urls;
+        if (isUsingTaobaoMirror()) {
+            urls = getDriversFromMirror(driverUrl);
+        } else {
+            urls = getDriversFromXml(getDriverUrl(), getDriverName());
+        }
+        return urls;
+    }
 
-	@Override
-	protected String getExportParameter() {
-		return WdmConfig.getString("wdm.chromeDriverExport");
-	}
+    @Override
+    protected String getExportParameter() {
+        return WdmConfig.getString("wdm.chromeDriverExport");
+    }
 
-	@Override
-	protected String getDriverVersionKey() {
-		return "wdm.chromeDriverVersion";
-	}
+    @Override
+    protected String getDriverVersionKey() {
+        return "wdm.chromeDriverVersion";
+    }
 
-	@Override
-	protected String getDriverUrlKey() {
-		return "wdm.chromeDriverUrl";
-	}
+    @Override
+    protected String getDriverUrlKey() {
+        return "wdm.chromeDriverUrl";
+    }
 
-	@Override
-	protected List<String> getDriverName() {
-		return Arrays.asList("chromedriver");
-	}
+    @Override
+    protected List<String> getDriverName() {
+        return Arrays.asList("chromedriver");
+    }
 
-	@Override
-	protected String getCurrentVersion(URL url, String driverName)
-			throws MalformedURLException {
-		if (isUsingTaobaoMirror()) {
-			int i = url.getFile().lastIndexOf(SEPARATOR);
-			int j = url.getFile().substring(0, i).lastIndexOf(SEPARATOR) + 1;
-			return url.getFile().substring(j, i);
-		} else {
-			return super.getCurrentVersion(url, driverName);
-		}
-	}
+    @Override
+    protected String getCurrentVersion(URL url, String driverName)
+            throws MalformedURLException {
+        if (isUsingTaobaoMirror()) {
+            int i = url.getFile().lastIndexOf(SEPARATOR);
+            int j = url.getFile().substring(0, i).lastIndexOf(SEPARATOR) + 1;
+            return url.getFile().substring(j, i);
+        } else {
+            return super.getCurrentVersion(url, driverName);
+        }
+    }
 
-	@Override
-	public BrowserManager useTaobaoMirror() {
-		try {
-			driverUrl = new URL(
-					WdmConfig.getString("wdm.chromeDriverTaobaoUrl"));
-		} catch (MalformedURLException e) {
-			log.error("Malformed URL", e);
-			throw new RuntimeException(e);
-		}
-		return instance;
-	}
+    @Override
+    public BrowserManager useTaobaoMirror() {
+        try {
+            driverUrl = new URL(
+                    WdmConfig.getString("wdm.chromeDriverTaobaoUrl"));
+        } catch (MalformedURLException e) {
+            log.error("Malformed URL", e);
+            throw new RuntimeException(e);
+        }
+        return instance;
+    }
 
 }

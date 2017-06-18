@@ -36,31 +36,31 @@ import io.github.bonigarcia.wdm.base.BaseBrowserTst;
  */
 public class OperaTest extends BaseBrowserTst {
 
-	// opera does not work with xvfb which is used on the ci server
-	// see: https://github.com/operasoftware/operachromiumdriver/issues/26
-	private static boolean ignoreTestInHeadlessEnvironment = "true"
-			.equals(System.getProperty("headlessEnvironment"));
+    // opera does not work with xvfb which is used on the ci server
+    // see: https://github.com/operasoftware/operachromiumdriver/issues/26
+    private static boolean ignoreTestInHeadlessEnvironment = "true"
+            .equals(System.getProperty("headlessEnvironment"));
 
-	@BeforeClass
-	public static void setupClass() {
-		if (ignoreTestInHeadlessEnvironment) {
-			validOS = false;
-			assumeTrue(false);
-		}
-		OperaDriverManager.getInstance().setup();
-	}
+    @BeforeClass
+    public static void setupClass() {
+        if (ignoreTestInHeadlessEnvironment) {
+            validOS = false;
+            assumeTrue(false);
+        }
+        OperaDriverManager.getInstance().setup();
+    }
 
-	@Before
-	public void setupTest() {
-		DesiredCapabilities capabilities = DesiredCapabilities.operaBlink();
-		if (IS_OS_LINUX) {
-			assumeTrue("no Opera installed on Linux; well ... :-)",
-					new File("/usr/bin/opera").exists());
-			OperaOptions options = new OperaOptions();
-			options.setBinary(new File("/usr/bin/opera"));
-			capabilities.setCapability(OperaOptions.CAPABILITY, options);
-		}
-		driver = new OperaDriver(capabilities);
-	}
+    @Before
+    public void setupTest() {
+        DesiredCapabilities capabilities = DesiredCapabilities.operaBlink();
+        if (IS_OS_LINUX) {
+            assumeTrue("no Opera installed on Linux; well ... :-)",
+                    new File("/usr/bin/opera").exists());
+            OperaOptions options = new OperaOptions();
+            options.setBinary(new File("/usr/bin/opera"));
+            capabilities.setCapability(OperaOptions.CAPABILITY, options);
+        }
+        driver = new OperaDriver(capabilities);
+    }
 
 }

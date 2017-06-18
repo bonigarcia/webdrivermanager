@@ -22,6 +22,6 @@ package io.github.bonigarcia.wdm;
  */
 public enum DriverVersion {
 
-	LATEST, NOT_SPECIFIED
+    LATEST, NOT_SPECIFIED
 
 }

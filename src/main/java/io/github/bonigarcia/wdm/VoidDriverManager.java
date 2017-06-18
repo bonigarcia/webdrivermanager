@@ -27,37 +27,37 @@ import java.util.List;
  */
 public class VoidDriverManager extends BrowserManager {
 
-	public static synchronized BrowserManager getInstance() {
-		if (instance == null
-				|| !instance.getClass().equals(VoidDriverManager.class)) {
-			instance = new VoidDriverManager();
-		}
-		return instance;
-	}
+    public static synchronized BrowserManager getInstance() {
+        if (instance == null
+                || !instance.getClass().equals(VoidDriverManager.class)) {
+            instance = new VoidDriverManager();
+        }
+        return instance;
+    }
 
-	@Override
-	protected List<URL> getDrivers() throws Exception {
-		return Collections.emptyList();
-	}
+    @Override
+    protected List<URL> getDrivers() throws Exception {
+        return Collections.emptyList();
+    }
 
-	@Override
-	protected String getExportParameter() {
-		return "";
-	}
+    @Override
+    protected String getExportParameter() {
+        return "";
+    }
 
-	@Override
-	protected String getDriverVersionKey() {
-		return "";
-	}
+    @Override
+    protected String getDriverVersionKey() {
+        return "";
+    }
 
-	@Override
-	protected String getDriverUrlKey() {
-		return null;
-	}
+    @Override
+    protected String getDriverUrlKey() {
+        return null;
+    }
 
-	@Override
-	protected List<String> getDriverName() {
-		return Arrays.asList("");
-	}
+    @Override
+    protected List<String> getDriverName() {
+        return Arrays.asList("");
+    }
 
 }
