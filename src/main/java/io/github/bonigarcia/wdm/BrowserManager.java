@@ -107,6 +107,8 @@ public abstract class BrowserManager {
 
     protected List<String> listVersions;
 
+    protected boolean triedWithCache = false;
+
     /**
      * @since 1.6.2
      */
@@ -266,7 +268,16 @@ public abstract class BrowserManager {
             }
 
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            if (!forceCache && !triedWithCache) {
+                forceCache = true;
+                triedWithCache = true;
+                log.warn(
+                        "There was an error managing {} {} ({}) ... trying again forcing to use cache",
+                        getDriverName(), version, e.getMessage());
+                manage(arch, version);
+            } else {
+                throw new RuntimeException(e);
+            }
         }
     }
 
