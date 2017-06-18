@@ -42,7 +42,8 @@ import org.slf4j.LoggerFactory;
  * @since 1.0.0
  */
 public class Downloader {
-	protected static final Logger log = LoggerFactory.getLogger(Downloader.class);
+	protected static final Logger log = LoggerFactory
+			.getLogger(Downloader.class);
 
 	private static final String HOME = "~";
 
@@ -63,23 +64,28 @@ public class Downloader {
 		this.httpClient = httpClient;
 	}
 
-	public synchronized void download(URL url, String version, String export, List<String> driverName)
-			throws IOException {
+	public synchronized void download(URL url, String version, String export,
+			List<String> driverName) throws IOException {
 		File targetFile = new File(getTarget(version, url));
 		File binary = null;
 
 		// Check if binary exists
 		boolean download = !targetFile.getParentFile().exists()
-				|| (targetFile.getParentFile().exists() && targetFile.getParentFile().list().length == 0) || override;
+				|| (targetFile.getParentFile().exists()
+						&& targetFile.getParentFile().list().length == 0)
+				|| override;
 
 		if (!download) {
 			// Check if existing binary is valid
-			Collection<File> listFiles = FileUtils.listFiles(targetFile.getParentFile(), null, true);
+			Collection<File> listFiles = FileUtils
+					.listFiles(targetFile.getParentFile(), null, true);
 			for (File file : listFiles) {
 				for (String s : driverName) {
 					if (file.getName().startsWith(s) && file.canExecute()) {
 						binary = file;
-						log.debug("Using binary driver previously downloaded {}", binary);
+						log.debug(
+								"Using binary driver previously downloaded {}",
+								binary);
 						download = false;
 						break;
 					} else {
@@ -94,10 +100,12 @@ public class Downloader {
 
 		if (download) {
 			log.info("Downloading {} to {}", url, targetFile);
-			WdmHttpClient.Get get = new WdmHttpClient.Get(url).addHeader("User-Agent", "Mozilla/5.0")
+			WdmHttpClient.Get get = new WdmHttpClient.Get(url)
+					.addHeader("User-Agent", "Mozilla/5.0")
 					.addHeader("Connection", "keep-alive");
 
-			FileUtils.copyInputStreamToFile(httpClient.execute(get).getContent(), targetFile);
+			FileUtils.copyInputStreamToFile(
+					httpClient.execute(get).getContent(), targetFile);
 
 			if (!export.contains("edge")) {
 				binary = extract(targetFile, export);
@@ -146,9 +154,11 @@ public class Downloader {
 			String name = zipEntry.getName();
 			long size = zipEntry.getSize();
 			long compressedSize = zipEntry.getCompressedSize();
-			log.trace("Unzipping {} (size: {} KB, compressed size: {} KB)", name, size, compressedSize);
+			log.trace("Unzipping {} (size: {} KB, compressed size: {} KB)",
+					name, size, compressedSize);
 
-			file = new File(compressedFile.getParentFile() + File.separator + name);
+			file = new File(
+					compressedFile.getParentFile() + File.separator + name);
 			if (!file.exists() || override) {
 				if (name.endsWith("/")) {
 					file.mkdirs();
@@ -191,9 +201,11 @@ public class Downloader {
 		if (iDot != -1) {
 			fileName = fileName.substring(0, iDot);
 		}
-		File target = new File(archive.getParentFile() + File.separator + fileName);
+		File target = new File(
+				archive.getParentFile() + File.separator + fileName);
 
-		try (GZIPInputStream in = new GZIPInputStream(new FileInputStream(archive))) {
+		try (GZIPInputStream in = new GZIPInputStream(
+				new FileInputStream(archive))) {
 			try (FileOutputStream out = new FileOutputStream(target)) {
 				for (int c = in.read(); c != -1; c = in.read()) {
 					out.write(c);
@@ -201,7 +213,8 @@ public class Downloader {
 			}
 		}
 
-		if (!target.getName().toLowerCase().contains(".exe") && target.exists()) {
+		if (!target.getName().toLowerCase().contains(".exe")
+				&& target.exists()) {
 			target.setExecutable(true);
 		}
 
@@ -209,7 +222,8 @@ public class Downloader {
 	}
 
 	public File unTarGz(File archive) throws IOException {
-		Archiver archiver = ArchiverFactory.createArchiver(ArchiveFormat.TAR, CompressionType.GZIP);
+		Archiver archiver = ArchiverFactory.createArchiver(ArchiveFormat.TAR,
+				CompressionType.GZIP);
 		archiver.extract(archive, archive.getParentFile());
 		log.trace("unTarGz {}", archive);
 
@@ -217,7 +231,8 @@ public class Downloader {
 	}
 
 	public File unBZip2(File archive) throws IOException {
-		Archiver archiver = ArchiverFactory.createArchiver(ArchiveFormat.TAR, CompressionType.BZIP2);
+		Archiver archiver = ArchiverFactory.createArchiver(ArchiveFormat.TAR,
+				CompressionType.BZIP2);
 		archiver.extract(archive, archive.getParentFile());
 		log.trace("Unbzip2 {}", archive);
 
@@ -231,12 +246,18 @@ public class Downloader {
 
 		int iFirst = zip.indexOf("_");
 		int iSecond = zip.indexOf("-");
-		int iLast = iFirst != zip.lastIndexOf("_") ? zip.lastIndexOf("_") : iSecond != -1 ? iSecond : zip.length();
-		String folder = zip.substring(0, iLast).replace(".zip", "").replace(".tar.bz2", "").replace(".tar.gz", "")
-				.replace(".msi", "").replace(".exe", "").replace("_", File.separator);
+		int iLast = iFirst != zip.lastIndexOf("_") ? zip.lastIndexOf("_")
+				: iSecond != -1 ? iSecond : zip.length();
+		String folder = zip.substring(0, iLast).replace(".zip", "")
+				.replace(".tar.bz2", "").replace(".tar.gz", "")
+				.replace(".msi", "").replace(".exe", "")
+				.replace("_", File.separator);
 
-		String target = browserManager.preDownload(getTargetPath() + folder + File.separator + version + zip, version);
-		log.trace("Target file for URL {} version {} = {}", url, version, target);
+		String target = browserManager.preDownload(
+				getTargetPath() + folder + File.separator + version + zip,
+				version);
+		log.trace("Target file for URL {} version {} = {}", url, version,
+				target);
 
 		return target;
 	}
@@ -244,7 +265,8 @@ public class Downloader {
 	public String getTargetPath() {
 		String targetPath = WdmConfig.getString("wdm.targetPath");
 		if (targetPath.contains(HOME)) {
-			targetPath = targetPath.replace(HOME, System.getProperty("user.home"));
+			targetPath = targetPath.replace(HOME,
+					System.getProperty("user.home"));
 		}
 
 		// Create repository folder if not exits

@@ -15,6 +15,7 @@
 package io.github.bonigarcia.wdm;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
@@ -22,6 +23,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.apache.commons.io.FileUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -58,20 +61,21 @@ public class OperaDriverManager extends BrowserManager {
 
 				GsonBuilder gsonBuilder = new GsonBuilder();
 				Gson gson = gsonBuilder.create();
-				GitHubApi[] releaseArray = gson.fromJson(reader, GitHubApi[].class);
+				GitHubApi[] releaseArray = gson.fromJson(reader,
+						GitHubApi[].class);
 				if (driverVersion != null) {
-					releaseArray = new GitHubApi[]{
-						getVersion(releaseArray, driverVersion)};
+					releaseArray = new GitHubApi[] {
+							getVersion(releaseArray, driverVersion) };
 				}
 
 				urls = new ArrayList<>();
 				for (GitHubApi release : releaseArray) {
 					if (release != null) {
 						List<LinkedTreeMap<String, Object>> assets = release
-							.getAssets();
+								.getAssets();
 						for (LinkedTreeMap<String, Object> asset : assets) {
-							urls.add(new URL(
-								asset.get("browser_download_url").toString()));
+							urls.add(new URL(asset.get("browser_download_url")
+									.toString()));
 						}
 					}
 				}
@@ -123,6 +127,29 @@ public class OperaDriverManager extends BrowserManager {
 			return url.getFile().substring(
 					url.getFile().indexOf(SEPARATOR + "v") + 2,
 					url.getFile().lastIndexOf(SEPARATOR));
+		}
+	}
+
+	@Override
+	protected File postDownload(File archive) throws IOException {
+		log.trace("Post processing for Opera: {}", archive);
+
+		File extractFolder = archive.getParentFile().listFiles()[0];
+		if (!extractFolder.isFile()) {
+			log.trace("Opera extract folder (to be deleted): {}",
+					extractFolder);
+			File operadriver = extractFolder.listFiles()[0];
+			log.trace("Operadriver binary: {}", operadriver);
+
+			File target = new File(archive.getParentFile().getAbsolutePath()
+					+ File.separator + operadriver.getName());
+			log.trace("Operadriver target: {}", target);
+
+			operadriver.renameTo(target);
+			FileUtils.deleteDirectory(extractFolder);
+			return target;
+		} else {
+			return super.postDownload(archive);
 		}
 	}
 
