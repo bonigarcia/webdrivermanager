@@ -94,7 +94,7 @@ public class WdmHttpClient implements Closeable {
         HttpResponse response = httpClient
                 .execute(new WdmHttpClient.Options(url).toHttpUriRequest());
         if (response.getStatusLine()
-                .getStatusCode() >= HttpStatus.SC_BAD_REQUEST) {
+                .getStatusCode() > HttpStatus.SC_UNAUTHORIZED) {
             log.debug("A response error is detected. {}",
                     response.getStatusLine());
             return false;

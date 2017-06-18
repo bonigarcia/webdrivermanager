@@ -20,6 +20,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Files;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
@@ -111,6 +112,10 @@ public class Downloader {
                 binary = extract(targetFile, export);
             } else {
                 binary = targetFile;
+            }
+
+            if (targetFile.getName().toLowerCase().endsWith(".msi")) {
+                binary = extractMsi(targetFile);
             }
 
         }
@@ -279,6 +284,31 @@ public class Downloader {
 
     public void forceDownload() {
         this.override = true;
+    }
+
+    public File extractMsi(File msi) throws IOException {
+        File tmpMsi = new File(Files.createTempDirectory(msi.getName()).toFile()
+                .getAbsoluteFile() + File.separator + msi.getName());
+        Files.move(msi.toPath(), tmpMsi.toPath());
+        log.trace("Temporal msi file: {}", tmpMsi);
+
+        Process process = Runtime.getRuntime()
+                .exec(new String[] { "msiexec", "/a", tmpMsi.toString(), "/qb",
+                        "TARGETDIR=" + msi.getParent() });
+        try {
+            process.waitFor();
+        } catch (InterruptedException e) {
+            log.error("Exception waiting to msiexec to be finished", e);
+        } finally {
+            process.destroy();
+        }
+
+        tmpMsi.delete();
+        msi.delete();
+
+        Collection<File> listFiles = FileUtils.listFiles(
+                new File(msi.getParent()), new String[] { "exe" }, true);
+        return listFiles.iterator().next();
     }
 
 }

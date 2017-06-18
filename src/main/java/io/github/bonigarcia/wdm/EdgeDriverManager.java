@@ -43,6 +43,9 @@ public class EdgeDriverManager extends BrowserManager {
 
     @Override
     public List<URL> getDrivers() throws Exception {
+        listVersions = new ArrayList<>();
+        List<URL> urlList = new ArrayList<>();
+
         String edgeDriverUrl = WdmConfig.getString("wdm.edgeDriverUrl");
         log.debug("Reading {} to find out the latest version of Edge driver",
                 edgeDriverUrl);
@@ -59,12 +62,13 @@ public class EdgeDriverManager extends BrowserManager {
                     .select("ul.driver-downloads li.driver-download > a");
             Elements versionParagraph = doc.select(
                     "ul.driver-downloads li.driver-download p.driver-download__meta");
-            String[] latestVersion = versionParagraph.get(0).text().split(" ");
 
-            versionToDownload = latestVersion[1];
+            for (int i = 0; i < downloadLink.size(); i++) {
+                String[] version = versionParagraph.get(i).text().split(" ");
+                listVersions.add(version[1]);
+                urlList.add(new URL(downloadLink.get(i).attr("href")));
+            }
 
-            List<URL> urlList = new ArrayList<>();
-            urlList.add(new URL(downloadLink.get(0).attr("href")));
             return urlList;
         }
     }

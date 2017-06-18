@@ -102,6 +102,8 @@ public abstract class BrowserManager {
 
     protected String binaryPath;
 
+    protected List<String> listVersions;
+
     /**
      * @since 1.6.2
      */
@@ -200,8 +202,7 @@ public abstract class BrowserManager {
                     do {
                         // Get the latest or concrete version or Edge (the only
                         // version that can be downloaded is the latest)
-                        if (getLatest || getDriverName()
-                                .contains("MicrosoftWebDriver")) {
+                        if (getLatest) {
                             candidateUrls = getLatest(urls, getDriverName());
                         } else {
                             candidateUrls = getVersion(urls, getDriverName(),
@@ -217,6 +218,7 @@ public abstract class BrowserManager {
                         if (this.getClass().equals(EdgeDriverManager.class)) {
                             // Microsoft Edge binaries are different
                             continueSearchingVersion = false;
+
                         } else {
                             // Filter by architecture and OS
                             candidateUrls = filter(candidateUrls, arch);
@@ -479,6 +481,13 @@ public abstract class BrowserManager {
     protected List<URL> getVersion(List<URL> list, List<String> match,
             String version) {
         List<URL> out = new ArrayList<URL>();
+        if (getDriverName().contains("MicrosoftWebDriver")) {
+            int i = listVersions.indexOf(version);
+            if (i != -1) {
+                out.add(list.get(i));
+            }
+        }
+
         for (String s : match) {
             Collections.reverse(list);
             for (URL url : list) {
@@ -497,6 +506,16 @@ public abstract class BrowserManager {
         log.trace("Checking the lastest version of {}", match);
         log.trace("Input URL list {}", list);
         List<URL> out = new ArrayList<URL>();
+
+        // Edge
+        if (getDriverName().contains("MicrosoftWebDriver")) {
+            versionToDownload = listVersions.iterator().next();
+            out.add(list.iterator().next());
+            log.info("Latest version of MicrosoftWebDriver is {}",
+                    versionToDownload);
+            return out;
+        }
+
         Collections.reverse(list);
 
         List<URL> copyOfList = new ArrayList<>(list);
@@ -508,10 +527,6 @@ public abstract class BrowserManager {
                         String currentVersion = getCurrentVersion(url,
                                 driverName);
 
-                        if (getDriverName().contains("MicrosoftWebDriver")) {
-                            out.add(url);
-                            break;
-                        }
                         if (currentVersion.equalsIgnoreCase(driverName)) {
                             continue;
                         }
@@ -533,7 +548,6 @@ public abstract class BrowserManager {
                 } catch (Exception e) {
                     log.trace("There was a problem with URL {} : {}",
                             url.toString(), e.getMessage());
-                    e.printStackTrace();
                     list.remove(url);
                     continue;
                 }
