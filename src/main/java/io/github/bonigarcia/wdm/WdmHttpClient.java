@@ -14,7 +14,7 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
+import static io.github.bonigarcia.wdm.WdmUtils.isNullOrEmpty;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -60,8 +60,8 @@ public class WdmHttpClient implements Closeable {
 		HttpClientBuilder builder = HttpClientBuilder.create().setConnectionManagerShared(true);
 		if (proxyHost != null) {
 			builder.setProxy(proxyHost);
-			BasicCredentialsProvider credentialsProvider = createBasicCredentialsProvider(proxyUrl, proxyUser, proxyPass,
-					proxyHost);
+			BasicCredentialsProvider credentialsProvider = createBasicCredentialsProvider(proxyUrl, proxyUser,
+					proxyPass, proxyHost);
 			builder.setDefaultCredentialsProvider(credentialsProvider);
 		}
 		this.httpClient = builder.build();
