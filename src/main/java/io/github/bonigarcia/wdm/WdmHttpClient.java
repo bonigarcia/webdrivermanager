@@ -164,13 +164,49 @@ public class WdmHttpClient implements Closeable {
                 return null;
             }
 
+            String ntlmUsername = username;
+            String ntlmDomain = null;
+            
+            int index = username.indexOf("\\");
+            if (index > 0) {
+                ntlmDomain = username.substring(0, index);
+                ntlmUsername = username.substring(index + 1);                
+            }
+            
             BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-            credentialsProvider.setCredentials(
-                    new AuthScope(proxyHost.getHostName(), proxyHost.getPort()),
-                    new UsernamePasswordCredentials(username, password));
+            Credentials creds;
+            AuthScope authScope;
+            
+            authScope = new AuthScope(proxyHost.getHostName(), proxyHost.getPort(),  AuthScope.ANY_REALM, AuthSchemes.NTLM);
+            creds = new NTCredentials(ntlmUsername, password, getWorkstation(), ntlmDomain);            
+            credentialsProvider.setCredentials(authScope, creds);
+            
+            authScope = new AuthScope(proxyHost.getHostName(), proxyHost.getPort());
+            creds = new UsernamePasswordCredentials(username, password);
+            credentialsProvider.setCredentials(authScope, creds);
+
             return credentialsProvider;
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException("Invalid encoding.", e);
+        }
+    }
+
+    private String getWorkstation() {
+        Map<String, String> env = System.getenv();
+
+        if (env.containsKey("COMPUTERNAME")) {
+            // Windows
+            return env.get("COMPUTERNAME");
+        } else if (env.containsKey("HOSTNAME")) {
+            // Unix/Linux/MacOS
+            return env.get("HOSTNAME");
+        } else {
+            // From DNS
+            try {
+                return InetAddress.getLocalHost().getHostName();
+            } catch (UnknownHostException ex) {
+                return "Unknown";
+            }
         }
     }
 
