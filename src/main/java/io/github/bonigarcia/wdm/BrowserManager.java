@@ -572,7 +572,9 @@ public abstract class BrowserManager {
                 }
             }
         }
-
+        if (versionToDownload.startsWith(".")) {
+            versionToDownload = versionToDownload.substring(1);
+        }
         log.info("Latest version of {} is {}", match, versionToDownload);
         return out;
     }

@@ -30,7 +30,8 @@ public class OperaVersionTest extends BaseVersionTst {
     @Before
     public void setup() {
         browserManager = OperaDriverManager.getInstance();
-        specificVersions = new String[] { "0.2.2", "0.2.0", "0.1.0" };
+        specificVersions = new String[] { "0.2.2", "0.2.0", "0.1.0", "2.27",
+                "2.29" };
     }
 
 }
