@@ -768,9 +768,11 @@ public abstract class BrowserManager {
         Architecture architecture = this.architecture == null ? DEFAULT_ARCH
                 : this.architecture;
         String driverVersion = getDriverVersion();
-        String version = isNullOrEmpty(driverVersion)
-                ? DriverVersion.NOT_SPECIFIED.name() : driverVersion;
-        setup(architecture, version);
+        if (!driverVersion.equals("")) {
+            String version = isNullOrEmpty(driverVersion)
+                    ? DriverVersion.NOT_SPECIFIED.name() : driverVersion;
+            setup(architecture, version);
+        }
     }
 
     /**
