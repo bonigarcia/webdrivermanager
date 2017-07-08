@@ -14,6 +14,8 @@
  */
 package io.github.bonigarcia.wdm.test;
 
+import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 import java.lang.reflect.Field;
@@ -21,9 +23,6 @@ import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 
-import io.github.bonigarcia.wdm.WdmHttpClient;
-import org.hamcrest.core.Is;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -31,6 +30,7 @@ import org.slf4j.LoggerFactory;
 
 import io.github.bonigarcia.wdm.BrowserManager;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
+import io.github.bonigarcia.wdm.WdmHttpClient;
 import mockit.Mock;
 import mockit.MockUp;
 import mockit.integration.junit4.JMockit;
@@ -68,7 +68,7 @@ public class ProxyTest {
         method.setAccessible(true);
         Proxy proxy = (Proxy) method.invoke(browserManager);
 
-        Assert.assertNull(proxy);
+        assertNull(proxy);
     }
 
     @Test
@@ -85,7 +85,7 @@ public class ProxyTest {
         Proxy proxy = (Proxy) method.invoke(browserManager);
 
         InetSocketAddress address = (InetSocketAddress) proxy.address();
-        assertThat(address.getHostName(), Is.is(PROXY_URL));
+        assertThat(address.getHostName(), equalTo(PROXY_URL));
     }
 
     @Test
@@ -106,7 +106,7 @@ public class ProxyTest {
             Proxy proxy = (Proxy) method.invoke(browserManager);
             InetSocketAddress address = (InetSocketAddress) proxy.address();
 
-            assertThat(address.getHostName(), Is.is(PROXY_URL));
+            assertThat(address.getHostName(), equalTo(PROXY_URL));
         }
     }
 
