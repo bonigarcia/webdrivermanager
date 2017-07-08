@@ -211,7 +211,7 @@ public class WdmHttpClient implements Closeable {
             try {
                 return InetAddress.getLocalHost().getHostName();
             } catch (UnknownHostException ex) {
-                return "Unknown";
+                return null;
             }
         }
     }
