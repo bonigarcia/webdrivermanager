@@ -1,3 +1,12 @@
+webdrivermanager (1.7.1)
+
+  + Use NTCredentials for NTLM AuthSchemes (PR #149 from andrew-sumner)
+  + Avoid throwing exception in the case of non supported managers (e.g. RemoteWebDriver)
+  + Improve support for new versions of operadriver (e.g. 2.27 and 2.29)
+
+ -- Boni Garcia <boni.gg@gmail.com>  Mon, 10 Jul 2017 18:03:00 +0200
+
+
 webdrivermanager (1.7.0)
 
   + Bug-fix: added connection manager shared (PR #140 from tharakadesilva)
