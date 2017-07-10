@@ -20,19 +20,25 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.Credentials;
+import org.apache.http.auth.NTCredentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.config.AuthSchemes;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpOptions;
@@ -164,13 +170,49 @@ public class WdmHttpClient implements Closeable {
                 return null;
             }
 
+            String ntlmUsername = username;
+            String ntlmDomain = null;
+            
+            int index = username.indexOf("\\");
+            if (index > 0) {
+                ntlmDomain = username.substring(0, index);
+                ntlmUsername = username.substring(index + 1);                
+            }
+            
             BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-            credentialsProvider.setCredentials(
-                    new AuthScope(proxyHost.getHostName(), proxyHost.getPort()),
-                    new UsernamePasswordCredentials(username, password));
+            Credentials creds;
+            AuthScope authScope;
+            
+            authScope = new AuthScope(proxyHost.getHostName(), proxyHost.getPort(),  AuthScope.ANY_REALM, AuthSchemes.NTLM);
+            creds = new NTCredentials(ntlmUsername, password, getWorkstation(), ntlmDomain);            
+            credentialsProvider.setCredentials(authScope, creds);
+            
+            authScope = new AuthScope(proxyHost.getHostName(), proxyHost.getPort());
+            creds = new UsernamePasswordCredentials(username, password);
+            credentialsProvider.setCredentials(authScope, creds);
+
             return credentialsProvider;
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException("Invalid encoding.", e);
+        }
+    }
+
+    private String getWorkstation() {
+        Map<String, String> env = System.getenv();
+
+        if (env.containsKey("COMPUTERNAME")) {
+            // Windows
+            return env.get("COMPUTERNAME");
+        } else if (env.containsKey("HOSTNAME")) {
+            // Unix/Linux/MacOS
+            return env.get("HOSTNAME");
+        } else {
+            // From DNS
+            try {
+                return InetAddress.getLocalHost().getHostName();
+            } catch (UnknownHostException ex) {
+                return null;
+            }
         }
     }
 
