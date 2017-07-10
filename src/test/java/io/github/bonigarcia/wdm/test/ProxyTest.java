@@ -97,44 +97,69 @@ public class ProxyTest {
 
     @Test
     public void testProxyCredentialsScope() throws Exception {
-        WdmHttpClient wdmClient = new WdmHttpClient.Builder().proxy("myproxy:8081").proxyUser("domain\\me").proxyPass("pass").build();
+        WdmHttpClient wdmClient = new WdmHttpClient.Builder()
+                .proxy("myproxy:8081").proxyUser("domain\\me").proxyPass("pass")
+                .build();
         Field field = WdmHttpClient.class.getDeclaredField("httpClient");
         field.setAccessible(true);
-        
-        CloseableHttpClient client = (CloseableHttpClient)field.get(wdmClient);
+
+        CloseableHttpClient client = (CloseableHttpClient) field.get(wdmClient);
         field = client.getClass().getDeclaredField("credentialsProvider");
         field.setAccessible(true);
-        
-        BasicCredentialsProvider provider = (BasicCredentialsProvider)field.get(client);
-        
-        assertThat(provider.getCredentials(new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT, AuthScope.ANY_REALM, AuthSchemes.NTLM)), instanceOf(NTCredentials.class));
-        assertThat(provider.getCredentials(new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT, AuthScope.ANY_REALM, AuthSchemes.BASIC)), instanceOf(UsernamePasswordCredentials.class));
-        assertThat(provider.getCredentials(new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT)), instanceOf(UsernamePasswordCredentials.class));
-        assertThat(provider.getCredentials(new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT, AuthScope.ANY_REALM, AuthSchemes.KERBEROS)), instanceOf(UsernamePasswordCredentials.class));
+
+        BasicCredentialsProvider provider = (BasicCredentialsProvider) field
+                .get(client);
+
+        assertThat(
+                provider.getCredentials(
+                        new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT,
+                                AuthScope.ANY_REALM, AuthSchemes.NTLM)),
+                instanceOf(NTCredentials.class));
+        assertThat(
+                provider.getCredentials(
+                        new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT,
+                                AuthScope.ANY_REALM, AuthSchemes.BASIC)),
+                instanceOf(UsernamePasswordCredentials.class));
+        assertThat(
+                provider.getCredentials(
+                        new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT)),
+                instanceOf(UsernamePasswordCredentials.class));
+        assertThat(
+                provider.getCredentials(
+                        new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT,
+                                AuthScope.ANY_REALM, AuthSchemes.KERBEROS)),
+                instanceOf(UsernamePasswordCredentials.class));
     }
-    
+
     @Test
     public void testProxyCredentials() throws Exception {
-        WdmHttpClient wdmClient = new WdmHttpClient.Builder().proxy("myproxy:8081").proxyUser("domain\\me").proxyPass("pass").build();
+        WdmHttpClient wdmClient = new WdmHttpClient.Builder()
+                .proxy("myproxy:8081").proxyUser("domain\\me").proxyPass("pass")
+                .build();
         Field field = WdmHttpClient.class.getDeclaredField("httpClient");
         field.setAccessible(true);
-        
-        CloseableHttpClient client = (CloseableHttpClient)field.get(wdmClient);
+
+        CloseableHttpClient client = (CloseableHttpClient) field.get(wdmClient);
         field = client.getClass().getDeclaredField("credentialsProvider");
         field.setAccessible(true);
-        
-        BasicCredentialsProvider provider = (BasicCredentialsProvider)field.get(client);
-               
-        NTCredentials ntcreds = (NTCredentials)provider.getCredentials(new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT, AuthScope.ANY_REALM, AuthSchemes.NTLM));
+
+        BasicCredentialsProvider provider = (BasicCredentialsProvider) field
+                .get(client);
+
+        NTCredentials ntcreds = (NTCredentials) provider.getCredentials(
+                new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT,
+                        AuthScope.ANY_REALM, AuthSchemes.NTLM));
         assertThat(ntcreds.getDomain(), equalTo("DOMAIN"));
         assertThat(ntcreds.getUserName(), equalTo("me"));
         assertThat(ntcreds.getPassword(), equalTo("pass"));
-        
-        UsernamePasswordCredentials creds = (UsernamePasswordCredentials)provider.getCredentials(new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT));
+
+        UsernamePasswordCredentials creds = (UsernamePasswordCredentials) provider
+                .getCredentials(
+                        new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT));
         assertThat(creds.getUserName(), equalTo("domain\\me"));
         assertThat(creds.getPassword(), equalTo("pass"));
     }
-    
+
     @Test
     public void testMockedEnvProxy() throws Exception {
         for (String proxyTestString : PROXYS_TEST_STRINGS) {

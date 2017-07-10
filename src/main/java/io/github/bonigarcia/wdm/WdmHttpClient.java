@@ -152,10 +152,14 @@ public class WdmHttpClient implements Closeable {
             String userInfo = proxyUrl.getUserInfo();
             if (userInfo != null) {
                 StringTokenizer st = new StringTokenizer(userInfo, ":");
-                username = st.hasMoreTokens() ? URLDecoder.decode(
-                        st.nextToken(), StandardCharsets.UTF_8.name()) : null;
-                password = st.hasMoreTokens() ? URLDecoder.decode(
-                        st.nextToken(), StandardCharsets.UTF_8.name()) : null;
+                username = st.hasMoreTokens()
+                        ? URLDecoder.decode(st.nextToken(),
+                                StandardCharsets.UTF_8.name())
+                        : null;
+                password = st.hasMoreTokens()
+                        ? URLDecoder.decode(st.nextToken(),
+                                StandardCharsets.UTF_8.name())
+                        : null;
             }
             String envProxyUser = System.getenv("HTTPS_PROXY_USER");
             String envProxyPass = System.getenv("HTTPS_PROXY_PASS");
@@ -172,22 +176,25 @@ public class WdmHttpClient implements Closeable {
 
             String ntlmUsername = username;
             String ntlmDomain = null;
-            
+
             int index = username.indexOf("\\");
             if (index > 0) {
                 ntlmDomain = username.substring(0, index);
-                ntlmUsername = username.substring(index + 1);                
+                ntlmUsername = username.substring(index + 1);
             }
-            
+
             BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
             Credentials creds;
             AuthScope authScope;
-            
-            authScope = new AuthScope(proxyHost.getHostName(), proxyHost.getPort(),  AuthScope.ANY_REALM, AuthSchemes.NTLM);
-            creds = new NTCredentials(ntlmUsername, password, getWorkstation(), ntlmDomain);            
+
+            authScope = new AuthScope(proxyHost.getHostName(),
+                    proxyHost.getPort(), AuthScope.ANY_REALM, AuthSchemes.NTLM);
+            creds = new NTCredentials(ntlmUsername, password, getWorkstation(),
+                    ntlmDomain);
             credentialsProvider.setCredentials(authScope, creds);
-            
-            authScope = new AuthScope(proxyHost.getHostName(), proxyHost.getPort());
+
+            authScope = new AuthScope(proxyHost.getHostName(),
+                    proxyHost.getPort());
             creds = new UsernamePasswordCredentials(username, password);
             credentialsProvider.setCredentials(authScope, creds);
 
