@@ -17,18 +17,22 @@ package io.github.bonigarcia.wdm.test;
 import java.util.Arrays;
 import java.util.Collection;
 
+import org.junit.After;
 import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
+import org.openqa.selenium.htmlunit.HtmlUnitDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.safari.SafariDriver;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import io.github.bonigarcia.wdm.base.BaseBrowserTst;
 
 /**
  * Parameterized test with several browsers.
@@ -37,22 +41,42 @@ import io.github.bonigarcia.wdm.base.BaseBrowserTst;
  * @since 1.3.1
  */
 @RunWith(Parameterized.class)
-public class WebDriverTest extends BaseBrowserTst {
+public class OtherWebDriverTest {
+
+    protected static final Logger log = LoggerFactory
+            .getLogger(OtherWebDriverTest.class);
 
     @Parameter
     public Class<? extends WebDriver> driverClass;
 
+    protected WebDriver driver;
+
     @Parameters(name = "{index}: {0}")
     public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][] { { ChromeDriver.class },
-                { FirefoxDriver.class }, { PhantomJSDriver.class } });
+        return Arrays.asList(new Object[][] { { SafariDriver.class },
+                { EventFiringWebDriver.class }, { HtmlUnitDriver.class },
+                { RemoteWebDriver.class } });
     }
 
     @Before
-    public void setupTest()
-            throws InstantiationException, IllegalAccessException {
+    public void setupTest() {
         WebDriverManager.getInstance(driverClass).setup();
-        driver = driverClass.newInstance();
+    }
+
+    @After
+    public void teardown() {
+        if (driver != null) {
+            driver.quit();
+        }
+    }
+
+    @Test
+    public void test() throws InstantiationException, IllegalAccessException {
+        try {
+            driver = driverClass.newInstance();
+        } catch (Exception e) {
+            log.warn("Exception creating instance: {}", e.getMessage());
+        }
     }
 
 }

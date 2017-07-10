@@ -14,6 +14,8 @@
  */
 package io.github.bonigarcia.wdm.test;
 
+import static org.hamcrest.core.IsEqual.equalTo;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 
@@ -21,7 +23,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
-import io.github.bonigarcia.wdm.WdmHttpClient;
 
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.NTCredentials;
@@ -29,13 +30,12 @@ import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.config.AuthSchemes;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.hamcrest.core.Is;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import io.github.bonigarcia.wdm.WdmHttpClient;
 import io.github.bonigarcia.wdm.BrowserManager;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
 import mockit.Mock;
@@ -75,7 +75,7 @@ public class ProxyTest {
         method.setAccessible(true);
         Proxy proxy = (Proxy) method.invoke(browserManager);
 
-        Assert.assertNull(proxy);
+        assertNull(proxy);
     }
 
     @Test
@@ -92,11 +92,11 @@ public class ProxyTest {
         Proxy proxy = (Proxy) method.invoke(browserManager);
 
         InetSocketAddress address = (InetSocketAddress) proxy.address();
-        assertThat(address.getHostName(), Is.is(PROXY_URL));
+        assertThat(address.getHostName(), equalTo(PROXY_URL));
     }
 
     @Test
-    public void testCredentials() throws Exception {
+    public void testProxyCredentialsScope() throws Exception {
         WdmHttpClient wdmClient = new WdmHttpClient.Builder().proxy("myproxy:8081").proxyUser("domain\\me").proxyPass("pass").build();
         Field field = WdmHttpClient.class.getDeclaredField("httpClient");
         field.setAccessible(true);
@@ -107,19 +107,32 @@ public class ProxyTest {
         
         BasicCredentialsProvider provider = (BasicCredentialsProvider)field.get(client);
         
-        assertThat(provider.getCredentials(new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT, AuthScope.ANY_REALM, AuthSchemes.NTLM)), Is.is(instanceOf(NTCredentials.class)));
-        assertThat(provider.getCredentials(new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT, AuthScope.ANY_REALM, AuthSchemes.BASIC)), Is.is(instanceOf(UsernamePasswordCredentials.class)));
-        assertThat(provider.getCredentials(new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT)), Is.is(instanceOf(UsernamePasswordCredentials.class)));
-        assertThat(provider.getCredentials(new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT, AuthScope.ANY_REALM, AuthSchemes.KERBEROS)), Is.is(instanceOf(UsernamePasswordCredentials.class)));
+        assertThat(provider.getCredentials(new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT, AuthScope.ANY_REALM, AuthSchemes.NTLM)), instanceOf(NTCredentials.class));
+        assertThat(provider.getCredentials(new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT, AuthScope.ANY_REALM, AuthSchemes.BASIC)), instanceOf(UsernamePasswordCredentials.class));
+        assertThat(provider.getCredentials(new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT)), instanceOf(UsernamePasswordCredentials.class));
+        assertThat(provider.getCredentials(new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT, AuthScope.ANY_REALM, AuthSchemes.KERBEROS)), instanceOf(UsernamePasswordCredentials.class));
+    }
+    
+    @Test
+    public void testProxyCredentials() throws Exception {
+        WdmHttpClient wdmClient = new WdmHttpClient.Builder().proxy("myproxy:8081").proxyUser("domain\\me").proxyPass("pass").build();
+        Field field = WdmHttpClient.class.getDeclaredField("httpClient");
+        field.setAccessible(true);
         
+        CloseableHttpClient client = (CloseableHttpClient)field.get(wdmClient);
+        field = client.getClass().getDeclaredField("credentialsProvider");
+        field.setAccessible(true);
+        
+        BasicCredentialsProvider provider = (BasicCredentialsProvider)field.get(client);
+               
         NTCredentials ntcreds = (NTCredentials)provider.getCredentials(new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT, AuthScope.ANY_REALM, AuthSchemes.NTLM));
-        assertThat(ntcreds.getDomain(), Is.is("DOMAIN"));
-        assertThat(ntcreds.getUserName(), Is.is("me"));
-        assertThat(ntcreds.getPassword(), Is.is("pass"));
+        assertThat(ntcreds.getDomain(), equalTo("DOMAIN"));
+        assertThat(ntcreds.getUserName(), equalTo("me"));
+        assertThat(ntcreds.getPassword(), equalTo("pass"));
         
         UsernamePasswordCredentials creds = (UsernamePasswordCredentials)provider.getCredentials(new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT));
-        assertThat(creds.getUserName(), Is.is("domain\\me"));
-        assertThat(creds.getPassword(), Is.is("pass"));
+        assertThat(creds.getUserName(), equalTo("domain\\me"));
+        assertThat(creds.getPassword(), equalTo("pass"));
     }
     
     @Test
@@ -140,7 +153,7 @@ public class ProxyTest {
             Proxy proxy = (Proxy) method.invoke(browserManager);
             InetSocketAddress address = (InetSocketAddress) proxy.address();
 
-            assertThat(address.getHostName(), Is.is(PROXY_URL));
+            assertThat(address.getHostName(), equalTo(PROXY_URL));
         }
     }
 

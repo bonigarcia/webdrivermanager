@@ -572,7 +572,9 @@ public abstract class BrowserManager {
                 }
             }
         }
-
+        if (versionToDownload.startsWith(".")) {
+            versionToDownload = versionToDownload.substring(1);
+        }
         log.info("Latest version of {} is {}", match, versionToDownload);
         return out;
     }
@@ -768,9 +770,11 @@ public abstract class BrowserManager {
         Architecture architecture = this.architecture == null ? DEFAULT_ARCH
                 : this.architecture;
         String driverVersion = getDriverVersion();
-        String version = isNullOrEmpty(driverVersion)
-                ? DriverVersion.NOT_SPECIFIED.name() : driverVersion;
-        setup(architecture, version);
+        if (!driverVersion.equals("")) {
+            String version = isNullOrEmpty(driverVersion)
+                    ? DriverVersion.NOT_SPECIFIED.name() : driverVersion;
+            setup(architecture, version);
+        }
     }
 
     /**
