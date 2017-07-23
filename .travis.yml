@@ -25,3 +25,4 @@ before_script:
 
 script:
     - mvn -DheadlessEnvironment=true verify
+    - bash <(curl -s https://codecov.io/bash)
