@@ -90,8 +90,10 @@ public class WdmHttpClient implements Closeable {
         HttpResponse response = httpClient.execute(method.toHttpUriRequest());
         if (response.getStatusLine()
                 .getStatusCode() >= HttpStatus.SC_BAD_REQUEST) {
-            throw new RuntimeException("A response error is detected. "
-                    + response.getStatusLine());
+            String errorMessage = "A response error is detected: "
+                            + response.getStatusLine();
+            log.error(errorMessage);
+            throw new WebDriverManagerException(errorMessage);
         }
         return new Response(response);
     }
@@ -129,9 +131,10 @@ public class WdmHttpClient implements Closeable {
             return null;
         }
         if (!(proxy.address() instanceof InetSocketAddress)) {
-            throw new RuntimeException(
-                    "Detect an unsupported subclass of SocketAddress. Please use the InetSocketAddress or subclass. Actual:"
-                            + proxy.address().getClass());
+            String errorMessage = "Detect an unsupported subclass of SocketAddress. Please use the InetSocketAddress or subclass. Actual:"
+                    + proxy.address().getClass();
+            log.error(errorMessage);
+            throw new WebDriverManagerException(errorMessage);
         }
         InetSocketAddress proxyAddress = (InetSocketAddress) proxy.address();
         return new HttpHost(proxyAddress.getHostName(), proxyAddress.getPort());
@@ -152,14 +155,10 @@ public class WdmHttpClient implements Closeable {
             String userInfo = proxyUrl.getUserInfo();
             if (userInfo != null) {
                 StringTokenizer st = new StringTokenizer(userInfo, ":");
-                username = st.hasMoreTokens()
-                        ? URLDecoder.decode(st.nextToken(),
-                                StandardCharsets.UTF_8.name())
-                        : null;
-                password = st.hasMoreTokens()
-                        ? URLDecoder.decode(st.nextToken(),
-                                StandardCharsets.UTF_8.name())
-                        : null;
+                username = st.hasMoreTokens() ? URLDecoder.decode(
+                        st.nextToken(), StandardCharsets.UTF_8.name()) : null;
+                password = st.hasMoreTokens() ? URLDecoder.decode(
+                        st.nextToken(), StandardCharsets.UTF_8.name()) : null;
             }
             String envProxyUser = System.getenv("HTTPS_PROXY_USER");
             String envProxyPass = System.getenv("HTTPS_PROXY_PASS");
@@ -200,7 +199,10 @@ public class WdmHttpClient implements Closeable {
 
             return credentialsProvider;
         } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("Invalid encoding.", e);
+            String errorMessage = "Invalid encoding creating credentials for proxy "
+                    + proxy;
+            log.error(errorMessage, e);
+            throw new WebDriverManagerException(errorMessage, e);
         }
     }
 

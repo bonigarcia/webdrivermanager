@@ -251,11 +251,11 @@ public abstract class BrowserManager {
                     if (candidateUrls.isEmpty()) {
                         String versionStr = getLatest ? "(latest version)"
                                 : version;
-                        String errMessage = getDriverName() + " " + versionStr
+                        String errorMessage = getDriverName() + " " + versionStr
                                 + " for " + MY_OS_NAME + arch.toString()
                                 + " not found in " + getDriverUrl();
-                        log.error(errMessage);
-                        throw new RuntimeException(errMessage);
+                        log.error(errorMessage);
+                        throw new WebDriverManagerException(errorMessage);
                     }
 
                     for (URL url : candidateUrls) {
@@ -276,7 +276,15 @@ public abstract class BrowserManager {
                         getDriverName(), version, e.getMessage());
                 manage(arch, version);
             } else {
-                throw new RuntimeException(e);
+                String errorMessage = "Exception managing driver for "
+                        + getDriverName();
+                log.error(errorMessage, e);
+
+                if (e instanceof WebDriverManagerException) {
+                    throw (WebDriverManagerException) e;
+                } else {
+                    throw new WebDriverManagerException(errorMessage, e);
+                }
             }
         }
     }
@@ -857,9 +865,10 @@ public abstract class BrowserManager {
     }
 
     public BrowserManager useTaobaoMirror() {
-        throw new RuntimeException("Binaries for " + getDriverName()
-                + " not available in taobao.org mirror"
-                + " (http://npm.taobao.org/mirrors/)");
+        String errorMessage = "Binaries for " + getDriverName()
+                + " not available in taobao.org mirror (http://npm.taobao.org/mirrors/)";
+        log.error(errorMessage);
+        throw new WebDriverManagerException(errorMessage);
     }
 
     public BrowserManager proxy(String proxy) {

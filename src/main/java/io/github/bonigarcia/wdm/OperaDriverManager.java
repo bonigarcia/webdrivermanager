@@ -155,12 +155,15 @@ public class OperaDriverManager extends BrowserManager {
 
     @Override
     public BrowserManager useTaobaoMirror() {
+        String taobaoUrl = null;
         try {
-            driverUrl = new URL(
-                    WdmConfig.getString("wdm.operaDriverTaobaoUrl"));
+            taobaoUrl = WdmConfig
+                    .getString(WdmConfig.getString("wdm.operaDriverTaobaoUrl"));
+            driverUrl = new URL(taobaoUrl);
         } catch (MalformedURLException e) {
-            log.error("Malformed URL", e);
-            throw new RuntimeException(e);
+            String errorMessage = "Malformed URL " + taobaoUrl;
+            log.error(errorMessage, e);
+            throw new WebDriverManagerException(errorMessage, e);
         }
         return instance;
     }

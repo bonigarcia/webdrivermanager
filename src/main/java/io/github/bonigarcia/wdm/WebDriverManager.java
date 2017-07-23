@@ -61,7 +61,7 @@ public class WebDriverManager extends BrowserManager {
         } catch (Throwable e) {
             String errMessage = "Error creating WebDriverManager";
             log.error(errMessage, e);
-            throw new RuntimeException(errMessage, e);
+            throw new WebDriverManagerException(errMessage, e);
         }
         return instance;
     }
