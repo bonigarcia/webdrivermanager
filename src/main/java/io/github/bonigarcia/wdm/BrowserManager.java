@@ -70,6 +70,7 @@ public abstract class BrowserManager {
 
     public static final Architecture DEFAULT_ARCH = Architecture
             .valueOf("x" + System.getProperty("sun.arch.data.model"));
+
     public static final String MY_OS_NAME = getOsName();
 
     protected abstract List<URL> getDrivers() throws Exception;
@@ -260,7 +261,8 @@ public abstract class BrowserManager {
 
                     for (URL url : candidateUrls) {
                         String export = candidateUrls.contains(url)
-                                ? getExportParameter() : null;
+                                ? getExportParameter()
+                                : null;
                         downloader.download(url, versionToDownload, export,
                                 getDriverName());
                     }
@@ -744,11 +746,13 @@ public abstract class BrowserManager {
 
         String gitHubTokenName = WdmConfig.getString("wdm.gitHubTokenName");
         gitHubTokenName = isNullOrEmpty(gitHubTokenName)
-                ? System.getenv("WDM_GIT_HUB_TOKEN_NAME") : gitHubTokenName;
+                ? System.getenv("WDM_GIT_HUB_TOKEN_NAME")
+                : gitHubTokenName;
 
         String gitHubTokenSecret = WdmConfig.getString("wdm.gitHubTokenSecret");
         gitHubTokenSecret = isNullOrEmpty(gitHubTokenSecret)
-                ? System.getenv("WDM_GIT_HUB_TOKEN_SECRET") : gitHubTokenSecret;
+                ? System.getenv("WDM_GIT_HUB_TOKEN_SECRET")
+                : gitHubTokenSecret;
 
         if (!isNullOrEmpty(gitHubTokenName)
                 && !isNullOrEmpty(gitHubTokenSecret)) {
@@ -775,13 +779,12 @@ public abstract class BrowserManager {
     // *************************************
 
     public void setup() {
-        Architecture architecture = this.architecture == null ? DEFAULT_ARCH
-                : this.architecture;
         String driverVersion = getDriverVersion();
         if (!driverVersion.equals("")) {
             String version = isNullOrEmpty(driverVersion)
-                    ? DriverVersion.NOT_SPECIFIED.name() : driverVersion;
-            setup(architecture, version);
+                    ? DriverVersion.NOT_SPECIFIED.name()
+                    : driverVersion;
+            setup(getDefaultArchitecture(), version);
         }
     }
 
@@ -791,9 +794,18 @@ public abstract class BrowserManager {
      */
     @Deprecated
     public void setup(String version) {
-        Architecture architecture = this.architecture == null ? DEFAULT_ARCH
-                : this.architecture;
-        setup(architecture, version);
+        setup(getDefaultArchitecture(), version);
+    }
+
+    private Architecture getDefaultArchitecture() {
+        String archStr = WdmConfig.getString("wdm.architecture");
+        if (archStr.equals("")) {
+            this.architecture = Architecture
+                    .valueOf("x" + System.getProperty("sun.arch.data.model"));
+        } else {
+            this.architecture = Architecture.valueOf("x" + archStr);
+        }
+        return this.architecture == null ? DEFAULT_ARCH : this.architecture;
     }
 
     /**
@@ -804,7 +816,8 @@ public abstract class BrowserManager {
     public void setup(Architecture architecture) {
         String driverVersion = getDriverVersion();
         String version = isNullOrEmpty(driverVersion)
-                ? DriverVersion.NOT_SPECIFIED.name() : driverVersion;
+                ? DriverVersion.NOT_SPECIFIED.name()
+                : driverVersion;
         setup(architecture, version);
     }
 
@@ -899,6 +912,11 @@ public abstract class BrowserManager {
     public BrowserManager useBetaVersions() {
         this.useBetaVersions = true;
         return this;
+    }
+
+    public static void main(String[] args) {
+        String string = WdmConfig.getString("wdm.architecture");
+        System.out.println("-" + string);
     }
 
 }
