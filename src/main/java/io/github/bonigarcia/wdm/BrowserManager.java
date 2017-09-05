@@ -798,14 +798,15 @@ public abstract class BrowserManager {
     }
 
     private Architecture getDefaultArchitecture() {
-        String archStr = WdmConfig.getString("wdm.architecture");
-        if (archStr.equals("")) {
-            this.architecture = Architecture
-                    .valueOf("x" + System.getProperty("sun.arch.data.model"));
-        } else {
-            this.architecture = Architecture.valueOf("x" + archStr);
+        if (this.architecture == null) {
+            String archStr = WdmConfig.getString("wdm.architecture");
+            if (archStr.equals("")) {
+                this.architecture = DEFAULT_ARCH;
+            } else {
+                this.architecture = Architecture.valueOf("x" + archStr);
+            }
         }
-        return this.architecture == null ? DEFAULT_ARCH : this.architecture;
+        return this.architecture;
     }
 
     /**
