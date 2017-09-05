@@ -45,12 +45,13 @@ public class WdmConfig {
 
     public static String getString(String key) {
         String value = "";
-        try {
-            if (!key.equals("")) {
+        if (!key.equals("")) {
+            // dots are not allowed in POSIX environmental variables
+            value = System.getenv(key.replace(".", "_"));
+            if (value == null) {
                 value = WdmConfig.getInstance().conf.getString(key);
             }
-        } catch (Exception e) {
-            value = System.getenv(key);
+
         }
         return value;
     }
