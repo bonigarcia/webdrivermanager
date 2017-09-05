@@ -44,8 +44,15 @@ public class WdmConfig {
     }
 
     public static String getString(String key) {
-        return !key.equals("") ? WdmConfig.getInstance().conf.getString(key)
-                : "";
+        String value = "";
+        try {
+            if (!key.equals("")) {
+                value = WdmConfig.getInstance().conf.getString(key);
+            }
+        } catch (Exception e) {
+            value = System.getenv(key);
+        }
+        return value;
     }
 
     public static int getInt(String key) {
