@@ -1,3 +1,11 @@
+webdrivermanager (1.7.2)
+
+  + Add wdm.architecture configuration key (issue #154)
+  + Read properties values from system environment as fallback to properties
+
+ -- Boni Garcia <boni.gg@gmail.com>  Mon, 17 Sep 2017 13:28:00 +0200
+
+
 webdrivermanager (1.7.1)
 
   + Use NTCredentials for NTLM AuthSchemes (PR #149 from andrew-sumner)

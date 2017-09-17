@@ -31,7 +31,7 @@ In order to use WebDriverManager in a Maven project, first add the following dep
 <dependency>
 	<groupId>io.github.bonigarcia</groupId>
 	<artifactId>webdrivermanager</artifactId>
-	<version>1.7.1</version>
+	<version>1.7.2</version>
 </dependency>
 ```
 
@@ -174,6 +174,8 @@ wdm.geckoDriverVersion=LATEST
 
 wdm.gitHubTokenName=
 wdm.gitHubTokenSecret=
+
+wdm.architecture=
 ```
 
 The variable ``wdm.targetPath`` is the default folder in which WebDriver binaries are going to be stored. Notice that by default the path of the Maven local repository is used. The URLs to check the latest version of Chrome, Opera, Internet Explorer, Edge, PhantomJS, and Firefox are set using the variables ``wdm.chromeDriverUrl``, ``wdm.operaDriverExport``, ``wdm.operaDriverUrl``, ``wdm.edgeDriverUrl``, ``wdm.phantomjsDriverUrl``, and ``wdm.geckoDriverUrl``.
