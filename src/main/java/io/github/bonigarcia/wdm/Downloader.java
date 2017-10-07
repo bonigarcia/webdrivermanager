@@ -186,15 +186,11 @@ public class Downloader {
                     parent.mkdirs();
                 }
 
-                InputStream is = zipFolder.getInputStream(zipEntry);
-                FileOutputStream fos = new FileOutputStream(file);
-                byte[] bytes = new byte[1024];
-                int length;
-                while ((length = is.read(bytes)) >= 0) {
-                    fos.write(bytes, 0, length);
+                try (InputStream is = zipFolder.getInputStream(zipEntry)) {
+                    File temporaryFile = new File(parent, UUID.randomUUID().toString());
+                    FileUtils.copyInputStreamToFile(is, temporaryFile);
+                    temporaryFile.renameTo(file);
                 }
-                is.close();
-                fos.close();
                 file.setExecutable(true);
             } else {
                 log.debug(file + " already exists");
