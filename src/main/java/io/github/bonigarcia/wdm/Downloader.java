@@ -161,43 +161,43 @@ public class Downloader {
 
     public File unZip(File compressedFile) throws IOException {
         File file = null;
-        ZipFile zipFolder = new ZipFile(compressedFile);
-        Enumeration<?> enu = zipFolder.entries();
+        try (ZipFile zipFolder = new ZipFile(compressedFile)) {
+          Enumeration<?> enu = zipFolder.entries();
 
-        while (enu.hasMoreElements()) {
+          while (enu.hasMoreElements()) {
             ZipEntry zipEntry = (ZipEntry) enu.nextElement();
 
             String name = zipEntry.getName();
             long size = zipEntry.getSize();
             long compressedSize = zipEntry.getCompressedSize();
             log.trace("Unzipping {} (size: {} KB, compressed size: {} KB)",
-                    name, size, compressedSize);
+                name, size, compressedSize);
 
             file = new File(
-                    compressedFile.getParentFile() + File.separator + name);
+                compressedFile.getParentFile() + File.separator + name);
             if (!file.exists() || override) {
-                if (name.endsWith("/")) {
-                    file.mkdirs();
-                    continue;
-                }
+              if (name.endsWith("/")) {
+                file.mkdirs();
+                continue;
+              }
 
-                File parent = file.getParentFile();
-                if (parent != null) {
-                    parent.mkdirs();
-                }
+              File parent = file.getParentFile();
+              if (parent != null) {
+                parent.mkdirs();
+              }
 
-                try (InputStream is = zipFolder.getInputStream(zipEntry)) {
-                    File temporaryFile = new File(parent, UUID.randomUUID().toString());
-                    FileUtils.copyInputStreamToFile(is, temporaryFile);
-                    temporaryFile.renameTo(file);
-                }
-                file.setExecutable(true);
+              try (InputStream is = zipFolder.getInputStream(zipEntry)) {
+                File temporaryFile = new File(parent, UUID.randomUUID().toString());
+                FileUtils.copyInputStreamToFile(is, temporaryFile);
+                temporaryFile.renameTo(file);
+              }
+              file.setExecutable(true);
             } else {
-                log.debug(file + " already exists");
+              log.debug(file + " already exists");
             }
 
+          }
         }
-        zipFolder.close();
 
         return file;
     }
