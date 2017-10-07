@@ -24,6 +24,7 @@ import java.nio.file.Files;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.UUID;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -100,13 +101,23 @@ public class Downloader {
         }
 
         if (download) {
-            log.info("Downloading {} to {}", url, targetFile);
+            File temporaryFile = new File(targetFile.getParentFile(), UUID.randomUUID().toString());
+            log.info("Downloading {} to {}", url, temporaryFile);
             WdmHttpClient.Get get = new WdmHttpClient.Get(url)
                     .addHeader("User-Agent", "Mozilla/5.0")
                     .addHeader("Connection", "keep-alive");
 
-            FileUtils.copyInputStreamToFile(
-                    httpClient.execute(get).getContent(), targetFile);
+            try {
+                FileUtils.copyInputStreamToFile(
+                    httpClient.execute(get).getContent(), temporaryFile);
+            }
+            catch (IOException e) {
+                temporaryFile.delete();
+                throw e;
+            }
+
+            log.info("Renaming {} to {}", temporaryFile, targetFile);
+            temporaryFile.renameTo(targetFile);
 
             if (!export.contains("edge")) {
                 binary = extract(targetFile, export);
