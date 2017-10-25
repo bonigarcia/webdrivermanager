@@ -58,7 +58,7 @@ import org.slf4j.LoggerFactory;
 public class WdmHttpClient implements Closeable {
 
     protected static final Logger log = LoggerFactory
-            .getLogger(BrowserManager.class);
+            .getLogger(WdmHttpClient.class);
 
     private final CloseableHttpClient httpClient;
 
