@@ -24,6 +24,7 @@ import java.nio.file.Files;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.UUID;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -100,13 +101,23 @@ public class Downloader {
         }
 
         if (download) {
-            log.info("Downloading {} to {}", url, targetFile);
+            File temporaryFile = new File(targetFile.getParentFile(), UUID.randomUUID().toString());
+            log.info("Downloading {} to {}", url, temporaryFile);
             WdmHttpClient.Get get = new WdmHttpClient.Get(url)
                     .addHeader("User-Agent", "Mozilla/5.0")
                     .addHeader("Connection", "keep-alive");
 
-            FileUtils.copyInputStreamToFile(
-                    httpClient.execute(get).getContent(), targetFile);
+            try {
+                FileUtils.copyInputStreamToFile(
+                    httpClient.execute(get).getContent(), temporaryFile);
+            }
+            catch (IOException e) {
+                temporaryFile.delete();
+                throw e;
+            }
+
+            log.info("Renaming {} to {}", temporaryFile, targetFile);
+            temporaryFile.renameTo(targetFile);
 
             if (!export.contains("edge")) {
                 binary = extract(targetFile, export);
@@ -150,47 +161,43 @@ public class Downloader {
 
     public File unZip(File compressedFile) throws IOException {
         File file = null;
-        ZipFile zipFolder = new ZipFile(compressedFile);
-        Enumeration<?> enu = zipFolder.entries();
+        try (ZipFile zipFolder = new ZipFile(compressedFile)) {
+          Enumeration<?> enu = zipFolder.entries();
 
-        while (enu.hasMoreElements()) {
+          while (enu.hasMoreElements()) {
             ZipEntry zipEntry = (ZipEntry) enu.nextElement();
 
             String name = zipEntry.getName();
             long size = zipEntry.getSize();
             long compressedSize = zipEntry.getCompressedSize();
             log.trace("Unzipping {} (size: {} KB, compressed size: {} KB)",
-                    name, size, compressedSize);
+                name, size, compressedSize);
 
             file = new File(
-                    compressedFile.getParentFile() + File.separator + name);
+                compressedFile.getParentFile() + File.separator + name);
             if (!file.exists() || override) {
-                if (name.endsWith("/")) {
-                    file.mkdirs();
-                    continue;
-                }
+              if (name.endsWith("/")) {
+                file.mkdirs();
+                continue;
+              }
 
-                File parent = file.getParentFile();
-                if (parent != null) {
-                    parent.mkdirs();
-                }
+              File parent = file.getParentFile();
+              if (parent != null) {
+                parent.mkdirs();
+              }
 
-                InputStream is = zipFolder.getInputStream(zipEntry);
-                FileOutputStream fos = new FileOutputStream(file);
-                byte[] bytes = new byte[1024];
-                int length;
-                while ((length = is.read(bytes)) >= 0) {
-                    fos.write(bytes, 0, length);
-                }
-                is.close();
-                fos.close();
-                file.setExecutable(true);
+              try (InputStream is = zipFolder.getInputStream(zipEntry)) {
+                File temporaryFile = new File(parent, UUID.randomUUID().toString());
+                FileUtils.copyInputStreamToFile(is, temporaryFile);
+                temporaryFile.renameTo(file);
+              }
+              file.setExecutable(true);
             } else {
-                log.debug(file + " already exists");
+              log.debug(file + " already exists");
             }
 
+          }
         }
-        zipFolder.close();
 
         return file;
     }
