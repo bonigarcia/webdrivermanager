@@ -17,6 +17,7 @@ package io.github.bonigarcia.wdm;
 import static io.github.bonigarcia.wdm.WdmConfig.getBoolean;
 import static io.github.bonigarcia.wdm.WdmConfig.getString;
 import static java.io.File.separator;
+import static java.lang.Runtime.getRuntime;
 import static java.lang.System.getProperty;
 import static java.nio.file.Files.createTempDirectory;
 import static java.nio.file.Files.move;
@@ -75,7 +76,7 @@ public class Downloader {
     }
 
     public synchronized void download(URL url, String version, String export,
-            List<String> driverName) throws IOException {
+            List<String> driverName) throws IOException, InterruptedException {
         File targetFile = new File(getTarget(version, url));
         File binary = null;
 
@@ -296,20 +297,17 @@ public class Downloader {
         this.override = true;
     }
 
-    public File extractMsi(File msi) throws IOException {
+    public File extractMsi(File msi) throws IOException, InterruptedException {
         File tmpMsi = new File(
                 createTempDirectory(msi.getName()).toFile().getAbsoluteFile()
                         + separator + msi.getName());
         move(msi.toPath(), tmpMsi.toPath());
         log.trace("Temporal msi file: {}", tmpMsi);
 
-        Process process = Runtime.getRuntime()
-                .exec(new String[] { "msiexec", "/a", tmpMsi.toString(), "/qb",
-                        "TARGETDIR=" + msi.getParent() });
+        Process process = getRuntime().exec(new String[] { "msiexec", "/a",
+                tmpMsi.toString(), "/qb", "TARGETDIR=" + msi.getParent() });
         try {
             process.waitFor();
-        } catch (InterruptedException e) {
-            log.error("Exception waiting to msiexec to be finished", e);
         } finally {
             process.destroy();
         }
