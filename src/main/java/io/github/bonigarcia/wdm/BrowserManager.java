@@ -14,6 +14,8 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static io.github.bonigarcia.wdm.Architecture.X32;
+import static io.github.bonigarcia.wdm.Architecture.X64;
 import static io.github.bonigarcia.wdm.WdmUtils.isNullOrEmpty;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_LINUX;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
@@ -422,7 +424,7 @@ public abstract class BrowserManager {
         if (out.size() > 1 && arch != null) {
             for (URL url : list) {
                 // Exception: 32 bits (sometimes referred as x86 or i686)
-                if (arch == Architecture.x32 && ((url.getFile().contains("x86")
+                if (arch == X32 && ((url.getFile().contains("x86")
                         && !url.getFile().contains("64"))
                         || url.getFile().contains("i686"))) {
                     continue;
@@ -856,12 +858,12 @@ public abstract class BrowserManager {
     }
 
     public BrowserManager arch32() {
-        this.architecture = Architecture.x32;
+        this.architecture = X32;
         return this;
     }
 
     public BrowserManager arch64() {
-        this.architecture = Architecture.x64;
+        this.architecture = X64;
         return this;
     }
 

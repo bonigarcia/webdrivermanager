@@ -15,6 +15,8 @@
 package io.github.bonigarcia.wdm.base;
 
 import static io.github.bonigarcia.wdm.Architecture.DEFAULT;
+import static io.github.bonigarcia.wdm.Architecture.X32;
+import static io.github.bonigarcia.wdm.Architecture.X64;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -52,8 +54,7 @@ public abstract class BaseVersionTst {
 
     @Parameters(name = "{index}: {0}")
     public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][] { { Architecture.DEFAULT },
-                { Architecture.x32 }, { Architecture.x64 } });
+        return Arrays.asList(new Object[][] { { DEFAULT }, { X32 }, { X64 } });
     }
 
     @Test
