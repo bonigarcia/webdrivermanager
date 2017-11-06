@@ -16,7 +16,25 @@ package io.github.bonigarcia.wdm;
 
 import static io.github.bonigarcia.wdm.Architecture.X32;
 import static io.github.bonigarcia.wdm.Architecture.X64;
+import static io.github.bonigarcia.wdm.Architecture.valueOf;
+import static io.github.bonigarcia.wdm.DriverVersion.LATEST;
+import static io.github.bonigarcia.wdm.DriverVersion.NOT_SPECIFIED;
+import static io.github.bonigarcia.wdm.WdmConfig.getBoolean;
+import static io.github.bonigarcia.wdm.WdmConfig.getInt;
+import static io.github.bonigarcia.wdm.WdmConfig.getString;
+import static io.github.bonigarcia.wdm.WdmConfig.getUrl;
 import static io.github.bonigarcia.wdm.WdmUtils.isNullOrEmpty;
+import static java.lang.Integer.signum;
+import static java.lang.System.getProperty;
+import static java.lang.System.getenv;
+import static java.util.Arrays.copyOf;
+import static java.util.Arrays.sort;
+import static java.util.Collections.reverse;
+import static java.util.Collections.reverseOrder;
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static javax.xml.xpath.XPathConstants.NODESET;
+import static javax.xml.xpath.XPathFactory.newInstance;
+import static org.apache.commons.io.FileUtils.listFiles;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_LINUX;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
@@ -38,17 +56,13 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathFactory;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.SystemUtils;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,11 +81,11 @@ public abstract class BrowserManager {
 
     protected static final Logger log = LoggerFactory
             .getLogger(BrowserManager.class);
+
     public static final String TAOBAO_MIRROR = "npm.taobao.org";
     public static final String SEPARATOR = "/";
-
-    public static final Architecture DEFAULT_ARCH = Architecture
-            .valueOf("x" + System.getProperty("sun.arch.data.model"));
+    public static final Architecture DEFAULT_ARCH = valueOf(
+            "X" + getProperty("sun.arch.data.model"));
 
     public static final String MY_OS_NAME = getOsName();
 
@@ -99,8 +113,7 @@ public abstract class BrowserManager {
 
     protected boolean forceDownload = false;
 
-    protected boolean useBetaVersions = WdmConfig
-            .getBoolean("wdm.useBetaVersions");
+    protected boolean useBetaVersions = getBoolean("wdm.useBetaVersions");
 
     protected URL driverUrl;
 
@@ -130,13 +143,11 @@ public abstract class BrowserManager {
     protected WdmHttpClient httpClient;
 
     protected String getDriverVersion() {
-        return version == null ? WdmConfig.getString(getDriverVersionKey())
-                : version;
+        return version == null ? getString(getDriverVersionKey()) : version;
     }
 
     protected URL getDriverUrl() throws MalformedURLException {
-        return driverUrl == null ? WdmConfig.getUrl(getDriverUrlKey())
-                : driverUrl;
+        return driverUrl == null ? getUrl(getDriverUrlKey()) : driverUrl;
     }
 
     protected String preDownload(String target, String version)
@@ -167,7 +178,6 @@ public abstract class BrowserManager {
     }
 
     protected void manage(Architecture arch, String version) {
-
         this.httpClient = new WdmHttpClient.Builder().proxy(proxy)
                 .proxyUser(proxyUser).proxyPass(proxyPass).build();
 
@@ -179,12 +189,10 @@ public abstract class BrowserManager {
             }
 
             boolean getLatest = version == null || version.isEmpty()
-                    || version.equalsIgnoreCase(DriverVersion.LATEST.name())
-                    || version.equalsIgnoreCase(
-                            DriverVersion.NOT_SPECIFIED.name());
+                    || version.equalsIgnoreCase(LATEST.name())
+                    || version.equalsIgnoreCase(NOT_SPECIFIED.name());
 
-            boolean forceCache = this.forceCache
-                    || WdmConfig.getBoolean("wdm.forceCache")
+            boolean forceCache = this.forceCache || getBoolean("wdm.forceCache")
                     || !isNetAvailable();
 
             String driverInCache = null;
@@ -304,7 +312,7 @@ public abstract class BrowserManager {
             Collection<File> listFiles = FileUtils
                     .listFiles(new File(repository), null, true);
             Object[] array = listFiles.toArray();
-            Arrays.sort(array, Collections.reverseOrder());
+            sort(array, Collections.reverseOrder());
 
             for (Object f : array) {
                 driverInCache = f.toString();
@@ -336,10 +344,10 @@ public abstract class BrowserManager {
             log.trace("Checking if {} {} ({} bits) exists in cache {}",
                     driverName, driverVersion, arch, repository);
 
-            Collection<File> listFiles = FileUtils
-                    .listFiles(new File(repository), null, true);
+            Collection<File> listFiles = listFiles(new File(repository), null,
+                    true);
             Object[] array = listFiles.toArray();
-            Arrays.sort(array, Collections.reverseOrder());
+            sort(array, reverseOrder());
 
             for (Object f : array) {
                 driverInCache = f.toString();
@@ -474,7 +482,7 @@ public abstract class BrowserManager {
         }
         File fileVersion = new File("/proc/version");
         if (fileVersion.exists()) {
-            fileList = Arrays.copyOf(fileList, fileList.length + 1);
+            fileList = copyOf(fileList, fileList.length + 1);
             fileList[fileList.length - 1] = fileVersion;
         }
         for (File f : fileList) {
@@ -497,7 +505,7 @@ public abstract class BrowserManager {
     }
 
     protected List<URL> removeFromList(List<URL> list, String version) {
-        List<URL> out = new ArrayList<URL>(list);
+        List<URL> out = new ArrayList<>(list);
         for (URL url : list) {
             if (url.getFile().contains(version)) {
                 out.remove(url);
@@ -508,7 +516,7 @@ public abstract class BrowserManager {
 
     protected List<URL> getVersion(List<URL> list, List<String> match,
             String version) {
-        List<URL> out = new ArrayList<URL>();
+        List<URL> out = new ArrayList<>();
         if (getDriverName().contains("MicrosoftWebDriver")) {
             int i = listVersions.indexOf(version);
             if (i != -1) {
@@ -517,7 +525,7 @@ public abstract class BrowserManager {
         }
 
         for (String s : match) {
-            Collections.reverse(list);
+            reverse(list);
             for (URL url : list) {
                 if (url.getFile().contains(s) && url.getFile().contains(version)
                         && !url.getFile().contains("-symbols")) {
@@ -533,7 +541,7 @@ public abstract class BrowserManager {
     protected List<URL> getLatest(List<URL> list, List<String> match) {
         log.trace("Checking the lastest version of {}", match);
         log.trace("Input URL list {}", list);
-        List<URL> out = new ArrayList<URL>();
+        List<URL> out = new ArrayList<>();
 
         // Edge
         if (getDriverName().contains("MicrosoftWebDriver")) {
@@ -622,11 +630,11 @@ public abstract class BrowserManager {
         if (i < vals1.length && i < vals2.length) {
             int diff = Integer.valueOf(vals1[i])
                     .compareTo(Integer.valueOf(vals2[i]));
-            int signum = Integer.signum(diff);
+            int signum = signum(diff);
             log.trace("[1] Returning {}", signum);
             return signum;
         } else {
-            int signum = Integer.signum(vals1.length - vals2.length);
+            int signum = signum(vals1.length - vals2.length);
             log.trace("[2] Returning {}", signum);
             return signum;
         }
@@ -648,8 +656,7 @@ public abstract class BrowserManager {
 
         String driverStr = driverUrl.toString();
         String driverUrlContent = driverUrl.getPath();
-        int timeout = (int) TimeUnit.SECONDS
-                .toMillis(WdmConfig.getInt("wdm.timeout"));
+        int timeout = (int) SECONDS.toMillis(getInt("wdm.timeout"));
 
         WdmHttpClient.Response response = httpClient
                 .execute(new WdmHttpClient.Get(driverStr, timeout));
@@ -678,10 +685,10 @@ public abstract class BrowserManager {
             List<String> driverBinary) throws Exception {
         log.info("Reading {} to seek {}", driverUrl, getDriverName());
 
-        List<URL> urls = new ArrayList<URL>();
+        List<URL> urls = new ArrayList<>();
 
         int retries = 1;
-        int maxRetries = WdmConfig.getInt("wdm.seekErrorRetries");
+        int maxRetries = getInt("wdm.seekErrorRetries");
         do {
             try {
                 WdmHttpClient.Response response = httpClient
@@ -690,9 +697,9 @@ public abstract class BrowserManager {
                         new InputStreamReader(response.getContent()))) {
                     Document xml = loadXML(reader);
 
-                    XPath xPath = XPathFactory.newInstance().newXPath();
+                    XPath xPath = newInstance().newXPath();
                     NodeList nodes = (NodeList) xPath.evaluate("//Contents/Key",
-                            xml.getDocumentElement(), XPathConstants.NODESET);
+                            xml.getDocumentElement(), NODESET);
 
                     for (int i = 0; i < nodes.getLength(); ++i) {
                         Element e = (Element) nodes.item(i);
@@ -724,13 +731,13 @@ public abstract class BrowserManager {
     }
 
     protected static String getOsName() {
-        String os = System.getProperty("os.name").toLowerCase();
+        String os = getProperty("os.name").toLowerCase();
 
-        if (SystemUtils.IS_OS_WINDOWS) {
+        if (IS_OS_WINDOWS) {
             os = "win";
-        } else if (SystemUtils.IS_OS_LINUX) {
+        } else if (IS_OS_LINUX) {
             os = "linux";
-        } else if (SystemUtils.IS_OS_MAC) {
+        } else if (IS_OS_MAC) {
             os = "mac";
         }
         return os;
@@ -750,12 +757,12 @@ public abstract class BrowserManager {
 
         String gitHubTokenName = WdmConfig.getString("wdm.gitHubTokenName");
         gitHubTokenName = isNullOrEmpty(gitHubTokenName)
-                ? System.getenv("WDM_GIT_HUB_TOKEN_NAME")
+                ? getenv("WDM_GIT_HUB_TOKEN_NAME")
                 : gitHubTokenName;
 
         String gitHubTokenSecret = WdmConfig.getString("wdm.gitHubTokenSecret");
         gitHubTokenSecret = isNullOrEmpty(gitHubTokenSecret)
-                ? System.getenv("WDM_GIT_HUB_TOKEN_SECRET")
+                ? getenv("WDM_GIT_HUB_TOKEN_SECRET")
                 : gitHubTokenSecret;
 
         if (!isNullOrEmpty(gitHubTokenName)
@@ -785,8 +792,7 @@ public abstract class BrowserManager {
     public void setup() {
         String driverVersion = getDriverVersion();
         if (!driverVersion.equals("")) {
-            String version = isNullOrEmpty(driverVersion)
-                    ? DriverVersion.NOT_SPECIFIED.name()
+            String version = isNullOrEmpty(driverVersion) ? NOT_SPECIFIED.name()
                     : driverVersion;
             setup(getDefaultArchitecture(), version);
         }
@@ -803,11 +809,11 @@ public abstract class BrowserManager {
 
     private Architecture getDefaultArchitecture() {
         if (this.architecture == null) {
-            String archStr = WdmConfig.getString("wdm.architecture");
+            String archStr = getString("wdm.architecture");
             if (archStr.equals("")) {
                 this.architecture = DEFAULT_ARCH;
             } else {
-                this.architecture = Architecture.valueOf("x" + archStr);
+                this.architecture = Architecture.valueOf("X" + archStr);
             }
         }
         return this.architecture;
@@ -820,8 +826,7 @@ public abstract class BrowserManager {
     @Deprecated
     public void setup(Architecture architecture) {
         String driverVersion = getDriverVersion();
-        String version = isNullOrEmpty(driverVersion)
-                ? DriverVersion.NOT_SPECIFIED.name()
+        String version = isNullOrEmpty(driverVersion) ? NOT_SPECIFIED.name()
                 : driverVersion;
         setup(architecture, version);
     }
@@ -835,8 +840,8 @@ public abstract class BrowserManager {
     public void setup(Architecture architecture, String version) {
         // Honor property if available (even when version is present)
         String driverVersion = getDriverVersion();
-        if (!driverVersion.equalsIgnoreCase(DriverVersion.LATEST.name())
-                || version.equals(DriverVersion.NOT_SPECIFIED.name())) {
+        if (!driverVersion.equalsIgnoreCase(LATEST.name())
+                || version.equals(NOT_SPECIFIED.name())) {
             version = driverVersion;
         }
 
@@ -920,7 +925,7 @@ public abstract class BrowserManager {
     }
 
     public static void main(String[] args) {
-        String string = WdmConfig.getString("wdm.architecture");
+        String string = getString("wdm.architecture");
         System.out.println("-" + string);
     }
 
