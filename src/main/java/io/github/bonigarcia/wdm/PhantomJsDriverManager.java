@@ -14,14 +14,16 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static io.github.bonigarcia.wdm.WdmConfig.getString;
+import static java.io.File.separator;
+import static java.util.Arrays.asList;
+import static org.apache.commons.io.FileUtils.deleteDirectory;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.List;
-
-import org.apache.commons.io.FileUtils;
 
 /**
  * Manager for PhantomJs.
@@ -46,7 +48,7 @@ public class PhantomJsDriverManager extends BrowserManager {
 
     @Override
     protected String getExportParameter() {
-        return WdmConfig.getString("wdm.phantomjsDriverExport");
+        return getString("wdm.phantomjsDriverExport");
     }
 
     @Override
@@ -61,7 +63,7 @@ public class PhantomJsDriverManager extends BrowserManager {
 
     @Override
     protected List<String> getDriverName() {
-        return Arrays.asList("phantomjs");
+        return asList("phantomjs");
     }
 
     @Override
@@ -84,7 +86,8 @@ public class PhantomJsDriverManager extends BrowserManager {
         int iSeparator = target.indexOf(version) - 1;
         int iDash = target.lastIndexOf(version) + version.length();
         int iPoint = target.lastIndexOf(".tar") != -1
-                ? target.lastIndexOf(".tar") : target.lastIndexOf(".zip");
+                ? target.lastIndexOf(".tar")
+                : target.lastIndexOf(".zip");
         target = target.substring(0, iSeparator + 1)
                 + target.substring(iDash + 1, iPoint)
                 + target.substring(iSeparator);
@@ -100,7 +103,7 @@ public class PhantomJsDriverManager extends BrowserManager {
         log.trace("PhatomJS extract folder (to be deleted): {}", extractFolder);
 
         File binFolder = new File(
-                extractFolder.getAbsoluteFile() + File.separator + "bin");
+                extractFolder.getAbsoluteFile() + separator + "bin");
         // Exception for older version of PhantomJS
         int binaryIndex = 0;
         if (!binFolder.exists()) {
@@ -114,11 +117,12 @@ public class PhantomJsDriverManager extends BrowserManager {
         log.trace("PhatomJS binary: {}", phantomjs);
 
         File target = new File(archive.getParentFile().getAbsolutePath()
-                + File.separator + phantomjs.getName());
+                + separator + phantomjs.getName());
         log.trace("PhatomJS target: {}", target);
 
-        phantomjs.renameTo(target);
-        FileUtils.deleteDirectory(extractFolder);
+        downloader.renameFile(phantomjs, target);
+
+        deleteDirectory(extractFolder);
         return target;
     }
 
@@ -126,8 +130,7 @@ public class PhantomJsDriverManager extends BrowserManager {
     public BrowserManager useTaobaoMirror() {
         String taobaoUrl = null;
         try {
-            taobaoUrl = WdmConfig.getString(
-                    WdmConfig.getString("wdm.phantomjsDriverTaobaoUrl"));
+            taobaoUrl = getString(getString("wdm.phantomjsDriverTaobaoUrl"));
             driverUrl = new URL(taobaoUrl);
         } catch (MalformedURLException e) {
             String errorMessage = "Malformed URL " + taobaoUrl;

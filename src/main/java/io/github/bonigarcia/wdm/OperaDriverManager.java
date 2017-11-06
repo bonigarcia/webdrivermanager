@@ -14,6 +14,11 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static io.github.bonigarcia.wdm.WdmConfig.getString;
+import static java.io.File.separator;
+import static java.util.Arrays.asList;
+import static org.apache.commons.io.FileUtils.deleteDirectory;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -21,10 +26,7 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-import org.apache.commons.io.FileUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -86,7 +88,7 @@ public class OperaDriverManager extends BrowserManager {
 
     @Override
     protected String getExportParameter() {
-        return WdmConfig.getString("wdm.operaDriverExport");
+        return getString("wdm.operaDriverExport");
     }
 
     protected GitHubApi getVersion(GitHubApi[] releaseArray, String version) {
@@ -103,7 +105,7 @@ public class OperaDriverManager extends BrowserManager {
 
     @Override
     protected List<String> getDriverName() {
-        return Arrays.asList("operadriver");
+        return asList("operadriver");
     }
 
     @Override
@@ -142,11 +144,11 @@ public class OperaDriverManager extends BrowserManager {
             log.trace("Operadriver binary: {}", operadriver);
 
             File target = new File(archive.getParentFile().getAbsolutePath()
-                    + File.separator + operadriver.getName());
+                    + separator + operadriver.getName());
             log.trace("Operadriver target: {}", target);
 
-            operadriver.renameTo(target);
-            FileUtils.deleteDirectory(extractFolder);
+            downloader.renameFile(operadriver, target);
+            deleteDirectory(extractFolder);
             return target;
         } else {
             return super.postDownload(archive);
@@ -157,8 +159,7 @@ public class OperaDriverManager extends BrowserManager {
     public BrowserManager useTaobaoMirror() {
         String taobaoUrl = null;
         try {
-            taobaoUrl = WdmConfig
-                    .getString(WdmConfig.getString("wdm.operaDriverTaobaoUrl"));
+            taobaoUrl = getString(getString("wdm.operaDriverTaobaoUrl"));
             driverUrl = new URL(taobaoUrl);
         } catch (MalformedURLException e) {
             String errorMessage = "Malformed URL " + taobaoUrl;

@@ -110,6 +110,8 @@ public abstract class BrowserManager {
 
     protected boolean triedWithCache = false;
 
+    protected Downloader downloader;
+
     /**
      * @since 1.6.2
      */
@@ -169,7 +171,7 @@ public abstract class BrowserManager {
 
         try (WdmHttpClient httpClient = this.httpClient) {
 
-            Downloader downloader = new Downloader(this, httpClient);
+            downloader = new Downloader(this, httpClient);
             if (forceDownload) {
                 downloader.forceDownload();
             }

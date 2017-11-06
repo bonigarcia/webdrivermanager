@@ -319,21 +319,21 @@ public class Downloader {
         return listFiles.iterator().next();
     }
 
-    private void setFileExecutable(File file) {
+    protected void setFileExecutable(File file) {
         log.trace("Setting file {} as exectable", file);
         if (!file.setExecutable(true)) {
             log.warn("Error setting file {} as executable", file);
         }
     }
 
-    private void renameFile(File from, File to) {
+    protected void renameFile(File from, File to) {
         log.trace("Renaming file from {} to {}", from, to);
         if (!from.renameTo(to)) {
             log.warn("Error renaming file from {} to {}", from, to);
         }
     }
 
-    private void deleteFile(File file) {
+    protected void deleteFile(File file) {
         log.trace("Deleting file {}", file);
         if (!file.delete()) {
             log.warn("Error deleting temporal file {}", file);
