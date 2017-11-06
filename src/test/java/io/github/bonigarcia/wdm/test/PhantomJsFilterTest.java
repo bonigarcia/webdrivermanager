@@ -14,6 +14,8 @@
  */
 package io.github.bonigarcia.wdm.test;
 
+import static io.github.bonigarcia.wdm.Architecture.X64;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -21,7 +23,6 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
-import io.github.bonigarcia.wdm.WdmHttpClient;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import io.github.bonigarcia.wdm.Architecture;
 import io.github.bonigarcia.wdm.BrowserManager;
 import io.github.bonigarcia.wdm.PhantomJsDriverManager;
+import io.github.bonigarcia.wdm.WdmHttpClient;
 
 /**
  * Filter verifications for phantomjs.
@@ -75,7 +77,7 @@ public class PhantomJsFilterTest {
                 Architecture.class);
         method.setAccessible(true);
         List<URL> filteredLatestUrls = (List<URL>) method
-                .invoke(phatomJsManager, latestUrls, Architecture.x64);
+                .invoke(phatomJsManager, latestUrls, X64);
 
         log.info("Filtered URLS for LATEST version {} : {}",
                 phantomJsBinaryName, filteredLatestUrls);
@@ -100,7 +102,7 @@ public class PhantomJsFilterTest {
                 Architecture.class);
         method.setAccessible(true);
         List<URL> filteredVersionUrls = (List<URL>) method
-                .invoke(phatomJsManager, specificVersionUrls, Architecture.x64);
+                .invoke(phatomJsManager, specificVersionUrls, X64);
 
         log.info("Filtered URLS for {} version {}: {}", phantomJsBinaryName,
                 specificVersion, filteredVersionUrls);

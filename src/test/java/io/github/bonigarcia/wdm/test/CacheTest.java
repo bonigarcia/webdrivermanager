@@ -14,8 +14,8 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import static io.github.bonigarcia.wdm.Architecture.x32;
-import static io.github.bonigarcia.wdm.Architecture.x64;
+import static io.github.bonigarcia.wdm.Architecture.X32;
+import static io.github.bonigarcia.wdm.Architecture.X64;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
@@ -25,11 +25,6 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 
-import io.github.bonigarcia.wdm.Architecture;
-import io.github.bonigarcia.wdm.BrowserManager;
-import io.github.bonigarcia.wdm.Downloader;
-import io.github.bonigarcia.wdm.OperativeSystem;
-import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,6 +37,12 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.opera.OperaDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
+
+import io.github.bonigarcia.wdm.Architecture;
+import io.github.bonigarcia.wdm.BrowserManager;
+import io.github.bonigarcia.wdm.Downloader;
+import io.github.bonigarcia.wdm.OperativeSystem;
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 /**
  * Test for driver cache.
@@ -66,10 +67,10 @@ public class CacheTest {
         boolean isMac = BrowserManager.MY_OS_NAME
                 .contains(OperativeSystem.mac.name());
         return Arrays.asList(new Object[][] {
-                { ChromeDriver.class, "2.27", isMac ? x64 : x32 },
-                { OperaDriver.class, "0.2.2", x64 },
-                { PhantomJSDriver.class, "2.1.1", x64 },
-                { FirefoxDriver.class, "0.17.0", x64 } });
+                { ChromeDriver.class, "2.27", isMac ? X64 : X32 },
+                { OperaDriver.class, "0.2.2", X64 },
+                { PhantomJSDriver.class, "2.1.1", X64 },
+                { FirefoxDriver.class, "0.17.0", X64 } });
     }
 
     @Before
