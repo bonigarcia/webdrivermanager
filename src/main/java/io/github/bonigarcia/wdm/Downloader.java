@@ -89,7 +89,7 @@ public class Downloader {
         if (download) {
             File temporaryFile = new File(targetFile.getParentFile(),
                     randomUUID().toString());
-            log.info("Downloading {} to {}", url, temporaryFile);
+            log.debug("Downloading {} to {}", url, targetFile);
             WdmHttpClient.Get get = new WdmHttpClient.Get(url)
                     .addHeader("User-Agent", "Mozilla/5.0")
                     .addHeader("Connection", "keep-alive");
@@ -98,12 +98,11 @@ public class Downloader {
                 copyInputStreamToFile(httpClient.execute(get).getContent(),
                         temporaryFile);
             } catch (IOException e) {
-                temporaryFile.delete();
+                deleteFile(temporaryFile);
                 throw e;
             }
 
-            log.info("Renaming {} to {}", temporaryFile, targetFile);
-            temporaryFile.renameTo(targetFile);
+            renameFile(temporaryFile, targetFile);
 
             if (!export.contains("edge")) {
                 binary = extract(targetFile, export);
@@ -157,11 +156,11 @@ public class Downloader {
             file = unZip(compressedFile);
         }
 
-        compressedFile.delete();
+        deleteFile(compressedFile);
         file = browserManager.postDownload(compressedFile);
 
         File result = file.getAbsoluteFile();
-        result.setExecutable(true);
+        setFileExecutable(result);
         log.trace("Resulting binary file {}", result);
 
         return result;
@@ -198,9 +197,9 @@ public class Downloader {
                         File temporaryFile = new File(parent,
                                 randomUUID().toString());
                         copyInputStreamToFile(is, temporaryFile);
-                        temporaryFile.renameTo(file);
+                        renameFile(temporaryFile, file);
                     }
-                    file.setExecutable(true);
+                    setFileExecutable(file);
                 } else {
                     log.debug(file + " already exists");
                 }
@@ -235,7 +234,7 @@ public class Downloader {
 
         if (!target.getName().toLowerCase().contains(".exe")
                 && target.exists()) {
-            target.setExecutable(true);
+            setFileExecutable(target);
         }
 
         return target;
@@ -312,12 +311,33 @@ public class Downloader {
             process.destroy();
         }
 
-        tmpMsi.delete();
-        msi.delete();
+        deleteFile(tmpMsi);
+        deleteFile(msi);
 
         Collection<File> listFiles = listFiles(new File(msi.getParent()),
                 new String[] { "exe" }, true);
         return listFiles.iterator().next();
+    }
+
+    private void setFileExecutable(File file) {
+        log.trace("Setting file {} as exectable", file);
+        if (!file.setExecutable(true)) {
+            log.warn("Error setting file {} as executable", file);
+        }
+    }
+
+    private void renameFile(File from, File to) {
+        log.trace("Renaming file from {} to {}", from, to);
+        if (!from.renameTo(to)) {
+            log.warn("Error renaming file from {} to {}", from, to);
+        }
+    }
+
+    private void deleteFile(File file) {
+        log.trace("Deleting file {}", file);
+        if (!file.delete()) {
+            log.warn("Error deleting temporal file {}", file);
+        }
     }
 
 }
