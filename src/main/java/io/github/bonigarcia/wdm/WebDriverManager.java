@@ -58,7 +58,7 @@ public class WebDriverManager extends BrowserManager {
         try {
             log.debug("Creating instance of {}", browserManagerClass);
             instance = browserManagerClass.newInstance();
-        } catch (Throwable e) {
+        } catch (Exception e) {
             String errMessage = "Error creating WebDriverManager";
             log.error(errMessage, e);
             throw new WebDriverManagerException(errMessage, e);

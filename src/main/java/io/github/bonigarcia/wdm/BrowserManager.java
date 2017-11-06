@@ -59,7 +59,6 @@ import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.xpath.XPath;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
@@ -86,7 +85,6 @@ public abstract class BrowserManager {
     public static final String SEPARATOR = "/";
     public static final Architecture DEFAULT_ARCH = valueOf(
             "X" + getProperty("sun.arch.data.model"));
-
     public static final String MY_OS_NAME = getOsName();
 
     protected abstract List<URL> getDrivers() throws Exception;
@@ -409,7 +407,7 @@ public abstract class BrowserManager {
         log.trace("{} {} - URLs before filtering: {}", getDriverName(),
                 versionToDownload, list);
 
-        List<URL> out = new ArrayList<URL>();
+        List<URL> out = new ArrayList<>();
 
         // Round #1 : Filter by OS
         for (URL url : list) {
@@ -454,7 +452,7 @@ public abstract class BrowserManager {
         log.trace("{} {} - URLs before filtering by distro: {}",
                 getDriverName(), versionToDownload, list);
 
-        List<URL> out = new ArrayList<URL>(list);
+        List<URL> out = new ArrayList<>(list);
         // Round #3 : Filter by distribution (for Linux)
         for (URL url : list) {
             if (url.getFile().contains(version)
@@ -696,10 +694,9 @@ public abstract class BrowserManager {
                 try (BufferedReader reader = new BufferedReader(
                         new InputStreamReader(response.getContent()))) {
                     Document xml = loadXML(reader);
-
-                    XPath xPath = newInstance().newXPath();
-                    NodeList nodes = (NodeList) xPath.evaluate("//Contents/Key",
-                            xml.getDocumentElement(), NODESET);
+                    NodeList nodes = (NodeList) newInstance().newXPath()
+                            .evaluate("//Contents/Key",
+                                    xml.getDocumentElement(), NODESET);
 
                     for (int i = 0; i < nodes.getLength(); ++i) {
                         Element e = (Element) nodes.item(i);
@@ -709,7 +706,7 @@ public abstract class BrowserManager {
                     }
                 }
                 break;
-            } catch (Throwable e) {
+            } catch (Exception e) {
                 log.warn("[{}/{}] Exception reading {} to seek {}: {} {}",
                         retries, maxRetries, driverUrl, getDriverName(),
                         e.getClass().getName(), e.getMessage(), e);
@@ -732,7 +729,6 @@ public abstract class BrowserManager {
 
     protected static String getOsName() {
         String os = getProperty("os.name").toLowerCase();
-
         if (IS_OS_WINDOWS) {
             os = "win";
         } else if (IS_OS_LINUX) {
