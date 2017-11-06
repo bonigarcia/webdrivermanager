@@ -14,26 +14,34 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static io.github.bonigarcia.wdm.WdmConfig.getBoolean;
+import static io.github.bonigarcia.wdm.WdmConfig.getString;
+import static java.io.File.separator;
+import static java.lang.System.getProperty;
+import static java.nio.file.Files.createTempDirectory;
+import static java.nio.file.Files.move;
+import static java.util.UUID.randomUUID;
+import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
+import static org.apache.commons.io.FileUtils.listFiles;
+import static org.rauschig.jarchivelib.ArchiveFormat.TAR;
+import static org.rauschig.jarchivelib.ArchiverFactory.createArchiver;
+import static org.rauschig.jarchivelib.CompressionType.BZIP2;
+import static org.rauschig.jarchivelib.CompressionType.GZIP;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.nio.file.Files;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.UUID;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.apache.commons.io.FileUtils;
-import org.rauschig.jarchivelib.ArchiveFormat;
 import org.rauschig.jarchivelib.Archiver;
-import org.rauschig.jarchivelib.ArchiverFactory;
-import org.rauschig.jarchivelib.CompressionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,7 +60,7 @@ public class Downloader {
     private final BrowserManager browserManager;
     private final WdmHttpClient httpClient;
 
-    private boolean override = WdmConfig.getBoolean("wdm.override");
+    private boolean override = getBoolean("wdm.override");
 
     public Downloader(BrowserManager browserManager) {
         this(browserManager, new WdmHttpClient.Builder().build());
@@ -77,10 +85,39 @@ public class Downloader {
                         && targetFile.getParentFile().list().length == 0)
                 || override;
 
-        if (!download) {
+        if (download) {
+            File temporaryFile = new File(targetFile.getParentFile(),
+                    randomUUID().toString());
+            log.info("Downloading {} to {}", url, temporaryFile);
+            WdmHttpClient.Get get = new WdmHttpClient.Get(url)
+                    .addHeader("User-Agent", "Mozilla/5.0")
+                    .addHeader("Connection", "keep-alive");
+
+            try {
+                copyInputStreamToFile(httpClient.execute(get).getContent(),
+                        temporaryFile);
+            } catch (IOException e) {
+                temporaryFile.delete();
+                throw e;
+            }
+
+            log.info("Renaming {} to {}", temporaryFile, targetFile);
+            temporaryFile.renameTo(targetFile);
+
+            if (!export.contains("edge")) {
+                binary = extract(targetFile, export);
+            } else {
+                binary = targetFile;
+            }
+
+            if (targetFile.getName().toLowerCase().endsWith(".msi")) {
+                binary = extractMsi(targetFile);
+            }
+
+        } else {
             // Check if existing binary is valid
-            Collection<File> listFiles = FileUtils
-                    .listFiles(targetFile.getParentFile(), null, true);
+            Collection<File> listFiles = listFiles(targetFile.getParentFile(),
+                    null, true);
             for (File file : listFiles) {
                 for (String s : driverName) {
                     if (file.getName().startsWith(s) && file.canExecute()) {
@@ -100,37 +137,7 @@ public class Downloader {
             }
         }
 
-        if (download) {
-            File temporaryFile = new File(targetFile.getParentFile(), UUID.randomUUID().toString());
-            log.info("Downloading {} to {}", url, temporaryFile);
-            WdmHttpClient.Get get = new WdmHttpClient.Get(url)
-                    .addHeader("User-Agent", "Mozilla/5.0")
-                    .addHeader("Connection", "keep-alive");
-
-            try {
-                FileUtils.copyInputStreamToFile(
-                    httpClient.execute(get).getContent(), temporaryFile);
-            }
-            catch (IOException e) {
-                temporaryFile.delete();
-                throw e;
-            }
-
-            log.info("Renaming {} to {}", temporaryFile, targetFile);
-            temporaryFile.renameTo(targetFile);
-
-            if (!export.contains("edge")) {
-                binary = extract(targetFile, export);
-            } else {
-                binary = targetFile;
-            }
-
-            if (targetFile.getName().toLowerCase().endsWith(".msi")) {
-                binary = extractMsi(targetFile);
-            }
-
-        }
-        if (export != null) {
+        if (export != null && binary != null) {
             browserManager.exportDriver(export, binary.toString());
         }
     }
@@ -162,41 +169,42 @@ public class Downloader {
     public File unZip(File compressedFile) throws IOException {
         File file = null;
         try (ZipFile zipFolder = new ZipFile(compressedFile)) {
-          Enumeration<?> enu = zipFolder.entries();
+            Enumeration<?> enu = zipFolder.entries();
 
-          while (enu.hasMoreElements()) {
-            ZipEntry zipEntry = (ZipEntry) enu.nextElement();
+            while (enu.hasMoreElements()) {
+                ZipEntry zipEntry = (ZipEntry) enu.nextElement();
 
-            String name = zipEntry.getName();
-            long size = zipEntry.getSize();
-            long compressedSize = zipEntry.getCompressedSize();
-            log.trace("Unzipping {} (size: {} KB, compressed size: {} KB)",
-                name, size, compressedSize);
+                String name = zipEntry.getName();
+                long size = zipEntry.getSize();
+                long compressedSize = zipEntry.getCompressedSize();
+                log.trace("Unzipping {} (size: {} KB, compressed size: {} KB)",
+                        name, size, compressedSize);
 
-            file = new File(
-                compressedFile.getParentFile() + File.separator + name);
-            if (!file.exists() || override) {
-              if (name.endsWith("/")) {
-                file.mkdirs();
-                continue;
-              }
+                file = new File(
+                        compressedFile.getParentFile() + separator + name);
+                if (!file.exists() || override) {
+                    if (name.endsWith("/")) {
+                        file.mkdirs();
+                        continue;
+                    }
 
-              File parent = file.getParentFile();
-              if (parent != null) {
-                parent.mkdirs();
-              }
+                    File parent = file.getParentFile();
+                    if (parent != null) {
+                        parent.mkdirs();
+                    }
 
-              try (InputStream is = zipFolder.getInputStream(zipEntry)) {
-                File temporaryFile = new File(parent, UUID.randomUUID().toString());
-                FileUtils.copyInputStreamToFile(is, temporaryFile);
-                temporaryFile.renameTo(file);
-              }
-              file.setExecutable(true);
-            } else {
-              log.debug(file + " already exists");
+                    try (InputStream is = zipFolder.getInputStream(zipEntry)) {
+                        File temporaryFile = new File(parent,
+                                randomUUID().toString());
+                        copyInputStreamToFile(is, temporaryFile);
+                        temporaryFile.renameTo(file);
+                    }
+                    file.setExecutable(true);
+                } else {
+                    log.debug(file + " already exists");
+                }
+
             }
-
-          }
         }
 
         return file;
@@ -213,8 +221,7 @@ public class Downloader {
         if (iDot != -1) {
             fileName = fileName.substring(0, iDot);
         }
-        File target = new File(
-                archive.getParentFile() + File.separator + fileName);
+        File target = new File(archive.getParentFile() + separator + fileName);
 
         try (GZIPInputStream in = new GZIPInputStream(
                 new FileInputStream(archive))) {
@@ -234,8 +241,7 @@ public class Downloader {
     }
 
     public File unTarGz(File archive) throws IOException {
-        Archiver archiver = ArchiverFactory.createArchiver(ArchiveFormat.TAR,
-                CompressionType.GZIP);
+        Archiver archiver = createArchiver(TAR, GZIP);
         archiver.extract(archive, archive.getParentFile());
         log.trace("unTarGz {}", archive);
 
@@ -243,8 +249,7 @@ public class Downloader {
     }
 
     public File unBZip2(File archive) throws IOException {
-        Archiver archiver = ArchiverFactory.createArchiver(ArchiveFormat.TAR,
-                CompressionType.BZIP2);
+        Archiver archiver = createArchiver(TAR, BZIP2);
         archiver.extract(archive, archive.getParentFile());
         log.trace("Unbzip2 {}", archive);
 
@@ -263,11 +268,10 @@ public class Downloader {
         String folder = zip.substring(0, iLast).replace(".zip", "")
                 .replace(".tar.bz2", "").replace(".tar.gz", "")
                 .replace(".msi", "").replace(".exe", "")
-                .replace("_", File.separator);
+                .replace("_", separator);
 
         String target = browserManager.preDownload(
-                getTargetPath() + folder + File.separator + version + zip,
-                version);
+                getTargetPath() + folder + separator + version + zip, version);
         log.trace("Target file for URL {} version {} = {}", url, version,
                 target);
 
@@ -275,10 +279,9 @@ public class Downloader {
     }
 
     public String getTargetPath() {
-        String targetPath = WdmConfig.getString("wdm.targetPath");
+        String targetPath = getString("wdm.targetPath");
         if (targetPath.contains(HOME)) {
-            targetPath = targetPath.replace(HOME,
-                    System.getProperty("user.home"));
+            targetPath = targetPath.replace(HOME, getProperty("user.home"));
         }
 
         // Create repository folder if not exits
@@ -294,9 +297,10 @@ public class Downloader {
     }
 
     public File extractMsi(File msi) throws IOException {
-        File tmpMsi = new File(Files.createTempDirectory(msi.getName()).toFile()
-                .getAbsoluteFile() + File.separator + msi.getName());
-        Files.move(msi.toPath(), tmpMsi.toPath());
+        File tmpMsi = new File(
+                createTempDirectory(msi.getName()).toFile().getAbsoluteFile()
+                        + separator + msi.getName());
+        move(msi.toPath(), tmpMsi.toPath());
         log.trace("Temporal msi file: {}", tmpMsi);
 
         Process process = Runtime.getRuntime()
@@ -313,8 +317,8 @@ public class Downloader {
         tmpMsi.delete();
         msi.delete();
 
-        Collection<File> listFiles = FileUtils.listFiles(
-                new File(msi.getParent()), new String[] { "exe" }, true);
+        Collection<File> listFiles = listFiles(new File(msi.getParent()),
+                new String[] { "exe" }, true);
         return listFiles.iterator().next();
     }
 
