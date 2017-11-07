@@ -25,10 +25,9 @@ import java.util.List;
  */
 public class WebDriverManager extends BrowserManager {
 
-    private static Class<? extends BrowserManager> browserManagerClass;
-
     public static synchronized BrowserManager getInstance(
             Class<?> webDriverClass) {
+        Class<? extends BrowserManager> browserManagerClass;
 
         switch (webDriverClass.getName()) {
         case "org.openqa.selenium.chrome.ChromeDriver":
