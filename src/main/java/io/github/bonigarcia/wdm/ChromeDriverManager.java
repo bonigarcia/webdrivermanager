@@ -82,17 +82,7 @@ public class ChromeDriverManager extends BrowserManager {
 
     @Override
     public BrowserManager useTaobaoMirror() {
-        String taobaoUrl = null;
-        try {
-            taobaoUrl = WdmConfig.getString(
-                    WdmConfig.getString("wdm.chromeDriverTaobaoUrl"));
-            driverUrl = new URL(taobaoUrl);
-        } catch (MalformedURLException e) {
-            String errorMessage = "Malformed URL " + taobaoUrl;
-            log.error(errorMessage, e);
-            throw new WebDriverManagerException(errorMessage, e);
-        }
-        return instance;
+        return useTaobaoMirror("wdm.chromeDriverTaobaoUrl");
     }
 
 }

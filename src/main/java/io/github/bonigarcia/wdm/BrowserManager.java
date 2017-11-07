@@ -889,6 +889,18 @@ public abstract class BrowserManager {
         throw new WebDriverManagerException(errorMessage);
     }
 
+    public BrowserManager useTaobaoMirror(String taobaoUrl) {
+        try {
+            taobaoUrl = getString(getString(taobaoUrl));
+            driverUrl = new URL(taobaoUrl);
+        } catch (MalformedURLException e) {
+            String errorMessage = "Malformed URL " + taobaoUrl;
+            log.error(errorMessage, e);
+            throw new WebDriverManagerException(errorMessage, e);
+        }
+        return instance;
+    }
+
     public BrowserManager proxy(String proxy) {
         this.proxy = proxy;
         return this;
