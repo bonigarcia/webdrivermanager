@@ -22,6 +22,10 @@ package io.github.bonigarcia.wdm;
  */
 public class WdmUtils {
 
+    private WdmUtils() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static boolean isNullOrEmpty(String string) {
         return string == null || string.isEmpty();
     }
