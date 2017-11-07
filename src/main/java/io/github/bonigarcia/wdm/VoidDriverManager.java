@@ -14,9 +14,10 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+
 import java.net.URL;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -35,29 +36,16 @@ public class VoidDriverManager extends BrowserManager {
         return instance;
     }
 
+    public VoidDriverManager() {
+        exportParameter = "";
+        driverVersionKey = "";
+        driverUrlKey = "";
+        driverName = asList("");
+    }
+
     @Override
     protected List<URL> getDrivers() throws Exception {
-        return Collections.emptyList();
-    }
-
-    @Override
-    protected String getExportParameter() {
-        return "";
-    }
-
-    @Override
-    protected String getDriverVersionKey() {
-        return "";
-    }
-
-    @Override
-    protected String getDriverUrlKey() {
-        return null;
-    }
-
-    @Override
-    protected List<String> getDriverName() {
-        return Arrays.asList("");
+        return emptyList();
     }
 
 }

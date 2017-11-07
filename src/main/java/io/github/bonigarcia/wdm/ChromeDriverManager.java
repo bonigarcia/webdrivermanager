@@ -14,9 +14,10 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static java.util.Arrays.asList;
+
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -36,6 +37,13 @@ public class ChromeDriverManager extends BrowserManager {
         return instance;
     }
 
+    public ChromeDriverManager() {
+        exportParameter = "wdm.chromeDriverExport";
+        driverVersionKey = "wdm.chromeDriverExport";
+        driverUrlKey = "wdm.chromeDriverVersion";
+        driverName = asList("chromedriver");
+    }
+
     @Override
     protected List<URL> getDrivers() throws Exception {
         URL driverUrl = getDriverUrl();
@@ -46,26 +54,6 @@ public class ChromeDriverManager extends BrowserManager {
             urls = getDriversFromXml(getDriverUrl(), getDriverName());
         }
         return urls;
-    }
-
-    @Override
-    protected String getExportParameter() {
-        return WdmConfig.getString("wdm.chromeDriverExport");
-    }
-
-    @Override
-    protected String getDriverVersionKey() {
-        return "wdm.chromeDriverVersion";
-    }
-
-    @Override
-    protected String getDriverUrlKey() {
-        return "wdm.chromeDriverUrl";
-    }
-
-    @Override
-    protected List<String> getDriverName() {
-        return Arrays.asList("chromedriver");
     }
 
     @Override

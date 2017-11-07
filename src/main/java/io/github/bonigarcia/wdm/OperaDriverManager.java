@@ -14,7 +14,6 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static io.github.bonigarcia.wdm.WdmConfig.getString;
 import static java.io.File.separator;
 import static java.util.Arrays.asList;
 import static org.apache.commons.io.FileUtils.deleteDirectory;
@@ -41,29 +40,16 @@ public class OperaDriverManager extends BrowserManager {
         return instance;
     }
 
+    public OperaDriverManager() {
+        exportParameter = "wdm.operaDriverExport";
+        driverVersionKey = "wdm.operaDriverVersion";
+        driverUrlKey = "wdm.operaDriverUrl";
+        driverName = asList("operadriver");
+    }
+
     @Override
     protected List<URL> getDrivers() throws IOException {
         return getDriversFromGitHub();
-    }
-
-    @Override
-    protected String getExportParameter() {
-        return getString("wdm.operaDriverExport");
-    }
-
-    @Override
-    protected List<String> getDriverName() {
-        return asList("operadriver");
-    }
-
-    @Override
-    protected String getDriverVersionKey() {
-        return "wdm.operaDriverVersion";
-    }
-
-    @Override
-    protected String getDriverUrlKey() {
-        return "wdm.operaDriverUrl";
     }
 
     @Override

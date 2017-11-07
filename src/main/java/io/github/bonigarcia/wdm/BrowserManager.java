@@ -92,56 +92,27 @@ public abstract class BrowserManager {
 
     protected abstract List<URL> getDrivers() throws Exception;
 
-    protected abstract String getExportParameter();
-
-    protected abstract String getDriverVersionKey();
-
-    protected abstract List<String> getDriverName();
-
-    protected abstract String getDriverUrlKey();
-
     protected static BrowserManager instance;
-
     protected String versionToDownload;
-
     protected boolean mirrorLog = false;
-
     protected String version;
-
     protected Architecture architecture;
-
     protected boolean forceCache = false;
-
     protected boolean forceDownload = false;
-
     protected boolean useBetaVersions = getBoolean("wdm.useBetaVersions");
-
     protected URL driverUrl;
-
     protected String proxy;
-
     protected String binaryPath;
-
     protected List<String> listVersions;
-
     protected boolean triedWithCache = false;
-
     protected Downloader downloader;
-
-    /**
-     * @since 1.6.2
-     */
     protected String proxyUser;
-
-    /**
-     * @since 1.6.2
-     */
     protected String proxyPass;
-
-    /**
-     * @since 1.6.2
-     */
     protected WdmHttpClient httpClient;
+    protected String exportParameter;
+    protected String driverVersionKey;
+    protected String driverUrlKey;
+    protected List<String> driverName;
 
     protected String getDriverVersion() {
         return version == null ? getString(getDriverVersionKey()) : version;
@@ -990,4 +961,21 @@ public abstract class BrowserManager {
         }
         return out;
     }
+
+    protected String getExportParameter() {
+        return exportParameter;
+    }
+
+    protected String getDriverVersionKey() {
+        return driverVersionKey;
+    }
+
+    protected String getDriverUrlKey() {
+        return driverUrlKey;
+    }
+
+    protected List<String> getDriverName() {
+        return driverName;
+    }
+
 }

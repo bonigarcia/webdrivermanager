@@ -14,7 +14,6 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static io.github.bonigarcia.wdm.WdmConfig.getString;
 import static java.io.File.separator;
 import static java.util.Arrays.asList;
 import static org.apache.commons.io.FileUtils.deleteDirectory;
@@ -41,29 +40,16 @@ public class PhantomJsDriverManager extends BrowserManager {
         return instance;
     }
 
+    public PhantomJsDriverManager() {
+        exportParameter = "wdm.phantomjsDriverExport";
+        driverVersionKey = "wdm.phantomjsDriverVersion";
+        driverUrlKey = "wdm.phantomjsDriverUrl";
+        driverName = asList("phantomjs");
+    }
+
     @Override
     protected List<URL> getDrivers() throws Exception {
         return getDriversFromMirror(getDriverUrl());
-    }
-
-    @Override
-    protected String getExportParameter() {
-        return getString("wdm.phantomjsDriverExport");
-    }
-
-    @Override
-    protected String getDriverVersionKey() {
-        return "wdm.phantomjsDriverVersion";
-    }
-
-    @Override
-    protected String getDriverUrlKey() {
-        return "wdm.phantomjsDriverUrl";
-    }
-
-    @Override
-    protected List<String> getDriverName() {
-        return asList("phantomjs");
     }
 
     @Override

@@ -14,8 +14,9 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static java.util.Arrays.asList;
+
 import java.net.URL;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -34,31 +35,18 @@ public class InternetExplorerDriverManager extends BrowserManager {
         return instance;
     }
 
+    public InternetExplorerDriverManager() {
+        exportParameter = "wdm.internetExplorerExport";
+        driverVersionKey = "wdm.internetExplorerVersion";
+        driverUrlKey = "wdm.internetExplorerDriverUrl";
+        driverName = asList("IEDriverServer");
+    }
+
     @Override
     protected List<URL> getDrivers() throws Exception {
         return getDriversFromXml(
                 WdmConfig.getUrl("wdm.internetExplorerDriverUrl"),
                 getDriverName());
-    }
-
-    @Override
-    protected String getExportParameter() {
-        return WdmConfig.getString("wdm.internetExplorerExport");
-    }
-
-    @Override
-    protected String getDriverVersionKey() {
-        return "wdm.internetExplorerVersion";
-    }
-
-    @Override
-    protected String getDriverUrlKey() {
-        return "wdm.internetExplorerDriverUrl";
-    }
-
-    @Override
-    protected List<String> getDriverName() {
-        return Arrays.asList("IEDriverServer");
     }
 
 }

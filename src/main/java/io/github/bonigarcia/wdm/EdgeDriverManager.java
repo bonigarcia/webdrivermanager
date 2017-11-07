@@ -14,10 +14,11 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static java.util.Arrays.asList;
+
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -39,6 +40,13 @@ public class EdgeDriverManager extends BrowserManager {
             instance = new EdgeDriverManager();
         }
         return instance;
+    }
+
+    public EdgeDriverManager() {
+        exportParameter = "wdm.edgeExport";
+        driverVersionKey = "wdm.edgeVersion";
+        driverUrlKey = "wdm.edgeDriverUrl";
+        driverName = asList("MicrosoftWebDriver");
     }
 
     @Override
@@ -73,23 +81,4 @@ public class EdgeDriverManager extends BrowserManager {
         }
     }
 
-    @Override
-    protected String getExportParameter() {
-        return WdmConfig.getString("wdm.edgeExport");
-    }
-
-    @Override
-    protected String getDriverVersionKey() {
-        return "wdm.edgeVersion";
-    }
-
-    @Override
-    protected String getDriverUrlKey() {
-        return "wdm.edgeDriverUrl";
-    }
-
-    @Override
-    protected List<String> getDriverName() {
-        return Arrays.asList("MicrosoftWebDriver");
-    }
 }

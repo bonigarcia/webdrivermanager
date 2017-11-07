@@ -15,11 +15,11 @@
 package io.github.bonigarcia.wdm;
 
 import static io.github.bonigarcia.wdm.OperativeSystem.MAC;
+import static java.util.Arrays.asList;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -38,30 +38,16 @@ public class FirefoxDriverManager extends BrowserManager {
         return instance;
     }
 
+    public FirefoxDriverManager() {
+        exportParameter = "wdm.geckoDriverExport";
+        driverVersionKey = "wdm.geckoDriverVersion";
+        driverUrlKey = "wdm.geckoDriverVersion";
+        driverName = asList("wires", "geckodriver");
+    }
+
     @Override
     protected List<URL> getDrivers() throws IOException {
         return getDriversFromGitHub();
-    }
-
-
-    @Override
-    protected String getExportParameter() {
-        return WdmConfig.getString("wdm.geckoDriverExport");
-    }
-
-    @Override
-    protected String getDriverVersionKey() {
-        return "wdm.geckoDriverVersion";
-    }
-
-    @Override
-    protected List<String> getDriverName() {
-        return Arrays.asList("wires", "geckodriver");
-    }
-
-    @Override
-    protected String getDriverUrlKey() {
-        return "wdm.geckoDriverUrl";
     }
 
     @Override
@@ -95,9 +81,6 @@ public class FirefoxDriverManager extends BrowserManager {
         return useTaobaoMirror("wdm.geckoDriverTaobaoUrl");
     }
 
-    /**
-     * @since 1.6.2
-     */
     @Override
     protected boolean shouldCheckArchitecture() {
         return !MY_OS_NAME.contains(MAC.name());
