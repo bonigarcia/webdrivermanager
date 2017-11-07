@@ -15,6 +15,9 @@
 package io.github.bonigarcia.wdm;
 
 import static io.github.bonigarcia.wdm.WdmUtils.isNullOrEmpty;
+import static java.lang.System.getenv;
+import static org.apache.http.auth.AuthScope.ANY_REALM;
+import static org.apache.http.client.config.AuthSchemes.NTLM;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -38,7 +41,6 @@ import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.NTCredentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.config.AuthSchemes;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpOptions;
@@ -91,7 +93,7 @@ public class WdmHttpClient implements Closeable {
         if (response.getStatusLine()
                 .getStatusCode() >= HttpStatus.SC_BAD_REQUEST) {
             String errorMessage = "A response error is detected: "
-                            + response.getStatusLine();
+                    + response.getStatusLine();
             log.error(errorMessage);
             throw new WebDriverManagerException(errorMessage);
         }
@@ -111,7 +113,7 @@ public class WdmHttpClient implements Closeable {
     }
 
     private URL determineProxyUrl(String proxy) {
-        String proxyInput = isNullOrEmpty(proxy) ? System.getenv("HTTPS_PROXY")
+        String proxyInput = isNullOrEmpty(proxy) ? getenv("HTTPS_PROXY")
                 : proxy;
         if (isNullOrEmpty(proxyInput)) {
             return null;
@@ -155,10 +157,14 @@ public class WdmHttpClient implements Closeable {
             String userInfo = proxyUrl.getUserInfo();
             if (userInfo != null) {
                 StringTokenizer st = new StringTokenizer(userInfo, ":");
-                username = st.hasMoreTokens() ? URLDecoder.decode(
-                        st.nextToken(), StandardCharsets.UTF_8.name()) : null;
-                password = st.hasMoreTokens() ? URLDecoder.decode(
-                        st.nextToken(), StandardCharsets.UTF_8.name()) : null;
+                username = st.hasMoreTokens()
+                        ? URLDecoder.decode(st.nextToken(),
+                                StandardCharsets.UTF_8.name())
+                        : null;
+                password = st.hasMoreTokens()
+                        ? URLDecoder.decode(st.nextToken(),
+                                StandardCharsets.UTF_8.name())
+                        : null;
             }
             String envProxyUser = System.getenv("HTTPS_PROXY_USER");
             String envProxyPass = System.getenv("HTTPS_PROXY_PASS");
@@ -187,7 +193,7 @@ public class WdmHttpClient implements Closeable {
             AuthScope authScope;
 
             authScope = new AuthScope(proxyHost.getHostName(),
-                    proxyHost.getPort(), AuthScope.ANY_REALM, AuthSchemes.NTLM);
+                    proxyHost.getPort(), ANY_REALM, NTLM);
             creds = new NTCredentials(ntlmUsername, password, getWorkstation(),
                     ntlmDomain);
             credentialsProvider.setCredentials(authScope, creds);
@@ -207,7 +213,7 @@ public class WdmHttpClient implements Closeable {
     }
 
     private String getWorkstation() {
-        Map<String, String> env = System.getenv();
+        Map<String, String> env = getenv();
 
         if (env.containsKey("COMPUTERNAME")) {
             // Windows

@@ -72,10 +72,10 @@ public class PhantomJsDriverManager extends BrowserManager {
         String file = url.getFile();
         file = url.getFile().substring(file.lastIndexOf(SEPARATOR),
                 file.length());
-        final int matchIndex = file.indexOf(driverName);
+        int matchIndex = file.indexOf(driverName);
         String currentVersion = file
                 .substring(matchIndex + driverName.length() + 1, file.length());
-        final int dashIndex = currentVersion.indexOf('-');
+        int dashIndex = currentVersion.indexOf('-');
         currentVersion = currentVersion.substring(0, dashIndex);
         return currentVersion;
     }
@@ -144,7 +144,7 @@ public class PhantomJsDriverManager extends BrowserManager {
      * @since 1.6.2
      */
     @Override
-    protected boolean shouldCheckArchitecture(String driverName) {
+    protected boolean shouldCheckArchitecture() {
         return false;
     }
 }

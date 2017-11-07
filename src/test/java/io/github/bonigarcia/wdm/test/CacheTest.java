@@ -16,6 +16,9 @@ package io.github.bonigarcia.wdm.test;
 
 import static io.github.bonigarcia.wdm.Architecture.X32;
 import static io.github.bonigarcia.wdm.Architecture.X64;
+import static io.github.bonigarcia.wdm.BrowserManager.MY_OS_NAME;
+import static io.github.bonigarcia.wdm.OperativeSystem.MAC;
+import static org.apache.commons.io.FileUtils.cleanDirectory;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
@@ -25,7 +28,6 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Collection;
 
-import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,7 +43,6 @@ import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import io.github.bonigarcia.wdm.Architecture;
 import io.github.bonigarcia.wdm.BrowserManager;
 import io.github.bonigarcia.wdm.Downloader;
-import io.github.bonigarcia.wdm.OperativeSystem;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 /**
@@ -64,8 +65,7 @@ public class CacheTest {
 
     @Parameters(name = "{index}: {0} {1} {2}")
     public static Collection<Object[]> data() {
-        boolean isMac = BrowserManager.MY_OS_NAME
-                .contains(OperativeSystem.mac.name());
+        boolean isMac = MY_OS_NAME.contains(MAC.name());
         return Arrays.asList(new Object[][] {
                 { ChromeDriver.class, "2.27", isMac ? X64 : X32 },
                 { OperaDriver.class, "0.2.2", X64 },
@@ -75,8 +75,7 @@ public class CacheTest {
 
     @Before
     public void deleteDownloadedFiles() throws IOException {
-        FileUtils
-                .cleanDirectory(new File(new Downloader(null).getTargetPath()));
+        cleanDirectory(new File(new Downloader(null).getTargetPath()));
     }
 
     @Test

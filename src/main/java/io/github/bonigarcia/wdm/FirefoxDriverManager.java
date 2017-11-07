@@ -14,6 +14,8 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static io.github.bonigarcia.wdm.OperativeSystem.MAC;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -164,7 +166,7 @@ public class FirefoxDriverManager extends BrowserManager {
      * @since 1.6.2
      */
     @Override
-    protected boolean shouldCheckArchitecture(String driverName) {
-        return !MY_OS_NAME.contains(OperativeSystem.mac.name());
+    protected boolean shouldCheckArchitecture() {
+        return !MY_OS_NAME.contains(MAC.name());
     }
 }

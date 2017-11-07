@@ -17,11 +17,12 @@ package io.github.bonigarcia.wdm.base;
 import static io.github.bonigarcia.wdm.Architecture.DEFAULT;
 import static io.github.bonigarcia.wdm.Architecture.X32;
 import static io.github.bonigarcia.wdm.Architecture.X64;
+import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
-import java.util.Arrays;
 import java.util.Collection;
 
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -54,7 +55,7 @@ public abstract class BaseVersionTst {
 
     @Parameters(name = "{index}: {0}")
     public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][] { { DEFAULT }, { X32 }, { X64 } });
+        return asList(new Object[][] { { DEFAULT }, { X32 }, { X64 } });
     }
 
     @Test
@@ -67,7 +68,7 @@ public abstract class BaseVersionTst {
             }
 
             String driverVersion = browserManager.getDownloadedVersion();
-            Assert.assertNotNull(driverVersion);
+            assertNotNull(driverVersion);
         }
     }
 
@@ -85,7 +86,7 @@ public abstract class BaseVersionTst {
                 }
                 String driverVersion = browserManager.getDownloadedVersion();
 
-                Assert.assertEquals(specificVersion, driverVersion);
+                assertEquals(specificVersion, driverVersion);
             }
         }
     }

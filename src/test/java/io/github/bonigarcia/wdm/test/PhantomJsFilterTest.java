@@ -15,6 +15,7 @@
 package io.github.bonigarcia.wdm.test;
 
 import static io.github.bonigarcia.wdm.Architecture.X64;
+import static org.junit.Assert.assertTrue;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -23,7 +24,6 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -81,7 +81,7 @@ public class PhantomJsFilterTest {
 
         log.info("Filtered URLS for LATEST version {} : {}",
                 phantomJsBinaryName, filteredLatestUrls);
-        Assert.assertTrue(!filteredLatestUrls.isEmpty());
+        assertTrue(!filteredLatestUrls.isEmpty());
 
     }
 
@@ -106,7 +106,7 @@ public class PhantomJsFilterTest {
 
         log.info("Filtered URLS for {} version {}: {}", phantomJsBinaryName,
                 specificVersion, filteredVersionUrls);
-        Assert.assertTrue(!filteredVersionUrls.isEmpty());
+        assertTrue(!filteredVersionUrls.isEmpty());
     }
 
 }

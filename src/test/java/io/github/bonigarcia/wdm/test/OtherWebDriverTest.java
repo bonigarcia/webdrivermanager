@@ -14,7 +14,8 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import java.util.Arrays;
+import static java.util.Arrays.asList;
+
 import java.util.Collection;
 
 import org.junit.After;
@@ -53,7 +54,7 @@ public class OtherWebDriverTest {
 
     @Parameters(name = "{index}: {0}")
     public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][] { { SafariDriver.class },
+        return asList(new Object[][] { { SafariDriver.class },
                 { EventFiringWebDriver.class }, { HtmlUnitDriver.class },
                 { RemoteWebDriver.class } });
     }

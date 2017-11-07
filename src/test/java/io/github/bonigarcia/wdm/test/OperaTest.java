@@ -14,8 +14,11 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import static org.apache.commons.lang3.SystemUtils.IS_OS_LINUX;
+import static java.lang.System.getProperty;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 import static org.junit.Assume.assumeTrue;
+import static org.openqa.selenium.opera.OperaOptions.CAPABILITY;
+import static org.openqa.selenium.remote.DesiredCapabilities.operaBlink;
 
 import java.io.File;
 
@@ -39,27 +42,32 @@ public class OperaTest extends BaseBrowserTst {
     // opera does not work with xvfb which is used on the ci server
     // see: https://github.com/operasoftware/operachromiumdriver/issues/26
     private static boolean ignoreTestInHeadlessEnvironment = "true"
-            .equals(System.getProperty("headlessEnvironment"));
+            .equals(getProperty("headlessEnvironment"));
 
     @BeforeClass
     public static void setupClass() {
         if (ignoreTestInHeadlessEnvironment) {
             validOS = false;
-            assumeTrue(false);
+            assumeTrue(validOS);
         }
         OperaDriverManager.getInstance().setup();
     }
 
     @Before
     public void setupTest() {
-        DesiredCapabilities capabilities = DesiredCapabilities.operaBlink();
-        if (IS_OS_LINUX) {
-            assumeTrue("no Opera installed on Linux; well ... :-)",
-                    new File("/usr/bin/opera").exists());
-            OperaOptions options = new OperaOptions();
-            options.setBinary(new File("/usr/bin/opera"));
-            capabilities.setCapability(OperaOptions.CAPABILITY, options);
+        DesiredCapabilities capabilities = operaBlink();
+        File operaBinary = null;
+        if (IS_OS_WINDOWS) {
+            operaBinary = new File("C:\\Program Files\\Opera\\launcher.exe");
+        } else {
+            operaBinary = new File("/usr/bin/opera");
         }
+
+        assumeTrue(operaBinary != null && operaBinary.exists());
+        OperaOptions options = new OperaOptions();
+        options.setBinary(operaBinary);
+        capabilities.setCapability(CAPABILITY, options);
+
         driver = new OperaDriver(capabilities);
     }
 

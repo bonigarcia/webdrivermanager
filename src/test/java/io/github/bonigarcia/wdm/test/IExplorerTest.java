@@ -14,6 +14,7 @@
  */
 package io.github.bonigarcia.wdm.test;
 
+import static java.lang.Runtime.getRuntime;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 
 import java.io.IOException;
@@ -65,8 +66,8 @@ public class IExplorerTest {
     @After
     public void teardown() throws IOException {
         if (validOS) {
-            Runtime.getRuntime().exec("taskkill /F /IM IEDriverServer.exe");
-            Runtime.getRuntime().exec("taskkill /F /IM iexplore.exe");
+            getRuntime().exec("taskkill /F /IM IEDriverServer.exe");
+            getRuntime().exec("taskkill /F /IM iexplore.exe");
 
             if (driver != null) {
                 driver.close();

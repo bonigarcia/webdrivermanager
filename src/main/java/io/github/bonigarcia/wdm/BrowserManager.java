@@ -53,7 +53,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -310,7 +309,7 @@ public abstract class BrowserManager {
             Collection<File> listFiles = FileUtils
                     .listFiles(new File(repository), null, true);
             Object[] array = listFiles.toArray();
-            sort(array, Collections.reverseOrder());
+            sort(array, reverseOrder());
 
             for (Object f : array) {
                 driverInCache = f.toString();
@@ -351,7 +350,7 @@ public abstract class BrowserManager {
                 driverInCache = f.toString();
 
                 // Exception for phantomjs
-                boolean architecture = !shouldCheckArchitecture(driverName)
+                boolean architecture = !shouldCheckArchitecture()
                         || driverInCache.contains(arch.toString());
                 log.trace("Checking {}", driverInCache);
 
@@ -386,7 +385,7 @@ public abstract class BrowserManager {
     /**
      * @since 1.6.2
      */
-    protected boolean shouldCheckArchitecture(String driverName) {
+    protected boolean shouldCheckArchitecture() {
         return true;
     }
 
@@ -413,7 +412,7 @@ public abstract class BrowserManager {
         for (URL url : list) {
             for (OperativeSystem os : OperativeSystem.values()) {
                 if (((MY_OS_NAME.contains(os.name())
-                        && url.getFile().toLowerCase().contains(os.name()))
+                        && url.getFile().toUpperCase().contains(os.name()))
                         || getDriverName().contains("IEDriverServer")
                         || (IS_OS_MAC
                                 && url.getFile().toLowerCase().contains("osx")))
@@ -550,7 +549,7 @@ public abstract class BrowserManager {
             return out;
         }
 
-        Collections.reverse(list);
+        reverse(list);
 
         List<URL> copyOfList = new ArrayList<>(list);
         for (URL url : copyOfList) {
@@ -730,11 +729,11 @@ public abstract class BrowserManager {
     protected static String getOsName() {
         String os = getProperty("os.name").toLowerCase();
         if (IS_OS_WINDOWS) {
-            os = "win";
+            os = "WIN";
         } else if (IS_OS_LINUX) {
-            os = "linux";
+            os = "LINUX";
         } else if (IS_OS_MAC) {
-            os = "mac";
+            os = "MAC";
         }
         return os;
     }
