@@ -70,24 +70,4 @@ public class WebDriverManager extends BrowserManager {
         return instance.getDrivers();
     }
 
-    @Override
-    protected String getExportParameter() {
-        return instance.getExportParameter();
-    }
-
-    @Override
-    protected String getDriverVersionKey() {
-        return instance.getDriverVersionKey();
-    }
-
-    @Override
-    protected String getDriverUrlKey() {
-        return instance.getDriverUrlKey();
-    }
-
-    @Override
-    protected List<String> getDriverName() {
-        return instance.getDriverName();
-    }
-
 }

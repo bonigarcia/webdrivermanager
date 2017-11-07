@@ -14,6 +14,7 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static io.github.bonigarcia.wdm.WdmConfig.getString;
 import static java.util.Arrays.asList;
 
 import java.io.InputStream;
@@ -43,7 +44,7 @@ public class EdgeDriverManager extends BrowserManager {
     }
 
     public EdgeDriverManager() {
-        exportParameter = "wdm.edgeExport";
+        exportParameter = getString("wdm.edgeExport");
         driverVersionKey = "wdm.edgeVersion";
         driverUrlKey = "wdm.edgeDriverUrl";
         driverName = asList("MicrosoftWebDriver");
