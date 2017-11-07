@@ -69,6 +69,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.internal.LinkedTreeMap;
+
 /**
  * Generic manager.
  *
@@ -936,4 +940,54 @@ public abstract class BrowserManager {
         System.out.println("-" + string);
     }
 
+    protected List<URL> getDriversFromGitHub() throws IOException {
+        URL driverUrl = getDriverUrl();
+        List<URL> urls;
+        if (isUsingTaobaoMirror()) {
+            urls = getDriversFromMirror(driverUrl);
+
+        } else {
+            String driverVersion = versionToDownload;
+
+            try (BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(openGitHubConnection(driverUrl)))) {
+
+                GsonBuilder gsonBuilder = new GsonBuilder();
+                Gson gson = gsonBuilder.create();
+                GitHubApi[] releaseArray = gson.fromJson(reader,
+                        GitHubApi[].class);
+                if (driverVersion != null) {
+                    releaseArray = new GitHubApi[] {
+                            getVersion(releaseArray, driverVersion) };
+                }
+
+                urls = new ArrayList<>();
+                for (GitHubApi release : releaseArray) {
+                    if (release != null) {
+                        List<LinkedTreeMap<String, Object>> assets = release
+                                .getAssets();
+                        for (LinkedTreeMap<String, Object> asset : assets) {
+                            urls.add(new URL(asset.get("browser_download_url")
+                                    .toString()));
+                        }
+                    }
+                }
+            }
+        }
+        return urls;
+    }
+
+    protected GitHubApi getVersion(GitHubApi[] releaseArray, String version) {
+        GitHubApi out = null;
+        for (GitHubApi release : releaseArray) {
+            if ((release.getName() != null
+                    && release.getName().contains(version))
+                    || (release.getTagName() != null
+                            && release.getTagName().contains(version))) {
+                out = release;
+                break;
+            }
+        }
+        return out;
+    }
 }

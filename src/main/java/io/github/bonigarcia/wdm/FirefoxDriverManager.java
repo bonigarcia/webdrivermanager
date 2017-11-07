@@ -16,18 +16,11 @@ package io.github.bonigarcia.wdm;
 
 import static io.github.bonigarcia.wdm.OperativeSystem.MAC;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.internal.LinkedTreeMap;
 
 /**
  * Manager for Firefox (same as Marionette).
@@ -47,59 +40,9 @@ public class FirefoxDriverManager extends BrowserManager {
 
     @Override
     protected List<URL> getDrivers() throws IOException {
-        URL driverUrl = getDriverUrl();
-        List<URL> urls;
-        if (isUsingTaobaoMirror()) {
-            urls = getDriversFromMirror(driverUrl);
-
-        } else {
-
-            log.info("Reading {} to seek {}", driverUrl, getDriverName());
-
-            String driverVersion = versionToDownload;
-
-            try (BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(openGitHubConnection(driverUrl)))) {
-
-                GsonBuilder gsonBuilder = new GsonBuilder();
-                Gson gson = gsonBuilder.create();
-                GitHubApi[] releaseArray = gson.fromJson(reader,
-                        GitHubApi[].class);
-
-                if (driverVersion != null) {
-                    releaseArray = new GitHubApi[] {
-                            getVersion(releaseArray, driverVersion) };
-                }
-
-                urls = new ArrayList<>();
-                for (GitHubApi release : releaseArray) {
-                    if (release != null) {
-                        List<LinkedTreeMap<String, Object>> assets = release
-                                .getAssets();
-                        for (LinkedTreeMap<String, Object> asset : assets) {
-                            urls.add(new URL(asset.get("browser_download_url")
-                                    .toString()));
-                        }
-                    }
-                }
-            }
-        }
-        return urls;
+        return getDriversFromGitHub();
     }
 
-    protected GitHubApi getVersion(GitHubApi[] releaseArray, String version) {
-        GitHubApi out = null;
-        for (GitHubApi release : releaseArray) {
-            if ((release.getName() != null
-                    && release.getName().contains(version))
-                    || (release.getTagName() != null
-                            && release.getTagName().contains(version))) {
-                out = release;
-                break;
-            }
-        }
-        return out;
-    }
 
     @Override
     protected String getExportParameter() {
