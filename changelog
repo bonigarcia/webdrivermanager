@@ -1,3 +1,8 @@
+webdrivermanager (1.8.0)
+
+  + Remove deprecated MarionetteDriverManager
+
+
 webdrivermanager (1.7.2)
 
   + Add wdm.architecture configuration key (issue #154)

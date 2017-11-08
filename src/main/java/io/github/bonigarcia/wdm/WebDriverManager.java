@@ -45,7 +45,6 @@ public class WebDriverManager extends BrowserManager {
         case "org.openqa.selenium.phantomjs.PhantomJSDriver":
             browserManagerClass = PhantomJsDriverManager.class;
             break;
-        case "org.openqa.selenium.firefox.MarionetteDriver":
         case "org.openqa.selenium.firefox.FirefoxDriver":
             browserManagerClass = FirefoxDriverManager.class;
             break;

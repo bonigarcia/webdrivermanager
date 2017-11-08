@@ -20,7 +20,7 @@ import io.github.bonigarcia.wdm.FirefoxDriverManager;
 import io.github.bonigarcia.wdm.base.BaseVersionTst;
 
 /**
- * Test asserting Marionette versions.
+ * Test asserting Firefox versions.
  *
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.5.0

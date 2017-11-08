@@ -22,7 +22,7 @@ import io.github.bonigarcia.wdm.FirefoxDriverManager;
 import io.github.bonigarcia.wdm.base.BaseBrowserTst;
 
 /**
- * Test with Firefox browser (Marionette driver).
+ * Test with Firefox browser.
  *
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.5.0

@@ -24,7 +24,7 @@ import java.net.URL;
 import java.util.List;
 
 /**
- * Manager for Firefox (same as Marionette).
+ * Manager for Firefox.
  *
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.5.0
