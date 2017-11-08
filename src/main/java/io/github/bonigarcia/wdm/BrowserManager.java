@@ -755,10 +755,6 @@ public abstract class BrowserManager {
         return httpClient.createProxy(proxy);
     }
 
-    // *************************************
-    // Public methods
-    // *************************************
-
     public void setup() {
         String driverVersion = getDriverVersion();
         if (!driverVersion.equals("")) {
@@ -881,17 +877,11 @@ public abstract class BrowserManager {
         return this;
     }
 
-    /**
-     * @since 1.6.2
-     */
     public BrowserManager proxyUser(String proxyUser) {
         this.proxyUser = proxyUser;
         return this;
     }
 
-    /**
-     * @since 1.6.2
-     */
     public BrowserManager proxyPass(String proxyPass) {
         this.proxyPass = proxyPass;
         return this;
@@ -904,11 +894,6 @@ public abstract class BrowserManager {
     public BrowserManager useBetaVersions() {
         this.useBetaVersions = true;
         return this;
-    }
-
-    public static void main(String[] args) {
-        String string = getString("wdm.architecture");
-        System.out.println("-" + string);
     }
 
     protected List<URL> getDriversFromGitHub() throws IOException {
