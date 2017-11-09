@@ -16,6 +16,7 @@ package io.github.bonigarcia.wdm;
 
 import java.util.List;
 
+import com.google.gson.annotations.SerializedName;
 import com.google.gson.internal.LinkedTreeMap;
 
 /**
@@ -29,11 +30,10 @@ import com.google.gson.internal.LinkedTreeMap;
 public class GitHubApi {
 
     private String name;
-    private String tag_name;
     private List<LinkedTreeMap<String, Object>> assets;
 
-    public GitHubApi() {
-    }
+    @SerializedName("tag_name")
+    private String tagName;
 
     public String getName() {
         return name;
@@ -44,11 +44,11 @@ public class GitHubApi {
     }
 
     public String getTagName() {
-        return tag_name;
+        return tagName;
     }
 
     public void setTagName(String tagName) {
-        this.tag_name = tagName;
+        this.tagName = tagName;
     }
 
     public List<LinkedTreeMap<String, Object>> getAssets() {
