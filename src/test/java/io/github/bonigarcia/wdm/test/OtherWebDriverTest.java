@@ -15,23 +15,25 @@
 package io.github.bonigarcia.wdm.test;
 
 import static java.util.Arrays.asList;
+import static org.junit.rules.ExpectedException.none;
 
 import java.util.Collection;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
@@ -44,19 +46,24 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 @RunWith(Parameterized.class)
 public class OtherWebDriverTest {
 
-    protected static final Logger log = LoggerFactory
-            .getLogger(OtherWebDriverTest.class);
-
-    @Parameter
+    @Parameter(0)
     public Class<? extends WebDriver> driverClass;
+
+    @Parameter(1)
+    public Class<? extends Throwable> exception;
+
+    @Rule
+    public ExpectedException thrown = none();
 
     protected WebDriver driver;
 
-    @Parameters(name = "{index}: {0}")
+    @Parameters(name = "{index}: {0} {1}")
     public static Collection<Object[]> data() {
-        return asList(new Object[][] { { SafariDriver.class },
-                { EventFiringWebDriver.class }, { HtmlUnitDriver.class },
-                { RemoteWebDriver.class } });
+        return asList(new Object[][] {
+                { SafariDriver.class, WebDriverException.class },
+                { EventFiringWebDriver.class, InstantiationException.class },
+                { HtmlUnitDriver.class, null },
+                { RemoteWebDriver.class, IllegalAccessException.class } });
     }
 
     @Before
@@ -73,11 +80,10 @@ public class OtherWebDriverTest {
 
     @Test
     public void test() throws InstantiationException, IllegalAccessException {
-        try {
-            driver = driverClass.newInstance();
-        } catch (Exception e) {
-            log.warn("Exception creating instance: {}", e.getMessage());
+        if (exception != null) {
+            thrown.expect(exception);
         }
+        driver = driverClass.newInstance();
     }
 
 }

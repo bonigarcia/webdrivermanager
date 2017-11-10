@@ -16,8 +16,13 @@ package io.github.bonigarcia.wdm;
 
 import static io.github.bonigarcia.wdm.WdmUtils.isNullOrEmpty;
 import static java.lang.System.getenv;
+import static java.net.URLDecoder.decode;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
+import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
 import static org.apache.http.auth.AuthScope.ANY_REALM;
 import static org.apache.http.client.config.AuthSchemes.NTLM;
+import static org.apache.http.client.config.RequestConfig.custom;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -28,15 +33,12 @@ import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.net.UnknownHostException;
-import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
-import org.apache.http.HttpStatus;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
 import org.apache.http.auth.NTCredentials;
@@ -90,8 +92,7 @@ public class WdmHttpClient implements Closeable {
 
     public Response execute(Method method) throws IOException {
         HttpResponse response = httpClient.execute(method.toHttpUriRequest());
-        if (response.getStatusLine()
-                .getStatusCode() >= HttpStatus.SC_BAD_REQUEST) {
+        if (response.getStatusLine().getStatusCode() >= SC_BAD_REQUEST) {
             String errorMessage = "A response error is detected: "
                     + response.getStatusLine();
             log.error(errorMessage);
@@ -103,8 +104,7 @@ public class WdmHttpClient implements Closeable {
     public boolean isValid(URL url) throws IOException {
         HttpResponse response = httpClient
                 .execute(new WdmHttpClient.Options(url).toHttpUriRequest());
-        if (response.getStatusLine()
-                .getStatusCode() > HttpStatus.SC_UNAUTHORIZED) {
+        if (response.getStatusLine().getStatusCode() > SC_UNAUTHORIZED) {
             log.debug("A response error is detected. {}",
                     response.getStatusLine());
             return false;
@@ -133,7 +133,8 @@ public class WdmHttpClient implements Closeable {
             return null;
         }
         if (!(proxy.address() instanceof InetSocketAddress)) {
-            String errorMessage = "Detect an unsupported subclass of SocketAddress. Please use the InetSocketAddress or subclass. Actual:"
+            String errorMessage = "Detect an unsupported subclass of SocketAddress. "
+                    + "Please use the InetSocketAddress or subclass. Actual:"
                     + proxy.address().getClass();
             log.error(errorMessage);
             throw new WebDriverManagerException(errorMessage);
@@ -158,16 +159,14 @@ public class WdmHttpClient implements Closeable {
             if (userInfo != null) {
                 StringTokenizer st = new StringTokenizer(userInfo, ":");
                 username = st.hasMoreTokens()
-                        ? URLDecoder.decode(st.nextToken(),
-                                StandardCharsets.UTF_8.name())
+                        ? decode(st.nextToken(), UTF_8.name())
                         : null;
                 password = st.hasMoreTokens()
-                        ? URLDecoder.decode(st.nextToken(),
-                                StandardCharsets.UTF_8.name())
+                        ? decode(st.nextToken(), UTF_8.name())
                         : null;
             }
-            String envProxyUser = System.getenv("HTTPS_PROXY_USER");
-            String envProxyPass = System.getenv("HTTPS_PROXY_PASS");
+            String envProxyUser = getenv("HTTPS_PROXY_USER");
+            String envProxyPass = getenv("HTTPS_PROXY_PASS");
             username = (envProxyUser != null) ? envProxyUser : username;
             password = (envProxyPass != null) ? envProxyPass : password;
 
@@ -182,7 +181,7 @@ public class WdmHttpClient implements Closeable {
             String ntlmUsername = username;
             String ntlmDomain = null;
 
-            int index = username.indexOf("\\");
+            int index = username.indexOf('\\');
             if (index > 0) {
                 ntlmDomain = username.substring(0, index);
                 ntlmUsername = username.substring(index + 1);
@@ -237,7 +236,6 @@ public class WdmHttpClient implements Closeable {
     }
 
     public static class Builder {
-
         private String proxy;
         private String proxyUser;
         private String proxyPass;
@@ -261,67 +259,64 @@ public class WdmHttpClient implements Closeable {
             return new WdmHttpClient(this.proxy, this.proxyUser,
                     this.proxyPass);
         }
-
     }
 
     private interface Method {
         HttpUriRequest toHttpUriRequest();
     }
 
-    public final static class Get implements Method {
-        private final HttpGet get;
-        private final RequestConfig config;
+    public static final class Get implements Method {
+        private final HttpGet httpGet;
+        private final RequestConfig requestConfig;
 
         public Get(URL url) {
-            this.get = new HttpGet(url.toString());
-            this.config = null;
+            this.httpGet = new HttpGet(url.toString());
+            this.requestConfig = null;
         }
 
         public Get(String url, int socketTimeout) {
-            this.get = new HttpGet(url);
-            this.config = RequestConfig.custom().setSocketTimeout(socketTimeout)
+            this.httpGet = new HttpGet(url);
+            this.requestConfig = custom().setSocketTimeout(socketTimeout)
                     .build();
         }
 
         public Get addHeader(String name, String value) {
-            this.get.addHeader(name, value);
+            this.httpGet.addHeader(name, value);
             return this;
         }
 
         @Override
         public HttpUriRequest toHttpUriRequest() {
-            if (config != null) {
-                get.setConfig(config);
+            if (requestConfig != null) {
+                httpGet.setConfig(requestConfig);
             }
-            return this.get;
+            return this.httpGet;
         }
-
     }
 
-    public final static class Options implements Method {
-        private final HttpOptions options;
+    public static final class Options implements Method {
+        private final HttpOptions httpOptions;
 
         public Options(URL url) {
-            this.options = new HttpOptions(url.toString());
+            this.httpOptions = new HttpOptions(url.toString());
         }
 
         @Override
         public HttpUriRequest toHttpUriRequest() {
-            return this.options;
+            return this.httpOptions;
         }
     }
 
-    public final static class Response {
-        private final HttpResponse response;
+    public static final class Response {
+        private final HttpResponse httpResponse;
 
         public Response(HttpResponse response) {
-            this.response = response;
+            this.httpResponse = response;
         }
 
         public InputStream getContent() throws IOException {
-            return this.response.getEntity().getContent();
+            return this.httpResponse.getEntity().getContent();
         }
-
     }
 
 }

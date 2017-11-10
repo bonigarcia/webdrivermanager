@@ -15,13 +15,15 @@
 package io.github.bonigarcia.wdm.test;
 
 import static io.github.bonigarcia.wdm.Architecture.X64;
-import static org.junit.Assert.assertTrue;
+import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.collection.IsEmptyCollection.empty;
+import static org.junit.Assert.assertThat;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Before;
@@ -71,7 +73,7 @@ public class PhantomJsFilterTest {
                 List.class, List.class);
         method.setAccessible(true);
         List<URL> latestUrls = (List<URL>) method.invoke(phatomJsManager,
-                driversUrls, Arrays.asList(phantomJsBinaryName));
+                driversUrls, asList(phantomJsBinaryName));
 
         method = BrowserManager.class.getDeclaredMethod("filter", List.class,
                 Architecture.class);
@@ -81,7 +83,8 @@ public class PhantomJsFilterTest {
 
         log.info("Filtered URLS for LATEST version {} : {}",
                 phantomJsBinaryName, filteredLatestUrls);
-        assertTrue(!filteredLatestUrls.isEmpty());
+
+        assertThat(filteredLatestUrls, not(empty()));
 
     }
 
@@ -95,8 +98,8 @@ public class PhantomJsFilterTest {
                 List.class, List.class, String.class);
         method.setAccessible(true);
         List<URL> specificVersionUrls = (List<URL>) method.invoke(
-                phatomJsManager, driversUrls,
-                Arrays.asList(phantomJsBinaryName), specificVersion);
+                phatomJsManager, driversUrls, asList(phantomJsBinaryName),
+                specificVersion);
 
         method = BrowserManager.class.getDeclaredMethod("filter", List.class,
                 Architecture.class);
@@ -106,7 +109,8 @@ public class PhantomJsFilterTest {
 
         log.info("Filtered URLS for {} version {}: {}", phantomJsBinaryName,
                 specificVersion, filteredVersionUrls);
-        assertTrue(!filteredVersionUrls.isEmpty());
+
+        assertThat(filteredVersionUrls, not(empty()));
     }
 
 }

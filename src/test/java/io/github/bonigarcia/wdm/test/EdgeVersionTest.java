@@ -14,9 +14,6 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
-
-import org.junit.After;
 import org.junit.Before;
 
 import io.github.bonigarcia.wdm.EdgeDriverManager;
@@ -34,12 +31,6 @@ public class EdgeVersionTest extends BaseVersionTst {
     public void setup() {
         browserManager = EdgeDriverManager.getInstance();
         specificVersions = new String[] { "3.14393" };
-        validOS = IS_OS_WINDOWS;
-    }
-
-    @After
-    public void end() {
-        validOS = true;
     }
 
 }

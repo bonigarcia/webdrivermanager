@@ -14,7 +14,8 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import java.util.Arrays;
+import static java.util.Arrays.asList;
+
 import java.util.Collection;
 
 import org.junit.Before;
@@ -44,7 +45,7 @@ public class WebDriverTest extends BaseBrowserTst {
 
     @Parameters(name = "{index}: {0}")
     public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][] { { ChromeDriver.class },
+        return asList(new Object[][] { { ChromeDriver.class },
                 { FirefoxDriver.class }, { PhantomJSDriver.class } });
     }
 

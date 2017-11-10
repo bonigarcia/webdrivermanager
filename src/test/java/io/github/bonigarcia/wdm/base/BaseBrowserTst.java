@@ -15,11 +15,11 @@
 package io.github.bonigarcia.wdm.base;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.junit.Assert.assertThat;
 
 import org.junit.After;
-import org.junit.AfterClass;
 import org.junit.Test;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 /**
@@ -29,10 +29,6 @@ import org.openqa.selenium.WebDriver;
  * @since 1.4.1
  */
 public abstract class BaseBrowserTst {
-
-    protected static final int TIMEOUT = 30; // seconds
-
-    protected static boolean validOS = true;
 
     protected WebDriver driver;
 
@@ -45,16 +41,10 @@ public abstract class BaseBrowserTst {
 
     @Test
     public void test() {
-        if (validOS) {
-            driver.manage().timeouts().implicitlyWait(TIMEOUT, SECONDS);
-            driver.get("https://en.wikipedia.org/wiki/Main_Page");
-            driver.findElement(By.id("searchInput")).sendKeys("Software");
-            driver.findElement(By.id("searchButton")).click();
-        }
+        driver.manage().timeouts().implicitlyWait(30, SECONDS);
+        driver.get("https://bonigarcia.github.io/selenium-jupiter/");
+        assertThat(driver.getTitle(),
+                containsString("A JUnit 5 extension for Selenium WebDriver"));
     }
 
-    @AfterClass
-    public static void teardownClass() {
-        validOS = true;
-    }
 }

@@ -16,17 +16,18 @@ package io.github.bonigarcia.wdm.test;
 
 import static java.lang.Runtime.getRuntime;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
+import static org.junit.Assume.assumeTrue;
 
 import java.io.IOException;
 
-import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Test;
-import org.openqa.selenium.WebDriver;
+import org.junit.Ignore;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 
 import io.github.bonigarcia.wdm.InternetExplorerDriverManager;
+import io.github.bonigarcia.wdm.base.BaseBrowserTst;
 
 /**
  * Test with Internet Explorer browser.
@@ -34,45 +35,24 @@ import io.github.bonigarcia.wdm.InternetExplorerDriverManager;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.0.0
  */
-public class IExplorerTest {
-
-    protected static boolean validOS = true;
-
-    protected WebDriver driver;
+@Ignore
+public class IExplorerTest extends BaseBrowserTst {
 
     @BeforeClass
     public static void setupClass() {
-        validOS = IS_OS_WINDOWS;
-
-        if (validOS) {
-            InternetExplorerDriverManager.getInstance().setup();
-        }
+        assumeTrue(IS_OS_WINDOWS);
+        InternetExplorerDriverManager.getInstance().setup();
     }
 
     @Before
     public void setupTest() {
-        if (validOS) {
-            driver = new InternetExplorerDriver();
-        }
+        driver = new InternetExplorerDriver();
     }
 
-    @Test
-    public void test() {
-        if (validOS) {
-            driver.get("https://en.wikipedia.org/wiki/Main_Page");
-        }
-    }
-
-    @After
-    public void teardown() throws IOException {
-        if (validOS) {
-            getRuntime().exec("taskkill /F /IM IEDriverServer.exe");
-            getRuntime().exec("taskkill /F /IM iexplore.exe");
-
-            if (driver != null) {
-                driver.close();
-            }
-        }
+    @AfterClass
+    public static void taskkill() throws IOException {
+        getRuntime().exec("taskkill /F /IM IEDriverServer.exe");
+        getRuntime().exec("taskkill /F /IM iexplore.exe");
     }
 
 }

@@ -14,8 +14,10 @@
  */
 package io.github.bonigarcia.wdm.test;
 
+import static java.lang.Boolean.parseBoolean;
 import static java.lang.System.getProperty;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
+import static org.junit.Assume.assumeFalse;
 import static org.junit.Assume.assumeTrue;
 import static org.openqa.selenium.opera.OperaOptions.CAPABILITY;
 import static org.openqa.selenium.remote.DesiredCapabilities.operaBlink;
@@ -39,17 +41,9 @@ import io.github.bonigarcia.wdm.base.BaseBrowserTst;
  */
 public class OperaTest extends BaseBrowserTst {
 
-    // opera does not work with xvfb which is used on the ci server
-    // see: https://github.com/operasoftware/operachromiumdriver/issues/26
-    private static boolean ignoreTestInHeadlessEnvironment = "true"
-            .equals(getProperty("headlessEnvironment"));
-
     @BeforeClass
     public static void setupClass() {
-        if (ignoreTestInHeadlessEnvironment) {
-            validOS = false;
-            assumeTrue(validOS);
-        }
+        assumeFalse(parseBoolean(getProperty("headlessEnvironment")));
         OperaDriverManager.getInstance().setup();
     }
 

@@ -14,12 +14,12 @@
  */
 package io.github.bonigarcia.wdm.test;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertThat;
 
 import java.lang.reflect.Method;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Collection;
 
 import org.junit.Ignore;
@@ -51,7 +51,7 @@ public class TaobaoTest {
 
     @Parameters(name = "{index}: {0}")
     public static Collection<Object[]> data() {
-        return Arrays.asList(
+        return asList(
                 new Object[][] { { ChromeDriver.class }, { OperaDriver.class },
                         { PhantomJSDriver.class }, { FirefoxDriver.class } });
     }

@@ -14,10 +14,16 @@
  */
 package io.github.bonigarcia.wdm.test;
 
+import static org.apache.http.auth.AuthScope.ANY_HOST;
+import static org.apache.http.auth.AuthScope.ANY_PORT;
+import static org.apache.http.auth.AuthScope.ANY_REALM;
+import static org.apache.http.client.config.AuthSchemes.BASIC;
+import static org.apache.http.client.config.AuthSchemes.KERBEROS;
+import static org.apache.http.client.config.AuthSchemes.NTLM;
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
-import static org.hamcrest.core.IsInstanceOf.instanceOf;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -27,7 +33,6 @@ import java.net.Proxy;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.NTCredentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.config.AuthSchemes;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.junit.Test;
@@ -35,9 +40,9 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import io.github.bonigarcia.wdm.WdmHttpClient;
 import io.github.bonigarcia.wdm.BrowserManager;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
+import io.github.bonigarcia.wdm.WdmHttpClient;
 import mockit.Mock;
 import mockit.MockUp;
 import mockit.integration.junit4.JMockit;
@@ -112,22 +117,17 @@ public class ProxyTest {
 
         assertThat(
                 provider.getCredentials(
-                        new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT,
-                                AuthScope.ANY_REALM, AuthSchemes.NTLM)),
+                        new AuthScope(ANY_HOST, ANY_PORT, ANY_REALM, NTLM)),
                 instanceOf(NTCredentials.class));
         assertThat(
                 provider.getCredentials(
-                        new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT,
-                                AuthScope.ANY_REALM, AuthSchemes.BASIC)),
+                        new AuthScope(ANY_HOST, ANY_PORT, ANY_REALM, BASIC)),
+                instanceOf(UsernamePasswordCredentials.class));
+        assertThat(provider.getCredentials(new AuthScope(ANY_HOST, ANY_PORT)),
                 instanceOf(UsernamePasswordCredentials.class));
         assertThat(
                 provider.getCredentials(
-                        new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT)),
-                instanceOf(UsernamePasswordCredentials.class));
-        assertThat(
-                provider.getCredentials(
-                        new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT,
-                                AuthScope.ANY_REALM, AuthSchemes.KERBEROS)),
+                        new AuthScope(ANY_HOST, ANY_PORT, ANY_REALM, KERBEROS)),
                 instanceOf(UsernamePasswordCredentials.class));
     }
 
@@ -147,15 +147,13 @@ public class ProxyTest {
                 .get(client);
 
         NTCredentials ntcreds = (NTCredentials) provider.getCredentials(
-                new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT,
-                        AuthScope.ANY_REALM, AuthSchemes.NTLM));
+                new AuthScope(ANY_HOST, ANY_PORT, ANY_REALM, NTLM));
         assertThat(ntcreds.getDomain(), equalTo("DOMAIN"));
         assertThat(ntcreds.getUserName(), equalTo("me"));
         assertThat(ntcreds.getPassword(), equalTo("pass"));
 
         UsernamePasswordCredentials creds = (UsernamePasswordCredentials) provider
-                .getCredentials(
-                        new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT));
+                .getCredentials(new AuthScope(ANY_HOST, ANY_PORT));
         assertThat(creds.getUserName(), equalTo("domain\\me"));
         assertThat(creds.getPassword(), equalTo("pass"));
     }

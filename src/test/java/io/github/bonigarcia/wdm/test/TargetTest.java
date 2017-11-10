@@ -14,13 +14,13 @@
  */
 package io.github.bonigarcia.wdm.test;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Collection;
 
 import org.junit.Test;
@@ -65,7 +65,7 @@ public class TargetTest {
 
     @Parameters(name = "{index}: {0}")
     public static Collection<Object[]> data() {
-        return Arrays.asList(new Object[][] {
+        return asList(new Object[][] {
                 // Chrome Linux
                 { "2.21",
                         "http://chromedriver.storage.googleapis.com/2.21/chromedriver_linux64.zip",
@@ -108,7 +108,7 @@ public class TargetTest {
                         "/MicrosoftWebDriver/3.14361/MicrosoftWebDriver.exe",
                         EdgeDriverManager.getInstance() },
 
-                // Marionette Mac OS X
+                // Firefox Mac OS X
                 { "0.6.2",
                         "https://github.com/jgraham/wires/releases/download/v0.6.2/wires-0.6.2-OSX.gz",
                         "/wires/osx/0.6.2/wires-0.6.2-OSX.gz",
@@ -118,13 +118,13 @@ public class TargetTest {
                         "/wires/osx/0.3.0/wires-0.3.0-osx.tar.gz",
                         FirefoxDriverManager.getInstance() },
 
-                // Marionette Linux
+                // Firefox Linux
                 { "0.6.2",
                         "https://github.com/jgraham/wires/releases/download/v0.6.2/wires-0.6.2-linux64.gz",
                         "/wires/linux64/0.6.2/wires-0.6.2-linux64.gz",
                         FirefoxDriverManager.getInstance() },
 
-                // Marionette Linux #2
+                // Firefox Linux #2
                 { "0.8.0",
                         "https://github.com/mozilla/geckodriver/releases/download/v0.8.0/geckodriver-0.8.0-linux64.gz",
                         "/geckodriver/linux64/0.8.0/geckodriver-0.8.0-linux64.gz",
