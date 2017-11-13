@@ -1,5 +1,6 @@
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.bonigarcia/webdrivermanager/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.bonigarcia/webdrivermanager)
 [![Build Status](https://travis-ci.org/bonigarcia/webdrivermanager.svg?branch=master)](https://travis-ci.org/bonigarcia/webdrivermanager)
+[![Quality Gate](https://sonarcloud.io/api/badges/gate?key=io.github.bonigarcia:webdrivermanager)](https://sonarcloud.io/dashboard/index/io.github.bonigarcia:webdrivermanager)
 [![codecov](https://codecov.io/gh/bonigarcia/webdrivermanager/branch/master/graph/badge.svg)](https://codecov.io/gh/bonigarcia/webdrivermanager)
 [![License (LGPL version 2.1)](https://img.shields.io/badge/license-GNU%20LGPL%20version%202.1-brightgreen.svg?style=flat-square)](http://opensource.org/licenses/LGPL-2.1)
 [![Support badge](https://img.shields.io/badge/support-sof-green.svg)](http://stackoverflow.com/questions/tagged/webdrivermanager-java)
