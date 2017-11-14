@@ -20,6 +20,7 @@ import static java.io.File.separator;
 import static java.lang.Runtime.getRuntime;
 import static java.lang.System.getProperty;
 import static java.nio.file.Files.createTempDirectory;
+import static java.nio.file.Files.delete;
 import static java.nio.file.Files.move;
 import static java.util.UUID.randomUUID;
 import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
@@ -58,18 +59,14 @@ public class Downloader {
 
     private static final String HOME = "~";
 
-    private final BrowserManager browserManager;
-    private final WdmHttpClient httpClient;
-
+    private BrowserManager browserManager;
+    private WdmHttpClient httpClient;
     private boolean override = getBoolean("wdm.override");
 
     public Downloader(BrowserManager browserManager) {
         this(browserManager, new WdmHttpClient.Builder().build());
     }
 
-    /**
-     * @since 1.6.2
-     */
     public Downloader(BrowserManager browserManager, WdmHttpClient httpClient) {
         this.browserManager = browserManager;
         this.httpClient = httpClient;
@@ -105,7 +102,7 @@ public class Downloader {
             renameFile(temporaryFile, targetFile);
 
             if (!export.contains("edge")) {
-                binary = extract(targetFile, export);
+                binary = extract(targetFile);
             } else {
                 binary = targetFile;
             }
@@ -142,24 +139,22 @@ public class Downloader {
         }
     }
 
-    public File extract(File compressedFile, String export) throws IOException {
+    public File extract(File compressedFile) throws IOException {
         log.trace("Compressed file {}", compressedFile);
 
-        File file = null;
         if (compressedFile.getName().toLowerCase().endsWith("tar.bz2")) {
-            file = unBZip2(compressedFile);
+            unBZip2(compressedFile);
         } else if (compressedFile.getName().toLowerCase().endsWith("tar.gz")) {
-            file = unTarGz(compressedFile);
+            unTarGz(compressedFile);
         } else if (compressedFile.getName().toLowerCase().endsWith("gz")) {
-            file = unGzip(compressedFile);
+            unGzip(compressedFile);
         } else {
-            file = unZip(compressedFile);
+            unZip(compressedFile);
         }
-
         deleteFile(compressedFile);
-        file = browserManager.postDownload(compressedFile);
 
-        File result = file.getAbsoluteFile();
+        File result = browserManager.postDownload(compressedFile)
+                .getAbsoluteFile();
         setFileExecutable(result);
         log.trace("Resulting binary file {}", result);
 
@@ -201,7 +196,7 @@ public class Downloader {
                     }
                     setFileExecutable(file);
                 } else {
-                    log.debug(file + " already exists");
+                    log.debug("{} already exists", file);
                 }
 
             }
@@ -213,11 +208,11 @@ public class Downloader {
     public File unGzip(File archive) throws IOException {
         log.trace("UnGzip {}", archive);
         String fileName = archive.getName();
-        int iDash = fileName.indexOf("-");
+        int iDash = fileName.indexOf('-');
         if (iDash != -1) {
             fileName = fileName.substring(0, iDash);
         }
-        int iDot = fileName.indexOf(".");
+        int iDot = fileName.indexOf('.');
         if (iDot != -1) {
             fileName = fileName.substring(0, iDot);
         }
@@ -259,12 +254,17 @@ public class Downloader {
     public String getTarget(String version, URL url) throws IOException {
         log.trace("getTarget {} {}", version, url);
 
-        String zip = url.getFile().substring(url.getFile().lastIndexOf("/"));
+        String zip = url.getFile().substring(url.getFile().lastIndexOf('/'));
 
-        int iFirst = zip.indexOf("_");
-        int iSecond = zip.indexOf("-");
-        int iLast = iFirst != zip.lastIndexOf("_") ? zip.lastIndexOf("_")
-                : iSecond != -1 ? iSecond : zip.length();
+        int iFirst = zip.indexOf('_');
+        int iSecond = zip.indexOf('-');
+        int iLast = zip.length();
+        if (iFirst != zip.lastIndexOf('_')) {
+            iLast = zip.lastIndexOf('_');
+        } else if (iSecond != -1) {
+            iLast = iSecond;
+        }
+
         String folder = zip.substring(0, iLast).replace(".zip", "")
                 .replace(".tar.bz2", "").replace(".tar.gz", "")
                 .replace(".msi", "").replace(".exe", "")
@@ -333,11 +333,9 @@ public class Downloader {
         }
     }
 
-    protected void deleteFile(File file) {
+    protected void deleteFile(File file) throws IOException {
         log.trace("Deleting file {}", file);
-        if (!file.delete()) {
-            log.warn("Error deleting temporal file {}", file);
-        }
+        delete(file.toPath());
     }
 
 }
