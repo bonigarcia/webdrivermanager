@@ -306,9 +306,9 @@ public abstract class BrowserManager {
     protected String existsDriverInCache(String repository,
             String driverVersion, Architecture arch) throws IOException {
         String driverInCache = null;
-        for (String driverName : getDriverName()) {
-            log.trace("Checking if {} {} ({} bits) exists in cache {}",
-                    driverName, driverVersion, arch, repository);
+        for (String driver : getDriverName()) {
+            log.trace("Checking if {} {} ({} bits) exists in cache {}", driver,
+                    driverVersion, arch, repository);
 
             Collection<File> listFiles = listFiles(new File(repository), null,
                     true);
@@ -324,13 +324,13 @@ public abstract class BrowserManager {
                 log.trace("Checking {}", driverInCache);
 
                 if (driverInCache.contains(driverVersion)
-                        && driverInCache.contains(driverName)
+                        && driverInCache.contains(driver)
                         && checkArchitecture) {
                     if (!isExecutable(new File(driverInCache))) {
                         continue;
                     }
                     log.debug("Found {} {} ({} bits) in cache: {}",
-                            driverVersion, driverName, arch, driverInCache);
+                            driverVersion, driver, arch, driverInCache);
                     break;
                 }
                 driverInCache = null;
@@ -338,7 +338,7 @@ public abstract class BrowserManager {
 
             if (driverInCache == null) {
                 log.trace("{} {} ({} bits) do not exist in cache {}",
-                        driverVersion, driverName, arch, repository);
+                        driverVersion, driver, arch, repository);
             } else {
                 break;
             }

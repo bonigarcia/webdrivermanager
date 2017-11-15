@@ -252,7 +252,7 @@ public class Downloader {
         return archive;
     }
 
-    public String getTarget(String version, URL url) throws IOException {
+    public String getTarget(String version, URL url) {
         log.trace("getTarget {} {}", version, url);
 
         String zip = url.getFile().substring(url.getFile().lastIndexOf('/'));
