@@ -17,6 +17,7 @@ package io.github.bonigarcia.wdm;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
@@ -44,7 +45,7 @@ public class VoidDriverManager extends BrowserManager {
     }
 
     @Override
-    protected List<URL> getDrivers() throws Exception {
+    protected List<URL> getDrivers() throws IOException {
         return emptyList();
     }
 

@@ -17,11 +17,9 @@ package io.github.bonigarcia.wdm;
 import static io.github.bonigarcia.wdm.WdmConfig.getString;
 import static java.io.File.separator;
 import static java.util.Arrays.asList;
-import static org.apache.commons.io.FileUtils.deleteDirectory;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
@@ -54,8 +52,7 @@ public class OperaDriverManager extends BrowserManager {
     }
 
     @Override
-    protected String getCurrentVersion(URL url, String driverName)
-            throws MalformedURLException {
+    protected String getCurrentVersion(URL url, String driverName) {
         if (isUsingTaobaoMirror()) {
             int i = url.getFile().lastIndexOf(SEPARATOR);
             int j = url.getFile().substring(0, i).lastIndexOf(SEPARATOR) + 1;
@@ -68,7 +65,7 @@ public class OperaDriverManager extends BrowserManager {
     }
 
     @Override
-    protected File postDownload(File archive) throws IOException {
+    protected File postDownload(File archive) {
         log.trace("Post processing for Opera: {}", archive);
 
         File extractFolder = archive.getParentFile().listFiles()[0];
@@ -83,7 +80,7 @@ public class OperaDriverManager extends BrowserManager {
             log.trace("Operadriver target: {}", target);
 
             downloader.renameFile(operadriver, target);
-            deleteDirectory(extractFolder);
+            downloader.deleteFolder(extractFolder);
             return target;
         } else {
             return super.postDownload(archive);

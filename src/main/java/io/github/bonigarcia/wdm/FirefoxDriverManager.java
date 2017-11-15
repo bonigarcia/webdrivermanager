@@ -19,7 +19,6 @@ import static io.github.bonigarcia.wdm.WdmConfig.getString;
 import static java.util.Arrays.asList;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
@@ -52,8 +51,7 @@ public class FirefoxDriverManager extends BrowserManager {
     }
 
     @Override
-    protected String getCurrentVersion(URL url, String driverName)
-            throws MalformedURLException {
+    protected String getCurrentVersion(URL url, String driverName) {
         String currentVersion = url.getFile().substring(
                 url.getFile().indexOf('-') + 1, url.getFile().lastIndexOf('-'));
         if (currentVersion.startsWith("v")) {
@@ -63,8 +61,7 @@ public class FirefoxDriverManager extends BrowserManager {
     }
 
     @Override
-    protected String preDownload(String target, String version)
-            throws IOException {
+    protected String preDownload(String target, String version) {
         int iSeparator = target.indexOf(version) - 1;
         int iDash = target.lastIndexOf(version) + version.length();
         int iPoint = target.lastIndexOf(".zip");

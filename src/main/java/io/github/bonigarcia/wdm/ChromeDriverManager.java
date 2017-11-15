@@ -17,7 +17,7 @@ package io.github.bonigarcia.wdm;
 import static io.github.bonigarcia.wdm.WdmConfig.getString;
 import static java.util.Arrays.asList;
 
-import java.net.MalformedURLException;
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
@@ -46,20 +46,19 @@ public class ChromeDriverManager extends BrowserManager {
     }
 
     @Override
-    protected List<URL> getDrivers() throws Exception {
+    protected List<URL> getDrivers() throws IOException {
         URL driverUrl = getDriverUrl();
         List<URL> urls;
         if (isUsingTaobaoMirror()) {
             urls = getDriversFromMirror(driverUrl);
         } else {
-            urls = getDriversFromXml(getDriverUrl(), getDriverName());
+            urls = getDriversFromXml(getDriverUrl());
         }
         return urls;
     }
 
     @Override
-    protected String getCurrentVersion(URL url, String driverName)
-            throws MalformedURLException {
+    protected String getCurrentVersion(URL url, String driverName) {
         if (isUsingTaobaoMirror()) {
             int i = url.getFile().lastIndexOf(SEPARATOR);
             int j = url.getFile().substring(0, i).lastIndexOf(SEPARATOR) + 1;

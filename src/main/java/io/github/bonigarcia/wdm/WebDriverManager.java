@@ -14,6 +14,7 @@
  */
 package io.github.bonigarcia.wdm;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
@@ -65,7 +66,7 @@ public class WebDriverManager extends BrowserManager {
     }
 
     @Override
-    protected List<URL> getDrivers() throws Exception {
+    protected List<URL> getDrivers() throws IOException {
         return instance.getDrivers();
     }
 

@@ -24,6 +24,7 @@ import static java.nio.file.Files.delete;
 import static java.nio.file.Files.move;
 import static java.util.UUID.randomUUID;
 import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
+import static org.apache.commons.io.FileUtils.deleteDirectory;
 import static org.apache.commons.io.FileUtils.listFiles;
 import static org.rauschig.jarchivelib.ArchiveFormat.TAR;
 import static org.rauschig.jarchivelib.ArchiverFactory.createArchiver;
@@ -336,6 +337,16 @@ public class Downloader {
     protected void deleteFile(File file) throws IOException {
         log.trace("Deleting file {}", file);
         delete(file.toPath());
+    }
+
+    protected void deleteFolder(File folder) {
+        assert folder.isDirectory();
+        log.trace("Deleting folder {}", folder);
+        try {
+            deleteDirectory(folder);
+        } catch (IOException e) {
+            throw new WebDriverManagerException(e);
+        }
     }
 
 }

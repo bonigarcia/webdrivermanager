@@ -15,8 +15,10 @@
 package io.github.bonigarcia.wdm;
 
 import static io.github.bonigarcia.wdm.WdmConfig.getString;
+import static io.github.bonigarcia.wdm.WdmConfig.getUrl;
 import static java.util.Arrays.asList;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 
@@ -44,10 +46,8 @@ public class InternetExplorerDriverManager extends BrowserManager {
     }
 
     @Override
-    protected List<URL> getDrivers() throws Exception {
-        return getDriversFromXml(
-                WdmConfig.getUrl("wdm.internetExplorerDriverUrl"),
-                getDriverName());
+    protected List<URL> getDrivers() throws IOException {
+        return getDriversFromXml(getUrl("wdm.internetExplorerDriverUrl"));
     }
 
 }

@@ -14,16 +14,18 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static io.github.bonigarcia.wdm.WdmConfig.getInt;
 import static io.github.bonigarcia.wdm.WdmConfig.getString;
 import static java.util.Arrays.asList;
+import static org.jsoup.Jsoup.parse;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 
@@ -51,21 +53,20 @@ public class EdgeDriverManager extends BrowserManager {
     }
 
     @Override
-    public List<URL> getDrivers() throws Exception {
+    public List<URL> getDrivers() throws IOException {
         listVersions = new ArrayList<>();
         List<URL> urlList = new ArrayList<>();
 
-        String edgeDriverUrl = WdmConfig.getString("wdm.edgeDriverUrl");
+        String edgeDriverUrl = getString("wdm.edgeDriverUrl");
         log.debug("Reading {} to find out the latest version of Edge driver",
                 edgeDriverUrl);
 
-        int timeout = (int) TimeUnit.SECONDS
-                .toMillis(WdmConfig.getInt("wdm.timeout"));
+        int timeout = (int) TimeUnit.SECONDS.toMillis(getInt("wdm.timeout"));
 
         try (InputStream in = httpClient
                 .execute(new WdmHttpClient.Get(edgeDriverUrl, timeout))
                 .getContent()) {
-            Document doc = Jsoup.parse(in, null, "");
+            Document doc = parse(in, null, "");
 
             Elements downloadLink = doc
                     .select("ul.driver-downloads li.driver-download > a");

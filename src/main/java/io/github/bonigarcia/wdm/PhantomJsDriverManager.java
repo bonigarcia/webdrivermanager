@@ -17,11 +17,9 @@ package io.github.bonigarcia.wdm;
 import static io.github.bonigarcia.wdm.WdmConfig.getString;
 import static java.io.File.separator;
 import static java.util.Arrays.asList;
-import static org.apache.commons.io.FileUtils.deleteDirectory;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
@@ -49,13 +47,12 @@ public class PhantomJsDriverManager extends BrowserManager {
     }
 
     @Override
-    protected List<URL> getDrivers() throws Exception {
+    protected List<URL> getDrivers() throws IOException {
         return getDriversFromMirror(getDriverUrl());
     }
 
     @Override
-    protected String getCurrentVersion(URL url, String driverName)
-            throws MalformedURLException {
+    protected String getCurrentVersion(URL url, String driverName) {
         String file = url.getFile();
         file = url.getFile().substring(file.lastIndexOf(SEPARATOR),
                 file.length());
@@ -68,8 +65,7 @@ public class PhantomJsDriverManager extends BrowserManager {
     }
 
     @Override
-    protected String preDownload(String target, String version)
-            throws IOException {
+    protected String preDownload(String target, String version) {
         int iSeparator = target.indexOf(version) - 1;
         int iDash = target.lastIndexOf(version) + version.length();
         int iPoint = target.lastIndexOf(".tar") != -1
@@ -83,7 +79,7 @@ public class PhantomJsDriverManager extends BrowserManager {
     }
 
     @Override
-    protected File postDownload(File archive) throws IOException {
+    protected File postDownload(File archive) {
         log.trace("PhatomJS package name: {}", archive);
 
         File extractFolder = archive.getParentFile().listFiles()[0];
@@ -108,8 +104,7 @@ public class PhantomJsDriverManager extends BrowserManager {
         log.trace("PhatomJS target: {}", target);
 
         downloader.renameFile(phantomjs, target);
-
-        deleteDirectory(extractFolder);
+        downloader.deleteFolder(extractFolder);
         return target;
     }
 
@@ -118,9 +113,6 @@ public class PhantomJsDriverManager extends BrowserManager {
         return useTaobaoMirror("wdm.phantomjsDriverTaobaoUrl");
     }
 
-    /**
-     * @since 1.6.2
-     */
     @Override
     protected boolean shouldCheckArchitecture() {
         return false;
