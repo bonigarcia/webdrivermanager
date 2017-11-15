@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Collection;
+import java.util.Optional;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -79,6 +80,7 @@ public class CacheTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void testCache() throws Exception {
         BrowserManager browserManager = WebDriverManager
                 .getInstance(driverClass);
@@ -90,10 +92,12 @@ public class CacheTest {
                 "existsDriverInCache", String.class, String.class,
                 Architecture.class);
         method.setAccessible(true);
-        String driverInChachePath = (String) method.invoke(browserManager,
-                downloader.getTargetPath(), driverVersion, architecture);
 
-        assertThat(driverInChachePath, notNullValue());
+        Optional<String> driverInChachePath = (Optional<String>) method.invoke(
+                browserManager, downloader.getTargetPath(), driverVersion,
+                architecture);
+
+        assertThat(driverInChachePath.get(), notNullValue());
     }
 
 }
