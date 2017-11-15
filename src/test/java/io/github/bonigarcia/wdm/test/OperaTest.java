@@ -49,19 +49,18 @@ public class OperaTest extends BaseBrowserTst {
 
     @Before
     public void setupTest() {
-        DesiredCapabilities capabilities = operaBlink();
-        File operaBinary = null;
+        File operaBinary;
         if (IS_OS_WINDOWS) {
             operaBinary = new File("C:\\Program Files\\Opera\\launcher.exe");
         } else {
             operaBinary = new File("/usr/bin/opera");
         }
+        assumeTrue(operaBinary.exists());
 
-        assumeTrue(operaBinary != null && operaBinary.exists());
         OperaOptions options = new OperaOptions();
         options.setBinary(operaBinary);
+        DesiredCapabilities capabilities = operaBlink();
         capabilities.setCapability(CAPABILITY, options);
-
         driver = new OperaDriver(capabilities);
     }
 
