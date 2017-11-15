@@ -272,7 +272,7 @@ public abstract class BrowserManager {
         }
     }
 
-    protected String forceCache(String repository) throws IOException {
+    protected String forceCache(String repository) {
         String driverInCache = null;
         for (String driver : getDriverName()) {
             log.trace("Checking if {} exists in cache {}", driver, repository);
@@ -304,9 +304,9 @@ public abstract class BrowserManager {
     }
 
     protected String existsDriverInCache(String repository,
-            String driverVersion, Architecture arch) throws IOException {
+            String driverVersion, Architecture arch) {
         String driverInCache = null;
-        for (String driver : getDriverName()) {
+        cacheLoop: for (String driver : getDriverName()) {
             log.trace("Checking if {} {} ({} bits) exists in cache {}", driver,
                     driverVersion, arch, repository);
 
@@ -317,8 +317,6 @@ public abstract class BrowserManager {
 
             for (Object f : array) {
                 driverInCache = f.toString();
-
-                // Exception for phantomjs
                 boolean checkArchitecture = !shouldCheckArchitecture()
                         || driverInCache.contains(arch.toString());
                 log.trace("Checking {}", driverInCache);
@@ -326,21 +324,12 @@ public abstract class BrowserManager {
                 if (driverInCache.contains(driverVersion)
                         && driverInCache.contains(driver)
                         && checkArchitecture) {
-                    if (!isExecutable(new File(driverInCache))) {
-                        continue;
+                    if (isExecutable(new File(driverInCache))) {
+                        log.debug("Found {} {} ({} bits) in cache: {}",
+                                driverVersion, driver, arch, driverInCache);
+                        break cacheLoop;
                     }
-                    log.debug("Found {} {} ({} bits) in cache: {}",
-                            driverVersion, driver, arch, driverInCache);
-                    break;
                 }
-                driverInCache = null;
-            }
-
-            if (driverInCache == null) {
-                log.trace("{} {} ({} bits) do not exist in cache {}",
-                        driverVersion, driver, arch, repository);
-            } else {
-                break;
             }
         }
         return driverInCache;
