@@ -26,7 +26,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 
@@ -70,33 +69,17 @@ public class ProxyTest {
     @Test
     public void testRealEnvProxyToNull() throws Exception {
         BrowserManager browserManager = ChromeDriverManager.getInstance();
-        Field field = BrowserManager.class.getDeclaredField("httpClient");
-        field.setAccessible(true);
-        field.set(browserManager, new WdmHttpClient.Builder().build());
-
         setSystemGetEnvMock(null);
-
-        Method method = BrowserManager.class.getDeclaredMethod("createProxy");
-        method.setAccessible(true);
-        Proxy proxy = (Proxy) method.invoke(browserManager);
-
-        assertNull(proxy);
+        assertNull(getProxy(browserManager));
     }
 
     @Test
     public void testRealEnvProxyToNotNull() throws Exception {
         BrowserManager browserManager = ChromeDriverManager.getInstance();
-        Field field = BrowserManager.class.getDeclaredField("httpClient");
-        field.setAccessible(true);
-        field.set(browserManager, new WdmHttpClient.Builder().build());
-
         setSystemGetEnvMock(PROXY_URL);
 
-        Method method = BrowserManager.class.getDeclaredMethod("createProxy");
-        method.setAccessible(true);
-        Proxy proxy = (Proxy) method.invoke(browserManager);
-
-        InetSocketAddress address = (InetSocketAddress) proxy.address();
+        InetSocketAddress address = (InetSocketAddress) getProxy(browserManager)
+                .address();
         assertThat(address.getHostName(), equalTo(PROXY_URL));
     }
 
@@ -166,16 +149,8 @@ public class ProxyTest {
             log.info("Testing proxy {}", proxyTestString);
 
             BrowserManager browserManager = ChromeDriverManager.getInstance();
-            Field field = BrowserManager.class.getDeclaredField("httpClient");
-            field.setAccessible(true);
-            field.set(browserManager, new WdmHttpClient.Builder().build());
-
-            Method method = BrowserManager.class
-                    .getDeclaredMethod("createProxy");
-            method.setAccessible(true);
-            Proxy proxy = (Proxy) method.invoke(browserManager);
-            InetSocketAddress address = (InetSocketAddress) proxy.address();
-
+            InetSocketAddress address = (InetSocketAddress) getProxy(
+                    browserManager).address();
             assertThat(address.getHostName(), equalTo(PROXY_URL));
         }
     }
@@ -188,6 +163,24 @@ public class ProxyTest {
             }
         };
         return mockUp;
+    }
+
+    private Proxy getProxy(BrowserManager browserManager)
+            throws NoSuchFieldException, SecurityException,
+            IllegalArgumentException, IllegalAccessException {
+        Field httpClientField = BrowserManager.class
+                .getDeclaredField("httpClient");
+        httpClientField.setAccessible(true);
+        httpClientField.set(browserManager,
+                new WdmHttpClient.Builder().build());
+
+        Field proxyField = BrowserManager.class.getDeclaredField("proxyValue");
+        proxyField.setAccessible(true);
+        String proxyUrl = (String) proxyField.get(browserManager);
+
+        WdmHttpClient wdmHttpClient = (WdmHttpClient) httpClientField
+                .get(browserManager);
+        return wdmHttpClient.createProxy(proxyUrl);
     }
 
 }

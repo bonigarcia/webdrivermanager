@@ -79,7 +79,7 @@ public class WdmHttpClient implements Closeable {
         this.httpClient = builder.build();
     }
 
-    Proxy createProxy(String proxyUrl) {
+    public Proxy createProxy(String proxyUrl) {
         URL url = determineProxyUrl(proxyUrl);
         if (url == null) {
             return null;

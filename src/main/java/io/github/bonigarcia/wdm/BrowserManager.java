@@ -101,7 +101,7 @@ public abstract class BrowserManager {
     protected boolean isForcingDownload = false;
     protected boolean useBetaVersions = getBoolean("wdm.useBetaVersions");
     protected URL driverUrl;
-    protected String proxy;
+    protected String proxyValue;
     protected String binaryPath;
     protected List<String> listVersions;
     protected boolean triedWithCache = false;
@@ -151,7 +151,7 @@ public abstract class BrowserManager {
     }
 
     protected void manage(Architecture arch, String version) {
-        this.httpClient = new WdmHttpClient.Builder().proxy(proxy)
+        this.httpClient = new WdmHttpClient.Builder().proxy(proxyValue)
                 .proxyUser(proxyUser).proxyPass(proxyPass).build();
 
         try (WdmHttpClient wdmHttpClient = this.httpClient) {
@@ -816,7 +816,7 @@ public abstract class BrowserManager {
     }
 
     public BrowserManager proxy(String proxy) {
-        this.proxy = proxy;
+        this.proxyValue = proxy;
         return this;
     }
 
