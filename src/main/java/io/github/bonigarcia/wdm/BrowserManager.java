@@ -32,6 +32,8 @@ import static java.util.Arrays.copyOf;
 import static java.util.Arrays.sort;
 import static java.util.Collections.reverse;
 import static java.util.Collections.reverseOrder;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static javax.xml.xpath.XPathConstants.NODESET;
 import static javax.xml.xpath.XPathFactory.newInstance;
@@ -54,6 +56,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -168,7 +171,7 @@ public abstract class BrowserManager {
             boolean cache = this.isForcingCache || getBoolean("wdm.forceCache")
                     || !isNetAvailable();
 
-            String driverInCache = null;
+            Optional<String> driverInCache = empty();
             if (cache) {
                 driverInCache = forceCache(downloader.getTargetPath());
             } else if (!getLatest) {
@@ -177,11 +180,11 @@ public abstract class BrowserManager {
                         version, arch);
             }
 
-            if (driverInCache != null) {
+            if (driverInCache.isPresent()) {
                 versionToDownload = version;
                 log.debug("Driver for {} {} found in cache {}", getDriverName(),
-                        versionToDownload, driverInCache);
-                exportDriver(getExportParameter(), driverInCache);
+                        versionToDownload, driverInCache.get());
+                exportDriver(getExportParameter(), driverInCache.get());
 
             } else {
                 // Get the complete list of URLs
@@ -272,7 +275,7 @@ public abstract class BrowserManager {
         }
     }
 
-    protected String forceCache(String repository) {
+    protected Optional<String> forceCache(String repository) {
         String driverInCache = null;
         for (String driver : getDriverName()) {
             log.trace("Checking if {} exists in cache {}", driver, repository);
@@ -288,25 +291,17 @@ public abstract class BrowserManager {
                 if (driverInCache.contains(driver)
                         && isExecutable(new File(driverInCache))) {
                     log.info("Found {} in cache: {} ", driver, driverInCache);
-                    break;
-                } else {
-                    driverInCache = null;
+                    return of(driverInCache);
                 }
             }
-
-            if (driverInCache == null) {
-                log.trace("{} do not exist in cache {}", driver, repository);
-            } else {
-                break;
-            }
         }
-        return driverInCache;
+        return empty();
     }
 
-    protected String existsDriverInCache(String repository,
+    protected Optional<String> existsDriverInCache(String repository,
             String driverVersion, Architecture arch) {
         String driverInCache = null;
-        cacheLoop: for (String driver : getDriverName()) {
+        for (String driver : getDriverName()) {
             log.trace("Checking if {} {} ({} bits) exists in cache {}", driver,
                     driverVersion, arch, repository);
 
@@ -322,17 +317,15 @@ public abstract class BrowserManager {
                 log.trace("Checking {}", driverInCache);
 
                 if (driverInCache.contains(driverVersion)
-                        && driverInCache.contains(driver)
-                        && checkArchitecture) {
-                    if (isExecutable(new File(driverInCache))) {
-                        log.debug("Found {} {} ({} bits) in cache: {}",
-                                driverVersion, driver, arch, driverInCache);
-                        break cacheLoop;
-                    }
+                        && driverInCache.contains(driver) && checkArchitecture
+                        && isExecutable(new File(driverInCache))) {
+                    log.debug("Found {} {} ({} bits) in cache: {}",
+                            driverVersion, driver, arch, driverInCache);
+                    return of(driverInCache);
                 }
             }
         }
-        return driverInCache;
+        return empty();
     }
 
     public boolean isExecutable(File file) {
