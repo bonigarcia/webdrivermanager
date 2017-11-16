@@ -107,7 +107,6 @@ public abstract class BrowserManager {
     protected String proxyValue;
     protected String binaryPath;
     protected List<String> listVersions;
-    protected boolean triedWithCache = false;
     protected Downloader downloader;
     protected String proxyUser;
     protected String proxyPass;
@@ -258,9 +257,8 @@ public abstract class BrowserManager {
             }
 
         } catch (Exception e) {
-            if (!isForcingCache && !triedWithCache) {
+            if (!isForcingCache) {
                 isForcingCache = true;
-                triedWithCache = true;
                 log.warn(
                         "There was an error managing {} {} ({}) ... trying again forcing to use cache",
                         getDriverName(), version, e.getMessage());
