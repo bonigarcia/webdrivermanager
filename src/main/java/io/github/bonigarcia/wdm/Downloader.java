@@ -79,20 +79,14 @@ public class Downloader {
     public synchronized void download(URL url, String version, String export,
             List<String> driverName) throws IOException, InterruptedException {
         File targetFile = new File(getTarget(version, url));
-        Optional<File> binary = empty();
 
-        // Check if binary exists
         boolean download = !targetFile.getParentFile().exists()
                 || (targetFile.getParentFile().exists()
                         && targetFile.getParentFile().list().length == 0)
                 || override;
 
-        if (download) {
-            binary = download(url, targetFile, export);
-        } else {
-            binary = checkBinary(driverName, targetFile);
-        }
-
+        Optional<File> binary = (download) ? download(url, targetFile, export)
+                : checkBinary(driverName, targetFile);
         if (export != null && binary.isPresent()) {
             browserManager.exportDriver(export, binary.get().toString());
         }
