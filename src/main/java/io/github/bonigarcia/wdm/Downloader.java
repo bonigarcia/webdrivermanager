@@ -22,6 +22,8 @@ import static java.lang.System.getProperty;
 import static java.nio.file.Files.createTempDirectory;
 import static java.nio.file.Files.delete;
 import static java.nio.file.Files.move;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static java.util.UUID.randomUUID;
 import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
 import static org.apache.commons.io.FileUtils.deleteDirectory;
@@ -40,6 +42,7 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Optional;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -76,7 +79,7 @@ public class Downloader {
     public synchronized void download(URL url, String version, String export,
             List<String> driverName) throws IOException, InterruptedException {
         File targetFile = new File(getTarget(version, url));
-        File binary = null;
+        Optional<File> binary = empty();
 
         // Check if binary exists
         boolean download = !targetFile.getParentFile().exists()
@@ -85,59 +88,60 @@ public class Downloader {
                 || override;
 
         if (download) {
-            File temporaryFile = new File(targetFile.getParentFile(),
-                    randomUUID().toString());
-            log.debug("Downloading {} to {}", url, targetFile);
-            WdmHttpClient.Get get = new WdmHttpClient.Get(url)
-                    .addHeader("User-Agent", "Mozilla/5.0")
-                    .addHeader("Connection", "keep-alive");
-
-            try {
-                copyInputStreamToFile(httpClient.execute(get).getContent(),
-                        temporaryFile);
-            } catch (IOException e) {
-                deleteFile(temporaryFile);
-                throw e;
-            }
-
-            renameFile(temporaryFile, targetFile);
-
-            if (!export.contains("edge")) {
-                binary = extract(targetFile);
-            } else {
-                binary = targetFile;
-            }
-
-            if (targetFile.getName().toLowerCase().endsWith(".msi")) {
-                binary = extractMsi(targetFile);
-            }
-
+            binary = download(url, targetFile, export);
         } else {
-            // Check if existing binary is valid
-            Collection<File> listFiles = listFiles(targetFile.getParentFile(),
-                    null, true);
-            for (File file : listFiles) {
-                for (String s : driverName) {
-                    if (file.getName().startsWith(s) && file.canExecute()) {
-                        binary = file;
-                        log.debug(
-                                "Using binary driver previously downloaded {}",
-                                binary);
-                        download = false;
-                        break;
-                    } else {
-                        download = true;
-                    }
-                }
-                if (!download) {
-                    break;
+            binary = checkBinary(driverName, targetFile);
+        }
+
+        if (export != null && binary.isPresent()) {
+            browserManager.exportDriver(export, binary.get().toString());
+        }
+    }
+
+    private Optional<File> download(URL url, File targetFile, String export)
+            throws IOException, InterruptedException {
+        log.debug("Downloading {} to {}", url, targetFile);
+
+        File temporaryFile = new File(targetFile.getParentFile(),
+                randomUUID().toString());
+        WdmHttpClient.Get get = new WdmHttpClient.Get(url)
+                .addHeader("User-Agent", "Mozilla/5.0")
+                .addHeader("Connection", "keep-alive");
+
+        try {
+            copyInputStreamToFile(httpClient.execute(get).getContent(),
+                    temporaryFile);
+        } catch (IOException e) {
+            deleteFile(temporaryFile);
+            throw e;
+        }
+
+        renameFile(temporaryFile, targetFile);
+
+        if (!export.contains("edge")) {
+            return of(extract(targetFile));
+        } else if (targetFile.getName().toLowerCase().endsWith(".msi")) {
+            return of(extractMsi(targetFile));
+        } else {
+            return of(targetFile);
+        }
+    }
+
+    private Optional<File> checkBinary(List<String> driverName,
+            File targetFile) {
+        // Check if existing binary is valid
+        Collection<File> listFiles = listFiles(targetFile.getParentFile(), null,
+                true);
+        for (File file : listFiles) {
+            for (String s : driverName) {
+                if (file.getName().startsWith(s) && file.canExecute()) {
+                    log.debug("Using binary driver previously downloaded {}",
+                            file);
+                    return of(file);
                 }
             }
         }
-
-        if (export != null && binary != null) {
-            browserManager.exportDriver(export, binary.toString());
-        }
+        return empty();
     }
 
     public File extract(File compressedFile) throws IOException {
