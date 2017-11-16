@@ -153,11 +153,9 @@ public abstract class BrowserManager {
     }
 
     protected void manage(Architecture arch, String version) {
-        this.httpClient = new WdmHttpClient.Builder().proxy(proxyValue)
+        httpClient = new WdmHttpClient.Builder().proxy(proxyValue)
                 .proxyUser(proxyUser).proxyPass(proxyPass).build();
-
-        try (WdmHttpClient wdmHttpClient = this.httpClient) {
-
+        try (WdmHttpClient wdmHttpClient = httpClient) {
             downloader = new Downloader(this, wdmHttpClient);
             if (isForcingDownload) {
                 downloader.forceDownload();
@@ -166,18 +164,11 @@ public abstract class BrowserManager {
             boolean getLatest = version == null || version.isEmpty()
                     || version.equalsIgnoreCase(LATEST.name())
                     || version.equalsIgnoreCase(NOT_SPECIFIED.name());
-
             boolean cache = this.isForcingCache || getBoolean("wdm.forceCache")
                     || !isNetAvailable();
 
-            Optional<String> driverInCache = empty();
-            if (cache) {
-                driverInCache = forceCache(downloader.getTargetPath());
-            } else if (!getLatest) {
-                versionToDownload = version;
-                driverInCache = existsDriverInCache(downloader.getTargetPath(),
-                        version, arch);
-            }
+            Optional<String> driverInCache = handleCache(arch, version,
+                    getLatest, cache);
 
             if (driverInCache.isPresent()) {
                 versionToDownload = version;
@@ -186,91 +177,113 @@ public abstract class BrowserManager {
                 exportDriver(getExportParameter(), driverInCache.get());
 
             } else {
-                // Get the complete list of URLs
-                List<URL> urls = getDrivers();
-                if (!urls.isEmpty()) {
-                    List<URL> candidateUrls;
-                    boolean continueSearchingVersion;
+                List<URL> candidateUrls = filterCandidateUrls(arch, version,
+                        getLatest);
 
-                    do {
-                        // Get the latest or concrete version or Edge (the only
-                        // version that can be downloaded is the latest)
-                        if (getLatest) {
-                            candidateUrls = getLatest(urls, getDriverName());
-                        } else {
-                            candidateUrls = getVersion(urls, getDriverName(),
-                                    version);
-                        }
-                        if (versionToDownload == null) {
-                            break;
-                        }
-
-                        log.trace("All URLs: {}", urls);
-                        log.trace("Candidate URLs: {}", candidateUrls);
-
-                        if (this.getClass().equals(EdgeDriverManager.class)) {
-                            // Microsoft Edge binaries are different
-                            continueSearchingVersion = false;
-
-                        } else {
-                            // Filter by architecture and OS
-                            candidateUrls = filter(candidateUrls, arch);
-
-                            // Exception for phantomjs 2.5.0 in Linux
-                            if (IS_OS_LINUX
-                                    && getDriverName().contains("phantomjs")) {
-                                candidateUrls = filterByDistro(candidateUrls,
-                                        getDistroName(), "2.5.0");
-                            }
-
-                            // Find out if driver version has been found or not
-                            continueSearchingVersion = candidateUrls.isEmpty()
-                                    && getLatest;
-                            if (continueSearchingVersion) {
-                                log.info("No valid binary found for {} {}",
-                                        getDriverName(), versionToDownload);
-                                urls = removeFromList(urls, versionToDownload);
-                                versionToDownload = null;
-                            }
-                        }
-
-                    } while (continueSearchingVersion);
-
-                    if (candidateUrls.isEmpty()) {
-                        String versionStr = getLatest ? "(latest version)"
-                                : version;
-                        String errorMessage = getDriverName() + " " + versionStr
-                                + " for " + MY_OS_NAME + arch.toString()
-                                + " not found in " + getDriverUrl();
-                        log.error(errorMessage);
-                        throw new WebDriverManagerException(errorMessage);
-                    }
-
-                    for (URL url : candidateUrls) {
-                        String export = candidateUrls.contains(url)
-                                ? getExportParameter()
-                                : null;
-                        downloader.download(url, versionToDownload, export,
-                                getDriverName());
-                    }
+                if (candidateUrls.isEmpty()) {
+                    String versionStr = getLatest ? "(latest version)"
+                            : version;
+                    String errorMessage = getDriverName() + " " + versionStr
+                            + " for " + MY_OS_NAME + arch.toString()
+                            + " not found in " + getDriverUrl();
+                    log.error(errorMessage);
+                    throw new WebDriverManagerException(errorMessage);
                 }
+
+                downloadCandidateUrls(candidateUrls);
             }
 
         } catch (Exception e) {
-            if (!isForcingCache) {
-                isForcingCache = true;
-                log.warn(
-                        "There was an error managing {} {} ({}) ... trying again forcing to use cache",
-                        getDriverName(), version, e.getMessage());
-                manage(arch, version);
-            } else {
-                String errorMessage = "Exception managing driver for "
-                        + getDriverName();
-                log.error(errorMessage, e);
-
-                throw new WebDriverManagerException(errorMessage, e);
-            }
+            handleException(e, arch, version);
         }
+    }
+
+    private void handleException(Exception e, Architecture arch,
+            String version) {
+        if (!isForcingCache) {
+            isForcingCache = true;
+            log.warn(
+                    "There was an error managing {} {} ({}) ... trying again forcing to use cache",
+                    getDriverName(), version, e.getMessage());
+            manage(arch, version);
+        } else {
+            String errorMessage = "Exception managing driver for "
+                    + getDriverName();
+            log.error(errorMessage, e);
+
+            throw new WebDriverManagerException(errorMessage, e);
+        }
+    }
+
+    private void downloadCandidateUrls(List<URL> candidateUrls)
+            throws IOException, InterruptedException {
+        for (URL url : candidateUrls) {
+            String export = candidateUrls.contains(url) ? getExportParameter()
+                    : null;
+            downloader.download(url, versionToDownload, export,
+                    getDriverName());
+        }
+    }
+
+    private List<URL> filterCandidateUrls(Architecture arch, String version,
+            boolean getLatest) throws IOException {
+        List<URL> urls = getDrivers();
+        List<URL> candidateUrls;
+        boolean continueSearchingVersion;
+        do {
+            // Get the latest or concrete version or Edge (the only
+            // version that can be downloaded is the latest)
+            if (getLatest) {
+                candidateUrls = getLatest(urls, getDriverName());
+            } else {
+                candidateUrls = getVersion(urls, getDriverName(), version);
+            }
+            if (versionToDownload == null) {
+                break;
+            }
+
+            log.trace("All URLs: {}", urls);
+            log.trace("Candidate URLs: {}", candidateUrls);
+
+            if (this.getClass().equals(EdgeDriverManager.class)) {
+                // Microsoft Edge binaries are different
+                continueSearchingVersion = false;
+
+            } else {
+                // Filter by architecture and OS
+                candidateUrls = filter(candidateUrls, arch);
+
+                // Exception for phantomjs 2.5.0 in Linux
+                if (IS_OS_LINUX && getDriverName().contains("phantomjs")) {
+                    candidateUrls = filterByDistro(candidateUrls,
+                            getDistroName(), "2.5.0");
+                }
+
+                // Find out if driver version has been found or not
+                continueSearchingVersion = candidateUrls.isEmpty() && getLatest;
+                if (continueSearchingVersion) {
+                    log.info("No valid binary found for {} {}", getDriverName(),
+                            versionToDownload);
+                    urls = removeFromList(urls, versionToDownload);
+                    versionToDownload = null;
+                }
+            }
+
+        } while (continueSearchingVersion);
+        return urls;
+    }
+
+    private Optional<String> handleCache(Architecture arch, String version,
+            boolean getLatest, boolean cache) {
+        Optional<String> driverInCache = empty();
+        if (cache) {
+            driverInCache = forceCache(downloader.getTargetPath());
+        } else if (!getLatest) {
+            versionToDownload = version;
+            driverInCache = existsDriverInCache(downloader.getTargetPath(),
+                    version, arch);
+        }
+        return driverInCache;
     }
 
     protected Optional<String> forceCache(String repository) {
