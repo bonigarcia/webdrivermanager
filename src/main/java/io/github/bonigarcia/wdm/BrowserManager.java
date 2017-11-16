@@ -270,7 +270,7 @@ public abstract class BrowserManager {
             }
 
         } while (continueSearchingVersion);
-        return urls;
+        return candidateUrls;
     }
 
     private Optional<String> handleCache(Architecture arch, String version,
