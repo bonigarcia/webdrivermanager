@@ -484,57 +484,20 @@ public abstract class BrowserManager {
     }
 
     protected List<URL> getLatest(List<URL> list, List<String> match) {
-        log.trace("Checking the lastest version of {}", match);
-        log.trace("Input URL list {}", list);
+        log.trace("Checking the lastest version of {} with URL list {}", match,
+                list);
         List<URL> out = new ArrayList<>();
-
-        // Edge
-        if (getDriverName().contains("MicrosoftWebDriver")) {
-            versionToDownload = listVersions.iterator().next();
-            out.add(list.iterator().next());
-            log.info("Latest version of MicrosoftWebDriver is {}",
-                    versionToDownload);
-            return out;
-        }
-
         reverse(list);
-
         List<URL> copyOfList = new ArrayList<>(list);
+
         for (URL url : copyOfList) {
             for (String driver : match) {
                 try {
-                    // Beta versions
-                    if (!useBetaVersions
-                            && url.getFile().toLowerCase().contains("beta")) {
-                        continue;
-                    }
-                    if (url.getFile().contains(driver)) {
-                        log.trace("URL {} match with {}", url, driver);
-                        String currentVersion = getCurrentVersion(url, driver);
-
-                        if (currentVersion.equalsIgnoreCase(driver)) {
-                            continue;
-                        }
-
-                        if (versionToDownload == null) {
-                            versionToDownload = currentVersion;
-                        }
-
-                        if (versionCompare(currentVersion,
-                                versionToDownload) > 0) {
-                            versionToDownload = currentVersion;
-                            out.clear();
-                        }
-                        if (url.getFile().contains(versionToDownload)) {
-                            out.add(url);
-                        }
-                    }
-
+                    handleDriver(url, driver, out);
                 } catch (Exception e) {
                     log.trace("There was a problem with URL {} : {}",
                             url.toString(), e.getMessage());
                     list.remove(url);
-                    continue;
                 }
             }
         }
@@ -543,6 +506,30 @@ public abstract class BrowserManager {
         }
         log.info("Latest version of {} is {}", match, versionToDownload);
         return out;
+    }
+
+    private void handleDriver(URL url, String driver, List<URL> out) {
+        if (!useBetaVersions && url.getFile().toLowerCase().contains("beta")) {
+            return;
+        }
+        if (url.getFile().contains(driver)) {
+            log.trace("URL {} match with {}", url, driver);
+            String currentVersion = getCurrentVersion(url, driver);
+
+            if (currentVersion.equalsIgnoreCase(driver)) {
+                return;
+            }
+            if (versionToDownload == null) {
+                versionToDownload = currentVersion;
+            }
+            if (versionCompare(currentVersion, versionToDownload) > 0) {
+                versionToDownload = currentVersion;
+                out.clear();
+            }
+            if (url.getFile().contains(versionToDownload)) {
+                out.add(url);
+            }
+        }
     }
 
     protected boolean isUsingTaobaoMirror() {

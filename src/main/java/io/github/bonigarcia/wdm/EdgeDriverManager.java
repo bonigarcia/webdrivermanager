@@ -17,6 +17,7 @@ package io.github.bonigarcia.wdm;
 import static io.github.bonigarcia.wdm.WdmConfig.getInt;
 import static io.github.bonigarcia.wdm.WdmConfig.getString;
 import static java.util.Arrays.asList;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.jsoup.Jsoup.parse;
 
 import java.io.IOException;
@@ -24,7 +25,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -61,7 +61,7 @@ public class EdgeDriverManager extends BrowserManager {
         log.debug("Reading {} to find out the latest version of Edge driver",
                 edgeDriverUrl);
 
-        int timeout = (int) TimeUnit.SECONDS.toMillis(getInt("wdm.timeout"));
+        int timeout = (int) SECONDS.toMillis(getInt("wdm.timeout"));
 
         try (InputStream in = httpClient
                 .execute(new WdmHttpClient.Get(edgeDriverUrl, timeout))
@@ -81,6 +81,18 @@ public class EdgeDriverManager extends BrowserManager {
 
             return urlList;
         }
+    }
+
+    @Override
+    protected List<URL> getLatest(List<URL> list, List<String> match) {
+        log.trace("Checking the lastest version of {} with URL list {}", match,
+                list);
+        List<URL> out = new ArrayList<>();
+        versionToDownload = listVersions.iterator().next();
+        out.add(list.iterator().next());
+        log.info("Latest version of MicrosoftWebDriver is {}",
+                versionToDownload);
+        return out;
     }
 
 }
