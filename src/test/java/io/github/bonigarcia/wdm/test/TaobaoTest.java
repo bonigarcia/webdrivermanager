@@ -22,7 +22,6 @@ import java.lang.reflect.Method;
 import java.net.URL;
 import java.util.Collection;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -30,9 +29,6 @@ import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.opera.OperaDriver;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
 
 import io.github.bonigarcia.wdm.BrowserManager;
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -51,13 +47,10 @@ public class TaobaoTest {
 
     @Parameters(name = "{index}: {0}")
     public static Collection<Object[]> data() {
-        return asList(
-                new Object[][] { { ChromeDriver.class }, { OperaDriver.class },
-                        { PhantomJSDriver.class }, { FirefoxDriver.class } });
+        return asList(new Object[][] { { ChromeDriver.class } });
     }
 
     @Test
-    @Ignore("Taobao mirror sometimes raises a 'Connection reset' error")
     public void testCache() throws Exception {
         BrowserManager browserManager = WebDriverManager
                 .getInstance(driverClass);

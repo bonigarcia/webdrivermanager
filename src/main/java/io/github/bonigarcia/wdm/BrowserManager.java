@@ -580,7 +580,6 @@ public abstract class BrowserManager {
     /**
      * This method works also for http://npm.taobao.org/ and
      * https://bitbucket.org/ mirrors.
-     *
      */
     protected List<URL> getDriversFromMirror(URL driverUrl) throws IOException {
         if (!mirrorLog) {
@@ -779,7 +778,7 @@ public abstract class BrowserManager {
 
     public BrowserManager useTaobaoMirror(String taobaoUrl) {
         try {
-            taobaoUrl = getString(getString(taobaoUrl));
+            taobaoUrl = getString(taobaoUrl);
             driverUrl = new URL(taobaoUrl);
         } catch (MalformedURLException e) {
             String errorMessage = "Malformed URL " + taobaoUrl;
