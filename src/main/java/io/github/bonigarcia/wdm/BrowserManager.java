@@ -243,9 +243,10 @@ public abstract class BrowserManager {
             }
 
             // Filter by architecture and OS
-            candidateUrls = filter(candidateUrls, arch);
+            candidateUrls = filterByOs(candidateUrls);
+            candidateUrls = filterByArch(candidateUrls, arch);
 
-            // Exception for phantomjs 2.5.0 in Linux
+            // Extra round of filter phantomjs 2.5.0 in Linux
             if (IS_OS_LINUX && getDriverName().contains("phantomjs")) {
                 candidateUrls = filterByDistro(candidateUrls, getDistroName(),
                         "2.5.0");
@@ -351,13 +352,11 @@ public abstract class BrowserManager {
         return true;
     }
 
-    protected List<URL> filter(List<URL> list, Architecture arch) {
-        log.trace("{} {} - URLs before filtering: {}", getDriverName(),
+    protected List<URL> filterByOs(List<URL> list) {
+        log.trace("{} {} - URLs before filtering by OS: {}", getDriverName(),
                 versionToDownload, list);
-
         List<URL> out = new ArrayList<>();
 
-        // Round #1 : Filter by OS
         for (URL url : list) {
             for (OperativeSystem os : OperativeSystem.values()) {
                 if (((MY_OS_NAME.contains(os.name())
@@ -373,8 +372,14 @@ public abstract class BrowserManager {
 
         log.trace("{} {} - URLs after filtering by OS ({}): {}",
                 getDriverName(), versionToDownload, MY_OS_NAME, out);
+        return out;
+    }
 
-        // Round #2 : Filter by architecture (32/64 bits)
+    protected List<URL> filterByArch(List<URL> list, Architecture arch) {
+        log.trace("{} {} - URLs before filtering by architecture: {}",
+                getDriverName(), versionToDownload, list);
+        List<URL> out = new ArrayList<>();
+
         if (out.size() > 1 && arch != null) {
             for (URL url : list) {
                 // Exception: 32 bits (sometimes referred as x86 or i686)
@@ -389,28 +394,27 @@ public abstract class BrowserManager {
                 }
             }
         }
+
         log.trace("{} {} - URLs after filtering by architecture ({}): {}",
                 getDriverName(), versionToDownload, arch, out);
-
         return out;
     }
 
     protected List<URL> filterByDistro(List<URL> list, String distro,
             String version) {
-        log.trace("{} {} - URLs before filtering by distro: {}",
+        log.trace("{} {} - URLs before filtering by distribution: {}",
                 getDriverName(), versionToDownload, list);
-
         List<URL> out = new ArrayList<>(list);
-        // Round #3 : Filter by distribution (for Linux)
+
         for (URL url : list) {
             if (url.getFile().contains(version)
                     && !url.getFile().contains(distro)) {
                 out.remove(url);
             }
         }
+
         log.trace("{} {} - URLs after filtering by Linux distribution ({}): {}",
                 getDriverName(), versionToDownload, distro, out);
-
         return out;
     }
 
