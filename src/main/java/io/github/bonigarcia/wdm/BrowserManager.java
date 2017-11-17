@@ -378,7 +378,7 @@ public abstract class BrowserManager {
     protected List<URL> filterByArch(List<URL> list, Architecture arch) {
         log.trace("{} {} - URLs before filtering by architecture: {}",
                 getDriverName(), versionToDownload, list);
-        List<URL> out = new ArrayList<>();
+        List<URL> out = new ArrayList<>(list);
 
         if (out.size() > 1 && arch != null) {
             for (URL url : list) {
