@@ -229,46 +229,36 @@ public abstract class BrowserManager {
             boolean getLatest) throws IOException {
         List<URL> urls = getDrivers();
         List<URL> candidateUrls;
+        log.trace("All URLs: {}", urls);
+
         boolean continueSearchingVersion;
         do {
-            // Get the latest or concrete version or Edge (the only
-            // version that can be downloaded is the latest)
-            if (getLatest) {
-                candidateUrls = getLatest(urls, getDriverName());
-            } else {
-                candidateUrls = getVersion(urls, getDriverName(), version);
-            }
-            if (versionToDownload == null) {
+            // Get the latest or concrete version
+            candidateUrls = getLatest ? getLatest(urls, getDriverName())
+                    : getVersion(urls, getDriverName(), version);
+            log.trace("Candidate URLs: {}", candidateUrls);
+            if (versionToDownload == null
+                    || this.getClass().equals(EdgeDriverManager.class)) {
                 break;
             }
 
-            log.trace("All URLs: {}", urls);
-            log.trace("Candidate URLs: {}", candidateUrls);
+            // Filter by architecture and OS
+            candidateUrls = filter(candidateUrls, arch);
 
-            if (this.getClass().equals(EdgeDriverManager.class)) {
-                // Microsoft Edge binaries are different
-                continueSearchingVersion = false;
-
-            } else {
-                // Filter by architecture and OS
-                candidateUrls = filter(candidateUrls, arch);
-
-                // Exception for phantomjs 2.5.0 in Linux
-                if (IS_OS_LINUX && getDriverName().contains("phantomjs")) {
-                    candidateUrls = filterByDistro(candidateUrls,
-                            getDistroName(), "2.5.0");
-                }
-
-                // Find out if driver version has been found or not
-                continueSearchingVersion = candidateUrls.isEmpty() && getLatest;
-                if (continueSearchingVersion) {
-                    log.info("No valid binary found for {} {}", getDriverName(),
-                            versionToDownload);
-                    urls = removeFromList(urls, versionToDownload);
-                    versionToDownload = null;
-                }
+            // Exception for phantomjs 2.5.0 in Linux
+            if (IS_OS_LINUX && getDriverName().contains("phantomjs")) {
+                candidateUrls = filterByDistro(candidateUrls, getDistroName(),
+                        "2.5.0");
             }
 
+            // Find out if driver version has been found or not
+            continueSearchingVersion = candidateUrls.isEmpty() && getLatest;
+            if (continueSearchingVersion) {
+                log.trace("No valid binary found for {} {}", getDriverName(),
+                        versionToDownload);
+                urls = removeFromList(urls, versionToDownload);
+                versionToDownload = null;
+            }
         } while (continueSearchingVersion);
         return candidateUrls;
     }
