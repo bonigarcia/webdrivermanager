@@ -84,8 +84,8 @@ public class CacheTest {
     public void testCache() throws Exception {
         BrowserManager browserManager = WebDriverManager
                 .getInstance(driverClass);
-        browserManager.architecture(architecture).version(driverVersion)
-                .setup();
+        browserManager.forceCache().forceDownload().architecture(architecture)
+                .version(driverVersion).setup();
         Downloader downloader = new Downloader(browserManager);
 
         Method method = BrowserManager.class.getDeclaredMethod(
