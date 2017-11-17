@@ -75,8 +75,8 @@ public class PhantomJsFilterTest {
         List<URL> latestUrls = (List<URL>) method.invoke(phatomJsManager,
                 driversUrls, asList(phantomJsBinaryName));
 
-        method = BrowserManager.class.getDeclaredMethod("filter", List.class,
-                Architecture.class);
+        method = BrowserManager.class.getDeclaredMethod("filterByArch",
+                List.class, Architecture.class);
         method.setAccessible(true);
         List<URL> filteredLatestUrls = (List<URL>) method
                 .invoke(phatomJsManager, latestUrls, X64);
@@ -101,8 +101,8 @@ public class PhantomJsFilterTest {
                 phatomJsManager, driversUrls, asList(phantomJsBinaryName),
                 specificVersion);
 
-        method = BrowserManager.class.getDeclaredMethod("filter", List.class,
-                Architecture.class);
+        method = BrowserManager.class.getDeclaredMethod("filterByArch",
+                List.class, Architecture.class);
         method.setAccessible(true);
         List<URL> filteredVersionUrls = (List<URL>) method
                 .invoke(phatomJsManager, specificVersionUrls, X64);
