@@ -30,8 +30,7 @@ public class FirefoxVersionTest extends BaseVersionTst {
     @Before
     public void setup() {
         browserManager = FirefoxDriverManager.getInstance();
-        specificVersions = new String[] { "0.10.0", "0.9.0", "0.8.0", "0.6.2",
-                "0.5.0", "0.4.0", "0.3.0" };
+        specificVersions = new String[] { "0.3.0", "0.19.1" };
     }
 
 }

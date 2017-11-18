@@ -30,10 +30,7 @@ public class ChromeVersionTest extends BaseVersionTst {
     @Before
     public void setup() {
         browserManager = ChromeDriverManager.getInstance();
-        specificVersions = new String[] { "2.10", "2.11", "2.12", "2.13",
-                "2.14", "2.15", "2.16", "2.17", "2.18", "2.19", "2.20", "2.21",
-                "2.22", "2.23", "2.24", "2.25", "2.26", "2.27", "2.28",
-                "2.29" };
+        specificVersions = new String[] { "2.10", "2.33" };
     }
 
 }

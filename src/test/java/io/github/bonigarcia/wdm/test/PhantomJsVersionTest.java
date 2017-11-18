@@ -30,7 +30,7 @@ public class PhantomJsVersionTest extends BaseVersionTst {
     @Before
     public void setup() {
         browserManager = PhantomJsDriverManager.getInstance();
-        specificVersions = new String[] { "1.9.7", "1.9.8", "2.1.1", "2.5.0" };
+        specificVersions = new String[] { "1.9.7", "2.1.1" };
     }
 
 }

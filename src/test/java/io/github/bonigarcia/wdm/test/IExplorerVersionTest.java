@@ -30,8 +30,7 @@ public class IExplorerVersionTest extends BaseVersionTst {
     @Before
     public void setup() {
         browserManager = InternetExplorerDriverManager.getInstance();
-        specificVersions = new String[] { "2.39", "2.40", "2.41", "2.42",
-                "2.43", "2.44", "2.45", "2.47" };
+        specificVersions = new String[] { "2.39", "2.47" };
     }
 
 }

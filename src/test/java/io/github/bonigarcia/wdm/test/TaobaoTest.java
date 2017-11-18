@@ -14,6 +14,7 @@
  */
 package io.github.bonigarcia.wdm.test;
 
+import static java.lang.System.setProperty;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.junit.Assert.assertThat;
@@ -42,16 +43,22 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 @RunWith(Parameterized.class)
 public class TaobaoTest {
 
-    @Parameter
+    @Parameter(0)
     public Class<? extends WebDriver> driverClass;
+
+    @Parameter(1)
+    public String taobaoUrl;
 
     @Parameters(name = "{index}: {0}")
     public static Collection<Object[]> data() {
-        return asList(new Object[][] { { ChromeDriver.class } });
+        return asList(new Object[][] { { ChromeDriver.class,
+                "http://npm.taobao.org/mirrors/chromedriver/2.33/" } });
     }
 
     @Test
-    public void testCache() throws Exception {
+    public void testTaobao() throws Exception {
+        setProperty("wdm.chromeDriverTaobaoUrl", taobaoUrl);
+
         BrowserManager browserManager = WebDriverManager
                 .getInstance(driverClass);
         browserManager.useTaobaoMirror().setup();
