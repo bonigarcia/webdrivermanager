@@ -39,24 +39,12 @@ public class GitHubApi {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getTagName() {
         return tagName;
     }
 
-    public void setTagName(String tagName) {
-        this.tagName = tagName;
-    }
-
     public List<LinkedTreeMap<String, Object>> getAssets() {
         return assets;
-    }
-
-    public void setAssets(List<LinkedTreeMap<String, Object>> assets) {
-        this.assets = assets;
     }
 
 }

@@ -60,9 +60,14 @@ public abstract class BaseVersionTst {
 
     @Test
     public void testLatestVersion() throws Exception {
-        if (architecture != DEFAULT) {
-            browserManager.architecture(architecture).setup();
-        } else {
+        switch (architecture) {
+        case X32:
+            browserManager.arch32().setup();
+            break;
+        case X64:
+            browserManager.arch32().setup();
+            break;
+        default:
             browserManager.setup();
         }
 

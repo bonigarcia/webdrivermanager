@@ -745,12 +745,12 @@ public abstract class BrowserManager {
     }
 
     public BrowserManager arch32() {
-        this.architecture = X32;
+        architecture(X32);
         return this;
     }
 
     public BrowserManager arch64() {
-        this.architecture = X64;
+        architecture(X64);
         return this;
     }
 
@@ -828,6 +828,7 @@ public abstract class BrowserManager {
                 Gson gson = gsonBuilder.create();
                 GitHubApi[] releaseArray = gson.fromJson(reader,
                         GitHubApi[].class);
+
                 if (driverVersion != null) {
                     releaseArray = new GitHubApi[] {
                             getVersion(releaseArray, driverVersion) };
@@ -852,6 +853,7 @@ public abstract class BrowserManager {
     protected GitHubApi getVersion(GitHubApi[] releaseArray, String version) {
         GitHubApi out = null;
         for (GitHubApi release : releaseArray) {
+            log.info("*** Get version {} of {}", version, release);
             if ((release.getName() != null
                     && release.getName().contains(version))
                     || (release.getTagName() != null
