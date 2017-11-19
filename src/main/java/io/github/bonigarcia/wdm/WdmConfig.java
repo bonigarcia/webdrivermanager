@@ -44,16 +44,8 @@ public class WdmConfig {
     }
 
     public static String getString(String key) {
-        String value = "";
-        if (!key.equals("")) {
-            // dots are not allowed in POSIX environmental variables
-            value = System.getenv(key.replace(".", "_"));
-            if (value == null) {
-                value = WdmConfig.getInstance().conf.getString(key);
-            }
-
-        }
-        return value;
+        return key.equals("") ? ""
+                : WdmConfig.getInstance().conf.getString(key);
     }
 
     public static int getInt(String key) {
