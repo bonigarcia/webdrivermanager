@@ -23,7 +23,7 @@ import static io.github.bonigarcia.wdm.WdmConfig.getBoolean;
 import static io.github.bonigarcia.wdm.WdmConfig.getInt;
 import static io.github.bonigarcia.wdm.WdmConfig.getString;
 import static io.github.bonigarcia.wdm.WdmConfig.getUrl;
-import static io.github.bonigarcia.wdm.WdmUtils.isNullOrEmpty;
+import static io.github.bonigarcia.wdm.WdmConfig.isNullOrEmpty;
 import static java.io.File.separator;
 import static java.lang.Integer.signum;
 import static java.lang.System.getProperty;
@@ -853,7 +853,7 @@ public abstract class BrowserManager {
     protected GitHubApi getVersion(GitHubApi[] releaseArray, String version) {
         GitHubApi out = null;
         for (GitHubApi release : releaseArray) {
-            log.info("*** Get version {} of {}", version, release);
+            log.trace("Get version {} of {}", version, release);
             if ((release.getName() != null
                     && release.getName().contains(version))
                     || (release.getTagName() != null

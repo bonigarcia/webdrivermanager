@@ -14,58 +14,67 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static java.lang.Boolean.parseBoolean;
+import static java.lang.Integer.parseInt;
+
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigFactory;
+import java.util.Properties;
 
 /**
- * Configuration (wrapper for Java properties).
+ * Configuration utility class.
  *
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.0.0
  */
 public class WdmConfig {
 
-    private static WdmConfig instance;
-    private Config conf;
-
-    protected WdmConfig() {
-        conf = ConfigFactory.load(WdmConfig.class.getClassLoader(), System
-                .getProperty("wdm.properties", "webdrivermanager.properties"));
-    }
-
-    public static synchronized WdmConfig getInstance() {
-        if (instance == null) {
-            instance = new WdmConfig();
-        }
-        return instance;
+    private WdmConfig() {
+        throw new IllegalStateException("Utility class");
     }
 
     public static String getString(String key) {
         String value = "";
         if (!key.equals("")) {
-            // dots are not allowed in POSIX environmental variables
-            value = System.getenv(key.replace(".", "_"));
+            value = System.getenv(key.toUpperCase().replace(".", "_"));
             if (value == null) {
-                value = WdmConfig.getInstance().conf.getString(key);
+                value = System.getProperty(key);
             }
-
+            if (value == null) {
+                value = getProperty(key);
+            }
         }
         return value;
     }
 
     public static int getInt(String key) {
-        return WdmConfig.getInstance().conf.getInt(key);
+        return parseInt(getString(key));
     }
 
     public static boolean getBoolean(String key) {
-        return WdmConfig.getInstance().conf.getBoolean(key);
+        return parseBoolean(getString(key));
     }
 
     public static URL getUrl(String key) throws MalformedURLException {
-        return new URL(WdmConfig.getInstance().conf.getString(key));
+        return new URL(getString(key));
+    }
+
+    private static String getProperty(String key) {
+        Properties properties = new Properties();
+        try {
+            InputStream inputStream = WdmConfig.class
+                    .getResourceAsStream(System.getProperty("wdm.properties",
+                            "/webdrivermanager.properties"));
+            properties.load(inputStream);
+        } catch (Exception e) {
+            throw new WebDriverManagerException(e);
+        }
+        return properties.getProperty(key);
+    }
+
+    public static boolean isNullOrEmpty(String string) {
+        return string == null || string.isEmpty();
     }
 
 }

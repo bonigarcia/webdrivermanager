@@ -14,7 +14,6 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import static java.lang.System.getProperty;
 import static java.lang.System.setProperty;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.file.Files.createTempDirectory;
@@ -49,8 +48,7 @@ public class CustomTargetTest {
     public void setup() throws IOException {
         tmpFolder = createTempDirectory("");
         setProperty("wdm.targetPath", tmpFolder.toString());
-        log.info("Using temporal folder {} as cache [{}]", tmpFolder,
-                getProperty("wdm.targetPath"));
+        log.info("Using temporal folder {} as cache", tmpFolder);
     }
 
     @Test
@@ -65,6 +63,7 @@ public class CustomTargetTest {
     public void teardown() throws IOException {
         log.info("Deleting temporal folder {}", tmpFolder);
         deleteDirectory(tmpFolder.toFile());
+        System.getProperties().remove("wdm.targetPath");
     }
 
 }

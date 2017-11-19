@@ -280,11 +280,10 @@ public class Downloader {
 
     public String getTargetPath() {
         String targetPath = getString("wdm.targetPath");
-        log.debug("Target path {}", targetPath);
         if (targetPath.contains(HOME)) {
             targetPath = targetPath.replace(HOME, getProperty("user.home"));
         }
-        log.debug("Target path {}", targetPath);
+        log.trace("Target path {}", targetPath);
 
         // Create repository folder if not exits
         File repository = new File(targetPath);

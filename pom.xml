@@ -10,7 +10,6 @@
         <slf4j.version>1.7.24</slf4j.version>
         <commons-io.version>2.5</commons-io.version>
         <gson.version>2.8.0</gson.version>
-        <config.version>1.2.1</config.version>
         <commons-lang3.version>3.5</commons-lang3.version>
         <jarchivelib.version>0.7.1</jarchivelib.version>
         <jsoup.version>1.10.2</jsoup.version>
@@ -89,11 +88,6 @@
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
             <version>${gson.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.typesafe</groupId>
-            <artifactId>config</artifactId>
-            <version>${config.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
