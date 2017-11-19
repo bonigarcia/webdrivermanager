@@ -14,6 +14,7 @@
  */
 package io.github.bonigarcia.wdm.test;
 
+import static java.lang.System.getProperty;
 import static java.lang.System.setProperty;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.file.Files.createTempDirectory;
@@ -47,19 +48,17 @@ public class CustomTargetTest {
     @Before
     public void setup() throws IOException {
         tmpFolder = createTempDirectory("");
-        log.info("Using temporal folder {} as cache", tmpFolder);
+        setProperty("wdm.targetPath", tmpFolder.toString());
+        log.info("Using temporal folder {} as cache [{}]", tmpFolder,
+                getProperty("wdm.targetPath"));
     }
 
     @Test
     public void testTargetPath() {
-        String cacheFolder = tmpFolder.toString();
-        setProperty("wdm.targetPath", cacheFolder);
         ChromeDriverManager.getInstance().setup();
-
         String binaryPath = ChromeDriverManager.getInstance().getBinaryPath();
         log.info("Binary path {}", binaryPath);
-
-        assertThat(binaryPath, startsWith(cacheFolder));
+        assertThat(binaryPath, startsWith(tmpFolder.toString()));
     }
 
     @After
