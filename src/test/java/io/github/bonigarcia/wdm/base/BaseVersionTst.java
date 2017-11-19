@@ -17,10 +17,12 @@ package io.github.bonigarcia.wdm.base;
 import static io.github.bonigarcia.wdm.Architecture.DEFAULT;
 import static io.github.bonigarcia.wdm.Architecture.X32;
 import static io.github.bonigarcia.wdm.Architecture.X64;
+import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import java.util.Collection;
 
@@ -30,7 +32,6 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import io.github.bonigarcia.wdm.Architecture;
 import io.github.bonigarcia.wdm.BrowserManager;
@@ -50,8 +51,7 @@ public abstract class BaseVersionTst {
     protected BrowserManager browserManager;
     protected String[] specificVersions;
 
-    protected static final Logger log = LoggerFactory
-            .getLogger(BaseVersionTst.class);
+    final Logger log = getLogger(lookup().lookupClass());
 
     @Parameters(name = "{index}: {0}")
     public static Collection<Object[]> data() {

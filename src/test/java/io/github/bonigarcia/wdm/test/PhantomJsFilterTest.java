@@ -15,10 +15,12 @@
 package io.github.bonigarcia.wdm.test;
 
 import static io.github.bonigarcia.wdm.Architecture.X64;
+import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.junit.Assert.assertThat;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -29,7 +31,6 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import io.github.bonigarcia.wdm.Architecture;
 import io.github.bonigarcia.wdm.BrowserManager;
@@ -44,8 +45,7 @@ import io.github.bonigarcia.wdm.WdmHttpClient;
  */
 public class PhantomJsFilterTest {
 
-    protected static final Logger log = LoggerFactory
-            .getLogger(PhantomJsFilterTest.class);
+    final Logger log = getLogger(lookup().lookupClass());
 
     protected BrowserManager phatomJsManager;
     protected List<URL> driversUrls;

@@ -14,6 +14,7 @@
  */
 package io.github.bonigarcia.wdm.test;
 
+import static java.lang.invoke.MethodHandles.lookup;
 import static org.apache.http.auth.AuthScope.ANY_HOST;
 import static org.apache.http.auth.AuthScope.ANY_PORT;
 import static org.apache.http.auth.AuthScope.ANY_REALM;
@@ -24,6 +25,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import java.lang.reflect.Field;
 import java.net.InetSocketAddress;
@@ -37,7 +39,6 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import io.github.bonigarcia.wdm.BrowserManager;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
@@ -54,8 +55,7 @@ import mockit.integration.junit4.JMockit;
 @RunWith(JMockit.class)
 public class ProxyTest {
 
-    protected static final Logger log = LoggerFactory
-            .getLogger(ProxyTest.class);
+    final Logger log = getLogger(lookup().lookupClass());
 
     private static final String PROXY_URL = "my.http.proxy";
     private static final String PROXY_PORT = "1234";

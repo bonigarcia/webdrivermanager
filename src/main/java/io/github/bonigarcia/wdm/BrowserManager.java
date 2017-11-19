@@ -28,6 +28,7 @@ import static java.io.File.separator;
 import static java.lang.Integer.signum;
 import static java.lang.System.getProperty;
 import static java.lang.System.getenv;
+import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.copyOf;
 import static java.util.Arrays.sort;
 import static java.util.Collections.reverse;
@@ -41,6 +42,7 @@ import static org.apache.commons.io.FileUtils.listFiles;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_LINUX;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -65,7 +67,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.commons.codec.binary.Base64;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -84,8 +85,7 @@ import com.google.gson.internal.LinkedTreeMap;
  */
 public abstract class BrowserManager {
 
-    protected static final Logger log = LoggerFactory
-            .getLogger(BrowserManager.class);
+    final Logger log = getLogger(lookup().lookupClass());
 
     public static final String TAOBAO_MIRROR = "npm.taobao.org";
     public static final String SEPARATOR = "/";

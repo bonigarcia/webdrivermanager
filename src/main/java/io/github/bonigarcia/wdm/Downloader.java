@@ -19,6 +19,7 @@ import static io.github.bonigarcia.wdm.WdmConfig.getString;
 import static java.io.File.separator;
 import static java.lang.Runtime.getRuntime;
 import static java.lang.System.getProperty;
+import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.file.Files.createTempDirectory;
 import static java.nio.file.Files.delete;
 import static java.nio.file.Files.move;
@@ -32,6 +33,7 @@ import static org.rauschig.jarchivelib.ArchiveFormat.TAR;
 import static org.rauschig.jarchivelib.ArchiverFactory.createArchiver;
 import static org.rauschig.jarchivelib.CompressionType.BZIP2;
 import static org.rauschig.jarchivelib.CompressionType.GZIP;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -49,7 +51,6 @@ import java.util.zip.ZipFile;
 
 import org.rauschig.jarchivelib.Archiver;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Downloader class.
@@ -58,8 +59,8 @@ import org.slf4j.LoggerFactory;
  * @since 1.0.0
  */
 public class Downloader {
-    protected static final Logger log = LoggerFactory
-            .getLogger(Downloader.class);
+
+    final Logger log = getLogger(lookup().lookupClass());
 
     private static final String HOME = "~";
 

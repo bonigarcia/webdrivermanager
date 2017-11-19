@@ -14,9 +14,11 @@
  */
 package io.github.bonigarcia.wdm.test;
 
+import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,7 +31,6 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import io.github.bonigarcia.wdm.BrowserManager;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
@@ -48,8 +49,7 @@ import io.github.bonigarcia.wdm.PhantomJsDriverManager;
 @RunWith(Parameterized.class)
 public class TargetTest {
 
-    protected static final Logger log = LoggerFactory
-            .getLogger(TargetTest.class);
+    final Logger log = getLogger(lookup().lookupClass());
 
     @Parameter(0)
     public String version;
