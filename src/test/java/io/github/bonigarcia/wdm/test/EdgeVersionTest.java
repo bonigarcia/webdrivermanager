@@ -30,7 +30,7 @@ public class EdgeVersionTest extends BaseVersionTst {
     @Before
     public void setup() {
         browserManager = EdgeDriverManager.getInstance();
-        specificVersions = new String[] { "3.14393" };
+        specificVersions = new String[] { "4.15063", "16.16299" };
     }
 
 }

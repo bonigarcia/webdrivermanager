@@ -35,7 +35,7 @@ public class EdgeTest extends BaseBrowserTst {
     @BeforeClass
     public static void setupClass() {
         assumeTrue(IS_OS_WINDOWS);
-        EdgeDriverManager.getInstance().version("3.14393").setup();
+        EdgeDriverManager.getInstance().version("4.15063").setup();
     }
 
     @Before
