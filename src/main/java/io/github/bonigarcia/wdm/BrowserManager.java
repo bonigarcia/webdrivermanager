@@ -14,7 +14,6 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static com.google.common.collect.Lists.reverse;
 import static io.github.bonigarcia.wdm.Architecture.X32;
 import static io.github.bonigarcia.wdm.Architecture.X64;
 import static io.github.bonigarcia.wdm.DriverVersion.LATEST;
@@ -32,6 +31,7 @@ import static java.lang.System.getenv;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.copyOf;
 import static java.util.Arrays.sort;
+import static java.util.Collections.reverse;
 import static java.util.Collections.reverseOrder;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -212,7 +212,8 @@ public abstract class BrowserManager {
 
     private void downloadCandidateUrls(List<URL> candidateUrls)
             throws IOException, InterruptedException {
-        URL url = reverse(candidateUrls).iterator().next();
+        reverse(candidateUrls);
+        URL url = candidateUrls.iterator().next();
         String export = candidateUrls.contains(url) ? getExportParameter()
                 : null;
         downloader.download(url, versionToDownload, export, getDriverName());
