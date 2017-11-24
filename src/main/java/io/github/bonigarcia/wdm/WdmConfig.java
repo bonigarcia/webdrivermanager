@@ -56,8 +56,12 @@ public class WdmConfig {
         return parseBoolean(getString(key));
     }
 
-    public static URL getUrl(String key) throws MalformedURLException {
-        return new URL(getString(key));
+    public static URL getUrl(String key) {
+        try {
+            return new URL(getString(key));
+        } catch (MalformedURLException e) {
+            throw new WebDriverManagerException(e);
+        }
     }
 
     private static String getProperty(String key) {

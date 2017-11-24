@@ -52,7 +52,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -120,7 +119,7 @@ public abstract class BrowserManager {
         return version == null ? getString(getDriverVersionKey()) : version;
     }
 
-    protected URL getDriverUrl() throws MalformedURLException {
+    protected URL getDriverUrl() {
         return driverUrl == null ? getUrl(getDriverUrlKey()) : driverUrl;
     }
 
@@ -146,10 +145,6 @@ public abstract class BrowserManager {
                 driverName);
         return url.getFile().substring(url.getFile().indexOf(SEPARATOR) + 1,
                 url.getFile().lastIndexOf(SEPARATOR));
-    }
-
-    protected void manage(Architecture arch, DriverVersion version) {
-        manage(arch, version.name());
     }
 
     protected void manage(Architecture arch, String version) {
@@ -255,7 +250,7 @@ public abstract class BrowserManager {
             // Find out if driver version has been found or not
             continueSearchingVersion = candidateUrls.isEmpty() && getLatest;
             if (continueSearchingVersion) {
-                log.trace("No valid binary found for {} {}", getDriverName(),
+                log.debug("No valid binary found for {} {}", getDriverName(),
                         versionToDownload);
                 urls = removeFromList(urls, versionToDownload);
                 versionToDownload = null;
@@ -538,18 +533,12 @@ public abstract class BrowserManager {
     }
 
     protected boolean isUsingTaobaoMirror() {
-        try {
-            return getDriverUrl().getHost().equalsIgnoreCase(TAOBAO_MIRROR);
-        } catch (MalformedURLException e) {
-            throw new WebDriverManagerException(e);
-        }
+        return getDriverUrl().getHost().equalsIgnoreCase(TAOBAO_MIRROR);
     }
 
     protected Integer versionCompare(String str1, String str2) {
         String[] vals1 = str1.replaceAll("v", "").split("\\.");
         String[] vals2 = str2.replaceAll("v", "").split("\\.");
-
-        log.trace("Comparing {} to {}", str1, str2);
 
         if (vals1[0].equals("")) {
             vals1[0] = "0";
@@ -568,11 +557,9 @@ public abstract class BrowserManager {
             int diff = Integer.valueOf(vals1[i])
                     .compareTo(Integer.valueOf(vals2[i]));
             int signum = signum(diff);
-            log.trace("[1] Returning {}", signum);
             return signum;
         } else {
             int signum = signum(vals1.length - vals2.length);
-            log.trace("[2] Returning {}", signum);
             return signum;
         }
     }
@@ -777,14 +764,7 @@ public abstract class BrowserManager {
     }
 
     public BrowserManager useTaobaoMirror(String taobaoUrl) {
-        try {
-            taobaoUrl = getString(taobaoUrl);
-            driverUrl = new URL(taobaoUrl);
-        } catch (MalformedURLException e) {
-            String errorMessage = "Malformed URL " + taobaoUrl;
-            log.error(errorMessage, e);
-            throw new WebDriverManagerException(errorMessage, e);
-        }
+        driverUrl = getUrl(taobaoUrl);
         return instance;
     }
 

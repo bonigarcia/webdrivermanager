@@ -32,7 +32,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 import io.github.bonigarcia.wdm.BrowserManager;
+import io.github.bonigarcia.wdm.EdgeDriverManager;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import io.github.bonigarcia.wdm.WebDriverManagerException;
 
 /**
  * Test for taobao.org mirror.
@@ -68,6 +70,11 @@ public class TaobaoTest {
         URL driverUrl = (URL) method.invoke(browserManager);
 
         assertThat(driverUrl.toString(), containsString("taobao.org"));
+    }
+
+    @Test(expected = WebDriverManagerException.class)
+    public void testTaobaoException() {
+        EdgeDriverManager.getInstance().useTaobaoMirror().setup();
     }
 
 }
