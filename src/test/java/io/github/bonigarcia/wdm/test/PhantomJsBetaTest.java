@@ -14,22 +14,25 @@
  */
 package io.github.bonigarcia.wdm.test;
 
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
+import org.junit.Test;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 
 import io.github.bonigarcia.wdm.PhantomJsDriverManager;
-import io.github.bonigarcia.wdm.base.BaseBrowserTst;
 
 /**
- * Test with PhatomJS.
+ * Test with PhatomJS beta.
  *
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.4.0
  */
-@Ignore
-public class PhantomJsBetaTest extends BaseBrowserTst {
+public class PhantomJsBetaTest {
 
     @BeforeClass
     public static void setupClass() {
@@ -41,4 +44,19 @@ public class PhantomJsBetaTest extends BaseBrowserTst {
         driver = new PhantomJSDriver();
     }
 
+    protected WebDriver driver;
+
+    @After
+    public void teardown() {
+        if (driver != null) {
+            driver.quit();
+        }
+    }
+
+    @Test
+    public void testPhantomBeta() {
+        String binaryPath = PhantomJsDriverManager.getInstance()
+                .getBinaryPath();
+        assertThat(binaryPath, notNullValue());
+    }
 }
