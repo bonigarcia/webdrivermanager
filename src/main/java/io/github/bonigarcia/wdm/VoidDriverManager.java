@@ -29,14 +29,6 @@ import java.util.List;
  */
 public class VoidDriverManager extends BrowserManager {
 
-    public static synchronized BrowserManager getInstance() {
-        if (instance == null
-                || !instance.getClass().equals(VoidDriverManager.class)) {
-            instance = new VoidDriverManager();
-        }
-        return instance;
-    }
-
     public VoidDriverManager() {
         exportParameter = "";
         driverVersionKey = "";
