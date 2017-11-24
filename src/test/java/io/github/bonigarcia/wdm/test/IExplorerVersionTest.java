@@ -15,8 +15,9 @@
 package io.github.bonigarcia.wdm.test;
 
 import org.junit.Before;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 
-import io.github.bonigarcia.wdm.InternetExplorerDriverManager;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.base.BaseVersionTst;
 
 /**
@@ -29,7 +30,8 @@ public class IExplorerVersionTest extends BaseVersionTst {
 
     @Before
     public void setup() {
-        browserManager = InternetExplorerDriverManager.getInstance();
+        browserManager = WebDriverManager
+                .getInstance(InternetExplorerDriver.class);
         specificVersions = new String[] { "2.39", "2.47" };
     }
 

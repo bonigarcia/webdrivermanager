@@ -15,8 +15,9 @@
 package io.github.bonigarcia.wdm.test;
 
 import org.junit.Before;
+import org.openqa.selenium.edge.EdgeDriver;
 
-import io.github.bonigarcia.wdm.EdgeDriverManager;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.base.BaseVersionTst;
 
 /**
@@ -29,7 +30,7 @@ public class EdgeVersionTest extends BaseVersionTst {
 
     @Before
     public void setup() {
-        browserManager = EdgeDriverManager.getInstance();
+        browserManager = WebDriverManager.getInstance(EdgeDriver.class);
         specificVersions = new String[] { "4.15063" };
     }
 
