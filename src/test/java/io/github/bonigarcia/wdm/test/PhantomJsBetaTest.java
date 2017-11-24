@@ -17,12 +17,8 @@ package io.github.bonigarcia.wdm.test;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
-import org.junit.After;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
 
 import io.github.bonigarcia.wdm.PhantomJsDriverManager;
 
@@ -37,20 +33,6 @@ public class PhantomJsBetaTest {
     @BeforeClass
     public static void setupClass() {
         PhantomJsDriverManager.getInstance().useBetaVersions().setup();
-    }
-
-    @Before
-    public void setupTest() {
-        driver = new PhantomJSDriver();
-    }
-
-    protected WebDriver driver;
-
-    @After
-    public void teardown() {
-        if (driver != null) {
-            driver.quit();
-        }
     }
 
     @Test
