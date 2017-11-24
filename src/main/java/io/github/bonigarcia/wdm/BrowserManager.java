@@ -14,9 +14,9 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static com.google.common.collect.Lists.reverse;
 import static io.github.bonigarcia.wdm.Architecture.X32;
 import static io.github.bonigarcia.wdm.Architecture.X64;
-import static io.github.bonigarcia.wdm.Architecture.valueOf;
 import static io.github.bonigarcia.wdm.DriverVersion.LATEST;
 import static io.github.bonigarcia.wdm.DriverVersion.NOT_SPECIFIED;
 import static io.github.bonigarcia.wdm.WdmConfig.getBoolean;
@@ -26,12 +26,12 @@ import static io.github.bonigarcia.wdm.WdmConfig.getUrl;
 import static io.github.bonigarcia.wdm.WdmConfig.isNullOrEmpty;
 import static java.io.File.separator;
 import static java.lang.Integer.signum;
+import static java.lang.Integer.valueOf;
 import static java.lang.System.getProperty;
 import static java.lang.System.getenv;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.copyOf;
 import static java.util.Arrays.sort;
-import static java.util.Collections.reverse;
 import static java.util.Collections.reverseOrder;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
@@ -88,8 +88,8 @@ public abstract class BrowserManager {
 
     public static final String TAOBAO_MIRROR = "npm.taobao.org";
     public static final String SEPARATOR = "/";
-    public static final Architecture DEFAULT_ARCH = valueOf(
-            "X" + getProperty("sun.arch.data.model"));
+    public static final Architecture DEFAULT_ARCH = Architecture
+            .valueOf("X" + getProperty("sun.arch.data.model"));
     public static final String MY_OS_NAME = getOsName();
 
     protected abstract List<URL> getDrivers() throws IOException;
@@ -212,12 +212,10 @@ public abstract class BrowserManager {
 
     private void downloadCandidateUrls(List<URL> candidateUrls)
             throws IOException, InterruptedException {
-        for (URL url : candidateUrls) {
-            String export = candidateUrls.contains(url) ? getExportParameter()
-                    : null;
-            downloader.download(url, versionToDownload, export,
-                    getDriverName());
-        }
+        URL url = reverse(candidateUrls).iterator().next();
+        String export = candidateUrls.contains(url) ? getExportParameter()
+                : null;
+        downloader.download(url, versionToDownload, export, getDriverName());
     }
 
     private List<URL> filterCandidateUrls(Architecture arch, String version,
@@ -377,10 +375,10 @@ public abstract class BrowserManager {
 
         if (out.size() > 1 && arch != null) {
             for (URL url : list) {
-                // Exception: 32 bits (sometimes referred as x86 or i686)
-                if (arch == X32 && ((url.getFile().contains("x86")
-                        && !url.getFile().contains("64"))
-                        || url.getFile().contains("i686"))) {
+                if (!url.getFile().contains("x86")
+                        && !url.getFile().contains("64")
+                        && !url.getFile().contains("i686")
+                        && !url.getFile().contains("32")) {
                     continue;
                 }
 
@@ -554,13 +552,9 @@ public abstract class BrowserManager {
         }
 
         if (i < vals1.length && i < vals2.length) {
-            int diff = Integer.valueOf(vals1[i])
-                    .compareTo(Integer.valueOf(vals2[i]));
-            int signum = signum(diff);
-            return signum;
+            return signum(valueOf(vals1[i]).compareTo(valueOf(vals2[i])));
         } else {
-            int signum = signum(vals1.length - vals2.length);
-            return signum;
+            return signum(vals1.length - vals2.length);
         }
     }
 
