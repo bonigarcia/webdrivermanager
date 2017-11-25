@@ -54,13 +54,13 @@ public class OperaDriverManager extends BrowserManager {
     @Override
     protected String getCurrentVersion(URL url, String driverName) {
         if (isUsingTaobaoMirror()) {
-            int i = url.getFile().lastIndexOf(SEPARATOR);
-            int j = url.getFile().substring(0, i).lastIndexOf(SEPARATOR) + 1;
+            int i = url.getFile().lastIndexOf(SLASH);
+            int j = url.getFile().substring(0, i).lastIndexOf(SLASH) + 1;
             return url.getFile().substring(j, i);
         } else {
             return url.getFile().substring(
-                    url.getFile().indexOf(SEPARATOR + "v") + 2,
-                    url.getFile().lastIndexOf(SEPARATOR));
+                    url.getFile().indexOf(SLASH + "v") + 2,
+                    url.getFile().lastIndexOf(SLASH));
         }
     }
 

@@ -16,10 +16,9 @@ package io.github.bonigarcia.wdm.test;
 
 import static io.github.bonigarcia.wdm.Architecture.X32;
 import static io.github.bonigarcia.wdm.Architecture.X64;
-import static io.github.bonigarcia.wdm.BrowserManager.MY_OS_NAME;
-import static io.github.bonigarcia.wdm.OperativeSystem.MAC;
 import static java.util.Arrays.asList;
 import static org.apache.commons.io.FileUtils.cleanDirectory;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
@@ -66,9 +65,8 @@ public class CacheTest {
 
     @Parameters(name = "{index}: {0} {1} {2}")
     public static Collection<Object[]> data() {
-        boolean isMac = MY_OS_NAME.contains(MAC.name());
         return asList(new Object[][] {
-                { ChromeDriver.class, "2.27", isMac ? X64 : X32 },
+                { ChromeDriver.class, "2.27", IS_OS_MAC ? X64 : X32 },
                 { OperaDriver.class, "0.2.2", X64 },
                 { PhantomJSDriver.class, "2.1.1", X64 },
                 { FirefoxDriver.class, "0.17.0", X64 } });

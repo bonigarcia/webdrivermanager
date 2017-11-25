@@ -29,18 +29,18 @@ import com.google.gson.internal.LinkedTreeMap;
  */
 public class GitHubApi {
 
-    private String name;
-    private List<LinkedTreeMap<String, Object>> assets;
-
     @SerializedName("tag_name")
     private String tagName;
 
-    public String getName() {
-        return name;
-    }
+    private String name;
+    private List<LinkedTreeMap<String, Object>> assets;
 
     public String getTagName() {
         return tagName;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public List<LinkedTreeMap<String, Object>> getAssets() {

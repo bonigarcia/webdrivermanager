@@ -86,34 +86,31 @@ public abstract class BrowserManager {
 
     final Logger log = getLogger(lookup().lookupClass());
 
-    public static final String TAOBAO_MIRROR = "npm.taobao.org";
-    public static final String SEPARATOR = "/";
-    public static final Architecture DEFAULT_ARCH = Architecture
-            .valueOf("X" + getProperty("sun.arch.data.model"));
-    public static final String MY_OS_NAME = getOsName();
+    public static final String SLASH = "/";
 
     protected abstract List<URL> getDrivers() throws IOException;
 
     protected static BrowserManager instance;
-    protected String versionToDownload;
+    protected String myOsName = getOsName();
+    protected boolean useBetaVersions = getBoolean("wdm.useBetaVersions");
     protected boolean mirrorLog = false;
-    protected String version;
-    protected Architecture architecture;
     protected boolean isForcingCache = false;
     protected boolean isForcingDownload = false;
-    protected boolean useBetaVersions = getBoolean("wdm.useBetaVersions");
+    protected List<String> listVersions;
+    protected List<String> driverName;
+    protected Architecture architecture;
+    protected WdmHttpClient httpClient;
+    protected Downloader downloader;
     protected URL driverUrl;
+    protected String versionToDownload;
+    protected String version;
     protected String proxyValue;
     protected String binaryPath;
-    protected List<String> listVersions;
-    protected Downloader downloader;
     protected String proxyUser;
     protected String proxyPass;
-    protected WdmHttpClient httpClient;
     protected String exportParameter;
     protected String driverVersionKey;
     protected String driverUrlKey;
-    protected List<String> driverName;
 
     protected String getDriverVersion() {
         return version == null ? getString(getDriverVersionKey()) : version;
@@ -143,8 +140,8 @@ public abstract class BrowserManager {
     protected String getCurrentVersion(URL url, String driverName) {
         log.trace("Getting current version: url={}, driverName={}", url,
                 driverName);
-        return url.getFile().substring(url.getFile().indexOf(SEPARATOR) + 1,
-                url.getFile().lastIndexOf(SEPARATOR));
+        return url.getFile().substring(url.getFile().indexOf(SLASH) + 1,
+                url.getFile().lastIndexOf(SLASH));
     }
 
     protected void manage(Architecture arch, String version) {
@@ -179,7 +176,7 @@ public abstract class BrowserManager {
                     String versionStr = getLatest ? "(latest version)"
                             : version;
                     String errorMessage = getDriverName() + " " + versionStr
-                            + " for " + MY_OS_NAME + arch.toString()
+                            + " for " + myOsName + arch.toString()
                             + " not found in " + getDriverUrl();
                     log.error(errorMessage);
                     throw new WebDriverManagerException(errorMessage);
@@ -193,7 +190,7 @@ public abstract class BrowserManager {
         }
     }
 
-    private void handleException(Exception e, Architecture arch,
+    protected void handleException(Exception e, Architecture arch,
             String version) {
         if (!isForcingCache) {
             isForcingCache = true;
@@ -210,7 +207,7 @@ public abstract class BrowserManager {
         }
     }
 
-    private void downloadCandidateUrls(List<URL> candidateUrls)
+    protected void downloadCandidateUrls(List<URL> candidateUrls)
             throws IOException, InterruptedException {
         reverse(candidateUrls);
         URL url = candidateUrls.iterator().next();
@@ -219,7 +216,7 @@ public abstract class BrowserManager {
         downloader.download(url, versionToDownload, export, getDriverName());
     }
 
-    private List<URL> filterCandidateUrls(Architecture arch, String version,
+    protected List<URL> filterCandidateUrls(Architecture arch, String version,
             boolean getLatest) throws IOException {
         List<URL> urls = getDrivers();
         List<URL> candidateUrls;
@@ -258,7 +255,7 @@ public abstract class BrowserManager {
         return candidateUrls;
     }
 
-    private Optional<String> handleCache(Architecture arch, String version,
+    protected Optional<String> handleCache(Architecture arch, String version,
             boolean getLatest, boolean cache) {
         Optional<String> driverInCache = empty();
         if (cache) {
@@ -324,7 +321,7 @@ public abstract class BrowserManager {
         return empty();
     }
 
-    public boolean isExecutable(File file) {
+    protected boolean isExecutable(File file) {
         return IS_OS_WINDOWS ? file.getName().toLowerCase().endsWith(".exe")
                 : file.canExecute();
     }
@@ -353,7 +350,7 @@ public abstract class BrowserManager {
 
         for (URL url : list) {
             for (OperativeSystem os : OperativeSystem.values()) {
-                if (((MY_OS_NAME.contains(os.name())
+                if (((myOsName.contains(os.name())
                         && url.getFile().toUpperCase().contains(os.name()))
                         || getDriverName().contains("IEDriverServer")
                         || (IS_OS_MAC
@@ -365,7 +362,7 @@ public abstract class BrowserManager {
         }
 
         log.trace("{} {} - URLs after filtering by OS ({}): {}",
-                getDriverName(), versionToDownload, MY_OS_NAME, out);
+                getDriverName(), versionToDownload, myOsName, out);
         return out;
     }
 
@@ -507,7 +504,7 @@ public abstract class BrowserManager {
         return out;
     }
 
-    private void handleDriver(URL url, String driver, List<URL> out) {
+    protected void handleDriver(URL url, String driver, List<URL> out) {
         if (!useBetaVersions && url.getFile().toLowerCase().contains("beta")) {
             return;
         }
@@ -532,7 +529,7 @@ public abstract class BrowserManager {
     }
 
     protected boolean isUsingTaobaoMirror() {
-        return getDriverUrl().getHost().equalsIgnoreCase(TAOBAO_MIRROR);
+        return getDriverUrl().getHost().equalsIgnoreCase("npm.taobao.org");
     }
 
     protected Integer versionCompare(String str1, String str2) {
@@ -586,7 +583,7 @@ public abstract class BrowserManager {
 
             while (iterator.hasNext()) {
                 String link = iterator.next().attr("href");
-                if (link.contains("mirror") && link.endsWith(SEPARATOR)) {
+                if (link.contains("mirror") && link.endsWith(SLASH)) {
                     urlList.addAll(getDriversFromMirror(new URL(
                             driverStr + link.replace(driverUrlContent, ""))));
                 } else if (link.startsWith(driverUrlContent)
@@ -646,7 +643,7 @@ public abstract class BrowserManager {
         return builder.parse(is);
     }
 
-    protected static String getOsName() {
+    protected String getOsName() {
         String os = getProperty("os.name").toLowerCase();
         if (IS_OS_WINDOWS) {
             os = "WIN";
@@ -691,6 +688,87 @@ public abstract class BrowserManager {
         return httpClient.execute(get).getContent();
     }
 
+    protected Architecture getDefaultArchitecture() {
+        if (architecture == null) {
+            String archStr = getString("wdm.architecture");
+            if (archStr.equals("")) {
+                archStr = getProperty("sun.arch.data.model");
+            }
+            architecture = Architecture.valueOf("X" + archStr);
+        }
+        return architecture;
+
+    }
+
+    protected List<URL> getDriversFromGitHub() throws IOException {
+        List<URL> urls;
+        if (isUsingTaobaoMirror()) {
+            urls = getDriversFromMirror(getDriverUrl());
+
+        } else {
+            String driverVersion = versionToDownload;
+
+            try (BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(
+                            openGitHubConnection(getDriverUrl())))) {
+
+                GsonBuilder gsonBuilder = new GsonBuilder();
+                Gson gson = gsonBuilder.create();
+                GitHubApi[] releaseArray = gson.fromJson(reader,
+                        GitHubApi[].class);
+
+                if (driverVersion != null) {
+                    releaseArray = new GitHubApi[] {
+                            getVersion(releaseArray, driverVersion) };
+                }
+
+                urls = new ArrayList<>();
+                for (GitHubApi release : releaseArray) {
+                    if (release != null) {
+                        List<LinkedTreeMap<String, Object>> assets = release
+                                .getAssets();
+                        for (LinkedTreeMap<String, Object> asset : assets) {
+                            urls.add(new URL(asset.get("browser_download_url")
+                                    .toString()));
+                        }
+                    }
+                }
+            }
+        }
+        return urls;
+    }
+
+    protected GitHubApi getVersion(GitHubApi[] releaseArray, String version) {
+        GitHubApi out = null;
+        for (GitHubApi release : releaseArray) {
+            log.trace("Get version {} of {}", version, release);
+            if ((release.getName() != null
+                    && release.getName().contains(version))
+                    || (release.getTagName() != null
+                            && release.getTagName().contains(version))) {
+                out = release;
+                break;
+            }
+        }
+        return out;
+    }
+
+    protected String getExportParameter() {
+        return exportParameter;
+    }
+
+    protected String getDriverVersionKey() {
+        return driverVersionKey;
+    }
+
+    protected String getDriverUrlKey() {
+        return driverUrlKey;
+    }
+
+    protected List<String> getDriverName() {
+        return driverName;
+    }
+
     public void setup() {
         String driverVersion = getDriverVersion();
         if (!driverVersion.equals("")) {
@@ -698,18 +776,6 @@ public abstract class BrowserManager {
                     isNullOrEmpty(driverVersion) ? NOT_SPECIFIED.name()
                             : driverVersion);
         }
-    }
-
-    private Architecture getDefaultArchitecture() {
-        if (this.architecture == null) {
-            String archStr = getString("wdm.architecture");
-            if (archStr.equals("")) {
-                this.architecture = DEFAULT_ARCH;
-            } else {
-                this.architecture = Architecture.valueOf("X" + archStr);
-            }
-        }
-        return this.architecture;
     }
 
     public String getDownloadedVersion() {
@@ -786,74 +852,4 @@ public abstract class BrowserManager {
         this.useBetaVersions = true;
         return this;
     }
-
-    protected List<URL> getDriversFromGitHub() throws IOException {
-        List<URL> urls;
-        if (isUsingTaobaoMirror()) {
-            urls = getDriversFromMirror(getDriverUrl());
-
-        } else {
-            String driverVersion = versionToDownload;
-
-            try (BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(
-                            openGitHubConnection(getDriverUrl())))) {
-
-                GsonBuilder gsonBuilder = new GsonBuilder();
-                Gson gson = gsonBuilder.create();
-                GitHubApi[] releaseArray = gson.fromJson(reader,
-                        GitHubApi[].class);
-
-                if (driverVersion != null) {
-                    releaseArray = new GitHubApi[] {
-                            getVersion(releaseArray, driverVersion) };
-                }
-
-                urls = new ArrayList<>();
-                for (GitHubApi release : releaseArray) {
-                    if (release != null) {
-                        List<LinkedTreeMap<String, Object>> assets = release
-                                .getAssets();
-                        for (LinkedTreeMap<String, Object> asset : assets) {
-                            urls.add(new URL(asset.get("browser_download_url")
-                                    .toString()));
-                        }
-                    }
-                }
-            }
-        }
-        return urls;
-    }
-
-    protected GitHubApi getVersion(GitHubApi[] releaseArray, String version) {
-        GitHubApi out = null;
-        for (GitHubApi release : releaseArray) {
-            log.trace("Get version {} of {}", version, release);
-            if ((release.getName() != null
-                    && release.getName().contains(version))
-                    || (release.getTagName() != null
-                            && release.getTagName().contains(version))) {
-                out = release;
-                break;
-            }
-        }
-        return out;
-    }
-
-    protected String getExportParameter() {
-        return exportParameter;
-    }
-
-    protected String getDriverVersionKey() {
-        return driverVersionKey;
-    }
-
-    protected String getDriverUrlKey() {
-        return driverUrlKey;
-    }
-
-    protected List<String> getDriverName() {
-        return driverName;
-    }
-
 }
