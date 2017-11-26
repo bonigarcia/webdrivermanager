@@ -140,8 +140,6 @@ public abstract class BrowserManager {
     }
 
     protected String getCurrentVersion(URL url, String driverName) {
-        log.trace("Getting current version: url={}, driverName={}", url,
-                driverName);
         return url.getFile().substring(url.getFile().indexOf(SLASH) + 1,
                 url.getFile().lastIndexOf(SLASH));
     }
@@ -161,6 +159,9 @@ public abstract class BrowserManager {
                     || version.equalsIgnoreCase(NOT_SPECIFIED.name());
             boolean cache = this.isForcingCache || getBoolean("wdm.forceCache")
                     || !isNetAvailable();
+
+            log.trace(">> Managing {} arch={} version={} getLatest={} cache={}",
+                    getDriverName(), arch, version, getLatest, cache);
 
             Optional<String> driverInCache = handleCache(arch, version,
                     getLatest, cache);
@@ -415,7 +416,6 @@ public abstract class BrowserManager {
             return;
         }
         if (url.getFile().contains(driver)) {
-            log.trace("URL {} match with {}", url, driver);
             String currentVersion = getCurrentVersion(url, driver);
 
             if (currentVersion.equalsIgnoreCase(driver)) {
