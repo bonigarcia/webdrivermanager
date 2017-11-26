@@ -108,8 +108,10 @@ public class UrlFilter {
 
     public List<URL> filterByIgnoredVersions(List<URL> list,
             String... ignoredVersions) {
-        log.trace("URLs before filtering by ignored versions ({}): {}",
-                Arrays.toString(ignoredVersions), list);
+        if (log.isTraceEnabled()) {
+            log.trace("URLs before filtering by ignored versions ({}): {}",
+                    Arrays.toString(ignoredVersions), list);
+        }
         List<URL> out = new ArrayList<>(list);
 
         for (URL url : list) {
@@ -121,8 +123,10 @@ public class UrlFilter {
             }
         }
 
-        log.trace("URLs after filtering by ignored versions ({}): {}",
-                Arrays.toString(ignoredVersions), out);
+        if (log.isTraceEnabled()) {
+            log.trace("URLs after filtering by ignored versions ({}): {}",
+                    Arrays.toString(ignoredVersions), out);
+        }
         return out;
     }
 
