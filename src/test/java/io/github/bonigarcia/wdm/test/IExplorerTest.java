@@ -14,20 +14,17 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import static java.lang.Runtime.getRuntime;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
-import static org.junit.Assume.assumeTrue;
+import static io.github.bonigarcia.wdm.OperativeSystem.WIN;
+import static java.lang.invoke.MethodHandles.lookup;
+import static org.junit.Assert.assertTrue;
+import static org.slf4j.LoggerFactory.getLogger;
 
-import java.io.IOException;
+import java.io.File;
 
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.junit.Test;
+import org.slf4j.Logger;
 
-import io.github.bonigarcia.wdm.InternetExplorerDriverManager;
-import io.github.bonigarcia.wdm.base.BaseBrowserTst;
+import io.github.bonigarcia.wdm.ChromeDriverManager;
 
 /**
  * Test with Internet Explorer browser.
@@ -35,24 +32,17 @@ import io.github.bonigarcia.wdm.base.BaseBrowserTst;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.0.0
  */
-@Ignore
-public class IExplorerTest extends BaseBrowserTst {
+public class IExplorerTest {
 
-    @BeforeClass
-    public static void setupClass() {
-        assumeTrue(IS_OS_WINDOWS);
-        InternetExplorerDriverManager.getInstance().setup();
-    }
+    final Logger log = getLogger(lookup().lookupClass());
 
-    @Before
-    public void setupTest() {
-        driver = new InternetExplorerDriver();
-    }
-
-    @AfterClass
-    public static void taskkill() throws IOException {
-        getRuntime().exec("taskkill /F /IM IEDriverServer.exe");
-        getRuntime().exec("taskkill /F /IM iexplore.exe");
+    @Test
+    public void testIExplorer() {
+        ChromeDriverManager.getInstance().forceOperativeSystem(WIN).setup();
+        File binary = new File(
+                ChromeDriverManager.getInstance().getBinaryPath());
+        log.debug("Binary path for IExploer {}", binary);
+        assertTrue(binary.exists());
     }
 
 }

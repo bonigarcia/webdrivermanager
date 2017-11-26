@@ -18,6 +18,9 @@ import static io.github.bonigarcia.wdm.Architecture.X32;
 import static io.github.bonigarcia.wdm.Architecture.X64;
 import static io.github.bonigarcia.wdm.DriverVersion.LATEST;
 import static io.github.bonigarcia.wdm.DriverVersion.NOT_SPECIFIED;
+import static io.github.bonigarcia.wdm.OperativeSystem.LINUX;
+import static io.github.bonigarcia.wdm.OperativeSystem.MAC;
+import static io.github.bonigarcia.wdm.OperativeSystem.WIN;
 import static io.github.bonigarcia.wdm.WdmConfig.getBoolean;
 import static io.github.bonigarcia.wdm.WdmConfig.getInt;
 import static io.github.bonigarcia.wdm.WdmConfig.getString;
@@ -87,7 +90,7 @@ public abstract class BrowserManager {
     protected abstract List<URL> getDrivers() throws IOException;
 
     protected static BrowserManager instance;
-    protected String myOsName = getOsName();
+    protected String myOsName = defaultOsName();
     protected boolean useBetaVersions = getBoolean("wdm.useBetaVersions");
     protected boolean mirrorLog = false;
     protected boolean isForcingCache = false;
@@ -129,6 +132,7 @@ public abstract class BrowserManager {
         for (File f : ls) {
             if (isExecutable(f)) {
                 target = f;
+                log.trace("Found binary in post-download: {}", target);
                 break;
             }
         }
@@ -238,7 +242,8 @@ public abstract class BrowserManager {
             candidateUrls = urlFilter.filterByArch(candidateUrls, arch);
 
             // Extra round of filter phantomjs 2.5.0 in Linux
-            if (IS_OS_LINUX && getDriverName().contains("phantomjs")) {
+            if (myOsName.equalsIgnoreCase("linux")
+                    && getDriverName().contains("phantomjs")) {
                 candidateUrls = urlFilter.filterByDistro(candidateUrls,
                         "2.5.0");
             }
@@ -329,7 +334,8 @@ public abstract class BrowserManager {
     }
 
     protected boolean isExecutable(File file) {
-        return IS_OS_WINDOWS ? file.getName().toLowerCase().endsWith(".exe")
+        return myOsName.equalsIgnoreCase("win")
+                ? file.getName().toLowerCase().endsWith(".exe")
                 : file.canExecute();
     }
 
@@ -548,14 +554,14 @@ public abstract class BrowserManager {
         return builder.parse(is);
     }
 
-    protected String getOsName() {
+    protected String defaultOsName() {
         String os = getProperty("os.name").toLowerCase();
         if (IS_OS_WINDOWS) {
-            os = "WIN";
+            os = WIN.name();
         } else if (IS_OS_LINUX) {
-            os = "LINUX";
+            os = LINUX.name();
         } else if (IS_OS_MAC) {
-            os = "MAC";
+            os = MAC.name();
         }
         return os;
     }
@@ -762,4 +768,11 @@ public abstract class BrowserManager {
         this.ignoredVersions = versions;
         return this;
     }
+
+    public BrowserManager forceOperativeSystem(
+            OperativeSystem operativeSystem) {
+        this.myOsName = operativeSystem.name();
+        return this;
+    }
+
 }

@@ -17,7 +17,6 @@ package io.github.bonigarcia.wdm;
 import static java.io.File.separator;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.copyOf;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.BufferedReader;
@@ -51,8 +50,7 @@ public class UrlFilter {
             for (OperativeSystem os : OperativeSystem.values()) {
                 if (((osName.contains(os.name())
                         && url.getFile().toUpperCase().contains(os.name()))
-                        || drivers.contains("IEDriverServer")
-                        || (IS_OS_MAC
+                        || (osName.equalsIgnoreCase("mac")
                                 && url.getFile().toLowerCase().contains("osx")))
                         && !out.contains(url)) {
                     out.add(url);
