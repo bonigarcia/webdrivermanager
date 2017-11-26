@@ -243,10 +243,7 @@ public class WdmHttpClient implements Closeable {
 
             return credentialsProvider;
         } catch (UnsupportedEncodingException e) {
-            String errorMessage = "Invalid encoding creating credentials for proxy "
-                    + proxy;
-            log.error(errorMessage, e);
-            throw new WebDriverManagerException(errorMessage, e);
+            throw new WebDriverManagerException(e);
         }
     }
 
@@ -314,8 +311,7 @@ public class WdmHttpClient implements Closeable {
 
         public Get(String url, int socketTimeout) {
             httpGet = new HttpGet(url);
-            requestConfig = custom().setSocketTimeout(socketTimeout)
-                    .build();
+            requestConfig = custom().setSocketTimeout(socketTimeout).build();
         }
 
         public Get addHeader(String name, String value) {

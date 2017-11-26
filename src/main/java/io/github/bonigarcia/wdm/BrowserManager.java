@@ -202,11 +202,7 @@ public abstract class BrowserManager {
                     getDriverName(), version, e.getMessage());
             manage(arch, version);
         } else {
-            String errorMessage = "Exception managing driver for "
-                    + getDriverName();
-            log.error(errorMessage, e);
-
-            throw new WebDriverManagerException(errorMessage, e);
+            throw new WebDriverManagerException(e);
         }
     }
 

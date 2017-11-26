@@ -28,10 +28,6 @@ public class WebDriverManagerException extends RuntimeException {
         super(message);
     }
 
-    public WebDriverManagerException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
     public WebDriverManagerException(Throwable cause) {
         super(cause);
     }
