@@ -237,8 +237,7 @@ public abstract class BrowserManager {
             }
 
             // Filter by architecture and OS
-            candidateUrls = urlFilter.filterByOs(candidateUrls, myOsName,
-                    getDriverName());
+            candidateUrls = urlFilter.filterByOs(candidateUrls, myOsName);
             candidateUrls = urlFilter.filterByArch(candidateUrls, arch);
 
             // Extra round of filter phantomjs 2.5.0 in Linux

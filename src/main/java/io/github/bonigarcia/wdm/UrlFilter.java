@@ -41,8 +41,7 @@ public class UrlFilter {
 
     final Logger log = getLogger(lookup().lookupClass());
 
-    public List<URL> filterByOs(List<URL> list, String osName,
-            List<String> drivers) {
+    public List<URL> filterByOs(List<URL> list, String osName) {
         log.trace("URLs before filtering by OS ({}): {}", osName, list);
         List<URL> out = new ArrayList<>();
 
