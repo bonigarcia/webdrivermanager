@@ -6,3 +6,4 @@ target
 /.idea
 *.iml
 phantomjsdriver.log
+*.pem
