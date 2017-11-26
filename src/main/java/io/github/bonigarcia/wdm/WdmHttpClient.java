@@ -36,8 +36,14 @@ import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
 import java.net.UnknownHostException;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.Map;
 import java.util.StringTokenizer;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
 
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
@@ -49,9 +55,17 @@ import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpOptions;
 import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.config.Registry;
+import org.apache.http.config.RegistryBuilder;
+import org.apache.http.conn.socket.ConnectionSocketFactory;
+import org.apache.http.conn.socket.PlainConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
+import org.apache.http.ssl.SSLContexts;
+import org.apache.http.ssl.TrustStrategy;
 import org.slf4j.Logger;
 
 /**
@@ -75,7 +89,36 @@ public class WdmHttpClient implements Closeable {
                     proxyUrl, proxyUser, proxyPass, proxyHost);
             builder.setDefaultCredentialsProvider(credentialsProvider);
         }
-        this.httpClient = builder.build();
+
+        try {
+            HostnameVerifier allHostsValid = new HostnameVerifier() {
+                public boolean verify(String hostname, SSLSession session) {
+                    return true;
+                }
+            };
+            SSLContext sslContext = SSLContexts.custom()
+                    .loadTrustMaterial(null, new TrustStrategy() {
+                        @Override
+                        public boolean isTrusted(X509Certificate[] chain,
+                                String authType) throws CertificateException {
+                            return true;
+                        }
+                    }).build();
+            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
+                    sslContext, allHostsValid);
+            Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder
+                    .<ConnectionSocketFactory>create().register("https", sslsf)
+                    .register("http", new PlainConnectionSocketFactory())
+                    .build();
+            PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager(
+                    socketFactoryRegistry);
+
+            builder.setConnectionManager(cm);
+        } catch (Exception e) {
+            throw new WebDriverManagerException(e);
+        }
+
+        httpClient = builder.useSystemProperties().build();
     }
 
     public Proxy createProxy(String proxyUrl) {
@@ -187,13 +230,10 @@ public class WdmHttpClient implements Closeable {
             }
 
             BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-            Credentials creds;
-            AuthScope authScope;
-
-            authScope = new AuthScope(proxyHost.getHostName(),
+            AuthScope authScope = new AuthScope(proxyHost.getHostName(),
                     proxyHost.getPort(), ANY_REALM, NTLM);
-            creds = new NTCredentials(ntlmUsername, password, getWorkstation(),
-                    ntlmDomain);
+            Credentials creds = new NTCredentials(ntlmUsername, password,
+                    getWorkstation(), ntlmDomain);
             credentialsProvider.setCredentials(authScope, creds);
 
             authScope = new AuthScope(proxyHost.getHostName(),
@@ -231,7 +271,7 @@ public class WdmHttpClient implements Closeable {
 
     @Override
     public void close() throws IOException {
-        this.httpClient.close();
+        httpClient.close();
     }
 
     public static class Builder {
@@ -255,8 +295,7 @@ public class WdmHttpClient implements Closeable {
         }
 
         public WdmHttpClient build() {
-            return new WdmHttpClient(this.proxy, this.proxyUser,
-                    this.proxyPass);
+            return new WdmHttpClient(proxy, proxyUser, proxyPass);
         }
     }
 
@@ -269,18 +308,18 @@ public class WdmHttpClient implements Closeable {
         private final RequestConfig requestConfig;
 
         public Get(URL url) {
-            this.httpGet = new HttpGet(url.toString());
-            this.requestConfig = null;
+            httpGet = new HttpGet(url.toString());
+            requestConfig = null;
         }
 
         public Get(String url, int socketTimeout) {
-            this.httpGet = new HttpGet(url);
-            this.requestConfig = custom().setSocketTimeout(socketTimeout)
+            httpGet = new HttpGet(url);
+            requestConfig = custom().setSocketTimeout(socketTimeout)
                     .build();
         }
 
         public Get addHeader(String name, String value) {
-            this.httpGet.addHeader(name, value);
+            httpGet.addHeader(name, value);
             return this;
         }
 
@@ -289,7 +328,7 @@ public class WdmHttpClient implements Closeable {
             if (requestConfig != null) {
                 httpGet.setConfig(requestConfig);
             }
-            return this.httpGet;
+            return httpGet;
         }
     }
 
@@ -297,12 +336,12 @@ public class WdmHttpClient implements Closeable {
         private final HttpOptions httpOptions;
 
         public Options(URL url) {
-            this.httpOptions = new HttpOptions(url.toString());
+            httpOptions = new HttpOptions(url.toString());
         }
 
         @Override
         public HttpUriRequest toHttpUriRequest() {
-            return this.httpOptions;
+            return httpOptions;
         }
     }
 
@@ -314,7 +353,7 @@ public class WdmHttpClient implements Closeable {
         }
 
         public InputStream getContent() throws IOException {
-            return this.httpResponse.getEntity().getContent();
+            return httpResponse.getEntity().getContent();
         }
     }
 

@@ -68,8 +68,13 @@ public class Downloader {
     private WdmHttpClient httpClient;
     private boolean override = getBoolean("wdm.override");
 
+    public Downloader() {
+        this.httpClient = new WdmHttpClient.Builder().build();
+    }
+
     public Downloader(BrowserManager browserManager) {
-        this(browserManager, new WdmHttpClient.Builder().build());
+        this();
+        this.browserManager = browserManager;
     }
 
     public Downloader(BrowserManager browserManager, WdmHttpClient httpClient) {
