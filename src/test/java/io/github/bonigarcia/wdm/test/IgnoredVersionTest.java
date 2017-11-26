@@ -15,18 +15,22 @@
 package io.github.bonigarcia.wdm.test;
 
 import static java.lang.invoke.MethodHandles.lookup;
+import static org.apache.commons.io.FileUtils.cleanDirectory;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.not;
 import static org.junit.Assert.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.ChromeDriverManager;
+import io.github.bonigarcia.wdm.Downloader;
 
 /**
  * Test for ignore versions.
@@ -36,6 +40,11 @@ import io.github.bonigarcia.wdm.ChromeDriverManager;
 public class IgnoredVersionTest {
 
     final Logger log = getLogger(lookup().lookupClass());
+
+    @Before
+    public void cleanCache() throws IOException {
+        cleanDirectory(new File(new Downloader().getTargetPath()));
+    }
 
     @Test
     public void testIgnoreVersions() {

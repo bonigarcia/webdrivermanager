@@ -108,14 +108,8 @@ public class Downloader {
                 .addHeader("User-Agent", "Mozilla/5.0")
                 .addHeader("Connection", "keep-alive");
 
-        try {
-            copyInputStreamToFile(httpClient.execute(get).getContent(),
-                    temporaryFile);
-        } catch (IOException e) {
-            deleteFile(temporaryFile);
-            throw e;
-        }
-
+        copyInputStreamToFile(httpClient.execute(get).getContent(),
+                temporaryFile);
         renameFile(temporaryFile, targetFile);
 
         if (!export.contains("edge")) {

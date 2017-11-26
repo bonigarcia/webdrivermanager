@@ -73,7 +73,7 @@ public class CacheTest {
     }
 
     @Before
-    public void deleteDownloadedFiles() throws IOException {
+    public void cleanCache() throws IOException {
         cleanDirectory(new File(new Downloader().getTargetPath()));
     }
 
