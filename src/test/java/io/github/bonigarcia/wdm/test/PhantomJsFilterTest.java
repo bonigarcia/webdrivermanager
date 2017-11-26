@@ -32,9 +32,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 
-import io.github.bonigarcia.wdm.Architecture;
 import io.github.bonigarcia.wdm.BrowserManager;
 import io.github.bonigarcia.wdm.PhantomJsDriverManager;
+import io.github.bonigarcia.wdm.UrlFilter;
 import io.github.bonigarcia.wdm.WdmHttpClient;
 
 /**
@@ -75,17 +75,13 @@ public class PhantomJsFilterTest {
         List<URL> latestUrls = (List<URL>) method.invoke(phatomJsManager,
                 driversUrls, asList(phantomJsBinaryName));
 
-        method = BrowserManager.class.getDeclaredMethod("filterByArch",
-                List.class, Architecture.class);
-        method.setAccessible(true);
-        List<URL> filteredLatestUrls = (List<URL>) method
-                .invoke(phatomJsManager, latestUrls, X64);
+        List<URL> filteredLatestUrls = new UrlFilter().filterByArch(latestUrls,
+                X64);
 
         log.info("Filtered URLS for LATEST version {} : {}",
                 phantomJsBinaryName, filteredLatestUrls);
 
         assertThat(filteredLatestUrls, not(empty()));
-
     }
 
     @Test
@@ -101,11 +97,8 @@ public class PhantomJsFilterTest {
                 phatomJsManager, driversUrls, asList(phantomJsBinaryName),
                 specificVersion);
 
-        method = BrowserManager.class.getDeclaredMethod("filterByArch",
-                List.class, Architecture.class);
-        method.setAccessible(true);
-        List<URL> filteredVersionUrls = (List<URL>) method
-                .invoke(phatomJsManager, specificVersionUrls, X64);
+        List<URL> filteredVersionUrls = new UrlFilter()
+                .filterByArch(specificVersionUrls, X64);
 
         log.info("Filtered URLS for {} version {}: {}", phantomJsBinaryName,
                 specificVersion, filteredVersionUrls);

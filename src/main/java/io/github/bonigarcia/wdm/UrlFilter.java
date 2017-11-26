@@ -41,14 +41,16 @@ public class UrlFilter {
 
     final Logger log = getLogger(lookup().lookupClass());
 
-    protected List<URL> filterByOs(List<URL> list, String osName) {
-        log.trace("URLs before filtering by OS ({})", osName);
+    public List<URL> filterByOs(List<URL> list, String osName,
+            List<String> drivers) {
+        log.trace("URLs before filtering by OS ({}): {}", osName, list);
         List<URL> out = new ArrayList<>();
 
         for (URL url : list) {
             for (OperativeSystem os : OperativeSystem.values()) {
                 if (((osName.contains(os.name())
                         && url.getFile().toUpperCase().contains(os.name()))
+                        || drivers.contains("IEDriverServer")
                         || (IS_OS_MAC
                                 && url.getFile().toLowerCase().contains("osx")))
                         && !out.contains(url)) {
