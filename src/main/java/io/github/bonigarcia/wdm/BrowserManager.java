@@ -23,13 +23,11 @@ import static io.github.bonigarcia.wdm.WdmConfig.getInt;
 import static io.github.bonigarcia.wdm.WdmConfig.getString;
 import static io.github.bonigarcia.wdm.WdmConfig.getUrl;
 import static io.github.bonigarcia.wdm.WdmConfig.isNullOrEmpty;
-import static java.io.File.separator;
 import static java.lang.Integer.signum;
 import static java.lang.Integer.valueOf;
 import static java.lang.System.getProperty;
 import static java.lang.System.getenv;
 import static java.lang.invoke.MethodHandles.lookup;
-import static java.util.Arrays.copyOf;
 import static java.util.Arrays.sort;
 import static java.util.Collections.reverse;
 import static java.util.Collections.reverseOrder;
@@ -46,8 +44,6 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -101,6 +97,7 @@ public abstract class BrowserManager {
     protected Architecture architecture;
     protected WdmHttpClient httpClient;
     protected Downloader downloader;
+    protected UrlFilter urlFilter;
     protected URL driverUrl;
     protected String versionToDownload;
     protected String version;
@@ -111,6 +108,7 @@ public abstract class BrowserManager {
     protected String exportParameter;
     protected String driverVersionKey;
     protected String driverUrlKey;
+    protected String[] ignoredVersions;
 
     protected String getDriverVersion() {
         return version == null ? getString(getDriverVersionKey()) : version;
@@ -149,6 +147,7 @@ public abstract class BrowserManager {
                 .proxyUser(proxyUser).proxyPass(proxyPass).build();
         try (WdmHttpClient wdmHttpClient = httpClient) {
             downloader = new Downloader(this, wdmHttpClient);
+            urlFilter = new UrlFilter();
             if (isForcingDownload) {
                 downloader.forceDownload();
             }
@@ -234,12 +233,12 @@ public abstract class BrowserManager {
             }
 
             // Filter by architecture and OS
-            candidateUrls = filterByOs(candidateUrls);
-            candidateUrls = filterByArch(candidateUrls, arch);
+            candidateUrls = urlFilter.filterByOs(candidateUrls, myOsName);
+            candidateUrls = urlFilter.filterByArch(candidateUrls, arch);
 
             // Extra round of filter phantomjs 2.5.0 in Linux
             if (IS_OS_LINUX && getDriverName().contains("phantomjs")) {
-                candidateUrls = filterByDistro(candidateUrls, getDistroName(),
+                candidateUrls = urlFilter.filterByDistro(candidateUrls,
                         "2.5.0");
             }
 
@@ -341,108 +340,6 @@ public abstract class BrowserManager {
             return false;
         }
         return true;
-    }
-
-    protected List<URL> filterByOs(List<URL> list) {
-        log.trace("{} {} - URLs before filtering by OS: {}", getDriverName(),
-                versionToDownload, list);
-        List<URL> out = new ArrayList<>();
-
-        for (URL url : list) {
-            for (OperativeSystem os : OperativeSystem.values()) {
-                if (((myOsName.contains(os.name())
-                        && url.getFile().toUpperCase().contains(os.name()))
-                        || getDriverName().contains("IEDriverServer")
-                        || (IS_OS_MAC
-                                && url.getFile().toLowerCase().contains("osx")))
-                        && !out.contains(url)) {
-                    out.add(url);
-                }
-            }
-        }
-
-        log.trace("{} {} - URLs after filtering by OS ({}): {}",
-                getDriverName(), versionToDownload, myOsName, out);
-        return out;
-    }
-
-    protected List<URL> filterByArch(List<URL> list, Architecture arch) {
-        log.trace("{} {} - URLs before filtering by architecture: {}",
-                getDriverName(), versionToDownload, list);
-        List<URL> out = new ArrayList<>(list);
-
-        if (out.size() > 1 && arch != null) {
-            for (URL url : list) {
-                if (!url.getFile().contains("x86")
-                        && !url.getFile().contains("64")
-                        && !url.getFile().contains("i686")
-                        && !url.getFile().contains("32")) {
-                    continue;
-                }
-
-                if (!url.getFile().contains(arch.toString())) {
-                    out.remove(url);
-                }
-            }
-        }
-
-        log.trace("{} {} - URLs after filtering by architecture ({}): {}",
-                getDriverName(), versionToDownload, arch, out);
-        return out;
-    }
-
-    protected List<URL> filterByDistro(List<URL> list, String distro,
-            String version) {
-        log.trace("{} {} - URLs before filtering by distribution: {}",
-                getDriverName(), versionToDownload, list);
-        List<URL> out = new ArrayList<>(list);
-
-        for (URL url : list) {
-            if (url.getFile().contains(version)
-                    && !url.getFile().contains(distro)) {
-                out.remove(url);
-            }
-        }
-
-        log.trace("{} {} - URLs after filtering by Linux distribution ({}): {}",
-                getDriverName(), versionToDownload, distro, out);
-        return out;
-    }
-
-    protected String getDistroName() throws IOException {
-        String out = "";
-        final String key = "UBUNTU_CODENAME";
-        File dir = new File(separator + "etc");
-        File[] fileList = new File[0];
-        if (dir.exists()) {
-            fileList = dir.listFiles(new FilenameFilter() {
-                public boolean accept(File dir, String filename) {
-                    return filename.endsWith("-release");
-                }
-            });
-        }
-        File fileVersion = new File(separator + "proc", "version");
-        if (fileVersion.exists()) {
-            fileList = copyOf(fileList, fileList.length + 1);
-            fileList[fileList.length - 1] = fileVersion;
-        }
-        for (File f : fileList) {
-            if (f.isDirectory()) {
-                continue;
-            }
-            try (BufferedReader myReader = new BufferedReader(
-                    new FileReader(f))) {
-                String strLine = null;
-                while ((strLine = myReader.readLine()) != null) {
-                    if (strLine.contains(key)) {
-                        int beginIndex = key.length();
-                        out = strLine.substring(beginIndex + 1);
-                    }
-                }
-            }
-        }
-
-        return out;
     }
 
     protected List<URL> removeFromList(List<URL> list, String version) {
@@ -852,4 +749,5 @@ public abstract class BrowserManager {
         this.useBetaVersions = true;
         return this;
     }
+
 }
