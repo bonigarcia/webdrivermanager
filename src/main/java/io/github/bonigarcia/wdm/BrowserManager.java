@@ -31,6 +31,7 @@ import static java.lang.Integer.valueOf;
 import static java.lang.System.getProperty;
 import static java.lang.System.getenv;
 import static java.lang.invoke.MethodHandles.lookup;
+import static java.lang.reflect.Modifier.isFinal;
 import static java.util.Arrays.sort;
 import static java.util.Collections.reverse;
 import static java.util.Collections.reverseOrder;
@@ -51,6 +52,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -675,12 +677,31 @@ public abstract class BrowserManager {
         return driverName;
     }
 
-    public void setup() {
+    protected void reset() {
+        Field[] fields = this.getClass().getSuperclass().getDeclaredFields();
+        for (Field field : fields) {
+            if (isFinal(field.getModifiers())) {
+                continue;
+            }
+            try {
+                if (field.getType().getCanonicalName() == "boolean") {
+                    field.set(this, false);
+                } else {
+                    field.set(this, null);
+                }
+            } catch (Exception e) {
+                // Ignore exception
+            }
+        }
+    }
+
+    public synchronized void setup() {
         String driverVersion = getDriverVersion();
         if (!driverVersion.equals("")) {
             manage(getDefaultArchitecture(),
                     isNullOrEmpty(driverVersion) ? NOT_SPECIFIED.name()
                             : driverVersion);
+            reset();
         }
     }
 
