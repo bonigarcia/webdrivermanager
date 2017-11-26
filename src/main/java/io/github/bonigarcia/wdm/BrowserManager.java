@@ -31,7 +31,6 @@ import static java.lang.Integer.valueOf;
 import static java.lang.System.getProperty;
 import static java.lang.System.getenv;
 import static java.lang.invoke.MethodHandles.lookup;
-import static java.lang.reflect.Modifier.isFinal;
 import static java.util.Arrays.sort;
 import static java.util.Collections.reverse;
 import static java.util.Collections.reverseOrder;
@@ -52,7 +51,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.lang.reflect.Field;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -678,21 +676,20 @@ public abstract class BrowserManager {
     }
 
     protected void reset() {
-        Field[] fields = this.getClass().getSuperclass().getDeclaredFields();
-        for (Field field : fields) {
-            if (isFinal(field.getModifiers())) {
-                continue;
-            }
-            try {
-                if (field.getType().getCanonicalName() == "boolean") {
-                    field.set(this, false);
-                } else {
-                    field.set(this, null);
-                }
-            } catch (Exception e) {
-                // Ignore exception
-            }
-        }
+        useBetaVersions = getBoolean("wdm.useBetaVersions");
+        mirrorLog = false;
+        isForcingCache = false;
+        isForcingDownload = false;
+        listVersions = null;
+        architecture = null;
+        driverUrl = null;
+        versionToDownload = null;
+        version = null;
+        proxyValue = null;
+        binaryPath = null;
+        proxyUser = null;
+        proxyPass = null;
+        ignoredVersions = null;
     }
 
     public synchronized void setup() {
