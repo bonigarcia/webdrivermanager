@@ -24,7 +24,7 @@ import java.io.File;
 import org.junit.Test;
 import org.slf4j.Logger;
 
-import io.github.bonigarcia.wdm.ChromeDriverManager;
+import io.github.bonigarcia.wdm.InternetExplorerDriverManager;
 
 /**
  * Test with Internet Explorer browser.
@@ -38,9 +38,10 @@ public class IExplorerTest {
 
     @Test
     public void testIExplorer() {
-        ChromeDriverManager.getInstance().forceOperativeSystem(WIN).setup();
+        InternetExplorerDriverManager.getInstance().forceOperativeSystem(WIN)
+                .setup();
         File binary = new File(
-                ChromeDriverManager.getInstance().getBinaryPath());
+                InternetExplorerDriverManager.getInstance().getBinaryPath());
         log.debug("Binary path for IExploer {}", binary);
         assertTrue(binary.exists());
     }
