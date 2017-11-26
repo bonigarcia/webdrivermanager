@@ -27,6 +27,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -63,8 +64,8 @@ public class UrlFilter {
         return out;
     }
 
-    protected List<URL> filterByArch(List<URL> list, Architecture arch) {
-        log.trace("URLs before filtering by architecture ({}): {}", arch);
+    public List<URL> filterByArch(List<URL> list, Architecture arch) {
+        log.trace("URLs before filtering by architecture ({}): {}", arch, list);
         List<URL> out = new ArrayList<>(list);
 
         if (out.size() > 1 && arch != null) {
@@ -86,10 +87,11 @@ public class UrlFilter {
         return out;
     }
 
-    protected List<URL> filterByDistro(List<URL> list, String version)
+    public List<URL> filterByDistro(List<URL> list, String version)
             throws IOException {
         String distro = getDistroName();
-        log.trace("URLs before filtering by Linux distribution ({})", distro);
+        log.trace("URLs before filtering by Linux distribution ({}): {}",
+                distro, list);
         List<URL> out = new ArrayList<>(list);
 
         for (URL url : list) {
@@ -104,7 +106,27 @@ public class UrlFilter {
         return out;
     }
 
-    protected String getDistroName() throws IOException {
+    public List<URL> filterByIgnoredVersions(List<URL> list,
+            String... ignoredVersions) {
+        log.trace("URLs before filtering by ignored versions ({}): {}",
+                Arrays.toString(ignoredVersions), list);
+        List<URL> out = new ArrayList<>(list);
+
+        for (URL url : list) {
+            for (String s : ignoredVersions) {
+                if (url.getFile().contains(s)) {
+                    log.info("Ignoring version {}", s);
+                    out.remove(url);
+                }
+            }
+        }
+
+        log.trace("URLs after filtering by ignored versions ({}): {}",
+                Arrays.toString(ignoredVersions), out);
+        return out;
+    }
+
+    private String getDistroName() throws IOException {
         String out = "";
         final String key = "UBUNTU_CODENAME";
         File dir = new File(separator + "etc");
@@ -136,7 +158,6 @@ public class UrlFilter {
                 }
             }
         }
-
         return out;
     }
 

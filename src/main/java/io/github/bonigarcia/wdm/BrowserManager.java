@@ -243,11 +243,18 @@ public abstract class BrowserManager {
                         "2.5.0");
             }
 
+            // Filter by ignored version
+            if (ignoredVersions != null) {
+                candidateUrls = urlFilter.filterByIgnoredVersions(candidateUrls,
+                        ignoredVersions);
+            }
+
             // Find out if driver version has been found or not
             continueSearchingVersion = candidateUrls.isEmpty() && getLatest;
             if (continueSearchingVersion) {
-                log.debug("No valid binary found for {} {}", getDriverName(),
-                        versionToDownload);
+                log.info(
+                        "No binary found for {} {} ... seeking another version",
+                        getDriverName(), versionToDownload);
                 urls = removeFromList(urls, versionToDownload);
                 versionToDownload = null;
             }
@@ -751,4 +758,8 @@ public abstract class BrowserManager {
         return this;
     }
 
+    public BrowserManager ignoreVersions(String... versions) {
+        this.ignoredVersions = versions;
+        return this;
+    }
 }
