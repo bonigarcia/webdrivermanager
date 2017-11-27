@@ -21,8 +21,6 @@ import static java.lang.System.getProperty;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 import static org.junit.Assume.assumeFalse;
 import static org.junit.Assume.assumeTrue;
-import static org.openqa.selenium.opera.OperaOptions.CAPABILITY;
-import static org.openqa.selenium.remote.DesiredCapabilities.operaBlink;
 
 import java.io.File;
 
@@ -30,7 +28,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.openqa.selenium.opera.OperaDriver;
 import org.openqa.selenium.opera.OperaOptions;
-import org.openqa.selenium.remote.DesiredCapabilities;
 
 import io.github.bonigarcia.wdm.OperaDriverManager;
 import io.github.bonigarcia.wdm.base.BaseBrowserTst;
@@ -51,19 +48,14 @@ public class OperaTest extends BaseBrowserTst {
 
     @Before
     public void setupTest() {
-        File operaBinary;
-        if (IS_OS_WINDOWS) {
-            operaBinary = new File("C:\\Program Files\\Opera\\launcher.exe");
-        } else {
-            operaBinary = new File("/usr/bin/opera");
-        }
+        File operaBinary = IS_OS_WINDOWS
+                ? new File("C:\\Program Files\\Opera\\launcher.exe")
+                : new File("/usr/bin/opera");
         assumeTrue(operaBinary.exists());
 
         OperaOptions options = new OperaOptions();
         options.setBinary(operaBinary);
-        DesiredCapabilities capabilities = operaBlink();
-        capabilities.setCapability(CAPABILITY, options);
-        driver = new OperaDriver(capabilities);
+        driver = new OperaDriver(options);
     }
 
 }
