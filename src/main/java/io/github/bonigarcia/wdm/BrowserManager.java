@@ -105,6 +105,7 @@ public abstract class BrowserManager {
     protected UrlFilter urlFilter;
     protected URL driverUrl;
     protected String versionToDownload;
+    protected String downloadedVersion;
     protected String version;
     protected String proxyValue;
     protected String binaryPath;
@@ -216,6 +217,7 @@ public abstract class BrowserManager {
         String export = candidateUrls.contains(url) ? getExportParameter()
                 : null;
         downloader.download(url, versionToDownload, export, getDriverName());
+        downloadedVersion = versionToDownload;
     }
 
     protected List<URL> filterCandidateUrls(Architecture arch, String version,
@@ -687,6 +689,7 @@ public abstract class BrowserManager {
         architecture = null;
         driverUrl = null;
         version = null;
+        versionToDownload = null;
         proxyValue = null;
         proxyUser = null;
         proxyPass = null;
@@ -704,7 +707,7 @@ public abstract class BrowserManager {
     }
 
     public String getDownloadedVersion() {
-        return versionToDownload;
+        return downloadedVersion;
     }
 
     public BrowserManager version(String version) {

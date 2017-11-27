@@ -30,6 +30,7 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Optional;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -75,6 +76,7 @@ public class CacheTest {
     }
 
     @Before
+    @After
     public void cleanCache() throws IOException {
         cleanDirectory(new File(new Downloader().getTargetPath()));
     }

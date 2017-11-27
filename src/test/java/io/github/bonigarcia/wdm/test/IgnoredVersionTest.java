@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -44,6 +45,7 @@ public class IgnoredVersionTest {
     final Logger log = getLogger(lookup().lookupClass());
 
     @Before
+    @After
     public void cleanCache() throws IOException {
         cleanDirectory(new File(new Downloader().getTargetPath()));
     }
