@@ -10,18 +10,18 @@
 
 This library is aimed to automate the [Selenium Webdriver] binaries management in runtime for Java.
 
-If you have ever used [Selenium Webdriver], you probably know that in order to use some browsers such as **Chrome**, **Internet Explorer**, **Opera**, **Microsoft Edge**, **PhantomJS**, or **Firefox** you need to download a binary which allows WebDriver to handle the browser. In addition, the absolute path to this binary must be set as Java variables, as follows:
+If you are using [Selenium Webdriver], you would know that to use some browsers such as **Chrome**, **Firefox**, **Opera**, **PhantomJS**, **Microsoft Edge**, or **Internet Explorer**, you need to download a binary which allows WebDriver to handle the browser. In addition, the absolute path to this binary must be set as JVM properties, as follows:
 
 ```java
 System.setProperty("webdriver.chrome.driver", "/absolute/path/to/binary/chromedriver");
-System.setProperty("webdriver.opera.driver", "/absolute/path/to/binary/operadriver");
-System.setProperty("webdriver.ie.driver", "C:/absolute/path/to/binary/IEDriverServer.exe");
-System.setProperty("webdriver.edge.driver", "C:/absolute/path/to/binary/MicrosoftWebDriver.exe");
-System.setProperty("phantomjs.binary.path", "/absolute/path/to/binary/phantomjs");
 System.setProperty("webdriver.gecko.driver", "/absolute/path/to/binary/geckodriver");
+System.setProperty("webdriver.opera.driver", "/absolute/path/to/binary/operadriver");
+System.setProperty("phantomjs.binary.path", "/absolute/path/to/binary/phantomjs");
+System.setProperty("webdriver.edge.driver", "C:/absolute/path/to/binary/MicrosoftWebDriver.exe");
+System.setProperty("webdriver.ie.driver", "C:/absolute/path/to/binary/IEDriverServer.exe");
 ```
 
-This is quite annoying since it forces you to link directly this binary in your source code. In addition, you have to check manually when new versions of the binaries are released. This library comes to the rescue, performing in an automated way all this dirty job for you.
+This is quite annoying since it forces you to link directly this binary in your source code. In addition, you have to check manually when new versions of the binaries are released. WebDriverManager comes to the rescue, performing in an automated way all this dirty job for you.
 
 WebDriverManager is open source, released under the terms of [Apache 2.0 License].
 
@@ -31,53 +31,53 @@ In order to use WebDriverManager in a Maven project, first add the following dep
 
 ```xml
 <dependency>
-	<groupId>io.github.bonigarcia</groupId>
-	<artifactId>webdrivermanager</artifactId>
-	<version>1.7.2</version>
+    <groupId>io.github.bonigarcia</groupId>
+    <artifactId>webdrivermanager</artifactId>
+    <version>2.0.0</version>
 </dependency>
 ```
 
-WebDriverManager will be tipically used by tests. In that case, the scope of the dependency should be test (`<scope>test</scope>`).
+WebDriverManager is tipically used by tests, and therefore, the typicall scope would be *test* (`<scope>test</scope>`).
 
-Once we have included this dependency, you can let WebDriverManager to manage the WebDriver binaries for your application/test. Take a look at this JUnit example which uses Chrome with Selenium WebDriver:
+Once we have included this dependency, you can let WebDriverManager to manage the WebDriver binaries for you. Take a look at this JUnit 4 example which uses Chrome with Selenium WebDriver (in order to use WebDriverManager in conjunction with **JUnit 5**, the extension [selenium-jupiter] is highly recommended):
 
 ```java
 public class ChromeTest {
 
-	private WebDriver driver;
+    private WebDriver driver;
 
-	@BeforeClass
-	public static void setupClass() {
-		ChromeDriverManager.getInstance().setup();
-	}
+    @BeforeClass
+    public static void setupClass() {
+        ChromeDriverManager.getInstance().setup();
+    }
 
-	@Before
-	public void setupTest() {
-		driver = new ChromeDriver();
-	}
+    @Before
+    public void setupTest() {
+        driver = new ChromeDriver();
+    }
 
-	@After
-	public void teardown() {
-		if (driver != null) {
-			driver.quit();
-		}
-	}
+    @After
+    public void teardown() {
+        if (driver != null) {
+            driver.quit();
+        }
+    }
 
-	@Test
-	public void test() {
-		// Your test code here
-	}
+    @Test
+    public void test() {
+        // Your test code here
+    }
 
 }
 ```
 
 Notice that simply adding ``ChromeDriverManager.getInstance().setup();`` WebDriverManager does magic for you:
 
-1. It checks for the latest version of the WebDriver binary
-2. It downloads the WebDriver binary if it's not present on your system
-3. It exports the required WebDriver Java environment variables needed by Selenium
+1. It checks for the latest version of the WebDriver binary.
+2. It downloads the WebDriver binary if it's not present on your system.
+3. It exports the required WebDriver Java environment variables needed by Selenium.
 
-So far, WebDriverManager supports **Chrome**, **Opera**, **Internet Explorer**, **Microsoft Edge**,  **PhantomJS**, and **Firefox**. For that, it provides several *drivers managers* for these browsers, i.e. `ChromeDriverManager`, `FirefoxDriverManager`, `OperaDriverManager`, `PhantomJsDriverManager`, `EdgeDriverManager`, and `InternetExplorerDriverManager`. These *drivers managers* can be used as follows:
+So far, WebDriverManager supports **Chrome**, **Firefox**, **Opera**, **PhantomJS**, **Microsoft Edge**, and **Internet Explorer**. For that, it provides several *drivers managers* for these browsers, i.e. `ChromeDriverManager`, `FirefoxDriverManager`, `OperaDriverManager`, `PhantomJsDriverManager`, `EdgeDriverManager`, and `InternetExplorerDriverManager`. These *drivers managers* can be used as follows:
 
 ```java
 ChromeDriverManager.getInstance().setup();
@@ -104,16 +104,17 @@ WebDriver driver = driverClass.newInstance();
 
 ## Examples
 
-Check out [WebDriverManager Examples][WebDriverManager Examples] for some JUnit tests utilizing WebDriverManager.
+Check out [WebDriverManager Examples][WebDriverManager Examples] for some JUnit 4 tests using WebDriverManager.
 
 
 ## WebDriverManager API
 
-As of version 1.6.0, WebDriverManager exposes its API by means of the **builder pattern**. This means that given a *DriverManger* instance (e.g. ``ChromeDriverManager``, ``FirefoxDriverManager``, and so on), their capabilities can be tuned using different methods, namely:
+WebDriverManager exposes its API by means of the **builder pattern**. This means that given a *DriverManger* instance (e.g. ``ChromeDriverManager``, ``FirefoxDriverManager``, and so on), their capabilities can be tuned using different methods, namely:
 
 -  ``version()`` : By default, WebDriverManager tries to download the latest version of a given driver binary. An specific version can be specified using this method. 
 -  ``forceCache()`` : By default, WebDriverManager connects to the specific driver repository URL to find out what is the latest version of the binary. This can be avoided forcing to use the latest version form the local repository.
 -  ``forceDownload()`` : By default, after WebDriverManager verifies the latest version of the binary, and then it uses the cached version if exists. This opcion forces to download again the binary even if it has been previously cached.
+-  ``forceOperativeSystem(OperativeSystem operativeSystem)`` : By default, WebDriverManager downloads the proper binary for the operative system running the code. This behaviour can be changed by forcing some other operative system (i.e. Windows, Linux, Mac).
 -  ``useBetaVersions()`` : By default, WebDriverManager skip beta versions. With this method, WebDriverManager will download also beta versions.
 -  ``architecture(Architecture arch)`` : By default, WebDriverManager would try to use the proper binary for the platform running the test case (i.e. 32-bit or 64-bit). This behavior can be changed by forcing a given architecture: 32-bits (``Architecture.x32``) or 64-bits (``Architecture.x64``);   
 -  ``arch32()`` : Force to use the 32-bit version of a given driver binary.
@@ -123,15 +124,18 @@ As of version 1.6.0, WebDriverManager exposes its API by means of the **builder 
 -  ``proxy(String proxy)`` : Use a HTTP proxy for the Internet connection.
 -  ``proxyUser(String username)`` : Specify a username for HTTP proxy.
 -  ``proxyPass(String password)`` : Specify a password for HTTP proxy.
+-  ``proxyPass(String password)`` : Specify a password for HTTP proxy.
+-  ``ignoreVersions(String... versions)`` : Ignore binary versions to be ignored by WebDriverManager.
+
 
 The following table contains some examples:
 
-| Example                                                                | Description                                                       |
-|------------------------------------------------------------------------|-------------------------------------------------------------------|
+| Example                                                              | Description                                                       |
+|----------------------------------------------------------------------|-------------------------------------------------------------------|
 | ``ChromeDriverManager.getInstance().version("2.26").setup();``       | Force to use version 2.26 of *chromedriver*                       |
 | ``FirefoxDriverManager.getInstance().arch32().setup();``             | Force to use the 32-bit version of *geckodriver*                  |
-| ``OperaDriverManager.getInstance().forceCache().setup();``             | Force to use the cache version of *operadriver*                   |
-| ``PhantomJsDriverManager.getInstance().useTaobaoMirror().setup();``    | Force to use the taobao.org mirror to download *phantomjs* driver |
+| ``OperaDriverManager.getInstance().forceCache().setup();``           | Force to use the cache version of *operadriver*                   |
+| ``PhantomJsDriverManager.getInstance().useTaobaoMirror().setup();``  | Force to use the taobao.org mirror to download *phantomjs* driver |
 | ``ChromeDriverManager.getInstance().proxy("server:port").setup();``  | Using proxy *server:port* for the connection                      |
 
 
@@ -207,6 +211,8 @@ By default, WebDriverManager downloads the latest version of the WebDriver binar
 
 If no version is specified, WebDriverManager sends a request to the server hosting the binary. In order to avoid this request and check if any binary has been previously downloaded, the key `wdm.forceCache` can be used.
 
+As of WebDriverManager 2, the value of these properties can be overrided by means of *environmental variables*. The name of these variables result from putting the name in uppercase and replacing the symbol `.` by `_`. For example, the property ``wdm.targetPath`` can be overried by the environment variable ``WDM_TARGETPATH``.    
+
 ### HTTP Proxy
 
 If you use an HTTP Proxy in your Internet connection, you can configure your settings by exporting the Java environment variable ``HTTPS_PROXY`` using the following notation: ``my.http.proxy:1234`` or ``username:password@my.http.proxy:1234``.
@@ -218,21 +224,21 @@ Some of the binaries (for Opera and Firefox) are hosted on GitHub. When several 
 
 ```
 Caused by: java.io.IOException: Server returned HTTP response code: 403 for URL: https://api.github.com/repos/operasoftware/operachromiumdriver/releases
-	at sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1840)
-	at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1441)
-	at sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:254)
-	at io.github.bonigarcia.wdm.BrowserManager.openGitHubConnection(BrowserManager.java:463)
-	at io.github.bonigarcia.wdm.OperaDriverManager.getDrivers(OperaDriverManager.java:55)
-	at io.github.bonigarcia.wdm.BrowserManager.manage(BrowserManager.java:168)
+    at sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1840)
+    at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1441)
+    at sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:254)
+    at io.github.bonigarcia.wdm.BrowserManager.openGitHubConnection(BrowserManager.java:463)
+    at io.github.bonigarcia.wdm.OperaDriverManager.getDrivers(OperaDriverManager.java:55)
+    at io.github.bonigarcia.wdm.BrowserManager.manage(BrowserManager.java:168)
 ```
 
 ```
 Caused by: java.io.IOException: Server returned HTTP response code: 403 for URL: https://api.github.com/repos/mozilla/geckodriver/releases
-	at sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1840)
-	at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1441)
-	at sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:254)
-	at io.github.bonigarcia.wdm.FirefoxDriverManager.getDrivers(FirefoxDriverManager.java:61)
-	at io.github.bonigarcia.wdm.BrowserManager.manage(BrowserManager.java:163)
+    at sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1840)
+    at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1441)
+    at sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:254)
+    at io.github.bonigarcia.wdm.FirefoxDriverManager.getDrivers(FirefoxDriverManager.java:61)
+    at io.github.bonigarcia.wdm.BrowserManager.manage(BrowserManager.java:163)
 ```
 
 In order to avoid this problem, [authenticated requests] should be done. The procedure is the following:
@@ -251,7 +257,7 @@ If you have questions on how to use WebDriverManager properly with a special con
 
 ## About
 
-WebDriverManager (Copyright &copy; 2015-2017) is a personal project of [Boni Garcia] licensed under [Apache 2.0 License]. Comments, questions and suggestions are always very [welcome][WebDriverManager issues]!
+WebDriverManager (Copyright &copy; 2015-2017) is a project created by [Boni Garcia] and licensed under the terms of the [Apache 2.0 License]. Comments, questions and suggestions are always very [welcome][WebDriverManager issues].
 
 [Logo]: http://bonigarcia.github.io/img/webdrivermanager.png
 [Selenium Webdriver]: http://docs.seleniumhq.org/projects/webdriver/
@@ -263,3 +269,4 @@ WebDriverManager (Copyright &copy; 2015-2017) is a personal project of [Boni Gar
 [WebDriverManager issues]: https://github.com/bonigarcia/webdrivermanager/issues
 [WebDriverManager Examples]: https://github.com/bonigarcia/webdrivermanager-examples
 [npm.taobao.org]: http://npm.taobao.org/mirrors/
+[selenium-jupiter]: https://github.com/bonigarcia/selenium-jupiter/

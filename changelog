@@ -1,7 +1,20 @@
-webdrivermanager (1.8.0)
+webdrivermanager (2.0.0)
 
-  + Remove deprecated MarionetteDriverManager
+  + Relicense to Apache 2.0
+  + New method in BrowserManager API: forceOperativeSystem(OperativeSystem operativeSystem)
+  + New method in BrowserManager API: ignoreVersions(String... versions)
+  + Use logback instead of simplelogger for logging
+  + Stop using tyepsafe config library for handling properties
+  + Override configuration values with environmental variables (e.g. WDM_TARGETPATH)
+  + Improve management of proxy
+  + Use SonarCloud to keep a good level of internal code quality
+  + Use Codecov to keep a good level of code coverage
+  + Reset state of browser managers after setup
+  + Remove deprecated methods from version 1.x (MarionetteDriverManager, etc)
+  + Upgrade to Selenium 3.7 for end-to-end tests
+  + Improve test performance
 
+ -- Boni Garcia <boni.gg@gmail.com>  Mon, 27 Nov 2017 04:22:00 +0200
 
 webdrivermanager (1.7.2)
 
