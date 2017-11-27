@@ -2,7 +2,7 @@
 [![Build Status](https://travis-ci.org/bonigarcia/webdrivermanager.svg?branch=master)](https://travis-ci.org/bonigarcia/webdrivermanager)
 [![Quality Gate](https://sonarcloud.io/api/badges/gate?key=io.github.bonigarcia:webdrivermanager)](https://sonarcloud.io/dashboard/index/io.github.bonigarcia:webdrivermanager)
 [![codecov](https://codecov.io/gh/bonigarcia/webdrivermanager/branch/master/graph/badge.svg)](https://codecov.io/gh/bonigarcia/webdrivermanager)
-[![License (LGPL version 2.1)](https://img.shields.io/badge/license-GNU%20LGPL%20version%202.1-brightgreen.svg?style=flat-square)](http://opensource.org/licenses/LGPL-2.1)
+[![License badge](https://img.shields.io/badge/license-Apache2-green.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 [![Support badge](https://img.shields.io/badge/support-sof-green.svg)](http://stackoverflow.com/questions/tagged/webdrivermanager-java)
 [![Twitter Follow](https://img.shields.io/twitter/url/http/shields.io.svg?style=social)](https://twitter.com/boni_gg)
 
@@ -23,7 +23,7 @@ System.setProperty("webdriver.gecko.driver", "/absolute/path/to/binary/geckodriv
 
 This is quite annoying since it forces you to link directly this binary in your source code. In addition, you have to check manually when new versions of the binaries are released. This library comes to the rescue, performing in an automated way all this dirty job for you.
 
-WebDriverManager is open source, released under the terms of [LGPL License 2.1].
+WebDriverManager is open source, released under the terms of [Apache 2.0 License].
 
 ## Usage
 
@@ -251,11 +251,11 @@ If you have questions on how to use WebDriverManager properly with a special con
 
 ## About
 
-WebDriverManager (Copyright &copy; 2015-2017) is a personal project of [Boni Garcia] licensed under [LGPL License 2.1]. Comments, questions and suggestions are always very [welcome][WebDriverManager issues]!
+WebDriverManager (Copyright &copy; 2015-2017) is a personal project of [Boni Garcia] licensed under [Apache 2.0 License]. Comments, questions and suggestions are always very [welcome][WebDriverManager issues]!
 
 [Logo]: http://bonigarcia.github.io/img/webdrivermanager.png
 [Selenium Webdriver]: http://docs.seleniumhq.org/projects/webdriver/
-[LGPL License 2.1]: http://www.gnu.org/licenses/lgpl-2.1.html
+[Apache 2.0 License]: http://www.apache.org/licenses/LICENSE-2.0
 [Boni Garcia]: http://bonigarcia.github.io/
 [GitHub Repository]: https://github.com/bonigarcia/webdrivermanager
 [authenticated requests]: https://developer.github.com/v3/#rate-limiting
