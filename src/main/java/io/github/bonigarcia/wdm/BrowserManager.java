@@ -91,7 +91,7 @@ public abstract class BrowserManager {
 
     protected static BrowserManager instance;
     protected String myOsName = defaultOsName();
-    protected boolean useBetaVersions = getBoolean("wdm.useBetaVersions");
+    protected boolean useBetaVersions = false;
     protected boolean mirrorLog = false;
     protected boolean isForcingCache = false;
     protected boolean isForcingDownload = false;
@@ -412,7 +412,8 @@ public abstract class BrowserManager {
     }
 
     protected void handleDriver(URL url, String driver, List<URL> out) {
-        if (!useBetaVersions && url.getFile().toLowerCase().contains("beta")) {
+        if (!useBetaVersions && !getBoolean("wdm.useBetaVersions")
+                && url.getFile().toLowerCase().contains("beta")) {
             return;
         }
         if (url.getFile().contains(driver)) {
@@ -676,17 +677,15 @@ public abstract class BrowserManager {
     }
 
     protected void reset() {
-        useBetaVersions = getBoolean("wdm.useBetaVersions");
+        useBetaVersions = false;
         mirrorLog = false;
         isForcingCache = false;
         isForcingDownload = false;
         listVersions = null;
         architecture = null;
         driverUrl = null;
-        versionToDownload = null;
         version = null;
         proxyValue = null;
-        binaryPath = null;
         proxyUser = null;
         proxyPass = null;
         ignoredVersions = null;

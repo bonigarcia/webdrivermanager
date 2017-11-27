@@ -15,10 +15,12 @@
 package io.github.bonigarcia.wdm.test;
 
 import static java.util.Arrays.asList;
+import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.util.Collection;
 
-import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
@@ -29,7 +31,6 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import io.github.bonigarcia.wdm.base.BaseBrowserTst;
 
 /**
  * Parameterized test with several browsers.
@@ -38,7 +39,7 @@ import io.github.bonigarcia.wdm.base.BaseBrowserTst;
  * @since 1.3.1
  */
 @RunWith(Parameterized.class)
-public class WebDriverTest extends BaseBrowserTst {
+public class WebDriverTest {
 
     @Parameter
     public Class<? extends WebDriver> driverClass;
@@ -49,11 +50,13 @@ public class WebDriverTest extends BaseBrowserTst {
                 { FirefoxDriver.class }, { PhantomJSDriver.class } });
     }
 
-    @Before
-    public void setupTest()
-            throws InstantiationException, IllegalAccessException {
+    @Test
+    public void testWebDriver() {
         WebDriverManager.getInstance(driverClass).setup();
-        driver = driverClass.newInstance();
+        String binaryPath = WebDriverManager.getInstance(driverClass)
+                .getBinaryPath();
+        File binary = new File(binaryPath);
+        assertTrue(binary.exists());
     }
 
 }

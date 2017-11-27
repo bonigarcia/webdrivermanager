@@ -66,7 +66,7 @@ public class Downloader {
 
     private BrowserManager browserManager;
     private WdmHttpClient httpClient;
-    private boolean override = getBoolean("wdm.override");
+    private boolean isForcingDownload;
 
     public Downloader() {
         this.httpClient = new WdmHttpClient.Builder().build();
@@ -89,7 +89,7 @@ public class Downloader {
         boolean download = !targetFile.getParentFile().exists()
                 || (targetFile.getParentFile().exists()
                         && targetFile.getParentFile().list().length == 0)
-                || override;
+                || isForcingDownload || getBoolean("wdm.override");
 
         Optional<File> binary = (download) ? download(url, targetFile, export)
                 : checkBinary(driverName, targetFile);
@@ -176,7 +176,8 @@ public class Downloader {
 
                 file = new File(
                         compressedFile.getParentFile() + separator + name);
-                if (!file.exists() || override) {
+                if (!file.exists() || isForcingDownload
+                        || getBoolean("wdm.override")) {
                     if (name.endsWith("/")) {
                         file.mkdirs();
                         continue;
@@ -293,7 +294,7 @@ public class Downloader {
     }
 
     public void forceDownload() {
-        this.override = true;
+        this.isForcingDownload = true;
     }
 
     public File extractMsi(File msi) throws IOException, InterruptedException {

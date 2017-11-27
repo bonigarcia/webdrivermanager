@@ -28,36 +28,38 @@ public class WebDriverManager extends BrowserManager {
 
     public static synchronized BrowserManager getInstance(
             Class<?> webDriverClass) {
-        Class<? extends BrowserManager> browserManagerClass;
+        if (instance == null) {
+            Class<? extends BrowserManager> browserManagerClass;
 
-        switch (webDriverClass.getName()) {
-        case "org.openqa.selenium.chrome.ChromeDriver":
-            browserManagerClass = ChromeDriverManager.class;
-            break;
-        case "org.openqa.selenium.opera.OperaDriver":
-            browserManagerClass = OperaDriverManager.class;
-            break;
-        case "org.openqa.selenium.ie.InternetExplorerDriver":
-            browserManagerClass = InternetExplorerDriverManager.class;
-            break;
-        case "org.openqa.selenium.edge.EdgeDriver":
-            browserManagerClass = EdgeDriverManager.class;
-            break;
-        case "org.openqa.selenium.phantomjs.PhantomJSDriver":
-            browserManagerClass = PhantomJsDriverManager.class;
-            break;
-        case "org.openqa.selenium.firefox.FirefoxDriver":
-            browserManagerClass = FirefoxDriverManager.class;
-            break;
-        default:
-            browserManagerClass = VoidDriverManager.class;
-            break;
-        }
+            switch (webDriverClass.getName()) {
+            case "org.openqa.selenium.chrome.ChromeDriver":
+                browserManagerClass = ChromeDriverManager.class;
+                break;
+            case "org.openqa.selenium.opera.OperaDriver":
+                browserManagerClass = OperaDriverManager.class;
+                break;
+            case "org.openqa.selenium.ie.InternetExplorerDriver":
+                browserManagerClass = InternetExplorerDriverManager.class;
+                break;
+            case "org.openqa.selenium.edge.EdgeDriver":
+                browserManagerClass = EdgeDriverManager.class;
+                break;
+            case "org.openqa.selenium.phantomjs.PhantomJSDriver":
+                browserManagerClass = PhantomJsDriverManager.class;
+                break;
+            case "org.openqa.selenium.firefox.FirefoxDriver":
+                browserManagerClass = FirefoxDriverManager.class;
+                break;
+            default:
+                browserManagerClass = VoidDriverManager.class;
+                break;
+            }
 
-        try {
-            instance = browserManagerClass.newInstance();
-        } catch (Exception e) {
-            throw new WebDriverManagerException(e);
+            try {
+                instance = browserManagerClass.newInstance();
+            } catch (Exception e) {
+                throw new WebDriverManagerException(e);
+            }
         }
         return instance;
     }
