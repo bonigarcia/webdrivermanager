@@ -37,7 +37,7 @@ public class TaobaoTest {
     public void testTaobao() throws Exception {
         setProperty("wdm.chromeDriverTaobaoUrl",
                 "http://npm.taobao.org/mirrors/chromedriver/2.33/");
-        ChromeDriverManager.getInstance().setup();
+        ChromeDriverManager.getInstance().useTaobaoMirror().setup();
 
         File binary = new File(
                 ChromeDriverManager.getInstance().getBinaryPath());
