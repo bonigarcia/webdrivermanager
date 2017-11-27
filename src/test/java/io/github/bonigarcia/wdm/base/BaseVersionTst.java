@@ -67,7 +67,7 @@ public abstract class BaseVersionTst {
             browserManager.arch32().setup();
             break;
         case X64:
-            browserManager.arch32().setup();
+            browserManager.arch64().setup();
             break;
         default:
             browserManager.setup();

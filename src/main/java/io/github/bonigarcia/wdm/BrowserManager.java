@@ -171,6 +171,7 @@ public abstract class BrowserManager {
 
             if (driverInCache.isPresent()) {
                 versionToDownload = version;
+                downloadedVersion = version;
                 log.debug("Driver for {} {} found in cache {}", getDriverName(),
                         versionToDownload, driverInCache.get());
                 exportDriver(getExportParameter(), driverInCache.get());

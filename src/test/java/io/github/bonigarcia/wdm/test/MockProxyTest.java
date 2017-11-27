@@ -71,7 +71,7 @@ public class MockProxyTest {
     @Test
     public void testMockProx() throws MalformedURLException {
         ChromeDriverManager.getInstance().proxy("localhost:" + proxyPort)
-                .arch64().proxyUser("").proxyPass("")
+                .proxyUser("").proxyPass("")
                 .driverRepositoryUrl(
                         new URL("https://chromedriver.storage.googleapis.com/"))
                 .setup();
