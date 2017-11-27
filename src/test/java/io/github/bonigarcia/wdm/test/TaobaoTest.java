@@ -15,17 +15,12 @@
 package io.github.bonigarcia.wdm.test;
 
 import static java.lang.System.setProperty;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
-import java.lang.reflect.Method;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.io.File;
 
-import org.junit.AfterClass;
 import org.junit.Test;
 
-import io.github.bonigarcia.wdm.BrowserManager;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
 import io.github.bonigarcia.wdm.EdgeDriverManager;
 import io.github.bonigarcia.wdm.WebDriverManagerException;
@@ -42,27 +37,18 @@ public class TaobaoTest {
     public void testTaobao() throws Exception {
         setProperty("wdm.chromeDriverTaobaoUrl",
                 "http://npm.taobao.org/mirrors/chromedriver/2.33/");
-        BrowserManager chromeDriver = ChromeDriverManager.getInstance();
-        chromeDriver.useTaobaoMirror().setup();
+        ChromeDriverManager.getInstance().setup();
 
-        Method method = BrowserManager.class.getDeclaredMethod("getDriverUrl");
-        method.setAccessible(true);
-        URL driverUrl = (URL) method.invoke(chromeDriver);
-
-        assertThat(driverUrl.toString(), containsString("taobao.org"));
+        File binary = new File(
+                ChromeDriverManager.getInstance().getBinaryPath());
+        assertTrue(binary.exists());
     }
 
     @Test(expected = WebDriverManagerException.class)
     public void testTaobaoException() {
         EdgeDriverManager.getInstance().useTaobaoMirror().setup();
-    }
-
-    @AfterClass
-    public static void teardown() throws MalformedURLException {
-        ChromeDriverManager.getInstance().driverRepositoryUrl(
-                new URL("https://chromedriver.storage.googleapis.com/"));
-        EdgeDriverManager.getInstance().driverRepositoryUrl(new URL(
-                "https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/"));
+        File binary = new File(EdgeDriverManager.getInstance().getBinaryPath());
+        assertTrue(binary.exists());
     }
 
 }

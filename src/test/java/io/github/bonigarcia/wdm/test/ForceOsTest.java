@@ -27,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,7 +59,8 @@ public class ForceOsTest {
     }
 
     @Before
-    public void deleteDownloadedFiles() throws IOException {
+    @After
+    public void cleanCache() throws IOException {
         cleanDirectory(new File(new Downloader().getTargetPath()));
     }
 

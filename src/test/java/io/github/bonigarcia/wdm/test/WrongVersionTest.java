@@ -15,10 +15,12 @@
 package io.github.bonigarcia.wdm.test;
 
 import static java.util.Arrays.asList;
+import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.util.Collection;
 
-import org.junit.Before;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
@@ -28,7 +30,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import io.github.bonigarcia.wdm.base.BaseBrowserTst;
 
 /**
  * Test with incorrect version numbers.
@@ -37,7 +38,7 @@ import io.github.bonigarcia.wdm.base.BaseBrowserTst;
  * @since 1.7.2
  */
 @RunWith(Parameterized.class)
-public class WrongVersionTest extends BaseBrowserTst {
+public class WrongVersionTest {
 
     @Parameter(0)
     public Class<? extends WebDriver> driverClass;
@@ -51,12 +52,14 @@ public class WrongVersionTest extends BaseBrowserTst {
                 { FirefoxDriver.class, "99" } });
     }
 
-    @Before
-    public void setupTest()
+    @Test
+    public void testWrongVersionAndCache()
             throws InstantiationException, IllegalAccessException {
         WebDriverManager.getInstance(driverClass).setup();
         WebDriverManager.getInstance(driverClass).version(version).setup();
-        driver = driverClass.newInstance();
+        File binary = new File(
+                WebDriverManager.getInstance(driverClass).getBinaryPath());
+        assertTrue(binary.exists());
     }
 
 }
