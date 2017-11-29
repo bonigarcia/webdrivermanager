@@ -37,7 +37,7 @@ In order to use WebDriverManager in a Maven project, first add the following dep
 </dependency>
 ```
 
-WebDriverManager is tipically used by tests, and therefore, the typicall scope would be *test* (`<scope>test</scope>`).
+WebDriverManager is typically used by tests, and therefore, the typical scope would be *test* (`<scope>test</scope>`).
 
 Once we have included this dependency, you can let WebDriverManager to manage the WebDriver binaries for you. Take a look at this JUnit 4 example which uses Chrome with Selenium WebDriver (in order to use WebDriverManager in conjunction with **JUnit 5**, the extension [selenium-jupiter] is highly recommended):
 
@@ -113,7 +113,7 @@ WebDriverManager exposes its API by means of the **builder pattern**. This means
 
 -  ``version()`` : By default, WebDriverManager tries to download the latest version of a given driver binary. An specific version can be specified using this method. 
 -  ``forceCache()`` : By default, WebDriverManager connects to the specific driver repository URL to find out what is the latest version of the binary. This can be avoided forcing to use the latest version form the local repository.
--  ``forceDownload()`` : By default, after WebDriverManager verifies the latest version of the binary, and then it uses the cached version if exists. This opcion forces to download again the binary even if it has been previously cached.
+-  ``forceDownload()`` : By default, after WebDriverManager verifies the latest version of the binary, and then it uses the cached version if exists. This option forces to download again the binary even if it has been previously cached.
 -  ``forceOperativeSystem(OperativeSystem operativeSystem)`` : By default, WebDriverManager downloads the proper binary for the operative system running the code. This behaviour can be changed by forcing some other operative system (i.e. Windows, Linux, Mac).
 -  ``useBetaVersions()`` : By default, WebDriverManager skip beta versions. With this method, WebDriverManager will download also beta versions.
 -  ``architecture(Architecture arch)`` : By default, WebDriverManager would try to use the proper binary for the platform running the test case (i.e. 32-bit or 64-bit). This behavior can be changed by forcing a given architecture: 32-bits (``Architecture.x32``) or 64-bits (``Architecture.x64``);   
@@ -211,7 +211,7 @@ By default, WebDriverManager downloads the latest version of the WebDriver binar
 
 If no version is specified, WebDriverManager sends a request to the server hosting the binary. In order to avoid this request and check if any binary has been previously downloaded, the key `wdm.forceCache` can be used.
 
-As of WebDriverManager 2, the value of these properties can be overrided by means of *environmental variables*. The name of these variables result from putting the name in uppercase and replacing the symbol `.` by `_`. For example, the property ``wdm.targetPath`` can be overried by the environment variable ``WDM_TARGETPATH``.    
+As of WebDriverManager 2, the value of these properties can be overridden by means of *environmental variables*. The name of these variables result from putting the name in uppercase and replacing the symbol `.` by `_`. For example, the property ``wdm.targetPath`` can be overridden by the environment variable ``WDM_TARGETPATH``.    
 
 ### HTTP Proxy
 
