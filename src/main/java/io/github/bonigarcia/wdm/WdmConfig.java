@@ -18,11 +18,15 @@ package io.github.bonigarcia.wdm;
 
 import static java.lang.Boolean.parseBoolean;
 import static java.lang.Integer.parseInt;
+import static java.lang.invoke.MethodHandles.lookup;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Properties;
+
+import org.slf4j.Logger;
 
 /**
  * Configuration utility class.
@@ -31,6 +35,8 @@ import java.util.Properties;
  * @since 1.0.0
  */
 public class WdmConfig {
+
+    final static Logger log = getLogger(lookup().lookupClass());
 
     private WdmConfig() {
         throw new IllegalStateException("Utility class");
@@ -67,16 +73,24 @@ public class WdmConfig {
     }
 
     private static String getProperty(String key) {
+        String value = null;
         Properties properties = new Properties();
         try {
             InputStream inputStream = WdmConfig.class
                     .getResourceAsStream(System.getProperty("wdm.properties",
                             "/webdrivermanager.properties"));
             properties.load(inputStream);
+            value = properties.getProperty(key);
         } catch (Exception e) {
             throw new WebDriverManagerException(e);
+        } finally {
+            if (value == null) {
+                log.trace("Property key {} not found, using default value",
+                        key);
+                value = "";
+            }
         }
-        return properties.getProperty(key);
+        return value;
     }
 
     public static boolean isNullOrEmpty(String string) {

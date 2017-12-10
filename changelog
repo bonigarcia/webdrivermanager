@@ -1,3 +1,10 @@
+webdrivermanager (2.0.1)
+
+  + Configuration keys (wdm.*) are now optional (default values: false, "", 0)
+
+ -- Boni Garcia <boni.gg@gmail.com>
+
+
 webdrivermanager (2.0.0)
 
   + Relicense to Apache 2.0
@@ -15,6 +22,7 @@ webdrivermanager (2.0.0)
   + Improve test performance
 
  -- Boni Garcia <boni.gg@gmail.com>  Mon, 27 Nov 2017 04:22:00 +0200
+
 
 webdrivermanager (1.7.2)
 
