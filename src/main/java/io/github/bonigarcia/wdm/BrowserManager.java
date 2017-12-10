@@ -157,6 +157,11 @@ public abstract class BrowserManager {
                 downloader.forceDownload();
             }
 
+            String forceOs = getString("wdm.forceOs");
+            if (!forceOs.equals("")) {
+                myOsName = forceOs;
+            }
+
             boolean getLatest = version == null || version.isEmpty()
                     || version.equalsIgnoreCase(LATEST.name())
                     || version.equalsIgnoreCase(NOT_SPECIFIED.name());

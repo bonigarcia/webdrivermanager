@@ -1,6 +1,7 @@
 webdrivermanager (2.0.1)
 
   + Configuration keys (wdm.*) are now optional (default values: false, "", 0)
+  + Include configuration key wdm.forceOs to force operative system
 
  -- Boni Garcia <boni.gg@gmail.com>
 
