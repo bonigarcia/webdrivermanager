@@ -5,7 +5,7 @@ webdrivermanager (2.0.1)
   + Include configuration keys wdm.proxy, wdm.proxyUser, and wdm.proxyPass for proxy settings
   + Include configuration key wdm.useTaobaoMirror to use Taobao mirror
 
- -- Boni Garcia <boni.gg@gmail.com>
+ -- Boni Garcia <boni.gg@gmail.com>  Sun, 12 Dec 2017 19:47:00 +0200
 
 
 webdrivermanager (2.0.0)
