@@ -199,7 +199,7 @@ public abstract class BrowserManager {
         }
     }
 
-    private void updateValuesWithConfig() {
+    protected void updateValuesWithConfig() {
         String wdmForceOs = getString("wdm.forceOs");
         if (!wdmForceOs.equals("")) {
             myOsName = wdmForceOs;
@@ -215,6 +215,9 @@ public abstract class BrowserManager {
         String wdmProxyPass = getString("wdm.proxyPass");
         if (!wdmProxyPass.equals("")) {
             proxyPass = wdmProxyPass;
+        }
+        if (getBoolean("wdm.useTaobaoMirror")) {
+            useTaobaoMirror();
         }
     }
 

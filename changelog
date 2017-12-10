@@ -3,6 +3,7 @@ webdrivermanager (2.0.1)
   + Configuration keys (wdm.*) are now optional (default values: false, "", 0)
   + Include configuration key wdm.forceOs to force operative system
   + Include configuration keys wdm.proxy, wdm.proxyUser, and wdm.proxyPass for proxy settings
+  + Include configuration key wdm.useTaobaoMirror to use Taobao mirror
 
  -- Boni Garcia <boni.gg@gmail.com>
 
