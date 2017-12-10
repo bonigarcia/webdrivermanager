@@ -36,7 +36,7 @@ import org.slf4j.Logger;
  */
 public class WdmConfig {
 
-    final static Logger log = getLogger(lookup().lookupClass());
+    static final Logger log = getLogger(lookup().lookupClass());
 
     private WdmConfig() {
         throw new IllegalStateException("Utility class");

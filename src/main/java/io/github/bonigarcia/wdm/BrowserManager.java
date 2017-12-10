@@ -156,11 +156,7 @@ public abstract class BrowserManager {
             if (isForcingDownload) {
                 downloader.forceDownload();
             }
-
-            String forceOs = getString("wdm.forceOs");
-            if (!forceOs.equals("")) {
-                myOsName = forceOs;
-            }
+            updateValuesWithConfig();
 
             boolean getLatest = version == null || version.isEmpty()
                     || version.equalsIgnoreCase(LATEST.name())
@@ -200,6 +196,25 @@ public abstract class BrowserManager {
 
         } catch (Exception e) {
             handleException(e, arch, version);
+        }
+    }
+
+    private void updateValuesWithConfig() {
+        String wdmForceOs = getString("wdm.forceOs");
+        if (!wdmForceOs.equals("")) {
+            myOsName = wdmForceOs;
+        }
+        String wdmProxy = getString("wdm.proxy");
+        if (!wdmProxy.equals("")) {
+            proxyValue = wdmProxy;
+        }
+        String wdmProxyUser = getString("wdm.proxyUser");
+        if (!wdmProxyUser.equals("")) {
+            proxyUser = wdmProxyUser;
+        }
+        String wdmProxyPass = getString("wdm.proxyPass");
+        if (!wdmProxyPass.equals("")) {
+            proxyPass = wdmProxyPass;
         }
     }
 
