@@ -705,6 +705,7 @@ public abstract class BrowserManager {
     }
 
     protected void reset() {
+        myOsName = defaultOsName();
         useBetaVersions = false;
         mirrorLog = false;
         isForcingCache = false;
