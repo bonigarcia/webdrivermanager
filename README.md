@@ -147,8 +147,8 @@ Configuration parameters for WebDriverManager are set in the ``webdrivermanager.
 wdm.targetPath=~/.m2/repository/webdriver
 wdm.forceCache=false
 wdm.override=false
+wdm.useBetaVersions=false
 wdm.timeout=30
-wdm.seekErrorRetries=3
 
 wdm.chromeDriverUrl=https://chromedriver.storage.googleapis.com/
 wdm.chromeDriverTaobaoUrl=http://npm.taobao.org/mirrors/chromedriver

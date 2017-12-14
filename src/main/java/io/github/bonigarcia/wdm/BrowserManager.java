@@ -533,40 +533,25 @@ public abstract class BrowserManager {
 
     protected List<URL> getDriversFromXml(URL driverUrl) throws IOException {
         log.info("Reading {} to seek {}", driverUrl, getDriverName());
-
         List<URL> urls = new ArrayList<>();
+        WdmHttpClient.Response response = httpClient
+                .execute(new WdmHttpClient.Get(driverUrl));
+        try {
+            try (BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(response.getContent()))) {
+                Document xml = loadXML(reader);
+                NodeList nodes = (NodeList) newInstance().newXPath().evaluate(
+                        "//Contents/Key", xml.getDocumentElement(), NODESET);
 
-        int retries = 1;
-        int maxRetries = getInt("wdm.seekErrorRetries");
-        do {
-            try {
-                WdmHttpClient.Response response = httpClient
-                        .execute(new WdmHttpClient.Get(driverUrl));
-                try (BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(response.getContent()))) {
-                    Document xml = loadXML(reader);
-                    NodeList nodes = (NodeList) newInstance().newXPath()
-                            .evaluate("//Contents/Key",
-                                    xml.getDocumentElement(), NODESET);
-
-                    for (int i = 0; i < nodes.getLength(); ++i) {
-                        Element e = (Element) nodes.item(i);
-                        urls.add(new URL(driverUrl
-                                + e.getChildNodes().item(0).getNodeValue()));
-                    }
-                }
-                break;
-            } catch (Exception e) {
-                log.warn("[{}/{}] Exception reading {} to seek {}: {} {}",
-                        retries, maxRetries, driverUrl, getDriverName(),
-                        e.getClass().getName(), e.getMessage(), e);
-                retries++;
-                if (retries > maxRetries) {
-                    throw new WebDriverManagerException(e);
+                for (int i = 0; i < nodes.getLength(); ++i) {
+                    Element e = (Element) nodes.item(i);
+                    urls.add(new URL(driverUrl
+                            + e.getChildNodes().item(0).getNodeValue()));
                 }
             }
-        } while (true);
-
+        } catch (Exception e) {
+            throw new WebDriverManagerException(e);
+        }
         return urls;
     }
 
