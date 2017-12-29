@@ -80,9 +80,10 @@ import org.slf4j.Logger;
  * @since 2.1.0
  */
 public class HttpClient implements Closeable {
+
     final Logger log = getLogger(lookup().lookupClass());
 
-    CloseableHttpClient httpClient;
+    CloseableHttpClient closeableHttpClient;
 
     public HttpClient(String proxyUrl, String proxyUser, String proxyPass) {
         HttpClientBuilder builder = HttpClientBuilder.create()
@@ -126,7 +127,7 @@ public class HttpClient implements Closeable {
             throw new WebDriverManagerException(e);
         }
 
-        httpClient = builder.useSystemProperties().build();
+        closeableHttpClient = builder.useSystemProperties().build();
     }
 
     public Optional<Proxy> createProxy(String proxyUrl)
@@ -155,7 +156,7 @@ public class HttpClient implements Closeable {
     }
 
     public HttpResponse execute(HttpRequestBase method) throws IOException {
-        HttpResponse response = httpClient.execute(method);
+        HttpResponse response = closeableHttpClient.execute(method);
         if (response.getStatusLine().getStatusCode() >= SC_BAD_REQUEST) {
             String errorMessage = "A response error is detected: "
                     + response.getStatusLine();
@@ -166,7 +167,7 @@ public class HttpClient implements Closeable {
     }
 
     public boolean isValid(URL url) throws IOException {
-        HttpResponse response = httpClient
+        HttpResponse response = closeableHttpClient
                 .execute(new HttpOptions(url.toString()));
         if (response.getStatusLine().getStatusCode() > SC_UNAUTHORIZED) {
             log.debug("A response error is detected. {}",
@@ -209,64 +210,58 @@ public class HttpClient implements Closeable {
 
     private final Optional<BasicCredentialsProvider> createBasicCredentialsProvider(
             String proxy, String proxyUser, String proxyPass,
-            HttpHost proxyHost) throws MalformedURLException {
+            HttpHost proxyHost)
+            throws MalformedURLException, UnsupportedEncodingException {
         Optional<URL> proxyUrl = determineProxyUrl(proxy);
-        if (proxyUrl.isPresent()) {
-            try {
-                String username = null;
-                String password = null;
-
-                // apply env value
-                String userInfo = proxyUrl.get().getUserInfo();
-                if (userInfo != null) {
-                    StringTokenizer st = new StringTokenizer(userInfo, ":");
-                    username = st.hasMoreTokens()
-                            ? decode(st.nextToken(), UTF_8.name())
-                            : null;
-                    password = st.hasMoreTokens()
-                            ? decode(st.nextToken(), UTF_8.name())
-                            : null;
-                }
-                String envProxyUser = getenv("HTTPS_PROXY_USER");
-                String envProxyPass = getenv("HTTPS_PROXY_PASS");
-                username = (envProxyUser != null) ? envProxyUser : username;
-                password = (envProxyPass != null) ? envProxyPass : password;
-
-                // apply option value
-                username = (proxyUser != null) ? proxyUser : username;
-                password = (proxyPass != null) ? proxyPass : password;
-
-                if (username == null) {
-                    return null;
-                }
-
-                String ntlmUsername = username;
-                String ntlmDomain = null;
-
-                int index = username.indexOf('\\');
-                if (index > 0) {
-                    ntlmDomain = username.substring(0, index);
-                    ntlmUsername = username.substring(index + 1);
-                }
-
-                BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-                AuthScope authScope = new AuthScope(proxyHost.getHostName(),
-                        proxyHost.getPort(), ANY_REALM, NTLM);
-                Credentials creds = new NTCredentials(ntlmUsername, password,
-                        getWorkstation(), ntlmDomain);
-                credentialsProvider.setCredentials(authScope, creds);
-
-                authScope = new AuthScope(proxyHost.getHostName(),
-                        proxyHost.getPort());
-                creds = new UsernamePasswordCredentials(username, password);
-                credentialsProvider.setCredentials(authScope, creds);
-
-                return Optional.of(credentialsProvider);
-            } catch (UnsupportedEncodingException e) {
-                throw new WebDriverManagerException(e);
-            }
+        if (!proxyUrl.isPresent()) {
+            return empty();
         }
-        return empty();
+        String username = null;
+        String password = null;
+
+        // apply env value
+        String userInfo = proxyUrl.get().getUserInfo();
+        if (userInfo != null) {
+            StringTokenizer st = new StringTokenizer(userInfo, ":");
+            username = st.hasMoreTokens() ? decode(st.nextToken(), UTF_8.name())
+                    : null;
+            password = st.hasMoreTokens() ? decode(st.nextToken(), UTF_8.name())
+                    : null;
+        }
+        String envProxyUser = getenv("HTTPS_PROXY_USER");
+        String envProxyPass = getenv("HTTPS_PROXY_PASS");
+        username = (envProxyUser != null) ? envProxyUser : username;
+        password = (envProxyPass != null) ? envProxyPass : password;
+
+        // apply option value
+        username = (proxyUser != null) ? proxyUser : username;
+        password = (proxyPass != null) ? proxyPass : password;
+
+        if (username == null) {
+            return empty();
+        }
+
+        String ntlmUsername = username;
+        String ntlmDomain = null;
+
+        int index = username.indexOf('\\');
+        if (index > 0) {
+            ntlmDomain = username.substring(0, index);
+            ntlmUsername = username.substring(index + 1);
+        }
+
+        BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+        AuthScope authScope = new AuthScope(proxyHost.getHostName(),
+                proxyHost.getPort(), ANY_REALM, NTLM);
+        Credentials creds = new NTCredentials(ntlmUsername, password,
+                getWorkstation(), ntlmDomain);
+        credentialsProvider.setCredentials(authScope, creds);
+
+        authScope = new AuthScope(proxyHost.getHostName(), proxyHost.getPort());
+        creds = new UsernamePasswordCredentials(username, password);
+        credentialsProvider.setCredentials(authScope, creds);
+
+        return Optional.of(credentialsProvider);
     }
 
     private String getWorkstation() {
@@ -290,7 +285,7 @@ public class HttpClient implements Closeable {
 
     @Override
     public void close() throws IOException {
-        httpClient.close();
+        closeableHttpClient.close();
     }
 
     public static class Builder {
