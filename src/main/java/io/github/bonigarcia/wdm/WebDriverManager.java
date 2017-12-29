@@ -96,7 +96,7 @@ public abstract class WebDriverManager {
 
     final Logger log = getLogger(lookup().lookupClass());
 
-    public static final String SLASH = "/";
+    protected static final String SLASH = "/";
 
     protected abstract List<URL> getDrivers() throws IOException;
 
@@ -349,9 +349,6 @@ public abstract class WebDriverManager {
         try (HttpClient wdmHttpClient = httpClient) {
             downloader = new Downloader(driverManagerType);
             urlFilter = new UrlFilter();
-            if (isForcingDownload) {
-                downloader.forceDownload();
-            }
             updateValuesWithConfig();
 
             boolean getLatest = version == null || version.isEmpty()

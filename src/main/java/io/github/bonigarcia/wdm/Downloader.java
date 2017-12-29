@@ -68,9 +68,14 @@ public class Downloader {
 
     boolean isForcingDownload;
     DriverManagerType driverManagerType;
+    HttpClient httpClient;
 
     public Downloader(DriverManagerType driverManagerType) {
         this.driverManagerType = driverManagerType;
+        httpClient = WebDriverManager.getInstance(driverManagerType)
+                .getHttpClient();
+        isForcingDownload = WebDriverManager
+                .getInstance(driverManagerType).isForcingDownload;
     }
 
     public synchronized Optional<String> download(URL url, String version,
@@ -98,8 +103,6 @@ public class Downloader {
         File temporaryFile = new File(targetFile.getParentFile(),
                 randomUUID().toString());
 
-        HttpClient httpClient = WebDriverManager.getInstance(driverManagerType)
-                .getHttpClient();
         copyInputStreamToFile(httpClient.execute(httpClient.createHttpGet(url))
                 .getEntity().getContent(), temporaryFile);
         renameFile(temporaryFile, targetFile);
@@ -284,10 +287,6 @@ public class Downloader {
             repository.mkdirs();
         }
         return targetPath;
-    }
-
-    public void forceDownload() {
-        this.isForcingDownload = true;
     }
 
     public File extractMsi(File msi) throws IOException, InterruptedException {
