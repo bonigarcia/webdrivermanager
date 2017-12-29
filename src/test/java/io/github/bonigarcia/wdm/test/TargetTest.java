@@ -34,7 +34,7 @@ import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 import org.slf4j.Logger;
 
-import io.github.bonigarcia.wdm.BrowserManager;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
 import io.github.bonigarcia.wdm.Downloader;
 import io.github.bonigarcia.wdm.EdgeDriverManager;
@@ -63,7 +63,7 @@ public class TargetTest {
     public String target;
 
     @Parameter(3)
-    public BrowserManager manager;
+    public WebDriverManager manager;
 
     @Parameters(name = "{index}: {0}")
     public static Collection<Object[]> data() {

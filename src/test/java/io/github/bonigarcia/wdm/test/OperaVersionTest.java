@@ -19,7 +19,7 @@ package io.github.bonigarcia.wdm.test;
 import org.junit.Before;
 
 import io.github.bonigarcia.wdm.OperaDriverManager;
-import io.github.bonigarcia.wdm.base.BaseVersionTst;
+import io.github.bonigarcia.wdm.base.VersionTestParent;
 
 /**
  * Test asserting operadriver versions.
@@ -27,7 +27,7 @@ import io.github.bonigarcia.wdm.base.BaseVersionTst;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.2.2
  */
-public class OperaVersionTest extends BaseVersionTst {
+public class OperaVersionTest extends VersionTestParent {
 
     @Before
     public void setup() {

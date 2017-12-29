@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static io.github.bonigarcia.wdm.DriverManagerType.OPERA;
 import static io.github.bonigarcia.wdm.WdmConfig.getString;
 import static java.util.Arrays.asList;
 
@@ -30,9 +31,9 @@ import java.util.List;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.0.0
  */
-public class OperaDriverManager extends BrowserManager {
+public class OperaDriverManager extends WebDriverManager {
 
-    public static synchronized BrowserManager getInstance() {
+    public static synchronized WebDriverManager getInstance() {
         if (instance == null
                 || !instance.getClass().equals(OperaDriverManager.class)) {
             instance = new OperaDriverManager();
@@ -41,6 +42,7 @@ public class OperaDriverManager extends BrowserManager {
     }
 
     public OperaDriverManager() {
+        driverManagerType = OPERA;
         exportParameter = getString("wdm.operaDriverExport");
         driverVersionKey = "wdm.operaDriverVersion";
         driverUrlKey = "wdm.operaDriverUrl";
@@ -89,7 +91,7 @@ public class OperaDriverManager extends BrowserManager {
     }
 
     @Override
-    public BrowserManager useTaobaoMirror() {
+    public WebDriverManager useTaobaoMirror() {
         return useTaobaoMirror("wdm.operaDriverTaobaoUrl");
     }
 

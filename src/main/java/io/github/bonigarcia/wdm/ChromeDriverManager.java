@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static io.github.bonigarcia.wdm.DriverManagerType.CHROME;
 import static io.github.bonigarcia.wdm.WdmConfig.getString;
 import static java.util.Arrays.asList;
 
@@ -29,9 +30,9 @@ import java.util.List;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.0.0
  */
-public class ChromeDriverManager extends BrowserManager {
+public class ChromeDriverManager extends WebDriverManager {
 
-    public static synchronized BrowserManager getInstance() {
+    public static synchronized WebDriverManager getInstance() {
         if (instance == null
                 || !instance.getClass().equals(ChromeDriverManager.class)) {
 
@@ -41,6 +42,7 @@ public class ChromeDriverManager extends BrowserManager {
     }
 
     public ChromeDriverManager() {
+        driverManagerType = CHROME;
         exportParameter = getString("wdm.chromeDriverExport");
         driverVersionKey = "wdm.chromeDriverVersion";
         driverUrlKey = "wdm.chromeDriverUrl";
@@ -71,7 +73,7 @@ public class ChromeDriverManager extends BrowserManager {
     }
 
     @Override
-    public BrowserManager useTaobaoMirror() {
+    public WebDriverManager useTaobaoMirror() {
         return useTaobaoMirror("wdm.chromeDriverTaobaoUrl");
     }
 

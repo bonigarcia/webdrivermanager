@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static io.github.bonigarcia.wdm.DriverManagerType.VOID;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
@@ -29,9 +30,10 @@ import java.util.List;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.3.1
  */
-public class VoidDriverManager extends BrowserManager {
+public class VoidDriverManager extends WebDriverManager {
 
     public VoidDriverManager() {
+        driverManagerType = VOID;
         exportParameter = "";
         driverVersionKey = "";
         driverUrlKey = "";

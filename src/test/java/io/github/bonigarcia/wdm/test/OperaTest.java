@@ -29,8 +29,8 @@ import org.junit.BeforeClass;
 import org.openqa.selenium.opera.OperaDriver;
 import org.openqa.selenium.opera.OperaOptions;
 
-import io.github.bonigarcia.wdm.OperaDriverManager;
-import io.github.bonigarcia.wdm.base.BaseBrowserTst;
+import io.github.bonigarcia.wdm.WebDriverManager;
+import io.github.bonigarcia.wdm.base.BrowserTestParent;
 
 /**
  * Test with Opera browser.
@@ -38,12 +38,12 @@ import io.github.bonigarcia.wdm.base.BaseBrowserTst;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.0.0
  */
-public class OperaTest extends BaseBrowserTst {
+public class OperaTest extends BrowserTestParent {
 
     @BeforeClass
     public static void setupClass() {
         assumeFalse(parseBoolean(getProperty("headlessEnvironment")));
-        OperaDriverManager.getInstance().setup();
+        WebDriverManager.operadriver().setup();
     }
 
     @Before

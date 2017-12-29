@@ -36,7 +36,7 @@ import org.junit.runners.Parameterized.Parameters;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.Architecture;
-import io.github.bonigarcia.wdm.BrowserManager;
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 /**
  * Parent class for version based tests.
@@ -45,12 +45,12 @@ import io.github.bonigarcia.wdm.BrowserManager;
  * @since 1.4.1
  */
 @RunWith(Parameterized.class)
-public abstract class BaseVersionTst {
+public abstract class VersionTestParent {
 
     @Parameter
     public Architecture architecture;
 
-    protected BrowserManager browserManager;
+    protected WebDriverManager browserManager;
     protected String[] specificVersions;
 
     final Logger log = getLogger(lookup().lookupClass());

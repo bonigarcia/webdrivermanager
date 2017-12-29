@@ -19,7 +19,7 @@ package io.github.bonigarcia.wdm.test;
 import org.junit.Before;
 
 import io.github.bonigarcia.wdm.FirefoxDriverManager;
-import io.github.bonigarcia.wdm.base.BaseVersionTst;
+import io.github.bonigarcia.wdm.base.VersionTestParent;
 
 /**
  * Test asserting Firefox versions.
@@ -27,7 +27,7 @@ import io.github.bonigarcia.wdm.base.BaseVersionTst;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.5.0
  */
-public class FirefoxVersionTest extends BaseVersionTst {
+public class FirefoxVersionTest extends VersionTestParent {
 
     @Before
     public void setup() {

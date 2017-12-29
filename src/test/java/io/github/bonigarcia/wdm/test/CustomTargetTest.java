@@ -32,7 +32,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 
-import io.github.bonigarcia.wdm.ChromeDriverManager;
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 /**
  * Test for custom target.
@@ -55,8 +55,8 @@ public class CustomTargetTest {
 
     @Test
     public void testTargetPath() {
-        ChromeDriverManager.getInstance().setup();
-        String binaryPath = ChromeDriverManager.getInstance().getBinaryPath();
+        WebDriverManager.chromedriver().setup();
+        String binaryPath = WebDriverManager.chromedriver().getBinaryPath();
         log.info("Binary path {}", binaryPath);
         assertThat(binaryPath, startsWith(tmpFolder.toString()));
     }

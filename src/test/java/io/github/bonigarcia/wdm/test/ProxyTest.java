@@ -44,7 +44,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 
-import io.github.bonigarcia.wdm.BrowserManager;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
 import io.github.bonigarcia.wdm.HttpClient;
 import mockit.Mock;
@@ -72,14 +72,14 @@ public class ProxyTest {
 
     @Test
     public void testRealEnvProxyToNull() throws Exception {
-        BrowserManager browserManager = ChromeDriverManager.getInstance();
+        WebDriverManager browserManager = ChromeDriverManager.getInstance();
         setSystemGetEnvMock(null);
         assertFalse(getProxy(browserManager).isPresent());
     }
 
     @Test
     public void testRealEnvProxyToNotNull() throws Exception {
-        BrowserManager browserManager = ChromeDriverManager.getInstance();
+        WebDriverManager browserManager = ChromeDriverManager.getInstance();
         setSystemGetEnvMock(PROXY_URL);
 
         InetSocketAddress address = (InetSocketAddress) getProxy(browserManager)
@@ -150,7 +150,7 @@ public class ProxyTest {
 
             log.info("Testing proxy {}", proxyTestString);
 
-            BrowserManager browserManager = ChromeDriverManager.getInstance();
+            WebDriverManager browserManager = ChromeDriverManager.getInstance();
             InetSocketAddress address = (InetSocketAddress) getProxy(
                     browserManager).get().address();
             assertThat(address.getHostName(), equalTo(PROXY_URL));
@@ -167,16 +167,17 @@ public class ProxyTest {
         return mockUp;
     }
 
-    private Optional<Proxy> getProxy(BrowserManager browserManager)
+    private Optional<Proxy> getProxy(WebDriverManager browserManager)
             throws NoSuchFieldException, SecurityException,
             IllegalArgumentException, IllegalAccessException,
             MalformedURLException {
-        Field httpClientField = BrowserManager.class
+        Field httpClientField = WebDriverManager.class
                 .getDeclaredField("httpClient");
         httpClientField.setAccessible(true);
         httpClientField.set(browserManager, new HttpClient.Builder().build());
 
-        Field proxyField = BrowserManager.class.getDeclaredField("proxyValue");
+        Field proxyField = WebDriverManager.class
+                .getDeclaredField("proxyValue");
         proxyField.setAccessible(true);
         String proxyUrl = (String) proxyField.get(browserManager);
 

@@ -66,7 +66,7 @@ public class Downloader {
 
     private static final String HOME = "~";
 
-    private BrowserManager browserManager;
+    private WebDriverManager browserManager;
     private HttpClient httpClient;
     private boolean isForcingDownload;
 
@@ -74,12 +74,12 @@ public class Downloader {
         this.httpClient = new HttpClient.Builder().build();
     }
 
-    public Downloader(BrowserManager browserManager) {
+    public Downloader(WebDriverManager browserManager) {
         this();
         this.browserManager = browserManager;
     }
 
-    public Downloader(BrowserManager browserManager, HttpClient httpClient) {
+    public Downloader(WebDriverManager browserManager, HttpClient httpClient) {
         this.browserManager = browserManager;
         this.httpClient = httpClient;
     }

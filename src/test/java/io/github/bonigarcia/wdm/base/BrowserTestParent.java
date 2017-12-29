@@ -30,7 +30,7 @@ import org.openqa.selenium.WebDriver;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.4.1
  */
-public abstract class BaseBrowserTst {
+public abstract class BrowserTestParent {
 
     protected WebDriver driver;
 

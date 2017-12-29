@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static io.github.bonigarcia.wdm.DriverManagerType.EDGE;
 import static io.github.bonigarcia.wdm.WdmConfig.getString;
 import static io.github.bonigarcia.wdm.WdmConfig.getUrl;
 import static java.util.Arrays.asList;
@@ -36,9 +37,9 @@ import org.jsoup.select.Elements;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.3.0
  */
-public class EdgeDriverManager extends BrowserManager {
+public class EdgeDriverManager extends WebDriverManager {
 
-    public static synchronized BrowserManager getInstance() {
+    public static synchronized WebDriverManager getInstance() {
         if (instance == null
                 || !instance.getClass().equals(EdgeDriverManager.class)) {
             instance = new EdgeDriverManager();
@@ -47,6 +48,7 @@ public class EdgeDriverManager extends BrowserManager {
     }
 
     public EdgeDriverManager() {
+        driverManagerType = EDGE;
         exportParameter = getString("wdm.edgeExport");
         driverVersionKey = "wdm.edgeVersion";
         driverUrlKey = "wdm.edgeDriverUrl";

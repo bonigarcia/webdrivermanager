@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static io.github.bonigarcia.wdm.DriverManagerType.FIREFOX;
 import static io.github.bonigarcia.wdm.OperativeSystem.MAC;
 import static io.github.bonigarcia.wdm.WdmConfig.getString;
 import static java.util.Arrays.asList;
@@ -30,9 +31,9 @@ import java.util.List;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.5.0
  */
-public class FirefoxDriverManager extends BrowserManager {
+public class FirefoxDriverManager extends WebDriverManager {
 
-    public static synchronized BrowserManager getInstance() {
+    public static synchronized WebDriverManager getInstance() {
         if (instance == null
                 || !instance.getClass().equals(FirefoxDriverManager.class)) {
             instance = new FirefoxDriverManager();
@@ -41,6 +42,7 @@ public class FirefoxDriverManager extends BrowserManager {
     }
 
     public FirefoxDriverManager() {
+        driverManagerType = FIREFOX;
         exportParameter = getString("wdm.geckoDriverExport");
         driverVersionKey = "wdm.geckoDriverVersion";
         driverUrlKey = "wdm.geckoDriverUrl";
@@ -83,7 +85,7 @@ public class FirefoxDriverManager extends BrowserManager {
     }
 
     @Override
-    public BrowserManager useTaobaoMirror() {
+    public WebDriverManager useTaobaoMirror() {
         return useTaobaoMirror("wdm.geckoDriverTaobaoUrl");
     }
 

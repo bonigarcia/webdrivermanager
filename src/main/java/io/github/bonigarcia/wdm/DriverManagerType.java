@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2016 Boni Garcia (http://bonigarcia.github.io/)
+ * (C) Copyright 2017 Boni Garcia (http://bonigarcia.github.io/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,31 +14,16 @@
  * limitations under the License.
  *
  */
-package io.github.bonigarcia.wdm.test;
-
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.openqa.selenium.firefox.FirefoxDriver;
-
-import io.github.bonigarcia.wdm.WebDriverManager;
-import io.github.bonigarcia.wdm.base.BrowserTestParent;
+package io.github.bonigarcia.wdm;
 
 /**
- * Test with Firefox browser.
+ * Types for driver managers.
  *
  * @author Boni Garcia (boni.gg@gmail.com)
- * @since 1.5.0
+ * @since 2.1.0
  */
-public class FirefoxTest extends BrowserTestParent {
+public enum DriverManagerType {
 
-    @BeforeClass
-    public static void setupClass() {
-        WebDriverManager.firefoxdriver().setup();
-    }
-
-    @Before
-    public void setupTest() {
-        driver = new FirefoxDriver();
-    }
+    CHROME, FIREFOX, OPERA, EDGE, IEXPLORER, PHANTOMJS, VOID;
 
 }

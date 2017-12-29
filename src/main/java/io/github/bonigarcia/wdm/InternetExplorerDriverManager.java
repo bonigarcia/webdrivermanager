@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static io.github.bonigarcia.wdm.DriverManagerType.IEXPLORER;
 import static io.github.bonigarcia.wdm.WdmConfig.getString;
 import static io.github.bonigarcia.wdm.WdmConfig.getUrl;
 import static java.util.Arrays.asList;
@@ -30,9 +31,9 @@ import java.util.List;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.0.0
  */
-public class InternetExplorerDriverManager extends BrowserManager {
+public class InternetExplorerDriverManager extends WebDriverManager {
 
-    public static synchronized BrowserManager getInstance() {
+    public static synchronized WebDriverManager getInstance() {
         if (instance == null || !instance.getClass()
                 .equals(InternetExplorerDriverManager.class)) {
             instance = new InternetExplorerDriverManager();
@@ -41,6 +42,7 @@ public class InternetExplorerDriverManager extends BrowserManager {
     }
 
     public InternetExplorerDriverManager() {
+        driverManagerType = IEXPLORER;
         exportParameter = getString("wdm.internetExplorerExport");
         driverVersionKey = "wdm.internetExplorerVersion";
         driverUrlKey = "wdm.internetExplorerDriverUrl";

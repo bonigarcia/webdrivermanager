@@ -20,8 +20,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 
-import io.github.bonigarcia.wdm.PhantomJsDriverManager;
-import io.github.bonigarcia.wdm.base.BaseBrowserTst;
+import io.github.bonigarcia.wdm.WebDriverManager;
+import io.github.bonigarcia.wdm.base.BrowserTestParent;
 
 /**
  * Test with PhatomJS.
@@ -30,11 +30,11 @@ import io.github.bonigarcia.wdm.base.BaseBrowserTst;
  * @since 1.4.0
  */
 
-public class PhantomJsTest extends BaseBrowserTst {
+public class PhantomJsTest extends BrowserTestParent {
 
     @BeforeClass
     public static void setupClass() {
-        PhantomJsDriverManager.getInstance().setup();
+        WebDriverManager.phantomjs().setup();
     }
 
     @Before

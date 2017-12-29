@@ -23,8 +23,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.openqa.selenium.edge.EdgeDriver;
 
-import io.github.bonigarcia.wdm.EdgeDriverManager;
-import io.github.bonigarcia.wdm.base.BaseBrowserTst;
+import io.github.bonigarcia.wdm.WebDriverManager;
+import io.github.bonigarcia.wdm.base.BrowserTestParent;
 
 /**
  * Test with Microsoft Edge.
@@ -32,12 +32,12 @@ import io.github.bonigarcia.wdm.base.BaseBrowserTst;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.3.0
  */
-public class EdgeTest extends BaseBrowserTst {
+public class EdgeTest extends BrowserTestParent {
 
     @BeforeClass
     public static void setupClass() {
         assumeTrue(IS_OS_WINDOWS);
-        EdgeDriverManager.getInstance().version("4.15063").setup();
+        WebDriverManager.edgedriver().version("4.15063").setup();
     }
 
     @Before

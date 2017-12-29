@@ -22,7 +22,7 @@ import org.junit.Before;
 import org.openqa.selenium.edge.EdgeDriver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import io.github.bonigarcia.wdm.base.BaseVersionTst;
+import io.github.bonigarcia.wdm.base.VersionTestParent;
 
 /**
  * Test asserting MicrosoftWebDriver Edge versions.
@@ -30,7 +30,7 @@ import io.github.bonigarcia.wdm.base.BaseVersionTst;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.3.0
  */
-public class EdgeVersionTest extends BaseVersionTst {
+public class EdgeVersionTest extends VersionTestParent {
 
     @Before
     public void setup() {

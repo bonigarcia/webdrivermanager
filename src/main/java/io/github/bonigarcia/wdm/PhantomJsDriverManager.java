@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static io.github.bonigarcia.wdm.DriverManagerType.OPERA;
 import static io.github.bonigarcia.wdm.WdmConfig.getString;
 import static java.io.File.separator;
 import static java.util.Arrays.asList;
@@ -31,9 +32,9 @@ import java.util.List;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.4.0
  */
-public class PhantomJsDriverManager extends BrowserManager {
+public class PhantomJsDriverManager extends WebDriverManager {
 
-    public static synchronized BrowserManager getInstance() {
+    public static synchronized WebDriverManager getInstance() {
         if (instance == null
                 || !instance.getClass().equals(PhantomJsDriverManager.class)) {
             instance = new PhantomJsDriverManager();
@@ -42,6 +43,7 @@ public class PhantomJsDriverManager extends BrowserManager {
     }
 
     public PhantomJsDriverManager() {
+        driverManagerType = OPERA;
         exportParameter = getString("wdm.phantomjsDriverExport");
         driverVersionKey = "wdm.phantomjsDriverVersion";
         driverUrlKey = "wdm.phantomjsDriverUrl";
@@ -110,7 +112,7 @@ public class PhantomJsDriverManager extends BrowserManager {
     }
 
     @Override
-    public BrowserManager useTaobaoMirror() {
+    public WebDriverManager useTaobaoMirror() {
         return useTaobaoMirror("wdm.phantomjsDriverTaobaoUrl");
     }
 

@@ -20,8 +20,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.openqa.selenium.chrome.ChromeDriver;
 
-import io.github.bonigarcia.wdm.ChromeDriverManager;
-import io.github.bonigarcia.wdm.base.BaseBrowserTst;
+import io.github.bonigarcia.wdm.WebDriverManager;
+import io.github.bonigarcia.wdm.base.BrowserTestParent;
 
 /**
  * Test with Google Chrome browser.
@@ -29,11 +29,11 @@ import io.github.bonigarcia.wdm.base.BaseBrowserTst;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.0.0
  */
-public class ChromeTest extends BaseBrowserTst {
+public class ChromeTest extends BrowserTestParent {
 
     @BeforeClass
     public static void setupClass() {
-        ChromeDriverManager.getInstance().setup();
+        WebDriverManager.chromedriver().setup();
     }
 
     @Before

@@ -44,7 +44,6 @@ import org.openqa.selenium.opera.OperaDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 
 import io.github.bonigarcia.wdm.Architecture;
-import io.github.bonigarcia.wdm.BrowserManager;
 import io.github.bonigarcia.wdm.Downloader;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
@@ -84,13 +83,13 @@ public class CacheTest {
     @Test
     @SuppressWarnings("unchecked")
     public void testCache() throws Exception {
-        BrowserManager browserManager = WebDriverManager
+        WebDriverManager browserManager = WebDriverManager
                 .getInstance(driverClass);
         browserManager.forceCache().forceDownload().architecture(architecture)
                 .version(driverVersion).setup();
         Downloader downloader = new Downloader(browserManager);
 
-        Method method = BrowserManager.class.getDeclaredMethod(
+        Method method = WebDriverManager.class.getDeclaredMethod(
                 "existsDriverInCache", String.class, String.class,
                 Architecture.class);
         method.setAccessible(true);

@@ -19,7 +19,7 @@ package io.github.bonigarcia.wdm.test;
 import org.junit.Before;
 
 import io.github.bonigarcia.wdm.ChromeDriverManager;
-import io.github.bonigarcia.wdm.base.BaseVersionTst;
+import io.github.bonigarcia.wdm.base.VersionTestParent;
 
 /**
  * Test asserting chromedriver versions.
@@ -27,7 +27,7 @@ import io.github.bonigarcia.wdm.base.BaseVersionTst;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.2.1
  */
-public class ChromeVersionTest extends BaseVersionTst {
+public class ChromeVersionTest extends VersionTestParent {
 
     @Before
     public void setup() {

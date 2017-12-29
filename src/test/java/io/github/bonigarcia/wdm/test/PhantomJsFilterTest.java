@@ -34,7 +34,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 
-import io.github.bonigarcia.wdm.BrowserManager;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.PhantomJsDriverManager;
 import io.github.bonigarcia.wdm.UrlFilter;
 import io.github.bonigarcia.wdm.HttpClient;
@@ -49,7 +49,7 @@ public class PhantomJsFilterTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
-    protected BrowserManager phatomJsManager;
+    protected WebDriverManager phatomJsManager;
     protected List<URL> driversUrls;
     protected final String phantomJsBinaryName = "phantomjs";
 
@@ -57,11 +57,11 @@ public class PhantomJsFilterTest {
     @SuppressWarnings("unchecked")
     public void setup() throws Exception {
         phatomJsManager = PhantomJsDriverManager.getInstance();
-        Field field = BrowserManager.class.getDeclaredField("httpClient");
+        Field field = WebDriverManager.class.getDeclaredField("httpClient");
         field.setAccessible(true);
         field.set(phatomJsManager, new HttpClient.Builder().build());
 
-        Method method = BrowserManager.class.getDeclaredMethod("getDrivers");
+        Method method = WebDriverManager.class.getDeclaredMethod("getDrivers");
         method.setAccessible(true);
         driversUrls = (List<URL>) method.invoke(phatomJsManager);
     }
@@ -71,7 +71,7 @@ public class PhantomJsFilterTest {
     public void testFilterPhantomJs() throws NoSuchMethodException,
             SecurityException, IllegalAccessException, IllegalArgumentException,
             InvocationTargetException {
-        Method method = BrowserManager.class.getDeclaredMethod("getLatest",
+        Method method = WebDriverManager.class.getDeclaredMethod("getLatest",
                 List.class, List.class);
         method.setAccessible(true);
         List<URL> latestUrls = (List<URL>) method.invoke(phatomJsManager,
@@ -92,7 +92,7 @@ public class PhantomJsFilterTest {
             SecurityException, IllegalAccessException, IllegalArgumentException,
             InvocationTargetException {
         String specificVersion = "1.9.6";
-        Method method = BrowserManager.class.getDeclaredMethod("getVersion",
+        Method method = WebDriverManager.class.getDeclaredMethod("getVersion",
                 List.class, List.class, String.class);
         method.setAccessible(true);
         List<URL> specificVersionUrls = (List<URL>) method.invoke(
