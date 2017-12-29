@@ -40,7 +40,7 @@ public class IExplorerTest {
 
     @Test
     public void testIExplorer() {
-        WebDriverManager.iedriver().forceOperativeSystem(WIN).setup();
+        WebDriverManager.iedriver().operativeSystem(WIN).setup();
         File binary = new File(WebDriverManager.iedriver().getBinaryPath());
         log.debug("Binary path for IExploer {}", binary);
         assertTrue(binary.exists());

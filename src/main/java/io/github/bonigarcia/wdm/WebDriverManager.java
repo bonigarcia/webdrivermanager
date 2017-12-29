@@ -171,13 +171,6 @@ public abstract class WebDriverManager {
         return instanceMap.get(PHANTOMJS);
     }
 
-    protected static synchronized WebDriverManager voiddriver() {
-        if (!instanceMap.containsKey(VOID)) {
-            instanceMap.put(VOID, new VoidDriverManager());
-        }
-        return instanceMap.get(VOID);
-    }
-
     public static synchronized WebDriverManager getInstance(
             Class<?> webDriverClass) {
         switch (webDriverClass.getName()) {
@@ -205,6 +198,110 @@ public abstract class WebDriverManager {
             break;
         }
         return instance;
+    }
+
+    public synchronized void setup() {
+        if (driverManagerType != VOID) {
+            String driverVersion = getDriverVersion();
+            manage(getDefaultArchitecture(),
+                    isNullOrEmpty(driverVersion) ? NOT_SPECIFIED.name()
+                            : driverVersion);
+            reset();
+        }
+    }
+
+    public WebDriverManager version(String version) {
+        this.version = version;
+        return instanceMap.get(driverManagerType);
+    }
+
+    public WebDriverManager architecture(Architecture architecture) {
+        this.architecture = architecture;
+        return instanceMap.get(driverManagerType);
+    }
+
+    public WebDriverManager arch32() {
+        architecture(X32);
+        return instanceMap.get(driverManagerType);
+    }
+
+    public WebDriverManager arch64() {
+        architecture(X64);
+        return instanceMap.get(driverManagerType);
+    }
+
+    public WebDriverManager operativeSystem(OperativeSystem os) {
+        this.myOsName = os.name();
+        return instanceMap.get(driverManagerType);
+    }
+
+    public WebDriverManager forceCache() {
+        this.isForcingCache = true;
+        return instanceMap.get(driverManagerType);
+    }
+
+    public WebDriverManager forceDownload() {
+        this.isForcingDownload = true;
+        return instanceMap.get(driverManagerType);
+    }
+
+    public WebDriverManager driverRepositoryUrl(URL url) {
+        this.driverUrl = url;
+        return instanceMap.get(driverManagerType);
+    }
+
+    public WebDriverManager useTaobaoMirror() {
+        String errorMessage = "Binaries for " + getDriverName()
+                + " not available in taobao.org mirror (http://npm.taobao.org/mirrors/)";
+        log.error(errorMessage);
+        throw new WebDriverManagerException(errorMessage);
+    }
+
+    public WebDriverManager useTaobaoMirror(String taobaoUrl) {
+        driverUrl = getUrl(taobaoUrl);
+        return instance;
+    }
+
+    public WebDriverManager proxy(String proxy) {
+        this.proxyValue = proxy;
+        return instanceMap.get(driverManagerType);
+    }
+
+    public WebDriverManager proxyUser(String proxyUser) {
+        this.proxyUser = proxyUser;
+        return instanceMap.get(driverManagerType);
+    }
+
+    public WebDriverManager proxyPass(String proxyPass) {
+        this.proxyPass = proxyPass;
+        return instanceMap.get(driverManagerType);
+    }
+
+    public WebDriverManager useBetaVersions() {
+        this.useBetaVersions = true;
+        return instanceMap.get(driverManagerType);
+    }
+
+    public WebDriverManager ignoreVersions(String... versions) {
+        this.ignoredVersions = versions;
+        return instanceMap.get(driverManagerType);
+    }
+
+    public String getBinaryPath() {
+        return instanceMap.get(driverManagerType).binaryPath;
+    }
+
+    public String getDownloadedVersion() {
+        return instanceMap.get(driverManagerType).downloadedVersion;
+    }
+
+    // ------------
+
+    protected static synchronized WebDriverManager voiddriver() {
+        if (!instanceMap.containsKey(VOID)) {
+            instanceMap.put(VOID, new VoidDriverManager());
+        }
+        return instanceMap.get(VOID);
     }
 
     protected String getDriverVersion() {
@@ -791,102 +888,6 @@ public abstract class WebDriverManager {
         proxyUser = null;
         proxyPass = null;
         ignoredVersions = null;
-    }
-
-    public synchronized void setup() {
-        if (driverManagerType != VOID) {
-            String driverVersion = getDriverVersion();
-            manage(getDefaultArchitecture(),
-                    isNullOrEmpty(driverVersion) ? NOT_SPECIFIED.name()
-                            : driverVersion);
-            reset();
-        }
-    }
-
-    public String getDownloadedVersion() {
-        return downloadedVersion;
-    }
-
-    public WebDriverManager version(String version) {
-        this.version = version;
-        return instanceMap.get(driverManagerType);
-    }
-
-    public WebDriverManager architecture(Architecture architecture) {
-        this.architecture = architecture;
-        return instanceMap.get(driverManagerType);
-    }
-
-    public WebDriverManager arch32() {
-        architecture(X32);
-        return instanceMap.get(driverManagerType);
-    }
-
-    public WebDriverManager arch64() {
-        architecture(X64);
-        return instanceMap.get(driverManagerType);
-    }
-
-    public WebDriverManager forceCache() {
-        this.isForcingCache = true;
-        return instanceMap.get(driverManagerType);
-    }
-
-    public WebDriverManager forceDownload() {
-        this.isForcingDownload = true;
-        return instanceMap.get(driverManagerType);
-    }
-
-    public WebDriverManager driverRepositoryUrl(URL url) {
-        this.driverUrl = url;
-        return instanceMap.get(driverManagerType);
-    }
-
-    public WebDriverManager useTaobaoMirror() {
-        String errorMessage = "Binaries for " + getDriverName()
-                + " not available in taobao.org mirror (http://npm.taobao.org/mirrors/)";
-        log.error(errorMessage);
-        throw new WebDriverManagerException(errorMessage);
-    }
-
-    public WebDriverManager useTaobaoMirror(String taobaoUrl) {
-        driverUrl = getUrl(taobaoUrl);
-        return instance;
-    }
-
-    public WebDriverManager proxy(String proxy) {
-        this.proxyValue = proxy;
-        return instanceMap.get(driverManagerType);
-    }
-
-    public WebDriverManager proxyUser(String proxyUser) {
-        this.proxyUser = proxyUser;
-        return instanceMap.get(driverManagerType);
-    }
-
-    public WebDriverManager proxyPass(String proxyPass) {
-        this.proxyPass = proxyPass;
-        return instanceMap.get(driverManagerType);
-    }
-
-    public String getBinaryPath() {
-        return binaryPath;
-    }
-
-    public WebDriverManager useBetaVersions() {
-        this.useBetaVersions = true;
-        return instanceMap.get(driverManagerType);
-    }
-
-    public WebDriverManager ignoreVersions(String... versions) {
-        this.ignoredVersions = versions;
-        return instanceMap.get(driverManagerType);
-    }
-
-    public WebDriverManager forceOperativeSystem(
-            OperativeSystem operativeSystem) {
-        this.myOsName = operativeSystem.name();
-        return instanceMap.get(driverManagerType);
     }
 
 }

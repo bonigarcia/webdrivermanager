@@ -68,7 +68,7 @@ public class ForceOsTest {
 
     @Test
     public void testForceOs() {
-        ChromeDriverManager.getInstance().forceOperativeSystem(operativeSystem)
+        ChromeDriverManager.getInstance().operativeSystem(operativeSystem)
                 .setup();
         File binary = new File(
                 ChromeDriverManager.getInstance().getBinaryPath());
