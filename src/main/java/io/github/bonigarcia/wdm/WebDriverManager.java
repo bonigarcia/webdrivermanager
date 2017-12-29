@@ -24,7 +24,6 @@ import static io.github.bonigarcia.wdm.DriverManagerType.FIREFOX;
 import static io.github.bonigarcia.wdm.DriverManagerType.IEXPLORER;
 import static io.github.bonigarcia.wdm.DriverManagerType.OPERA;
 import static io.github.bonigarcia.wdm.DriverManagerType.PHANTOMJS;
-import static io.github.bonigarcia.wdm.DriverManagerType.VOID;
 import static io.github.bonigarcia.wdm.DriverVersion.LATEST;
 import static io.github.bonigarcia.wdm.DriverVersion.NOT_SPECIFIED;
 import static io.github.bonigarcia.wdm.OperativeSystem.LINUX;
@@ -40,6 +39,7 @@ import static java.lang.System.getProperty;
 import static java.lang.System.getenv;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.sort;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.reverse;
 import static java.util.Collections.reverseOrder;
 import static java.util.Optional.empty;
@@ -171,6 +171,9 @@ public abstract class WebDriverManager {
 
     public static synchronized WebDriverManager getInstance(
             DriverManagerType driverManagerType) {
+        if (driverManagerType == null) {
+            return voiddriver();
+        }
         switch (driverManagerType) {
         case CHROME:
             return chromedriver();
@@ -210,7 +213,7 @@ public abstract class WebDriverManager {
     }
 
     public synchronized void setup() {
-        if (driverManagerType != VOID) {
+        if (driverManagerType != null) {
             String driverVersion = getDriverVersion();
             manage(getDefaultArchitecture(),
                     isNullOrEmpty(driverVersion) ? NOT_SPECIFIED.name()
@@ -307,10 +310,12 @@ public abstract class WebDriverManager {
     // ------------
 
     protected static synchronized WebDriverManager voiddriver() {
-        if (!instanceMap.containsKey(VOID)) {
-            instanceMap.put(VOID, new VoidDriverManager());
-        }
-        return instanceMap.get(VOID);
+        return new WebDriverManager() {
+            @Override
+            protected List<URL> getDrivers() throws IOException {
+                return emptyList();
+            }
+        };
     }
 
     protected String getDriverVersion() {

@@ -16,7 +16,6 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import static io.github.bonigarcia.wdm.DriverManagerType.VOID;
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.apache.commons.io.FileUtils.cleanDirectory;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -31,6 +30,9 @@ import java.util.Arrays;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.ChromeDriverManager;
@@ -41,14 +43,18 @@ import io.github.bonigarcia.wdm.Downloader;
  * 
  * @since 1.7.2
  */
+@RunWith(MockitoJUnitRunner.class)
 public class IgnoredVersionTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
+    @InjectMocks
+    public Downloader downloader;
+
     @Before
     @After
     public void cleanCache() throws IOException {
-        cleanDirectory(new File(new Downloader(VOID).getTargetPath()));
+        cleanDirectory(new File(downloader.getTargetPath()));
     }
 
     @Test

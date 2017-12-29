@@ -16,7 +16,6 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import static io.github.bonigarcia.wdm.DriverManagerType.VOID;
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.apache.commons.io.FileUtils.cleanDirectory;
 import static org.junit.Assert.assertTrue;
@@ -32,6 +31,9 @@ import java.net.URL;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.mockserver.integration.ClientAndProxy;
 import org.slf4j.Logger;
 
@@ -43,16 +45,20 @@ import io.github.bonigarcia.wdm.Downloader;
  * 
  * @since 1.7.2
  */
+@RunWith(MockitoJUnitRunner.class)
 public class MockProxyTest {
 
     final Logger log = getLogger(lookup().lookupClass());
+
+    @InjectMocks
+    public Downloader downloader;
 
     private ClientAndProxy proxy;
     private int proxyPort;
 
     @Before
     public void setup() throws IOException {
-        File wdmCache = new File(new Downloader(VOID).getTargetPath());
+        File wdmCache = new File(downloader.getTargetPath());
         log.debug("Cleaning local cache {}", wdmCache);
         cleanDirectory(wdmCache);
 

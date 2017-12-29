@@ -16,7 +16,6 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import static io.github.bonigarcia.wdm.DriverManagerType.VOID;
 import static io.github.bonigarcia.wdm.OperativeSystem.LINUX;
 import static io.github.bonigarcia.wdm.OperativeSystem.MAC;
 import static io.github.bonigarcia.wdm.OperativeSystem.WIN;
@@ -24,6 +23,7 @@ import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.asList;
 import static org.apache.commons.io.FileUtils.cleanDirectory;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.MockitoAnnotations.initMocks;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
@@ -37,6 +37,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
+import org.mockito.InjectMocks;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.ChromeDriverManager;
@@ -56,15 +57,24 @@ public class ForceOsTest {
     @Parameter
     public OperativeSystem operativeSystem;
 
+    @InjectMocks
+    public Downloader downloader;
+
     @Parameters(name = "{index}: {0}")
     public static Collection<Object[]> data() {
         return asList(new Object[][] { { WIN }, { LINUX }, { MAC } });
     }
 
     @Before
+    public void setup() throws IOException {
+        initMocks(this);
+        cleanDirectory(new File(downloader.getTargetPath()));
+    }
+
+    @Before
     @After
-    public void cleanCache() throws IOException {
-        cleanDirectory(new File(new Downloader(VOID).getTargetPath()));
+    public void teardown() throws IOException {
+        cleanDirectory(new File(downloader.getTargetPath()));
     }
 
     @Test
