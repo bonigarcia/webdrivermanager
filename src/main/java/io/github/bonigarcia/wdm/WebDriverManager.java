@@ -98,13 +98,11 @@ public abstract class WebDriverManager {
 
     public static final String SLASH = "/";
 
-    static Map<DriverManagerType, WebDriverManager> instanceMap = new HashMap<>();
-
-    DriverManagerType driverManagerType;
-
     protected abstract List<URL> getDrivers() throws IOException;
 
-    protected static WebDriverManager instance;
+    protected static Map<DriverManagerType, WebDriverManager> instanceMap = new HashMap<>();
+
+    protected DriverManagerType driverManagerType;
     protected String myOsName = defaultOsName();
     protected boolean useBetaVersions = false;
     protected boolean mirrorLog = false;
@@ -172,32 +170,43 @@ public abstract class WebDriverManager {
     }
 
     public static synchronized WebDriverManager getInstance(
+            DriverManagerType driverManagerType) {
+        switch (driverManagerType) {
+        case CHROME:
+            return chromedriver();
+        case FIREFOX:
+            return firefoxdriver();
+        case OPERA:
+            return operadriver();
+        case IEXPLORER:
+            return iedriver();
+        case EDGE:
+            return edgedriver();
+        case PHANTOMJS:
+            return phantomjs();
+        default:
+            return voiddriver();
+        }
+    }
+
+    public static synchronized WebDriverManager getInstance(
             Class<?> webDriverClass) {
         switch (webDriverClass.getName()) {
         case "org.openqa.selenium.chrome.ChromeDriver":
-            instance = chromedriver();
-            break;
+            return chromedriver();
         case "org.openqa.selenium.firefox.FirefoxDriver":
-            instance = firefoxdriver();
-            break;
+            return firefoxdriver();
         case "org.openqa.selenium.opera.OperaDriver":
-            instance = operadriver();
-            break;
+            return operadriver();
         case "org.openqa.selenium.ie.InternetExplorerDriver":
-            instance = iedriver();
-            break;
+            return iedriver();
         case "org.openqa.selenium.edge.EdgeDriver":
-            instance = edgedriver();
-            break;
-
+            return edgedriver();
         case "org.openqa.selenium.phantomjs.PhantomJSDriver":
-            instance = phantomjs();
-            break;
+            return phantomjs();
         default:
-            instance = voiddriver();
-            break;
+            return voiddriver();
         }
-        return instance;
     }
 
     public synchronized void setup() {
@@ -259,7 +268,7 @@ public abstract class WebDriverManager {
 
     public WebDriverManager useTaobaoMirror(String taobaoUrl) {
         driverUrl = getUrl(taobaoUrl);
-        return instance;
+        return instanceMap.get(driverManagerType);
     }
 
     public WebDriverManager proxy(String proxy) {
@@ -338,7 +347,7 @@ public abstract class WebDriverManager {
     protected void manage(Architecture arch, String version) {
         httpClient = new HttpClient(proxyValue, proxyUser, proxyPass);
         try (HttpClient wdmHttpClient = httpClient) {
-            downloader = new Downloader(this, wdmHttpClient);
+            downloader = new Downloader(driverManagerType);
             urlFilter = new UrlFilter();
             if (isForcingDownload) {
                 downloader.forceDownload();
@@ -427,8 +436,12 @@ public abstract class WebDriverManager {
         URL url = candidateUrls.iterator().next();
         String export = candidateUrls.contains(url) ? getExportParameter()
                 : null;
-        downloader.download(url, versionToDownload, export, getDriverName());
-        downloadedVersion = versionToDownload;
+        Optional<String> exportValue = downloader.download(url,
+                versionToDownload, export, getDriverName());
+        if (exportValue.isPresent()) {
+            exportDriver(export, exportValue.get());
+            downloadedVersion = versionToDownload;
+        }
     }
 
     protected List<URL> filterCandidateUrls(Architecture arch, String version,
@@ -871,6 +884,10 @@ public abstract class WebDriverManager {
 
     protected List<String> getDriverName() {
         return driverName;
+    }
+
+    protected HttpClient getHttpClient() {
+        return httpClient;
     }
 
     protected void reset() {

@@ -64,28 +64,18 @@ public class Downloader {
 
     final Logger log = getLogger(lookup().lookupClass());
 
-    private static final String HOME = "~";
+    static final String HOME = "~";
 
-    private WebDriverManager browserManager;
-    private HttpClient httpClient;
-    private boolean isForcingDownload;
+    boolean isForcingDownload;
+    DriverManagerType driverManagerType;
 
-    public Downloader() {
-        this.httpClient = new HttpClient.Builder().build();
+    public Downloader(DriverManagerType driverManagerType) {
+        this.driverManagerType = driverManagerType;
     }
 
-    public Downloader(WebDriverManager browserManager) {
-        this();
-        this.browserManager = browserManager;
-    }
-
-    public Downloader(WebDriverManager browserManager, HttpClient httpClient) {
-        this.browserManager = browserManager;
-        this.httpClient = httpClient;
-    }
-
-    public synchronized void download(URL url, String version, String export,
-            List<String> driverName) throws IOException, InterruptedException {
+    public synchronized Optional<String> download(URL url, String version,
+            String export, List<String> driverName)
+            throws IOException, InterruptedException {
         File targetFile = new File(getTarget(version, url));
 
         boolean download = !targetFile.getParentFile().exists()
@@ -96,8 +86,9 @@ public class Downloader {
         Optional<File> binary = (download) ? download(url, targetFile, export)
                 : checkBinary(driverName, targetFile);
         if (export != null && binary.isPresent()) {
-            browserManager.exportDriver(export, binary.get().toString());
+            return Optional.of(binary.get().toString());
         }
+        return Optional.empty();
     }
 
     private Optional<File> download(URL url, File targetFile, String export)
@@ -107,6 +98,8 @@ public class Downloader {
         File temporaryFile = new File(targetFile.getParentFile(),
                 randomUUID().toString());
 
+        HttpClient httpClient = WebDriverManager.getInstance(driverManagerType)
+                .getHttpClient();
         copyInputStreamToFile(httpClient.execute(httpClient.createHttpGet(url))
                 .getEntity().getContent(), temporaryFile);
         renameFile(temporaryFile, targetFile);
@@ -151,8 +144,8 @@ public class Downloader {
         }
         deleteFile(compressedFile);
 
-        File result = browserManager.postDownload(compressedFile)
-                .getAbsoluteFile();
+        File result = WebDriverManager.getInstance(driverManagerType)
+                .postDownload(compressedFile).getAbsoluteFile();
         setFileExecutable(result);
         log.trace("Resulting binary file {}", result);
 
@@ -268,8 +261,10 @@ public class Downloader {
                 .replace(".msi", "").replace(".exe", "")
                 .replace("_", separator);
 
-        String target = browserManager.preDownload(
-                getTargetPath() + folder + separator + version + zip, version);
+        String target = WebDriverManager.getInstance(driverManagerType)
+                .preDownload(
+                        getTargetPath() + folder + separator + version + zip,
+                        version);
         log.trace("Target file for URL {} version {} = {}", url, version,
                 target);
 

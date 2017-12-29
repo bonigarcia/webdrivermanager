@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm.test;
 
+import static io.github.bonigarcia.wdm.DriverManagerType.VOID;
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.apache.commons.io.FileUtils.cleanDirectory;
 import static org.junit.Assert.assertTrue;
@@ -51,7 +52,7 @@ public class MockProxyTest {
 
     @Before
     public void setup() throws IOException {
-        File wdmCache = new File(new Downloader().getTargetPath());
+        File wdmCache = new File(new Downloader(VOID).getTargetPath());
         log.debug("Cleaning local cache {}", wdmCache);
         cleanDirectory(wdmCache);
 

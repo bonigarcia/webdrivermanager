@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm.test;
 
+import static io.github.bonigarcia.wdm.DriverManagerType.VOID;
 import static io.github.bonigarcia.wdm.OperativeSystem.LINUX;
 import static io.github.bonigarcia.wdm.OperativeSystem.MAC;
 import static io.github.bonigarcia.wdm.OperativeSystem.WIN;
@@ -63,7 +64,7 @@ public class ForceOsTest {
     @Before
     @After
     public void cleanCache() throws IOException {
-        cleanDirectory(new File(new Downloader().getTargetPath()));
+        cleanDirectory(new File(new Downloader(VOID).getTargetPath()));
     }
 
     @Test
