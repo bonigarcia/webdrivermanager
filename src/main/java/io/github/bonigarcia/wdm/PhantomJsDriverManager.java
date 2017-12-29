@@ -43,6 +43,7 @@ public class PhantomJsDriverManager extends WebDriverManager {
         exportParameter = getString("wdm.phantomjsDriverExport");
         driverVersionKey = "wdm.phantomjsDriverVersion";
         driverUrlKey = "wdm.phantomjsDriverUrl";
+        driverMirrorUrlKey = "wdm.phantomjsDriverMirrorUrl";
         driverName = asList("phantomjs");
     }
 
@@ -105,11 +106,6 @@ public class PhantomJsDriverManager extends WebDriverManager {
         downloader.renameFile(phantomjs, target);
         downloader.deleteFolder(extractFolder);
         return target;
-    }
-
-    @Override
-    public WebDriverManager useTaobaoMirror() {
-        return useTaobaoMirror("wdm.phantomjsDriverTaobaoUrl");
     }
 
     @Override

@@ -42,6 +42,7 @@ public class OperaDriverManager extends WebDriverManager {
         exportParameter = getString("wdm.operaDriverExport");
         driverVersionKey = "wdm.operaDriverVersion";
         driverUrlKey = "wdm.operaDriverUrl";
+        driverMirrorUrlKey = "wdm.operaDriverMirrorUrl";
         driverName = asList("operadriver");
     }
 
@@ -84,11 +85,6 @@ public class OperaDriverManager extends WebDriverManager {
         } else {
             return super.postDownload(archive);
         }
-    }
-
-    @Override
-    public WebDriverManager useTaobaoMirror() {
-        return useTaobaoMirror("wdm.operaDriverTaobaoUrl");
     }
 
 }

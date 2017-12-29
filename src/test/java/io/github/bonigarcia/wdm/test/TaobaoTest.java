@@ -37,9 +37,9 @@ public class TaobaoTest {
 
     @Test
     public void testTaobao() throws Exception {
-        setProperty("wdm.chromeDriverTaobaoUrl",
+        setProperty("wdm.chromeDriverMirrorUrl",
                 "http://npm.taobao.org/mirrors/chromedriver/2.33/");
-        ChromeDriverManager.getInstance().useTaobaoMirror().setup();
+        ChromeDriverManager.getInstance().useMirror().setup();
 
         File binary = new File(
                 ChromeDriverManager.getInstance().getBinaryPath());
@@ -48,7 +48,7 @@ public class TaobaoTest {
 
     @Test(expected = WebDriverManagerException.class)
     public void testTaobaoException() {
-        EdgeDriverManager.getInstance().useTaobaoMirror().setup();
+        EdgeDriverManager.getInstance().useMirror().setup();
         File binary = new File(EdgeDriverManager.getInstance().getBinaryPath());
         assertTrue(binary.exists());
     }

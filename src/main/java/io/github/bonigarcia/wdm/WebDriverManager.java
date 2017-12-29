@@ -126,6 +126,7 @@ public abstract class WebDriverManager {
     protected String exportParameter;
     protected String driverVersionKey;
     protected String driverUrlKey;
+    protected String driverMirrorUrlKey;
     protected String[] ignoredVersions;
 
     public static synchronized WebDriverManager chromedriver() {
@@ -263,15 +264,12 @@ public abstract class WebDriverManager {
         return instanceMap.get(driverManagerType);
     }
 
-    public WebDriverManager useTaobaoMirror() {
-        String errorMessage = "Binaries for " + getDriverName()
-                + " not available in taobao.org mirror (http://npm.taobao.org/mirrors/)";
-        log.error(errorMessage);
-        throw new WebDriverManagerException(errorMessage);
-    }
-
-    public WebDriverManager useTaobaoMirror(String taobaoUrl) {
-        driverUrl = getUrl(taobaoUrl);
+    public WebDriverManager useMirror() {
+        if (isNullOrEmpty(driverMirrorUrlKey)) {
+            throw new WebDriverManagerException(
+                    "Mirror URL not available for " + getDriverName());
+        }
+        this.driverUrl = getUrl(driverMirrorUrlKey);
         return instanceMap.get(driverManagerType);
     }
 
@@ -415,8 +413,8 @@ public abstract class WebDriverManager {
         if (!wdmProxyPass.equals("")) {
             proxyPass = wdmProxyPass;
         }
-        if (getBoolean("wdm.useTaobaoMirror")) {
-            useTaobaoMirror();
+        if (getBoolean("wdm.useMirror")) {
+            useMirror();
         }
     }
 

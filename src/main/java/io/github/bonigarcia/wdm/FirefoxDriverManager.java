@@ -42,6 +42,7 @@ public class FirefoxDriverManager extends WebDriverManager {
         exportParameter = getString("wdm.geckoDriverExport");
         driverVersionKey = "wdm.geckoDriverVersion";
         driverUrlKey = "wdm.geckoDriverUrl";
+        driverMirrorUrlKey = "wdm.geckoDriverMirrorUrl";
         driverName = asList("wires", "geckodriver");
     }
 
@@ -78,11 +79,6 @@ public class FirefoxDriverManager extends WebDriverManager {
                 + target.substring(iDash + 1, iPoint).toLowerCase()
                 + target.substring(iSeparator);
         return target;
-    }
-
-    @Override
-    public WebDriverManager useTaobaoMirror() {
-        return useTaobaoMirror("wdm.geckoDriverTaobaoUrl");
     }
 
     @Override

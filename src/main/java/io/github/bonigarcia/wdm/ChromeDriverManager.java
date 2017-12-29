@@ -41,6 +41,7 @@ public class ChromeDriverManager extends WebDriverManager {
         exportParameter = getString("wdm.chromeDriverExport");
         driverVersionKey = "wdm.chromeDriverVersion";
         driverUrlKey = "wdm.chromeDriverUrl";
+        driverMirrorUrlKey = "wdm.chromeDriverMirrorUrl";
         driverName = asList("chromedriver");
     }
 
@@ -65,11 +66,6 @@ public class ChromeDriverManager extends WebDriverManager {
         } else {
             return super.getCurrentVersion(url, driverName);
         }
-    }
-
-    @Override
-    public WebDriverManager useTaobaoMirror() {
-        return useTaobaoMirror("wdm.chromeDriverTaobaoUrl");
     }
 
 }
