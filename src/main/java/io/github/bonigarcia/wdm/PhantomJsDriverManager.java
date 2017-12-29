@@ -16,7 +16,7 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static io.github.bonigarcia.wdm.DriverManagerType.OPERA;
+import static io.github.bonigarcia.wdm.DriverManagerType.PHANTOMJS;
 import static io.github.bonigarcia.wdm.WdmConfig.getString;
 import static java.io.File.separator;
 import static java.util.Arrays.asList;
@@ -39,7 +39,7 @@ public class PhantomJsDriverManager extends WebDriverManager {
     }
 
     public PhantomJsDriverManager() {
-        driverManagerType = OPERA;
+        driverManagerType = PHANTOMJS;
         exportParameter = getString("wdm.phantomjsDriverExport");
         driverVersionKey = "wdm.phantomjsDriverVersion";
         driverUrlKey = "wdm.phantomjsDriverUrl";
