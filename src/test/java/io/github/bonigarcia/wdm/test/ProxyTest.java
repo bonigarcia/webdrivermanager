@@ -91,7 +91,7 @@ public class ProxyTest {
     public void testProxyCredentialsScope() throws Exception {
         HttpClient wdmClient = new HttpClient.Builder().proxy("myproxy:8081")
                 .proxyUser("domain\\me").proxyPass("pass").build();
-        Field field = HttpClient.class.getDeclaredField("httpClient");
+        Field field = HttpClient.class.getDeclaredField("closeableHttpClient");
         field.setAccessible(true);
 
         CloseableHttpClient client = (CloseableHttpClient) field.get(wdmClient);
@@ -121,7 +121,7 @@ public class ProxyTest {
     public void testProxyCredentials() throws Exception {
         HttpClient wdmClient = new HttpClient.Builder().proxy("myproxy:8081")
                 .proxyUser("domain\\me").proxyPass("pass").build();
-        Field field = HttpClient.class.getDeclaredField("httpClient");
+        Field field = HttpClient.class.getDeclaredField("closeableHttpClient");
         field.setAccessible(true);
 
         CloseableHttpClient client = (CloseableHttpClient) field.get(wdmClient);
