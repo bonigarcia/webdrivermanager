@@ -34,11 +34,7 @@ import java.util.List;
 public class InternetExplorerDriverManager extends WebDriverManager {
 
     public static synchronized WebDriverManager getInstance() {
-        if (instance == null || !instance.getClass()
-                .equals(InternetExplorerDriverManager.class)) {
-            instance = new InternetExplorerDriverManager();
-        }
-        return instance;
+        return iedriver();
     }
 
     public InternetExplorerDriverManager() {

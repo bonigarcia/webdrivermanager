@@ -40,11 +40,7 @@ import org.jsoup.select.Elements;
 public class EdgeDriverManager extends WebDriverManager {
 
     public static synchronized WebDriverManager getInstance() {
-        if (instance == null
-                || !instance.getClass().equals(EdgeDriverManager.class)) {
-            instance = new EdgeDriverManager();
-        }
-        return instance;
+        return edgedriver();
     }
 
     public EdgeDriverManager() {

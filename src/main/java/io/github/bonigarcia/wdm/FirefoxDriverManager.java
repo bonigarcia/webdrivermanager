@@ -34,11 +34,7 @@ import java.util.List;
 public class FirefoxDriverManager extends WebDriverManager {
 
     public static synchronized WebDriverManager getInstance() {
-        if (instance == null
-                || !instance.getClass().equals(FirefoxDriverManager.class)) {
-            instance = new FirefoxDriverManager();
-        }
-        return instance;
+        return firefoxdriver();
     }
 
     public FirefoxDriverManager() {

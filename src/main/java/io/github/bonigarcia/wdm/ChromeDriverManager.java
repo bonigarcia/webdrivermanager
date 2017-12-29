@@ -33,12 +33,7 @@ import java.util.List;
 public class ChromeDriverManager extends WebDriverManager {
 
     public static synchronized WebDriverManager getInstance() {
-        if (instance == null
-                || !instance.getClass().equals(ChromeDriverManager.class)) {
-
-            instance = new ChromeDriverManager();
-        }
-        return instance;
+        return chromedriver();
     }
 
     public ChromeDriverManager() {

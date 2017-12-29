@@ -34,11 +34,7 @@ import java.util.List;
 public class OperaDriverManager extends WebDriverManager {
 
     public static synchronized WebDriverManager getInstance() {
-        if (instance == null
-                || !instance.getClass().equals(OperaDriverManager.class)) {
-            instance = new OperaDriverManager();
-        }
-        return instance;
+        return operadriver();
     }
 
     public OperaDriverManager() {

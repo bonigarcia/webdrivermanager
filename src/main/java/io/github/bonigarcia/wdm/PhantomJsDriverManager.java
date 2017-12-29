@@ -35,11 +35,7 @@ import java.util.List;
 public class PhantomJsDriverManager extends WebDriverManager {
 
     public static synchronized WebDriverManager getInstance() {
-        if (instance == null
-                || !instance.getClass().equals(PhantomJsDriverManager.class)) {
-            instance = new PhantomJsDriverManager();
-        }
-        return instance;
+        return phantomjs();
     }
 
     public PhantomJsDriverManager() {
