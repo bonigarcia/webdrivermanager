@@ -67,11 +67,11 @@ public class Downloader {
     private static final String HOME = "~";
 
     private BrowserManager browserManager;
-    private WdmHttpClient httpClient;
+    private HttpClient httpClient;
     private boolean isForcingDownload;
 
     public Downloader() {
-        this.httpClient = new WdmHttpClient.Builder().build();
+        this.httpClient = new HttpClient.Builder().build();
     }
 
     public Downloader(BrowserManager browserManager) {
@@ -79,7 +79,7 @@ public class Downloader {
         this.browserManager = browserManager;
     }
 
-    public Downloader(BrowserManager browserManager, WdmHttpClient httpClient) {
+    public Downloader(BrowserManager browserManager, HttpClient httpClient) {
         this.browserManager = browserManager;
         this.httpClient = httpClient;
     }
@@ -106,12 +106,9 @@ public class Downloader {
 
         File temporaryFile = new File(targetFile.getParentFile(),
                 randomUUID().toString());
-        WdmHttpClient.Get get = new WdmHttpClient.Get(url)
-                .addHeader("User-Agent", "Mozilla/5.0")
-                .addHeader("Connection", "keep-alive");
 
-        copyInputStreamToFile(httpClient.execute(get).getContent(),
-                temporaryFile);
+        copyInputStreamToFile(httpClient.execute(httpClient.createHttpGet(url))
+                .getEntity().getContent(), temporaryFile);
         renameFile(temporaryFile, targetFile);
 
         if (!export.contains("edge")) {
@@ -176,8 +173,7 @@ public class Downloader {
                 log.trace("Unzipping {} (size: {} KB, compressed size: {} KB)",
                         name, size, compressedSize);
 
-                file = new File(
-                        compressedFile.getParentFile() + separator + name);
+                file = new File(compressedFile.getParentFile(), name);
                 if (!file.exists() || isForcingDownload
                         || getBoolean("wdm.override")) {
                     if (name.endsWith("/")) {
@@ -218,7 +214,7 @@ public class Downloader {
         if (iDot != -1) {
             fileName = fileName.substring(0, iDot);
         }
-        File target = new File(archive.getParentFile() + separator + fileName);
+        File target = new File(archive.getParentFile(), fileName);
 
         try (GZIPInputStream in = new GZIPInputStream(
                 new FileInputStream(archive))) {

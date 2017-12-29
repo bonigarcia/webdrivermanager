@@ -100,8 +100,8 @@ public class PhantomJsDriverManager extends BrowserManager {
         File phantomjs = binFolder.listFiles()[binaryIndex];
         log.trace("PhatomJS binary: {}", phantomjs);
 
-        File target = new File(archive.getParentFile().getAbsolutePath()
-                + separator + phantomjs.getName());
+        File target = new File(archive.getParentFile().getAbsolutePath(),
+                phantomjs.getName());
         log.trace("PhatomJS target: {}", target);
 
         downloader.renameFile(phantomjs, target);

@@ -37,7 +37,7 @@ import org.slf4j.Logger;
 import io.github.bonigarcia.wdm.BrowserManager;
 import io.github.bonigarcia.wdm.PhantomJsDriverManager;
 import io.github.bonigarcia.wdm.UrlFilter;
-import io.github.bonigarcia.wdm.WdmHttpClient;
+import io.github.bonigarcia.wdm.HttpClient;
 
 /**
  * Filter verifications for phantomjs.
@@ -59,7 +59,7 @@ public class PhantomJsFilterTest {
         phatomJsManager = PhantomJsDriverManager.getInstance();
         Field field = BrowserManager.class.getDeclaredField("httpClient");
         field.setAccessible(true);
-        field.set(phatomJsManager, new WdmHttpClient.Builder().build());
+        field.set(phatomJsManager, new HttpClient.Builder().build());
 
         Method method = BrowserManager.class.getDeclaredMethod("getDrivers");
         method.setAccessible(true);

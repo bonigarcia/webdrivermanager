@@ -16,7 +16,6 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static java.io.File.separator;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.copyOf;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -132,7 +131,7 @@ public class UrlFilter {
     private String getDistroName() throws IOException {
         String out = "";
         final String key = "UBUNTU_CODENAME";
-        File dir = new File(separator + "etc");
+        File dir = new File("/etc");
         File[] fileList = new File[0];
         if (dir.exists()) {
             fileList = dir.listFiles(new FilenameFilter() {
@@ -141,7 +140,7 @@ public class UrlFilter {
                 }
             });
         }
-        File fileVersion = new File(separator + "proc", "version");
+        File fileVersion = new File("/proc", "version");
         if (fileVersion.exists()) {
             fileList = copyOf(fileList, fileList.length + 1);
             fileList[fileList.length - 1] = fileVersion;

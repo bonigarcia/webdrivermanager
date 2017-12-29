@@ -16,10 +16,9 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static io.github.bonigarcia.wdm.WdmConfig.getInt;
 import static io.github.bonigarcia.wdm.WdmConfig.getString;
+import static io.github.bonigarcia.wdm.WdmConfig.getUrl;
 import static java.util.Arrays.asList;
-import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.jsoup.Jsoup.parse;
 
 import java.io.IOException;
@@ -59,14 +58,12 @@ public class EdgeDriverManager extends BrowserManager {
         listVersions = new ArrayList<>();
         List<URL> urlList = new ArrayList<>();
 
-        String edgeDriverUrl = getString("wdm.edgeDriverUrl");
+        URL edgeDriverUrl = getUrl("wdm.edgeDriverUrl");
         log.debug("Reading {} to find out the latest version of Edge driver",
                 edgeDriverUrl);
 
-        int timeout = (int) SECONDS.toMillis(getInt("wdm.timeout"));
-
         try (InputStream in = httpClient
-                .execute(new WdmHttpClient.Get(edgeDriverUrl, timeout))
+                .execute(httpClient.createHttpGet(edgeDriverUrl)).getEntity()
                 .getContent()) {
             Document doc = parse(in, null, "");
 

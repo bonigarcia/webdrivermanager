@@ -24,7 +24,6 @@ import static io.github.bonigarcia.wdm.OperativeSystem.LINUX;
 import static io.github.bonigarcia.wdm.OperativeSystem.MAC;
 import static io.github.bonigarcia.wdm.OperativeSystem.WIN;
 import static io.github.bonigarcia.wdm.WdmConfig.getBoolean;
-import static io.github.bonigarcia.wdm.WdmConfig.getInt;
 import static io.github.bonigarcia.wdm.WdmConfig.getString;
 import static io.github.bonigarcia.wdm.WdmConfig.getUrl;
 import static io.github.bonigarcia.wdm.WdmConfig.isNullOrEmpty;
@@ -38,7 +37,6 @@ import static java.util.Collections.reverse;
 import static java.util.Collections.reverseOrder;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
-import static java.util.concurrent.TimeUnit.SECONDS;
 import static javax.xml.xpath.XPathConstants.NODESET;
 import static javax.xml.xpath.XPathFactory.newInstance;
 import static org.apache.commons.io.FileUtils.listFiles;
@@ -65,6 +63,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.w3c.dom.Document;
@@ -100,7 +100,7 @@ public abstract class BrowserManager {
     protected List<String> listVersions;
     protected List<String> driverName;
     protected Architecture architecture;
-    protected WdmHttpClient httpClient;
+    protected HttpClient httpClient;
     protected Downloader downloader;
     protected UrlFilter urlFilter;
     protected URL driverUrl;
@@ -148,9 +148,8 @@ public abstract class BrowserManager {
     }
 
     protected void manage(Architecture arch, String version) {
-        httpClient = new WdmHttpClient.Builder().proxy(proxyValue)
-                .proxyUser(proxyUser).proxyPass(proxyPass).build();
-        try (WdmHttpClient wdmHttpClient = httpClient) {
+        httpClient = new HttpClient(proxyValue, proxyUser, proxyPass);
+        try (HttpClient wdmHttpClient = httpClient) {
             downloader = new Downloader(this, wdmHttpClient);
             urlFilter = new UrlFilter();
             if (isForcingDownload) {
@@ -506,11 +505,10 @@ public abstract class BrowserManager {
 
         String driverStr = driverUrl.toString();
         String driverUrlContent = driverUrl.getPath();
-        int timeout = (int) SECONDS.toMillis(getInt("wdm.timeout"));
 
-        WdmHttpClient.Response response = httpClient
-                .execute(new WdmHttpClient.Get(driverStr, timeout));
-        try (InputStream in = response.getContent()) {
+        HttpResponse response = httpClient
+                .execute(httpClient.createHttpGet(driverUrl));
+        try (InputStream in = response.getEntity().getContent()) {
             org.jsoup.nodes.Document doc = Jsoup.parse(in, null, "");
             Iterator<org.jsoup.nodes.Element> iterator = doc.select("a")
                     .iterator();
@@ -534,11 +532,11 @@ public abstract class BrowserManager {
     protected List<URL> getDriversFromXml(URL driverUrl) throws IOException {
         log.info("Reading {} to seek {}", driverUrl, getDriverName());
         List<URL> urls = new ArrayList<>();
-        WdmHttpClient.Response response = httpClient
-                .execute(new WdmHttpClient.Get(driverUrl));
+        HttpResponse response = httpClient
+                .execute(httpClient.createHttpGet(driverUrl));
         try {
             try (BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(response.getContent()))) {
+                    new InputStreamReader(response.getEntity().getContent()))) {
                 Document xml = loadXML(reader);
                 NodeList nodes = (NodeList) newInstance().newXPath().evaluate(
                         "//Contents/Key", xml.getDocumentElement(), NODESET);
@@ -583,9 +581,7 @@ public abstract class BrowserManager {
 
     protected InputStream openGitHubConnection(URL driverUrl)
             throws IOException {
-        WdmHttpClient.Get get = new WdmHttpClient.Get(driverUrl)
-                .addHeader("User-Agent", "Mozilla/5.0")
-                .addHeader("Connection", "keep-alive");
+        HttpGet get = httpClient.createHttpGet(driverUrl);
 
         String gitHubTokenName = WdmConfig.getString("wdm.gitHubTokenName");
         gitHubTokenName = isNullOrEmpty(gitHubTokenName)
@@ -605,7 +601,7 @@ public abstract class BrowserManager {
             get.addHeader("Authorization", basicAuth);
         }
 
-        return httpClient.execute(get).getContent();
+        return httpClient.execute(get).getEntity().getContent();
     }
 
     protected Architecture getDefaultArchitecture() {

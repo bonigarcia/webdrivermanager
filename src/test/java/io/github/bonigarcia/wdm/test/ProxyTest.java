@@ -25,13 +25,15 @@ import static org.apache.http.client.config.AuthSchemes.KERBEROS;
 import static org.apache.http.client.config.AuthSchemes.NTLM;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.lang.reflect.Field;
 import java.net.InetSocketAddress;
+import java.net.MalformedURLException;
 import java.net.Proxy;
+import java.util.Optional;
 
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.NTCredentials;
@@ -44,7 +46,7 @@ import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.BrowserManager;
 import io.github.bonigarcia.wdm.ChromeDriverManager;
-import io.github.bonigarcia.wdm.WdmHttpClient;
+import io.github.bonigarcia.wdm.HttpClient;
 import mockit.Mock;
 import mockit.MockUp;
 import mockit.integration.junit4.JMockit;
@@ -72,7 +74,7 @@ public class ProxyTest {
     public void testRealEnvProxyToNull() throws Exception {
         BrowserManager browserManager = ChromeDriverManager.getInstance();
         setSystemGetEnvMock(null);
-        assertNull(getProxy(browserManager));
+        assertFalse(getProxy(browserManager).isPresent());
     }
 
     @Test
@@ -81,16 +83,15 @@ public class ProxyTest {
         setSystemGetEnvMock(PROXY_URL);
 
         InetSocketAddress address = (InetSocketAddress) getProxy(browserManager)
-                .address();
+                .get().address();
         assertThat(address.getHostName(), equalTo(PROXY_URL));
     }
 
     @Test
     public void testProxyCredentialsScope() throws Exception {
-        WdmHttpClient wdmClient = new WdmHttpClient.Builder()
-                .proxy("myproxy:8081").proxyUser("domain\\me").proxyPass("pass")
-                .build();
-        Field field = WdmHttpClient.class.getDeclaredField("httpClient");
+        HttpClient wdmClient = new HttpClient.Builder().proxy("myproxy:8081")
+                .proxyUser("domain\\me").proxyPass("pass").build();
+        Field field = HttpClient.class.getDeclaredField("httpClient");
         field.setAccessible(true);
 
         CloseableHttpClient client = (CloseableHttpClient) field.get(wdmClient);
@@ -118,10 +119,9 @@ public class ProxyTest {
 
     @Test
     public void testProxyCredentials() throws Exception {
-        WdmHttpClient wdmClient = new WdmHttpClient.Builder()
-                .proxy("myproxy:8081").proxyUser("domain\\me").proxyPass("pass")
-                .build();
-        Field field = WdmHttpClient.class.getDeclaredField("httpClient");
+        HttpClient wdmClient = new HttpClient.Builder().proxy("myproxy:8081")
+                .proxyUser("domain\\me").proxyPass("pass").build();
+        Field field = HttpClient.class.getDeclaredField("httpClient");
         field.setAccessible(true);
 
         CloseableHttpClient client = (CloseableHttpClient) field.get(wdmClient);
@@ -152,7 +152,7 @@ public class ProxyTest {
 
             BrowserManager browserManager = ChromeDriverManager.getInstance();
             InetSocketAddress address = (InetSocketAddress) getProxy(
-                    browserManager).address();
+                    browserManager).get().address();
             assertThat(address.getHostName(), equalTo(PROXY_URL));
         }
     }
@@ -167,20 +167,20 @@ public class ProxyTest {
         return mockUp;
     }
 
-    private Proxy getProxy(BrowserManager browserManager)
+    private Optional<Proxy> getProxy(BrowserManager browserManager)
             throws NoSuchFieldException, SecurityException,
-            IllegalArgumentException, IllegalAccessException {
+            IllegalArgumentException, IllegalAccessException,
+            MalformedURLException {
         Field httpClientField = BrowserManager.class
                 .getDeclaredField("httpClient");
         httpClientField.setAccessible(true);
-        httpClientField.set(browserManager,
-                new WdmHttpClient.Builder().build());
+        httpClientField.set(browserManager, new HttpClient.Builder().build());
 
         Field proxyField = BrowserManager.class.getDeclaredField("proxyValue");
         proxyField.setAccessible(true);
         String proxyUrl = (String) proxyField.get(browserManager);
 
-        WdmHttpClient wdmHttpClient = (WdmHttpClient) httpClientField
+        HttpClient wdmHttpClient = (HttpClient) httpClientField
                 .get(browserManager);
         return wdmHttpClient.createProxy(proxyUrl);
     }

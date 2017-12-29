@@ -17,7 +17,6 @@
 package io.github.bonigarcia.wdm;
 
 import static io.github.bonigarcia.wdm.WdmConfig.getString;
-import static java.io.File.separator;
 import static java.util.Arrays.asList;
 
 import java.io.File;
@@ -77,8 +76,8 @@ public class OperaDriverManager extends BrowserManager {
             File operadriver = extractFolder.listFiles()[0];
             log.trace("Operadriver binary: {}", operadriver);
 
-            File target = new File(archive.getParentFile().getAbsolutePath()
-                    + separator + operadriver.getName());
+            File target = new File(archive.getParentFile().getAbsolutePath(),
+                    operadriver.getName());
             log.trace("Operadriver target: {}", target);
 
             downloader.renameFile(operadriver, target);
