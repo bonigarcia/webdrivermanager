@@ -703,8 +703,8 @@ public abstract class BrowserManager {
     }
 
     public synchronized void setup() {
-        String driverVersion = getDriverVersion();
-        if (!driverVersion.equals("")) {
+        if (!driverVersionKey.equals("")) {
+            String driverVersion = getDriverVersion();
             manage(getDefaultArchitecture(),
                     isNullOrEmpty(driverVersion) ? NOT_SPECIFIED.name()
                             : driverVersion);
