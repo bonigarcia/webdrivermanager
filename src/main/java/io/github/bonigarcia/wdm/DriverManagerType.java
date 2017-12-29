@@ -24,6 +24,6 @@ package io.github.bonigarcia.wdm;
  */
 public enum DriverManagerType {
 
-    CHROME, FIREFOX, OPERA, IEXPLORER, PHANTOMJS, EDGE;
+    CHROME, FIREFOX, OPERA, EDGE, PHANTOMJS, IEXPLORER;
 
 }

@@ -61,7 +61,7 @@ import java.io.Reader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.EnumMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -100,7 +100,8 @@ public abstract class WebDriverManager {
 
     protected abstract List<URL> getDrivers() throws IOException;
 
-    protected static Map<DriverManagerType, WebDriverManager> instanceMap = new HashMap<>();
+    protected static Map<DriverManagerType, WebDriverManager> instanceMap = new EnumMap<>(
+            DriverManagerType.class);
 
     protected DriverManagerType driverManagerType;
     protected String myOsName = defaultOsName();
