@@ -52,7 +52,7 @@ public class EdgeDriverManager extends WebDriverManager {
     }
 
     @Override
-    public List<URL> getDrivers() throws IOException {
+    protected List<URL> getDrivers() throws IOException {
         listVersions = new ArrayList<>();
         List<URL> urlList = new ArrayList<>();
 
