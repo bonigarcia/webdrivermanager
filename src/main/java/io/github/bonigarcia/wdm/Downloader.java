@@ -133,6 +133,50 @@ public class Downloader {
         return empty();
     }
 
+    public String getTarget(String version, URL url) {
+        log.trace("getTarget {} {}", version, url);
+
+        String zip = url.getFile().substring(url.getFile().lastIndexOf('/'));
+
+        int iFirst = zip.indexOf('_');
+        int iSecond = zip.indexOf('-');
+        int iLast = zip.length();
+        if (iFirst != zip.lastIndexOf('_')) {
+            iLast = zip.lastIndexOf('_');
+        } else if (iSecond != -1) {
+            iLast = iSecond;
+        }
+
+        String folder = zip.substring(0, iLast).replace(".zip", "")
+                .replace(".tar.bz2", "").replace(".tar.gz", "")
+                .replace(".msi", "").replace(".exe", "")
+                .replace("_", separator);
+
+        String target = WebDriverManager.getInstance(driverManagerType)
+                .preDownload(
+                        getTargetPath() + folder + separator + version + zip,
+                        version);
+        log.trace("Target file for URL {} version {} = {}", url, version,
+                target);
+
+        return target;
+    }
+
+    public String getTargetPath() {
+        String targetPath = getString("wdm.targetPath");
+        if (targetPath.contains(HOME)) {
+            targetPath = targetPath.replace(HOME, getProperty("user.home"));
+        }
+        log.trace("Target path {}", targetPath);
+
+        // Create repository folder if not exits
+        File repository = new File(targetPath);
+        if (!repository.exists()) {
+            repository.mkdirs();
+        }
+        return targetPath;
+    }
+
     public File extract(File compressedFile) throws IOException {
         log.trace("Compressed file {}", compressedFile);
 
@@ -243,50 +287,6 @@ public class Downloader {
         log.trace("Unbzip2 {}", archive);
 
         return archive;
-    }
-
-    public String getTarget(String version, URL url) {
-        log.trace("getTarget {} {}", version, url);
-
-        String zip = url.getFile().substring(url.getFile().lastIndexOf('/'));
-
-        int iFirst = zip.indexOf('_');
-        int iSecond = zip.indexOf('-');
-        int iLast = zip.length();
-        if (iFirst != zip.lastIndexOf('_')) {
-            iLast = zip.lastIndexOf('_');
-        } else if (iSecond != -1) {
-            iLast = iSecond;
-        }
-
-        String folder = zip.substring(0, iLast).replace(".zip", "")
-                .replace(".tar.bz2", "").replace(".tar.gz", "")
-                .replace(".msi", "").replace(".exe", "")
-                .replace("_", separator);
-
-        String target = WebDriverManager.getInstance(driverManagerType)
-                .preDownload(
-                        getTargetPath() + folder + separator + version + zip,
-                        version);
-        log.trace("Target file for URL {} version {} = {}", url, version,
-                target);
-
-        return target;
-    }
-
-    public String getTargetPath() {
-        String targetPath = getString("wdm.targetPath");
-        if (targetPath.contains(HOME)) {
-            targetPath = targetPath.replace(HOME, getProperty("user.home"));
-        }
-        log.trace("Target path {}", targetPath);
-
-        // Create repository folder if not exits
-        File repository = new File(targetPath);
-        if (!repository.exists()) {
-            repository.mkdirs();
-        }
-        return targetPath;
     }
 
     public File extractMsi(File msi) throws IOException, InterruptedException {

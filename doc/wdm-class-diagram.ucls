@@ -14,7 +14,7 @@
   <class id="2" language="java" name="io.github.bonigarcia.wdm.ChromeDriverManager" project="webdrivermanager" 
     file="/webdrivermanager/src/main/java/io/github/bonigarcia/wdm/ChromeDriverManager.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="121" y="-178"/>    
+    <position height="-1" width="-1" x="122" y="-222"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="false" protected="false" private="false" static="true"/>      
@@ -24,7 +24,7 @@
   <class id="3" language="java" name="io.github.bonigarcia.wdm.FirefoxDriverManager" project="webdrivermanager" 
     file="/webdrivermanager/src/main/java/io/github/bonigarcia/wdm/FirefoxDriverManager.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="119" y="-55"/>    
+    <position height="-1" width="-1" x="123" y="-97"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="false" protected="false" private="false" static="true"/>      
@@ -33,7 +33,7 @@
   </class>  
   <class id="4" language="java" name="io.github.bonigarcia.wdm.HttpClient" project="webdrivermanager" 
     file="/webdrivermanager/src/main/java/io/github/bonigarcia/wdm/HttpClient.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="847" y="353"/>    
+    <position height="-1" width="-1" x="846" y="357"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="false" protected="false" private="false" static="true"/>      
@@ -42,7 +42,7 @@
   </class>  
   <class id="5" language="java" name="io.github.bonigarcia.wdm.Downloader" project="webdrivermanager" 
     file="/webdrivermanager/src/main/java/io/github/bonigarcia/wdm/Downloader.java" binary="false" corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="844" y="80"/>    
+    <position height="-1" width="-1" x="848" y="84"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="false" protected="false" private="false" static="true"/>      
@@ -52,7 +52,7 @@
   <enumeration id="6" language="java" name="io.github.bonigarcia.wdm.DriverManagerType" project="webdrivermanager" 
     file="/webdrivermanager/src/main/java/io/github/bonigarcia/wdm/DriverManagerType.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="845" y="-188"/>    
+    <position height="-1" width="-1" x="848" y="-190"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="false" protected="false" private="false" static="true"/>      
@@ -62,7 +62,7 @@
   <class id="7" language="java" name="io.github.bonigarcia.wdm.OperaDriverManager" project="webdrivermanager" 
     file="/webdrivermanager/src/main/java/io/github/bonigarcia/wdm/OperaDriverManager.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="121" y="67"/>    
+    <position height="-1" width="-1" x="121" y="24"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="false" protected="false" private="false" static="true"/>      
@@ -72,7 +72,7 @@
   <class id="8" language="java" name="io.github.bonigarcia.wdm.InternetExplorerDriverManager" project="webdrivermanager" 
     file="/webdrivermanager/src/main/java/io/github/bonigarcia/wdm/InternetExplorerDriverManager.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="108" y="447"/>    
+    <position height="-1" width="-1" x="122" y="385"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="false" protected="false" private="false" static="true"/>      
@@ -82,7 +82,7 @@
   <class id="9" language="java" name="io.github.bonigarcia.wdm.EdgeDriverManager" project="webdrivermanager" 
     file="/webdrivermanager/src/main/java/io/github/bonigarcia/wdm/EdgeDriverManager.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="107" y="199"/>    
+    <position height="-1" width="-1" x="123" y="143"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="false" protected="false" private="false" static="true"/>      
@@ -92,111 +92,111 @@
   <class id="10" language="java" name="io.github.bonigarcia.wdm.PhantomJsDriverManager" project="webdrivermanager" 
     file="/webdrivermanager/src/main/java/io/github/bonigarcia/wdm/PhantomJsDriverManager.java" binary="false" 
     corner="BOTTOM_RIGHT">    
-    <position height="-1" width="-1" x="117" y="332"/>    
+    <position height="-1" width="-1" x="124" y="259"/>    
     <display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
       sort-features="false" accessors="true" visibility="true">      
       <attributes public="true" package="false" protected="false" private="false" static="true"/>      
       <operations public="true" package="false" protected="false" private="false" static="true"/>    
     </display>  
   </class>  
-  <association id="11">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="12" name="httpClient">        
-        <position height="0" width="0" x="93" y="21"/>      
+  <generalization id="11">    
+    <bendpoint x="268" y="-149"/>    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="1"/>  
+  </generalization>  
+  <association id="12">    
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="13" name="httpClient">        
+        <position height="0" width="0" x="97" y="76"/>      
       </attribute>      
-      <multiplicity id="13" minimum="0" maximum="1">        
-        <position height="0" width="0" x="93" y="21"/>      
+      <multiplicity id="14" minimum="0" maximum="1">        
+        <position height="0" width="0" x="97" y="76"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="4" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <generalization id="14">    
-    <end type="SOURCE" refId="3"/>    
-    <end type="TARGET" refId="1"/>  
-  </generalization>  
   <generalization id="15">    
     <end type="SOURCE" refId="7"/>    
     <end type="TARGET" refId="1"/>  
   </generalization>  
   <generalization id="16">    
-    <bendpoint x="261" y="385"/>    
+    <bendpoint x="254" y="331"/>    
     <end type="SOURCE" refId="8"/>    
     <end type="TARGET" refId="1"/>  
   </generalization>  
-  <generalization id="17">    
-    <end type="SOURCE" refId="9"/>    
-    <end type="TARGET" refId="1"/>  
-  </generalization>  
-  <association id="18">    
+  <association id="17">    
     <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="19" name="downloader">        
-        <position height="0" width="0" x="93" y="131"/>      
-      </attribute>      
-      <multiplicity id="20" minimum="0" maximum="1">        
-        <position height="0" width="0" x="93" y="131"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="5" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="21">    
-    <end type="SOURCE" refId="5" navigable="false">      
-      <attribute id="22" name="httpClient">        
-        <position height="0" width="0" x="98" y="72"/>      
-      </attribute>      
-      <multiplicity id="23" minimum="0" maximum="1">        
-        <position height="0" width="0" x="98" y="72"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="4" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <generalization id="24">    
-    <end type="SOURCE" refId="10"/>    
-    <end type="TARGET" refId="1"/>  
-  </generalization>  
-  <association id="25">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="26" name="driverManagerType">        
-        <position height="0" width="0" x="52" y="1"/>      
-      </attribute>      
-      <multiplicity id="27" minimum="0" maximum="1">        
-        <position height="0" width="0" x="52" y="1"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="6" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="28">    
-    <end type="SOURCE" refId="5" navigable="false">      
-      <attribute id="29" name="driverManagerType">        
-        <position height="0" width="0" x="52" y="1"/>      
-      </attribute>      
-      <multiplicity id="30" minimum="0" maximum="1">        
-        <position height="0" width="0" x="52" y="1"/>      
-      </multiplicity>    
-    </end>    
-    <end type="TARGET" refId="6" navigable="true"/>    
-    <display labels="true" multiplicity="true"/>  
-  </association>  
-  <association id="31">    
-    <end type="SOURCE" refId="1" navigable="false">      
-      <attribute id="32" name="instanceMap">        
+      <attribute id="18" name="instanceMap">        
         <position height="0" width="0" x="85" y="50"/>      
       </attribute>      
-      <multiplicity id="33" minimum="0" maximum="2147483647">        
+      <multiplicity id="19" minimum="0" maximum="2147483647">        
         <position height="0" width="0" x="85" y="50"/>      
       </multiplicity>    
     </end>    
     <end type="TARGET" refId="1" navigable="true"/>    
     <display labels="true" multiplicity="true"/>  
   </association>  
-  <generalization id="34">    
-    <bendpoint x="266" y="-118"/>    
-    <end type="SOURCE" refId="2"/>    
+  <association id="20">    
+    <end type="SOURCE" refId="5" navigable="false">      
+      <attribute id="21" name="driverManagerType">        
+        <position height="0" width="0" x="55" y="-1"/>      
+      </attribute>      
+      <multiplicity id="22" minimum="0" maximum="1">        
+        <position height="0" width="0" x="55" y="-1"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="23">    
+    <end type="SOURCE" refId="9"/>    
     <end type="TARGET" refId="1"/>  
   </generalization>  
+  <generalization id="24">    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="1"/>  
+  </generalization>  
+  <association id="25">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="26" name="httpClient">        
+        <position height="0" width="0" x="92" y="25"/>      
+      </attribute>      
+      <multiplicity id="27" minimum="0" maximum="1">        
+        <position height="0" width="0" x="92" y="25"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="4" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <generalization id="28">    
+    <end type="SOURCE" refId="3"/>    
+    <end type="TARGET" refId="1"/>  
+  </generalization>  
+  <association id="29">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="30" name="driverManagerType">        
+        <position height="0" width="0" x="55" y="-1"/>      
+      </attribute>      
+      <multiplicity id="31" minimum="0" maximum="1">        
+        <position height="0" width="0" x="55" y="-1"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="6" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="32">    
+    <end type="SOURCE" refId="1" navigable="false">      
+      <attribute id="33" name="downloader">        
+        <position height="0" width="0" x="97" y="135"/>      
+      </attribute>      
+      <multiplicity id="34" minimum="0" maximum="1">        
+        <position height="0" width="0" x="97" y="135"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="5" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
   <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
     sort-features="false" accessors="true" visibility="true">    
     <attributes public="true" package="false" protected="false" private="false" static="true"/>    
