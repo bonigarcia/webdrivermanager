@@ -71,7 +71,6 @@ public class ForceOsTest {
         cleanDirectory(new File(downloader.getTargetPath()));
     }
 
-    @Before
     @After
     public void teardown() throws IOException {
         cleanDirectory(new File(downloader.getTargetPath()));
