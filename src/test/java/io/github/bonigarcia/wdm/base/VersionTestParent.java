@@ -36,6 +36,7 @@ import org.junit.runners.Parameterized.Parameters;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.Architecture;
+import io.github.bonigarcia.wdm.OperativeSystem;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 /**
@@ -52,6 +53,7 @@ public abstract class VersionTestParent {
 
     protected WebDriverManager browserManager;
     protected String[] specificVersions;
+    protected OperativeSystem os;
 
     final Logger log = getLogger(lookup().lookupClass());
 
@@ -62,6 +64,9 @@ public abstract class VersionTestParent {
 
     @Test
     public void testLatestVersion() throws Exception {
+        if (os != null) {
+            browserManager.operativeSystem(os);
+        }
         switch (architecture) {
         case X32:
             browserManager.arch32().setup();
@@ -82,11 +87,12 @@ public abstract class VersionTestParent {
             log.info("Test specific version arch={} version={}", architecture,
                     specificVersion);
             if (architecture != DEFAULT) {
-                browserManager.architecture(architecture)
-                        .version(specificVersion).setup();
-            } else {
-                browserManager.version(specificVersion).setup();
+                browserManager.architecture(architecture);
             }
+            if (os != null) {
+                browserManager.operativeSystem(os);
+            }
+            browserManager.version(specificVersion).setup();
 
             assertThat(browserManager.getDownloadedVersion(),
                     equalTo(specificVersion));

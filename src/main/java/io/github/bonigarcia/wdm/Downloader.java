@@ -123,7 +123,8 @@ public class Downloader {
                 true);
         for (File file : listFiles) {
             for (String s : driverName) {
-                if (file.getName().startsWith(s) && file.canExecute()) {
+                if (file.getName().startsWith(s) && WebDriverManager
+                        .getInstance(driverManagerType).isExecutable(file)) {
                     log.debug("Using binary driver previously downloaded {}",
                             file);
                     return of(file);
