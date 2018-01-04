@@ -397,9 +397,9 @@ public abstract class WebDriverManager {
     }
 
     protected void updateValuesWithConfig() {
-        String wdmForceOs = getString("wdm.forceOs");
-        if (!wdmForceOs.equals("")) {
-            myOsName = wdmForceOs;
+        String wdmOs = getString("wdm.os");
+        if (!wdmOs.equals("")) {
+            myOsName = wdmOs;
         }
         String wdmProxy = getString("wdm.proxy");
         if (!wdmProxy.equals("")) {
