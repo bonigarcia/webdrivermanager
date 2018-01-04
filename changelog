@@ -4,8 +4,9 @@ webdrivermanager (2.1.0)
   + Keep getInstance() method for backwards compatibility, e.g. ChromeDriverManager.getInstance().setup();
   + Rename forceOperativeSystem() method to operativeSystem()
   + Rename useTaobaoMirror() method by useMirror()
-  + Include class diagram using ObjectAid
+  + Remove logback.xml from packaged jar (issue #181 and #184)
   + Change configuration key wdm.forceOs by wdm.os
+  + Include class diagram using ObjectAid
 
  -- Boni Garcia <boni.gg@gmail.com>  Thu, 4 Jan 2018 11:46:00 +0200
 
