@@ -1,3 +1,15 @@
+webdrivermanager (2.1.0)
+
+  + Use multiton pattern (WebDriverManager class) to provide unique access point
+  + Keep getInstance() method for backwards compatibility, e.g. ChromeDriverManager.getInstance().setup();
+  + Rename forceOperativeSystem() method to operativeSystem()
+  + Rename useTaobaoMirror() method by useMirror()
+  + Include class diagram using ObjectAid
+  + Change configuration key wdm.forceOs by wdm.os
+
+ -- Boni Garcia <boni.gg@gmail.com>  Thu, 4 Jan 2018 11:46:00 +0200
+
+
 webdrivermanager (2.0.1)
 
   + Configuration keys (wdm.*) are now optional (default values: false, "", 0)
