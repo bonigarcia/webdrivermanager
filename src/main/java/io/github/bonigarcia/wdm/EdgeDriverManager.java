@@ -16,11 +16,8 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static io.github.bonigarcia.wdm.WdmConfig.getInt;
-import static io.github.bonigarcia.wdm.WdmConfig.getString;
-import static java.util.Arrays.asList;
-import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.jsoup.Jsoup.parse;
+import org.jsoup.nodes.Document;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,8 +25,11 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jsoup.nodes.Document;
-import org.jsoup.select.Elements;
+import static io.github.bonigarcia.wdm.WdmConfig.getInt;
+import static io.github.bonigarcia.wdm.WdmConfig.getString;
+import static java.util.Arrays.asList;
+import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.jsoup.Jsoup.parse;
 
 /**
  * Manager for Microsoft Edge.
@@ -51,37 +51,41 @@ public class EdgeDriverManager extends BrowserManager {
         exportParameter = getString("wdm.edgeExport");
         driverVersionKey = "wdm.edgeVersion";
         driverUrlKey = "wdm.edgeDriverUrl";
-        driverName = asList("MicrosoftWebDriver");
+        driverName = asList("MicrosoftWebDriver", "edgedriver");
     }
 
     @Override
     public List<URL> getDrivers() throws IOException {
-        listVersions = new ArrayList<>();
-        List<URL> urlList = new ArrayList<>();
+        if (isUsingNexus) {
+            return getDriversFromNexus(getDriverUrl());
+        } else {
+            listVersions = new ArrayList<>();
+            List<URL> urlList = new ArrayList<>();
 
-        String edgeDriverUrl = getString("wdm.edgeDriverUrl");
-        log.debug("Reading {} to find out the latest version of Edge driver",
-                edgeDriverUrl);
+            String edgeDriverUrl = getString("wdm.edgeDriverUrl");
+            log.debug("Reading {} to find out the latest version of Edge driver",
+                    edgeDriverUrl);
 
-        int timeout = (int) SECONDS.toMillis(getInt("wdm.timeout"));
+            int timeout = (int) SECONDS.toMillis(getInt("wdm.timeout"));
 
-        try (InputStream in = httpClient
-                .execute(new WdmHttpClient.Get(edgeDriverUrl, timeout))
-                .getContent()) {
-            Document doc = parse(in, null, "");
+            try (InputStream in = httpClient
+                    .execute(new WdmHttpClient.Get(edgeDriverUrl, timeout))
+                    .getContent()) {
+                Document doc = parse(in, null, "");
 
-            Elements downloadLink = doc
-                    .select("ul.driver-downloads li.driver-download > a");
-            Elements versionParagraph = doc.select(
-                    "ul.driver-downloads li.driver-download p.driver-download__meta");
+                Elements downloadLink = doc
+                        .select("ul.driver-downloads li.driver-download > a");
+                Elements versionParagraph = doc.select(
+                        "ul.driver-downloads li.driver-download p.driver-download__meta");
 
-            for (int i = 0; i < downloadLink.size(); i++) {
-                String[] version = versionParagraph.get(i).text().split(" ");
-                listVersions.add(version[1]);
-                urlList.add(new URL(downloadLink.get(i).attr("href")));
+                for (int i = 0; i < downloadLink.size(); i++) {
+                    String[] version = versionParagraph.get(i).text().split(" ");
+                    listVersions.add(version[1]);
+                    urlList.add(new URL(downloadLink.get(i).attr("href")));
+                }
+
+                return urlList;
             }
-
-            return urlList;
         }
     }
 

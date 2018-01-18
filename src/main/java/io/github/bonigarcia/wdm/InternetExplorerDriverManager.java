@@ -16,13 +16,12 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static io.github.bonigarcia.wdm.WdmConfig.getString;
-import static io.github.bonigarcia.wdm.WdmConfig.getUrl;
-import static java.util.Arrays.asList;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+
+import static io.github.bonigarcia.wdm.WdmConfig.getString;
+import static java.util.Arrays.asList;
 
 /**
  * Manager for Internet Explorer.
@@ -44,12 +43,15 @@ public class InternetExplorerDriverManager extends BrowserManager {
         exportParameter = getString("wdm.internetExplorerExport");
         driverVersionKey = "wdm.internetExplorerVersion";
         driverUrlKey = "wdm.internetExplorerDriverUrl";
-        driverName = asList("IEDriverServer");
+        driverName = asList("IEDriverServer", "iedriver");
     }
 
     @Override
     protected List<URL> getDrivers() throws IOException {
-        return getDriversFromXml(getUrl("wdm.internetExplorerDriverUrl"));
+        driverUrl = getDriverUrl();
+        if (isUsingNexus) {
+            return getDriversFromNexus(driverUrl);
+        }
+        return getDriversFromXml(driverUrl);
     }
-
 }

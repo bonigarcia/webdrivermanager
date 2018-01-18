@@ -16,14 +16,14 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static io.github.bonigarcia.wdm.WdmConfig.getString;
-import static java.io.File.separator;
-import static java.util.Arrays.asList;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+
+import static io.github.bonigarcia.wdm.WdmConfig.getString;
+import static java.io.File.separator;
+import static java.util.Arrays.asList;
 
 /**
  * Manager for Opera.
@@ -50,7 +50,11 @@ public class OperaDriverManager extends BrowserManager {
 
     @Override
     protected List<URL> getDrivers() throws IOException {
-        return getDriversFromGitHub();
+        if (isUsingNexus) {
+            return getDriversFromNexus(getDriverUrl());
+        } else {
+            return getDriversFromGitHub();
+        }
     }
 
     @Override

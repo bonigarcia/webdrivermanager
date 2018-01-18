@@ -16,13 +16,13 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static io.github.bonigarcia.wdm.OperativeSystem.MAC;
-import static io.github.bonigarcia.wdm.WdmConfig.getString;
-import static java.util.Arrays.asList;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+
+import static io.github.bonigarcia.wdm.OperativeSystem.MAC;
+import static io.github.bonigarcia.wdm.WdmConfig.getString;
+import static java.util.Arrays.asList;
 
 /**
  * Manager for Firefox.
@@ -49,7 +49,12 @@ public class FirefoxDriverManager extends BrowserManager {
 
     @Override
     protected List<URL> getDrivers() throws IOException {
-        return getDriversFromGitHub();
+        URL driverUrl = getDriverUrl();
+        if (isUsingNexus) {
+            return getDriversFromNexus(driverUrl);
+        } else {
+            return getDriversFromGitHub();
+        }
     }
 
     @Override

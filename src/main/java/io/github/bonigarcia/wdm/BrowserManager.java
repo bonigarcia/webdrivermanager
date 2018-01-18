@@ -16,18 +16,32 @@
  */
 package io.github.bonigarcia.wdm;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.internal.LinkedTreeMap;
+import org.apache.commons.codec.binary.Base64;
+import org.jsoup.Jsoup;
+import org.slf4j.Logger;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.*;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.*;
+
 import static io.github.bonigarcia.wdm.Architecture.X32;
 import static io.github.bonigarcia.wdm.Architecture.X64;
 import static io.github.bonigarcia.wdm.DriverVersion.LATEST;
 import static io.github.bonigarcia.wdm.DriverVersion.NOT_SPECIFIED;
-import static io.github.bonigarcia.wdm.OperativeSystem.LINUX;
-import static io.github.bonigarcia.wdm.OperativeSystem.MAC;
-import static io.github.bonigarcia.wdm.OperativeSystem.WIN;
-import static io.github.bonigarcia.wdm.WdmConfig.getBoolean;
-import static io.github.bonigarcia.wdm.WdmConfig.getInt;
-import static io.github.bonigarcia.wdm.WdmConfig.getString;
-import static io.github.bonigarcia.wdm.WdmConfig.getUrl;
-import static io.github.bonigarcia.wdm.WdmConfig.isNullOrEmpty;
+import static io.github.bonigarcia.wdm.OperativeSystem.*;
+import static io.github.bonigarcia.wdm.WdmConfig.*;
 import static java.lang.Integer.signum;
 import static java.lang.Integer.valueOf;
 import static java.lang.System.getProperty;
@@ -42,40 +56,8 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static javax.xml.xpath.XPathConstants.NODESET;
 import static javax.xml.xpath.XPathFactory.newInstance;
 import static org.apache.commons.io.FileUtils.listFiles;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_LINUX;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
+import static org.apache.commons.lang3.SystemUtils.*;
 import static org.slf4j.LoggerFactory.getLogger;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Optional;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.apache.commons.codec.binary.Base64;
-import org.jsoup.Jsoup;
-import org.slf4j.Logger;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.internal.LinkedTreeMap;
 
 /**
  * Generic manager.
@@ -115,6 +97,8 @@ public abstract class BrowserManager {
     protected String driverVersionKey;
     protected String driverUrlKey;
     protected String[] ignoredVersions;
+    protected boolean isUsingTaobao;
+    protected boolean isUsingNexus;
 
     protected String getDriverVersion() {
         return version == null ? getString(getDriverVersionKey()) : version;
@@ -143,8 +127,13 @@ public abstract class BrowserManager {
     }
 
     protected String getCurrentVersion(URL url, String driverName) {
-        return url.getFile().substring(url.getFile().indexOf(SLASH) + 1,
-                url.getFile().lastIndexOf(SLASH));
+        if (isUsingNexus) {
+            String[] urlParts = url.getFile().split("/");
+            return urlParts[urlParts.length - 2];
+        } else {
+            return url.getFile().substring(url.getFile().indexOf(SLASH) + 1,
+                    url.getFile().lastIndexOf(SLASH));
+        }
     }
 
     protected void manage(Architecture arch, String version) {
@@ -222,7 +211,7 @@ public abstract class BrowserManager {
     }
 
     protected void handleException(Exception e, Architecture arch,
-            String version) {
+                                   String version) {
         if (!isForcingCache) {
             isForcingCache = true;
             log.warn(
@@ -245,7 +234,7 @@ public abstract class BrowserManager {
     }
 
     protected List<URL> filterCandidateUrls(Architecture arch, String version,
-            boolean getLatest) throws IOException {
+                                            boolean getLatest) throws IOException {
         List<URL> urls = getDrivers();
         List<URL> candidateUrls;
         log.trace("All URLs: {}", urls);
@@ -292,7 +281,7 @@ public abstract class BrowserManager {
     }
 
     protected Optional<String> handleCache(Architecture arch, String version,
-            boolean getLatest, boolean cache) {
+                                           boolean getLatest, boolean cache) {
         Optional<String> driverInCache = empty();
         if (cache) {
             driverInCache = forceCache(downloader.getTargetPath());
@@ -328,7 +317,7 @@ public abstract class BrowserManager {
     }
 
     protected Optional<String> existsDriverInCache(String repository,
-            String driverVersion, Architecture arch) {
+                                                   String driverVersion, Architecture arch) {
         String driverInCache = null;
         for (String driver : getDriverName()) {
             log.trace("Checking if {} {} ({} bits) exists in cache {}", driver,
@@ -391,9 +380,9 @@ public abstract class BrowserManager {
     }
 
     protected List<URL> getVersion(List<URL> list, List<String> match,
-            String version) {
+                                   String version) {
         List<URL> out = new ArrayList<>();
-        if (getDriverName().contains("MicrosoftWebDriver")) {
+        if (getDriverName().contains("MicrosoftWebDriver") && !isUsingNexus) {
             int i = listVersions.indexOf(version);
             if (i != -1) {
                 out.add(list.get(i));
@@ -464,7 +453,11 @@ public abstract class BrowserManager {
     }
 
     protected boolean isUsingTaobaoMirror() {
-        return getDriverUrl().getHost().equalsIgnoreCase("npm.taobao.org");
+        return isUsingTaobao;
+    }
+
+    protected boolean isUsingNexus() {
+        return isUsingNexus;
     }
 
     protected Integer versionCompare(String str1, String str2) {
@@ -525,6 +518,42 @@ public abstract class BrowserManager {
                         && !link.contains("icons")) {
                     urlList.add(new URL(
                             driverStr + link.replace(driverUrlContent, "")));
+                }
+            }
+            return urlList;
+        }
+    }
+
+    protected List<URL> getDriversFromNexus(URL driverUrl) throws IOException {
+        if (!mirrorLog) {
+            log.info("Crawling driver list from nexus {}", driverUrl);
+            mirrorLog = true;
+        } else {
+            log.trace("[Recursive call] Crawling driver list from nexus {}",
+                    driverUrl);
+        }
+
+        String driverStr = driverUrl.toString();
+        int timeout = (int) SECONDS.toMillis(getInt("wdm.timeout"));
+
+        WdmHttpClient.Response response = httpClient
+                .execute(new WdmHttpClient.Get(driverStr, timeout));
+        try (InputStream in = response.getContent()) {
+            org.jsoup.nodes.Document doc = Jsoup.parse(in, null, "");
+            Iterator<org.jsoup.nodes.Element> iterator = doc.select("a")
+                    .iterator();
+            List<URL> urlList = new ArrayList<>();
+
+            while (iterator.hasNext()) {
+                String link = iterator.next().attr("href");
+                if (link.toLowerCase().startsWith("http")
+                        && link.toLowerCase().contains("nexus")
+                        && link.endsWith(SLASH)) {
+                    urlList.addAll(getDriversFromNexus(new URL(link)));
+                } else if (link.toLowerCase().startsWith("http")
+                        && link.toLowerCase().contains("nexus")
+                        && link.toLowerCase().endsWith(".bin")) {
+                    urlList.add(new URL(link));
                 }
             }
             return urlList;
@@ -612,7 +641,7 @@ public abstract class BrowserManager {
         if (architecture == null) {
             String archStr = getString("wdm.architecture");
             if (archStr.equals("")) {
-                archStr = getProperty("sun.arch.data.model");
+                archStr = "32";
             }
             architecture = Architecture.valueOf("X" + archStr);
         }
@@ -638,8 +667,8 @@ public abstract class BrowserManager {
                         GitHubApi[].class);
 
                 if (driverVersion != null) {
-                    releaseArray = new GitHubApi[] {
-                            getVersion(releaseArray, driverVersion) };
+                    releaseArray = new GitHubApi[]{
+                            getVersion(releaseArray, driverVersion)};
                 }
 
                 urls = new ArrayList<>();
@@ -665,7 +694,7 @@ public abstract class BrowserManager {
             if ((release.getName() != null
                     && release.getName().contains(version))
                     || (release.getTagName() != null
-                            && release.getTagName().contains(version))) {
+                    && release.getTagName().contains(version))) {
                 out = release;
                 break;
             }
@@ -695,6 +724,8 @@ public abstract class BrowserManager {
         mirrorLog = false;
         isForcingCache = false;
         isForcingDownload = false;
+        isUsingNexus = false;
+        isUsingTaobao = false;
         listVersions = null;
         architecture = null;
         driverUrl = null;
@@ -763,7 +794,25 @@ public abstract class BrowserManager {
     }
 
     public BrowserManager useTaobaoMirror(String taobaoUrl) {
+        isUsingTaobao = true;
         driverUrl = getUrl(taobaoUrl);
+        return instance;
+    }
+
+    public BrowserManager useNexus() {
+        String errorMessage = "Binaries for " + getDriverName()
+                + " not available in nexus";
+        log.error(errorMessage);
+        throw new WebDriverManagerException(errorMessage);
+    }
+
+    public BrowserManager useNexus(String nexusUrl) {
+        isUsingNexus = true;
+        try {
+            driverUrl = new URL(nexusUrl);
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
         return instance;
     }
 
