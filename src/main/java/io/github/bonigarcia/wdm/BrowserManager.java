@@ -128,8 +128,13 @@ public abstract class BrowserManager {
 
     protected String getCurrentVersion(URL url, String driverName) {
         if (isUsingNexus) {
-            String[] urlParts = url.getFile().split("/");
-            return urlParts[urlParts.length - 2];
+            String[] urlParts = url.getFile().split(SLASH);
+            if (urlParts.length > 1) {
+                return urlParts[urlParts.length - 2];
+            } else {
+                final String errorMessage = "Can't get current driver version from nexus. Bad nexus URL " + url.toString();
+                throw new WebDriverManagerException(errorMessage);
+            }
         } else {
             return url.getFile().substring(url.getFile().indexOf(SLASH) + 1,
                     url.getFile().lastIndexOf(SLASH));
