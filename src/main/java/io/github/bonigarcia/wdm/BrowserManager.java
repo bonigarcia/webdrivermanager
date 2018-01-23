@@ -538,11 +538,10 @@ public abstract class BrowserManager {
                     driverUrl);
         }
 
-        String driverStr = driverUrl.toString();
         int timeout = (int) SECONDS.toMillis(getInt("wdm.timeout"));
 
         WdmHttpClient.Response response = httpClient
-                .execute(new WdmHttpClient.Get(driverStr, timeout));
+                .execute(new WdmHttpClient.Get(driverUrl.toString(), timeout));
         try (InputStream in = response.getContent()) {
             org.jsoup.nodes.Document doc = Jsoup.parse(in, null, "");
             Iterator<org.jsoup.nodes.Element> iterator = doc.select("a")
