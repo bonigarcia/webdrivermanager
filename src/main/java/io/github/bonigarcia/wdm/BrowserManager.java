@@ -502,20 +502,20 @@ public abstract class BrowserManager {
                     driverUrl);
         }
 
-        String driverStr = driverUrl.toString();
-        String driverUrlContent = driverUrl.getPath();
+        String driverStr = driverUrl.toString().toLowerCase();
+        String driverUrlContent = driverUrl.getPath().toLowerCase();
         int timeout = (int) SECONDS.toMillis(getInt("wdm.timeout"));
 
         WdmHttpClient.Response response = httpClient
                 .execute(new WdmHttpClient.Get(driverStr, timeout));
         try (InputStream in = response.getContent()) {
             org.jsoup.nodes.Document doc = Jsoup.parse(in, null, "");
-            Iterator<org.jsoup.nodes.Element> iterator = doc.select("a")
-                    .iterator();
+
             List<URL> urlList = new ArrayList<>();
 
-            while (iterator.hasNext()) {
-                String link = iterator.next().attr("href");
+            for (org.jsoup.nodes.Element element : doc.select("a")) {
+                String link = element.attr("href").toLowerCase();
+
                 if (link.contains("mirror") && link.endsWith(SLASH)) {
                     urlList.addAll(getDriversFromMirror(new URL(
                             driverStr + link.replace(driverUrlContent, ""))));
@@ -544,20 +544,18 @@ public abstract class BrowserManager {
                 .execute(new WdmHttpClient.Get(driverUrl.toString(), timeout));
         try (InputStream in = response.getContent()) {
             org.jsoup.nodes.Document doc = Jsoup.parse(in, null, "");
-            Iterator<org.jsoup.nodes.Element> iterator = doc.select("a")
-                    .iterator();
+
             List<URL> urlList = new ArrayList<>();
 
-            while (iterator.hasNext()) {
-                String link = iterator.next().attr("href");
-                if (link.toLowerCase().startsWith("http")
-                        && link.toLowerCase().contains("nexus")
-                        && link.endsWith(SLASH)) {
-                    urlList.addAll(getDriversFromNexus(new URL(link)));
-                } else if (link.toLowerCase().startsWith("http")
-                        && link.toLowerCase().contains("nexus")
-                        && (link.toLowerCase().endsWith(".bin") || link.toLowerCase().endsWith(".jar"))) {
-                    urlList.add(new URL(link));
+            for (org.jsoup.nodes.Element element : doc.select("a")) {
+                String link = element.attr("href").toLowerCase();
+
+                if (link.startsWith("http") && link.contains("nexus")) {
+                    if (link.endsWith(SLASH)) {
+                        urlList.addAll(getDriversFromNexus(new URL(link)));
+                    } else if (link.toLowerCase().endsWith(".bin") || link.toLowerCase().endsWith(".jar")) {
+                        urlList.add(new URL(link));
+                    }
                 }
             }
             return urlList;
