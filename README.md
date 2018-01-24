@@ -6,6 +6,8 @@
 [![Support badge](https://img.shields.io/badge/support-sof-green.svg)](http://stackoverflow.com/questions/tagged/webdrivermanager-java)
 [![Twitter](https://img.shields.io/badge/follow-@boni_gg-green.svg)](https://twitter.com/boni_gg)
 
+We forked this project to add "get drivers from Nexus" functionality and use it with Page-Factory framework.
+
 # WebDriverManager [![][Logo]][GitHub Repository]
 
 This library is aimed to automate the [Selenium Webdriver] binaries management in runtime for Java.
