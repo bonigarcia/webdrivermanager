@@ -133,6 +133,7 @@ public abstract class BrowserManager {
                 return urlParts[urlParts.length - 2];
             } else {
                 final String errorMessage = "Can't get current driver version from nexus. Bad nexus URL " + url.toString();
+                log.error(errorMessage);
                 throw new WebDriverManagerException(errorMessage);
             }
         } else {
@@ -553,7 +554,7 @@ public abstract class BrowserManager {
                 if (link.startsWith("http") && link.contains("nexus")) {
                     if (link.endsWith(SLASH)) {
                         urlList.addAll(getDriversFromNexus(new URL(link)));
-                    } else if (link.toLowerCase().endsWith(".bin") || link.toLowerCase().endsWith(".jar")) {
+                    } else if (link.endsWith(".bin") || link.endsWith(".jar")) {
                         urlList.add(new URL(link));
                     }
                 }
@@ -812,8 +813,8 @@ public abstract class BrowserManager {
         isUsingNexus = true;
         try {
             driverUrl = new URL(nexusUrl);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
+        }catch (MalformedURLException e) {
+            throw new WebDriverManagerException(e);
         }
         return instance;
     }
