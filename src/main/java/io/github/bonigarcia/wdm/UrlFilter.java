@@ -84,6 +84,12 @@ public class UrlFilter {
         }
 
         log.trace("URLs after filtering by architecture ({}): {}", arch, out);
+
+        if (arch != null && out.isEmpty() && arch.equals(Architecture.X64)){
+            log.trace("There are no URLs for X64 architecture. Trying to find URLs for X32 drivers.");
+            out = filterByArch(list, Architecture.X32);
+        }
+
         return out;
     }
 

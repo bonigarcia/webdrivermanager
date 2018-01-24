@@ -44,7 +44,7 @@ public class FirefoxDriverManager extends BrowserManager {
         exportParameter = getString("wdm.geckoDriverExport");
         driverVersionKey = "wdm.geckoDriverVersion";
         driverUrlKey = "wdm.geckoDriverUrl";
-        driverName = asList("wires", "geckodriver");
+        driverName = asList("wires", "geckodriver", "firefoxdriver");
     }
 
     @Override

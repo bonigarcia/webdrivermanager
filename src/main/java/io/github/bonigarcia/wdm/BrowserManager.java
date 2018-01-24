@@ -645,7 +645,7 @@ public abstract class BrowserManager {
         if (architecture == null) {
             String archStr = getString("wdm.architecture");
             if (archStr.equals("")) {
-                archStr = "32";
+                archStr = getProperty("sun.arch.data.model");
             }
             architecture = Architecture.valueOf("X" + archStr);
         }
