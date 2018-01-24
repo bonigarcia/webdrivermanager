@@ -556,7 +556,7 @@ public abstract class BrowserManager {
                     urlList.addAll(getDriversFromNexus(new URL(link)));
                 } else if (link.toLowerCase().startsWith("http")
                         && link.toLowerCase().contains("nexus")
-                        && link.toLowerCase().endsWith(".bin")) {
+                        && (link.toLowerCase().endsWith(".bin") || link.toLowerCase().endsWith(".jar"))) {
                     urlList.add(new URL(link));
                 }
             }

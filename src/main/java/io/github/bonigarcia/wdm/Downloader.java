@@ -249,11 +249,12 @@ public class Downloader {
 
         String file = url.getFile().substring(url.getFile().lastIndexOf('/'));
 
-        if (file.endsWith(".bin")) {
+        if (file.endsWith(".bin") || file.endsWith(".jar")) {
+            final String fileEnding = file.substring(file.lastIndexOf("."), file.length());
             if (browserManager.myOsName.toLowerCase().contains("win")) {
-                file = file.replace(".bin", ".exe");
+                file = file.replace(fileEnding, ".exe");
             } else {
-                file = file.replace(".bin", "");
+                file = file.replace(fileEnding, "");
             }
             isBinary = true;
         }
@@ -270,7 +271,8 @@ public class Downloader {
         String folder = file.substring(0, iLast).replace(".zip", "")
                 .replace(".tar.bz2", "").replace(".tar.gz", "")
                 .replace(".msi", "").replace(".exe", "")
-                .replace(".bin", "").replace("_", separator);
+                .replace(".bin", "").replace(".jar", "")
+                .replace("_", separator);
 
 
         String target;
