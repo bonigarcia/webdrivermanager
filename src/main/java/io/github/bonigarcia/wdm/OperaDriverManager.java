@@ -59,6 +59,9 @@ public class OperaDriverManager extends BrowserManager {
 
     @Override
     protected String getCurrentVersion(URL url, String driverName) {
+        if (isUsingNexus) {
+            return super.getCurrentVersion(url, driverName);
+        }
         if (isUsingTaobaoMirror()) {
             int i = url.getFile().lastIndexOf(SLASH);
             int j = url.getFile().substring(0, i).lastIndexOf(SLASH) + 1;

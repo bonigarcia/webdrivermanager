@@ -59,6 +59,9 @@ public class FirefoxDriverManager extends BrowserManager {
 
     @Override
     protected String getCurrentVersion(URL url, String driverName) {
+        if (isUsingNexus){
+            return super.getCurrentVersion(url, driverName);
+        }
         String currentVersion = url.getFile().substring(
                 url.getFile().indexOf('-') + 1, url.getFile().lastIndexOf('-'));
         if (currentVersion.startsWith("v")) {
