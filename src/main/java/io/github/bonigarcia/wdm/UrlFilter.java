@@ -66,10 +66,10 @@ public class UrlFilter {
         log.trace("URLs before filtering by architecture ({}): {}", arch, list);
         List<URL> out = new ArrayList<>(list);
 
-        if (out.size() > 0 && arch != null) {
+        if (!out.isEmpty() && arch != null) {
             for (URL url : list) {
                 final String urlFile = url.getFile();
-                final String fileName = urlFile.substring(urlFile.lastIndexOf("/"), urlFile.length());
+                final String fileName = urlFile.substring(urlFile.lastIndexOf('/'), urlFile.length());
                 if (!fileName.contains("x86")
                         && !url.getFile().contains("64")
                         && !url.getFile().contains("i686")

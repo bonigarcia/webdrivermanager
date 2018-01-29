@@ -16,37 +16,6 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static io.github.bonigarcia.wdm.WdmConfig.isNullOrEmpty;
-import static java.lang.System.getenv;
-import static java.lang.invoke.MethodHandles.lookup;
-import static java.net.URLDecoder.decode;
-import static java.nio.charset.StandardCharsets.UTF_8;
-import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
-import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
-import static org.apache.http.auth.AuthScope.ANY_REALM;
-import static org.apache.http.client.config.AuthSchemes.NTLM;
-import static org.apache.http.client.config.RequestConfig.custom;
-import static org.slf4j.LoggerFactory.getLogger;
-
-import java.io.Closeable;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
-import java.net.MalformedURLException;
-import java.net.Proxy;
-import java.net.URL;
-import java.net.UnknownHostException;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
-import java.util.Map;
-import java.util.StringTokenizer;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
@@ -67,8 +36,29 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.ssl.SSLContexts;
-import org.apache.http.ssl.TrustStrategy;
 import org.slf4j.Logger;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import java.io.Closeable;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.*;
+import java.util.Map;
+import java.util.StringTokenizer;
+
+import static io.github.bonigarcia.wdm.WdmConfig.isNullOrEmpty;
+import static java.lang.System.getenv;
+import static java.lang.invoke.MethodHandles.lookup;
+import static java.net.URLDecoder.decode;
+import static java.nio.charset.StandardCharsets.UTF_8;
+import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
+import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
+import static org.apache.http.auth.AuthScope.ANY_REALM;
+import static org.apache.http.client.config.AuthSchemes.NTLM;
+import static org.apache.http.client.config.RequestConfig.custom;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * The Http Client for WebDriverManager.
@@ -93,19 +83,9 @@ public class WdmHttpClient implements Closeable {
         }
 
         try {
-            HostnameVerifier allHostsValid = new HostnameVerifier() {
-                public boolean verify(String hostname, SSLSession session) {
-                    return true;
-                }
-            };
+            HostnameVerifier allHostsValid = (hostname, session) -> true;
             SSLContext sslContext = SSLContexts.custom()
-                    .loadTrustMaterial(null, new TrustStrategy() {
-                        @Override
-                        public boolean isTrusted(X509Certificate[] chain,
-                                String authType) throws CertificateException {
-                            return true;
-                        }
-                    }).build();
+                    .loadTrustMaterial(null, (chain, authType) -> true).build();
             SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
                     sslContext, allHostsValid);
             Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder

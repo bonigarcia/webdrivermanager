@@ -250,7 +250,7 @@ public class Downloader {
         String file = url.getFile().substring(url.getFile().lastIndexOf('/'));
 
         if (file.endsWith(".bin") || file.endsWith(".jar")) {
-            final String fileEnding = file.substring(file.lastIndexOf("."), file.length());
+            final String fileEnding = file.substring(file.lastIndexOf('.'), file.length());
             if (browserManager.myOsName.toLowerCase().contains("win")) {
                 file = file.replace(fileEnding, ".exe");
             } else {
@@ -340,8 +340,7 @@ public class Downloader {
     protected void renameFile(File from, File to) {
         log.trace("Renaming file from {} to {}", from, to);
         if (!from.renameTo(to)) {
-            System.out.println("ERROR IN RENAMING");
-            log.warn("Error renaming file from {} to {}", from, to);
+            log.error("Error renaming file from {} to {}", from, to);
         }
     }
 

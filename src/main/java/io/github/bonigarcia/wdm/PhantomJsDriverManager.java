@@ -55,6 +55,9 @@ public class PhantomJsDriverManager extends BrowserManager {
 
     @Override
     protected String getCurrentVersion(URL url, String driverName) {
+        if (isUsingNexus) {
+            return super.getCurrentVersion(url, driverName);
+        }
         String file = url.getFile();
         file = url.getFile().substring(file.lastIndexOf(SLASH), file.length());
         int matchIndex = file.indexOf(driverName);
