@@ -49,7 +49,7 @@ public class InternetExplorerDriverManager extends BrowserManager {
     @Override
     protected List<URL> getDrivers() throws IOException {
         driverUrl = getDriverUrl();
-        if (isUsingNexus) {
+        if (isUsingNexus()) {
             return getDriversFromNexus(driverUrl);
         }
         return getDriversFromXml(driverUrl);

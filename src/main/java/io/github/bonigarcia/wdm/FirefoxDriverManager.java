@@ -50,7 +50,7 @@ public class FirefoxDriverManager extends BrowserManager {
     @Override
     protected List<URL> getDrivers() throws IOException {
         URL driverUrl = getDriverUrl();
-        if (isUsingNexus) {
+        if (isUsingNexus()) {
             return getDriversFromNexus(driverUrl);
         } else {
             return getDriversFromGitHub();
@@ -59,7 +59,7 @@ public class FirefoxDriverManager extends BrowserManager {
 
     @Override
     protected String getCurrentVersion(URL url, String driverName) {
-        if (isUsingNexus){
+        if (isUsingNexus()){
             return super.getCurrentVersion(url, driverName);
         }
         String currentVersion = url.getFile().substring(

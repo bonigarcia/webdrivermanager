@@ -97,8 +97,9 @@ public abstract class BrowserManager {
     protected String driverVersionKey;
     protected String driverUrlKey;
     protected String[] ignoredVersions;
-    protected boolean isUsingTaobao;
-    protected boolean isUsingNexus;
+
+    private boolean usingTaobao;
+    private boolean usingNexus;
 
     protected String getDriverVersion() {
         return version == null ? getString(getDriverVersionKey()) : version;
@@ -127,7 +128,7 @@ public abstract class BrowserManager {
     }
 
     protected String getCurrentVersion(URL url, String driverName) {
-        if (isUsingNexus) {
+        if (usingNexus) {
             String[] urlParts = url.getFile().split(SLASH);
             if (urlParts.length > 1) {
                 return urlParts[urlParts.length - 2];
@@ -300,7 +301,7 @@ public abstract class BrowserManager {
     }
 
     protected Optional<String> forceCache(String repository) {
-        String driverInCache = null;
+        String driverInCache;
         for (String driver : getDriverName()) {
             log.trace("Checking if {} exists in cache {}", driver, repository);
 
@@ -388,7 +389,7 @@ public abstract class BrowserManager {
     protected List<URL> getVersion(List<URL> list, List<String> match,
                                    String version) {
         List<URL> out = new ArrayList<>();
-        if (getDriverName().contains("MicrosoftWebDriver") && !isUsingNexus) {
+        if (getDriverName().contains("MicrosoftWebDriver") && !usingNexus) {
             int i = listVersions.indexOf(version);
             if (i != -1) {
                 out.add(list.get(i));
@@ -459,11 +460,11 @@ public abstract class BrowserManager {
     }
 
     protected boolean isUsingTaobaoMirror() {
-        return isUsingTaobao;
+        return usingTaobao;
     }
 
     protected boolean isUsingNexus() {
-        return isUsingNexus;
+        return usingNexus;
     }
 
     protected Integer versionCompare(String str1, String str2) {
@@ -727,8 +728,8 @@ public abstract class BrowserManager {
         mirrorLog = false;
         isForcingCache = false;
         isForcingDownload = false;
-        isUsingNexus = false;
-        isUsingTaobao = false;
+        usingNexus = false;
+        usingTaobao = false;
         listVersions = null;
         architecture = null;
         driverUrl = null;
@@ -797,7 +798,7 @@ public abstract class BrowserManager {
     }
 
     public BrowserManager useTaobaoMirror(String taobaoUrl) {
-        isUsingTaobao = true;
+        usingTaobao = true;
         driverUrl = getUrl(taobaoUrl);
         return instance;
     }
@@ -810,7 +811,7 @@ public abstract class BrowserManager {
     }
 
     public BrowserManager useNexus(String nexusUrl) {
-        isUsingNexus = true;
+        usingNexus = true;
         try {
             driverUrl = new URL(nexusUrl);
         }catch (MalformedURLException e) {

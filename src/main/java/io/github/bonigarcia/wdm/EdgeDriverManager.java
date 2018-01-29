@@ -56,7 +56,7 @@ public class EdgeDriverManager extends BrowserManager {
 
     @Override
     public List<URL> getDrivers() throws IOException {
-        if (isUsingNexus) {
+        if (isUsingNexus()) {
             return getDriversFromNexus(getDriverUrl());
         } else {
             listVersions = new ArrayList<>();

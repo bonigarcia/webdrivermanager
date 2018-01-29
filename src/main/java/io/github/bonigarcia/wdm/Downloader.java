@@ -276,7 +276,7 @@ public class Downloader {
 
 
         String target;
-        if (!browserManager.isUsingNexus) {
+        if (!browserManager.isUsingNexus()) {
             target = browserManager.preDownload(
                     getTargetPath() + folder + separator + version + file, version);
         } else {

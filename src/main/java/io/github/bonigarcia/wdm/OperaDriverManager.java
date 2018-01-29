@@ -50,7 +50,7 @@ public class OperaDriverManager extends BrowserManager {
 
     @Override
     protected List<URL> getDrivers() throws IOException {
-        if (isUsingNexus) {
+        if (isUsingNexus()) {
             return getDriversFromNexus(getDriverUrl());
         } else {
             return getDriversFromGitHub();
@@ -59,7 +59,7 @@ public class OperaDriverManager extends BrowserManager {
 
     @Override
     protected String getCurrentVersion(URL url, String driverName) {
-        if (isUsingNexus) {
+        if (isUsingNexus()) {
             return super.getCurrentVersion(url, driverName);
         }
         if (isUsingTaobaoMirror()) {
