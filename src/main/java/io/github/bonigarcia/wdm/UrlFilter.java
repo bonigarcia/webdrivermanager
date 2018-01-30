@@ -16,22 +16,21 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static java.io.File.separator;
-import static java.lang.invoke.MethodHandles.lookup;
-import static java.util.Arrays.copyOf;
-import static org.slf4j.LoggerFactory.getLogger;
+import org.slf4j.Logger;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.slf4j.Logger;
+import static java.io.File.separator;
+import static java.lang.invoke.MethodHandles.lookup;
+import static java.util.Arrays.copyOf;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * URL filtering logic.
@@ -52,7 +51,7 @@ public class UrlFilter {
                 if (((osName.contains(os.name())
                         && url.getFile().toUpperCase().contains(os.name()))
                         || (osName.equalsIgnoreCase("mac")
-                                && url.getFile().toLowerCase().contains("osx")))
+                        && url.getFile().toLowerCase().contains("osx")))
                         && !out.contains(url)) {
                     out.add(url);
                 }
@@ -67,22 +66,30 @@ public class UrlFilter {
         log.trace("URLs before filtering by architecture ({}): {}", arch, list);
         List<URL> out = new ArrayList<>(list);
 
-        if (out.size() > 1 && arch != null) {
+        if (!out.isEmpty() && arch != null) {
             for (URL url : list) {
-                if (!url.getFile().contains("x86")
+                final String urlFile = url.getFile();
+                final String fileName = urlFile.substring(urlFile.lastIndexOf('/'), urlFile.length());
+                if (!fileName.contains("x86")
                         && !url.getFile().contains("64")
                         && !url.getFile().contains("i686")
                         && !url.getFile().contains("32")) {
+                    log.debug("URL doesn't contain any architecture symbols. No filtering will be done.");
                     continue;
                 }
-
-                if (!url.getFile().contains(arch.toString())) {
+                if (!fileName.contains(arch.toString() + ".") && !fileName.contains(arch.toString() + "_")) {
                     out.remove(url);
                 }
             }
         }
 
         log.trace("URLs after filtering by architecture ({}): {}", arch, out);
+
+        if (arch != null && out.isEmpty() && arch.equals(Architecture.X64)){
+            log.trace("There are no URLs for X64 architecture. Trying to find URLs for X32 drivers.");
+            out = filterByArch(list, Architecture.X32);
+        }
+
         return out;
     }
 
@@ -106,7 +113,7 @@ public class UrlFilter {
     }
 
     public List<URL> filterByIgnoredVersions(List<URL> list,
-            String... ignoredVersions) {
+                                             String... ignoredVersions) {
         if (log.isTraceEnabled()) {
             log.trace("URLs before filtering by ignored versions ({}): {}",
                     Arrays.toString(ignoredVersions), list);
@@ -135,11 +142,7 @@ public class UrlFilter {
         File dir = new File(separator + "etc");
         File[] fileList = new File[0];
         if (dir.exists()) {
-            fileList = dir.listFiles(new FilenameFilter() {
-                public boolean accept(File dir, String filename) {
-                    return filename.endsWith("-release");
-                }
-            });
+            fileList = dir.listFiles((dir1, filename) -> filename.endsWith("-release"));
         }
         File fileVersion = new File(separator + "proc", "version");
         if (fileVersion.exists()) {

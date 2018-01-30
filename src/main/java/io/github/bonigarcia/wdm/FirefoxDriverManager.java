@@ -16,13 +16,13 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static io.github.bonigarcia.wdm.OperativeSystem.MAC;
-import static io.github.bonigarcia.wdm.WdmConfig.getString;
-import static java.util.Arrays.asList;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+
+import static io.github.bonigarcia.wdm.OperativeSystem.MAC;
+import static io.github.bonigarcia.wdm.WdmConfig.getString;
+import static java.util.Arrays.asList;
 
 /**
  * Manager for Firefox.
@@ -44,16 +44,24 @@ public class FirefoxDriverManager extends BrowserManager {
         exportParameter = getString("wdm.geckoDriverExport");
         driverVersionKey = "wdm.geckoDriverVersion";
         driverUrlKey = "wdm.geckoDriverUrl";
-        driverName = asList("wires", "geckodriver");
+        driverName = asList("wires", "geckodriver", "firefoxdriver");
     }
 
     @Override
     protected List<URL> getDrivers() throws IOException {
-        return getDriversFromGitHub();
+        URL driverUrl = getDriverUrl();
+        if (isUsingNexus()) {
+            return getDriversFromNexus(driverUrl);
+        } else {
+            return getDriversFromGitHub();
+        }
     }
 
     @Override
     protected String getCurrentVersion(URL url, String driverName) {
+        if (isUsingNexus()){
+            return super.getCurrentVersion(url, driverName);
+        }
         String currentVersion = url.getFile().substring(
                 url.getFile().indexOf('-') + 1, url.getFile().lastIndexOf('-'));
         if (currentVersion.startsWith("v")) {

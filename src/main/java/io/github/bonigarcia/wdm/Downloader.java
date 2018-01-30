@@ -16,32 +16,10 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static io.github.bonigarcia.wdm.WdmConfig.getBoolean;
-import static io.github.bonigarcia.wdm.WdmConfig.getString;
-import static java.io.File.separator;
-import static java.lang.Runtime.getRuntime;
-import static java.lang.System.getProperty;
-import static java.lang.invoke.MethodHandles.lookup;
-import static java.nio.file.Files.createTempDirectory;
-import static java.nio.file.Files.delete;
-import static java.nio.file.Files.move;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
-import static java.util.UUID.randomUUID;
-import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
-import static org.apache.commons.io.FileUtils.deleteDirectory;
-import static org.apache.commons.io.FileUtils.listFiles;
-import static org.rauschig.jarchivelib.ArchiveFormat.TAR;
-import static org.rauschig.jarchivelib.ArchiverFactory.createArchiver;
-import static org.rauschig.jarchivelib.CompressionType.BZIP2;
-import static org.rauschig.jarchivelib.CompressionType.GZIP;
-import static org.slf4j.LoggerFactory.getLogger;
+import org.rauschig.jarchivelib.Archiver;
+import org.slf4j.Logger;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -51,8 +29,22 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.rauschig.jarchivelib.Archiver;
-import org.slf4j.Logger;
+import static io.github.bonigarcia.wdm.WdmConfig.getBoolean;
+import static io.github.bonigarcia.wdm.WdmConfig.getString;
+import static java.io.File.separator;
+import static java.lang.Runtime.getRuntime;
+import static java.lang.System.getProperty;
+import static java.lang.invoke.MethodHandles.lookup;
+import static java.nio.file.Files.*;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
+import static java.util.UUID.randomUUID;
+import static org.apache.commons.io.FileUtils.*;
+import static org.rauschig.jarchivelib.ArchiveFormat.TAR;
+import static org.rauschig.jarchivelib.ArchiverFactory.createArchiver;
+import static org.rauschig.jarchivelib.CompressionType.BZIP2;
+import static org.rauschig.jarchivelib.CompressionType.GZIP;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Downloader class.
@@ -69,6 +61,7 @@ public class Downloader {
     private BrowserManager browserManager;
     private WdmHttpClient httpClient;
     private boolean isForcingDownload;
+    private boolean isBinary;
 
     public Downloader() {
         this.httpClient = new WdmHttpClient.Builder().build();
@@ -85,14 +78,13 @@ public class Downloader {
     }
 
     public synchronized void download(URL url, String version, String export,
-            List<String> driverName) throws IOException, InterruptedException {
+                                      List<String> driverName) throws IOException, InterruptedException {
         File targetFile = new File(getTarget(version, url));
 
         boolean download = !targetFile.getParentFile().exists()
                 || (targetFile.getParentFile().exists()
-                        && targetFile.getParentFile().list().length == 0)
+                && targetFile.getParentFile().list().length == 0)
                 || isForcingDownload || getBoolean("wdm.override");
-
         Optional<File> binary = (download) ? download(url, targetFile, export)
                 : checkBinary(driverName, targetFile);
         if (export != null && binary.isPresent()) {
@@ -103,7 +95,6 @@ public class Downloader {
     private Optional<File> download(URL url, File targetFile, String export)
             throws IOException, InterruptedException {
         log.debug("Downloading {} to {}", url, targetFile);
-
         File temporaryFile = new File(targetFile.getParentFile(),
                 randomUUID().toString());
         WdmHttpClient.Get get = new WdmHttpClient.Get(url)
@@ -114,7 +105,7 @@ public class Downloader {
                 temporaryFile);
         renameFile(temporaryFile, targetFile);
 
-        if (!export.contains("edge")) {
+        if (!export.contains("edge") && !isBinary) {
             return of(extract(targetFile));
         } else if (targetFile.getName().toLowerCase().endsWith(".msi")) {
             return of(extractMsi(targetFile));
@@ -124,7 +115,7 @@ public class Downloader {
     }
 
     private Optional<File> checkBinary(List<String> driverName,
-            File targetFile) {
+                                       File targetFile) {
         // Check if existing binary is valid
         Collection<File> listFiles = listFiles(targetFile.getParentFile(), null,
                 true);
@@ -256,24 +247,41 @@ public class Downloader {
     public String getTarget(String version, URL url) {
         log.trace("getTarget {} {}", version, url);
 
-        String zip = url.getFile().substring(url.getFile().lastIndexOf('/'));
+        String file = url.getFile().substring(url.getFile().lastIndexOf('/'));
 
-        int iFirst = zip.indexOf('_');
-        int iSecond = zip.indexOf('-');
-        int iLast = zip.length();
-        if (iFirst != zip.lastIndexOf('_')) {
-            iLast = zip.lastIndexOf('_');
+        if (file.endsWith(".bin") || file.endsWith(".jar")) {
+            final String fileEnding = file.substring(file.lastIndexOf('.'), file.length());
+            if (browserManager.myOsName.toLowerCase().contains("win")) {
+                file = file.replace(fileEnding, ".exe");
+            } else {
+                file = file.replace(fileEnding, "");
+            }
+            isBinary = true;
+        }
+
+        int iFirst = file.indexOf('_');
+        int iSecond = file.indexOf('-');
+        int iLast = file.length();
+        if (iFirst != file.lastIndexOf('_')) {
+            iLast = file.lastIndexOf('_');
         } else if (iSecond != -1) {
             iLast = iSecond;
         }
 
-        String folder = zip.substring(0, iLast).replace(".zip", "")
+        String folder = file.substring(0, iLast).replace(".zip", "")
                 .replace(".tar.bz2", "").replace(".tar.gz", "")
                 .replace(".msi", "").replace(".exe", "")
+                .replace(".bin", "").replace(".jar", "")
                 .replace("_", separator);
 
-        String target = browserManager.preDownload(
-                getTargetPath() + folder + separator + version + zip, version);
+
+        String target;
+        if (!browserManager.isUsingNexus()) {
+            target = browserManager.preDownload(
+                    getTargetPath() + folder + separator + version + file, version);
+        } else {
+            target = getTargetPath() + folder + separator + version + file;
+        }
         log.trace("Target file for URL {} version {} = {}", url, version,
                 target);
 
@@ -306,8 +314,8 @@ public class Downloader {
         move(msi.toPath(), tmpMsi.toPath());
         log.trace("Temporal msi file: {}", tmpMsi);
 
-        Process process = getRuntime().exec(new String[] { "msiexec", "/a",
-                tmpMsi.toString(), "/qb", "TARGETDIR=" + msi.getParent() });
+        Process process = getRuntime().exec(new String[]{"msiexec", "/a",
+                tmpMsi.toString(), "/qb", "TARGETDIR=" + msi.getParent()});
         try {
             process.waitFor();
         } finally {
@@ -318,7 +326,7 @@ public class Downloader {
         deleteFile(msi);
 
         Collection<File> listFiles = listFiles(new File(msi.getParent()),
-                new String[] { "exe" }, true);
+                new String[]{"exe"}, true);
         return listFiles.iterator().next();
     }
 
@@ -332,7 +340,7 @@ public class Downloader {
     protected void renameFile(File from, File to) {
         log.trace("Renaming file from {} to {}", from, to);
         if (!from.renameTo(to)) {
-            log.warn("Error renaming file from {} to {}", from, to);
+            log.error("Error renaming file from {} to {}", from, to);
         }
     }
 

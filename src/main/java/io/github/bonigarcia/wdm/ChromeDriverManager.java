@@ -16,12 +16,12 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static io.github.bonigarcia.wdm.WdmConfig.getString;
-import static java.util.Arrays.asList;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+
+import static io.github.bonigarcia.wdm.WdmConfig.getString;
+import static java.util.Arrays.asList;
 
 /**
  * Manager for Chrome.
@@ -53,8 +53,10 @@ public class ChromeDriverManager extends BrowserManager {
         List<URL> urls;
         if (isUsingTaobaoMirror()) {
             urls = getDriversFromMirror(driverUrl);
+        } else if (isUsingNexus()) {
+            urls = getDriversFromNexus(driverUrl);
         } else {
-            urls = getDriversFromXml(getDriverUrl());
+            urls = getDriversFromXml(driverUrl);
         }
         return urls;
     }
