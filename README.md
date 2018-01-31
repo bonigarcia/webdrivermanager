@@ -1,11 +1,3 @@
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.bonigarcia/webdrivermanager/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.bonigarcia/webdrivermanager)
-[![Build Status](https://travis-ci.org/bonigarcia/webdrivermanager.svg?branch=master)](https://travis-ci.org/bonigarcia/webdrivermanager)
-[![Quality Gate](https://sonarcloud.io/api/badges/gate?key=io.github.bonigarcia:webdrivermanager)](https://sonarcloud.io/dashboard/index/io.github.bonigarcia:webdrivermanager)
-[![codecov](https://codecov.io/gh/bonigarcia/webdrivermanager/branch/master/graph/badge.svg)](https://codecov.io/gh/bonigarcia/webdrivermanager)
-[![License badge](https://img.shields.io/badge/license-Apache2-green.svg)](http://www.apache.org/licenses/LICENSE-2.0)
-[![Support badge](https://img.shields.io/badge/support-sof-green.svg)](http://stackoverflow.com/questions/tagged/webdrivermanager-java)
-[![Twitter](https://img.shields.io/badge/follow-@boni_gg-green.svg)](https://twitter.com/boni_gg)
-
 We forked this project to add "get drivers from Nexus" functionality and use it with Page-Factory framework.
 
 # WebDriverManager [![][Logo]][GitHub Repository]
