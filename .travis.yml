@@ -1,9 +1,4 @@
 language: java
-addons:
-  sonarcloud:
-    organization: "sbtqasonarkey"
-    token:
-      secure: $SONAR_TOKEN
 branches:
   only:
     - master
@@ -16,8 +11,6 @@ before_install:
 install:
   - mvn clean --settings .travis/settings.xml install -DskipTests -Dmaven.javadoc.skip=true -Dgpg.skip -B -V
   
-script:
-  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar
 deploy:
   - provider: script
     script: ".travis/deploy.sh"
