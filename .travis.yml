@@ -14,7 +14,7 @@ before_install:
   - if [ ! -z "$GPG_SECRET_KEYS" ]; then echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import; fi
   - if [ ! -z "$GPG_OWNERTRUST" ]; then echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust; fi
 install:
-  - mvn clean --settings .travis/settings.xml install -Dmaven.javadoc.skip=true -Dgpg.skip -B -V
+  - mvn clean --settings .travis/settings.xml install -DskipTests -Dmaven.javadoc.skip=true -Dgpg.skip -B -V
   
 script:
   - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar
