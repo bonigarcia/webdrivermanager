@@ -18,10 +18,7 @@ package io.github.bonigarcia.wdm;
 
 import org.slf4j.Logger;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -142,7 +139,12 @@ public class UrlFilter {
         File dir = new File(separator + "etc");
         File[] fileList = new File[0];
         if (dir.exists()) {
-            fileList = dir.listFiles((dir1, filename) -> filename.endsWith("-release"));
+            fileList = dir.listFiles(new FilenameFilter() {
+                @Override
+                public boolean accept(File dir1, String filename) {
+                    return filename.endsWith("-release");
+                }
+            });
         }
         File fileVersion = new File(separator + "proc", "version");
         if (fileVersion.exists()) {

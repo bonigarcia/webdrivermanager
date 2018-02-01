@@ -36,15 +36,19 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.ssl.SSLContexts;
+import org.apache.http.ssl.TrustStrategy;
 import org.slf4j.Logger;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
 import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.*;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.util.Map;
 import java.util.StringTokenizer;
 
@@ -83,9 +87,19 @@ public class WdmHttpClient implements Closeable {
         }
 
         try {
-            HostnameVerifier allHostsValid = (hostname, session) -> true;
+            HostnameVerifier allHostsValid = new HostnameVerifier() {
+                @Override
+                public boolean verify(String hostname, SSLSession session) {
+                    return true;
+                }
+            };
             SSLContext sslContext = SSLContexts.custom()
-                    .loadTrustMaterial(null, (chain, authType) -> true).build();
+                    .loadTrustMaterial(null, new TrustStrategy() {
+                        @Override
+                        public boolean isTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                            return true;
+                        }
+                    }).build();
             SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
                     sslContext, allHostsValid);
             Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder
