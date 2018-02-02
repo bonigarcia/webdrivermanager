@@ -50,8 +50,6 @@ import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.sort;
 import static java.util.Collections.reverse;
 import static java.util.Collections.reverseOrder;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static javax.xml.xpath.XPathConstants.NODESET;
 import static javax.xml.xpath.XPathFactory.newInstance;
@@ -163,15 +161,15 @@ public abstract class BrowserManager {
             log.trace(">> Managing {} arch={} version={} getLatest={} cache={}",
                     getDriverName(), arch, version, getLatest, cache);
 
-            Optional<String> driverInCache = handleCache(arch, version,
+            String driverInCache = handleCache(arch, version,
                     getLatest, cache);
 
-            if (driverInCache.isPresent()) {
+            if (null != driverInCache) {
                 versionToDownload = version;
                 downloadedVersion = version;
                 log.debug("Driver for {} {} found in cache {}", getDriverName(),
-                        versionToDownload, driverInCache.get());
-                exportDriver(getExportParameter(), driverInCache.get());
+                        versionToDownload, driverInCache);
+                exportDriver(getExportParameter(), driverInCache);
 
             } else {
                 List<URL> candidateUrls = filterCandidateUrls(arch, version,
@@ -287,9 +285,9 @@ public abstract class BrowserManager {
         return candidateUrls;
     }
 
-    protected Optional<String> handleCache(Architecture arch, String version,
+    protected String handleCache(Architecture arch, String version,
                                            boolean getLatest, boolean cache) {
-        Optional<String> driverInCache = empty();
+        String driverInCache = null;
         if (cache) {
             driverInCache = forceCache(downloader.getTargetPath());
         } else if (!getLatest) {
@@ -300,7 +298,7 @@ public abstract class BrowserManager {
         return driverInCache;
     }
 
-    protected Optional<String> forceCache(String repository) {
+    protected String forceCache(String repository) {
         String driverInCache;
         for (String driver : getDriverName()) {
             log.trace("Checking if {} exists in cache {}", driver, repository);
@@ -316,16 +314,16 @@ public abstract class BrowserManager {
                 if (driverInCache.contains(driver)
                         && isExecutable(new File(driverInCache))) {
                     log.info("Found {} in cache: {} ", driver, driverInCache);
-                    return of(driverInCache);
+                    return driverInCache;
                 }
             }
         }
-        return empty();
+        return null;
     }
 
-    protected Optional<String> existsDriverInCache(String repository,
+    protected String existsDriverInCache(String repository,
                                                    String driverVersion, Architecture arch) {
-        String driverInCache = null;
+        String driverInCache;
         for (String driver : getDriverName()) {
             log.trace("Checking if {} {} ({} bits) exists in cache {}", driver,
                     driverVersion, arch, repository);
@@ -346,11 +344,11 @@ public abstract class BrowserManager {
                         && isExecutable(new File(driverInCache))) {
                     log.debug("Found {} {} ({} bits) in cache: {}",
                             driverVersion, driver, arch, driverInCache);
-                    return of(driverInCache);
+                    return driverInCache;
                 }
             }
         }
-        return empty();
+        return null;
     }
 
     protected boolean isExecutable(File file) {

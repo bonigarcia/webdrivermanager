@@ -24,7 +24,6 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Optional;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -36,8 +35,6 @@ import static java.lang.Runtime.getRuntime;
 import static java.lang.System.getProperty;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.file.Files.*;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 import static java.util.UUID.randomUUID;
 import static org.apache.commons.io.FileUtils.*;
 import static org.rauschig.jarchivelib.ArchiveFormat.TAR;
@@ -85,14 +82,14 @@ public class Downloader {
                 || (targetFile.getParentFile().exists()
                 && targetFile.getParentFile().list().length == 0)
                 || isForcingDownload || getBoolean("wdm.override");
-        Optional<File> binary = (download) ? download(url, targetFile, export)
+        File binary = (download) ? download(url, targetFile, export)
                 : checkBinary(driverName, targetFile);
-        if (export != null && binary.isPresent()) {
-            browserManager.exportDriver(export, binary.get().toString());
+        if (export != null && binary != null) {
+            browserManager.exportDriver(export, binary.toString());
         }
     }
 
-    private Optional<File> download(URL url, File targetFile, String export)
+    private File download(URL url, File targetFile, String export)
             throws IOException, InterruptedException {
         log.debug("Downloading {} to {}", url, targetFile);
         File temporaryFile = new File(targetFile.getParentFile(),
@@ -106,15 +103,15 @@ public class Downloader {
         renameFile(temporaryFile, targetFile);
 
         if (!export.contains("edge") && !isBinary) {
-            return of(extract(targetFile));
+            return extract(targetFile);
         } else if (targetFile.getName().toLowerCase().endsWith(".msi")) {
-            return of(extractMsi(targetFile));
+            return extractMsi(targetFile);
         } else {
-            return of(targetFile);
+            return targetFile;
         }
     }
 
-    private Optional<File> checkBinary(List<String> driverName,
+    private File checkBinary(List<String> driverName,
                                        File targetFile) {
         // Check if existing binary is valid
         Collection<File> listFiles = listFiles(targetFile.getParentFile(), null,
@@ -124,11 +121,11 @@ public class Downloader {
                 if (file.getName().startsWith(s) && file.canExecute()) {
                     log.debug("Using binary driver previously downloaded {}",
                             file);
-                    return of(file);
+                    return file;
                 }
             }
         }
-        return empty();
+        return null;
     }
 
     public File extract(File compressedFile) throws IOException {
