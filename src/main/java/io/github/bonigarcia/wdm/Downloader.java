@@ -107,6 +107,7 @@ public class Downloader {
         } else if (targetFile.getName().toLowerCase().endsWith(".msi")) {
             return extractMsi(targetFile);
         } else {
+            setFileExecutable(targetFile);
             return targetFile;
         }
     }
