@@ -17,8 +17,6 @@
 package io.github.bonigarcia.wdm;
 
 import static io.github.bonigarcia.wdm.DriverManagerType.EDGE;
-import static io.github.bonigarcia.wdm.WdmConfig.getString;
-import static io.github.bonigarcia.wdm.WdmConfig.getUrl;
 import static java.util.Arrays.asList;
 import static org.jsoup.Jsoup.parse;
 
@@ -45,7 +43,7 @@ public class EdgeDriverManager extends WebDriverManager {
 
     public EdgeDriverManager() {
         driverManagerType = EDGE;
-        exportParameter = getString("wdm.edgeExport");
+        exportParameterKey = "wdm.edgeExport";
         driverVersionKey = "wdm.edgeVersion";
         driverUrlKey = "wdm.edgeDriverUrl";
         driverName = asList("MicrosoftWebDriver");
@@ -56,12 +54,12 @@ public class EdgeDriverManager extends WebDriverManager {
         listVersions = new ArrayList<>();
         List<URL> urlList = new ArrayList<>();
 
-        URL edgeDriverUrl = getUrl("wdm.edgeDriverUrl");
+        URL driverUrl = config().getDriverUrl(driverUrlKey);
         log.debug("Reading {} to find out the latest version of Edge driver",
-                edgeDriverUrl);
+                driverUrl);
 
         try (InputStream in = httpClient
-                .execute(httpClient.createHttpGet(edgeDriverUrl)).getEntity()
+                .execute(httpClient.createHttpGet(driverUrl)).getEntity()
                 .getContent()) {
             Document doc = parse(in, null, "");
 

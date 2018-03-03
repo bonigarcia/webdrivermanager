@@ -18,7 +18,6 @@ package io.github.bonigarcia.wdm;
 
 import static io.github.bonigarcia.wdm.DriverManagerType.FIREFOX;
 import static io.github.bonigarcia.wdm.OperativeSystem.MAC;
-import static io.github.bonigarcia.wdm.WdmConfig.getString;
 import static java.util.Arrays.asList;
 
 import java.io.IOException;
@@ -39,7 +38,7 @@ public class FirefoxDriverManager extends WebDriverManager {
 
     public FirefoxDriverManager() {
         driverManagerType = FIREFOX;
-        exportParameter = getString("wdm.geckoDriverExport");
+        exportParameterKey = "wdm.geckoDriverExport";
         driverVersionKey = "wdm.geckoDriverVersion";
         driverUrlKey = "wdm.geckoDriverUrl";
         driverMirrorUrlKey = "wdm.geckoDriverMirrorUrl";
@@ -83,6 +82,6 @@ public class FirefoxDriverManager extends WebDriverManager {
 
     @Override
     protected boolean shouldCheckArchitecture() {
-        return !myOsName.contains(MAC.name());
+        return !config().getMyOsName().contains(MAC.name());
     }
 }

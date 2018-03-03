@@ -16,11 +16,9 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static io.github.bonigarcia.wdm.WdmConfig.getBoolean;
-import static io.github.bonigarcia.wdm.WdmConfig.getString;
+import static io.github.bonigarcia.wdm.WebDriverManager.config;
 import static java.io.File.separator;
 import static java.lang.Runtime.getRuntime;
-import static java.lang.System.getProperty;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.file.Files.createTempDirectory;
 import static java.nio.file.Files.delete;
@@ -64,9 +62,6 @@ public class Downloader {
 
     final Logger log = getLogger(lookup().lookupClass());
 
-    static final String HOME = "~";
-
-    boolean isForcingDownload;
     DriverManagerType driverManagerType;
     HttpClient httpClient;
 
@@ -74,8 +69,6 @@ public class Downloader {
         this.driverManagerType = driverManagerType;
         httpClient = WebDriverManager.getInstance(driverManagerType)
                 .getHttpClient();
-        isForcingDownload = WebDriverManager
-                .getInstance(driverManagerType).isForcingDownload;
     }
 
     public synchronized Optional<String> download(URL url, String version,
@@ -86,7 +79,7 @@ public class Downloader {
         boolean download = !targetFile.getParentFile().exists()
                 || (targetFile.getParentFile().exists()
                         && targetFile.getParentFile().list().length == 0)
-                || isForcingDownload || getBoolean("wdm.override");
+                || config().isForcingDownload();
 
         Optional<File> binary = (download) ? download(url, targetFile, export)
                 : checkBinary(driverName, targetFile);
@@ -123,8 +116,8 @@ public class Downloader {
                 true);
         for (File file : listFiles) {
             for (String s : driverName) {
-                if (file.getName().startsWith(s) && WebDriverManager
-                        .getInstance(driverManagerType).isExecutable(file)) {
+                if (file.getName().startsWith(s)
+                        && config().isExecutable(file)) {
                     log.debug("Using binary driver previously downloaded {}",
                             file);
                     return of(file);
@@ -164,10 +157,7 @@ public class Downloader {
     }
 
     public String getTargetPath() {
-        String targetPath = getString("wdm.targetPath");
-        if (targetPath.contains(HOME)) {
-            targetPath = targetPath.replace(HOME, getProperty("user.home"));
-        }
+        String targetPath = config().getTargetPath();
         log.trace("Target path {}", targetPath);
 
         // Create repository folder if not exits
@@ -215,8 +205,7 @@ public class Downloader {
                         name, size, compressedSize);
 
                 file = new File(compressedFile.getParentFile(), name);
-                if (!file.exists() || isForcingDownload
-                        || getBoolean("wdm.override")) {
+                if (!file.exists() || config().isForcingDownload()) {
                     if (name.endsWith("/")) {
                         file.mkdirs();
                         continue;

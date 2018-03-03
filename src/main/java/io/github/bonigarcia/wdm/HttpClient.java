@@ -16,7 +16,6 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static io.github.bonigarcia.wdm.WdmConfig.getInt;
 import static io.github.bonigarcia.wdm.WdmConfig.isNullOrEmpty;
 import static java.lang.System.getenv;
 import static java.lang.invoke.MethodHandles.lookup;
@@ -84,6 +83,7 @@ public class HttpClient implements Closeable {
     final Logger log = getLogger(lookup().lookupClass());
 
     CloseableHttpClient closeableHttpClient;
+    int timeout;
 
     public HttpClient(String proxyUrl, String proxyUser, String proxyPass) {
         HttpClientBuilder builder = HttpClientBuilder.create()
@@ -147,12 +147,10 @@ public class HttpClient implements Closeable {
         HttpGet httpGet = new HttpGet(url.toString());
         httpGet.addHeader("User-Agent", "Mozilla/5.0");
         httpGet.addHeader("Connection", "keep-alive");
-        int timeout = (int) SECONDS.toMillis(getInt("wdm.timeout"));
         RequestConfig requestConfig = custom().setSocketTimeout(timeout)
                 .build();
         httpGet.setConfig(requestConfig);
         return httpGet;
-
     }
 
     public HttpResponse execute(HttpRequestBase method) throws IOException {
@@ -286,6 +284,10 @@ public class HttpClient implements Closeable {
     @Override
     public void close() throws IOException {
         closeableHttpClient.close();
+    }
+
+    public void setTimeout(int timeout) {
+        this.timeout = (int) SECONDS.toMillis(timeout);
     }
 
     public static class Builder {

@@ -17,7 +17,6 @@
 package io.github.bonigarcia.wdm;
 
 import static io.github.bonigarcia.wdm.DriverManagerType.CHROME;
-import static io.github.bonigarcia.wdm.WdmConfig.getString;
 import static java.util.Arrays.asList;
 
 import java.io.IOException;
@@ -37,8 +36,9 @@ public class ChromeDriverManager extends WebDriverManager {
     }
 
     public ChromeDriverManager() {
+        config = new WdmConfig();
         driverManagerType = CHROME;
-        exportParameter = getString("wdm.chromeDriverExport");
+        exportParameterKey = "wdm.chromeDriverExport";
         driverVersionKey = "wdm.chromeDriverVersion";
         driverUrlKey = "wdm.chromeDriverUrl";
         driverMirrorUrlKey = "wdm.chromeDriverMirrorUrl";
@@ -47,12 +47,12 @@ public class ChromeDriverManager extends WebDriverManager {
 
     @Override
     protected List<URL> getDrivers() throws IOException {
-        URL driverUrl = getDriverUrl();
+        URL driverUrl = config().getDriverUrl(driverUrlKey);
         List<URL> urls;
         if (isUsingTaobaoMirror()) {
             urls = getDriversFromMirror(driverUrl);
         } else {
-            urls = getDriversFromXml(getDriverUrl());
+            urls = getDriversFromXml(driverUrl);
         }
         return urls;
     }

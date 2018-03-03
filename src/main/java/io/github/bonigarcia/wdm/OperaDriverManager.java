@@ -17,7 +17,6 @@
 package io.github.bonigarcia.wdm;
 
 import static io.github.bonigarcia.wdm.DriverManagerType.OPERA;
-import static io.github.bonigarcia.wdm.WdmConfig.getString;
 import static java.util.Arrays.asList;
 
 import java.io.File;
@@ -39,7 +38,7 @@ public class OperaDriverManager extends WebDriverManager {
 
     public OperaDriverManager() {
         driverManagerType = OPERA;
-        exportParameter = getString("wdm.operaDriverExport");
+        exportParameterKey = "wdm.operaDriverExport";
         driverVersionKey = "wdm.operaDriverVersion";
         driverUrlKey = "wdm.operaDriverUrl";
         driverMirrorUrlKey = "wdm.operaDriverMirrorUrl";
