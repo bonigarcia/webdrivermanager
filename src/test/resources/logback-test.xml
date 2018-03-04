@@ -11,7 +11,7 @@
     <logger name="com" level="WARN" />
 
     <root level="INFO">
-        <appender-ref ref="STDOUT" />
+        <appender-ref ref="TRACE" />
     </root>
 
 </configuration>
