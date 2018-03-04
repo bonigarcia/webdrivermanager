@@ -325,9 +325,13 @@ public class WdmConfig {
     }
 
     protected String getTargetPath() {
-        String path = (String) resolveConfigKey("wdm.targetPath", targetPath);
-        if (path.contains(HOME)) {
-            path = path.replace(HOME, System.getProperty("user.home"));
+        String path = null;
+        Object resolved = resolveConfigKey("wdm.targetPath", targetPath);
+        if (resolved != null) {
+            path = (String) resolved;
+            if (path.contains(HOME)) {
+                path = path.replace(HOME, System.getProperty("user.home"));
+            }
         }
         return path;
     }
