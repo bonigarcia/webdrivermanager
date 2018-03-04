@@ -47,14 +47,16 @@ public class WdmConfig {
 
     static final String HOME = "~";
 
+    protected Architecture architecture; // architecture()
     protected String myOsName; // operativeSystem()
+    protected Boolean useBetaVersions; // useBetaVersions()
     protected String version; // version()
     protected String exportParameter; // exportParameter()
     protected Boolean isForcingCache; // forceCache()
     protected Boolean isForcingDownload; // forceDownload()
-    protected Boolean useBetaVersions; // useBetaVersions()
+
     protected Boolean useMirror; // useMirror()
-    protected Architecture architecture; // architecture()
+
     protected URL driverUrl; // driverRepositoryUrl()
     protected String proxyValue; // proxy()
     protected String proxyUser; // proxyUser()
@@ -73,16 +75,20 @@ public class WdmConfig {
         setArchitecture(defaultArchitecture());
         setMyOsName(defaultOsName());
         setUseBetaVersions(null);
+        setVersion(null);
+        setExportParameter(null);
         setForcingCache(null);
         setForcingDownload(null);
+        setUseMirror(null);
         setDriverUrl(null);
-        setVersion(null);
         setProxyValue(null);
         setProxyUser(null);
         setProxyPass(null);
         setIgnoredVersions(null);
         setGitHubTokenName(null);
         setGitHubTokenSecret(null);
+        setTargetPath(null);
+        setTimeout(null);
     }
 
     public String defaultOsName() {
