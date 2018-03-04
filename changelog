@@ -1,3 +1,10 @@
+webdrivermanager (2.1.1)
+
+  + Remove envs WDM_GIT_HUB_TOKEN_NAME and WDM_GIT_HUB_TOKEN_SECRET (use WDM_GITHUBTOKENNAME and WDM_GITHUBTOKENSECRET instead)
+
+ -- Boni Garcia <boni.gg@gmail.com>
+
+
 webdrivermanager (2.1.0)
 
   + Use multiton pattern (WebDriverManager class) to provide unique access point
