@@ -66,6 +66,7 @@ public class WdmConfig {
     protected String targetPath; // targetPath()
     protected Integer timeout; // timeout()
     protected String properties; // properties()
+    protected Boolean avoidExport; // avoidExport()
 
     public WdmConfig() {
         reset();
@@ -346,6 +347,14 @@ public class WdmConfig {
 
     public void setProperties(String properties) {
         this.properties = properties;
+    }
+
+    protected Boolean isAvoidExporting() {
+        return resolveBoolean("wdm.avoidExport", avoidExport);
+    }
+
+    public void setAvoidExport(Boolean avoidExport) {
+        this.avoidExport = avoidExport;
     }
 
 }

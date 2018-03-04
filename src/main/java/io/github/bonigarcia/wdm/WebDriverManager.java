@@ -319,6 +319,11 @@ public abstract class WebDriverManager {
         return instanceMap.get(driverManagerType);
     }
 
+    public WebDriverManager avoidExport() {
+        config().setAvoidExport(true);
+        return instanceMap.get(driverManagerType);
+    }
+
     // ------------
 
     public String getBinaryPath() {
@@ -751,9 +756,11 @@ public abstract class WebDriverManager {
     }
 
     protected void exportDriver(String variableName, String variableValue) {
-        log.info("Exporting {} as {}", variableName, variableValue);
-        binaryPath = variableValue;
-        System.setProperty(variableName, variableValue);
+        if (!config.isAvoidExporting()) {
+            log.info("Exporting {} as {}", variableName, variableValue);
+            binaryPath = variableValue;
+            System.setProperty(variableName, variableValue);
+        }
     }
 
     protected InputStream openGitHubConnection(URL driverUrl)
@@ -847,7 +854,8 @@ public abstract class WebDriverManager {
         } else {
             DriverManagerType driverManagerType = DriverManagerType
                     .valueOf(args[0].toUpperCase());
-            WebDriverManager.getInstance(driverManagerType).setup();
+            WebDriverManager.getInstance(driverManagerType).avoidExport()
+                    .setup();
         }
     }
 }
