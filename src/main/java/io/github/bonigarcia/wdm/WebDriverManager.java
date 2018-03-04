@@ -16,7 +16,6 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static ch.qos.logback.classic.util.ContextInitializer.CONFIG_FILE_PROPERTY;
 import static io.github.bonigarcia.wdm.Architecture.X32;
 import static io.github.bonigarcia.wdm.Architecture.X64;
 import static io.github.bonigarcia.wdm.DriverManagerType.CHROME;
@@ -107,10 +106,6 @@ public abstract class WebDriverManager {
     protected String driverUrlKey;
     protected String driverMirrorUrlKey;
     protected String exportParameterKey;
-
-    static {
-        System.setProperty(CONFIG_FILE_PROPERTY, "/wdm-logback.xml");
-    }
 
     public static synchronized WdmConfig config() {
         if (config == null) {
@@ -850,10 +845,13 @@ public abstract class WebDriverManager {
 
     public static void main(String[] args) {
         if (args.length <= 0) {
-            log.error("Usage WebDriverManager <browser>");
+            log.error("Usage: WebDriverManager <browserName> ... "
+                    + "where browserName=chrome|firefox|opera|edge|phantomjs|iexplorer");
         } else {
+            String browser = args[0];
+            log.info("Using WebDriverManager to resolve {}", browser);
             DriverManagerType driverManagerType = DriverManagerType
-                    .valueOf(args[0].toUpperCase());
+                    .valueOf(browser.toUpperCase());
             WebDriverManager.getInstance(driverManagerType).avoidExport()
                     .setup();
         }

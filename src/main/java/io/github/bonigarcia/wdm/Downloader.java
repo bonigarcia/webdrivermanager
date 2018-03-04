@@ -118,7 +118,7 @@ public class Downloader {
             for (String s : driverName) {
                 if (file.getName().startsWith(s)
                         && config().isExecutable(file)) {
-                    log.debug("Using binary driver previously downloaded {}",
+                    log.info("Using binary driver previously downloaded {}",
                             file);
                     return of(file);
                 }
