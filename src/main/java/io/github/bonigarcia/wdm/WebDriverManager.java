@@ -388,7 +388,6 @@ public abstract class WebDriverManager {
             }
 
         } catch (Exception e) {
-            e.printStackTrace();
             handleException(e, arch, version);
         }
     }
@@ -826,7 +825,5 @@ public abstract class WebDriverManager {
         mirrorLog = false;
         listVersions = null;
         versionToDownload = null;
-        downloadedVersion = null;
-        driverManagerType = null;
     }
 }
