@@ -64,12 +64,14 @@ public class WdmConfig {
     protected String gitHubTokenSecret; // gitHubTokenSecret()
     protected String targetPath; // targetPath()
     protected Integer timeout; // timeout()
+    protected String properties; // properties()
 
     public WdmConfig() {
         reset();
     }
 
     protected void reset() {
+        setProperties("webdrivermanager.properties");
         setArchitecture(defaultArchitecture());
         setMyOsName(defaultOsName());
         setUseBetaVersions(null);
@@ -89,6 +91,16 @@ public class WdmConfig {
         setTimeout(null);
     }
 
+    protected static boolean isNullOrEmpty(String string) {
+        return string == null || string.isEmpty();
+    }
+
+    protected boolean isExecutable(File file) {
+        return getMyOsName().equalsIgnoreCase("win")
+                ? file.getName().toLowerCase().endsWith(".exe")
+                : file.canExecute();
+    }
+
     private String defaultOsName() {
         String os = getProperty("os.name").toLowerCase();
         if (IS_OS_WINDOWS) {
@@ -105,34 +117,19 @@ public class WdmConfig {
         return valueOf("X" + System.getProperty("sun.arch.data.model"));
     }
 
-    protected static boolean isNullOrEmpty(String string) {
-        return string == null || string.isEmpty();
-    }
-
-    protected boolean isExecutable(File file) {
-        return getMyOsName().equalsIgnoreCase("win")
-                ? file.getName().toLowerCase().endsWith(".exe")
-                : file.canExecute();
-    }
-
-    private String resolveConfigKey(String key) {
-        String value = null;
-        if (!key.equals("")) {
+    private Object resolveConfigKey(String key, Object configValue) {
+        Object value = null;
+        if (!key.isEmpty()) {
             value = System.getenv(key.toUpperCase().replace(".", "_"));
             if (value == null) {
                 value = System.getProperty(key);
             }
-        }
-        return value;
-    }
-
-    private Object resolveConfigKey(String key, Object configValue) {
-        Object value = resolveConfigKey(key);
-        if (value == null && configValue != null) {
-            value = configValue;
-        }
-        if (value == null) {
-            value = getProperty(key);
+            if (value == null && configValue != null) {
+                value = configValue;
+            }
+            if (value == null) {
+                value = getProperty(key);
+            }
         }
         return value;
     }
@@ -148,16 +145,12 @@ public class WdmConfig {
 
     private String getProperty(String key) {
         String value = null;
-        Properties properties = new Properties();
+        Properties props = new Properties();
         try {
-            String wdmProperties = resolveConfigKey("wdm.properties");
-            if (wdmProperties == null) {
-                wdmProperties = "/webdrivermanager.properties";
-            }
             InputStream inputStream = WdmConfig.class
-                    .getResourceAsStream(wdmProperties);
-            properties.load(inputStream);
-            value = properties.getProperty(key);
+                    .getResourceAsStream("/" + properties);
+            props.load(inputStream);
+            value = props.getProperty(key);
         } catch (Exception e) {
             throw new WebDriverManagerException(e);
         } finally {
@@ -337,6 +330,14 @@ public class WdmConfig {
 
     public void setTargetPath(String targetPath) {
         this.targetPath = targetPath;
+    }
+
+    protected String getProperties() {
+        return (String) resolveConfigKey("wdm.properties", properties);
+    }
+
+    public void setProperties(String properties) {
+        this.properties = properties;
     }
 
 }

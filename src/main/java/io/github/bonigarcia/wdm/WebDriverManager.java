@@ -309,6 +309,13 @@ public abstract class WebDriverManager {
         return instanceMap.get(driverManagerType);
     }
 
+    public WebDriverManager properties(String properties) {
+        config().setProperties(properties);
+        return instanceMap.get(driverManagerType);
+    }
+
+    // ------------
+
     public String getBinaryPath() {
         return instanceMap.get(driverManagerType).binaryPath;
     }
@@ -394,13 +401,15 @@ public abstract class WebDriverManager {
 
     protected void handleException(Exception e, Architecture arch,
             String version) {
+        String errorMessage = String.format(
+                "There was an error managing %s %s (%s)", getDriverName(),
+                version, e.getMessage());
         if (!config().isForcingCache()) {
             config().setForcingCache(true);
-            log.warn(
-                    "There was an error managing {} {} ({}) ... trying again forcing to use cache",
-                    getDriverName(), version, e.getMessage());
+            log.warn("{} ... trying again forcing to use cache", errorMessage);
             manage(arch, version);
         } else {
+            log.error("{}", errorMessage, e);
             throw new WebDriverManagerException(e);
         }
     }
