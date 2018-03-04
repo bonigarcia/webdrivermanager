@@ -52,8 +52,8 @@ public class WdmConfig {
     protected Boolean useBetaVersions; // useBetaVersions()
     protected String version; // version()
     protected String exportParameter; // exportParameter()
-    protected Boolean isForcingCache; // forceCache()
-    protected Boolean isForcingDownload; // forceDownload()
+    protected Boolean forcingCache; // forceCache()
+    protected Boolean forcingDownload; // forceDownload()
     protected Boolean useMirror; // useMirror()
     protected URL driverUrl; // driverRepositoryUrl()
     protected String proxyValue; // proxy()
@@ -217,19 +217,19 @@ public class WdmConfig {
     }
 
     protected boolean isForcingCache() {
-        return resolveBoolean("wdm.forceCache", isForcingCache);
+        return resolveBoolean("wdm.forceCache", forcingCache);
     }
 
     public void setForcingCache(Boolean isForcingCache) {
-        this.isForcingCache = isForcingCache;
+        this.forcingCache = isForcingCache;
     }
 
     protected boolean isForcingDownload() {
-        return resolveBoolean("wdm.override", isForcingDownload);
+        return resolveBoolean("wdm.override", forcingDownload);
     }
 
     public void setForcingDownload(Boolean isForcingDownload) {
-        this.isForcingDownload = isForcingDownload;
+        this.forcingDownload = isForcingDownload;
     }
 
     protected boolean isUseBetaVersions() {
