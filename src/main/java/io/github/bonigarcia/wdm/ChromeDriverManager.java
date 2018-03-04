@@ -36,7 +36,6 @@ public class ChromeDriverManager extends WebDriverManager {
     }
 
     public ChromeDriverManager() {
-        config = new WdmConfig();
         driverManagerType = CHROME;
         exportParameterKey = "wdm.chromeDriverExport";
         driverVersionKey = "wdm.chromeDriverVersion";
