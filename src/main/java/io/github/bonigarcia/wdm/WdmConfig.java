@@ -21,6 +21,7 @@ import static io.github.bonigarcia.wdm.OperativeSystem.LINUX;
 import static io.github.bonigarcia.wdm.OperativeSystem.MAC;
 import static io.github.bonigarcia.wdm.OperativeSystem.WIN;
 import static java.lang.Boolean.getBoolean;
+import static java.lang.Integer.parseInt;
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_LINUX;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
@@ -312,8 +313,11 @@ public class WdmConfig {
     }
 
     protected Integer getTimeout() {
-        return Integer
-                .parseInt((String) resolveConfigKey("wdm.timeout", timeout));
+        try {
+            return parseInt((String) resolveConfigKey("wdm.timeout", timeout));
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     public void setTimeout(Integer timeout) {
