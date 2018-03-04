@@ -16,7 +16,6 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import static java.lang.System.setProperty;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.file.Files.createTempDirectory;
 import static org.apache.commons.io.FileUtils.deleteDirectory;
@@ -49,7 +48,7 @@ public class CustomTargetTest {
     @Before
     public void setup() throws IOException {
         tmpFolder = createTempDirectory("");
-        setProperty("wdm.targetPath", tmpFolder.toString());
+        WebDriverManager.config().setTargetPath(tmpFolder.toString());
         log.info("Using temporal folder {} as cache", tmpFolder);
     }
 

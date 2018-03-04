@@ -16,15 +16,16 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import static java.lang.System.setProperty;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.net.URL;
 
 import org.junit.Test;
 
 import io.github.bonigarcia.wdm.ChromeDriverManager;
 import io.github.bonigarcia.wdm.EdgeDriverManager;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.WebDriverManagerException;
 
 /**
@@ -37,8 +38,8 @@ public class TaobaoTest {
 
     @Test
     public void testTaobao() throws Exception {
-        setProperty("wdm.chromeDriverMirrorUrl",
-                "http://npm.taobao.org/mirrors/chromedriver/2.33/");
+        WebDriverManager.config().setDriverUrl(
+                new URL("http://npm.taobao.org/mirrors/chromedriver/2.33/"));
         ChromeDriverManager.getInstance().useMirror().setup();
 
         File binary = new File(
