@@ -6,12 +6,12 @@
         </encoder>
     </appender>
 
-    <logger name="io.github.bonigarcia" level="DEBUG" />
+    <logger name="io.github.bonigarcia" level="TRACE" />
     <logger name="org" level="WARN" />
     <logger name="com" level="WARN" />
 
     <root level="INFO">
-        <appender-ref ref="TRACE" />
+        <appender-ref ref="STDOUT" />
     </root>
 
 </configuration>
