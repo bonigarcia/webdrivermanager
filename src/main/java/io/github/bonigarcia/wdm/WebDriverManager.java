@@ -597,8 +597,8 @@ public abstract class WebDriverManager {
                 try {
                     handleDriver(url, driver, out);
                 } catch (Exception e) {
-                    log.trace("There was a problem with URL {} : {}",
-                            url.toString(), e.getMessage());
+                    log.trace("There was a problem with URL {} : {}", url,
+                            e.getMessage());
                     list.remove(url);
                 }
             }
