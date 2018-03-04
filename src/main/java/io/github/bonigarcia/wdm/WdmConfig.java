@@ -54,9 +54,7 @@ public class WdmConfig {
     protected String exportParameter; // exportParameter()
     protected Boolean isForcingCache; // forceCache()
     protected Boolean isForcingDownload; // forceDownload()
-
     protected Boolean useMirror; // useMirror()
-
     protected URL driverUrl; // driverRepositoryUrl()
     protected String proxyValue; // proxy()
     protected String proxyUser; // proxyUser()
@@ -71,7 +69,7 @@ public class WdmConfig {
         reset();
     }
 
-    public void reset() {
+    protected void reset() {
         setArchitecture(defaultArchitecture());
         setMyOsName(defaultOsName());
         setUseBetaVersions(null);
@@ -91,7 +89,7 @@ public class WdmConfig {
         setTimeout(null);
     }
 
-    public String defaultOsName() {
+    private String defaultOsName() {
         String os = getProperty("os.name").toLowerCase();
         if (IS_OS_WINDOWS) {
             os = WIN.name();
@@ -103,21 +101,21 @@ public class WdmConfig {
         return os;
     }
 
-    public Architecture defaultArchitecture() {
+    private Architecture defaultArchitecture() {
         return valueOf("X" + System.getProperty("sun.arch.data.model"));
     }
 
-    public static boolean isNullOrEmpty(String string) {
+    protected static boolean isNullOrEmpty(String string) {
         return string == null || string.isEmpty();
     }
 
-    public boolean isExecutable(File file) {
+    protected boolean isExecutable(File file) {
         return getMyOsName().equalsIgnoreCase("win")
                 ? file.getName().toLowerCase().endsWith(".exe")
                 : file.canExecute();
     }
 
-    public String resolveConfigKey(String key) {
+    private String resolveConfigKey(String key) {
         String value = null;
         if (!key.equals("")) {
             value = System.getenv(key.toUpperCase().replace(".", "_"));
@@ -128,7 +126,7 @@ public class WdmConfig {
         return value;
     }
 
-    public Object resolveConfigKey(String key, Object configValue) {
+    private Object resolveConfigKey(String key, Object configValue) {
         Object value = resolveConfigKey(key);
         if (value == null && configValue != null) {
             value = configValue;
@@ -139,7 +137,7 @@ public class WdmConfig {
         return value;
     }
 
-    public boolean resolveBoolean(String key, Object configValue) {
+    private boolean resolveBoolean(String key, Object configValue) {
         Object resolved = resolveConfigKey(key, configValue);
         try {
             return (boolean) resolved;
@@ -148,7 +146,7 @@ public class WdmConfig {
         }
     }
 
-    public String getProperty(String key) {
+    private String getProperty(String key) {
         String value = null;
         Properties properties = new Properties();
         try {
@@ -174,7 +172,7 @@ public class WdmConfig {
 
     // Getters and setters
 
-    public String getVersion(String driverVersionKey) {
+    protected String getVersion(String driverVersionKey) {
         return (String) resolveConfigKey(driverVersionKey, version);
     }
 
@@ -182,7 +180,7 @@ public class WdmConfig {
         this.version = version;
     }
 
-    public String getExportParameter(String exportParameterKey) {
+    protected String getExportParameter(String exportParameterKey) {
         return (String) resolveConfigKey(exportParameterKey, exportParameter);
     }
 
@@ -190,7 +188,7 @@ public class WdmConfig {
         this.exportParameter = exportParameter;
     }
 
-    public URL getDriverUrl(String driverUrlKey) {
+    protected URL getDriverUrl(String driverUrlKey) {
         try {
             return (URL) resolveConfigKey(driverUrlKey, driverUrl);
         } catch (Exception e1) {
@@ -207,7 +205,7 @@ public class WdmConfig {
         this.driverUrl = driverUrl;
     }
 
-    public Boolean getUseMirror(String driverMirrorUrlKey) {
+    protected Boolean getUseMirror(String driverMirrorUrlKey) {
         if (isNullOrEmpty(driverMirrorUrlKey)) {
             throw new WebDriverManagerException("Mirror URL not available");
         }
@@ -218,7 +216,7 @@ public class WdmConfig {
         this.useMirror = useMirror;
     }
 
-    public boolean isForcingCache() {
+    protected boolean isForcingCache() {
         return resolveBoolean("wdm.forceCache", isForcingCache);
     }
 
@@ -226,7 +224,7 @@ public class WdmConfig {
         this.isForcingCache = isForcingCache;
     }
 
-    public boolean isForcingDownload() {
+    protected boolean isForcingDownload() {
         return resolveBoolean("wdm.override", isForcingDownload);
     }
 
@@ -234,7 +232,7 @@ public class WdmConfig {
         this.isForcingDownload = isForcingDownload;
     }
 
-    public boolean isUseBetaVersions() {
+    protected boolean isUseBetaVersions() {
         return resolveBoolean("wdm.useBetaVersions", useBetaVersions);
     }
 
@@ -242,7 +240,7 @@ public class WdmConfig {
         this.useBetaVersions = useBetaVersions;
     }
 
-    public Architecture getArchitecture() {
+    protected Architecture getArchitecture() {
         return (Architecture) resolveConfigKey("wdm.architecture",
                 architecture);
     }
@@ -251,7 +249,7 @@ public class WdmConfig {
         this.architecture = architecture;
     }
 
-    public String getMyOsName() {
+    protected String getMyOsName() {
         return (String) resolveConfigKey("wdm.os", myOsName);
     }
 
@@ -259,7 +257,7 @@ public class WdmConfig {
         this.myOsName = myOsName;
     }
 
-    public String getProxyValue() {
+    protected String getProxyValue() {
         return (String) resolveConfigKey("wdm.proxy", proxyValue);
     }
 
@@ -267,7 +265,7 @@ public class WdmConfig {
         this.proxyValue = proxyValue;
     }
 
-    public String getProxyUser() {
+    protected String getProxyUser() {
         return (String) resolveConfigKey("wdm.proxyUser", proxyUser);
     }
 
@@ -275,7 +273,7 @@ public class WdmConfig {
         this.proxyUser = proxyUser;
     }
 
-    public String getProxyPass() {
+    protected String getProxyPass() {
         return (String) resolveConfigKey("wdm.proxyPass", proxyPass);
     }
 
@@ -283,7 +281,7 @@ public class WdmConfig {
         this.proxyPass = proxyPass;
     }
 
-    public String[] getIgnoredVersions() {
+    protected String[] getIgnoredVersions() {
         Object resolved = resolveConfigKey("wdm.ignoreVersions",
                 ignoredVersions);
         try {
@@ -302,7 +300,7 @@ public class WdmConfig {
         this.ignoredVersions = ignoredVersions;
     }
 
-    public String getGitHubTokenName() {
+    protected String getGitHubTokenName() {
         return (String) resolveConfigKey("wdm.gitHubTokenName",
                 gitHubTokenName);
     }
@@ -311,7 +309,7 @@ public class WdmConfig {
         this.gitHubTokenName = gitHubTokenName;
     }
 
-    public String getGitHubTokenSecret() {
+    protected String getGitHubTokenSecret() {
         return (String) resolveConfigKey("wdm.gitHubTokenSecret",
                 gitHubTokenSecret);
     }
@@ -320,7 +318,7 @@ public class WdmConfig {
         this.gitHubTokenSecret = gitHubTokenSecret;
     }
 
-    public Integer getTimeout() {
+    protected Integer getTimeout() {
         return Integer
                 .parseInt((String) resolveConfigKey("wdm.timeout", timeout));
     }
@@ -329,7 +327,7 @@ public class WdmConfig {
         this.timeout = timeout;
     }
 
-    public String getTargetPath() {
+    protected String getTargetPath() {
         String path = (String) resolveConfigKey("wdm.targetPath", targetPath);
         if (path.contains(HOME)) {
             path = path.replace(HOME, System.getProperty("user.home"));

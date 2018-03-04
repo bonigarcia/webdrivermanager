@@ -40,6 +40,7 @@ import org.apache.http.auth.NTCredentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -70,6 +71,11 @@ public class ProxyTest {
             "http://" + PROXY_URL + ":" + PROXY_PORT,
             "https://" + PROXY_URL + ":" + PROXY_PORT,
             "https://test:test@" + PROXY_URL + ":" + PROXY_PORT, };
+
+    @Before
+    public void setup() {
+        WebDriverManager.config();
+    }
 
     @Test
     public void testRealEnvProxyToNull() throws Exception {
@@ -179,8 +185,11 @@ public class ProxyTest {
 
         Field configField = WebDriverManager.class.getDeclaredField("config");
         configField.setAccessible(true);
-        String proxyUrl = ((WdmConfig) configField.get(browserManager))
-                .getProxyValue();
+        WdmConfig wdmConfig = (WdmConfig) configField.get(browserManager);
+
+        Field proxyValue = WdmConfig.class.getDeclaredField("proxyValue");
+        proxyValue.setAccessible(true);
+        String proxyUrl = (String) proxyValue.get(wdmConfig);
 
         HttpClient wdmHttpClient = (HttpClient) httpClientField
                 .get(browserManager);
