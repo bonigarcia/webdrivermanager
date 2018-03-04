@@ -210,11 +210,14 @@ public abstract class WebDriverManager {
 
     public synchronized void setup() {
         if (driverManagerType != null) {
-            String driverVersion = config().getVersion(driverVersionKey);
-            manage(config().getArchitecture(),
-                    isNullOrEmpty(driverVersion) ? NOT_SPECIFIED.name()
-                            : driverVersion);
-            reset();
+            try {
+                String driverVersion = config().getVersion(driverVersionKey);
+                manage(config().getArchitecture(),
+                        isNullOrEmpty(driverVersion) ? NOT_SPECIFIED.name()
+                                : driverVersion);
+            } finally {
+                reset();
+            }
         }
     }
 
@@ -823,5 +826,7 @@ public abstract class WebDriverManager {
         mirrorLog = false;
         listVersions = null;
         versionToDownload = null;
+        downloadedVersion = null;
+        driverManagerType = null;
     }
 }
