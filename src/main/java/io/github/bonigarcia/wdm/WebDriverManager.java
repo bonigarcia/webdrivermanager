@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static ch.qos.logback.classic.util.ContextInitializer.CONFIG_FILE_PROPERTY;
 import static io.github.bonigarcia.wdm.Architecture.X32;
 import static io.github.bonigarcia.wdm.Architecture.X64;
 import static io.github.bonigarcia.wdm.DriverManagerType.CHROME;
@@ -83,7 +84,7 @@ import com.google.gson.internal.LinkedTreeMap;
  */
 public abstract class WebDriverManager {
 
-    final Logger log = getLogger(lookup().lookupClass());
+    final static Logger log = getLogger(lookup().lookupClass());
 
     protected static final String SLASH = "/";
 
@@ -106,6 +107,10 @@ public abstract class WebDriverManager {
     protected String driverUrlKey;
     protected String driverMirrorUrlKey;
     protected String exportParameterKey;
+
+    static {
+        System.setProperty(CONFIG_FILE_PROPERTY, "/wdm-logback.xml");
+    }
 
     public static synchronized WdmConfig config() {
         if (config == null) {
@@ -834,5 +839,15 @@ public abstract class WebDriverManager {
         mirrorLog = false;
         listVersions = null;
         versionToDownload = null;
+    }
+
+    public static void main(String[] args) {
+        if (args.length <= 0) {
+            log.error("Usage WebDriverManager <browser>");
+        } else {
+            DriverManagerType driverManagerType = DriverManagerType
+                    .valueOf(args[0].toUpperCase());
+            WebDriverManager.getInstance(driverManagerType).setup();
+        }
     }
 }
