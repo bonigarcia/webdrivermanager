@@ -29,6 +29,7 @@ import static java.util.UUID.randomUUID;
 import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
 import static org.apache.commons.io.FileUtils.deleteDirectory;
 import static org.apache.commons.io.FileUtils.listFiles;
+import static org.apache.commons.io.FileUtils.moveFile;
 import static org.rauschig.jarchivelib.ArchiveFormat.TAR;
 import static org.rauschig.jarchivelib.ArchiverFactory.createArchiver;
 import static org.rauschig.jarchivelib.CompressionType.BZIP2;
@@ -80,6 +81,7 @@ public class Downloader {
                 || (targetFile.getParentFile().exists()
                         && targetFile.getParentFile().list().length == 0)
                 || config().isForcingDownload();
+        log.trace("Downloading {} ({})", url, download);
 
         Optional<File> binary = (download) ? download(url, targetFile, export)
                 : checkBinary(driverName, targetFile);
@@ -92,13 +94,13 @@ public class Downloader {
     private Optional<File> download(URL url, File targetFile, String export)
             throws IOException, InterruptedException {
         log.debug("Downloading {} to {}", url, targetFile);
-
-        File temporaryFile = new File(targetFile.getParentFile(),
-                randomUUID().toString());
-
+        File tempDir = createTempDirectory("").toFile();
+        File temporaryFile = new File(tempDir, targetFile.getName());
+        log.trace("Using temporal file {}", temporaryFile);
         copyInputStreamToFile(httpClient.execute(httpClient.createHttpGet(url))
                 .getEntity().getContent(), temporaryFile);
-        renameFile(temporaryFile, targetFile);
+        moveFile(temporaryFile, targetFile);
+        deleteFile(tempDir);
 
         if (!export.contains("edge")) {
             return of(extract(targetFile));
@@ -124,6 +126,7 @@ public class Downloader {
                 }
             }
         }
+        log.trace("{} does not exist in cache {}", driverName);
         return empty();
     }
 
