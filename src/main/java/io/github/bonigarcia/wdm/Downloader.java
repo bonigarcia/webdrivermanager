@@ -126,7 +126,7 @@ public class Downloader {
                 }
             }
         }
-        log.trace("{} does not exist in cache {}", driverName);
+        log.trace("{} does not exist in cache", driverName);
         return empty();
     }
 

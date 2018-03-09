@@ -83,7 +83,7 @@ import com.google.gson.internal.LinkedTreeMap;
  */
 public abstract class WebDriverManager {
 
-    final static Logger log = getLogger(lookup().lookupClass());
+    static final Logger log = getLogger(lookup().lookupClass());
 
     protected static final String SLASH = "/";
 
