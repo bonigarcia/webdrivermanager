@@ -27,6 +27,7 @@ import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
 import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
 import static org.apache.http.auth.AuthScope.ANY_REALM;
 import static org.apache.http.client.config.AuthSchemes.NTLM;
+import static org.apache.http.client.config.CookieSpecs.STANDARD;
 import static org.apache.http.client.config.RequestConfig.custom;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -147,8 +148,8 @@ public class HttpClient implements Closeable {
         HttpGet httpGet = new HttpGet(url.toString());
         httpGet.addHeader("User-Agent", "Mozilla/5.0");
         httpGet.addHeader("Connection", "keep-alive");
-        RequestConfig requestConfig = custom().setSocketTimeout(timeout)
-                .build();
+        RequestConfig requestConfig = custom().setCookieSpec(STANDARD)
+                .setSocketTimeout(timeout).build();
         httpGet.setConfig(requestConfig);
         return httpGet;
     }
