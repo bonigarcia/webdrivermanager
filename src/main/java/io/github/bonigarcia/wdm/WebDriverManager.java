@@ -857,12 +857,11 @@ public abstract class WebDriverManager {
     }
 
     protected FilenameFilter getFolderFilter() {
-        final String driverName = getDriverName().get(0);
         return new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
                 return dir.isDirectory()
-                        && name.toLowerCase().contains(driverName);
+                        && name.toLowerCase().contains(getDriverName().get(0));
             }
         };
     }
