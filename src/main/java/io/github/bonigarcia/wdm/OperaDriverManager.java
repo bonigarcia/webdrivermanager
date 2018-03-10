@@ -72,7 +72,15 @@ public class OperaDriverManager extends WebDriverManager {
         if (!extractFolder.isFile()) {
             log.trace("Opera extract folder (to be deleted): {}",
                     extractFolder);
-            File operadriver = extractFolder.listFiles()[0];
+            File[] listFiles = extractFolder.listFiles();
+            int i = 0;
+            File operadriver;
+            do {
+                operadriver = listFiles[0];
+                i++;
+            } while (!config().isExecutable(operadriver)
+                    || i >= listFiles.length);
+
             log.trace("Operadriver binary: {}", operadriver);
 
             File target = new File(archive.getParentFile().getAbsolutePath(),
