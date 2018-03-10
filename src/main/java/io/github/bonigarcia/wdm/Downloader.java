@@ -93,7 +93,7 @@ public class Downloader {
 
     private Optional<File> download(URL url, File targetFile, String export)
             throws IOException, InterruptedException {
-        log.debug("Downloading {} to {}", url, targetFile);
+        log.info("Downloading {} to {}", url, targetFile);
         File tempDir = createTempDirectory("").toFile();
         File temporaryFile = new File(tempDir, targetFile.getName());
         log.trace("Using temporal file {}", temporaryFile);

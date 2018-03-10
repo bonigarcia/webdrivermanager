@@ -326,6 +326,11 @@ public abstract class WebDriverManager {
         return instanceMap.get(driverManagerType);
     }
 
+    public WebDriverManager targetPath(String targetPath) {
+        config().setTargetPath(targetPath);
+        return instanceMap.get(driverManagerType);
+    }
+
     // ------------
 
     public String getBinaryPath() {
@@ -860,7 +865,7 @@ public abstract class WebDriverManager {
             DriverManagerType driverManagerType = DriverManagerType
                     .valueOf(browser.toUpperCase());
             WebDriverManager.getInstance(driverManagerType).avoidExport()
-                    .setup();
+                    .targetPath(".").setup();
         }
     }
 }
