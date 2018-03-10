@@ -314,14 +314,21 @@ public class Downloader {
 
     protected void renameFile(File from, File to) {
         log.trace("Renaming file from {} to {}", from, to);
+        if (to.exists()) {
+            deleteFile(to);
+        }
         if (!from.renameTo(to)) {
             log.warn("Error renaming file from {} to {}", from, to);
         }
     }
 
-    protected void deleteFile(File file) throws IOException {
+    protected void deleteFile(File file) {
         log.trace("Deleting file {}", file);
-        delete(file.toPath());
+        try {
+            delete(file.toPath());
+        } catch (IOException e) {
+            throw new WebDriverManagerException(e);
+        }
     }
 
     protected void deleteFolder(File folder) {
