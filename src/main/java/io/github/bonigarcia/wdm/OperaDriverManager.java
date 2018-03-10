@@ -76,7 +76,7 @@ public class OperaDriverManager extends WebDriverManager {
             int i = 0;
             File operadriver;
             do {
-                operadriver = listFiles[0];
+                operadriver = listFiles[i];
                 i++;
             } while (!config().isExecutable(operadriver)
                     || i >= listFiles.length);
