@@ -322,13 +322,18 @@ public abstract class WebDriverManager {
         return instanceMap.get(driverManagerType);
     }
 
+    public WebDriverManager targetPath(String targetPath) {
+        config().setTargetPath(targetPath);
+        return instanceMap.get(driverManagerType);
+    }
+
     public WebDriverManager avoidExport() {
         config().setAvoidExport(true);
         return instanceMap.get(driverManagerType);
     }
 
-    public WebDriverManager targetPath(String targetPath) {
-        config().setTargetPath(targetPath);
+    public WebDriverManager avoidOutputTree() {
+        config().setAvoidOutputTree(true);
         return instanceMap.get(driverManagerType);
     }
 
@@ -770,6 +775,8 @@ public abstract class WebDriverManager {
             log.info("Exporting {} as {}", variableName, variableValue);
             binaryPath = variableValue;
             System.setProperty(variableName, variableValue);
+        } else {
+            log.info("Resulting binary {}", variableValue);
         }
     }
 
@@ -872,7 +879,7 @@ public abstract class WebDriverManager {
             DriverManagerType driverManagerType = DriverManagerType
                     .valueOf(browser.toUpperCase());
             WebDriverManager.getInstance(driverManagerType).avoidExport()
-                    .targetPath(".").setup();
+                    .targetPath(".").forceDownload().avoidOutputTree().setup();
         }
     }
 }

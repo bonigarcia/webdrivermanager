@@ -32,6 +32,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.util.Properties;
 
 import org.slf4j.Logger;
@@ -67,6 +68,7 @@ public class WdmConfig {
     protected Integer timeout; // timeout()
     protected String properties; // properties()
     protected Boolean avoidExport; // avoidExport()
+    protected Boolean avoidOutputTree; // avoidOutputTree()
 
     public WdmConfig() {
         reset();
@@ -91,6 +93,8 @@ public class WdmConfig {
         setGitHubTokenSecret(null);
         setTargetPath(null);
         setTimeout(null);
+        setAvoidExport(null);
+        setAvoidOutputTree(null);
     }
 
     protected static boolean isNullOrEmpty(String string) {
@@ -333,6 +337,9 @@ public class WdmConfig {
             if (path.contains(HOME)) {
                 path = path.replace(HOME, System.getProperty("user.home"));
             }
+            if (path.equals(".")) {
+                path = Paths.get("").toAbsolutePath().toString();
+            }
         }
         return path;
     }
@@ -355,6 +362,14 @@ public class WdmConfig {
 
     public void setAvoidExport(Boolean avoidExport) {
         this.avoidExport = avoidExport;
+    }
+
+    protected Boolean isAvoidOutputTree() {
+        return resolveBoolean("wdm.avoidOutputTree", avoidOutputTree);
+    }
+
+    public void setAvoidOutputTree(Boolean avoidOutputTree) {
+        this.avoidOutputTree = avoidOutputTree;
     }
 
 }

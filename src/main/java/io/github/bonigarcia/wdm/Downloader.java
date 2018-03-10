@@ -132,31 +132,35 @@ public class Downloader {
 
     public String getTarget(String version, URL url) {
         log.trace("getTarget {} {}", version, url);
-
         String zip = url.getFile().substring(url.getFile().lastIndexOf('/'));
+        String target;
 
-        int iFirst = zip.indexOf('_');
-        int iSecond = zip.indexOf('-');
-        int iLast = zip.length();
-        if (iFirst != zip.lastIndexOf('_')) {
-            iLast = zip.lastIndexOf('_');
-        } else if (iSecond != -1) {
-            iLast = iSecond;
+        if (config().isAvoidOutputTree()) {
+            target = getTargetPath() + zip;
+
+        } else {
+            int iFirst = zip.indexOf('_');
+            int iSecond = zip.indexOf('-');
+            int iLast = zip.length();
+            if (iFirst != zip.lastIndexOf('_')) {
+                iLast = zip.lastIndexOf('_');
+            } else if (iSecond != -1) {
+                iLast = iSecond;
+            }
+
+            String folder = zip.substring(0, iLast).replace(".zip", "")
+                    .replace(".tar.bz2", "").replace(".tar.gz", "")
+                    .replace(".msi", "").replace(".exe", "")
+                    .replace("_", separator);
+
+            target = WebDriverManager.getInstance(driverManagerType)
+                    .preDownload(getTargetPath() + folder + separator + version
+                            + zip, version);
+            log.trace("Target file for URL {} version {} = {}", url, version,
+                    target);
         }
 
-        String folder = zip.substring(0, iLast).replace(".zip", "")
-                .replace(".tar.bz2", "").replace(".tar.gz", "")
-                .replace(".msi", "").replace(".exe", "")
-                .replace("_", separator);
-
-        String target = WebDriverManager.getInstance(driverManagerType)
-                .preDownload(
-                        getTargetPath() + folder + separator + version + zip,
-                        version);
-        log.trace("Target file for URL {} version {} = {}", url, version,
-                target);
-
-        return target;
+        return new File(target).getPath();
     }
 
     public String getTargetPath() {
