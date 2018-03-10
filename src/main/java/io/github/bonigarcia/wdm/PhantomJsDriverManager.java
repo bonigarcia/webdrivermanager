@@ -82,7 +82,8 @@ public class PhantomJsDriverManager extends WebDriverManager {
     protected File postDownload(File archive) {
         log.trace("PhatomJS package name: {}", archive);
 
-        File extractFolder = archive.getParentFile().listFiles()[0];
+        File extractFolder = archive.getParentFile()
+                .listFiles(getFolderFilter())[0];
         log.trace("PhatomJS extract folder (to be deleted): {}", extractFolder);
 
         File binFolder = new File(

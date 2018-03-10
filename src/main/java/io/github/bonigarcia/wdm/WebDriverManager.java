@@ -44,6 +44,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -853,6 +854,17 @@ public abstract class WebDriverManager {
 
     protected HttpClient getHttpClient() {
         return httpClient;
+    }
+
+    protected FilenameFilter getFolderFilter() {
+        final String driverName = getDriverName().get(0);
+        return new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return dir.isDirectory()
+                        && name.toLowerCase().contains(driverName);
+            }
+        };
     }
 
     protected void reset() {
