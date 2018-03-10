@@ -425,7 +425,8 @@ public abstract class WebDriverManager {
                 getDriverNameAsString(), version, e.getMessage());
         if (!config().isForcingCache()) {
             config().setForcingCache(true);
-            log.warn("{} ... trying again forcing to use cache", errorMessage);
+            log.warn("{} ... trying again forcing to use cache", errorMessage,
+                    e);
             manage(arch, version);
         } else {
             log.error("{}", errorMessage, e);

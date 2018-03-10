@@ -75,13 +75,16 @@ public class OperaDriverManager extends WebDriverManager {
             File[] listFiles = extractFolder.listFiles();
             int i = 0;
             File operadriver;
+            boolean isOperaDriver;
             do {
                 operadriver = listFiles[i];
+                isOperaDriver = config().isExecutable(operadriver)
+                        && operadriver.getName()
+                                .contains(getDriverName().get(0));
                 i++;
-            } while (!config().isExecutable(operadriver)
-                    || i >= listFiles.length);
-
-            log.trace("Operadriver binary: {}", operadriver);
+                log.trace("{} is valid: {}", operadriver, isOperaDriver);
+            } while (!isOperaDriver || i >= listFiles.length);
+            log.info("Operadriver binary: {}", operadriver);
 
             File target = new File(archive.getParentFile().getAbsolutePath(),
                     operadriver.getName());
