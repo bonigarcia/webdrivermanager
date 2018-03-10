@@ -30,6 +30,7 @@ import static io.github.bonigarcia.wdm.DriverVersion.NOT_SPECIFIED;
 import static io.github.bonigarcia.wdm.WdmConfig.isNullOrEmpty;
 import static java.lang.Integer.signum;
 import static java.lang.Integer.valueOf;
+import static java.lang.String.join;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.sort;
 import static java.util.Collections.emptyList;
@@ -379,8 +380,9 @@ public abstract class WebDriverManager {
                     || version.equalsIgnoreCase(NOT_SPECIFIED.name());
             boolean cache = config().isForcingCache() || !isNetAvailable();
 
+            String driverNameString = getDriverNameAsString();
             log.trace(">> Managing {} arch={} version={} getLatest={} cache={}",
-                    getDriverName(), arch, version, getLatest, cache);
+                    driverNameString, arch, version, getLatest, cache);
 
             Optional<String> driverInCache = handleCache(arch, version,
                     getLatest, cache);
@@ -388,8 +390,8 @@ public abstract class WebDriverManager {
             if (driverInCache.isPresent()) {
                 versionToDownload = version;
                 downloadedVersion = version;
-                log.debug("Driver for {} {} found in cache {}", getDriverName(),
-                        version, driverInCache.get());
+                log.debug("Driver for {} {} found in cache {}",
+                        driverNameString, version, driverInCache.get());
                 exportDriver(config().getExportParameter(exportParameterKey),
                         driverInCache.get());
 
@@ -400,7 +402,7 @@ public abstract class WebDriverManager {
                 if (candidateUrls.isEmpty()) {
                     String versionStr = getLatest ? "(latest version)"
                             : version;
-                    String errorMessage = getDriverName() + " " + versionStr
+                    String errorMessage = driverNameString + " " + versionStr
                             + " for " + config().getMyOsName() + arch.toString()
                             + " not found in "
                             + config().getDriverUrl(driverUrlKey);
@@ -419,8 +421,8 @@ public abstract class WebDriverManager {
     protected void handleException(Exception e, Architecture arch,
             String version) {
         String errorMessage = String.format(
-                "There was an error managing %s %s (%s)", getDriverName(),
-                version, e.getMessage());
+                "There was an error managing %s %s (%s)",
+                getDriverNameAsString(), version, e.getMessage());
         if (!config().isForcingCache()) {
             config().setForcingCache(true);
             log.warn("{} ... trying again forcing to use cache", errorMessage);
@@ -488,7 +490,7 @@ public abstract class WebDriverManager {
             if (continueSearchingVersion) {
                 log.info(
                         "No binary found for {} {} ... seeking another version",
-                        getDriverName(), versionToDownload);
+                        getDriverNameAsString(), versionToDownload);
                 urls = removeFromList(urls, versionToDownload);
                 versionToDownload = null;
             }
@@ -634,7 +636,8 @@ public abstract class WebDriverManager {
         if (versionToDownload.startsWith(".")) {
             versionToDownload = versionToDownload.substring(1);
         }
-        log.info("Latest version of {} is {}", match, versionToDownload);
+        log.info("Latest version of {} is {}", join(", ", match),
+                versionToDownload);
         return out;
     }
 
@@ -731,7 +734,7 @@ public abstract class WebDriverManager {
     }
 
     protected List<URL> getDriversFromXml(URL driverUrl) throws IOException {
-        log.info("Reading {} to seek {}", driverUrl, getDriverName());
+        log.info("Reading {} to seek {}", driverUrl, getDriverNameAsString());
         List<URL> urls = new ArrayList<>();
         HttpResponse response = httpClient
                 .execute(httpClient.createHttpGet(driverUrl));
@@ -842,6 +845,10 @@ public abstract class WebDriverManager {
 
     protected List<String> getDriverName() {
         return driverName;
+    }
+
+    protected String getDriverNameAsString() {
+        return join(", ", getDriverName());
     }
 
     protected HttpClient getHttpClient() {
