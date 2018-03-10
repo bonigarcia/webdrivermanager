@@ -20,6 +20,7 @@ import static io.github.bonigarcia.wdm.DriverManagerType.OPERA;
 import static java.util.Arrays.asList;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -67,7 +68,15 @@ public class OperaDriverManager extends WebDriverManager {
     protected File postDownload(File archive) {
         log.trace("Post processing for Opera: {}", archive);
 
-        File extractFolder = archive.getParentFile().listFiles()[0];
+        final String operaDriverName = getDriverName().get(0);
+        FilenameFilter filter = new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return dir.isDirectory()
+                        && name.toLowerCase().startsWith(operaDriverName + "_");
+            }
+        };
+        File extractFolder = archive.getParentFile().listFiles(filter)[0];
         if (!extractFolder.isFile()) {
             log.trace("Opera extract folder (to be deleted): {}",
                     extractFolder);

@@ -614,8 +614,9 @@ public abstract class WebDriverManager {
     }
 
     protected List<URL> getLatest(List<URL> list, List<String> match) {
-        log.trace("Checking the lastest version of {} with URL list {}", match,
-                list);
+        String matchString = join(", ", match);
+        log.trace("Checking the lastest version of {} with URL list {}",
+                matchString, list);
         List<URL> out = new ArrayList<>();
         reverse(list);
         List<URL> copyOfList = new ArrayList<>(list);
@@ -634,10 +635,7 @@ public abstract class WebDriverManager {
         if (versionToDownload.startsWith(".")) {
             versionToDownload = versionToDownload.substring(1);
         }
-        if (log.isInfoEnabled()) {
-            log.info("Latest version of {} is {}", join(", ", match),
-                    versionToDownload);
-        }
+        log.info("Latest version of {} is {}", matchString, versionToDownload);
         return out;
     }
 
