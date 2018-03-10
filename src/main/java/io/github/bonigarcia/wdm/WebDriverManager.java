@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static ch.qos.logback.classic.util.ContextInitializer.CONFIG_FILE_PROPERTY;
 import static io.github.bonigarcia.wdm.Architecture.X32;
 import static io.github.bonigarcia.wdm.Architecture.X64;
 import static io.github.bonigarcia.wdm.DriverManagerType.CHROME;
@@ -82,6 +83,12 @@ import com.google.gson.internal.LinkedTreeMap;
  * @since 2.1.0
  */
 public abstract class WebDriverManager {
+
+    static {
+        System.setProperty(CONFIG_FILE_PROPERTY,
+                WebDriverManager.class.getClassLoader()
+                        .getResource("wdm_logback.xml").toExternalForm());
+    }
 
     static final Logger log = getLogger(lookup().lookupClass());
 
