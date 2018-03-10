@@ -70,28 +70,36 @@ public class OperaDriverManager extends WebDriverManager {
         File extractFolder = archive.getParentFile()
                 .listFiles(getFolderFilter())[0];
         if (!extractFolder.isFile()) {
-            log.trace("Opera extract folder (to be deleted): {}",
-                    extractFolder);
-            File[] listFiles = extractFolder.listFiles();
-            int i = 0;
-            File operadriver;
-            boolean isOperaDriver;
-            do {
-                operadriver = listFiles[i];
-                isOperaDriver = config().isExecutable(operadriver)
-                        && operadriver.getName()
-                                .contains(getDriverName().get(0));
-                i++;
-                log.trace("{} is valid: {}", operadriver, isOperaDriver);
-            } while (!isOperaDriver || i >= listFiles.length);
-            log.info("Operadriver binary: {}", operadriver);
+            File target;
+            try {
+                log.trace("Opera extract folder (to be deleted): {}",
+                        extractFolder);
+                File[] listFiles = extractFolder.listFiles();
+                int i = 0;
+                File operadriver;
+                boolean isOperaDriver;
+                do {
+                    if (i >= listFiles.length) {
+                        throw new WebDriverManagerException(
+                                "Driver binary for Opera not found in zip file");
+                    }
+                    operadriver = listFiles[i];
+                    isOperaDriver = config().isExecutable(operadriver)
+                            && operadriver.getName()
+                                    .contains(getDriverName().get(0));
+                    i++;
+                    log.trace("{} is valid: {}", operadriver, isOperaDriver);
+                } while (!isOperaDriver);
+                log.info("Operadriver binary: {}", operadriver);
 
-            File target = new File(archive.getParentFile().getAbsolutePath(),
-                    operadriver.getName());
-            log.trace("Operadriver target: {}", target);
+                target = new File(archive.getParentFile().getAbsolutePath(),
+                        operadriver.getName());
+                log.trace("Operadriver target: {}", target);
 
-            downloader.renameFile(operadriver, target);
-            downloader.deleteFolder(extractFolder);
+                downloader.renameFile(operadriver, target);
+            } finally {
+                downloader.deleteFolder(extractFolder);
+            }
             return target;
         } else {
             return super.postDownload(archive);
