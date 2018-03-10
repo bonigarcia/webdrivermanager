@@ -26,6 +26,7 @@ import static io.github.bonigarcia.wdm.DriverManagerType.OPERA;
 import static io.github.bonigarcia.wdm.DriverManagerType.PHANTOMJS;
 import static io.github.bonigarcia.wdm.DriverVersion.LATEST;
 import static io.github.bonigarcia.wdm.DriverVersion.NOT_SPECIFIED;
+import static io.github.bonigarcia.wdm.OperativeSystem.WIN;
 import static io.github.bonigarcia.wdm.WdmConfig.isNullOrEmpty;
 import static java.lang.Integer.signum;
 import static java.lang.Integer.valueOf;
@@ -882,8 +883,14 @@ public abstract class WebDriverManager {
             log.info("Using WebDriverManager to resolve {}", browser);
             DriverManagerType driverManagerType = DriverManagerType
                     .valueOf(browser.toUpperCase());
-            WebDriverManager.getInstance(driverManagerType).avoidExport()
-                    .targetPath(".").forceDownload().avoidOutputTree().setup();
+            WebDriverManager wdm = WebDriverManager
+                    .getInstance(driverManagerType).avoidExport()
+                    .targetPath(".").forceDownload();
+            if (browser.equalsIgnoreCase("edge")
+                    || browser.equalsIgnoreCase("iexplorer")) {
+                wdm.operativeSystem(WIN);
+            }
+            wdm.avoidOutputTree().setup();
         }
     }
 }
