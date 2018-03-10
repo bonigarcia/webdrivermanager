@@ -634,8 +634,10 @@ public abstract class WebDriverManager {
         if (versionToDownload.startsWith(".")) {
             versionToDownload = versionToDownload.substring(1);
         }
-        log.info("Latest version of {} is {}", join(", ", match),
-                versionToDownload);
+        if (log.isInfoEnabled()) {
+            log.info("Latest version of {} is {}", join(", ", match),
+                    versionToDownload);
+        }
         return out;
     }
 
