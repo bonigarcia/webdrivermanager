@@ -875,22 +875,29 @@ public abstract class WebDriverManager {
     }
 
     public static void main(String[] args) {
+        String validBrowsers = "chrome|firefox|opera|edge|phantomjs|iexplorer";
         if (args.length <= 0) {
-            log.error("Usage: WebDriverManager <browserName> ... "
-                    + "where browserName=chrome|firefox|opera|edge|phantomjs|iexplorer");
+            log.error(
+                    "Usage: WebDriverManager <browserName> ... where browserName={}",
+                    validBrowsers);
         } else {
             String browser = args[0];
             log.info("Using WebDriverManager to resolve {}", browser);
-            DriverManagerType driverManagerType = DriverManagerType
-                    .valueOf(browser.toUpperCase());
-            WebDriverManager wdm = WebDriverManager
-                    .getInstance(driverManagerType).avoidExport()
-                    .targetPath(".").forceDownload();
-            if (browser.equalsIgnoreCase("edge")
-                    || browser.equalsIgnoreCase("iexplorer")) {
-                wdm.operativeSystem(WIN);
+            try {
+                DriverManagerType driverManagerType = DriverManagerType
+                        .valueOf(browser.toUpperCase());
+                WebDriverManager wdm = WebDriverManager
+                        .getInstance(driverManagerType).avoidExport()
+                        .targetPath(".").forceDownload();
+                if (browser.equalsIgnoreCase("edge")
+                        || browser.equalsIgnoreCase("iexplorer")) {
+                    wdm.operativeSystem(WIN);
+                }
+                wdm.avoidOutputTree().setup();
+            } catch (Exception e) {
+                log.error("Driver for {} not found (valid browsers {})",
+                        browser, validBrowsers);
             }
-            wdm.avoidOutputTree().setup();
         }
     }
 }
