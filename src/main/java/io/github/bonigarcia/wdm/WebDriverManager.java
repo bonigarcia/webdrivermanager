@@ -18,6 +18,7 @@ package io.github.bonigarcia.wdm;
 
 import static io.github.bonigarcia.wdm.Architecture.X32;
 import static io.github.bonigarcia.wdm.Architecture.X64;
+import static io.github.bonigarcia.wdm.Config.isNullOrEmpty;
 import static io.github.bonigarcia.wdm.DriverManagerType.CHROME;
 import static io.github.bonigarcia.wdm.DriverManagerType.EDGE;
 import static io.github.bonigarcia.wdm.DriverManagerType.FIREFOX;
@@ -27,7 +28,6 @@ import static io.github.bonigarcia.wdm.DriverManagerType.PHANTOMJS;
 import static io.github.bonigarcia.wdm.DriverVersion.LATEST;
 import static io.github.bonigarcia.wdm.DriverVersion.NOT_SPECIFIED;
 import static io.github.bonigarcia.wdm.OperativeSystem.WIN;
-import static io.github.bonigarcia.wdm.WdmConfig.isNullOrEmpty;
 import static java.lang.Integer.signum;
 import static java.lang.Integer.valueOf;
 import static java.lang.String.join;
@@ -94,7 +94,7 @@ public abstract class WebDriverManager {
 
     protected static Map<DriverManagerType, WebDriverManager> instanceMap = new EnumMap<>(
             DriverManagerType.class);
-    protected static WdmConfig config;
+    protected static Config config;
     protected HttpClient httpClient;
     protected Downloader downloader;
     protected UrlFilter urlFilter;
@@ -110,9 +110,9 @@ public abstract class WebDriverManager {
     protected String driverMirrorUrlKey;
     protected String exportParameterKey;
 
-    public static synchronized WdmConfig config() {
+    public static synchronized Config config() {
         if (config == null) {
-            config = new WdmConfig();
+            config = new Config();
         }
         return config;
     }
@@ -245,17 +245,17 @@ public abstract class WebDriverManager {
     }
 
     public WebDriverManager operativeSystem(OperativeSystem os) {
-        config().setMyOsName(os.name());
+        config().setOs(os.name());
         return instanceMap.get(driverManagerType);
     }
 
     public WebDriverManager forceCache() {
-        config().setForcingCache(true);
+        config().setForceCache(true);
         return instanceMap.get(driverManagerType);
     }
 
     public WebDriverManager forceDownload() {
-        config().setForcingDownload(true);
+        config().setOverride(true);
         return instanceMap.get(driverManagerType);
     }
 
@@ -273,7 +273,7 @@ public abstract class WebDriverManager {
     }
 
     public WebDriverManager proxy(String proxy) {
-        config().setProxyValue(proxy);
+        config().setProxy(proxy);
         return instanceMap.get(driverManagerType);
     }
 
@@ -293,7 +293,7 @@ public abstract class WebDriverManager {
     }
 
     public WebDriverManager ignoreVersions(String... versions) {
-        config().setIgnoredVersions(versions);
+        config().setIgnoreVersions(versions);
         return instanceMap.get(driverManagerType);
     }
 
@@ -368,7 +368,7 @@ public abstract class WebDriverManager {
     }
 
     protected void manage(Architecture arch, String version) {
-        httpClient = new HttpClient(config().getProxyValue(),
+        httpClient = new HttpClient(config().getProxy(),
                 config().getProxyUser(), config().getProxyPass());
         httpClient.setTimeout(config().getTimeout());
         try (HttpClient wdmHttpClient = httpClient) {
@@ -378,7 +378,7 @@ public abstract class WebDriverManager {
             boolean getLatest = version == null || version.isEmpty()
                     || version.equalsIgnoreCase(LATEST.name())
                     || version.equalsIgnoreCase(NOT_SPECIFIED.name());
-            boolean cache = config().isForcingCache() || !isNetAvailable();
+            boolean cache = config().isForceCache() || !isNetAvailable();
 
             String driverNameString = getDriverNameAsString();
             log.trace(">> Managing {} arch={} version={} getLatest={} cache={}",
@@ -392,7 +392,7 @@ public abstract class WebDriverManager {
                 downloadedVersion = version;
                 log.debug("Driver for {} {} found in cache {}",
                         driverNameString, version, driverInCache.get());
-                exportDriver(config().getExportParameter(exportParameterKey),
+                exportDriver(config().getDriverExport(exportParameterKey),
                         driverInCache.get());
 
             } else {
@@ -403,7 +403,7 @@ public abstract class WebDriverManager {
                     String versionStr = getLatest ? "(latest version)"
                             : version;
                     String errorMessage = driverNameString + " " + versionStr
-                            + " for " + config().getMyOsName() + arch.toString()
+                            + " for " + config().getOs() + arch.toString()
                             + " not found in "
                             + config().getDriverUrl(driverUrlKey);
                     log.error(errorMessage);
@@ -423,8 +423,8 @@ public abstract class WebDriverManager {
         String errorMessage = String.format(
                 "There was an error managing %s %s (%s)",
                 getDriverNameAsString(), version, e.getMessage());
-        if (!config().isForcingCache()) {
-            config().setForcingCache(true);
+        if (!config().isForceCache()) {
+            config().setForceCache(true);
             log.warn("{} ... trying again forcing to use cache", errorMessage,
                     e);
             manage(arch, version);
@@ -439,7 +439,7 @@ public abstract class WebDriverManager {
         reverse(candidateUrls);
         URL url = candidateUrls.iterator().next();
         String export = candidateUrls.contains(url)
-                ? config().getExportParameter(exportParameterKey)
+                ? config().getDriverExport(exportParameterKey)
                 : null;
 
         Optional<String> exportValue = downloader.download(url,
@@ -470,20 +470,20 @@ public abstract class WebDriverManager {
 
             // Filter by architecture and OS
             candidateUrls = urlFilter.filterByOs(candidateUrls,
-                    config().getMyOsName());
+                    config().getOs());
             candidateUrls = urlFilter.filterByArch(candidateUrls, arch);
 
             // Extra round of filter phantomjs 2.5.0 in Linux
-            if (config().getMyOsName().equalsIgnoreCase("linux")
+            if (config().getOs().equalsIgnoreCase("linux")
                     && getDriverName().contains("phantomjs")) {
                 candidateUrls = urlFilter.filterByDistro(candidateUrls,
                         "2.5.0");
             }
 
             // Filter by ignored version
-            if (config().getIgnoredVersions() != null) {
+            if (config().getIgnoreVersions() != null) {
                 candidateUrls = urlFilter.filterByIgnoredVersions(candidateUrls,
-                        config().getIgnoredVersions());
+                        config().getIgnoreVersions());
             }
 
             // Find out if driver version has been found or not
@@ -767,7 +767,7 @@ public abstract class WebDriverManager {
     }
 
     protected void exportDriver(String variableName, String variableValue) {
-        if (!config.isAvoidExporting()) {
+        if (!config.isAvoidExport()) {
             log.info("Exporting {} as {}", variableName, variableValue);
             binaryPath = variableValue;
             System.setProperty(variableName, variableValue);

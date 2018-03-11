@@ -82,6 +82,6 @@ public class FirefoxDriverManager extends WebDriverManager {
 
     @Override
     protected boolean shouldCheckArchitecture() {
-        return !config().getMyOsName().contains(MAC.name());
+        return !config().getOs().contains(MAC.name());
     }
 }

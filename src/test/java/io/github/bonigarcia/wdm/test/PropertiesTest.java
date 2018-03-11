@@ -23,7 +23,6 @@ import java.io.File;
 import org.junit.Test;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import io.github.bonigarcia.wdm.WebDriverManagerException;
 
 /**
  * Using different properties.
@@ -42,7 +41,7 @@ public class PropertiesTest {
         assertTrue(binary.exists());
     }
 
-    @Test(expected = WebDriverManagerException.class)
+    @Test(expected = Exception.class)
     public void testBadProperties() {
         WebDriverManager.chromedriver().properties("").setup();
     }

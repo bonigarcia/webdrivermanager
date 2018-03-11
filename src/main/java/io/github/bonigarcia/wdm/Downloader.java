@@ -80,7 +80,7 @@ public class Downloader {
         boolean download = !targetFile.getParentFile().exists()
                 || (targetFile.getParentFile().exists()
                         && targetFile.getParentFile().list().length == 0)
-                || config().isForcingDownload();
+                || config().isOverride();
         log.trace("Downloading {} ({})", url, download);
 
         Optional<File> binary = (download) ? download(url, targetFile, export)
@@ -207,7 +207,7 @@ public class Downloader {
                         name, size, compressedSize);
 
                 file = new File(compressedFile.getParentFile(), name);
-                if (!file.exists() || config().isForcingDownload()) {
+                if (!file.exists() || config().isOverride()) {
                     if (name.endsWith("/")) {
                         file.mkdirs();
                         continue;

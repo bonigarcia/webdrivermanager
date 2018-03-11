@@ -15,6 +15,7 @@
         <jarchivelib.version>0.7.1</jarchivelib.version>
         <jsoup.version>1.10.2</jsoup.version>
         <httpclient.version>4.5.3</httpclient.version>
+        <type-parser.version>0.6.0</type-parser.version>
 
         <junit.version>4.12</junit.version>
         <hamcrest.version>1.3</hamcrest.version>
@@ -118,6 +119,11 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>${logback.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.drapostolos</groupId>
+            <artifactId>type-parser</artifactId>
+            <version>${type-parser.version}</version>
         </dependency>
 
         <dependency>

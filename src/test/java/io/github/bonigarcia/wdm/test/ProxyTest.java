@@ -46,8 +46,8 @@ import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.ChromeDriverManager;
+import io.github.bonigarcia.wdm.Config;
 import io.github.bonigarcia.wdm.HttpClient;
-import io.github.bonigarcia.wdm.WdmConfig;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import mockit.Mock;
 import mockit.MockUp;
@@ -185,15 +185,11 @@ public class ProxyTest {
 
         Field configField = WebDriverManager.class.getDeclaredField("config");
         configField.setAccessible(true);
-        WdmConfig wdmConfig = (WdmConfig) configField.get(browserManager);
-
-        Field proxyValue = WdmConfig.class.getDeclaredField("proxyValue");
-        proxyValue.setAccessible(true);
-        String proxyUrl = (String) proxyValue.get(wdmConfig);
-
+        Config config = (Config) configField.get(browserManager);
+        String proxy = config.getProxy();
         HttpClient wdmHttpClient = (HttpClient) httpClientField
                 .get(browserManager);
-        return wdmHttpClient.createProxy(proxyUrl);
+        return wdmHttpClient.createProxy(proxy);
     }
 
 }

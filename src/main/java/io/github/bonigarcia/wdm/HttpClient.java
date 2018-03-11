@@ -16,7 +16,7 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static io.github.bonigarcia.wdm.WdmConfig.isNullOrEmpty;
+import static io.github.bonigarcia.wdm.Config.isNullOrEmpty;
 import static java.lang.System.getenv;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.net.URLDecoder.decode;

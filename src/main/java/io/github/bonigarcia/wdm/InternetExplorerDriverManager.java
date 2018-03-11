@@ -37,7 +37,7 @@ public class InternetExplorerDriverManager extends WebDriverManager {
 
     public InternetExplorerDriverManager() {
         driverManagerType = IEXPLORER;
-        exportParameterKey = "wdm.internetExplorerExport";
+        exportParameterKey = "wdm.internetExplorerDriverExport";
         driverVersionKey = "wdm.internetExplorerVersion";
         driverUrlKey = "wdm.internetExplorerDriverUrl";
         driverName = asList("IEDriverServer");
