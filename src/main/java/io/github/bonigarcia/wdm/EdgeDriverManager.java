@@ -45,7 +45,7 @@ public class EdgeDriverManager extends WebDriverManager {
     public EdgeDriverManager() {
         driverManagerType = EDGE;
         exportParameterKey = "wdm.edgeDriverExport";
-        driverVersionKey = "wdm.edgeVersion";
+        driverVersionKey = "wdm.edgeDriverVersion";
         driverUrlKey = "wdm.edgeDriverUrl";
         driverName = asList("MicrosoftWebDriver");
     }

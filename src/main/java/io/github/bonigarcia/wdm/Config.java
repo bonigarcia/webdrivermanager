@@ -86,7 +86,7 @@ public class Config {
     ConfigKey<String> gitHubTokenSecret = new ConfigKey<>(
             "wdm.gitHubTokenSecret", String.class);
 
-    ConfigKey<String> version = new ConfigKey<>(String.class);
+    ConfigKey<String> driverVersion = new ConfigKey<>(String.class);
     ConfigKey<URL> driverUrl = new ConfigKey<>(URL.class);
     ConfigKey<URL> driverMirrorUrl = new ConfigKey<>(URL.class);
     ConfigKey<String> driverExport = new ConfigKey<>(String.class);
@@ -147,15 +147,15 @@ public class Config {
     }
 
     private String defaultOsName() {
-        String os = getProperty("os.name").toLowerCase();
+        String osName = getProperty("os.name").toLowerCase();
         if (IS_OS_WINDOWS) {
-            os = WIN.name();
+            osName = WIN.name();
         } else if (IS_OS_LINUX) {
-            os = LINUX.name();
+            osName = LINUX.name();
         } else if (IS_OS_MAC) {
-            os = MAC.name();
+            osName = MAC.name();
         }
-        return os;
+        return osName;
     }
 
     private String defaultArchitecture() {
@@ -187,7 +187,7 @@ public class Config {
         String path = null;
 
         if (resolved != null) {
-            path = (String) resolved;
+            path = resolved;
             if (path.contains(HOME)) {
                 path = path.replace(HOME, System.getProperty("user.home"));
             }
@@ -327,12 +327,13 @@ public class Config {
         this.gitHubTokenSecret.setValue(value);
     }
 
-    public String getVersion(String name) {
-        return resolver(name, version.getValue(), version.getType());
+    public String getDriverVersion(String name) {
+        return resolver(name, driverVersion.getValue(),
+                driverVersion.getType());
     }
 
-    public void setVersion(String value) {
-        this.version.setValue(value);
+    public void setDriverVersion(String value) {
+        this.driverVersion.setValue(value);
     }
 
     public URL getDriverUrl(String name) {

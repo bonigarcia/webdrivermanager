@@ -214,7 +214,8 @@ public abstract class WebDriverManager {
     public synchronized void setup() {
         if (driverManagerType != null) {
             try {
-                String driverVersion = config().getVersion(driverVersionKey);
+                String driverVersion = config()
+                        .getDriverVersion(driverVersionKey);
                 manage(config().getArchitecture(),
                         isNullOrEmpty(driverVersion) ? NOT_SPECIFIED.name()
                                 : driverVersion);
@@ -225,7 +226,7 @@ public abstract class WebDriverManager {
     }
 
     public WebDriverManager version(String version) {
-        config().setVersion(version);
+        config().setDriverVersion(version);
         return instanceMap.get(driverManagerType);
     }
 
