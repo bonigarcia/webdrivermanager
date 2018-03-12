@@ -120,6 +120,7 @@ public class Downloader {
         File resultingBinary = new File(targetFolder, extractedFile.getName());
         if (!resultingBinary.exists()) {
             moveFileToDirectory(extractedFile, targetFolder, true);
+            setFileExecutable(resultingBinary);
         }
         deleteFolder(tempDir);
 
@@ -203,7 +204,6 @@ public class Downloader {
 
         File result = WebDriverManager.getInstance(driverManagerType)
                 .postDownload(compressedFile).getAbsoluteFile();
-        setFileExecutable(result);
         log.trace("Resulting binary file {}", result);
 
         return result;
