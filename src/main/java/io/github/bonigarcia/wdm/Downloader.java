@@ -118,7 +118,12 @@ public class Downloader {
             extractedFile = temporaryFile;
         }
         File resultingBinary = new File(targetFolder, extractedFile.getName());
-        if (!resultingBinary.exists()) {
+        boolean binaryExists = resultingBinary.exists();
+        if (!binaryExists || config().isOverride()) {
+            if (binaryExists) {
+                log.debug("Overriding former binary {}", resultingBinary);
+                deleteFile(resultingBinary);
+            }
             moveFileToDirectory(extractedFile, targetFolder, true);
         }
         if (!config().isExecutable(resultingBinary)) {

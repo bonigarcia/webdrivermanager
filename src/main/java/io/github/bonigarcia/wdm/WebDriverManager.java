@@ -376,14 +376,14 @@ public abstract class WebDriverManager {
             boolean cache = config().isForceCache() || !isNetAvailable();
 
             String driverNameString = listToString(getDriverName());
-            log.trace(">> Managing {} arch={} version={} getLatest={} cache={}",
+            log.trace("Managing {} arch={} version={} getLatest={} cache={}",
                     driverNameString, arch, version, getLatest, cache);
 
             Optional<String> driverInCache = handleCache(arch, version,
                     getLatest, cache);
 
             String versionStr = getLatest ? "(latest version)" : version;
-            if (driverInCache.isPresent()) {
+            if (driverInCache.isPresent() && !config().isOverride()) {
                 versionToDownload = version;
                 downloadedVersion = version;
                 log.debug("Driver for {} {} found in cache {}",
