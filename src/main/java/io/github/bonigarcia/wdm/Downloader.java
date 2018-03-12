@@ -30,7 +30,7 @@ import static java.util.UUID.randomUUID;
 import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
 import static org.apache.commons.io.FileUtils.deleteDirectory;
 import static org.apache.commons.io.FileUtils.listFiles;
-import static org.apache.commons.io.FileUtils.moveFile;
+import static org.apache.commons.io.FileUtils.moveFileToDirectory;
 import static org.rauschig.jarchivelib.ArchiveFormat.TAR;
 import static org.rauschig.jarchivelib.ArchiverFactory.createArchiver;
 import static org.rauschig.jarchivelib.CompressionType.BZIP2;
@@ -90,7 +90,8 @@ public class Downloader {
             log.debug("Target folder content: {}", content);
         }
 
-        Optional<File> binary = (download) ? download(url, targetFile, export)
+        Optional<File> binary = (download)
+                ? downloadAndExtract(url, targetFile, export)
                 : checkBinary(driverName, targetFile);
         if (export != null && binary.isPresent()) {
             return Optional.of(binary.get().toString());
@@ -98,24 +99,30 @@ public class Downloader {
         return Optional.empty();
     }
 
-    private Optional<File> download(URL url, File targetFile, String export)
-            throws IOException, InterruptedException {
-        log.info("Downloading {} to {}", url, targetFile);
+    private Optional<File> downloadAndExtract(URL url, File targetFile,
+            String export) throws IOException, InterruptedException {
+        File targetFolder = targetFile.getParentFile();
+        log.info("Downloading {} to folder {}", url, targetFolder);
         File tempDir = createTempDirectory("").toFile();
         File temporaryFile = new File(tempDir, targetFile.getName());
         log.trace("Using temporal file {}", temporaryFile);
         copyInputStreamToFile(httpClient.execute(httpClient.createHttpGet(url))
                 .getEntity().getContent(), temporaryFile);
-        moveFile(temporaryFile, targetFile);
-        deleteFile(tempDir);
 
+        File extractedFile;
         if (!export.contains("edge")) {
-            return of(extract(targetFile));
+            extractedFile = extract(temporaryFile);
         } else if (targetFile.getName().toLowerCase().endsWith(".msi")) {
-            return of(extractMsi(targetFile));
+            extractedFile = extractMsi(temporaryFile);
         } else {
-            return of(targetFile);
+            extractedFile = temporaryFile;
         }
+        moveFileToDirectory(extractedFile, targetFolder, true);
+        deleteFile(tempDir);
+        File resultingBinary = new File(targetFolder, extractedFile.getName());
+        log.info("Binary driver after extraction {}", resultingBinary);
+
+        return Optional.of(resultingBinary);
     }
 
     private Optional<File> checkBinary(List<String> driverName,
