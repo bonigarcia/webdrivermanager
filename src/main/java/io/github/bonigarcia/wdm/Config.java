@@ -183,8 +183,9 @@ public class Config {
         return resolve(properties);
     }
 
-    public void setProperties(String properties) {
+    public Config setProperties(String properties) {
         this.properties.setValue(properties);
+        return this;
     }
 
     public String getTargetPath() {
@@ -203,104 +204,117 @@ public class Config {
         return path;
     }
 
-    public void setTargetPath(String value) {
+    public Config setTargetPath(String value) {
         this.targetPath.setValue(value);
+        return this;
     }
 
     public boolean isForceCache() {
         return resolve(forceCache);
     }
 
-    public void setForceCache(boolean value) {
+    public Config setForceCache(boolean value) {
         this.forceCache.setValue(value);
+        return this;
     }
 
     public boolean isOverride() {
         return resolve(override);
     }
 
-    public void setOverride(boolean value) {
+    public Config setOverride(boolean value) {
         this.override.setValue(value);
+        return this;
     }
 
     public boolean isUseMirror() {
         return resolve(useMirror);
     }
 
-    public void setUseMirror(boolean value) {
+    public Config setUseMirror(boolean value) {
         this.useMirror.setValue(value);
+        return this;
     }
 
     public boolean isUseBetaVersions() {
         return resolve(useBetaVersions);
     }
 
-    public void setUseBetaVersions(boolean value) {
+    public Config setUseBetaVersions(boolean value) {
         this.useBetaVersions.setValue(value);
+        return this;
     }
 
     public boolean isAvoidExport() {
         return resolve(avoidExport);
     }
 
-    public void setAvoidExport(boolean value) {
+    public Config setAvoidExport(boolean value) {
         this.avoidExport.setValue(value);
+        return this;
     }
 
     public boolean isAvoidOutputTree() {
         return resolve(avoidOutputTree);
     }
 
-    public void setAvoidOutputTree(boolean value) {
+    public Config setAvoidOutputTree(boolean value) {
         this.avoidOutputTree.setValue(value);
+        return this;
     }
 
     public int getTimeout() {
         return resolve(timeout);
     }
 
-    public void setTimeout(int value) {
+    public Config setTimeout(int value) {
         this.timeout.setValue(value);
+        return this;
     }
 
     public Architecture getArchitecture() {
         return Architecture.valueOf(resolve(architecture));
     }
 
-    public void setArchitecture(Architecture value) {
+    public Config setArchitecture(Architecture value) {
         this.architecture.setValue(value.name());
+        return this;
     }
 
     public String getOs() {
         return resolve(os);
     }
 
-    public void setOs(String value) {
+    public Config setOs(String value) {
         this.os.setValue(value);
+        return this;
     }
 
     public String getProxy() {
         return resolve(proxy);
     }
 
-    public void setProxy(String value) {
+    public Config setProxy(String value) {
         this.proxy.setValue(value);
+        return this;
     }
 
     public String getProxyUser() {
         return resolve(proxyUser);
     }
 
-    public void setProxyUser(String value) {
+    public Config setProxyUser(String value) {
         this.proxyUser.setValue(value);
+        return this;
     }
 
     public String getProxyPass() {
         return resolve(proxyPass);
     }
 
-    public void setProxyPass(String value) {
+    public Config setProxyPass(String value) {
         this.proxyPass.setValue(value);
+        return this;
     }
 
     public String[] getIgnoreVersions() {
@@ -312,24 +326,27 @@ public class Config {
         return out;
     }
 
-    public void setIgnoreVersions(String[] value) {
+    public Config setIgnoreVersions(String[] value) {
         this.ignoreVersions.setValue(join(",", value));
+        return this;
     }
 
     public String getGitHubTokenName() {
         return resolve(gitHubTokenName);
     }
 
-    public void setGitHubTokenName(String value) {
+    public Config setGitHubTokenName(String value) {
         this.gitHubTokenName.setValue(value);
+        return this;
     }
 
     public String getGitHubTokenSecret() {
         return resolve(gitHubTokenSecret);
     }
 
-    public void setGitHubTokenSecret(String value) {
+    public Config setGitHubTokenSecret(String value) {
         this.gitHubTokenSecret.setValue(value);
+        return this;
     }
 
     public String getDriverVersion(String name) {
@@ -337,16 +354,18 @@ public class Config {
                 driverVersion.getType());
     }
 
-    public void setDriverVersion(String value) {
+    public Config setDriverVersion(String value) {
         this.driverVersion.setValue(value);
+        return this;
     }
 
     public URL getDriverUrl(String name) {
         return resolver(name, driverUrl.getValue(), driverUrl.getType());
     }
 
-    public void setDriverUrl(URL value) {
+    public Config setDriverUrl(URL value) {
         this.driverUrl.setValue(value);
+        return this;
     }
 
     public URL getDriverMirrorUrl(String name) {
@@ -354,16 +373,18 @@ public class Config {
                 driverMirrorUrl.getType());
     }
 
-    public void setDriverMirrorUrl(URL value) {
+    public Config setDriverMirrorUrl(URL value) {
         this.driverMirrorUrl.setValue(value);
+        return this;
     }
 
     public String getDriverExport(String name) {
         return resolver(name, driverExport.getValue(), driverExport.getType());
     }
 
-    public void setDriverExport(String value) {
+    public Config setDriverExport(String value) {
         this.driverExport.setValue(value);
+        return this;
     }
 
     public Boolean getUseMirror(String driverMirrorUrlKey) {
