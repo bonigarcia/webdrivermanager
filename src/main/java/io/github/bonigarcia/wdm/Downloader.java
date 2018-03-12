@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static io.github.bonigarcia.wdm.Config.listToString;
 import static io.github.bonigarcia.wdm.WebDriverManager.config;
 import static java.io.File.separator;
 import static java.lang.Runtime.getRuntime;
@@ -85,7 +86,8 @@ public class Downloader {
 
         log.trace("Downloading {} to {} ({})", url, targetFile, download);
         if (!download && log.isDebugEnabled() && list != null) {
-            log.debug("Target folder content: {}", Arrays.asList(list));
+            String content = listToString(Arrays.asList(list));
+            log.debug("Target folder content: {}", content);
         }
 
         Optional<File> binary = (download) ? download(url, targetFile, export)
