@@ -16,8 +16,10 @@
  */
 package io.github.bonigarcia.wdm.test;
 
+import static io.github.bonigarcia.wdm.DriverManagerType.EDGE;
 import static io.github.bonigarcia.wdm.WebDriverManager.edgedriver;
 import static java.lang.invoke.MethodHandles.lookup;
+import static org.apache.commons.io.FileUtils.cleanDirectory;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeFalse;
@@ -25,10 +27,14 @@ import static org.junit.Assume.assumeTrue;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
+import java.io.IOException;
 
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 
+import io.github.bonigarcia.wdm.Downloader;
 import io.github.bonigarcia.wdm.WebDriverManagerException;
 
 /**
@@ -40,6 +46,12 @@ import io.github.bonigarcia.wdm.WebDriverManagerException;
 public class EdgeMsiTest {
 
     final Logger log = getLogger(lookup().lookupClass());
+
+    @Before
+    @After
+    public void cleanCache() throws IOException {
+        cleanDirectory(new File(new Downloader(EDGE).getTargetPath()));
+    }
 
     @Test(expected = WebDriverManagerException.class)
     public void testMsiOutWindows() {
