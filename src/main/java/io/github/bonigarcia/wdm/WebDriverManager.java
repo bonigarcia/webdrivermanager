@@ -26,8 +26,6 @@ import static io.github.bonigarcia.wdm.DriverManagerType.FIREFOX;
 import static io.github.bonigarcia.wdm.DriverManagerType.IEXPLORER;
 import static io.github.bonigarcia.wdm.DriverManagerType.OPERA;
 import static io.github.bonigarcia.wdm.DriverManagerType.PHANTOMJS;
-import static io.github.bonigarcia.wdm.DriverVersion.LATEST;
-import static io.github.bonigarcia.wdm.DriverVersion.NOT_SPECIFIED;
 import static io.github.bonigarcia.wdm.OperativeSystem.WIN;
 import static java.lang.Integer.signum;
 import static java.lang.Integer.valueOf;
@@ -214,11 +212,8 @@ public abstract class WebDriverManager {
     public synchronized void setup() {
         if (driverManagerType != null) {
             try {
-                String driverVersion = config()
-                        .getDriverVersion(driverVersionKey);
                 manage(config().getArchitecture(),
-                        isNullOrEmpty(driverVersion) ? NOT_SPECIFIED.name()
-                                : driverVersion);
+                        config().getDriverVersion(driverVersionKey));
             } finally {
                 reset();
             }
@@ -377,8 +372,7 @@ public abstract class WebDriverManager {
             urlFilter = new UrlFilter();
 
             boolean getLatest = version == null || version.isEmpty()
-                    || version.equalsIgnoreCase(LATEST.name())
-                    || version.equalsIgnoreCase(NOT_SPECIFIED.name());
+                    || version.equalsIgnoreCase("latest");
             boolean cache = config().isForceCache() || !isNetAvailable();
 
             String driverNameString = listToString(getDriverName());
@@ -388,11 +382,12 @@ public abstract class WebDriverManager {
             Optional<String> driverInCache = handleCache(arch, version,
                     getLatest, cache);
 
+            String versionStr = getLatest ? "(latest version)" : version;
             if (driverInCache.isPresent()) {
                 versionToDownload = version;
                 downloadedVersion = version;
                 log.debug("Driver for {} {} found in cache {}",
-                        driverNameString, version, driverInCache.get());
+                        driverNameString, versionStr, driverInCache.get());
                 exportDriver(config().getDriverExport(exportParameterKey),
                         driverInCache.get());
 
@@ -401,8 +396,6 @@ public abstract class WebDriverManager {
                         getLatest);
 
                 if (candidateUrls.isEmpty()) {
-                    String versionStr = getLatest ? "(latest version)"
-                            : version;
                     String errorMessage = driverNameString + " " + versionStr
                             + " for " + config().getOs() + arch.toString()
                             + " not found in "
