@@ -117,9 +117,12 @@ public class Downloader {
         } else {
             extractedFile = temporaryFile;
         }
-        moveFileToDirectory(extractedFile, targetFolder, true);
-        deleteFile(tempDir);
         File resultingBinary = new File(targetFolder, extractedFile.getName());
+        if (!resultingBinary.exists()) {
+            moveFileToDirectory(extractedFile, targetFolder, true);
+        }
+        deleteFile(tempDir);
+
         log.info("Binary driver after extraction {}", resultingBinary);
 
         return Optional.of(resultingBinary);
