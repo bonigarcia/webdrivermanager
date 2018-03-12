@@ -40,7 +40,6 @@ import org.apache.http.auth.NTCredentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -72,11 +71,6 @@ public class ProxyTest {
             "https://" + PROXY_URL + ":" + PROXY_PORT,
             "https://test:test@" + PROXY_URL + ":" + PROXY_PORT, };
 
-    @Before
-    public void setup() {
-        WebDriverManager.config();
-    }
-
     @Test
     public void testRealEnvProxyToNull() throws Exception {
         WebDriverManager browserManager = ChromeDriverManager.getInstance();
@@ -96,8 +90,9 @@ public class ProxyTest {
 
     @Test
     public void testProxyCredentialsScope() throws Exception {
-        HttpClient wdmClient = new HttpClient.Builder().proxy("myproxy:8081")
-                .proxyUser("domain\\me").proxyPass("pass").build();
+        WebDriverManager.config().setProxy("myproxy:8081")
+                .setProxyUser("domain\\me").setProxyPass("pass");
+        HttpClient wdmClient = new HttpClient();
         Field field = HttpClient.class.getDeclaredField("closeableHttpClient");
         field.setAccessible(true);
 
@@ -126,8 +121,9 @@ public class ProxyTest {
 
     @Test
     public void testProxyCredentials() throws Exception {
-        HttpClient wdmClient = new HttpClient.Builder().proxy("myproxy:8081")
-                .proxyUser("domain\\me").proxyPass("pass").build();
+        WebDriverManager.config().setProxy("myproxy:8081")
+                .setProxyUser("domain\\me").setProxyPass("pass");
+        HttpClient wdmClient = new HttpClient();
         Field field = HttpClient.class.getDeclaredField("closeableHttpClient");
         field.setAccessible(true);
 
@@ -181,7 +177,7 @@ public class ProxyTest {
         Field httpClientField = WebDriverManager.class
                 .getDeclaredField("httpClient");
         httpClientField.setAccessible(true);
-        httpClientField.set(browserManager, new HttpClient.Builder().build());
+        httpClientField.set(browserManager, new HttpClient());
 
         Field configField = WebDriverManager.class.getDeclaredField("config");
         configField.setAccessible(true);

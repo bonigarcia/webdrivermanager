@@ -34,10 +34,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
+import io.github.bonigarcia.wdm.HttpClient;
 import io.github.bonigarcia.wdm.PhantomJsDriverManager;
 import io.github.bonigarcia.wdm.UrlFilter;
-import io.github.bonigarcia.wdm.HttpClient;
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 /**
  * Filter verifications for phantomjs.
@@ -59,7 +59,7 @@ public class PhantomJsFilterTest {
         phatomJsManager = PhantomJsDriverManager.getInstance();
         Field field = WebDriverManager.class.getDeclaredField("httpClient");
         field.setAccessible(true);
-        field.set(phatomJsManager, new HttpClient.Builder().build());
+        field.set(phatomJsManager, new HttpClient());
 
         Method method = WebDriverManager.class.getDeclaredMethod("getDrivers");
         method.setAccessible(true);

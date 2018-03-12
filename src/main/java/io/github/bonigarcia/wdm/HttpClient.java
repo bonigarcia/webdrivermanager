@@ -17,6 +17,7 @@
 package io.github.bonigarcia.wdm;
 
 import static io.github.bonigarcia.wdm.Config.isNullOrEmpty;
+import static io.github.bonigarcia.wdm.WebDriverManager.config;
 import static java.lang.System.getenv;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.net.URLDecoder.decode;
@@ -86,15 +87,17 @@ public class HttpClient implements Closeable {
     CloseableHttpClient closeableHttpClient;
     int timeout;
 
-    public HttpClient(String proxyUrl, String proxyUser, String proxyPass) {
+    public HttpClient() {
         HttpClientBuilder builder = HttpClientBuilder.create()
                 .setConnectionManagerShared(true);
         try {
-            Optional<HttpHost> proxyHost = createProxyHttpHost(proxyUrl);
+            String proxy = config().getProxy();
+            Optional<HttpHost> proxyHost = createProxyHttpHost(proxy);
             if (proxyHost.isPresent()) {
                 builder.setProxy(proxyHost.get());
                 Optional<BasicCredentialsProvider> credentialsProvider = createBasicCredentialsProvider(
-                        proxyUrl, proxyUser, proxyPass, proxyHost.get());
+                        proxy, config().getProxyUser(), config().getProxyPass(),
+                        proxyHost.get());
                 if (credentialsProvider.isPresent()) {
                     builder.setDefaultCredentialsProvider(
                             credentialsProvider.get());
@@ -131,9 +134,9 @@ public class HttpClient implements Closeable {
         closeableHttpClient = builder.useSystemProperties().build();
     }
 
-    public Optional<Proxy> createProxy(String proxyUrl)
+    public Optional<Proxy> createProxy(String proxy)
             throws MalformedURLException {
-        Optional<URL> url = determineProxyUrl(proxyUrl);
+        Optional<URL> url = determineProxyUrl(proxy);
         if (url.isPresent()) {
             String proxyHost = url.get().getHost();
             int proxyPort = url.get().getPort() == -1 ? 80
@@ -289,31 +292,6 @@ public class HttpClient implements Closeable {
 
     public void setTimeout(int timeout) {
         this.timeout = (int) SECONDS.toMillis(timeout);
-    }
-
-    public static class Builder {
-        private String proxy;
-        private String proxyUser;
-        private String proxyPass;
-
-        public Builder proxy(String proxy) {
-            this.proxy = proxy;
-            return this;
-        }
-
-        public Builder proxyUser(String proxyUser) {
-            this.proxyUser = proxyUser;
-            return this;
-        }
-
-        public Builder proxyPass(String proxyPass) {
-            this.proxyPass = proxyPass;
-            return this;
-        }
-
-        public HttpClient build() {
-            return new HttpClient(proxy, proxyUser, proxyPass);
-        }
     }
 
 }

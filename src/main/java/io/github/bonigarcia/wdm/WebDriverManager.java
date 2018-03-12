@@ -364,8 +364,7 @@ public abstract class WebDriverManager {
     }
 
     protected void manage(Architecture arch, String version) {
-        httpClient = new HttpClient(config().getProxy(),
-                config().getProxyUser(), config().getProxyPass());
+        httpClient = new HttpClient();
         httpClient.setTimeout(config().getTimeout());
         try (HttpClient wdmHttpClient = httpClient) {
             downloader = new Downloader(driverManagerType);
