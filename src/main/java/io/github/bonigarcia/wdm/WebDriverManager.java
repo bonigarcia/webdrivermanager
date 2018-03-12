@@ -19,6 +19,7 @@ package io.github.bonigarcia.wdm;
 import static io.github.bonigarcia.wdm.Architecture.X32;
 import static io.github.bonigarcia.wdm.Architecture.X64;
 import static io.github.bonigarcia.wdm.Config.isNullOrEmpty;
+import static io.github.bonigarcia.wdm.Config.listToString;
 import static io.github.bonigarcia.wdm.DriverManagerType.CHROME;
 import static io.github.bonigarcia.wdm.DriverManagerType.EDGE;
 import static io.github.bonigarcia.wdm.DriverManagerType.FIREFOX;
@@ -30,7 +31,6 @@ import static io.github.bonigarcia.wdm.DriverVersion.NOT_SPECIFIED;
 import static io.github.bonigarcia.wdm.OperativeSystem.WIN;
 import static java.lang.Integer.signum;
 import static java.lang.Integer.valueOf;
-import static java.lang.String.join;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.sort;
 import static java.util.Collections.emptyList;
@@ -381,7 +381,7 @@ public abstract class WebDriverManager {
                     || version.equalsIgnoreCase(NOT_SPECIFIED.name());
             boolean cache = config().isForceCache() || !isNetAvailable();
 
-            String driverNameString = getDriverNameAsString();
+            String driverNameString = listToString(getDriverName());
             log.trace(">> Managing {} arch={} version={} getLatest={} cache={}",
                     driverNameString, arch, version, getLatest, cache);
 
@@ -421,9 +421,10 @@ public abstract class WebDriverManager {
 
     protected void handleException(Exception e, Architecture arch,
             String version) {
+        String driverNameString = listToString(getDriverName());
         String errorMessage = String.format(
-                "There was an error managing %s %s (%s)",
-                getDriverNameAsString(), version, e.getMessage());
+                "There was an error managing %s %s (%s)", driverNameString,
+                version, e.getMessage());
         if (!config().isForceCache()) {
             config().setForceCache(true);
             log.warn("{} ... trying again forcing to use cache", errorMessage,
@@ -490,9 +491,10 @@ public abstract class WebDriverManager {
             // Find out if driver version has been found or not
             continueSearchingVersion = candidateUrls.isEmpty() && getLatest;
             if (continueSearchingVersion) {
+                String driverNameString = listToString(getDriverName());
                 log.info(
                         "No binary found for {} {} ... seeking another version",
-                        getDriverNameAsString(), versionToDownload);
+                        driverNameString, versionToDownload);
                 urls = removeFromList(urls, versionToDownload);
                 versionToDownload = null;
             }
@@ -613,12 +615,13 @@ public abstract class WebDriverManager {
             }
         }
         versionToDownload = version;
-        log.debug("Using {} {}", match, version);
+        String matchString = listToString(match);
+        log.debug("Using {} {}", matchString, version);
         return out;
     }
 
     protected List<URL> getLatest(List<URL> list, List<String> match) {
-        String matchString = join(", ", match);
+        String matchString = listToString(match);
         log.trace("Checking the lastest version of {} with URL list {}",
                 matchString, list);
         List<URL> out = new ArrayList<>();
@@ -736,7 +739,8 @@ public abstract class WebDriverManager {
     }
 
     protected List<URL> getDriversFromXml(URL driverUrl) throws IOException {
-        log.info("Reading {} to seek {}", driverUrl, getDriverNameAsString());
+        String driverNameString = listToString(getDriverName());
+        log.info("Reading {} to seek {}", driverUrl, driverNameString);
         List<URL> urls = new ArrayList<>();
         HttpResponse response = httpClient
                 .execute(httpClient.createHttpGet(driverUrl));
@@ -849,10 +853,6 @@ public abstract class WebDriverManager {
 
     protected List<String> getDriverName() {
         return driverName;
-    }
-
-    protected String getDriverNameAsString() {
-        return join(", ", getDriverName());
     }
 
     protected HttpClient getHttpClient() {

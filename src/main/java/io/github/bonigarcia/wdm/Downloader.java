@@ -42,6 +42,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
@@ -77,11 +78,15 @@ public class Downloader {
             throws IOException, InterruptedException {
         File targetFile = new File(getTarget(version, url));
 
+        String[] list = targetFile.getParentFile().list();
         boolean download = !targetFile.getParentFile().exists()
-                || (targetFile.getParentFile().exists()
-                        && targetFile.getParentFile().list().length == 0)
+                || !checkBinary(driverName, targetFile).isPresent()
                 || config().isOverride();
-        log.trace("Downloading {} ({})", url, download);
+
+        log.trace("Downloading {} to {} ({})", url, targetFile, download);
+        if (!download && log.isDebugEnabled() && list != null) {
+            log.debug("Target folder content: {}", Arrays.asList(list));
+        }
 
         Optional<File> binary = (download) ? download(url, targetFile, export)
                 : checkBinary(driverName, targetFile);

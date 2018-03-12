@@ -16,8 +16,8 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static io.github.bonigarcia.wdm.Config.listToString;
 import static io.github.bonigarcia.wdm.DriverManagerType.EDGE;
-import static java.lang.String.join;
 import static java.util.Arrays.asList;
 import static org.jsoup.Jsoup.parse;
 
@@ -81,7 +81,7 @@ public class EdgeDriverManager extends WebDriverManager {
 
     @Override
     protected List<URL> getLatest(List<URL> list, List<String> match) {
-        String matchString = join(", ", match);
+        String matchString = listToString(match);
         log.trace("Checking the lastest version of {} with URL list {}",
                 matchString, list);
         List<URL> out = new ArrayList<>();

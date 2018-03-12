@@ -31,6 +31,7 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.util.List;
 import java.util.Properties;
 
 import org.slf4j.Logger;
@@ -164,6 +165,10 @@ public class Config {
 
     public static boolean isNullOrEmpty(String string) {
         return string == null || string.isEmpty();
+    }
+
+    public static String listToString(List<String> list) {
+        return join(", ", list);
     }
 
     public boolean isExecutable(File file) {
