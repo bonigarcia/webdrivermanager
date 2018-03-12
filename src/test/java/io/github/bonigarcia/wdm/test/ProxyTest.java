@@ -40,6 +40,7 @@ import org.apache.http.auth.NTCredentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.junit.AfterClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -70,6 +71,11 @@ public class ProxyTest {
             "http://" + PROXY_URL + ":" + PROXY_PORT,
             "https://" + PROXY_URL + ":" + PROXY_PORT,
             "https://test:test@" + PROXY_URL + ":" + PROXY_PORT, };
+
+    @AfterClass
+    public static void teardown() {
+        WebDriverManager.config().reset();
+    }
 
     @Test
     public void testRealEnvProxyToNull() throws Exception {
