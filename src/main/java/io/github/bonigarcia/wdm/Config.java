@@ -148,7 +148,7 @@ public class Config {
     }
 
     private String defaultOsName() {
-        String osName = getProperty("os.name").toLowerCase();
+        String osName = System.getProperty("os.name").toLowerCase();
         if (IS_OS_WINDOWS) {
             osName = WIN.name();
         } else if (IS_OS_LINUX) {
