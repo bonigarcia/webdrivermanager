@@ -121,7 +121,9 @@ public class Downloader {
         if (!resultingBinary.exists()) {
             moveFileToDirectory(extractedFile, targetFolder, true);
         }
-        setFileExecutable(resultingBinary);
+        if (!config().isExecutable(resultingBinary)) {
+            setFileExecutable(resultingBinary);
+        }
         deleteFolder(tempDir);
 
         log.info("Binary driver after extraction {}", resultingBinary);
