@@ -26,7 +26,6 @@ import static java.nio.file.Files.delete;
 import static java.nio.file.Files.move;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
-import static java.util.UUID.randomUUID;
 import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
 import static org.apache.commons.io.FileUtils.deleteDirectory;
 import static org.apache.commons.io.FileUtils.listFiles;
@@ -243,10 +242,7 @@ public class Downloader {
                     }
 
                     try (InputStream is = zipFolder.getInputStream(zipEntry)) {
-                        File temporaryFile = new File(parent,
-                                randomUUID().toString());
-                        copyInputStreamToFile(is, temporaryFile);
-                        renameFile(temporaryFile, file);
+                        copyInputStreamToFile(is, file);
                     }
                     setFileExecutable(file);
                 } else {
