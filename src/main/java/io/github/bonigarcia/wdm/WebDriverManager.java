@@ -346,8 +346,8 @@ public abstract class WebDriverManager {
             List<String> driverNames = getDriverName();
             List<String> versions = new ArrayList<>();
             for (URL url : drivers) {
-                for (String driverName : driverNames) {
-                    String version = getCurrentVersion(url, driverName);
+                for (String d : driverNames) {
+                    String version = getCurrentVersion(url, d);
                     if (version.isEmpty()
                             || version.equalsIgnoreCase("icons")) {
                         continue;
