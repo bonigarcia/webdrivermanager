@@ -34,6 +34,7 @@ import static java.util.Arrays.sort;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.reverse;
 import static java.util.Collections.reverseOrder;
+import static java.util.Collections.sort;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static javax.xml.xpath.XPathConstants.NODESET;
@@ -338,6 +339,35 @@ public abstract class WebDriverManager {
         return instanceMap.get(driverManagerType).downloadedVersion;
     }
 
+    public List<String> getVersions() {
+        httpClient = new HttpClient(config().getTimeout());
+        try {
+            List<URL> drivers = getDrivers();
+            List<String> driverNames = getDriverName();
+            List<String> versions = new ArrayList<>();
+            for (URL url : drivers) {
+                for (String driverName : driverNames) {
+                    String version = getCurrentVersion(url, driverName);
+                    if (version.isEmpty()
+                            || version.equalsIgnoreCase("icons")) {
+                        continue;
+                    }
+                    if (version.startsWith(".")) {
+                        version = version.substring(1);
+                    }
+                    if (!versions.contains(version)) {
+                        versions.add(version);
+                    }
+                }
+            }
+            log.trace("Version list before sorting {}", versions);
+            sort(versions, new VersionComparator());
+            return versions;
+        } catch (IOException e) {
+            throw new WebDriverManagerException(e);
+        }
+    }
+
     // ------------
 
     protected String preDownload(String target, String version) {
@@ -359,13 +389,21 @@ public abstract class WebDriverManager {
     }
 
     protected String getCurrentVersion(URL url, String driverName) {
-        return url.getFile().substring(url.getFile().indexOf(SLASH) + 1,
-                url.getFile().lastIndexOf(SLASH));
+        String currentVersion = "";
+        try {
+            currentVersion = url.getFile().substring(
+                    url.getFile().indexOf(SLASH) + 1,
+                    url.getFile().lastIndexOf(SLASH));
+        } catch (StringIndexOutOfBoundsException e) {
+            log.trace("Exception getting version of URL {} ({})", url,
+                    e.getMessage());
+        }
+
+        return currentVersion;
     }
 
     protected void manage(Architecture arch, String version) {
-        httpClient = new HttpClient();
-        httpClient.setTimeout(config().getTimeout());
+        httpClient = new HttpClient(config().getTimeout());
         try (HttpClient wdmHttpClient = httpClient) {
             downloader = new Downloader(driverManagerType);
             urlFilter = new UrlFilter();
@@ -793,6 +831,9 @@ public abstract class WebDriverManager {
     protected List<URL> getDriversFromGitHub() throws IOException {
         List<URL> urls;
         URL driverUrl = config().getDriverUrl(driverUrlKey);
+        String driverNameString = listToString(getDriverName());
+        log.info("Reading {} to seek {}", driverUrl, driverNameString);
+
         if (isUsingTaobaoMirror()) {
             urls = getDriversFromMirror(driverUrl);
 
@@ -894,4 +935,5 @@ public abstract class WebDriverManager {
             }
         }
     }
+
 }

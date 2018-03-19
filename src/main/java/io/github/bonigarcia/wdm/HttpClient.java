@@ -87,6 +87,11 @@ public class HttpClient implements Closeable {
     CloseableHttpClient closeableHttpClient;
     int timeout;
 
+    public HttpClient(int timeout) {
+        this();
+        this.timeout = (int) SECONDS.toMillis(timeout);
+    }
+
     public HttpClient() {
         HttpClientBuilder builder = HttpClientBuilder.create()
                 .setConnectionManagerShared(true);
@@ -288,10 +293,6 @@ public class HttpClient implements Closeable {
     @Override
     public void close() throws IOException {
         closeableHttpClient.close();
-    }
-
-    public void setTimeout(int timeout) {
-        this.timeout = (int) SECONDS.toMillis(timeout);
     }
 
 }

@@ -19,6 +19,7 @@ package io.github.bonigarcia.wdm;
 import static io.github.bonigarcia.wdm.Config.listToString;
 import static io.github.bonigarcia.wdm.DriverManagerType.EDGE;
 import static java.util.Arrays.asList;
+import static java.util.Collections.sort;
 import static org.jsoup.Jsoup.parse;
 
 import java.io.IOException;
@@ -71,11 +72,26 @@ public class EdgeDriverManager extends WebDriverManager {
 
             for (int i = 0; i < downloadLink.size(); i++) {
                 String[] version = versionParagraph.get(i).text().split(" ");
-                listVersions.add(version[1]);
-                urlList.add(new URL(downloadLink.get(i).attr("href")));
+                String v = version[1];
+                if (!v.equalsIgnoreCase("version")) {
+                    listVersions.add(v);
+                    urlList.add(new URL(downloadLink.get(i).attr("href")));
+                }
             }
 
             return urlList;
+        }
+    }
+
+    @Override
+    public List<String> getVersions() {
+        httpClient = new HttpClient(config().getTimeout());
+        try {
+            getDrivers();
+            sort(listVersions, new VersionComparator());
+            return listVersions;
+        } catch (IOException e) {
+            throw new WebDriverManagerException(e);
         }
     }
 

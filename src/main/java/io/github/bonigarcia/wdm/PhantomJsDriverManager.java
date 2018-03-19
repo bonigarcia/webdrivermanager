@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static io.github.bonigarcia.wdm.Config.listToString;
 import static io.github.bonigarcia.wdm.DriverManagerType.PHANTOMJS;
 import static java.io.File.separator;
 import static java.util.Arrays.asList;
@@ -33,6 +34,8 @@ import java.util.List;
  */
 public class PhantomJsDriverManager extends WebDriverManager {
 
+    private static final String BETA = "beta";
+
     public static synchronized WebDriverManager getInstance() {
         return phantomjs();
     }
@@ -49,6 +52,8 @@ public class PhantomJsDriverManager extends WebDriverManager {
     @Override
     protected List<URL> getDrivers() throws IOException {
         URL driverUrl = config().getDriverUrl(driverUrlKey);
+        String driverNameString = listToString(getDriverName());
+        log.info("Reading {} to seek {}", driverUrl, driverNameString);
         return getDriversFromMirror(driverUrl);
     }
 
@@ -60,7 +65,20 @@ public class PhantomJsDriverManager extends WebDriverManager {
         String currentVersion = file
                 .substring(matchIndex + driverName.length() + 1, file.length());
         int dashIndex = currentVersion.indexOf('-');
-        currentVersion = currentVersion.substring(0, dashIndex);
+
+        if (dashIndex != -1) {
+            String beta = currentVersion.substring(dashIndex + 1,
+                    dashIndex + 1 + BETA.length());
+            if (beta.equalsIgnoreCase(BETA)) {
+                dashIndex = currentVersion.indexOf('-', dashIndex + 1);
+            }
+            currentVersion = dashIndex != -1
+                    ? currentVersion.substring(0, dashIndex)
+                    : "";
+        } else {
+            currentVersion = "";
+        }
+
         return currentVersion;
     }
 
