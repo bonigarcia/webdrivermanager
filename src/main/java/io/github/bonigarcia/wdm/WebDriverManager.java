@@ -40,6 +40,7 @@ import static java.util.Optional.of;
 import static javax.xml.xpath.XPathConstants.NODESET;
 import static javax.xml.xpath.XPathFactory.newInstance;
 import static org.apache.commons.io.FileUtils.listFiles;
+import static org.apache.commons.io.FilenameUtils.removeExtension;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.BufferedReader;
@@ -376,16 +377,17 @@ public abstract class WebDriverManager {
     }
 
     protected File postDownload(File archive) {
-        File target = archive;
-        File[] ls = archive.getParentFile().listFiles();
+        File parentFolder = archive.getParentFile();
+        File[] ls = parentFolder.listFiles();
         for (File f : ls) {
-            if (config().isExecutable(f)) {
-                target = f;
-                log.trace("Found binary in post-download: {}", target);
-                break;
+            if (getDriverName().contains(removeExtension(f.getName()))) {
+                log.trace("Found binary in post-download: {}", f);
+                return f;
             }
         }
-        return target;
+        throw new WebDriverManagerException("Driver "
+                + listToString(getDriverName())
+                + " not found (using temporal folder " + parentFolder + ")");
     }
 
     protected String getCurrentVersion(URL url, String driverName) {
