@@ -36,8 +36,6 @@ import java.util.Properties;
 
 import org.slf4j.Logger;
 
-import com.github.drapostolos.typeparser.TypeParser;
-
 /**
  * Configuration class.
  *
@@ -49,8 +47,6 @@ public class Config {
     final Logger log = getLogger(lookup().lookupClass());
 
     static final String HOME = "~";
-
-    TypeParser parser = TypeParser.newBuilder().build();
 
     ConfigKey<String> properties = new ConfigKey<>("wdm.properties",
             String.class, "webdrivermanager.properties");
@@ -112,7 +108,29 @@ public class Config {
         if (strValue == null) {
             strValue = getProperty(name);
         }
-        return parser.parse(strValue, type);
+        return parse(type, strValue);
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> T parse(Class<T> type, String strValue) {
+        T output = null;
+        if (type.equals(String.class)) {
+            output = (T) strValue;
+        } else if (type.equals(Integer.class)) {
+            output = (T) Integer.valueOf(strValue);
+        } else if (type.equals(Boolean.class)) {
+            output = (T) Boolean.valueOf(strValue);
+        } else if (type.equals(URL.class)) {
+            try {
+                output = (T) new URL(strValue);
+            } catch (Exception e) {
+                throw new WebDriverManagerException(e);
+            }
+        } else {
+            throw new WebDriverManagerException(
+                    "Type " + type.getTypeName() + " cannot be parsed");
+        }
+        return output;
     }
 
     private String getProperty(String key) {
