@@ -344,7 +344,7 @@ public class Config {
         return out;
     }
 
-    public Config setIgnoreVersions(String[] value) {
+    public Config setIgnoreVersions(String... value) {
         this.ignoreVersions.setValue(join(",", value));
         return this;
     }
