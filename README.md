@@ -151,7 +151,7 @@ WebDriverManager exposes its API by means of the **builder pattern**. This means
 | ``gitHubTokenSecret(String)``        | Secret for authenticated requests (see "Known issues").                                                                                                                                                                                                                                      | ``wdm.gitHubTokenSecret``                                                                                                                                                             |
 | ``timeout(int)``                     | Timeout (in seconds) to connect and download binaries from online reporsitories                                                                                                                                                                                                              | ``wdm.timeout``                                                                                                                                                                       |
 | ``properties(String)``               | Properties file for configuration values (by default ``webdrivermanager.properties``).                                                                                                                                                                                                       | ``wdm.properties``                                                                                                                                                                    |
-| ``avoidExport()``                    | Avoid exporting JVM properties with the path of binaries (i.e. ``webdriver.chrome.driver``, ``webdriver.gecko.driver``, etc). Only recommeded for interactive mode).                                                                                                                         | ``wdm.avoidExport``                                                                                                                                                                   |
+| ``avoidExport()``                    | Avoid exporting JVM properties with the path of binaries (i.e. ``webdriver.chrome.driver``, ``webdriver.gecko.driver``, etc). Only recommended for interactive mode.                                                                                                                         | ``wdm.avoidExport``                                                                                                                                                                   |
 | ``avoidOutputTree()``                | Avoid create tree structure for downloaded binaries (e.g. ``~/.m2/repository/webdriver/chromedriver/linux64/2.37/`` for ``chromedriver``). Used by default in interactive mode.                                                                                                              | ``wdm.avoidOutputTree``                                                                                                                                                               |
 
 
@@ -164,6 +164,13 @@ The following table contains some examples:
 | ``WebDriverManager.operadriver().forceCache().setup();``          | Force to use the cache version of *operadriver*                   |
 | ``WebDriverManager.phantomjs().useMirror().setup();``             | Force to use the taobao.org mirror to download *phantomjs* driver |
 | ``WebDriverManager.chromedriver().proxy("server:port").setup();`` | Using proxy *server:port* for the connection                      |
+
+Three more methods are exposed by WebDriverManager, namely:
+
+* ``getVersions()``: This method allows to find out the list of of available binary versions for a given browser.
+* ``getBinaryPath()``: This method allows to find out the path of the latest resolved binary.
+* ``getDownloadedVersion()``: This method allows to find out the version of the latest resolved binary.
+
 
 ## Configuration
 
@@ -203,9 +210,7 @@ wdm.internetExplorerDriverExport=webdriver.ie.driver
 
 ```
 
-The variable ``wdm.targetPath`` is the default folder in which WebDriver binaries are going to be stored. Notice that by default the path of the Maven local repository is used. The URLs to check the latest version of Chrome, Opera, Internet Explorer, Edge, PhantomJS, and Firefox are set using the variables ``wdm.chromeDriverUrl``, ``wdm.operaDriverUrl``, ``wdm.internetExplorerDriverUrl``, ``wdm.edgeDriverUrl``, ``wdm.phantomjsDriverUrl``, and ``wdm.geckoDriverUrl``.
-
-These properties can be overwritten by Java system properties, for example:
+For instance, the variable ``wdm.targetPath`` is the default folder in which WebDriver binaries are going to be stored. By default the path of the Maven local repository is used. This property can be overwritten by Java system properties, for example:
 
 ```java
 System.setProperty("wdm.targetPath", "/my/custom/path/to/driver/binaries");
@@ -238,8 +243,50 @@ Moreover, as of WebDriverManager 2.2.x, configuration value can be customized us
 ```java
 WebDriverManager.config().setTargetPath("/path/to/my-wdm-cache");
 WebDriverManager.config().setProperties("/path/to/my-wdm.properties");
+WebDriverManager.config().setForceCache(true);
+WebDriverManager.config().setOverride(true);
 ```
 
+## Interactive mode
+
+As of version 2.2.0, WebDriverManager can used interactively from the shell to resolve and download binaries for the supported browsers. There are two ways of using this feature:
+
+* Directly from the source code, using Maven. The command to be used is ``mvn exec:java -Dexec.args="browserName"``. For instance:
+
+```
+> mvn exec:java -Dexec.args="chrome"
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] Building WebDriverManager 2.2.0
+[INFO] ------------------------------------------------------------------------
+[INFO]
+[INFO] --- exec-maven-plugin:1.6.0:java (default-cli) @ webdrivermanager ---
+[INFO] Using WebDriverManager to resolve chrome
+[INFO] Reading https://chromedriver.storage.googleapis.com/ to seek chromedriver
+[INFO] Latest version of chromedriver is 2.37
+[INFO] Downloading https://chromedriver.storage.googleapis.com/2.37/chromedriver_win32.zip to folder D:\projects\webdrivermanager
+[INFO] Binary driver after extraction D:\projects\webdrivermanager\chromedriver.exe
+[INFO] Resulting binary D:\projects\webdrivermanager\chromedriver.exe
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 7.306 s
+[INFO] Finished at: 2018-03-23T09:53:58+01:00
+[INFO] Final Memory: 17M/247M
+[INFO] ------------------------------------------------------------------------
+```
+
+* Using WebDriverManager as a *fat-jar*. This jar can be created using the command ``mvn compile assembly:single`` from the source code, and then ``java -jar webdrivermanager.jar browserName`` . For instance:
+
+```
+> java -jar webdrivermanager-2.1.0-jar-with-dependencies.jar chrome
+[INFO] Using WebDriverManager to resolve chrome
+[INFO] Reading https://chromedriver.storage.googleapis.com/ to seek chromedriver
+[INFO] Latest version of chromedriver is 2.37
+[INFO] Downloading https://chromedriver.storage.googleapis.com/2.37/chromedriver_win32.zip to D:\projects\webdrivermanager\target\chromedriver_win32.zip
+[INFO] Resulting binary D:\projects\webdrivermanager\target\chromedriver.exe
+```
 
 ### HTTP Proxy
 
@@ -277,6 +324,13 @@ In order to avoid this problem, [authenticated requests] should be done. The pro
 ```properties
 -Dwdm.gitHubTokenName=<your-token-name>
 -Dwdm.gitHubTokenSecret=<your-token-secret>
+```
+
+... or as environment variables (e.g. in Travis CI) as follows:
+
+```properties
+WDM_GITHUBTOKENNAME=<your-token-name>
+WDM_GITHUBTOKENSECRET=<your-token-secret>
 ```
 
 ## Help
