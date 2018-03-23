@@ -280,7 +280,7 @@ As of version 2.2.0, WebDriverManager can used interactively from the shell to r
 * Using WebDriverManager as a *fat-jar*. This jar can be created using the command ``mvn compile assembly:single`` from the source code, and then ``java -jar webdrivermanager.jar browserName`` . For instance:
 
 ```
-> java -jar webdrivermanager-2.1.0-jar-with-dependencies.jar chrome
+> java -jar webdrivermanager-2.2.0-jar-with-dependencies.jar chrome
 [INFO] Using WebDriverManager to resolve chrome
 [INFO] Reading https://chromedriver.storage.googleapis.com/ to seek chromedriver
 [INFO] Latest version of chromedriver is 2.37
