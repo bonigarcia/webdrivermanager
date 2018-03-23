@@ -1,8 +1,16 @@
-webdrivermanager (2.1.1)
+webdrivermanager (2.2.0)
 
+  + Configuration manager: WebDriverManager.config()
+  + Interactive mode #1: mvn exec:java -Dexec.args="browserName"
+  + Interactive mode #2: java -jar webdrivermanager.jar browserName
+  + Create fat-jar from source code: mvn compile assembly:single
+  + Method getVersions() to get all driver versions available (issue #191)
+  + Bug-fix: intermittently fails to download driver when running in parallel (issue #186)
+  + Bug-fix: Improve exit condition looking for binary file in post download logic (issues #193 and #194)
+  + Bug-fix: honor forceDownload() option (related to issue #186)
   + Remove envs WDM_GIT_HUB_TOKEN_NAME and WDM_GIT_HUB_TOKEN_SECRET (use WDM_GITHUBTOKENNAME and WDM_GITHUBTOKENSECRET instead)
 
- -- Boni Garcia <boni.gg@gmail.com>
+ -- Boni Garcia <boni.gg@gmail.com>  Fri, 23 Mar 2018 09:00:00 +0200
 
 
 webdrivermanager (2.1.0)

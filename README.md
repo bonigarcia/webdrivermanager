@@ -34,7 +34,7 @@ In order to use WebDriverManager in a Maven project, you need to add the followi
 <dependency>
     <groupId>io.github.bonigarcia</groupId>
     <artifactId>webdrivermanager</artifactId>
-    <version>2.1.0</version>
+    <version>2.2.0</version>
 </dependency>
 ```
 
@@ -89,7 +89,7 @@ WebDriverManager.edgedriver().setup();
 WebDriverManager.iedriver().setup();
 ```
 
-NOTE
+*NOTE*: The old WebDriverManager API (version 1.x) is still supported (`ChromeDriverManager.getInstance().setup();`, `FirefoxDriverManager.getInstance().setup();`, and so on), although the 2.x fashion (`WebDriverManager.chromedriver()`, `WebDriverManager.firefoxdriver()`, and so on) is recommended. 
 
 Moreover, WebDriverManager provides a generic *driver manager*. This manager which can be parameterized using Selenium driver classes (e.g. `org.openqa.selenium.chrome.ChromeDriver`, `org.openqa.selenium.firefox.FirefoxDriver`, etc), as follows: 
 
@@ -130,21 +130,30 @@ Check out [WebDriverManager Examples][WebDriverManager Examples] for some JUnit 
 WebDriverManager exposes its API by means of the **builder pattern**. This means that given a *WebDriverManger* instance, their capabilities can be tuned using different methods. The following table summarizes the WebDriverManager API, together with the equivalent configuration key:
 
 
-| Method                                               | Description                                                                                                                                                                                                                                                                                                                                                     | Equivalent configuration key                                                                                                                                              |
-|------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| ``version()``                                        | By default, WebDriverManager tries to download the latest version of a given driver binary. A concrete version can be specified using this method.                                                                                                                                           | ``wdm.chromeDriverVersion``, ``wdm.operaDriverVersion``, ``wdm.internetExplorerVersion``, ``wdm.edgeVersion``, ``wdm.phantomjsDriverVersion``, ``wdm.geckoDriverVersion`` |
-| ``forceCache()``                                     | By default, WebDriverManager connects to the specific driver repository URL to find out what is the latest version of the binary. This can be avoided forcing to use the latest version form the local repository.                                                                           | ``wdm.forceCache=true``                                                                                                                                                   |
-| ``forceDownload()``                                  | By default, WebDriverManager finds out the latest version of the binary, and then it uses the cached version if exists. This option forces to download again the binary even if it has been previously cached.                                                                               | ``wdm.override=true``                                                                                                                                                     |
-| ``useBetaVersions()``                                | By default, WebDriverManager skip beta versions. With this method, WebDriverManager will download also beta versions.                                                                                                                                                                        | ``wdm.useBetaVersions=true``                                                                                                                                              |
-| ``architecture(Architecture arch)``                  | By default, WebDriverManager would try to use the proper binary for the platform running the test case (i.e. 32-bit or 64-bit). This behavior can be changed by forcing a given architecture: 32-bits (``Architecture.x32``) or 64-bits (``Architecture.x64``);                              | ``wdm.architecture``                                                                                                                                                      |
-| ``arch32()``                                         | Force to use the 32-bit version of a given driver binary.                                                                                                                                                                                                                                    | ``wdm.architecture=32``                                                                                                                                                   |
-| ``arch64()``                                         | Force to use the 64-bit version of a given driver binary.                                                                                                                                                                                                                                    | ``wdm.architecture=64``                                                                                                                                                   |
-| ``operativeSystem(OperativeSystem operativeSystem)`` | By default, WebDriverManager downloads the binary for the same operative systems than the machine running the test. This can be changed using this method (accepted values: ``WIN``, ``LINUX``, ``MAC``).                                                                                    | ``wdm.os=WIN``, ``wdm.os=LINUX``, ``wdm.os=MAC``                                                                                                                          |
-| ``driverRepositoryUrl(URL url)``                     | This method allows to change the repository URL in which the binaries are hosted (see next section for default values).                                                                                                                                                                      | ``wdm.chromeDriverUrl``, ``wdm.operaDriverUrl``, ``wdm.internetExplorerDriverUrl``, ``wdm.edgeDriverUrl``, ``wdm.phantomjsDriverUrl``, ``wdm.geckoDriverUrl``             |
-| ``useMirror()``                                      | The [npm.taobao.org] site is a mirror which hosts different software assets. Among them, it hosts *chromedriver*, *geckodriver*,  *operadriver*, and *phantomjs* driver. Therefore, this method can be used for Chrome, Firefox, Opera, and PhantomJS to force to use the taobao.org mirror. | ``wdm.useMirror=true``                                                                                                                                                    |
-| ``proxy(String proxy)``                              | Use a HTTP proxy for the Internet connection.                                                                                                                                                                                                                                                | ``wdm.proxy``                                                                                                                                                             |
-| ``proxyUser(String username)``                       | Specify a username for HTTP proxy.                                                                                                                                                                                                                                                           | ``wdm.proxyUser``                                                                                                                                                         |
-| ``proxyPass(String password)``                       | Specify a password for HTTP proxy.                                                                                                                                                                                                                                                           | ``wdm.proxyPass``                                                                                                                                                         |
+| Method                               | Description                                                                                                                                                                                                                                                                                  | Equivalent configuration key                                                                                                                                                          |
+|--------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| ``version(String)``                  | By default, WebDriverManager tries to download the latest version of a given driver binary. A concrete version can be specified using this method.                                                                                                                                           | ``wdm.chromeDriverVersion``, ``wdm.operaDriverVersion``, ``wdm.internetExplorerDriverVersion``, ``wdm.edgeDriverVersion``, ``wdm.phantomjsDriverVersion``, ``wdm.geckoDriverVersion`` |
+| ``targetPath(String)``               | Folder in which WebDriver binaries are stored (WedDriverManager *cache*).                                                                                                                                                                                                                    | ``wdm.targetPath``                                                                                                                                                                    |
+| ``forceCache()``                     | By default, WebDriverManager connects to the specific driver repository URL to find out what is the latest version of the binary. This can be avoided forcing to use the latest version form the local repository.                                                                           | ``wdm.forceCache=true``                                                                                                                                                               |
+| ``forceDownload()``                  | By default, WebDriverManager finds out the latest version of the binary, and then it uses the cached version if exists. This option forces to download again the binary even if it has been previously cached.                                                                               | ``wdm.override=true``                                                                                                                                                                 |
+| ``useBetaVersions()``                | By default, WebDriverManager skip beta versions. With this method, WebDriverManager will download also beta versions.                                                                                                                                                                        | ``wdm.useBetaVersions=true``                                                                                                                                                          |
+| ``architecture(Architecture)``       | By default, WebDriverManager would try to use the proper binary for the platform running the test case (i.e. 32-bit or 64-bit). This behavior can be changed by forcing a given architecture: 32-bits (``Architecture.x32``) or 64-bits (``Architecture.x64``);                              | ``wdm.architecture``                                                                                                                                                                  |
+| ``arch32()``                         | Force to use the 32-bit version of a given driver binary.                                                                                                                                                                                                                                    | ``wdm.architecture=32``                                                                                                                                                               |
+| ``arch64()``                         | Force to use the 64-bit version of a given driver binary.                                                                                                                                                                                                                                    | ``wdm.architecture=64``                                                                                                                                                               |
+| ``operativeSystem(OperativeSystem)`` | By default, WebDriverManager downloads the binary for the same operative systems than the machine running the test. This can be changed using this method (accepted values: ``WIN``, ``LINUX``, ``MAC``).                                                                                    | ``wdm.os=WIN``, ``wdm.os=LINUX``, ``wdm.os=MAC``                                                                                                                                      |
+| ``driverRepositoryUrl(URL)``         | This method allows to change the repository URL in which the binaries are hosted (see next section for default values).                                                                                                                                                                      | ``wdm.chromeDriverUrl``, ``wdm.operaDriverUrl``, ``wdm.internetExplorerDriverUrl``, ``wdm.edgeDriverUrl``, ``wdm.phantomjsDriverUrl``, ``wdm.geckoDriverUrl``                         |
+| ``useMirror()``                      | The [npm.taobao.org] site is a mirror which hosts different software assets. Among them, it hosts *chromedriver*, *geckodriver*,  *operadriver*, and *phantomjs* driver. Therefore, this method can be used for Chrome, Firefox, Opera, and PhantomJS to force to use the taobao.org mirror. | ``wdm.useMirror=true``                                                                                                                                                                |
+| ``proxy(String)``                    | Use a HTTP proxy for the Internet connection.                                                                                                                                                                                                                                                | ``wdm.proxy``                                                                                                                                                                         |
+| ``proxyUser(String)``                | Specify a username for HTTP proxy.                                                                                                                                                                                                                                                           | ``wdm.proxyUser``                                                                                                                                                                     |
+| ``proxyPass(String)``                | Specify a password for HTTP proxy.                                                                                                                                                                                                                                                           | ``wdm.proxyPass``                                                                                                                                                                     |
+| ``ignoreVersions(String...)``        | Ignore some versions to be downloaded.                                                                                                                                                                                                                                                       | ``wdm.ignoreVersions``                                                                                                                                                                |
+| ``gitHubTokenName(String)``          | Token name for authenticated requests (see "Known issues").                                                                                                                                                                                                                                  | ``wdm.gitHubTokenName``                                                                                                                                                               |
+| ``gitHubTokenSecret(String)``        | Secret for authenticated requests (see "Known issues").                                                                                                                                                                                                                                      | ``wdm.gitHubTokenSecret``                                                                                                                                                             |
+| ``timeout(int)``                     | Timeout (in seconds) to connect and download binaries from online reporsitories                                                                                                                                                                                                              | ``wdm.timeout``                                                                                                                                                                       |
+| ``properties(String)``               | Properties file for configuration values (by default ``webdrivermanager.properties``).                                                                                                                                                                                                       | ``wdm.properties``                                                                                                                                                                    |
+| ``avoidExport()``                    | Avoid exporting JVM properties with the path of binaries (i.e. ``webdriver.chrome.driver``, ``webdriver.gecko.driver``, etc). Only recommeded for interactive mode).                                                                                                                         | ``wdm.avoidExport``                                                                                                                                                                   |
+| ``avoidOutputTree()``                | Avoid create tree structure for downloaded binaries (e.g. ``~/.m2/repository/webdriver/chromedriver/linux64/2.37/`` for ``chromedriver``). Used by default in interactive mode.                                                                                                              | ``wdm.avoidOutputTree``                                                                                                                                                               |
+
 
 The following table contains some examples:
 
@@ -164,7 +173,10 @@ Configuration parameters for WebDriverManager are set in the ``webdrivermanager.
 wdm.targetPath=~/.m2/repository/webdriver
 wdm.forceCache=false
 wdm.override=false
+wdm.useMirror=false
 wdm.useBetaVersions=false
+wdm.avoidExport=false
+wdm.avoidOutputTree=false
 wdm.timeout=30
 
 wdm.chromeDriverUrl=https://chromedriver.storage.googleapis.com/
@@ -184,10 +196,11 @@ wdm.phantomjsDriverMirrorUrl=http://npm.taobao.org/mirrors/phantomjs
 wdm.phantomjsDriverExport=phantomjs.binary.path
 
 wdm.edgeDriverUrl=https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/
-wdm.edgeExport=webdriver.edge.driver
+wdm.edgeDriverExport=webdriver.edge.driver
 
 wdm.internetExplorerDriverUrl=https://selenium-release.storage.googleapis.com/
-wdm.internetExplorerExport=webdriver.ie.driver
+wdm.internetExplorerDriverExport=webdriver.ie.driver
+
 ```
 
 The variable ``wdm.targetPath`` is the default folder in which WebDriver binaries are going to be stored. Notice that by default the path of the Maven local repository is used. The URLs to check the latest version of Chrome, Opera, Internet Explorer, Edge, PhantomJS, and Firefox are set using the variables ``wdm.chromeDriverUrl``, ``wdm.operaDriverUrl``, ``wdm.internetExplorerDriverUrl``, ``wdm.edgeDriverUrl``, ``wdm.phantomjsDriverUrl``, and ``wdm.geckoDriverUrl``.
@@ -204,20 +217,29 @@ System.setProperty("wdm.targetPath", "/my/custom/path/to/driver/binaries");
 -Dwdm.override=true
 ```
 
-By default, WebDriverManager downloads the latest version of the WebDriver binary. But concrete versions of WebDriver binaries can be forced by changing the value of the variables ``wdm.chromeDriverVersion``, ``wdm.operaDriverVersion``,  ``wdm.internetExplorerVersion``, or  ``wdm.edgeVersion`` to a concrete version. For instance:
+By default, WebDriverManager downloads the latest version of the WebDriver binary. But concrete versions of WebDriver binaries can be forced by changing the value of the variables ``wdm.chromeDriverVersion``, ``wdm.operaDriverVersion``,  ``wdm.internetExplorerDriverVersion``, or  ``wdm.edgeDriverVersion`` to a concrete version. For instance:
 
 ```properties
 -Dwdm.chromeDriverVersion=2.25
 -Dwdm.internetExplorerVersion=2.46
 -Dwdm.operaDriverVersion=0.2.0
--Dwdm.edgeVersion=3.14366
+-Dwdm.edgeDriverVersion=3.14366
 -Dwdm.phantomjsDriverVersion=2.1.1
 -Dwdm.geckoDriverVersion=0.11.1
 ```
 
 If no version is specified, WebDriverManager sends a request to the server hosting the binary. In order to avoid this request and check if any binary has been previously downloaded, the key `wdm.forceCache` can be used.
 
-As of WebDriverManager 2, the value of these properties can be overridden by means of *environmental variables*. The name of these variables result from putting the name in uppercase and replacing the symbol `.` by `_`. For example, the property ``wdm.targetPath`` can be overridden by the environment variable ``WDM_TARGETPATH``.    
+As of WebDriverManager 2, the value of these properties can be overridden by means of *environmental variables*. The name of these variables result from putting the name in uppercase and replacing the symbol `.` by `_`. For example, the property ``wdm.targetPath`` can be overridden by the environment variable ``WDM_TARGETPATH``.
+
+Moreover, as of WebDriverManager 2.2.x, configuration value can be customized using a *configuration manager*. This manager can be accessed using ``WebDriverManager.config()``. For example:
+
+
+```java
+WebDriverManager.config().setTargetPath("/path/to/my-wdm-cache");
+WebDriverManager.config().setProperties("/path/to/my-wdm.properties");
+```
+
 
 ### HTTP Proxy
 
@@ -263,7 +285,7 @@ If you have questions on how to use WebDriverManager properly with a special con
 
 ## About
 
-WebDriverManager (Copyright &copy; 2015-2018) is a project created by [Boni Garcia] and licensed under the terms of the [Apache 2.0 License]. Comments, questions and suggestions are always very [welcome][WebDriverManager issues].
+WebDriverManager (Copyright &copy; 2015-2018) is a project created by [Boni Garcia] and licensed under the terms of the [Apache 2.0 License]. Comments, questions and suggestions are always very [welcome][WebDriverManager issues]!
 
 [Logo]: http://bonigarcia.github.io/img/webdrivermanager.png
 [Selenium Webdriver]: http://docs.seleniumhq.org/projects/webdriver/
