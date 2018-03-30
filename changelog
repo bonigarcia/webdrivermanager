@@ -1,5 +1,12 @@
 webdrivermanager (2.2.0)
 
+  + Rename operativeSystem() method to operatingSystem() (issue #196)
+
+ -- Boni Garcia <boni.gg@gmail.com>
+
+
+webdrivermanager (2.2.0)
+
   + Configuration manager: WebDriverManager.config()
   + Interactive mode #1: mvn exec:java -Dexec.args="browserName"
   + Interactive mode #2: java -jar webdrivermanager.jar browserName

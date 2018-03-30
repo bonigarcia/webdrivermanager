@@ -16,7 +16,7 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import static io.github.bonigarcia.wdm.OperativeSystem.WIN;
+import static io.github.bonigarcia.wdm.OperatingSystem.WIN;
 
 import org.junit.Before;
 import org.openqa.selenium.ie.InternetExplorerDriver;
@@ -36,7 +36,7 @@ public class IExplorerVersionTest extends VersionTestParent {
     public void setup() {
         browserManager = WebDriverManager
                 .getInstance(InternetExplorerDriver.class)
-                .operativeSystem(WIN);
+                .operatingSystem(WIN);
         specificVersions = new String[] { "2.39", "2.47" };
     }
 

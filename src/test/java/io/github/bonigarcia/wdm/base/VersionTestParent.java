@@ -36,7 +36,7 @@ import org.junit.runners.Parameterized.Parameters;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.Architecture;
-import io.github.bonigarcia.wdm.OperativeSystem;
+import io.github.bonigarcia.wdm.OperatingSystem;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 /**
@@ -53,7 +53,7 @@ public abstract class VersionTestParent {
 
     protected WebDriverManager browserManager;
     protected String[] specificVersions;
-    protected OperativeSystem os;
+    protected OperatingSystem os;
 
     final Logger log = getLogger(lookup().lookupClass());
 
@@ -65,7 +65,7 @@ public abstract class VersionTestParent {
     @Test
     public void testLatestVersion() throws Exception {
         if (os != null) {
-            browserManager.operativeSystem(os);
+            browserManager.operatingSystem(os);
         }
         switch (architecture) {
         case X32:
@@ -90,7 +90,7 @@ public abstract class VersionTestParent {
                 browserManager.architecture(architecture);
             }
             if (os != null) {
-                browserManager.operativeSystem(os);
+                browserManager.operatingSystem(os);
             }
             browserManager.version(specificVersion).setup();
 

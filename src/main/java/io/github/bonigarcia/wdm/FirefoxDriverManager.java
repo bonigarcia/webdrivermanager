@@ -17,7 +17,7 @@
 package io.github.bonigarcia.wdm;
 
 import static io.github.bonigarcia.wdm.DriverManagerType.FIREFOX;
-import static io.github.bonigarcia.wdm.OperativeSystem.MAC;
+import static io.github.bonigarcia.wdm.OperatingSystem.MAC;
 import static java.util.Arrays.asList;
 
 import java.io.IOException;

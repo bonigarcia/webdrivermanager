@@ -48,7 +48,7 @@ public class UrlFilter {
         List<URL> out = new ArrayList<>();
 
         for (URL url : list) {
-            for (OperativeSystem os : OperativeSystem.values()) {
+            for (OperatingSystem os : OperatingSystem.values()) {
                 if (((osName.contains(os.name())
                         && url.getFile().toUpperCase().contains(os.name()))
                         || (osName.equalsIgnoreCase("mac")

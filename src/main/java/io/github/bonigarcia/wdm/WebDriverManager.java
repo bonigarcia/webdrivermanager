@@ -26,7 +26,7 @@ import static io.github.bonigarcia.wdm.DriverManagerType.FIREFOX;
 import static io.github.bonigarcia.wdm.DriverManagerType.IEXPLORER;
 import static io.github.bonigarcia.wdm.DriverManagerType.OPERA;
 import static io.github.bonigarcia.wdm.DriverManagerType.PHANTOMJS;
-import static io.github.bonigarcia.wdm.OperativeSystem.WIN;
+import static io.github.bonigarcia.wdm.OperatingSystem.WIN;
 import static java.lang.Integer.signum;
 import static java.lang.Integer.valueOf;
 import static java.lang.invoke.MethodHandles.lookup;
@@ -242,7 +242,7 @@ public abstract class WebDriverManager {
         return instanceMap.get(driverManagerType);
     }
 
-    public WebDriverManager operativeSystem(OperativeSystem os) {
+    public WebDriverManager operatingSystem(OperatingSystem os) {
         config().setOs(os.name());
         return instanceMap.get(driverManagerType);
     }
@@ -928,7 +928,7 @@ public abstract class WebDriverManager {
                         .targetPath(".").forceDownload();
                 if (browser.equalsIgnoreCase("edge")
                         || browser.equalsIgnoreCase("iexplorer")) {
-                    wdm.operativeSystem(WIN);
+                    wdm.operatingSystem(WIN);
                 }
                 wdm.avoidOutputTree().setup();
             } catch (Exception e) {

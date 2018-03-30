@@ -22,6 +22,6 @@ package io.github.bonigarcia.wdm;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.0.0
  */
-public enum OperativeSystem {
+public enum OperatingSystem {
     WIN, LINUX, MAC
 }
