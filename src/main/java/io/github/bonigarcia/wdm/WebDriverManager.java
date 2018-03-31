@@ -100,6 +100,7 @@ public abstract class WebDriverManager {
     protected UrlFilter urlFilter;
     protected String versionToDownload;
     protected String downloadedVersion;
+    protected String latestVersion;
     protected DriverManagerType driverManagerType;
     protected String binaryPath;
     protected boolean mirrorLog;
@@ -413,10 +414,17 @@ public abstract class WebDriverManager {
             boolean getLatest = version == null || version.isEmpty()
                     || version.equalsIgnoreCase("latest");
             boolean cache = config().isForceCache() || !isNetAvailable();
-
             String driverNameString = listToString(getDriverName());
+
             log.trace("Managing {} arch={} version={} getLatest={} cache={}",
                     driverNameString, arch, version, getLatest, cache);
+
+            if (getLatest && latestVersion != null) {
+                log.debug("Latest version of {} is {} (recently resolved)",
+                        driverNameString, latestVersion);
+                version = latestVersion;
+                cache = true;
+            }
 
             Optional<String> driverInCache = handleCache(arch, version,
                     getLatest, cache);
@@ -429,7 +437,6 @@ public abstract class WebDriverManager {
                         driverNameString, versionStr, driverInCache.get());
                 exportDriver(config().getDriverExport(exportParameterKey),
                         driverInCache.get());
-
             } else {
                 List<URL> candidateUrls = filterCandidateUrls(arch, version,
                         getLatest);
@@ -674,6 +681,7 @@ public abstract class WebDriverManager {
         if (versionToDownload.startsWith(".")) {
             versionToDownload = versionToDownload.substring(1);
         }
+        latestVersion = versionToDownload;
         log.info("Latest version of {} is {}", matchString, versionToDownload);
         return out;
     }
