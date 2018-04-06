@@ -176,22 +176,23 @@ public class Downloader {
 
     public File extract(File compressedFile)
             throws IOException, InterruptedException {
-        String compressedFileName = compressedFile.getName().toLowerCase();
-        log.info("Extracting binary from compressed file {}",
-                compressedFileName);
+        String fileName = compressedFile.getName().toLowerCase();
+        log.info("Extracting binary from compressed file {}", fileName);
 
-        if (compressedFileName.endsWith("tar.bz2")) {
+        if (fileName.endsWith("tar.bz2")) {
             unBZip2(compressedFile);
-        } else if (compressedFileName.endsWith("tar.gz")) {
+        } else if (fileName.endsWith("tar.gz")) {
             unTarGz(compressedFile);
-        } else if (compressedFileName.endsWith("gz")) {
+        } else if (fileName.endsWith("gz")) {
             unGzip(compressedFile);
-        } else if (compressedFileName.endsWith("msi")) {
+        } else if (fileName.endsWith("msi")) {
             extractMsi(compressedFile);
-        } else {
+        } else if (fileName.endsWith("zip")) {
             unZip(compressedFile);
         }
-        deleteFile(compressedFile);
+        if (!fileName.endsWith("exe")) {
+            deleteFile(compressedFile);
+        }
 
         File result = WebDriverManager.getInstance(driverManagerType)
                 .postDownload(compressedFile).getAbsoluteFile();
