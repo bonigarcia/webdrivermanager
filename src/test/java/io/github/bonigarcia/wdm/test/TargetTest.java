@@ -137,14 +137,13 @@ public class TargetTest {
         Downloader downloader = new Downloader(driverManagerType);
         String targetPath = downloader.getTargetPath();
 
-        String result = downloader.getTarget(version, new URL(url));
-        log.info(result);
+        File result = downloader.getTarget(version, new URL(url));
+        log.info("{}", result);
         log.info(targetPath + target);
 
-        File fileResult = new File(result);
         File fileReal = new File(targetPath + target);
 
-        assertThat(fileResult, equalTo(fileReal));
+        assertThat(result, equalTo(fileReal));
     }
 
 }

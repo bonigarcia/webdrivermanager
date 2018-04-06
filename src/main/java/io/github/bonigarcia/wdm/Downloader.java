@@ -74,16 +74,12 @@ public class Downloader {
     public synchronized Optional<String> download(URL url, String version,
             String export, List<String> driverName)
             throws IOException, InterruptedException {
-        File targetFile = new File(getTarget(version, url));
-        File targetFolder = targetFile.getParentFile();
-        Optional<File> binary = checkBinary(driverName, targetFolder);
-        boolean download = !targetFolder.exists() || !binary.isPresent()
-                || config().isOverride();
-
-        if (download) {
+        File targetFile = getTarget(version, url);
+        Optional<File> binary = checkBinary(driverName, targetFile);
+        if (!binary.isPresent()) {
             binary = downloadAndExtract(url, targetFile, export);
         }
-        if (export != null && binary.isPresent()) {
+        if (binary.isPresent()) {
             return of(binary.get().toString());
         }
         return empty();
@@ -113,7 +109,7 @@ public class Downloader {
         boolean binaryExists = resultingBinary.exists();
         if (!binaryExists || config().isOverride()) {
             if (binaryExists) {
-                log.debug("Overriding former binary {}", resultingBinary);
+                log.info("Overriding former binary {}", resultingBinary);
                 deleteFile(resultingBinary);
             }
             moveFileToDirectory(extractedFile, targetFolder, true);
@@ -128,9 +124,11 @@ public class Downloader {
     }
 
     private Optional<File> checkBinary(List<String> driverName,
-            File parentFolder) {
-        // Check if binary exits in parent folder and it is valid
-        if (parentFolder.exists()) {
+            File targetFile) {
+        File parentFolder = targetFile.getParentFile();
+        if (parentFolder.exists() && !config().isOverride()) {
+            // Check if binary exits in parent folder and it is valid
+
             Collection<File> listFiles = listFiles(parentFolder, null, true);
             for (File file : listFiles) {
                 for (String s : driverName) {
@@ -146,7 +144,7 @@ public class Downloader {
         return empty();
     }
 
-    public String getTarget(String version, URL url) {
+    public File getTarget(String version, URL url) {
         log.trace("getTarget {} {}", version, url);
         String zip = url.getFile().substring(url.getFile().lastIndexOf('/'));
 
@@ -171,7 +169,7 @@ public class Downloader {
         log.trace("Target file for URL {} version {} = {}", url, version,
                 target);
 
-        return new File(target).getPath();
+        return new File(target);
     }
 
     public String getTargetPath() {
