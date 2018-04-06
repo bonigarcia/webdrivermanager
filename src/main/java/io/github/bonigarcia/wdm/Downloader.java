@@ -78,20 +78,22 @@ public class Downloader {
             throws IOException, InterruptedException {
         File targetFile = new File(getTarget(version, url));
 
-        String[] list = targetFile.getParentFile().list();
-        boolean download = !targetFile.getParentFile().exists()
-                || !checkBinary(driverName, targetFile).isPresent()
+        File parentFolder = targetFile.getParentFile();
+        String[] list = parentFolder.list();
+        Optional<File> optionalBinary = checkBinary(driverName, targetFile);
+        boolean download = !parentFolder.exists() || !optionalBinary.isPresent()
                 || config().isOverride();
 
         log.trace("Downloading {} to {} ({})", url, targetFile, download);
-        if (!download && log.isDebugEnabled() && list != null) {
+        if (!download && log.isTraceEnabled() && list != null) {
             String content = listToString(Arrays.asList(list));
-            log.debug("Target folder content: {}", content);
+            log.trace("{} file(s) in target folder ({}): {}", list.length,
+                    parentFolder, content);
         }
 
         Optional<File> binary = (download)
                 ? downloadAndExtract(url, targetFile, export)
-                : checkBinary(driverName, targetFile);
+                : optionalBinary;
         if (export != null && binary.isPresent()) {
             return Optional.of(binary.get().toString());
         }
@@ -144,8 +146,7 @@ public class Downloader {
             for (String s : driverName) {
                 if (file.getName().startsWith(s)
                         && config().isExecutable(file)) {
-                    log.info("Using binary driver previously downloaded {}",
-                            file);
+                    log.info("Using binary driver previously downloaded");
                     return of(file);
                 }
             }
