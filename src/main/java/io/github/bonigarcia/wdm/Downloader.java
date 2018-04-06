@@ -16,7 +16,6 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static io.github.bonigarcia.wdm.Config.listToString;
 import static io.github.bonigarcia.wdm.WebDriverManager.config;
 import static java.io.File.separator;
 import static java.lang.Runtime.getRuntime;
@@ -42,7 +41,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
@@ -77,36 +75,29 @@ public class Downloader {
             String export, List<String> driverName)
             throws IOException, InterruptedException {
         File targetFile = new File(getTarget(version, url));
-
-        File parentFolder = targetFile.getParentFile();
-        String[] list = parentFolder.list();
-        Optional<File> optionalBinary = checkBinary(driverName, parentFolder);
-        boolean download = !parentFolder.exists() || !optionalBinary.isPresent()
+        File targetFolder = targetFile.getParentFile();
+        Optional<File> binary = checkBinary(driverName, targetFolder);
+        boolean download = !targetFolder.exists() || !binary.isPresent()
                 || config().isOverride();
 
-        log.trace("Downloading {} to {} ({})", url, targetFile, download);
-        if (!download && log.isTraceEnabled() && list != null) {
-            String content = listToString(Arrays.asList(list));
-            log.trace("{} file(s) in target folder ({}): {}", list.length,
-                    parentFolder, content);
+        if (download) {
+            binary = downloadAndExtract(url, targetFile, export);
         }
-
-        Optional<File> binary = (download)
-                ? downloadAndExtract(url, targetFile, export)
-                : optionalBinary;
         if (export != null && binary.isPresent()) {
-            return Optional.of(binary.get().toString());
+            return of(binary.get().toString());
         }
-        return Optional.empty();
+        return empty();
     }
 
     private Optional<File> downloadAndExtract(URL url, File targetFile,
             String export) throws IOException, InterruptedException {
+        log.info("Downloading {}", url);
         File targetFolder = targetFile.getParentFile();
-        log.info("Downloading {} to folder {}", url, targetFolder);
         File tempDir = createTempDirectory("").toFile();
         File temporaryFile = new File(tempDir, targetFile.getName());
-        log.trace("Using temporal file {}", temporaryFile);
+
+        log.trace("Target folder {} ... using temporal file {}", targetFolder,
+                temporaryFile);
         copyInputStreamToFile(httpClient.execute(httpClient.createHttpGet(url))
                 .getEntity().getContent(), temporaryFile);
 
@@ -133,7 +124,7 @@ public class Downloader {
         deleteFolder(tempDir);
         log.trace("Binary driver after extraction {}", resultingBinary);
 
-        return Optional.of(resultingBinary);
+        return of(resultingBinary);
     }
 
     private Optional<File> checkBinary(List<String> driverName,
@@ -196,13 +187,15 @@ public class Downloader {
     }
 
     public File extract(File compressedFile) throws IOException {
-        log.trace("Compressed file {}", compressedFile);
+        String compressedFileName = compressedFile.getName();
+        log.info("Extracting binary from compressed file {}",
+                compressedFileName);
 
-        if (compressedFile.getName().toLowerCase().endsWith("tar.bz2")) {
+        if (compressedFileName.toLowerCase().endsWith("tar.bz2")) {
             unBZip2(compressedFile);
-        } else if (compressedFile.getName().toLowerCase().endsWith("tar.gz")) {
+        } else if (compressedFileName.toLowerCase().endsWith("tar.gz")) {
             unTarGz(compressedFile);
-        } else if (compressedFile.getName().toLowerCase().endsWith("gz")) {
+        } else if (compressedFileName.toLowerCase().endsWith("gz")) {
             unGzip(compressedFile);
         } else {
             unZip(compressedFile);
