@@ -71,22 +71,18 @@ public class Downloader {
                 .getHttpClient();
     }
 
-    public synchronized Optional<String> download(URL url, String version,
-            String export, List<String> driverName)
-            throws IOException, InterruptedException {
+    public synchronized String download(URL url, String version,
+            List<String> driverName) throws IOException, InterruptedException {
         File targetFile = getTarget(version, url);
         Optional<File> binary = checkBinary(driverName, targetFile);
         if (!binary.isPresent()) {
-            binary = downloadAndExtract(url, targetFile, export);
+            binary = downloadAndExtract(url, targetFile);
         }
-        if (binary.isPresent()) {
-            return of(binary.get().toString());
-        }
-        return empty();
+        return binary.get().toString();
     }
 
-    private Optional<File> downloadAndExtract(URL url, File targetFile,
-            String export) throws IOException, InterruptedException {
+    private Optional<File> downloadAndExtract(URL url, File targetFile)
+            throws IOException, InterruptedException {
         log.info("Downloading {}", url);
         File targetFolder = targetFile.getParentFile();
         File tempDir = createTempDirectory("").toFile();
@@ -97,16 +93,10 @@ public class Downloader {
         copyInputStreamToFile(httpClient.execute(httpClient.createHttpGet(url))
                 .getEntity().getContent(), temporaryFile);
 
-        File extractedFile;
-        if (!export.contains("edge")) {
-            extractedFile = extract(temporaryFile);
-        } else if (targetFile.getName().toLowerCase().endsWith(".msi")) {
-            extractedFile = extractMsi(temporaryFile);
-        } else {
-            extractedFile = temporaryFile;
-        }
+        File extractedFile = extract(temporaryFile);
         File resultingBinary = new File(targetFolder, extractedFile.getName());
         boolean binaryExists = resultingBinary.exists();
+
         if (!binaryExists || config().isOverride()) {
             if (binaryExists) {
                 log.info("Overriding former binary {}", resultingBinary);
@@ -184,17 +174,20 @@ public class Downloader {
         return targetPath;
     }
 
-    public File extract(File compressedFile) throws IOException {
-        String compressedFileName = compressedFile.getName();
+    public File extract(File compressedFile)
+            throws IOException, InterruptedException {
+        String compressedFileName = compressedFile.getName().toLowerCase();
         log.info("Extracting binary from compressed file {}",
                 compressedFileName);
 
-        if (compressedFileName.toLowerCase().endsWith("tar.bz2")) {
+        if (compressedFileName.endsWith("tar.bz2")) {
             unBZip2(compressedFile);
-        } else if (compressedFileName.toLowerCase().endsWith("tar.gz")) {
+        } else if (compressedFileName.endsWith("tar.gz")) {
             unTarGz(compressedFile);
-        } else if (compressedFileName.toLowerCase().endsWith("gz")) {
+        } else if (compressedFileName.endsWith("gz")) {
             unGzip(compressedFile);
+        } else if (compressedFileName.endsWith("msi")) {
+            extractMsi(compressedFile);
         } else {
             unZip(compressedFile);
         }
@@ -207,7 +200,7 @@ public class Downloader {
         return result;
     }
 
-    public File unZip(File compressedFile) throws IOException {
+    public void unZip(File compressedFile) throws IOException {
         File file = null;
         try (ZipFile zipFolder = new ZipFile(compressedFile)) {
             Enumeration<?> enu = zipFolder.entries();
@@ -243,11 +236,9 @@ public class Downloader {
 
             }
         }
-
-        return file;
     }
 
-    public File unGzip(File archive) throws IOException {
+    public void unGzip(File archive) throws IOException {
         log.trace("UnGzip {}", archive);
         String fileName = archive.getName();
         int iDash = fileName.indexOf('-');
@@ -273,30 +264,24 @@ public class Downloader {
                 && target.exists()) {
             setFileExecutable(target);
         }
-
-        return target;
     }
 
-    public File unTarGz(File archive) throws IOException {
+    public void unTarGz(File archive) throws IOException {
         Archiver archiver = createArchiver(TAR, GZIP);
         archiver.extract(archive, archive.getParentFile());
         log.trace("unTarGz {}", archive);
-
-        return archive;
     }
 
-    public File unBZip2(File archive) throws IOException {
+    public void unBZip2(File archive) throws IOException {
         Archiver archiver = createArchiver(TAR, BZIP2);
         archiver.extract(archive, archive.getParentFile());
         log.trace("Unbzip2 {}", archive);
-
-        return archive;
     }
 
-    public File extractMsi(File msi) throws IOException, InterruptedException {
+    public void extractMsi(File msi) throws IOException, InterruptedException {
         File tmpMsi = new File(
-                createTempDirectory(msi.getName()).toFile().getAbsoluteFile()
-                        + separator + msi.getName());
+                createTempDirectory("").toFile().getAbsoluteFile() + separator
+                        + msi.getName());
         move(msi.toPath(), tmpMsi.toPath());
         log.trace("Temporal msi file: {}", tmpMsi);
 
@@ -308,12 +293,7 @@ public class Downloader {
             process.destroy();
         }
 
-        deleteFile(tmpMsi);
-        deleteFile(msi);
-
-        Collection<File> listFiles = listFiles(new File(msi.getParent()),
-                new String[] { "exe" }, true);
-        return listFiles.iterator().next();
+        deleteFolder(tmpMsi.getParentFile());
     }
 
     protected void setFileExecutable(File file) {

@@ -20,12 +20,15 @@ import static io.github.bonigarcia.wdm.Config.listToString;
 import static io.github.bonigarcia.wdm.DriverManagerType.EDGE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.sort;
+import static org.apache.commons.io.FileUtils.listFiles;
 import static org.jsoup.Jsoup.parse;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.jsoup.nodes.Document;
@@ -106,6 +109,13 @@ public class EdgeDriverManager extends WebDriverManager {
         log.info("Latest version of MicrosoftWebDriver is {}",
                 versionToDownload);
         return out;
+    }
+
+    @Override
+    protected File postDownload(File archive) {
+        Collection<File> listFiles = listFiles(new File(archive.getParent()),
+                new String[] { "exe" }, true);
+        return listFiles.iterator().next();
     }
 
 }

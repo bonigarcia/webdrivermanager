@@ -435,8 +435,7 @@ public abstract class WebDriverManager {
                 downloadedVersion = version;
                 log.debug("Driver for {} {} found in cache {}",
                         driverNameString, versionStr, driverInCache.get());
-                exportDriver(config().getDriverExport(exportParameterKey),
-                        driverInCache.get());
+                exportDriver(driverInCache.get());
             } else {
                 List<URL> candidateUrls = filterCandidateUrls(arch, version,
                         getLatest);
@@ -479,17 +478,11 @@ public abstract class WebDriverManager {
             throws IOException, InterruptedException {
         reverse(candidateUrls);
         URL url = candidateUrls.iterator().next();
-        String export = candidateUrls.contains(url)
-                ? config().getDriverExport(exportParameterKey)
-                : null;
 
-        Optional<String> exportValue = downloader.download(url,
-                versionToDownload, export, getDriverName());
-
-        if (exportValue.isPresent()) {
-            exportDriver(export, exportValue.get());
-            downloadedVersion = versionToDownload;
-        }
+        String exportValue = downloader.download(url, versionToDownload,
+                getDriverName());
+        exportDriver(exportValue);
+        downloadedVersion = versionToDownload;
     }
 
     protected List<URL> filterCandidateUrls(Architecture arch, String version,
@@ -811,8 +804,9 @@ public abstract class WebDriverManager {
         return builder.parse(is);
     }
 
-    protected void exportDriver(String variableName, String variableValue) {
+    protected void exportDriver(String variableValue) {
         if (!config.isAvoidExport()) {
+            String variableName = config().getDriverExport(exportParameterKey);
             log.info("Exporting {} as {}", variableName, variableValue);
             binaryPath = variableValue;
             System.setProperty(variableName, variableValue);
