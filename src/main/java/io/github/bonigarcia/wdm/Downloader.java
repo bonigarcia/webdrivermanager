@@ -80,7 +80,7 @@ public class Downloader {
 
         File parentFolder = targetFile.getParentFile();
         String[] list = parentFolder.list();
-        Optional<File> optionalBinary = checkBinary(driverName, targetFile);
+        Optional<File> optionalBinary = checkBinary(driverName, parentFolder);
         boolean download = !parentFolder.exists() || !optionalBinary.isPresent()
                 || config().isOverride();
 
@@ -131,27 +131,27 @@ public class Downloader {
             setFileExecutable(resultingBinary);
         }
         deleteFolder(tempDir);
-
-        log.info("Binary driver after extraction {}", resultingBinary);
+        log.trace("Binary driver after extraction {}", resultingBinary);
 
         return Optional.of(resultingBinary);
     }
 
     private Optional<File> checkBinary(List<String> driverName,
-            File targetFile) {
-        // Check if existing binary is valid
-        Collection<File> listFiles = listFiles(targetFile.getParentFile(), null,
-                true);
-        for (File file : listFiles) {
-            for (String s : driverName) {
-                if (file.getName().startsWith(s)
-                        && config().isExecutable(file)) {
-                    log.info("Using binary driver previously downloaded");
-                    return of(file);
+            File parentFolder) {
+        // Check if binary exits in parent folder and it is valid
+        if (parentFolder.exists()) {
+            Collection<File> listFiles = listFiles(parentFolder, null, true);
+            for (File file : listFiles) {
+                for (String s : driverName) {
+                    if (file.getName().startsWith(s)
+                            && config().isExecutable(file)) {
+                        log.info("Using binary driver previously downloaded");
+                        return of(file);
+                    }
                 }
             }
+            log.trace("{} does not exist in cache", driverName);
         }
-        log.trace("{} does not exist in cache", driverName);
         return empty();
     }
 
