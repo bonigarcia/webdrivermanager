@@ -674,7 +674,7 @@ public abstract class WebDriverManager {
                 }
             }
         }
-        if (versionToDownload.startsWith(".")) {
+        if (versionToDownload != null && versionToDownload.startsWith(".")) {
             versionToDownload = versionToDownload.substring(1);
         }
         latestVersion = versionToDownload;
