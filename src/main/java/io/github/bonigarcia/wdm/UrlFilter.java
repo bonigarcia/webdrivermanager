@@ -63,11 +63,12 @@ public class UrlFilter {
         return out;
     }
 
-    public List<URL> filterByArch(List<URL> list, Architecture arch) {
+    public List<URL> filterByArch(List<URL> list, Architecture arch,
+            boolean forcedArch) {
         log.trace("URLs before filtering by architecture ({}): {}", arch, list);
         List<URL> out = new ArrayList<>(list);
 
-        if (out.size() > 1 && arch != null) {
+        if ((forcedArch || out.size() > 1) && arch != null) {
             for (URL url : list) {
                 if (!url.getFile().contains("x86")
                         && !url.getFile().contains("64")

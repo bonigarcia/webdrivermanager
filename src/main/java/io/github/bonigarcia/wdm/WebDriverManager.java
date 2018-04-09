@@ -110,6 +110,7 @@ public abstract class WebDriverManager {
     protected String driverUrlKey;
     protected String driverMirrorUrlKey;
     protected String exportParameterKey;
+    protected boolean forcedArch;
 
     public static synchronized Config config() {
         if (config == null) {
@@ -230,6 +231,7 @@ public abstract class WebDriverManager {
 
     public WebDriverManager architecture(Architecture architecture) {
         config().setArchitecture(architecture);
+        forcedArch = true;
         return instanceMap.get(driverManagerType);
     }
 
@@ -505,7 +507,8 @@ public abstract class WebDriverManager {
             // Filter by architecture and OS
             candidateUrls = urlFilter.filterByOs(candidateUrls,
                     config().getOs());
-            candidateUrls = urlFilter.filterByArch(candidateUrls, arch);
+            candidateUrls = urlFilter.filterByArch(candidateUrls, arch,
+                    forcedArch);
 
             // Extra round of filter phantomjs 2.5.0 in Linux
             if (config().getOs().equalsIgnoreCase("linux")
@@ -911,6 +914,7 @@ public abstract class WebDriverManager {
         mirrorLog = false;
         listVersions = null;
         versionToDownload = null;
+        forcedArch = false;
     }
 
     public static void main(String[] args) {

@@ -78,7 +78,7 @@ public class PhantomJsFilterTest {
                 driversUrls, asList(phantomJsBinaryName));
 
         List<URL> filteredLatestUrls = new UrlFilter().filterByArch(latestUrls,
-                X64);
+                X64, false);
 
         log.info("Filtered URLS for LATEST version {} : {}",
                 phantomJsBinaryName, filteredLatestUrls);
@@ -100,7 +100,7 @@ public class PhantomJsFilterTest {
                 specificVersion);
 
         List<URL> filteredVersionUrls = new UrlFilter()
-                .filterByArch(specificVersionUrls, X64);
+                .filterByArch(specificVersionUrls, X64, false);
 
         log.info("Filtered URLS for {} version {}: {}", phantomJsBinaryName,
                 specificVersion, filteredVersionUrls);
