@@ -9,9 +9,9 @@
 
 # WebDriverManager [![][Logo]][GitHub Repository]
 
-This library is aimed to automate the [Selenium Webdriver] binaries management in runtime for Java.
+This library is aimed to automate the [Selenium WebDriver] binaries management in runtime for Java.
 
-If you use [Selenium Webdriver], you will know that in order to use some browsers such as **Chrome**, **Firefox**, **Opera**, **PhantomJS**, **Microsoft Edge**, or **Internet Explorer**, first you need to download a binary file which allows WebDriver to handle browsers. In addition, the absolute path to this binary must be set as JVM properties, as follows:
+If you use [Selenium WebDriver], you will know that in order to use some browsers such as **Chrome**, **Firefox**, **Opera**, **PhantomJS**, **Microsoft Edge**, or **Internet Explorer**, first you need to download a binary file which allows WebDriver to handle browsers. In addition, the absolute path to this binary must be set as JVM properties, as follows:
 
 ```java
 System.setProperty("webdriver.chrome.driver", "/absolute/path/to/binary/chromedriver");
@@ -34,7 +34,7 @@ In order to use WebDriverManager in a Maven project, you need to add the followi
 <dependency>
     <groupId>io.github.bonigarcia</groupId>
     <artifactId>webdrivermanager</artifactId>
-    <version>2.2.0</version>
+    <version>2.2.1</version>
 </dependency>
 ```
 
@@ -342,7 +342,7 @@ If you have questions on how to use WebDriverManager properly with a special con
 WebDriverManager (Copyright &copy; 2015-2018) is a project created by [Boni Garcia] and licensed under the terms of the [Apache 2.0 License]. Comments, questions and suggestions are always very [welcome][WebDriverManager issues]!
 
 [Logo]: http://bonigarcia.github.io/img/webdrivermanager.png
-[Selenium Webdriver]: http://docs.seleniumhq.org/projects/webdriver/
+[Selenium WebDriver]: http://docs.seleniumhq.org/projects/webdriver/
 [Apache 2.0 License]: http://www.apache.org/licenses/LICENSE-2.0
 [Boni Garcia]: http://bonigarcia.github.io/
 [GitHub Repository]: https://github.com/bonigarcia/webdrivermanager

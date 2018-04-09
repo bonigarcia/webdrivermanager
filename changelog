@@ -1,8 +1,12 @@
-webdrivermanager (2.2.0)
+webdrivermanager (2.2.1)
 
   + Rename operativeSystem() method to operatingSystem() (issue #196)
+  + Keep latest version value by manager instance (issue #197)
+  + Force architecture filtering when explicit setup (issue #200)
+  + Move post downloader logic for Edge binary into the proper manager
+  + Clean Downloader logic and logging
 
- -- Boni Garcia <boni.gg@gmail.com>
+ -- Boni Garcia <boni.gg@gmail.com>  Mon, 9 Apr 2018 12:20:00 +0200
 
 
 webdrivermanager (2.2.0)
