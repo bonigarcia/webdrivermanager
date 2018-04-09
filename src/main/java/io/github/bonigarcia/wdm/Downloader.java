@@ -81,6 +81,46 @@ public class Downloader {
         return binary.get().toString();
     }
 
+    public File getTarget(String version, URL url) {
+        log.trace("getTarget {} {}", version, url);
+        String zip = url.getFile().substring(url.getFile().lastIndexOf('/'));
+
+        int iFirst = zip.indexOf('_');
+        int iSecond = zip.indexOf('-');
+        int iLast = zip.length();
+        if (iFirst != zip.lastIndexOf('_')) {
+            iLast = zip.lastIndexOf('_');
+        } else if (iSecond != -1) {
+            iLast = iSecond;
+        }
+
+        String folder = zip.substring(0, iLast).replace(".zip", "")
+                .replace(".tar.bz2", "").replace(".tar.gz", "")
+                .replace(".msi", "").replace(".exe", "")
+                .replace("_", separator);
+        String path = config().isAvoidOutputTree() ? getTargetPath() + zip
+                : getTargetPath() + folder + separator + version + zip;
+        String target = WebDriverManager.getInstance(driverManagerType)
+                .preDownload(path, version);
+
+        log.trace("Target file for URL {} version {} = {}", url, version,
+                target);
+
+        return new File(target);
+    }
+
+    public String getTargetPath() {
+        String targetPath = config().getTargetPath();
+        log.trace("Target path {}", targetPath);
+
+        // Create repository folder if not exits
+        File repository = new File(targetPath);
+        if (!repository.exists()) {
+            repository.mkdirs();
+        }
+        return targetPath;
+    }
+
     private Optional<File> downloadAndExtract(URL url, File targetFile)
             throws IOException, InterruptedException {
         log.info("Downloading {}", url);
@@ -134,47 +174,7 @@ public class Downloader {
         return empty();
     }
 
-    public File getTarget(String version, URL url) {
-        log.trace("getTarget {} {}", version, url);
-        String zip = url.getFile().substring(url.getFile().lastIndexOf('/'));
-
-        int iFirst = zip.indexOf('_');
-        int iSecond = zip.indexOf('-');
-        int iLast = zip.length();
-        if (iFirst != zip.lastIndexOf('_')) {
-            iLast = zip.lastIndexOf('_');
-        } else if (iSecond != -1) {
-            iLast = iSecond;
-        }
-
-        String folder = zip.substring(0, iLast).replace(".zip", "")
-                .replace(".tar.bz2", "").replace(".tar.gz", "")
-                .replace(".msi", "").replace(".exe", "")
-                .replace("_", separator);
-        String path = config().isAvoidOutputTree() ? getTargetPath() + zip
-                : getTargetPath() + folder + separator + version + zip;
-        String target = WebDriverManager.getInstance(driverManagerType)
-                .preDownload(path, version);
-
-        log.trace("Target file for URL {} version {} = {}", url, version,
-                target);
-
-        return new File(target);
-    }
-
-    public String getTargetPath() {
-        String targetPath = config().getTargetPath();
-        log.trace("Target path {}", targetPath);
-
-        // Create repository folder if not exits
-        File repository = new File(targetPath);
-        if (!repository.exists()) {
-            repository.mkdirs();
-        }
-        return targetPath;
-    }
-
-    public File extract(File compressedFile)
+    private File extract(File compressedFile)
             throws IOException, InterruptedException {
         String fileName = compressedFile.getName().toLowerCase();
         log.info("Extracting binary from compressed file {}", fileName);
@@ -201,7 +201,7 @@ public class Downloader {
         return result;
     }
 
-    public void unZip(File compressedFile) throws IOException {
+    private void unZip(File compressedFile) throws IOException {
         File file = null;
         try (ZipFile zipFolder = new ZipFile(compressedFile)) {
             Enumeration<?> enu = zipFolder.entries();
@@ -239,7 +239,7 @@ public class Downloader {
         }
     }
 
-    public void unGzip(File archive) throws IOException {
+    private void unGzip(File archive) throws IOException {
         log.trace("UnGzip {}", archive);
         String fileName = archive.getName();
         int iDash = fileName.indexOf('-');
@@ -267,19 +267,19 @@ public class Downloader {
         }
     }
 
-    public void unTarGz(File archive) throws IOException {
+    private void unTarGz(File archive) throws IOException {
         Archiver archiver = createArchiver(TAR, GZIP);
         archiver.extract(archive, archive.getParentFile());
         log.trace("unTarGz {}", archive);
     }
 
-    public void unBZip2(File archive) throws IOException {
+    private void unBZip2(File archive) throws IOException {
         Archiver archiver = createArchiver(TAR, BZIP2);
         archiver.extract(archive, archive.getParentFile());
         log.trace("Unbzip2 {}", archive);
     }
 
-    public void extractMsi(File msi) throws IOException, InterruptedException {
+    private void extractMsi(File msi) throws IOException, InterruptedException {
         File tmpMsi = new File(
                 createTempDirectory("").toFile().getAbsoluteFile() + separator
                         + msi.getName());
