@@ -40,7 +40,7 @@ In order to use WebDriverManager in a Maven project, you need to add the followi
 
 WebDriverManager is typically used by tests, and therefore, the typical scope would be *test* (`<scope>test</scope>`).
 
-Once we have included this dependency, you can let WebDriverManager to manage the WebDriver binaries for you. Take a look at this JUnit 4 example which uses Chrome with Selenium WebDriver (in order to use WebDriverManager in conjunction with **JUnit 5**, the extension [selenium-jupiter] is highly recommended):
+Once we have included this dependency, you can let WebDriverManager to manage the WebDriver binaries for you. Take a look at this JUnit 4 example which uses Chrome with Selenium WebDriver (in order to use WebDriverManager in conjunction with **JUnit 5**, the extension [Selenium-Jupiter] is highly recommended):
 
 ```java
 public class ChromeTest {
@@ -122,7 +122,7 @@ WebDriver driver = new ChromeDriver();
 
 ## Examples
 
-Check out [WebDriverManager Examples][WebDriverManager Examples] for some JUnit 4 tests using WebDriverManager.
+Check out the repository [WebDriverManager Examples] which contains different JUnit 4 test examples using WebDriverManager.
 
 
 ## WebDriverManager API
@@ -335,20 +335,21 @@ WDM_GITHUBTOKENSECRET=<your-token-secret>
 
 ## Help
 
-If you have questions on how to use WebDriverManager properly with a special configuration or suchlike, please consider asking a question on [stackoverflow](https://stackoverflow.com/questions/tagged/webdrivermanager-java) and tag it with  *webdrivermanager-java*.
+If you have questions on how to use WebDriverManager properly with a special configuration or suchlike, please consider asking a question on [Stack Overflow] and tag it with  *webdrivermanager-java*.
 
 ## About
 
 WebDriverManager (Copyright &copy; 2015-2018) is a project created by [Boni Garcia] and licensed under the terms of the [Apache 2.0 License]. Comments, questions and suggestions are always very [welcome][WebDriverManager issues]!
 
-[Logo]: http://bonigarcia.github.io/img/webdrivermanager.png
-[Selenium WebDriver]: http://docs.seleniumhq.org/projects/webdriver/
 [Apache 2.0 License]: http://www.apache.org/licenses/LICENSE-2.0
-[Boni Garcia]: http://bonigarcia.github.io/
-[GitHub Repository]: https://github.com/bonigarcia/webdrivermanager
 [authenticated requests]: https://developer.github.com/v3/#rate-limiting
+[Boni Garcia]: http://bonigarcia.github.io/
 [GitHub account]: https://github.com/settings/tokens
-[WebDriverManager issues]: https://github.com/bonigarcia/webdrivermanager/issues
-[WebDriverManager Examples]: https://github.com/bonigarcia/webdrivermanager-examples
+[GitHub Repository]: https://github.com/bonigarcia/webdrivermanager
+[Logo]: http://bonigarcia.github.io/img/webdrivermanager.png
 [npm.taobao.org]: http://npm.taobao.org/mirrors/
-[selenium-jupiter]: https://github.com/bonigarcia/selenium-jupiter/
+[Selenium WebDriver]: http://docs.seleniumhq.org/projects/webdriver/
+[Selenium-Jupiter]: https://github.com/bonigarcia/selenium-jupiter/
+[Stack Overflow]: https://stackoverflow.com/questions/tagged/webdrivermanager-java
+[WebDriverManager Examples]: https://github.com/bonigarcia/webdrivermanager-examples
+[WebDriverManager issues]: https://github.com/bonigarcia/webdrivermanager/issues
