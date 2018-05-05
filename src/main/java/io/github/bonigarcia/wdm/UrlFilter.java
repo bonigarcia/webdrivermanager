@@ -19,6 +19,7 @@ package io.github.bonigarcia.wdm;
 import static java.io.File.separator;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.copyOf;
+import static java.util.Collections.singletonList;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.BufferedReader;
@@ -84,6 +85,13 @@ public class UrlFilter {
         }
 
         log.trace("URLs after filtering by architecture ({}): {}", arch, out);
+
+        if (out.isEmpty() && !forcedArch && !list.isEmpty()) {
+            out = singletonList(list.get(0));
+            log.trace(
+                    "Empty URL list after filtering by architecture ... using first candidate: {}",
+                    out);
+        }
         return out;
     }
 
