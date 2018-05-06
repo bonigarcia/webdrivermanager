@@ -518,7 +518,8 @@ public abstract class WebDriverManager {
             }
 
             // Filter by ignored version
-            if (config().getIgnoreVersions() != null) {
+            if (config().getIgnoreVersions() != null
+                    && !candidateUrls.isEmpty()) {
                 candidateUrls = urlFilter.filterByIgnoredVersions(candidateUrls,
                         config().getIgnoreVersions());
             }
