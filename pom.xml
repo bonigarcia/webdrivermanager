@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.github.bonigarcia</groupId>
@@ -113,12 +115,13 @@
             <artifactId>jsoup</artifactId>
             <version>${jsoup.version}</version>
         </dependency>
+
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>${logback.version}</version>
+            <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -225,6 +228,14 @@
                 </executions>
                 <configuration>
                     <mainClass>${wdm.mainClass}</mainClass>
+                    <includePluginDependencies>false</includePluginDependencies>
+                    <classpathScope>test</classpathScope>
+                    <systemProperties>
+                        <systemProperty>
+                            <key>logback.configurationFile</key>
+                            <value>src/main/resources/logback.xml</value>
+                        </systemProperty>
+                    </systemProperties>
                 </configuration>
             </plugin>
             <plugin>
@@ -235,9 +246,9 @@
                             <mainClass>${wdm.mainClass}</mainClass>
                         </manifest>
                     </archive>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
+                    <descriptors>
+                        <descriptor>src/main/resources/assembly.xml</descriptor>
+                    </descriptors>
                 </configuration>
             </plugin>
             <plugin>
@@ -246,7 +257,7 @@
                 <version>${maven-jar-plugin.version}</version>
                 <configuration>
                     <excludes>
-                        <exclude>**/logback.xml</exclude>
+                        <exclude>**/*.xml</exclude>
                     </excludes>
                 </configuration>
             </plugin>
