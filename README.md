@@ -295,6 +295,8 @@ Also you can configure username and password using environment variables (``HTTP
 
 ### Known Issues
 
+#### HTTP response code 403
+
 Some of the binaries (for Opera and Firefox) are hosted on GitHub. When several consecutive requests are made by WebDriverManager, GitHub servers return an **HTTP 403 error** response as follows:
 
 ```
@@ -333,6 +335,17 @@ WDM_GITHUBTOKENNAME=<your-token-name>
 WDM_GITHUBTOKENSECRET=<your-token-secret>
 ```
 
+#### Tons of org.apache.http.wire/httpclient DEBUG log
+
+WebDriverManager uses [Apache HTTP Client] to download WebDriver binaries from online repositories. Internally, Apache HTTP client writes a lot of logging information using the `DEBUG` level of `org.apache.http` classes. To reduce this amount of logs, the level of this logger might be reduced. For instance, in the case of [Logback], the log configuration file should include the following:
+
+```xml
+<configuration>
+    <logger name="org.apache.http" level="WARN" />
+</configuration>```
+
+You can find further information about others logging implementations in the [Apache HTTP Client logging practices] page.
+
 ## Help
 
 If you have questions on how to use WebDriverManager properly with a special configuration or suchlike, please consider asking a question on [Stack Overflow] and tag it with  *webdrivermanager-java*.
@@ -341,11 +354,14 @@ If you have questions on how to use WebDriverManager properly with a special con
 
 WebDriverManager (Copyright &copy; 2015-2018) is a project created by [Boni Garcia] and licensed under the terms of the [Apache 2.0 License]. Comments, questions and suggestions are always very [welcome][WebDriverManager issues]!
 
+[Apache HTTP Client]: https://hc.apache.org/httpcomponents-client-ga/
+[Apache HTTP Client logging practices]: https://hc.apache.org/httpcomponents-client-ga/logging.html
 [Apache 2.0 License]: http://www.apache.org/licenses/LICENSE-2.0
 [authenticated requests]: https://developer.github.com/v3/#rate-limiting
 [Boni Garcia]: http://bonigarcia.github.io/
 [GitHub account]: https://github.com/settings/tokens
 [GitHub Repository]: https://github.com/bonigarcia/webdrivermanager
+[Logback]: https://logback.qos.ch/
 [Logo]: http://bonigarcia.github.io/img/webdrivermanager.png
 [npm.taobao.org]: http://npm.taobao.org/mirrors/
 [Selenium WebDriver]: http://docs.seleniumhq.org/projects/webdriver/
