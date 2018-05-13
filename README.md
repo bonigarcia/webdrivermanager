@@ -335,7 +335,7 @@ WDM_GITHUBTOKENNAME=<your-token-name>
 WDM_GITHUBTOKENSECRET=<your-token-secret>
 ```
 
-#### Tons of org.apache.http.wire/httpclient DEBUG log
+#### Tons of org.apache.http DEBUG log
 
 WebDriverManager uses [Apache HTTP Client] to download WebDriver binaries from online repositories. Internally, Apache HTTP client writes a lot of logging information using the `DEBUG` level of `org.apache.http` classes. To reduce this amount of logs, the level of this logger might be reduced. For instance, in the case of [Logback], the log configuration file should include the following:
 
