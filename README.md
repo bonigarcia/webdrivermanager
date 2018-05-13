@@ -342,7 +342,8 @@ WebDriverManager uses [Apache HTTP Client] to download WebDriver binaries from o
 ```xml
 <configuration>
     <logger name="org.apache.http" level="WARN" />
-</configuration>```
+</configuration>
+```
 
 You can find further information about others logging implementations in the [Apache HTTP Client logging practices] page.
 
