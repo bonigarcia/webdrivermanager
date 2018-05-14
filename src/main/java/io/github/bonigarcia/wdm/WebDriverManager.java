@@ -94,6 +94,7 @@ public abstract class WebDriverManager {
     protected static Map<DriverManagerType, WebDriverManager> instanceMap = new EnumMap<>(
             DriverManagerType.class);
     protected static Config config;
+    protected boolean useBeta = config().isUseBetaVersions();
     protected HttpClient httpClient;
     protected Downloader downloader;
     protected UrlFilter urlFilter;
@@ -680,8 +681,7 @@ public abstract class WebDriverManager {
     }
 
     protected void handleDriver(URL url, String driver, List<URL> out) {
-        if (!config().isUseBetaVersions()
-                && url.getFile().toLowerCase().contains("beta")) {
+        if (!useBeta && url.getFile().toLowerCase().contains("beta")) {
             return;
         }
         if (url.getFile().contains(driver)) {
@@ -912,6 +912,7 @@ public abstract class WebDriverManager {
         listVersions = null;
         versionToDownload = null;
         forcedArch = false;
+        useBeta = config().isUseBetaVersions();
     }
 
     public static void main(String[] args) {
