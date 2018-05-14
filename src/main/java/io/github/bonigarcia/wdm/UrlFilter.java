@@ -87,9 +87,9 @@ public class UrlFilter {
         log.trace("URLs after filtering by architecture ({}): {}", arch, out);
 
         if (out.isEmpty() && !forcedArch && !list.isEmpty()) {
-            out = singletonList(list.get(0));
+            out = singletonList(list.get(list.size() - 1));
             log.trace(
-                    "Empty URL list after filtering by architecture ... using first candidate: {}",
+                    "Empty URL list after filtering by architecture ... using last candidate: {}",
                     out);
         }
         return out;
