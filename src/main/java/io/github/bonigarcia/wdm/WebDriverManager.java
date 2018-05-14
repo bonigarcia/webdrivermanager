@@ -32,7 +32,6 @@ import static java.lang.Integer.valueOf;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.sort;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.reverse;
 import static java.util.Collections.reverseOrder;
 import static java.util.Collections.sort;
 import static java.util.Optional.empty;
@@ -478,7 +477,6 @@ public abstract class WebDriverManager {
 
     protected void downloadCandidateUrls(List<URL> candidateUrls)
             throws IOException, InterruptedException {
-        reverse(candidateUrls);
         URL url = candidateUrls.iterator().next();
 
         String exportValue = downloader.download(url, versionToDownload,
@@ -642,7 +640,6 @@ public abstract class WebDriverManager {
         }
 
         for (String s : match) {
-            reverse(list);
             for (URL url : list) {
                 if (url.getFile().contains(s) && url.getFile().contains(version)
                         && !url.getFile().contains("-symbols")) {
@@ -661,7 +658,6 @@ public abstract class WebDriverManager {
         log.trace("Checking the lastest version of {} with URL list {}",
                 matchString, list);
         List<URL> out = new ArrayList<>();
-        reverse(list);
         List<URL> copyOfList = new ArrayList<>(list);
 
         for (URL url : copyOfList) {
