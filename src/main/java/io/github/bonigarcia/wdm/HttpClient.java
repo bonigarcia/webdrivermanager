@@ -111,7 +111,7 @@ public class HttpClient implements Closeable {
 
             HostnameVerifier allHostsValid = new HostnameVerifier() {
                 public boolean verify(String hostname, SSLSession session) {
-                    return true;
+                    return hostname.equalsIgnoreCase(session.getPeerHost());
                 }
             };
             SSLContext sslContext = SSLContexts.custom()
