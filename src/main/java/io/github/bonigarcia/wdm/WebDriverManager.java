@@ -553,11 +553,7 @@ public abstract class WebDriverManager {
         String driverInCache = null;
         for (String driver : getDriverName()) {
             log.trace("Checking if {} exists in cache {}", driver, repository);
-
-            Collection<File> listFiles = listFiles(new File(repository), null,
-                    true);
-            Object[] array = listFiles.toArray();
-            sort(array, reverseOrder());
+            Object[] array = getFilesInCache(repository);
 
             for (Object f : array) {
                 driverInCache = f.toString();
@@ -578,11 +574,7 @@ public abstract class WebDriverManager {
         for (String driver : getDriverName()) {
             log.trace("Checking if {} {} ({} bits) exists in cache {}", driver,
                     driverVersion, arch, repository);
-
-            Collection<File> listFiles = listFiles(new File(repository), null,
-                    true);
-            Object[] array = listFiles.toArray();
-            sort(array, reverseOrder());
+            Object[] array = getFilesInCache(repository);
 
             for (Object f : array) {
                 driverInCache = f.toString();
@@ -600,6 +592,14 @@ public abstract class WebDriverManager {
             }
         }
         return empty();
+    }
+
+    protected Object[] getFilesInCache(String repository) {
+        Collection<File> listFiles = listFiles(new File(repository), null,
+                true);
+        Object[] array = listFiles.toArray();
+        sort(array, reverseOrder());
+        return array;
     }
 
     protected boolean shouldCheckArchitecture() {
