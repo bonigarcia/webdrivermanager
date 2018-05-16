@@ -855,7 +855,7 @@ public abstract class WebDriverManager {
                 GitHubApi[] releaseArray = gson.fromJson(reader,
                         GitHubApi[].class);
 
-                if (config().isUseLatestVersion()) {
+                if (useLatestVersion) {
                     driverVersion = releaseArray[0].getTagName();
                 }
 
