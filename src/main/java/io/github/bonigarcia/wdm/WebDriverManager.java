@@ -407,16 +407,18 @@ public abstract class WebDriverManager {
                     || version.equalsIgnoreCase("latest");
             boolean cache = config().isForceCache() || !isNetAvailable();
 
-            if (instanceMap.containsKey(CHROME) && useLatestVersion && !cache) {
-                String url = config().getDriverUrl(driverUrlKey) + LATEST_VERSION_TAG;
+            if (driverName.contains("chromedriver")) {
+                if (version.isEmpty() && useLatestVersion && !cache) {
+                    String url = config().getDriverUrl(driverUrlKey) + LATEST_VERSION_TAG;
 
-                HttpGet request = new HttpGet(url);
-                request.addHeader("User-Agent", USER_AGENT);
+                    HttpGet request = new HttpGet(url);
+                    request.addHeader("User-Agent", USER_AGENT);
 
-                HttpResponse response = wdmHttpClient.execute(request);
-                BufferedReader rd = new BufferedReader(
-                        new InputStreamReader(response.getEntity().getContent()));
-                latestVersion = IOUtils.toString(rd);
+                    HttpResponse response = wdmHttpClient.execute(request);
+                    BufferedReader rd = new BufferedReader(
+                            new InputStreamReader(response.getEntity().getContent()));
+                    latestVersion = IOUtils.toString(rd);
+                }
             }
 
             String driverNameString = listToString(getDriverName());
