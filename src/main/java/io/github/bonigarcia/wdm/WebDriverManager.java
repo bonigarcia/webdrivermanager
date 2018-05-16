@@ -71,6 +71,7 @@ public abstract class WebDriverManager {
     static final Logger log = getLogger(lookup().lookupClass());
 
     protected static final String SLASH = "/";
+    protected static final String LATEST_VERSION_TAG = "LATEST_RELEASE";
 
     protected abstract List<URL> getDrivers() throws IOException;
 
@@ -407,7 +408,7 @@ public abstract class WebDriverManager {
             boolean cache = config().isForceCache() || !isNetAvailable();
 
             if (instanceMap.containsKey(CHROME) && useLatestVersion && !cache) {
-                String url = config().getDriverUrl(driverUrlKey) + "LATEST_RELEASE";
+                String url = config().getDriverUrl(driverUrlKey) + LATEST_VERSION_TAG;
 
                 HttpGet request = new HttpGet(url);
                 request.addHeader("User-Agent", USER_AGENT);
