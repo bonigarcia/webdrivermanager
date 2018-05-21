@@ -16,30 +16,10 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static io.github.bonigarcia.wdm.WebDriverManager.config;
-import static java.io.File.separator;
-import static java.lang.Runtime.getRuntime;
-import static java.lang.invoke.MethodHandles.lookup;
-import static java.nio.file.Files.createTempDirectory;
-import static java.nio.file.Files.delete;
-import static java.nio.file.Files.move;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
-import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
-import static org.apache.commons.io.FileUtils.deleteDirectory;
-import static org.apache.commons.io.FileUtils.listFiles;
-import static org.apache.commons.io.FileUtils.moveFileToDirectory;
-import static org.rauschig.jarchivelib.ArchiveFormat.TAR;
-import static org.rauschig.jarchivelib.ArchiverFactory.createArchiver;
-import static org.rauschig.jarchivelib.CompressionType.BZIP2;
-import static org.rauschig.jarchivelib.CompressionType.GZIP;
-import static org.slf4j.LoggerFactory.getLogger;
+import org.rauschig.jarchivelib.Archiver;
+import org.slf4j.Logger;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -49,8 +29,19 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.rauschig.jarchivelib.Archiver;
-import org.slf4j.Logger;
+import static io.github.bonigarcia.wdm.WebDriverManager.config;
+import static java.io.File.separator;
+import static java.lang.Runtime.getRuntime;
+import static java.lang.invoke.MethodHandles.lookup;
+import static java.nio.file.Files.*;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
+import static org.apache.commons.io.FileUtils.*;
+import static org.rauschig.jarchivelib.ArchiveFormat.TAR;
+import static org.rauschig.jarchivelib.ArchiverFactory.createArchiver;
+import static org.rauschig.jarchivelib.CompressionType.BZIP2;
+import static org.rauschig.jarchivelib.CompressionType.GZIP;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Downloader class.
@@ -116,6 +107,10 @@ public class Downloader {
         // Create repository folder if not exits
         File repository = new File(targetPath);
         if (!repository.exists()) {
+            if (!repository.canWrite()){
+                throw new WebDriverManagerException("Can not write to: " + repository + " folder. " +
+                        "Please check path is correct and you have write access to it.");
+            }
             repository.mkdirs();
         }
         return targetPath;
