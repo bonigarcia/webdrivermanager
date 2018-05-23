@@ -16,16 +16,7 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static io.github.bonigarcia.wdm.OperatingSystem.LINUX;
-import static io.github.bonigarcia.wdm.OperatingSystem.MAC;
-import static io.github.bonigarcia.wdm.OperatingSystem.WIN;
-import static io.github.bonigarcia.wdm.WebDriverManager.config;
-import static java.lang.String.join;
-import static java.lang.invoke.MethodHandles.lookup;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_LINUX;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
-import static org.slf4j.LoggerFactory.getLogger;
+import org.slf4j.Logger;
 
 import java.io.File;
 import java.io.InputStream;
@@ -35,7 +26,12 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Properties;
 
-import org.slf4j.Logger;
+import static io.github.bonigarcia.wdm.OperatingSystem.*;
+import static io.github.bonigarcia.wdm.WebDriverManager.config;
+import static java.lang.String.join;
+import static java.lang.invoke.MethodHandles.lookup;
+import static org.apache.commons.lang3.SystemUtils.*;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Configuration class.
@@ -213,7 +209,7 @@ public class Config {
 
         if (resolved != null) {
             path = resolved;
-            if (path.contains(HOME) && !config().getOs().contains(WIN.name())) {
+            if (path.contains(HOME)) {
                 path = path.replace(HOME, System.getProperty("user.home"));
             }
             if (path.equals(".")) {

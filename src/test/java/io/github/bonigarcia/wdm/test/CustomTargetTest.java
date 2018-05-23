@@ -46,7 +46,7 @@ public class CustomTargetTest {
 
     @Before
     public void setup() throws IOException {
-        tmpFolder = createTempDirectory("");
+        tmpFolder = createTempDirectory("").toRealPath();
         WebDriverManager.config().setTargetPath(tmpFolder.toString());
         log.info("Using temporal folder {} as cache", tmpFolder);
     }
