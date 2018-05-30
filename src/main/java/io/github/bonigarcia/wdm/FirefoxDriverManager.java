@@ -16,13 +16,13 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static io.github.bonigarcia.wdm.DriverManagerType.FIREFOX;
-import static io.github.bonigarcia.wdm.OperatingSystem.MAC;
-import static java.util.Arrays.asList;
-
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+
+import static io.github.bonigarcia.wdm.DriverManagerType.FIREFOX;
+import static io.github.bonigarcia.wdm.OperatingSystem.MAC;
+import static java.util.Arrays.asList;
 
 /**
  * Manager for Firefox.
@@ -43,6 +43,7 @@ public class FirefoxDriverManager extends WebDriverManager {
         driverUrlKey = "wdm.geckoDriverUrl";
         driverMirrorUrlKey = "wdm.geckoDriverMirrorUrl";
         driverName = asList("wires", "geckodriver");
+        latestVersion = "wdm.latestVersion";
     }
 
     @Override

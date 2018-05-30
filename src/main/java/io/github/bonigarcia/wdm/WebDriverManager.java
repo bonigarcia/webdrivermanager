@@ -16,16 +16,33 @@
  */
 package io.github.bonigarcia.wdm;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.internal.LinkedTreeMap;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.jsoup.Jsoup;
+import org.slf4j.Logger;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.*;
+import java.net.URL;
+import java.util.*;
+
 import static io.github.bonigarcia.wdm.Architecture.X32;
 import static io.github.bonigarcia.wdm.Architecture.X64;
 import static io.github.bonigarcia.wdm.Config.isNullOrEmpty;
 import static io.github.bonigarcia.wdm.Config.listToString;
-import static io.github.bonigarcia.wdm.DriverManagerType.CHROME;
-import static io.github.bonigarcia.wdm.DriverManagerType.EDGE;
-import static io.github.bonigarcia.wdm.DriverManagerType.FIREFOX;
-import static io.github.bonigarcia.wdm.DriverManagerType.IEXPLORER;
-import static io.github.bonigarcia.wdm.DriverManagerType.OPERA;
-import static io.github.bonigarcia.wdm.DriverManagerType.PHANTOMJS;
+import static io.github.bonigarcia.wdm.DriverManagerType.*;
 import static io.github.bonigarcia.wdm.OperatingSystem.WIN;
 import static java.lang.Integer.signum;
 import static java.lang.Integer.valueOf;
@@ -40,42 +57,8 @@ import static javax.xml.xpath.XPathConstants.NODESET;
 import static javax.xml.xpath.XPathFactory.newInstance;
 import static org.apache.commons.io.FileUtils.listFiles;
 import static org.apache.commons.io.FilenameUtils.removeExtension;
+import static org.apache.http.HttpHeaders.USER_AGENT;
 import static org.slf4j.LoggerFactory.getLogger;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FilenameFilter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.EnumMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.apache.commons.codec.binary.Base64;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.jsoup.Jsoup;
-import org.slf4j.Logger;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.internal.LinkedTreeMap;
 
 /**
  * Parent driver manager.
@@ -88,6 +71,7 @@ public abstract class WebDriverManager {
     static final Logger log = getLogger(lookup().lookupClass());
 
     protected static final String SLASH = "/";
+    protected static final String LATEST_VERSION_TAG = "LATEST_RELEASE";
 
     protected abstract List<URL> getDrivers() throws IOException;
 
@@ -95,6 +79,7 @@ public abstract class WebDriverManager {
             DriverManagerType.class);
     protected static Config config;
     protected boolean useBeta = config().isUseBetaVersions();
+    protected boolean useLatestVersion = config().isUseLatestVersion();
     protected HttpClient httpClient;
     protected Downloader downloader;
     protected UrlFilter urlFilter;
@@ -313,6 +298,11 @@ public abstract class WebDriverManager {
         return instanceMap.get(driverManagerType);
     }
 
+    public WebDriverManager useLatestVersion() {
+        config().setLatestVersion(true);
+        return instanceMap.get(driverManagerType);
+    }
+
     public WebDriverManager properties(String properties) {
         config().setProperties(properties);
         return instanceMap.get(driverManagerType);
@@ -416,6 +406,21 @@ public abstract class WebDriverManager {
             boolean getLatest = version == null || version.isEmpty()
                     || version.equalsIgnoreCase("latest");
             boolean cache = config().isForceCache() || !isNetAvailable();
+
+            if (driverName.contains("chromedriver")) {
+                if (version.isEmpty() && useLatestVersion && !cache) {
+                    String url = config().getDriverUrl(driverUrlKey) + LATEST_VERSION_TAG;
+
+                    HttpGet request = new HttpGet(url);
+                    request.addHeader("User-Agent", USER_AGENT);
+
+                    HttpResponse response = wdmHttpClient.execute(request);
+                    BufferedReader rd = new BufferedReader(
+                            new InputStreamReader(response.getEntity().getContent()));
+                    latestVersion = IOUtils.toString(rd);
+                }
+            }
+
             String driverNameString = listToString(getDriverName());
 
             log.trace("Managing {} arch={} version={} getLatest={} cache={}",
@@ -851,6 +856,10 @@ public abstract class WebDriverManager {
                 Gson gson = gsonBuilder.create();
                 GitHubApi[] releaseArray = gson.fromJson(reader,
                         GitHubApi[].class);
+
+                if (useLatestVersion && driverVersion != null) {
+                    driverVersion = releaseArray[0].getTagName();
+                }
 
                 if (driverVersion != null) {
                     releaseArray = new GitHubApi[] {

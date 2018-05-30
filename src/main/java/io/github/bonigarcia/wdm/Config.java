@@ -66,6 +66,8 @@ public class Config {
     ConfigKey<Boolean> avoidOutputTree = new ConfigKey<>("wdm.avoidOutputTree",
             Boolean.class);
     ConfigKey<Integer> timeout = new ConfigKey<>("wdm.timeout", Integer.class);
+    ConfigKey<Boolean> latestVersion = new ConfigKey<>("wdm.useLatestVersion",
+            Boolean.class);
 
     ConfigKey<String> architecture = new ConfigKey<>("wdm.architecture",
             String.class, defaultArchitecture());
@@ -287,6 +289,15 @@ public class Config {
 
     public Config setTimeout(int value) {
         this.timeout.setValue(value);
+        return this;
+    }
+
+    public boolean isUseLatestVersion() {
+        return resolve(latestVersion);
+    }
+
+    public Config setLatestVersion(boolean value) {
+        this.latestVersion.setValue(value);
         return this;
     }
 
