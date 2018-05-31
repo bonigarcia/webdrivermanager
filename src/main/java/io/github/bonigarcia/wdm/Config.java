@@ -16,7 +16,15 @@
  */
 package io.github.bonigarcia.wdm;
 
-import org.slf4j.Logger;
+import static io.github.bonigarcia.wdm.OperatingSystem.LINUX;
+import static io.github.bonigarcia.wdm.OperatingSystem.MAC;
+import static io.github.bonigarcia.wdm.OperatingSystem.WIN;
+import static java.lang.String.join;
+import static java.lang.invoke.MethodHandles.lookup;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_LINUX;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
 import java.io.InputStream;
@@ -26,12 +34,7 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Properties;
 
-import static io.github.bonigarcia.wdm.OperatingSystem.*;
-import static io.github.bonigarcia.wdm.WebDriverManager.config;
-import static java.lang.String.join;
-import static java.lang.invoke.MethodHandles.lookup;
-import static org.apache.commons.lang3.SystemUtils.*;
-import static org.slf4j.LoggerFactory.getLogger;
+import org.slf4j.Logger;
 
 /**
  * Configuration class.
@@ -156,7 +159,7 @@ public class Config {
                 try {
                     ((ConfigKey<?>) field.get(this)).reset();
                 } catch (Exception e) {
-                    log.warn("Exception reseting {}", field);
+                    log.warn("Exception resetting {}", field);
                 }
             }
         }
