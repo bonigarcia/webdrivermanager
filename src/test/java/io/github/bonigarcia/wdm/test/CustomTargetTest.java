@@ -16,21 +16,22 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.slf4j.Logger;
-
-import java.io.IOException;
-import java.nio.file.Path;
-
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.file.Files.createTempDirectory;
 import static org.apache.commons.io.FileUtils.deleteDirectory;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.junit.Assert.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
+
+import java.io.IOException;
+import java.nio.file.Path;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.slf4j.Logger;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 /**
  * Test for custom target.
