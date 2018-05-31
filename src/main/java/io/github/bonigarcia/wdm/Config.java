@@ -159,7 +159,7 @@ public class Config {
                 try {
                     ((ConfigKey<?>) field.get(this)).reset();
                 } catch (Exception e) {
-                    log.warn("Exception reseting {}", field);
+                    log.warn("Exception resetting {}", field);
                 }
             }
         }
