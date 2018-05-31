@@ -32,6 +32,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import io.github.bonigarcia.wdm.WebDriverManagerException;
 
 /**
  * Test with incorrect version numbers.
@@ -54,10 +55,9 @@ public class WrongVersionTest {
                 { FirefoxDriver.class, "99" } });
     }
 
-    @Test
-    public void testWrongVersionAndCache()
+    @Test(expected = WebDriverManagerException.class)
+    public void testWrongVersion()
             throws InstantiationException, IllegalAccessException {
-        WebDriverManager.getInstance(driverClass).setup();
         WebDriverManager.getInstance(driverClass).version(version).setup();
         File binary = new File(
                 WebDriverManager.getInstance(driverClass).getBinaryPath());
