@@ -565,11 +565,13 @@ public abstract class WebDriverManager {
 
             // Filter by arch
             filesInCache = filterCacheBy(filesInCache, arch.name());
-            if (filesInCache.size() > 0) {
+            if (!filesInCache.isEmpty()) {
                 return Optional.of(filesInCache.get(0).toString());
             }
         }
-        log.debug("{} not found in cache", listToString(getDriverName()));
+        if (log.isDebugEnabled()) {
+            log.debug("{} not found in cache", listToString(getDriverName()));
+        }
         return empty();
     }
 
