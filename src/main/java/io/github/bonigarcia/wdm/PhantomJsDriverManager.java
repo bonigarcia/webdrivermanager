@@ -127,8 +127,4 @@ public class PhantomJsDriverManager extends WebDriverManager {
         return target;
     }
 
-    @Override
-    protected boolean shouldCheckArchitecture() {
-        return false;
-    }
 }

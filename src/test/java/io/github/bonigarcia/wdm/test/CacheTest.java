@@ -87,16 +87,14 @@ public class CacheTest {
                 .getInstance(driverManagerType);
         browserManager.forceCache().forceDownload().architecture(architecture)
                 .version(driverVersion).setup();
-        Downloader downloader = new Downloader(driverManagerType);
 
         Method method = WebDriverManager.class.getDeclaredMethod(
-                "existsDriverInCache", String.class, String.class,
-                Architecture.class);
+                "getDriverFromCache", String.class, Architecture.class,
+                String.class);
         method.setAccessible(true);
 
-        Optional<String> driverInChachePath = (Optional<String>) method.invoke(
-                browserManager, downloader.getTargetPath(), driverVersion,
-                architecture);
+        Optional<String> driverInChachePath = (Optional<String>) method
+                .invoke(browserManager, driverVersion, architecture, "");
 
         assertThat(driverInChachePath.get(), notNullValue());
     }

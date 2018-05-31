@@ -17,7 +17,6 @@
 package io.github.bonigarcia.wdm;
 
 import static io.github.bonigarcia.wdm.DriverManagerType.FIREFOX;
-import static io.github.bonigarcia.wdm.OperatingSystem.MAC;
 import static java.util.Arrays.asList;
 
 import java.io.IOException;
@@ -80,8 +79,4 @@ public class FirefoxDriverManager extends WebDriverManager {
         return target;
     }
 
-    @Override
-    protected boolean shouldCheckArchitecture() {
-        return !config().getOs().contains(MAC.name());
-    }
 }

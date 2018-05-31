@@ -30,12 +30,9 @@ import static io.github.bonigarcia.wdm.OperatingSystem.WIN;
 import static java.lang.Integer.signum;
 import static java.lang.Integer.valueOf;
 import static java.lang.invoke.MethodHandles.lookup;
-import static java.util.Arrays.sort;
 import static java.util.Collections.emptyList;
-import static java.util.Collections.reverseOrder;
 import static java.util.Collections.sort;
 import static java.util.Optional.empty;
-import static java.util.Optional.of;
 import static javax.xml.xpath.XPathConstants.NODESET;
 import static javax.xml.xpath.XPathFactory.newInstance;
 import static org.apache.commons.io.FileUtils.listFiles;
@@ -51,7 +48,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Iterator;
 import java.util.List;
@@ -417,6 +413,7 @@ public abstract class WebDriverManager {
                     || version.equalsIgnoreCase("latest");
             boolean cache = config().isForceCache() || !isNetAvailable();
             String driverNameString = listToString(getDriverName());
+            String os = config().getOs();
 
             log.trace("Managing {} arch={} version={} getLatest={} cache={}",
                     driverNameString, arch, version, getLatest, cache);
@@ -428,7 +425,7 @@ public abstract class WebDriverManager {
                 cache = true;
             }
 
-            Optional<String> driverInCache = handleCache(arch, version,
+            Optional<String> driverInCache = handleCache(arch, version, os,
                     getLatest, cache);
 
             String versionStr = getLatest ? "(latest version)" : version;
@@ -444,8 +441,7 @@ public abstract class WebDriverManager {
 
                 if (candidateUrls.isEmpty()) {
                     String errorMessage = driverNameString + " " + versionStr
-                            + " for " + config().getOs() + arch.toString()
-                            + " not found in "
+                            + " for " + os + arch.toString() + " not found in "
                             + config().getDriverUrl(driverUrlKey);
                     log.error(errorMessage);
                     throw new WebDriverManagerException(errorMessage);
@@ -538,73 +534,62 @@ public abstract class WebDriverManager {
     }
 
     protected Optional<String> handleCache(Architecture arch, String version,
-            boolean getLatest, boolean cache) {
+            String os, boolean getLatest, boolean cache) {
         Optional<String> driverInCache = empty();
-        if (cache) {
-            driverInCache = forceCache(downloader.getTargetPath());
-        } else if (!getLatest) {
+        if (cache || !getLatest) {
+            driverInCache = getDriverFromCache(version, arch, os);
+        }
+        if (!version.isEmpty()) {
             versionToDownload = version;
-            driverInCache = existsDriverInCache(downloader.getTargetPath(),
-                    version, arch);
         }
         return driverInCache;
     }
 
-    protected Optional<String> forceCache(String repository) {
-        String driverInCache = null;
+    protected Optional<String> getDriverFromCache(String driverVersion,
+            Architecture arch, String os) {
         for (String driver : getDriverName()) {
-            log.trace("Checking if {} exists in cache {}", driver, repository);
-            Object[] array = getFilesInCache(repository);
+            log.trace("Checking if {} exists in cache", driver);
+            List<File> filesInCache = getFilesInCache();
 
-            for (Object f : array) {
-                driverInCache = f.toString();
-                log.trace("Checking {}", driverInCache);
-                if (driverInCache.contains(driver)
-                        && config().isExecutable(new File(driverInCache))) {
-                    log.info("Found {} in cache: {} ", driver, driverInCache);
-                    return of(driverInCache);
-                }
+            // Filter by version
+            filesInCache = filterCacheBy(filesInCache, driverVersion);
+            if (filesInCache.size() == 1) {
+                return Optional.of(filesInCache.get(0).toString());
+            }
+
+            // Filter by OS
+            filesInCache = filterCacheBy(filesInCache, os.toLowerCase());
+            if (filesInCache.size() == 1) {
+                return Optional.of(filesInCache.get(0).toString());
+            }
+
+            // Filter by arch
+            filesInCache = filterCacheBy(filesInCache, arch.name());
+            if (filesInCache.size() > 0) {
+                return Optional.of(filesInCache.get(0).toString());
             }
         }
+        log.debug("{} not found in cache", listToString(getDriverName()));
         return empty();
     }
 
-    protected Optional<String> existsDriverInCache(String repository,
-            String driverVersion, Architecture arch) {
-        String driverInCache = null;
-        for (String driver : getDriverName()) {
-            log.trace("Checking if {} {} ({} bits) exists in cache {}", driver,
-                    driverVersion, arch, repository);
-            Object[] array = getFilesInCache(repository);
-
-            for (Object f : array) {
-                driverInCache = f.toString();
-                boolean checkArchitecture = !shouldCheckArchitecture()
-                        || driverInCache.contains(arch.toString());
-                log.trace("Checking {}", driverInCache);
-
-                if (driverInCache.contains(driverVersion)
-                        && driverInCache.contains(driver) && checkArchitecture
-                        && config().isExecutable(new File(driverInCache))) {
-                    log.debug("Found {} {} ({} bits) in cache: {}",
-                            driverVersion, driver, arch, driverInCache);
-                    return of(driverInCache);
+    protected List<File> filterCacheBy(List<File> input, String key) {
+        List<File> output = new ArrayList<>(input);
+        if (!key.isEmpty() && !input.isEmpty()) {
+            for (File f : input) {
+                if (!f.toString().contains(key)) {
+                    output.remove(f);
                 }
             }
         }
-        return empty();
+        log.trace("Filter cache by {} -- input list {} -- output list {} ", key,
+                input, output);
+        return output;
     }
 
-    protected Object[] getFilesInCache(String repository) {
-        Collection<File> listFiles = listFiles(new File(repository), null,
-                true);
-        Object[] array = listFiles.toArray();
-        sort(array, reverseOrder());
-        return array;
-    }
-
-    protected boolean shouldCheckArchitecture() {
-        return true;
+    protected List<File> getFilesInCache() {
+        return (List<File>) listFiles(new File(downloader.getTargetPath()),
+                null, true);
     }
 
     protected boolean isNetAvailable() {
