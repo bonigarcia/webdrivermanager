@@ -34,9 +34,9 @@ public class IExplorerVersionTest extends VersionTestParent {
 
     @Before
     public void setup() {
+        os = WIN;
         browserManager = WebDriverManager
-                .getInstance(InternetExplorerDriver.class)
-                .operatingSystem(WIN);
+                .getInstance(InternetExplorerDriver.class);
         specificVersions = new String[] { "2.39", "2.47" };
     }
 
