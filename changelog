@@ -1,3 +1,12 @@
+webdrivermanager (2.2.2)
+
+  + Improve cache handling (issue #216)
+  + Remove unnecessary reverse of URL lists (issue #206)
+  + Exclude logback-classic from compile scope (issue #202)
+
+ -- Boni Garcia <boni.gg@gmail.com>  Fri, 8 Jun 2018 09:43:00 +0200
+
+
 webdrivermanager (2.2.1)
 
   + Rename operativeSystem() method to operatingSystem() (issue #196)
