@@ -499,9 +499,13 @@ public abstract class WebDriverManager {
                 break;
             }
 
-            // Filter by architecture and OS
-            candidateUrls = urlFilter.filterByOs(candidateUrls,
-                    config().getOs());
+            // Filter by OS
+            if (!getDriverName().contains("IEDriverServer")) {
+                candidateUrls = urlFilter.filterByOs(candidateUrls,
+                        config().getOs());
+            }
+
+            // Filter by architecture
             candidateUrls = urlFilter.filterByArch(candidateUrls, arch,
                     forcedArch);
 
