@@ -73,6 +73,12 @@ public class EdgeDriverManager extends WebDriverManager {
             Elements versionParagraph = doc.select(
                     "ul.driver-downloads li.driver-download p.driver-download__meta");
 
+            // Due to recent changes in Edge driver page, the first three
+            // paragraphs note related with the version of the binaries
+            versionParagraph.remove(0);
+            versionParagraph.remove(0);
+            versionParagraph.remove(0);
+
             for (int i = 0; i < downloadLink.size(); i++) {
                 String[] version = versionParagraph.get(i).text().split(" ");
                 String v = version[1];
