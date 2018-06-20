@@ -509,19 +509,11 @@ public abstract class WebDriverManager {
             candidateUrls = urlFilter.filterByArch(candidateUrls, arch,
                     forcedArch);
 
-            // Extra round of filter phantomjs 2.5.0 in Linux
-            if (config().getOs().equalsIgnoreCase("linux")
-                    && getDriverName().contains("phantomjs")) {
-                candidateUrls = urlFilter.filterByDistro(candidateUrls,
-                        "2.5.0");
-            }
+            // Filter by distro
+            candidateUrls = filterByDistro(candidateUrls);
 
-            // Filter by ignored version
-            if (config().getIgnoreVersions() != null
-                    && !candidateUrls.isEmpty()) {
-                candidateUrls = urlFilter.filterByIgnoredVersions(candidateUrls,
-                        config().getIgnoreVersions());
-            }
+            // Filter by ignored versions
+            candidateUrls = filterByIgnoredVersions(candidateUrls);
 
             // Find out if driver version has been found or not
             continueSearchingVersion = candidateUrls.isEmpty() && getLatest;
@@ -534,6 +526,24 @@ public abstract class WebDriverManager {
                 versionToDownload = null;
             }
         } while (continueSearchingVersion);
+        return candidateUrls;
+    }
+
+    protected List<URL> filterByIgnoredVersions(List<URL> candidateUrls) {
+        if (config().getIgnoreVersions() != null && !candidateUrls.isEmpty()) {
+            candidateUrls = urlFilter.filterByIgnoredVersions(candidateUrls,
+                    config().getIgnoreVersions());
+        }
+        return candidateUrls;
+    }
+
+    protected List<URL> filterByDistro(List<URL> candidateUrls)
+            throws IOException {
+        // Filter phantomjs 2.5.0 in Linux
+        if (config().getOs().equalsIgnoreCase("linux")
+                && getDriverName().contains("phantomjs")) {
+            candidateUrls = urlFilter.filterByDistro(candidateUrls, "2.5.0");
+        }
         return candidateUrls;
     }
 
