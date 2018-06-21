@@ -1,3 +1,11 @@
+webdrivermanager (2.2.3)
+
+  + Bug-fix: Avoid filtering by OS in the case of IEDriverServer
+  + Bug-fix: Update EdgeDriverManager due to changes in web repository
+
+ -- Boni Garcia <boni.gg@gmail.com>  Thu, 21 Jun 2018 10:08:00 +0200
+
+
 webdrivermanager (2.2.2)
 
   + Improve cache handling (issue #216)
