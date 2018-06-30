@@ -18,7 +18,6 @@ package io.github.bonigarcia.wdm.test;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -30,7 +29,6 @@ import io.github.bonigarcia.wdm.base.BrowserTestParent;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.5.0
  */
-@Ignore
 public class FirefoxTest extends BrowserTestParent {
 
     @BeforeClass
