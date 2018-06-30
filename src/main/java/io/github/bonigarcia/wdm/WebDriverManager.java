@@ -565,8 +565,11 @@ public abstract class WebDriverManager {
             log.trace("Checking if {} exists in cache", driver);
             List<File> filesInCache = getFilesInCache();
 
-            // Filter by driver
-            filesInCache = filterByDriver(driver, filesInCache);
+            // Filter by name
+            filesInCache = filterCacheBy(filesInCache, driver);
+            if (filesInCache.size() == 1) {
+                return Optional.of(filesInCache.get(0).toString());
+            }
 
             // Filter by version
             filesInCache = filterCacheBy(filesInCache, driverVersion);
@@ -590,21 +593,6 @@ public abstract class WebDriverManager {
             log.debug("{} not found in cache", listToString(getDriverName()));
         }
         return empty();
-    }
-
-    private List<File> filterByDriver(String driver, List<File> filesInCache) {
-        List<File> out = new ArrayList<>(filesInCache);
-        if (!filesInCache.isEmpty()) {
-            for (File file : filesInCache) {
-                String filename = file.getName();
-                if (!filename.contains(driver)) {
-                    log.trace("Removing {} from the cache candidates",
-                            filename);
-                    out.remove(file);
-                }
-            }
-        }
-        return out;
     }
 
     protected List<File> filterCacheBy(List<File> input, String key) {
