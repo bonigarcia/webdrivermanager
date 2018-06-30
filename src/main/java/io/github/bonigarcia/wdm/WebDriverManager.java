@@ -565,15 +565,8 @@ public abstract class WebDriverManager {
             log.trace("Checking if {} exists in cache", driver);
             List<File> filesInCache = getFilesInCache();
 
-            // Filter by driverName
-            String driverName = driver.contains("edge") ? "MicrosoftWebDriver" : driver; //Thank you, Microsoft!
-            if (filesInCache.size() != 0) {
-                for (int i = 0; i < filesInCache.size(); i++) {
-                    if (!filesInCache.toString().contains(driverName)) {
-                        filesInCache.remove(filesInCache.get(i));
-                    }
-                }
-            }
+            // Filter by driver
+            filesInCache = filterByDriver(driver, filesInCache);
 
             // Filter by version
             filesInCache = filterCacheBy(filesInCache, driverVersion);
@@ -597,6 +590,21 @@ public abstract class WebDriverManager {
             log.debug("{} not found in cache", listToString(getDriverName()));
         }
         return empty();
+    }
+
+    private List<File> filterByDriver(String driver, List<File> filesInCache) {
+        List<File> out = new ArrayList<>(filesInCache);
+        if (!filesInCache.isEmpty()) {
+            for (File file : filesInCache) {
+                String filename = file.getName();
+                if (!filename.contains(driver)) {
+                    log.trace("Removing {} from the cache candidates",
+                            filename);
+                    out.remove(file);
+                }
+            }
+        }
+        return out;
     }
 
     protected List<File> filterCacheBy(List<File> input, String key) {
