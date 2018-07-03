@@ -1,3 +1,10 @@
+webdrivermanager (2.2.4)
+
+  + Bug-fix: Filter by driver name when seeking binaries in cache (issue #223)
+
+ -- Boni Garcia <boni.gg@gmail.com>  Thu, 4 Jul 2018 00:57:00 +0200
+
+
 webdrivermanager (2.2.3)
 
   + Bug-fix: Avoid filtering by OS in the case of IEDriverServer

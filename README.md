@@ -34,7 +34,7 @@ In order to use WebDriverManager in a Maven project, you need to add the followi
 <dependency>
     <groupId>io.github.bonigarcia</groupId>
     <artifactId>webdrivermanager</artifactId>
-    <version>2.2.3</version>
+    <version>2.2.4</version>
 </dependency>
 ```
 
