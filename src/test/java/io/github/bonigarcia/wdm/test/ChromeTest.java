@@ -39,6 +39,7 @@ public class ChromeTest extends BrowserTestParent {
     @Before
     public void setupTest() {
         driver = new ChromeDriver();
+        // creating instance of chrome driver class through the reference of webdriver object 
     }
 
 }
