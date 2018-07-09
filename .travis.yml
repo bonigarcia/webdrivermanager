@@ -22,5 +22,5 @@ before_script:
     - sleep 3 # give xvfb some time to start
 
 script:
-    - mvn test sonar:sonar -DheadlessEnvironment=true
+    - mvn test sonar:sonar
     - bash <(curl -s https://codecov.io/bash)

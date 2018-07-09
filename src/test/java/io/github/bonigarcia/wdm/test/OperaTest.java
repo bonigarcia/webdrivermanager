@@ -16,16 +16,12 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import static java.lang.Boolean.parseBoolean;
-import static java.lang.System.getProperty;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
-import static org.junit.Assume.assumeFalse;
 import static org.junit.Assume.assumeTrue;
 
 import java.io.File;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.openqa.selenium.opera.OperaDriver;
 import org.openqa.selenium.opera.OperaOptions;
 
@@ -40,12 +36,6 @@ import io.github.bonigarcia.wdm.base.BrowserTestParent;
  */
 public class OperaTest extends BrowserTestParent {
 
-    @BeforeClass
-    public static void setupClass() {
-        assumeFalse(parseBoolean(getProperty("headlessEnvironment")));
-        WebDriverManager.operadriver().setup();
-    }
-
     @Before
     public void setupTest() {
         File operaBinary = IS_OS_WINDOWS
@@ -53,6 +43,7 @@ public class OperaTest extends BrowserTestParent {
                 : new File("/usr/bin/opera");
         assumeTrue(operaBinary.exists());
 
+        WebDriverManager.operadriver().setup();
         OperaOptions options = new OperaOptions();
         options.setBinary(operaBinary);
         driver = new OperaDriver(options);
