@@ -22,5 +22,6 @@ before_script:
     - sleep 3 # give xvfb some time to start
 
 script:
-    - mvn test sonar:sonar
+    - mvn test
     - bash <(curl -s https://codecov.io/bash)
+    - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then mvn sonar:sonar'
