@@ -25,9 +25,9 @@ In order to use WebDriverManager in a Maven project, first add the following dep
 
 ```xml
 <dependency>
-    <groupId>io.github.bonigarcia</groupId>
+    <groupId>ru.sbtqa</groupId>
     <artifactId>webdrivermanager</artifactId>
-    <version>2.0.1</version>
+    <version>2.2.2</version>
 </dependency>
 ```
 
@@ -118,24 +118,26 @@ WebDriverManager exposes its API by means of the **builder pattern**. This means
 | ``arch64()``                                              | Force to use the 64-bit version of a given driver binary.                                                                                                                                                                                                                                                                                                       | ``wdm.architecture``=64                                                                                                                                                   |
 | ``driverRepositoryUrl(URL url)``                          | This method allows to change the repository URL in which the binaries are hosted (see next section for default values).                                                                                                                                                                                                                                         | ``wdm.chromeDriverUrl``, ``wdm.operaDriverUrl``, ``wdm.internetExplorerDriverUrl``, ``wdm.edgeDriverUrl``, ``wdm.phantomjsDriverUrl``, ``wdm.geckoDriverUrl``             |
 | ``useTaobaoMirror()``                                     | The [npm.taobao.org] site is a mirror which hosts different software assets. Among them, it hosts *chromedriver*, *geckodriver*,  *operadriver*, and *phantomjs* driver. Therefore, this method can be used in ``ChromeDriverManager``, ``FirefoxDriverManager``, ``OperaDriverManager``, and ``PhantomJsDriverManager`` to force to use the taobao.org mirror. | ``wdm.useTaobaoMirror``=true                                                                                                                                              |
+| ``useNexus(String nexusUrl)``                             | This method can be used in ``ChromeDriverManager``, ``FirefoxDriverManager``, ``OperaDriverManager``, and ``PhantomJsDriverManager`` to force to use your Nexus instead of default repos.                                                                                                                                            |
 | ``proxy(String proxy)``                                   | Use a HTTP proxy for the Internet connection.                                                                                                                                                                                                                                                                                                                   | ``wdm.proxy``                                                                                                                                                             |
 | ``proxyUser(String username)``                            | Specify a username for HTTP proxy.                                                                                                                                                                                                                                                                                                                              | ``wdm.proxyUser``                                                                                                                                                         |
 | ``proxyPass(String password)``                            | Specify a password for HTTP proxy.                                                                                                                                                                                                                                                                                                                              | ``wdm.proxyPass``                                                                                                                                                         |
 
 The following table contains some examples:
 
-| Example                                                              | Description                                                       |
-|----------------------------------------------------------------------|-------------------------------------------------------------------|
-| ``ChromeDriverManager.getInstance().version("2.26").setup();``       | Force to use version 2.26 of *chromedriver*                       |
-| ``FirefoxDriverManager.getInstance().arch32().setup();``             | Force to use the 32-bit version of *geckodriver*                  |
-| ``OperaDriverManager.getInstance().forceCache().setup();``           | Force to use the cache version of *operadriver*                   |
-| ``PhantomJsDriverManager.getInstance().useTaobaoMirror().setup();``  | Force to use the taobao.org mirror to download *phantomjs* driver |
-| ``ChromeDriverManager.getInstance().proxy("server:port").setup();``  | Using proxy *server:port* for the connection                      |
+| Example                                                                | Description                                                       |
+|------------------------------------------------------------------------|-------------------------------------------------------------------|
+| ``ChromeDriverManager.getInstance().version("2.26").setup();``         | Force to use version 2.26 of *chromedriver*                       |
+| ``FirefoxDriverManager.getInstance().arch32().setup();``               | Force to use the 32-bit version of *geckodriver*                  |
+| ``OperaDriverManager.getInstance().forceCache().setup();``             | Force to use the cache version of *operadriver*                   |
+| ``PhantomJsDriverManager.getInstance().useTaobaoMirror().setup();``    | Force to use the taobao.org mirror to download *phantomjs* driver |
+| ``ChromeDriverManager.getInstance().proxy("server:port").setup();``    | Using proxy *server:port* for the connection                      |
+| ``ChromeDriverManager.getInstance().useNexus("myNexusUrl").setup();``  | Force to use the Nexus to download *chrome* driver                |
 
 
 ## Configuration
 
-Configuration parameters for WebDriverManager are set in the ``webdrivermanager.properties`` file:
+Configuration parameters for WebDriverManager are set in the ``webdrivermanager.properties`` file (you can't manage Nexus parameters by properties file yet):
 
 ```properties
 wdm.targetPath=~/.m2/repository/webdriver
