@@ -19,6 +19,7 @@ package io.github.bonigarcia.wdm;
 import static io.github.bonigarcia.wdm.OperatingSystem.LINUX;
 import static io.github.bonigarcia.wdm.OperatingSystem.MAC;
 import static io.github.bonigarcia.wdm.OperatingSystem.WIN;
+import static io.github.bonigarcia.wdm.OperatingSystem.ARM;
 import static java.lang.String.join;
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_LINUX;
@@ -165,19 +166,27 @@ public class Config {
         }
     }
 
+    private boolean isArm() {
+        return System.getProperty("os.arch").equals("arm");
+    }
+
     private String defaultOsName() {
-        String osName = System.getProperty("os.name").toLowerCase();
         if (IS_OS_WINDOWS) {
-            osName = WIN.name();
+            return WIN.name();
+        } else if (isArm()) {
+            return ARM.name();
         } else if (IS_OS_LINUX) {
-            osName = LINUX.name();
+            return LINUX.name();
         } else if (IS_OS_MAC) {
-            osName = MAC.name();
+            return MAC.name();
         }
-        return osName;
+        return System.getProperty("os.name").toLowerCase();
     }
 
     private String defaultArchitecture() {
+        if (isArm() && "32".equals(System.getProperty("sun.arch.data.model"))) {
+          return "X7HF";
+        }
         return "X" + System.getProperty("sun.arch.data.model");
     }
 
