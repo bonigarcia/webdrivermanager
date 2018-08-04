@@ -18,6 +18,7 @@ package io.github.bonigarcia.wdm;
 
 import static io.github.bonigarcia.wdm.Architecture.X32;
 import static io.github.bonigarcia.wdm.Architecture.X64;
+import static io.github.bonigarcia.wdm.Architecture.X7HF;
 import static io.github.bonigarcia.wdm.Config.isNullOrEmpty;
 import static io.github.bonigarcia.wdm.Config.listToString;
 import static io.github.bonigarcia.wdm.DriverManagerType.CHROME;
@@ -238,6 +239,11 @@ public abstract class WebDriverManager {
 
     public WebDriverManager arch64() {
         architecture(X64);
+        return instanceMap.get(driverManagerType);
+    }
+
+    public WebDriverManager arch7hf() {
+        architecture(X7HF);
         return instanceMap.get(driverManagerType);
     }
 

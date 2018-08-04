@@ -23,5 +23,5 @@ package io.github.bonigarcia.wdm;
  * @since 1.0.0
  */
 public enum OperatingSystem {
-    WIN, LINUX, MAC
+    WIN, LINUX, MAC, ARM;
 }

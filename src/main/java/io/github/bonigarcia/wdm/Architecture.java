@@ -23,7 +23,7 @@ package io.github.bonigarcia.wdm;
  * @since 1.0.0
  */
 public enum Architecture {
-    DEFAULT, X32, X64;
+    DEFAULT, X32, X64, X7HF;
 
     @Override
     public String toString() {
