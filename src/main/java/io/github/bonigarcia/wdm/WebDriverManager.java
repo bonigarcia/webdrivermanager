@@ -563,16 +563,24 @@ public abstract class WebDriverManager {
         for (String driver : getDriverName()) {
             log.trace("Checking if {} exists in cache", driver);
             List<File> filesInCache = getFilesInCache();
+            if (filesInCache.isEmpty()) {
+                break;
+            }
 
             // Filter by name
             filesInCache = filterCacheBy(filesInCache, driver);
+            if (filesInCache.size() == 1) {
+                return Optional.of(filesInCache.get(0).toString());
+            }
 
             // Filter by version
             filesInCache = filterCacheBy(filesInCache, driverVersion);
+            if (filesInCache.size() == 1) {
+                return Optional.of(filesInCache.get(0).toString());
+            }
 
             // Filter by OS
             filesInCache = filterCacheBy(filesInCache, os.toLowerCase());
-
             if (filesInCache.size() == 1) {
                 return Optional.of(filesInCache.get(0).toString());
             }
