@@ -569,24 +569,20 @@ public abstract class WebDriverManager {
 
             // Filter by name
             filesInCache = filterCacheBy(filesInCache, driver);
-            if (filesInCache.size() == 1) {
-                return Optional.of(filesInCache.get(0).toString());
-            }
 
             // Filter by version
             filesInCache = filterCacheBy(filesInCache, driverVersion);
-            if (filesInCache.size() == 1) {
-                return Optional.of(filesInCache.get(0).toString());
-            }
 
             // Filter by OS
             filesInCache = filterCacheBy(filesInCache, os.toLowerCase());
+
             if (filesInCache.size() == 1) {
                 return Optional.of(filesInCache.get(0).toString());
             }
 
             // Filter by arch
             filesInCache = filterCacheBy(filesInCache, arch.name());
+
             if (!filesInCache.isEmpty()) {
                 return Optional.of(filesInCache.get(0).toString());
             }
