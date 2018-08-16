@@ -564,23 +564,33 @@ public abstract class WebDriverManager {
             log.trace("Checking if {} exists in cache", driver);
             List<File> filesInCache = getFilesInCache();
 
+            if (filesInCache.isEmpty()){
+                break;
+            }
+
             // Filter by name
             filesInCache = filterCacheBy(filesInCache, driver);
 
             // Filter by version
-            filesInCache = filterCacheBy(filesInCache, driverVersion);
+            if (!filesInCache.isEmpty()) {
+                filesInCache = filterCacheBy(filesInCache, driverVersion);
+            }
 
             // Filter by OS
-            filesInCache = filterCacheBy(filesInCache, os.toLowerCase());
+            if (!filesInCache.isEmpty()) {
+                filesInCache = filterCacheBy(filesInCache, os.toLowerCase());
+            }
 
             if (filesInCache.size() == 1) {
                 return Optional.of(filesInCache.get(0).toString());
             }
 
             // Filter by arch
-            filesInCache = filterCacheBy(filesInCache, arch.name());
             if (!filesInCache.isEmpty()) {
-                return Optional.of(filesInCache.get(0).toString());
+                filesInCache = filterCacheBy(filesInCache, arch.name());
+                if (!filesInCache.isEmpty()) {
+                    return Optional.of(filesInCache.get(0).toString());
+                }
             }
         }
         if (log.isDebugEnabled()) {
@@ -591,7 +601,7 @@ public abstract class WebDriverManager {
 
     protected List<File> filterCacheBy(List<File> input, String key) {
         List<File> output = new ArrayList<>(input);
-        if (!key.isEmpty() && !input.isEmpty()) {
+        if (!key.isEmpty()) {
             for (File f : input) {
                 if (!f.toString().contains(key)) {
                     output.remove(f);
