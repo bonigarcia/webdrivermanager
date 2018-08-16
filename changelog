@@ -1,3 +1,11 @@
+webdrivermanager (2.2.5)
+
+  + Bug-fix: logic for checking drivers in cache (issue #232)
+  + Improve cache logic (issue #229)
+
+ -- Boni Garcia <boni.gg@gmail.com>  Thu, 44 Jul 2018 14:15:00 +0200
+
+
 webdrivermanager (2.2.4)
 
   + Bug-fix: Filter by driver name when seeking binaries in cache (issue #223)
