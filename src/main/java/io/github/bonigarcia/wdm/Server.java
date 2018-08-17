@@ -71,23 +71,27 @@ public class Server {
             case "phantomjs":
                 driverManager = phantomjs();
                 break;
+            default:
+                log.warn("Unknown option {}", requestPath);
             }
 
-            driverManager.setup();
-            File binary = new File(driverManager.getBinaryPath());
-            String binaryVersion = driverManager.getDownloadedVersion();
-            String binaryName = binary.getName();
-            String binaryLength = String.valueOf(binary.length());
+            if (driverManager != null) {
+                driverManager.setup();
+                File binary = new File(driverManager.getBinaryPath());
+                String binaryVersion = driverManager.getDownloadedVersion();
+                String binaryName = binary.getName();
+                String binaryLength = String.valueOf(binary.length());
 
-            ctx.res.setHeader("Content-Disposition",
-                    "attachment; filename=\"" + binaryName + "\"");
-            ctx.res.setHeader("Content-Length", binaryLength);
-            ctx.res.setHeader("Content-Type", "application/octet-stream");
+                ctx.res.setHeader("Content-Type", "application/octet-stream");
+                ctx.res.setHeader("Content-Length", binaryLength);
+                ctx.res.setHeader("Content-Disposition",
+                        "attachment; filename=\"" + binaryName + "\"");
 
-            ctx.result(openInputStream(binary));
+                ctx.result(openInputStream(binary));
 
-            log.info("Server response: {} {} ({} bytes)", binaryName,
-                    binaryVersion, binaryLength);
+                log.info("Server response: {} {} ({} bytes)", binaryName,
+                        binaryVersion, binaryLength);
+            }
         };
 
         app.get("/chromedriver", handler);
@@ -98,6 +102,10 @@ public class Server {
         app.get("/phantomjs", handler);
 
         log.info("WebDriverManager server listening on port {}", port);
+    }
+
+    public static void main(String[] args) {
+        new Server(WebDriverManager.config().getServerPort());
     }
 
 }
