@@ -920,43 +920,53 @@ public abstract class WebDriverManager {
     public static void main(String[] args) {
         String validBrowsers = "chrome|firefox|opera|edge|phantomjs|iexplorer";
         if (args.length <= 0) {
-            log.error("Usage:");
-            log.error(
-                    "\tWebDriverManager <browserName> ... where browserName={}",
-                    validBrowsers);
-            log.error("(to resolve binary driver locally)");
-            log.error("... or:");
-            log.error(
-                    "\tWebDriverManager server <port> ... where default port is 4041");
-            log.error("(to use WebDriverManager as a server)");
+            logCliError(validBrowsers);
         } else {
             String arg = args[0];
             if (arg.equalsIgnoreCase("server")) {
-                int port = config().getServerPort();
-                if (args.length > 1 && isNumeric(args[1])) {
-                    port = parseInt(args[1]);
-                }
-                new Server(port);
-
+                startServer(args);
             } else {
-                log.info("Using WebDriverManager to resolve {}", arg);
-                try {
-                    DriverManagerType driverManagerType = DriverManagerType
-                            .valueOf(arg.toUpperCase());
-                    WebDriverManager wdm = WebDriverManager
-                            .getInstance(driverManagerType).avoidExport()
-                            .targetPath(".").forceDownload();
-                    if (arg.equalsIgnoreCase("edge")
-                            || arg.equalsIgnoreCase("iexplorer")) {
-                        wdm.operatingSystem(WIN);
-                    }
-                    wdm.avoidOutputTree().setup();
-                } catch (Exception e) {
-                    log.error("Driver for {} not found (valid browsers {})",
-                            arg, validBrowsers);
-                }
+                resolveLocal(validBrowsers, arg);
             }
         }
+    }
+
+    private static void resolveLocal(String validBrowsers, String arg) {
+        log.info("Using WebDriverManager to resolve {}", arg);
+        try {
+            DriverManagerType driverManagerType = DriverManagerType
+                    .valueOf(arg.toUpperCase());
+            WebDriverManager wdm = WebDriverManager
+                    .getInstance(driverManagerType).avoidExport()
+                    .targetPath(".").forceDownload();
+            if (arg.equalsIgnoreCase("edge")
+                    || arg.equalsIgnoreCase("iexplorer")) {
+                wdm.operatingSystem(WIN);
+            }
+            wdm.avoidOutputTree().setup();
+        } catch (Exception e) {
+            log.error("Driver for {} not found (valid browsers {})", arg,
+                    validBrowsers);
+        }
+    }
+
+    private static void startServer(String[] args) {
+        int port = config().getServerPort();
+        if (args.length > 1 && isNumeric(args[1])) {
+            port = parseInt(args[1]);
+        }
+        new Server(port);
+    }
+
+    private static void logCliError(String validBrowsers) {
+        log.error("Usage:");
+        log.error("\tWebDriverManager <browserName> ... where browserName={}",
+                validBrowsers);
+        log.error("(to resolve binary driver locally)");
+        log.error("... or:");
+        log.error(
+                "\tWebDriverManager server <port> ... where default port is 4041");
+        log.error("(to use WebDriverManager as a server)");
     }
 
 }
