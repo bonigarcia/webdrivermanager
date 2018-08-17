@@ -1,3 +1,11 @@
+webdrivermanager (3.0.0)
+
+  + Drop compatibility with 1.x API, i.e. DriverManager.getInstance()
+  + Set minimum Java compatibility version to 1.8
+
+ -- Boni Garcia <boni.gg@gmail.com>
+
+
 webdrivermanager (2.2.5)
 
   + Bug-fix: logic for checking drivers in cache (issue #232)
