@@ -31,11 +31,7 @@ import java.util.List;
  */
 public class ChromeDriverManager extends WebDriverManager {
 
-    public static synchronized WebDriverManager getInstance() {
-        return chromedriver();
-    }
-
-    public ChromeDriverManager() {
+    protected ChromeDriverManager() {
         driverManagerType = CHROME;
         exportParameterKey = "wdm.chromeDriverExport";
         driverVersionKey = "wdm.chromeDriverVersion";

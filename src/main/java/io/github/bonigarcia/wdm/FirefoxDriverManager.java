@@ -31,11 +31,7 @@ import java.util.List;
  */
 public class FirefoxDriverManager extends WebDriverManager {
 
-    public static synchronized WebDriverManager getInstance() {
-        return firefoxdriver();
-    }
-
-    public FirefoxDriverManager() {
+    protected FirefoxDriverManager() {
         driverManagerType = FIREFOX;
         exportParameterKey = "wdm.geckoDriverExport";
         driverVersionKey = "wdm.geckoDriverVersion";

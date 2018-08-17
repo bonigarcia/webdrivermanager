@@ -31,11 +31,7 @@ import java.util.List;
  */
 public class InternetExplorerDriverManager extends WebDriverManager {
 
-    public static synchronized WebDriverManager getInstance() {
-        return iedriver();
-    }
-
-    public InternetExplorerDriverManager() {
+    protected InternetExplorerDriverManager() {
         driverManagerType = IEXPLORER;
         exportParameterKey = "wdm.internetExplorerDriverExport";
         driverVersionKey = "wdm.internetExplorerDriverVersion";

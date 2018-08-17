@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm.test;
 
+import static io.github.bonigarcia.wdm.WebDriverManager.chromedriver;
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.apache.commons.io.FileUtils.cleanDirectory;
 import static org.junit.Assert.assertTrue;
@@ -37,7 +38,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.mockserver.integration.ClientAndProxy;
 import org.slf4j.Logger;
 
-import io.github.bonigarcia.wdm.ChromeDriverManager;
 import io.github.bonigarcia.wdm.Downloader;
 
 /**
@@ -77,13 +77,12 @@ public class MockProxyTest {
 
     @Test
     public void testMockProx() throws MalformedURLException {
-        ChromeDriverManager.getInstance().proxy("localhost:" + proxyPort)
-                .proxyUser("").proxyPass("")
+        chromedriver().proxy("localhost:" + proxyPort).proxyUser("")
+                .proxyPass("")
                 .driverRepositoryUrl(
                         new URL("https://chromedriver.storage.googleapis.com/"))
                 .setup();
-        File binary = new File(
-                ChromeDriverManager.getInstance().getBinaryPath());
+        File binary = new File(chromedriver().getBinaryPath());
         assertTrue(binary.exists());
     }
 

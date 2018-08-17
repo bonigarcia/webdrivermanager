@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm.test;
 
+import static io.github.bonigarcia.wdm.WebDriverManager.chromedriver;
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.apache.http.auth.AuthScope.ANY_HOST;
 import static org.apache.http.auth.AuthScope.ANY_PORT;
@@ -45,7 +46,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 
-import io.github.bonigarcia.wdm.ChromeDriverManager;
 import io.github.bonigarcia.wdm.Config;
 import io.github.bonigarcia.wdm.HttpClient;
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -79,17 +79,15 @@ public class ProxyTest {
 
     @Test
     public void testRealEnvProxyToNull() throws Exception {
-        WebDriverManager browserManager = ChromeDriverManager.getInstance();
         setSystemGetEnvMock(null);
-        assertFalse(getProxy(browserManager).isPresent());
+        assertFalse(getProxy(chromedriver()).isPresent());
     }
 
     @Test
     public void testRealEnvProxyToNotNull() throws Exception {
-        WebDriverManager browserManager = ChromeDriverManager.getInstance();
         setSystemGetEnvMock(PROXY_URL);
 
-        InetSocketAddress address = (InetSocketAddress) getProxy(browserManager)
+        InetSocketAddress address = (InetSocketAddress) getProxy(chromedriver())
                 .get().address();
         assertThat(address.getHostName(), equalTo(PROXY_URL));
     }
@@ -159,9 +157,8 @@ public class ProxyTest {
 
             log.info("Testing proxy {}", proxyTestString);
 
-            WebDriverManager browserManager = ChromeDriverManager.getInstance();
             InetSocketAddress address = (InetSocketAddress) getProxy(
-                    browserManager).get().address();
+                    chromedriver()).get().address();
             assertThat(address.getHostName(), equalTo(PROXY_URL));
         }
     }

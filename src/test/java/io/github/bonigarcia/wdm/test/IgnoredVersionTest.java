@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm.test;
 
+import static io.github.bonigarcia.wdm.WebDriverManager.chromedriver;
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.apache.commons.io.FileUtils.cleanDirectory;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -35,7 +36,6 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.Logger;
 
-import io.github.bonigarcia.wdm.ChromeDriverManager;
 import io.github.bonigarcia.wdm.Downloader;
 
 /**
@@ -60,10 +60,8 @@ public class IgnoredVersionTest {
     @Test
     public void testIgnoreVersions() {
         String[] ignoredVersions = { "2.33", "2.32" };
-        ChromeDriverManager.getInstance().ignoreVersions(ignoredVersions)
-                .setup();
-        File binary = new File(
-                ChromeDriverManager.getInstance().getBinaryPath());
+        chromedriver().ignoreVersions(ignoredVersions).setup();
+        File binary = new File(chromedriver().getBinaryPath());
         log.debug("Using binary {} (ignoring {})", binary,
                 Arrays.toString(ignoredVersions));
 

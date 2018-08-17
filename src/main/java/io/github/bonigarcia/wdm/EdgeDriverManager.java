@@ -42,11 +42,7 @@ import org.jsoup.select.Elements;
  */
 public class EdgeDriverManager extends WebDriverManager {
 
-    public static synchronized WebDriverManager getInstance() {
-        return edgedriver();
-    }
-
-    public EdgeDriverManager() {
+    protected EdgeDriverManager() {
         driverManagerType = EDGE;
         exportParameterKey = "wdm.edgeDriverExport";
         driverVersionKey = "wdm.edgeDriverVersion";

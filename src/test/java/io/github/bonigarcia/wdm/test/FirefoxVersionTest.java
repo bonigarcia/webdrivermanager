@@ -18,7 +18,7 @@ package io.github.bonigarcia.wdm.test;
 
 import org.junit.Before;
 
-import io.github.bonigarcia.wdm.FirefoxDriverManager;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.base.VersionTestParent;
 
 /**
@@ -31,7 +31,7 @@ public class FirefoxVersionTest extends VersionTestParent {
 
     @Before
     public void setup() {
-        browserManager = FirefoxDriverManager.getInstance();
+        browserManager = WebDriverManager.firefoxdriver();
         specificVersions = new String[] { "0.8.0", "0.19.1" };
     }
 

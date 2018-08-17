@@ -32,11 +32,7 @@ import java.util.List;
  */
 public class OperaDriverManager extends WebDriverManager {
 
-    public static synchronized WebDriverManager getInstance() {
-        return operadriver();
-    }
-
-    public OperaDriverManager() {
+    protected OperaDriverManager() {
         driverManagerType = OPERA;
         exportParameterKey = "wdm.operaDriverExport";
         driverVersionKey = "wdm.operaDriverVersion";

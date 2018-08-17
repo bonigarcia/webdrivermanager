@@ -22,7 +22,7 @@ import static org.junit.Assert.assertThat;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import io.github.bonigarcia.wdm.PhantomJsDriverManager;
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 /**
  * Test with PhatomJS beta.
@@ -34,13 +34,12 @@ public class PhantomJsBetaTest {
 
     @BeforeClass
     public static void setupClass() {
-        PhantomJsDriverManager.getInstance().useBetaVersions().setup();
+        WebDriverManager.phantomjs().useBetaVersions().setup();
     }
 
     @Test
     public void testPhantomBeta() {
-        String binaryPath = PhantomJsDriverManager.getInstance()
-                .getBinaryPath();
+        String binaryPath = WebDriverManager.phantomjs().getBinaryPath();
         assertThat(binaryPath, notNullValue());
     }
 }

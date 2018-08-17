@@ -35,7 +35,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.HttpClient;
-import io.github.bonigarcia.wdm.PhantomJsDriverManager;
 import io.github.bonigarcia.wdm.UrlFilter;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
@@ -56,7 +55,7 @@ public class PhantomJsFilterTest {
     @Before
     @SuppressWarnings("unchecked")
     public void setup() throws Exception {
-        phatomJsManager = PhantomJsDriverManager.getInstance();
+        phatomJsManager = WebDriverManager.phantomjs();
         Field field = WebDriverManager.class.getDeclaredField("httpClient");
         field.setAccessible(true);
         field.set(phatomJsManager, new HttpClient());

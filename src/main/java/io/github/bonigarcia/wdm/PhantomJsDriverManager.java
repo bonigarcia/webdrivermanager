@@ -36,11 +36,7 @@ public class PhantomJsDriverManager extends WebDriverManager {
 
     private static final String BETA = "beta";
 
-    public static synchronized WebDriverManager getInstance() {
-        return phantomjs();
-    }
-
-    public PhantomJsDriverManager() {
+    protected PhantomJsDriverManager() {
         driverManagerType = PHANTOMJS;
         exportParameterKey = "wdm.phantomjsDriverExport";
         driverVersionKey = "wdm.phantomjsDriverVersion";

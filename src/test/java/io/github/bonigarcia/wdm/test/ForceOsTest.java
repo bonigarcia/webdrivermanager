@@ -19,6 +19,7 @@ package io.github.bonigarcia.wdm.test;
 import static io.github.bonigarcia.wdm.OperatingSystem.LINUX;
 import static io.github.bonigarcia.wdm.OperatingSystem.MAC;
 import static io.github.bonigarcia.wdm.OperatingSystem.WIN;
+import static io.github.bonigarcia.wdm.WebDriverManager.chromedriver;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.asList;
 import static org.apache.commons.io.FileUtils.cleanDirectory;
@@ -40,7 +41,6 @@ import org.junit.runners.Parameterized.Parameters;
 import org.mockito.InjectMocks;
 import org.slf4j.Logger;
 
-import io.github.bonigarcia.wdm.ChromeDriverManager;
 import io.github.bonigarcia.wdm.Downloader;
 import io.github.bonigarcia.wdm.OperatingSystem;
 
@@ -78,10 +78,8 @@ public class ForceOsTest {
 
     @Test
     public void testForceOs() {
-        ChromeDriverManager.getInstance().operatingSystem(operatingSystem)
-                .setup();
-        File binary = new File(
-                ChromeDriverManager.getInstance().getBinaryPath());
+        chromedriver().operatingSystem(operatingSystem).setup();
+        File binary = new File(chromedriver().getBinaryPath());
         log.debug("OS {} - binary path {}", operatingSystem, binary);
         assertTrue(binary.exists());
     }

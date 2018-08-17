@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm.test;
 
+import static io.github.bonigarcia.wdm.WebDriverManager.chromedriver;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -23,8 +24,6 @@ import java.net.URL;
 
 import org.junit.Test;
 
-import io.github.bonigarcia.wdm.ChromeDriverManager;
-import io.github.bonigarcia.wdm.EdgeDriverManager;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.WebDriverManagerException;
 
@@ -40,17 +39,16 @@ public class TaobaoTest {
     public void testTaobao() throws Exception {
         WebDriverManager.config().setDriverUrl(
                 new URL("http://npm.taobao.org/mirrors/chromedriver/2.33/"));
-        ChromeDriverManager.getInstance().useMirror().setup();
+        chromedriver().useMirror().setup();
 
-        File binary = new File(
-                ChromeDriverManager.getInstance().getBinaryPath());
+        File binary = new File(chromedriver().getBinaryPath());
         assertTrue(binary.exists());
     }
 
     @Test(expected = WebDriverManagerException.class)
     public void testTaobaoException() {
-        EdgeDriverManager.getInstance().useMirror().setup();
-        File binary = new File(EdgeDriverManager.getInstance().getBinaryPath());
+        WebDriverManager.edgedriver().useMirror().setup();
+        File binary = new File(WebDriverManager.edgedriver().getBinaryPath());
         assertTrue(binary.exists());
     }
 
