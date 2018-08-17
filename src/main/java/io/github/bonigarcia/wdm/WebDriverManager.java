@@ -903,13 +903,8 @@ public abstract class WebDriverManager {
     }
 
     protected FilenameFilter getFolderFilter() {
-        return new FilenameFilter() {
-            @Override
-            public boolean accept(File dir, String name) {
-                return dir.isDirectory()
-                        && name.toLowerCase().contains(getDriverName().get(0));
-            }
-        };
+        return (dir, name) -> dir.isDirectory()
+                && name.toLowerCase().contains(getDriverName().get(0));
     }
 
     protected void reset() {

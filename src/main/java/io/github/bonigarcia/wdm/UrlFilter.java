@@ -25,7 +25,6 @@ import static org.slf4j.LoggerFactory.getLogger;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -144,11 +143,8 @@ public class UrlFilter {
         File dir = new File(separator + "etc");
         File[] fileList = new File[0];
         if (dir.exists()) {
-            fileList = dir.listFiles(new FilenameFilter() {
-                public boolean accept(File dir, String filename) {
-                    return filename.endsWith("-release");
-                }
-            });
+            fileList = dir.listFiles(
+                    (path, filename) -> filename.endsWith("-release"));
         }
         File fileVersion = new File(separator + "proc", "version");
         if (fileVersion.exists()) {

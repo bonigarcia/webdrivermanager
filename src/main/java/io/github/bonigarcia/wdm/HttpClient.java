@@ -49,7 +49,6 @@ import java.util.StringTokenizer;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
 
 import org.apache.http.HttpHost;
 import org.apache.http.HttpResponse;
@@ -109,11 +108,8 @@ public class HttpClient implements Closeable {
                 }
             }
 
-            HostnameVerifier allHostsValid = new HostnameVerifier() {
-                public boolean verify(String hostname, SSLSession session) {
-                    return hostname.equalsIgnoreCase(session.getPeerHost());
-                }
-            };
+            HostnameVerifier allHostsValid = (hostname, session) -> hostname
+                    .equalsIgnoreCase(session.getPeerHost());
             SSLContext sslContext = SSLContexts.custom()
                     .loadTrustMaterial(null, new TrustStrategy() {
                         @Override
