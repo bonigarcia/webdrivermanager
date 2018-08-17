@@ -27,6 +27,7 @@ import static io.github.bonigarcia.wdm.DriverManagerType.IEXPLORER;
 import static io.github.bonigarcia.wdm.DriverManagerType.OPERA;
 import static io.github.bonigarcia.wdm.DriverManagerType.PHANTOMJS;
 import static io.github.bonigarcia.wdm.OperatingSystem.WIN;
+import static java.lang.Integer.parseInt;
 import static java.lang.Integer.signum;
 import static java.lang.Integer.valueOf;
 import static java.lang.invoke.MethodHandles.lookup;
@@ -37,6 +38,7 @@ import static javax.xml.xpath.XPathConstants.NODESET;
 import static javax.xml.xpath.XPathFactory.newInstance;
 import static org.apache.commons.io.FileUtils.listFiles;
 import static org.apache.commons.io.FilenameUtils.removeExtension;
+import static org.apache.commons.lang3.StringUtils.isNumeric;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.BufferedReader;
@@ -918,26 +920,41 @@ public abstract class WebDriverManager {
     public static void main(String[] args) {
         String validBrowsers = "chrome|firefox|opera|edge|phantomjs|iexplorer";
         if (args.length <= 0) {
+            log.error("Usage:");
             log.error(
-                    "Usage: WebDriverManager <browserName> ... where browserName={}",
+                    "\tWebDriverManager <browserName> ... where browserName={}",
                     validBrowsers);
+            log.error("(to resolve binary driver locally)");
+            log.error("... or:");
+            log.error(
+                    "\tWebDriverManager server <port> ... where default port is 4041");
+            log.error("(to use WebDriverManager as a server)");
         } else {
-            String browser = args[0];
-            log.info("Using WebDriverManager to resolve {}", browser);
-            try {
-                DriverManagerType driverManagerType = DriverManagerType
-                        .valueOf(browser.toUpperCase());
-                WebDriverManager wdm = WebDriverManager
-                        .getInstance(driverManagerType).avoidExport()
-                        .targetPath(".").forceDownload();
-                if (browser.equalsIgnoreCase("edge")
-                        || browser.equalsIgnoreCase("iexplorer")) {
-                    wdm.operatingSystem(WIN);
+            String arg = args[0];
+            if (arg.equalsIgnoreCase("server")) {
+                int port = config().getServerPort();
+                if (args.length > 1 && isNumeric(args[1])) {
+                    port = parseInt(args[1]);
                 }
-                wdm.avoidOutputTree().setup();
-            } catch (Exception e) {
-                log.error("Driver for {} not found (valid browsers {})",
-                        browser, validBrowsers);
+                new Server(port);
+
+            } else {
+                log.info("Using WebDriverManager to resolve {}", arg);
+                try {
+                    DriverManagerType driverManagerType = DriverManagerType
+                            .valueOf(arg.toUpperCase());
+                    WebDriverManager wdm = WebDriverManager
+                            .getInstance(driverManagerType).avoidExport()
+                            .targetPath(".").forceDownload();
+                    if (arg.equalsIgnoreCase("edge")
+                            || arg.equalsIgnoreCase("iexplorer")) {
+                        wdm.operatingSystem(WIN);
+                    }
+                    wdm.avoidOutputTree().setup();
+                } catch (Exception e) {
+                    log.error("Driver for {} not found (valid browsers {})",
+                            arg, validBrowsers);
+                }
             }
         }
     }

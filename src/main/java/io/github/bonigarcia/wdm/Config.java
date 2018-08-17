@@ -88,6 +88,9 @@ public class Config {
     ConfigKey<URL> driverMirrorUrl = new ConfigKey<>(URL.class);
     ConfigKey<String> driverExport = new ConfigKey<>(String.class);
 
+    ConfigKey<Integer> serverPort = new ConfigKey<>("wdm.serverPort",
+            Integer.class);
+
     private <T> T resolve(ConfigKey<T> configKey) {
         String name = configKey.getName();
         T tValue = configKey.getValue();
@@ -412,4 +415,12 @@ public class Config {
         return resolve(useMirror);
     }
 
+    public int getServerPort() {
+        return resolve(serverPort);
+    }
+
+    public Config setServerPort(int value) {
+        this.serverPort.setValue(value);
+        return this;
+    }
 }

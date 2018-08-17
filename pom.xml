@@ -16,6 +16,8 @@
         <jarchivelib.version>0.8.0</jarchivelib.version>
         <jsoup.version>1.11.3</jsoup.version>
         <httpclient.version>4.5.5</httpclient.version>
+        <javalin.version>2.0.0.RC3</javalin.version>
+        <okhttp.version>3.11.0</okhttp.version>
 
         <junit.version>4.12</junit.version>
         <hamcrest.version>1.3</hamcrest.version>
@@ -113,6 +115,16 @@
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
             <version>${jsoup.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.javalin</groupId>
+            <artifactId>javalin</artifactId>
+            <version>${javalin.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>${okhttp.version}</version>
         </dependency>
 
         <dependency>
