@@ -959,13 +959,13 @@ public abstract class WebDriverManager {
     }
 
     private static void logCliError(String validBrowsers) {
-        log.error("Usage options:");
-        log.error("1.WebDriverManager used to resolve binary drivers locally",
-                validBrowsers);
+        log.error("There are 2 options to run WebDriverManager CLI");
+        log.error(
+                "1. WebDriverManager used to resolve binary drivers locally:");
         log.error("\tWebDriverManager browserName");
         log.error("\t(where browserName={})", validBrowsers);
 
-        log.error("2. WebDriverManager as a server");
+        log.error("2. WebDriverManager as a server:");
         log.error("\tWebDriverManager server <port>");
         log.error("\t(where default port is 4041)");
     }
