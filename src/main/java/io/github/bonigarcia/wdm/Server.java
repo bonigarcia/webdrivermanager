@@ -73,7 +73,7 @@ public class Server {
     }
 
     private Optional<WebDriverManager> createDriverManager(String requestPath) {
-        Optional<WebDriverManager> out = Optional.empty();
+        Optional<WebDriverManager> out;
         switch (requestPath.substring(1)) {
         case "chromedriver":
             out = Optional.of(chromedriver());
