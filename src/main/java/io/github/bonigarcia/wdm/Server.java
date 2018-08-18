@@ -106,12 +106,11 @@ public class Server {
         // Query string (for configuration parameters)
         Map<String, List<String>> queryParamMap = ctx.queryParamMap();
         if (!queryParamMap.isEmpty()) {
-            log.info("Using query string for configuration: {}",
-                    ctx.queryString());
+            log.info("Server query string for configuration {}", queryParamMap);
             for (String key : queryParamMap.keySet()) {
                 String configKey = "wdm." + key;
                 String configValue = queryParamMap.get(key).get(0);
-                log.info("\t{} = {}", configKey, configValue);
+                log.trace("\t{} = {}", configKey, configValue);
                 System.setProperty(configKey, configValue);
             }
         }
