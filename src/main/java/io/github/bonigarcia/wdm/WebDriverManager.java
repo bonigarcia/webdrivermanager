@@ -813,10 +813,10 @@ public abstract class WebDriverManager {
     }
 
     protected void exportDriver(String variableValue) {
+        binaryPath = variableValue;
         if (!config.isAvoidExport()) {
             String variableName = config().getDriverExport(exportParameterKey);
             log.info("Exporting {} as {}", variableName, variableValue);
-            binaryPath = variableValue;
             System.setProperty(variableName, variableValue);
         } else {
             log.info("Resulting binary {}", variableValue);
