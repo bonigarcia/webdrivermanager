@@ -67,7 +67,10 @@ public class ServerTest {
                 { "operadriver", "operadriver" + EXT },
                 { "phantomjs", "phantomjs" + EXT },
                 { "edgedriver", "MicrosoftWebDriver.exe" },
-                { "iedriver", "IEDriverServer.exe" } });
+                { "iedriver", "IEDriverServer.exe" },
+                { "chromedriver?os=WIN", "chromedriver.exe" },
+                { "chromedriver?os=LINUX&chromeDriverVersion=2.41&forceCache=true",
+                        "chromedriver" } });
     }
 
     @BeforeClass
