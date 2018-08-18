@@ -27,9 +27,12 @@ import static org.apache.commons.io.FileUtils.openInputStream;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Optional;
 
 import org.slf4j.Logger;
 
+import io.javalin.Context;
 import io.javalin.Handler;
 import io.javalin.Javalin;
 
@@ -46,48 +49,14 @@ public class Server {
     public Server(int port) {
         Javalin app = Javalin.create().start(port);
         Handler handler = ctx -> {
-
             String requestMethod = ctx.method();
             String requestPath = ctx.path();
             log.info("Server request: {} {}", requestMethod, requestPath);
 
-            WebDriverManager driverManager = null;
-            switch (requestPath.substring(1)) {
-            case "chromedriver":
-                driverManager = chromedriver();
-                break;
-            case "firefoxdriver":
-                driverManager = firefoxdriver();
-                break;
-            case "edgedriver":
-                driverManager = edgedriver();
-                break;
-            case "iedriver":
-                driverManager = iedriver();
-                break;
-            case "operadriver":
-                driverManager = operadriver();
-                break;
-            case "phantomjs":
-                driverManager = phantomjs();
-                break;
-            default:
-                log.warn("Unknown option {}", requestPath);
-            }
-
-            if (driverManager != null) {
-                driverManager.setup();
-                File binary = new File(driverManager.getBinaryPath());
-                String binaryVersion = driverManager.getDownloadedVersion();
-                String binaryName = binary.getName();
-                String binaryLength = String.valueOf(binary.length());
-
-                ctx.res.setHeader("Content-Disposition",
-                        "attachment; filename=\"" + binaryName + "\"");
-                ctx.result(openInputStream(binary));
-
-                log.info("Server response: {} {} ({} bytes)", binaryName,
-                        binaryVersion, binaryLength);
+            Optional<WebDriverManager> driverManager = createDriverManager(
+                    requestPath);
+            if (driverManager.isPresent()) {
+                resolveDriver(ctx, driverManager.get());
             }
         };
 
@@ -99,6 +68,50 @@ public class Server {
         app.get("/phantomjs", handler);
 
         log.info("WebDriverManager server listening on port {}", port);
+    }
+
+    private Optional<WebDriverManager> createDriverManager(String requestPath) {
+        Optional<WebDriverManager> out = Optional.empty();
+        switch (requestPath.substring(1)) {
+        case "chromedriver":
+            out = Optional.of(chromedriver());
+            break;
+        case "firefoxdriver":
+            out = Optional.of(firefoxdriver());
+            break;
+        case "edgedriver":
+            out = Optional.of(edgedriver());
+            break;
+        case "iedriver":
+            out = Optional.of(iedriver());
+            break;
+        case "operadriver":
+            out = Optional.of(operadriver());
+            break;
+        case "phantomjs":
+            out = Optional.of(phantomjs());
+            break;
+        default:
+            log.warn("Unknown option {}", requestPath);
+            out = Optional.empty();
+        }
+        return out;
+    }
+
+    private synchronized void resolveDriver(Context ctx,
+            WebDriverManager driverManager) throws IOException {
+        driverManager.setup();
+        File binary = new File(driverManager.getBinaryPath());
+        String binaryVersion = driverManager.getDownloadedVersion();
+        String binaryName = binary.getName();
+        String binaryLength = String.valueOf(binary.length());
+
+        ctx.res.setHeader("Content-Disposition",
+                "attachment; filename=\"" + binaryName + "\"");
+        ctx.result(openInputStream(binary));
+
+        log.info("Server response: {} {} ({} bytes)", binaryName, binaryVersion,
+                binaryLength);
     }
 
     public static void main(String[] args) {
