@@ -38,7 +38,6 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
-import okhttp3.ResponseBody;
 
 /**
  * Test using wdm server.
@@ -86,13 +85,16 @@ public class ServerTest {
                 path);
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder().url(serverUrl).build();
-        Response response = client.newCall(request).execute();
 
+        // Assert response
+        Response response = client.newCall(request).execute();
         assertTrue(response.isSuccessful());
 
-        ResponseBody body = response.body();
-        log.debug("Content-Type {}", body.contentType());
-        log.debug("Content-Length {}", body.contentLength());
+        // Assert attachment
+        String attachment = String.format("attachment; filename=\"%s\"",
+                driver);
+        assertTrue(response.headers().values("Content-Disposition")
+                .contains(attachment));
     }
 
     public static String getFreePort() throws IOException {
