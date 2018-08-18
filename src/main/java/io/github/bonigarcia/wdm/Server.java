@@ -30,7 +30,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.Set;
 
 import org.slf4j.Logger;
 
@@ -107,9 +109,9 @@ public class Server {
         Map<String, List<String>> queryParamMap = ctx.queryParamMap();
         if (!queryParamMap.isEmpty()) {
             log.info("Server query string for configuration {}", queryParamMap);
-            for (String key : queryParamMap.keySet()) {
-                String configKey = "wdm." + key;
-                String configValue = queryParamMap.get(key).get(0);
+            for (Entry<String, List<String>> entry : queryParamMap.entrySet()) {
+                String configKey = "wdm." + entry.getKey();
+                String configValue = entry.getValue().get(0);
                 log.trace("\t{} = {}", configKey, configValue);
                 System.setProperty(configKey, configValue);
             }
