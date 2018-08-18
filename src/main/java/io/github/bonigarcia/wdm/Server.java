@@ -82,11 +82,8 @@ public class Server {
                 String binaryName = binary.getName();
                 String binaryLength = String.valueOf(binary.length());
 
-                ctx.res.setHeader("Content-Type", "application/octet-stream");
-                ctx.res.setHeader("Content-Length", binaryLength);
                 ctx.res.setHeader("Content-Disposition",
                         "attachment; filename=\"" + binaryName + "\"");
-
                 ctx.result(openInputStream(binary));
 
                 log.info("Server response: {} {} ({} bytes)", binaryName,
