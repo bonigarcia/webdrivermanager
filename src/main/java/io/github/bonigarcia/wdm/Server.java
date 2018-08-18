@@ -28,6 +28,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -100,18 +102,38 @@ public class Server {
 
     private synchronized void resolveDriver(Context ctx,
             WebDriverManager driverManager) throws IOException {
+
+        // Query string (for configuration parameters)
+        Map<String, List<String>> queryParamMap = ctx.queryParamMap();
+        if (!queryParamMap.isEmpty()) {
+            log.info("Using query string for configuration: {}",
+                    ctx.queryString());
+            for (String key : queryParamMap.keySet()) {
+                String configKey = "wdm." + key;
+                String configValue = queryParamMap.get(key).get(0);
+                log.info("\t{} = {}", configKey, configValue);
+                System.setProperty(configKey, configValue);
+            }
+        }
+
+        // Resolve driver
         driverManager.setup();
         File binary = new File(driverManager.getBinaryPath());
         String binaryVersion = driverManager.getDownloadedVersion();
         String binaryName = binary.getName();
         String binaryLength = String.valueOf(binary.length());
 
+        // Response
         ctx.res.setHeader("Content-Disposition",
                 "attachment; filename=\"" + binaryName + "\"");
         ctx.result(openInputStream(binary));
-
         log.info("Server response: {} {} ({} bytes)", binaryName, binaryVersion,
                 binaryLength);
+
+        // Clear configuration
+        for (String key : queryParamMap.keySet()) {
+            System.clearProperty("wdm." + key);
+        }
     }
 
     public static void main(String[] args) {
