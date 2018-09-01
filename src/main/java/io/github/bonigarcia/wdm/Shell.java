@@ -66,6 +66,12 @@ public class Shell {
         return output.trim();
     }
 
+    public static String getVersionFromWmicOutput(String wmicOutput) {
+        int i = wmicOutput.indexOf('=');
+        int j = wmicOutput.indexOf('.');
+        return i != -1 && j != -1 ? wmicOutput.substring(i + 1, j) : wmicOutput;
+    }
+
     public static String getProgramFileParsePath() {
         return System.getenv("PROGRAMFILES(X86)").replaceAll("\\\\",
                 "\\\\\\\\");

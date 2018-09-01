@@ -18,6 +18,7 @@ package io.github.bonigarcia.wdm;
 
 import static io.github.bonigarcia.wdm.DriverManagerType.CHROME;
 import static io.github.bonigarcia.wdm.Shell.getProgramFileParsePath;
+import static io.github.bonigarcia.wdm.Shell.getVersionFromWmicOutput;
 import static io.github.bonigarcia.wdm.Shell.runAndWait;
 import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
