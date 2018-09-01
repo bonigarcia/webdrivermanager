@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static io.github.bonigarcia.wdm.Config.isNullOrEmpty;
 import static io.github.bonigarcia.wdm.DriverManagerType.CHROME;
 import static io.github.bonigarcia.wdm.Shell.getProgramFilePath;
 import static io.github.bonigarcia.wdm.Shell.getVersionFromWmicOutput;
@@ -78,8 +79,7 @@ public class ChromeDriverManager extends WebDriverManager {
                     "name='" + programFiles
                             + "\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe'",
                     "get", "Version", "/value");
-            if (browserVersionOutput != null
-                    && !browserVersionOutput.isEmpty()) {
+            if (!isNullOrEmpty(browserVersionOutput)) {
                 return Optional
                         .of(getVersionFromWmicOutput(browserVersionOutput));
             }

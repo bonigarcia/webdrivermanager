@@ -418,7 +418,7 @@ public abstract class WebDriverManager {
             downloader = new Downloader(driverManagerType);
             urlFilter = new UrlFilter();
 
-            boolean getLatest = version == null || version.isEmpty()
+            boolean getLatest = isNullOrEmpty(version)
                     || version.equalsIgnoreCase("latest");
             boolean cache = config().isForceCache() || !isNetAvailable();
             if (getLatest) {
