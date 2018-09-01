@@ -65,4 +65,9 @@ public class Shell {
         }
         return output.trim();
     }
+
+    public static String getProgramFileParsePath() {
+        return System.getenv("PROGRAMFILES(X86)").replaceAll("\\\\",
+                "\\\\\\\\");
+    }
 }

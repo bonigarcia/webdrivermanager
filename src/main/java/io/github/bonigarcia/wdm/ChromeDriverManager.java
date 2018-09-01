@@ -17,6 +17,8 @@
 package io.github.bonigarcia.wdm;
 
 import static io.github.bonigarcia.wdm.DriverManagerType.CHROME;
+import static io.github.bonigarcia.wdm.Shell.getProgramFileParsePath;
+import static io.github.bonigarcia.wdm.Shell.runAndWait;
 import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
@@ -69,9 +71,11 @@ public class ChromeDriverManager extends WebDriverManager {
     @Override
     protected Optional<String> getBrowserVersion() {
         if (IS_OS_WINDOWS) {
-            String browserVersionOutput = Shell.runAndWait("wmic", "datafile",
+            String programFiles = getProgramFileParsePath();
+            String browserVersionOutput = runAndWait("wmic", "datafile",
                     "where",
-                    "name='C:\\\\Program Files (x86)\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe'",
+                    "name='" + programFiles
+                            + "\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe'",
                     "get", "Version", "/value");
             if (browserVersionOutput != null
                     && !browserVersionOutput.isEmpty()) {
