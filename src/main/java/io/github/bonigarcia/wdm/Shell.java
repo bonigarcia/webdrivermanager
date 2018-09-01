@@ -72,7 +72,7 @@ public class Shell {
         return i != -1 && j != -1 ? wmicOutput.substring(i + 1, j) : wmicOutput;
     }
 
-    public static String getProgramFileParsePath() {
+    public static String getProgramFilePath() {
         return System.getenv("PROGRAMFILES(X86)").replaceAll("\\\\",
                 "\\\\\\\\");
     }
