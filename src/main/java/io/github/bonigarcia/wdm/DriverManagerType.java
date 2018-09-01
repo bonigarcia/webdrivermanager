@@ -26,4 +26,25 @@ public enum DriverManagerType {
 
     CHROME, FIREFOX, OPERA, EDGE, PHANTOMJS, IEXPLORER;
 
+    @Override
+    public String toString() {
+        switch (this) {
+        case CHROME:
+            return "Google Chrome";
+        case FIREFOX:
+            return "Mozilla Firefox";
+        case OPERA:
+            return "Opera";
+        case EDGE:
+            return "Microsoft Edge";
+        case PHANTOMJS:
+            return "PhantomJS";
+        case IEXPLORER:
+            return "Internet Explorer";
+        default:
+            throw new WebDriverManagerException(
+                    "Invalid driver manager type: " + this.name());
+        }
+    }
+
 }

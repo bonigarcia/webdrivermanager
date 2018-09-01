@@ -18,10 +18,12 @@ package io.github.bonigarcia.wdm;
 
 import static io.github.bonigarcia.wdm.DriverManagerType.FIREFOX;
 import static java.util.Arrays.asList;
+import static java.util.Optional.empty;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Manager for Firefox.
@@ -73,6 +75,11 @@ public class FirefoxDriverManager extends WebDriverManager {
                 + target.substring(iDash + 1, iPoint).toLowerCase()
                 + target.substring(iSeparator);
         return target;
+    }
+
+    @Override
+    protected Optional<String> getBrowserVersion() {
+        return empty();
     }
 
 }

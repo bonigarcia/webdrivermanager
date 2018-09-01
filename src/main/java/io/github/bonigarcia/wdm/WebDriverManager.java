@@ -55,6 +55,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Properties;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -88,6 +89,8 @@ public abstract class WebDriverManager {
     protected static final String SLASH = "/";
 
     protected abstract List<URL> getDrivers() throws IOException;
+
+    protected abstract Optional<String> getBrowserVersion();
 
     protected static Map<DriverManagerType, WebDriverManager> instanceMap = new EnumMap<>(
             DriverManagerType.class);
@@ -163,6 +166,11 @@ public abstract class WebDriverManager {
             @Override
             protected List<URL> getDrivers() throws IOException {
                 return emptyList();
+            }
+
+            @Override
+            protected Optional<String> getBrowserVersion() {
+                return empty();
             }
         };
     }
@@ -413,6 +421,11 @@ public abstract class WebDriverManager {
             boolean getLatest = version == null || version.isEmpty()
                     || version.equalsIgnoreCase("latest");
             boolean cache = config().isForceCache() || !isNetAvailable();
+            if (getLatest) {
+                version = getVersionForInstalledBrowser(driverManagerType);
+                getLatest = version.isEmpty();
+            }
+
             String driverNameString = listToString(getDriverName());
             String os = config().getOs();
 
@@ -454,6 +467,50 @@ public abstract class WebDriverManager {
         } catch (Exception e) {
             handleException(e, arch, version);
         }
+    }
+
+    private String getVersionForInstalledBrowser(
+            DriverManagerType driverManagerType) {
+        String driverNameString = listToString(getDriverName());
+        Optional<String> optionalBrowserVersion = getBrowserVersion();
+        String version = "";
+        if (optionalBrowserVersion.isPresent()) {
+            String browserVersion = optionalBrowserVersion.get();
+            Optional<String> driverVersionForBrowser = getDriverVersionForBrowser(
+                    driverManagerType, browserVersion);
+            if (driverVersionForBrowser.isPresent()) {
+                version = driverVersionForBrowser.get();
+                log.info(
+                        "Resolving {} {} (since the version of {} installed in your machine is {})",
+                        driverNameString, version, driverManagerType,
+                        browserVersion);
+            }
+        }
+        return version;
+    }
+
+    protected Optional<String> getDriverVersionForBrowser(
+            DriverManagerType driverManagerType, String browserVersion) {
+        try {
+            Properties props = new Properties();
+            InputStream inputStream = Config.class
+                    .getResourceAsStream("/versions.properties");
+            props.load(inputStream);
+            String key = driverManagerType.name().toLowerCase()
+                    + browserVersion;
+            return Optional.of(props.getProperty(key));
+        } catch (Exception e) {
+            log.warn(
+                    "The driver version for {} {} is unknown ... trying with latest",
+                    driverManagerType, browserVersion);
+        }
+        return empty();
+    }
+
+    protected String getVersionFromWmicOutput(String wmicOutput) {
+        int i = wmicOutput.indexOf("=");
+        int j = wmicOutput.indexOf(".");
+        return i != -1 && j != -1 ? wmicOutput.substring(i + 1, j) : wmicOutput;
     }
 
     protected void handleException(Exception e, Architecture arch,

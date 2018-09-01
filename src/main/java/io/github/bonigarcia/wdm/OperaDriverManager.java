@@ -18,11 +18,13 @@ package io.github.bonigarcia.wdm;
 
 import static io.github.bonigarcia.wdm.DriverManagerType.OPERA;
 import static java.util.Arrays.asList;
+import static java.util.Optional.empty;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Manager for Opera.
@@ -100,6 +102,11 @@ public class OperaDriverManager extends WebDriverManager {
         } else {
             return super.postDownload(archive);
         }
+    }
+    
+    @Override
+    protected Optional<String> getBrowserVersion() {
+        return empty();
     }
 
 }

@@ -18,10 +18,12 @@ package io.github.bonigarcia.wdm;
 
 import static io.github.bonigarcia.wdm.DriverManagerType.IEXPLORER;
 import static java.util.Arrays.asList;
+import static java.util.Optional.empty;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Manager for Internet Explorer.
@@ -43,6 +45,11 @@ public class InternetExplorerDriverManager extends WebDriverManager {
     protected List<URL> getDrivers() throws IOException {
         URL driverUrl = config().getDriverUrl(driverUrlKey);
         return getDriversFromXml(driverUrl);
+    }
+
+    @Override
+    protected Optional<String> getBrowserVersion() {
+        return empty();
     }
 
 }

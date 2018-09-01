@@ -18,10 +18,13 @@ package io.github.bonigarcia.wdm;
 
 import static io.github.bonigarcia.wdm.DriverManagerType.CHROME;
 import static java.util.Arrays.asList;
+import static java.util.Optional.empty;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Manager for Chrome.
@@ -61,6 +64,22 @@ public class ChromeDriverManager extends WebDriverManager {
         } else {
             return super.getCurrentVersion(url, driverName);
         }
+    }
+
+    @Override
+    protected Optional<String> getBrowserVersion() {
+        if (IS_OS_WINDOWS) {
+            String browserVersionOutput = Shell.runAndWait("wmic", "datafile",
+                    "where",
+                    "name='C:\\\\Program Files (x86)\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe'",
+                    "get", "Version", "/value");
+            if (browserVersionOutput != null
+                    && !browserVersionOutput.isEmpty()) {
+                return Optional
+                        .of(getVersionFromWmicOutput(browserVersionOutput));
+            }
+        }
+        return empty();
     }
 
 }

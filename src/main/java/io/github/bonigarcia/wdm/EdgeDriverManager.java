@@ -20,6 +20,7 @@ import static io.github.bonigarcia.wdm.Config.listToString;
 import static io.github.bonigarcia.wdm.DriverManagerType.EDGE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.sort;
+import static java.util.Optional.empty;
 import static org.apache.commons.io.FileUtils.listFiles;
 import static org.jsoup.Jsoup.parse;
 
@@ -30,6 +31,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
@@ -118,6 +120,11 @@ public class EdgeDriverManager extends WebDriverManager {
         Collection<File> listFiles = listFiles(new File(archive.getParent()),
                 new String[] { "exe" }, true);
         return listFiles.iterator().next();
+    }
+
+    @Override
+    protected Optional<String> getBrowserVersion() {
+        return empty();
     }
 
 }

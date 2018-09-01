@@ -20,11 +20,13 @@ import static io.github.bonigarcia.wdm.Config.listToString;
 import static io.github.bonigarcia.wdm.DriverManagerType.PHANTOMJS;
 import static java.io.File.separator;
 import static java.util.Arrays.asList;
+import static java.util.Optional.empty;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Manager for PhantomJs.
@@ -121,6 +123,11 @@ public class PhantomJsDriverManager extends WebDriverManager {
         downloader.renameFile(phantomjs, target);
         downloader.deleteFolder(extractFolder);
         return target;
+    }
+
+    @Override
+    protected Optional<String> getBrowserVersion() {
+        return empty();
     }
 
 }
