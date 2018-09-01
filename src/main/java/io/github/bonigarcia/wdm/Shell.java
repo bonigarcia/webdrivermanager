@@ -36,13 +36,15 @@ public class Shell {
 
     static final Logger log = getLogger(lookup().lookupClass());
 
+    private Shell() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static String runAndWait(String... command) {
         return runAndWaitArray(command);
     }
 
     public static String runAndWaitArray(String[] command) {
-        assert (command.length > 0);
-
         String commandStr = Arrays.toString(command);
         log.trace("Running command on the shell: {}", commandStr);
         String result = runAndWaitNoLog(command);
@@ -51,8 +53,6 @@ public class Shell {
     }
 
     public static String runAndWaitNoLog(String... command) {
-        assert (command.length > 0);
-
         String output = "";
         try {
             Process process = new ProcessBuilder(command)

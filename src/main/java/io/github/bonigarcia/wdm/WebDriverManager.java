@@ -508,8 +508,8 @@ public abstract class WebDriverManager {
     }
 
     protected String getVersionFromWmicOutput(String wmicOutput) {
-        int i = wmicOutput.indexOf("=");
-        int j = wmicOutput.indexOf(".");
+        int i = wmicOutput.indexOf('=');
+        int j = wmicOutput.indexOf('.');
         return i != -1 && j != -1 ? wmicOutput.substring(i + 1, j) : wmicOutput;
     }
 
