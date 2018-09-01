@@ -446,8 +446,8 @@ public abstract class WebDriverManager {
             if (driverInCache.isPresent() && !config().isOverride()) {
                 versionToDownload = version;
                 downloadedVersion = version;
-                log.debug("Driver for {} {} found in cache {}",
-                        driverNameString, versionStr, driverInCache.get());
+                log.debug("Driver {} {} found in cache", driverNameString,
+                        versionStr);
                 exportDriver(driverInCache.get());
             } else {
                 List<URL> candidateUrls = filterCandidateUrls(arch, version,
