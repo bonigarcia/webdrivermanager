@@ -81,7 +81,11 @@ public class Shell {
                 : posixOutput;
     }
 
-    public static String getProgramFilePath() {
+    public static String getProgramFilesPath() {
+        return System.getenv("PROGRAMFILES").replaceAll("\\\\", "\\\\\\\\");
+    }
+
+    public static String getProgramFilesX86Path() {
         return System.getenv("PROGRAMFILES(X86)").replaceAll("\\\\",
                 "\\\\\\\\");
     }

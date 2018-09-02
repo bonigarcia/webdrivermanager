@@ -18,7 +18,9 @@ package io.github.bonigarcia.wdm;
 
 import static io.github.bonigarcia.wdm.Config.isNullOrEmpty;
 import static io.github.bonigarcia.wdm.DriverManagerType.OPERA;
+import static io.github.bonigarcia.wdm.Shell.getProgramFilesPath;
 import static io.github.bonigarcia.wdm.Shell.getVersionFromPosixOutput;
+import static io.github.bonigarcia.wdm.Shell.getVersionFromWmicOutput;
 import static io.github.bonigarcia.wdm.Shell.runAndWait;
 import static java.util.Optional.empty;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_LINUX;
@@ -111,7 +113,15 @@ public class OperaDriverManager extends WebDriverManager {
     @Override
     protected Optional<String> getBrowserVersion() {
         if (IS_OS_WINDOWS) {
-            log.warn("Not implemented yet");
+            String programFiles = getProgramFilesPath();
+            String browserVersionOutput = runAndWait("wmic", "datafile",
+                    "where",
+                    "name='" + programFiles + "\\\\Opera\\\\launcher.exe'",
+                    "get", "Version", "/value");
+            if (!isNullOrEmpty(browserVersionOutput)) {
+                return Optional
+                        .of(getVersionFromWmicOutput(browserVersionOutput));
+            }
         } else if (IS_OS_LINUX) {
             String browserVersionOutput = runAndWait("opera", "--version");
             if (!isNullOrEmpty(browserVersionOutput)) {
