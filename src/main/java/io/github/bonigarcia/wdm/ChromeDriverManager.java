@@ -25,6 +25,8 @@ import static io.github.bonigarcia.wdm.Shell.runAndWait;
 import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_LINUX;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
 
 import java.io.IOException;
 import java.net.URL;
@@ -84,12 +86,20 @@ public class ChromeDriverManager extends WebDriverManager {
                 return Optional
                         .of(getVersionFromWmicOutput(browserVersionOutput));
             }
-        } else {
+        } else if (IS_OS_LINUX) {
             String browserVersionOutput = runAndWait("google-chrome",
                     "--version");
             if (!isNullOrEmpty(browserVersionOutput)) {
-                return Optional.of(getVersionFromPosixOutput(browserVersionOutput,
-                        driverManagerType));
+                return Optional.of(getVersionFromPosixOutput(
+                        browserVersionOutput, driverManagerType));
+            }
+        } else if (IS_OS_MAC) {
+            String browserVersionOutput = runAndWait(
+                    "/Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome",
+                    "--version");
+            if (!isNullOrEmpty(browserVersionOutput)) {
+                return Optional.of(getVersionFromPosixOutput(
+                        browserVersionOutput, driverManagerType));
             }
         }
         return empty();
