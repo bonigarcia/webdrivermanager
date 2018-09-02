@@ -16,9 +16,15 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static io.github.bonigarcia.wdm.Config.isNullOrEmpty;
 import static io.github.bonigarcia.wdm.DriverManagerType.FIREFOX;
+import static io.github.bonigarcia.wdm.Shell.getVersionFromPosixOutput;
+import static io.github.bonigarcia.wdm.Shell.runAndWait;
 import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_LINUX;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 
 import java.io.IOException;
 import java.net.URL;
@@ -79,6 +85,17 @@ public class FirefoxDriverManager extends WebDriverManager {
 
     @Override
     protected Optional<String> getBrowserVersion() {
+        if (IS_OS_WINDOWS) {
+            log.warn("Not implemented yet");
+        } else if (IS_OS_LINUX) {
+            String browserVersionOutput = runAndWait("firefox", "-v");
+            if (!isNullOrEmpty(browserVersionOutput)) {
+                return Optional.of(getVersionFromPosixOutput(
+                        browserVersionOutput, driverManagerType));
+            }
+        } else if (IS_OS_MAC) {
+            log.warn("Not implemented yet");
+        }
         return empty();
     }
 
