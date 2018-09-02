@@ -37,7 +37,7 @@ public class TaobaoTest {
 
     @Test
     public void testTaobao() throws Exception {
-        WebDriverManager.config().setDriverUrl(
+        WebDriverManager.config().setAvoidAutoVersion(true).setDriverUrl(
                 new URL("http://npm.taobao.org/mirrors/chromedriver/2.33/"));
         chromedriver().useMirror().setup();
 

@@ -65,6 +65,8 @@ public class Config {
             Boolean.class);
     ConfigKey<Boolean> avoidOutputTree = new ConfigKey<>("wdm.avoidOutputTree",
             Boolean.class);
+    ConfigKey<Boolean> avoidAutoVersion = new ConfigKey<>(
+            "wdm.avoidAutoVersion", Boolean.class);
     ConfigKey<Integer> timeout = new ConfigKey<>("wdm.timeout", Integer.class);
 
     ConfigKey<String> architecture = new ConfigKey<>("wdm.architecture",
@@ -281,6 +283,15 @@ public class Config {
 
     public Config setAvoidOutputTree(boolean value) {
         this.avoidOutputTree.setValue(value);
+        return this;
+    }
+
+    public boolean isAvoidAutoVersion() {
+        return resolve(avoidAutoVersion);
+    }
+
+    public Config setAvoidAutoVersion(boolean value) {
+        this.avoidAutoVersion.setValue(value);
         return this;
     }
 

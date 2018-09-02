@@ -421,7 +421,7 @@ public abstract class WebDriverManager {
             boolean getLatest = isNullOrEmpty(version)
                     || version.equalsIgnoreCase("latest");
             boolean cache = config().isForceCache() || !isNetAvailable();
-            if (getLatest) {
+            if (getLatest && !config().isAvoidAutoVersion()) {
                 version = getVersionForInstalledBrowser(driverManagerType);
                 getLatest = version.isEmpty();
             }
