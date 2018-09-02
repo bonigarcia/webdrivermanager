@@ -72,6 +72,16 @@ public class Shell {
         return i != -1 && j != -1 ? wmicOutput.substring(i + 1, j) : wmicOutput;
     }
 
+    public static String getVersionFromPosixOutput(String posixOutput,
+            DriverManagerType driverManagerType) {
+        String driverType = driverManagerType.toString();
+        int i = posixOutput.indexOf(driverType);
+        int j = posixOutput.indexOf('.');
+        return i != -1 && j != -1
+                ? posixOutput.substring(i + driverType.length() + 1, j)
+                : posixOutput;
+    }
+
     public static String getProgramFilePath() {
         return System.getenv("PROGRAMFILES(X86)").replaceAll("\\\\",
                 "\\\\\\\\");
