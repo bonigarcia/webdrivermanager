@@ -26,6 +26,9 @@ import static io.github.bonigarcia.wdm.DriverManagerType.IEXPLORER;
 import static io.github.bonigarcia.wdm.DriverManagerType.OPERA;
 import static io.github.bonigarcia.wdm.DriverManagerType.PHANTOMJS;
 import static io.github.bonigarcia.wdm.OperatingSystem.WIN;
+import static io.github.bonigarcia.wdm.Shell.getVersionFromPosixOutput;
+import static io.github.bonigarcia.wdm.Shell.getVersionFromWmicOutput;
+import static io.github.bonigarcia.wdm.Shell.runAndWait;
 import static java.lang.Integer.parseInt;
 import static java.lang.Integer.signum;
 import static java.lang.Integer.valueOf;
@@ -38,6 +41,9 @@ import static javax.xml.xpath.XPathFactory.newInstance;
 import static org.apache.commons.io.FileUtils.listFiles;
 import static org.apache.commons.io.FilenameUtils.removeExtension;
 import static org.apache.commons.lang3.StringUtils.isNumeric;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_LINUX;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.BufferedReader;
@@ -934,6 +940,37 @@ public abstract class WebDriverManager {
     protected FilenameFilter getFolderFilter() {
         return (dir, name) -> dir.isDirectory()
                 && name.toLowerCase().contains(driverName);
+    }
+
+    protected Optional<String> getDefaultBrowserVersion(String programFilesEnv,
+            String winBrowserName, String linuxBrowserName,
+            String macBrowserName, String versionFlag) {
+        if (IS_OS_WINDOWS) {
+            String programFiles = System.getenv(programFilesEnv)
+                    .replaceAll("\\\\", "\\\\\\\\");
+            String browserVersionOutput = runAndWait("wmic", "datafile",
+                    "where", "name='" + programFiles + winBrowserName + "'",
+                    "get", "Version", "/value");
+            if (!isNullOrEmpty(browserVersionOutput)) {
+                return Optional
+                        .of(getVersionFromWmicOutput(browserVersionOutput));
+            }
+        } else if (IS_OS_LINUX) {
+            String browserVersionOutput = runAndWait(linuxBrowserName,
+                    versionFlag);
+            if (!isNullOrEmpty(browserVersionOutput)) {
+                return Optional.of(
+                        getVersionFromPosixOutput(browserVersionOutput, ""));
+            }
+        } else if (IS_OS_MAC) {
+            String browserVersionOutput = runAndWait(macBrowserName,
+                    versionFlag);
+            if (!isNullOrEmpty(browserVersionOutput)) {
+                return Optional.of(
+                        getVersionFromPosixOutput(browserVersionOutput, ""));
+            }
+        }
+        return empty();
     }
 
     protected void reset() {

@@ -16,16 +16,7 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static io.github.bonigarcia.wdm.Config.isNullOrEmpty;
 import static io.github.bonigarcia.wdm.DriverManagerType.CHROME;
-import static io.github.bonigarcia.wdm.Shell.getProgramFilesX86Path;
-import static io.github.bonigarcia.wdm.Shell.getVersionFromPosixOutput;
-import static io.github.bonigarcia.wdm.Shell.getVersionFromWmicOutput;
-import static io.github.bonigarcia.wdm.Shell.runAndWait;
-import static java.util.Optional.empty;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_LINUX;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 
 import java.io.IOException;
 import java.net.URL;
@@ -74,34 +65,11 @@ public class ChromeDriverManager extends WebDriverManager {
 
     @Override
     protected Optional<String> getBrowserVersion() {
-        if (IS_OS_WINDOWS) {
-            String programFiles = getProgramFilesX86Path();
-            String browserVersionOutput = runAndWait("wmic", "datafile",
-                    "where",
-                    "name='" + programFiles
-                            + "\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe'",
-                    "get", "Version", "/value");
-            if (!isNullOrEmpty(browserVersionOutput)) {
-                return Optional
-                        .of(getVersionFromWmicOutput(browserVersionOutput));
-            }
-        } else if (IS_OS_LINUX) {
-            String browserVersionOutput = runAndWait("google-chrome",
-                    "--version");
-            if (!isNullOrEmpty(browserVersionOutput)) {
-                return Optional.of(getVersionFromPosixOutput(
-                        browserVersionOutput, driverManagerType.toString()));
-            }
-        } else if (IS_OS_MAC) {
-            String browserVersionOutput = runAndWait(
-                    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
-                    "--version");
-            if (!isNullOrEmpty(browserVersionOutput)) {
-                return Optional.of(getVersionFromPosixOutput(
-                        browserVersionOutput, driverManagerType.toString()));
-            }
-        }
-        return empty();
+        return getDefaultBrowserVersion("PROGRAMFILES(X86)",
+                "\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe",
+                "google-chrome",
+                "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+                "--version");
     }
 
 }
