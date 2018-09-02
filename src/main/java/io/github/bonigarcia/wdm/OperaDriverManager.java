@@ -119,7 +119,13 @@ public class OperaDriverManager extends WebDriverManager {
                         getVersionFromPosixOutput(browserVersionOutput, ""));
             }
         } else if (IS_OS_MAC) {
-            log.warn("Not implemented yet");
+            String browserVersionOutput = runAndWait(
+                    "/Applications/Opera.app/Contents/MacOS/Opera",
+                    "--version");
+            if (!isNullOrEmpty(browserVersionOutput)) {
+                return Optional.of(
+                        getVersionFromPosixOutput(browserVersionOutput, ""));
+            }
         }
         return empty();
     }
