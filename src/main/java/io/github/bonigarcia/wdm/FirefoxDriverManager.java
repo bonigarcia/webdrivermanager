@@ -93,7 +93,12 @@ public class FirefoxDriverManager extends WebDriverManager {
                         browserVersionOutput, driverManagerType.toString()));
             }
         } else if (IS_OS_MAC) {
-            log.warn("Not implemented yet");
+            String browserVersionOutput = runAndWait(
+                    "/Applications/Firefox.app/Contents/MacOS/firefox", "-v");
+            if (!isNullOrEmpty(browserVersionOutput)) {
+                return Optional.of(getVersionFromPosixOutput(
+                        browserVersionOutput, driverManagerType.toString()));
+            }
         }
         return empty();
     }
