@@ -95,7 +95,7 @@ public class ChromeDriverManager extends WebDriverManager {
             }
         } else if (IS_OS_MAC) {
             String browserVersionOutput = runAndWait(
-                    "/Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome",
+                    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
                     "--version");
             if (!isNullOrEmpty(browserVersionOutput)) {
                 return Optional.of(getVersionFromPosixOutput(
