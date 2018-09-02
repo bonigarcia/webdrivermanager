@@ -90,7 +90,7 @@ public class ChromeDriverManager extends WebDriverManager {
                     "--version");
             if (!isNullOrEmpty(browserVersionOutput)) {
                 return Optional.of(getVersionFromPosixOutput(
-                        browserVersionOutput, driverManagerType));
+                        browserVersionOutput, driverManagerType.toString()));
             }
         } else if (IS_OS_MAC) {
             String browserVersionOutput = runAndWait(
@@ -98,7 +98,7 @@ public class ChromeDriverManager extends WebDriverManager {
                     "--version");
             if (!isNullOrEmpty(browserVersionOutput)) {
                 return Optional.of(getVersionFromPosixOutput(
-                        browserVersionOutput, driverManagerType));
+                        browserVersionOutput, driverManagerType.toString()));
             }
         }
         return empty();

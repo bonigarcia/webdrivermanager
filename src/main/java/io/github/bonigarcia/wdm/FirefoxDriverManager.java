@@ -90,7 +90,7 @@ public class FirefoxDriverManager extends WebDriverManager {
             String browserVersionOutput = runAndWait("firefox", "-v");
             if (!isNullOrEmpty(browserVersionOutput)) {
                 return Optional.of(getVersionFromPosixOutput(
-                        browserVersionOutput, driverManagerType));
+                        browserVersionOutput, driverManagerType.toString()));
             }
         } else if (IS_OS_MAC) {
             log.warn("Not implemented yet");
