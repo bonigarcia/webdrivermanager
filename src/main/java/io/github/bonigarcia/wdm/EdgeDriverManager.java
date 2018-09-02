@@ -16,9 +16,7 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static io.github.bonigarcia.wdm.Config.listToString;
 import static io.github.bonigarcia.wdm.DriverManagerType.EDGE;
-import static java.util.Arrays.asList;
 import static java.util.Collections.sort;
 import static java.util.Optional.empty;
 import static org.apache.commons.io.FileUtils.listFiles;
@@ -49,7 +47,7 @@ public class EdgeDriverManager extends WebDriverManager {
         exportParameterKey = "wdm.edgeDriverExport";
         driverVersionKey = "wdm.edgeDriverVersion";
         driverUrlKey = "wdm.edgeDriverUrl";
-        driverName = asList("MicrosoftWebDriver");
+        driverName = "MicrosoftWebDriver";
     }
 
     @Override
@@ -103,10 +101,9 @@ public class EdgeDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected List<URL> getLatest(List<URL> list, List<String> match) {
-        String matchString = listToString(match);
-        log.trace("Checking the lastest version of {} with URL list {}",
-                matchString, list);
+    protected List<URL> getLatest(List<URL> list, String driver) {
+        log.trace("Checking the lastest version of {} with URL list {}", driver,
+                list);
         List<URL> out = new ArrayList<>();
         versionToDownload = listVersions.iterator().next();
         out.add(list.iterator().next());

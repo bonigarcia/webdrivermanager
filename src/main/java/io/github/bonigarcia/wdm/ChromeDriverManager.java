@@ -22,11 +22,10 @@ import static io.github.bonigarcia.wdm.Shell.getProgramFilePath;
 import static io.github.bonigarcia.wdm.Shell.getVersionFromPosixOutput;
 import static io.github.bonigarcia.wdm.Shell.getVersionFromWmicOutput;
 import static io.github.bonigarcia.wdm.Shell.runAndWait;
-import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_LINUX;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 
 import java.io.IOException;
 import java.net.URL;
@@ -47,7 +46,7 @@ public class ChromeDriverManager extends WebDriverManager {
         driverVersionKey = "wdm.chromeDriverVersion";
         driverUrlKey = "wdm.chromeDriverUrl";
         driverMirrorUrlKey = "wdm.chromeDriverMirrorUrl";
-        driverName = asList("chromedriver");
+        driverName = "chromedriver";
     }
 
     @Override

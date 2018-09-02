@@ -17,7 +17,6 @@
 package io.github.bonigarcia.wdm;
 
 import static io.github.bonigarcia.wdm.DriverManagerType.IEXPLORER;
-import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
 
 import java.io.IOException;
@@ -38,7 +37,7 @@ public class InternetExplorerDriverManager extends WebDriverManager {
         exportParameterKey = "wdm.internetExplorerDriverExport";
         driverVersionKey = "wdm.internetExplorerDriverVersion";
         driverUrlKey = "wdm.internetExplorerDriverUrl";
-        driverName = asList("IEDriverServer");
+        driverName = "IEDriverServer";
     }
 
     @Override

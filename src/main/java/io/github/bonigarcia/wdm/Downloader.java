@@ -43,7 +43,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Enumeration;
-import java.util.List;
 import java.util.Optional;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
@@ -72,7 +71,7 @@ public class Downloader {
     }
 
     public synchronized String download(URL url, String version,
-            List<String> driverName) throws IOException, InterruptedException {
+            String driverName) throws IOException, InterruptedException {
         File targetFile = getTarget(version, url);
         Optional<File> binary = checkBinary(driverName, targetFile);
         if (!binary.isPresent()) {
@@ -153,20 +152,17 @@ public class Downloader {
         return of(resultingBinary);
     }
 
-    private Optional<File> checkBinary(List<String> driverName,
-            File targetFile) {
+    private Optional<File> checkBinary(String driverName, File targetFile) {
         File parentFolder = targetFile.getParentFile();
         if (parentFolder.exists() && !config().isOverride()) {
             // Check if binary exits in parent folder and it is valid
 
             Collection<File> listFiles = listFiles(parentFolder, null, true);
             for (File file : listFiles) {
-                for (String s : driverName) {
-                    if (file.getName().startsWith(s)
-                            && config().isExecutable(file)) {
-                        log.info("Using binary driver previously downloaded");
-                        return of(file);
-                    }
+                if (file.getName().startsWith(driverName)
+                        && config().isExecutable(file)) {
+                    log.info("Using binary driver previously downloaded");
+                    return of(file);
                 }
             }
             log.trace("{} does not exist in cache", driverName);

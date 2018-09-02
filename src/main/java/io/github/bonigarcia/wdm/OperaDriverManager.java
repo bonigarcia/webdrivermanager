@@ -17,7 +17,6 @@
 package io.github.bonigarcia.wdm;
 
 import static io.github.bonigarcia.wdm.DriverManagerType.OPERA;
-import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
 
 import java.io.File;
@@ -40,7 +39,7 @@ public class OperaDriverManager extends WebDriverManager {
         driverVersionKey = "wdm.operaDriverVersion";
         driverUrlKey = "wdm.operaDriverUrl";
         driverMirrorUrlKey = "wdm.operaDriverMirrorUrl";
-        driverName = asList("operadriver");
+        driverName = "operadriver";
     }
 
     @Override
@@ -83,8 +82,7 @@ public class OperaDriverManager extends WebDriverManager {
                     }
                     operadriver = listFiles[i];
                     isOperaDriver = config().isExecutable(operadriver)
-                            && operadriver.getName()
-                                    .contains(getDriverName().get(0));
+                            && operadriver.getName().contains(getDriverName());
                     i++;
                     log.trace("{} is valid: {}", operadriver, isOperaDriver);
                 } while (!isOperaDriver);
@@ -103,7 +101,7 @@ public class OperaDriverManager extends WebDriverManager {
             return super.postDownload(archive);
         }
     }
-    
+
     @Override
     protected Optional<String> getBrowserVersion() {
         return empty();

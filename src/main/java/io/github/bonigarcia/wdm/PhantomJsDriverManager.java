@@ -16,10 +16,8 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static io.github.bonigarcia.wdm.Config.listToString;
 import static io.github.bonigarcia.wdm.DriverManagerType.PHANTOMJS;
 import static java.io.File.separator;
-import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
 
 import java.io.File;
@@ -44,14 +42,13 @@ public class PhantomJsDriverManager extends WebDriverManager {
         driverVersionKey = "wdm.phantomjsDriverVersion";
         driverUrlKey = "wdm.phantomjsDriverUrl";
         driverMirrorUrlKey = "wdm.phantomjsDriverMirrorUrl";
-        driverName = asList("phantomjs");
+        driverName = "phantomjs";
     }
 
     @Override
     protected List<URL> getDrivers() throws IOException {
         URL driverUrl = config().getDriverUrl(driverUrlKey);
-        String driverNameString = listToString(getDriverName());
-        log.info("Reading {} to seek {}", driverUrl, driverNameString);
+        log.info("Reading {} to seek {}", driverUrl, driverName);
         return getDriversFromMirror(driverUrl);
     }
 
