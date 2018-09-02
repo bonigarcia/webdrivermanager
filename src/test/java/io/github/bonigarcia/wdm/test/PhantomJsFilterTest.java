@@ -18,7 +18,6 @@ package io.github.bonigarcia.wdm.test;
 
 import static io.github.bonigarcia.wdm.Architecture.X64;
 import static java.lang.invoke.MethodHandles.lookup;
-import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.junit.Assert.assertThat;
@@ -71,10 +70,10 @@ public class PhantomJsFilterTest {
             SecurityException, IllegalAccessException, IllegalArgumentException,
             InvocationTargetException {
         Method method = WebDriverManager.class.getDeclaredMethod("getLatest",
-                List.class, List.class);
+                List.class, String.class);
         method.setAccessible(true);
         List<URL> latestUrls = (List<URL>) method.invoke(phatomJsManager,
-                driversUrls, asList(phantomJsBinaryName));
+                driversUrls, phantomJsBinaryName);
 
         List<URL> filteredLatestUrls = new UrlFilter().filterByArch(latestUrls,
                 X64, false);
@@ -92,10 +91,10 @@ public class PhantomJsFilterTest {
             InvocationTargetException {
         String specificVersion = "1.9.6";
         Method method = WebDriverManager.class.getDeclaredMethod("getVersion",
-                List.class, List.class, String.class);
+                List.class, String.class, String.class);
         method.setAccessible(true);
         List<URL> specificVersionUrls = (List<URL>) method.invoke(
-                phatomJsManager, driversUrls, asList(phantomJsBinaryName),
+                phatomJsManager, driversUrls, phantomJsBinaryName,
                 specificVersion);
 
         List<URL> filteredVersionUrls = new UrlFilter()
