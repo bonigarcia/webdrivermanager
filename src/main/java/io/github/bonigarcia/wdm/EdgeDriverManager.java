@@ -16,10 +16,14 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static io.github.bonigarcia.wdm.Config.isNullOrEmpty;
 import static io.github.bonigarcia.wdm.DriverManagerType.EDGE;
+import static io.github.bonigarcia.wdm.Shell.getVersionFromPowerShellOutput;
+import static io.github.bonigarcia.wdm.Shell.runAndWait;
 import static java.util.Collections.sort;
 import static java.util.Optional.empty;
 import static org.apache.commons.io.FileUtils.listFiles;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 import static org.jsoup.Jsoup.parse;
 
 import java.io.File;
@@ -121,6 +125,14 @@ public class EdgeDriverManager extends WebDriverManager {
 
     @Override
     protected Optional<String> getBrowserVersion() {
+        if (IS_OS_WINDOWS) {
+            String browserVersionOutput = runAndWait("powershell",
+                    "get-appxpackage Microsoft.MicrosoftEdge");
+            if (!isNullOrEmpty(browserVersionOutput)) {
+                return Optional.of(
+                        getVersionFromPowerShellOutput(browserVersionOutput));
+            }
+        }
         return empty();
     }
 

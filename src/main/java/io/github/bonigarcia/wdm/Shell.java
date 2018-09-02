@@ -66,19 +66,27 @@ public class Shell {
         return output.trim();
     }
 
-    public static String getVersionFromWmicOutput(String wmicOutput) {
-        int i = wmicOutput.indexOf('=');
-        int j = wmicOutput.indexOf('.');
-        return i != -1 && j != -1 ? wmicOutput.substring(i + 1, j) : wmicOutput;
+    public static String getVersionFromWmicOutput(String output) {
+        int i = output.indexOf('=');
+        int j = output.indexOf('.');
+        return i != -1 && j != -1 ? output.substring(i + 1, j) : output;
     }
 
-    public static String getVersionFromPosixOutput(String posixOutput,
+    public static String getVersionFromPosixOutput(String output,
             String driverType) {
-        int i = posixOutput.indexOf(driverType);
-        int j = posixOutput.indexOf('.');
+        int i = output.indexOf(driverType);
+        int j = output.indexOf('.');
         return i != -1 && j != -1
-                ? posixOutput.substring(i + driverType.length(), j).trim()
-                : posixOutput;
+                ? output.substring(i + driverType.length(), j).trim()
+                : output;
+    }
+
+    public static String getVersionFromPowerShellOutput(String output) {
+        int i = output.indexOf("Version");
+        int j = output.indexOf(':', i);
+        int k = output.indexOf('.', j);
+        return i != -1 && j != -1 && k != -1 ? output.substring(j + 1, k).trim()
+                : output;
     }
 
 }
