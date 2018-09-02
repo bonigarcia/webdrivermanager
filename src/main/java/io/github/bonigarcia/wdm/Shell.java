@@ -73,8 +73,7 @@ public class Shell {
     }
 
     public static String getVersionFromPosixOutput(String posixOutput,
-            String driverManagerType) {
-        String driverType = driverManagerType.toString();
+            String driverType) {
         int i = posixOutput.indexOf(driverType);
         int j = posixOutput.indexOf('.');
         return i != -1 && j != -1
