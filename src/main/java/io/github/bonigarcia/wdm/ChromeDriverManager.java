@@ -69,7 +69,7 @@ public class ChromeDriverManager extends WebDriverManager {
                 "\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe",
                 "google-chrome",
                 "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
-                "--version");
+                "--version", driverManagerType.toString());
     }
 
 }

@@ -946,7 +946,8 @@ public abstract class WebDriverManager {
 
     protected Optional<String> getDefaultBrowserVersion(String programFilesEnv,
             String winBrowserName, String linuxBrowserName,
-            String macBrowserName, String versionFlag) {
+            String macBrowserName, String versionFlag,
+            String browserNameInOutput) {
         if (IS_OS_WINDOWS) {
             String programFiles = System.getenv(programFilesEnv)
                     .replaceAll("\\\\", "\\\\\\\\");
@@ -957,19 +958,13 @@ public abstract class WebDriverManager {
                 return Optional
                         .of(getVersionFromWmicOutput(browserVersionOutput));
             }
-        } else if (IS_OS_LINUX) {
-            String browserVersionOutput = runAndWait(linuxBrowserName,
-                    versionFlag);
+        } else if (IS_OS_LINUX || IS_OS_MAC) {
+            String browserName = IS_OS_LINUX ? linuxBrowserName
+                    : macBrowserName;
+            String browserVersionOutput = runAndWait(browserName, versionFlag);
             if (!isNullOrEmpty(browserVersionOutput)) {
-                return Optional.of(
-                        getVersionFromPosixOutput(browserVersionOutput, ""));
-            }
-        } else if (IS_OS_MAC) {
-            String browserVersionOutput = runAndWait(macBrowserName,
-                    versionFlag);
-            if (!isNullOrEmpty(browserVersionOutput)) {
-                return Optional.of(
-                        getVersionFromPosixOutput(browserVersionOutput, ""));
+                return Optional.of(getVersionFromPosixOutput(
+                        browserVersionOutput, browserNameInOutput));
             }
         }
         return empty();
