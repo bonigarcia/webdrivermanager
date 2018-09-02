@@ -42,11 +42,6 @@ public class OperaDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected List<URL> getDrivers() throws IOException {
-        return getDriversFromGitHub();
-    }
-
-    @Override
     protected String getCurrentVersion(URL url, String driverName) {
         if (isUsingTaobaoMirror()) {
             int i = url.getFile().lastIndexOf(SLASH);
@@ -57,6 +52,11 @@ public class OperaDriverManager extends WebDriverManager {
                     url.getFile().indexOf(SLASH + "v") + 2,
                     url.getFile().lastIndexOf(SLASH));
         }
+    }
+
+    @Override
+    protected List<URL> getDrivers() throws IOException {
+        return getDriversFromGitHub();
     }
 
     @Override
