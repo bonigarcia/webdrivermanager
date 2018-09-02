@@ -617,7 +617,9 @@ public abstract class WebDriverManager {
             filesInCache = filterCacheBy(filesInCache, driverVersion);
 
             // Filter by OS
-            filesInCache = filterCacheBy(filesInCache, os.toLowerCase());
+            if (!driverName.equals("MicrosoftWebDriver")) {
+                filesInCache = filterCacheBy(filesInCache, os.toLowerCase());
+            }
 
             if (filesInCache.size() == 1) {
                 return Optional.of(filesInCache.get(0).toString());
