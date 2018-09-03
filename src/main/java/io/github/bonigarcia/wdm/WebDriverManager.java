@@ -478,7 +478,7 @@ public abstract class WebDriverManager {
             if (driverVersionForBrowser.isPresent()) {
                 version = driverVersionForBrowser.get();
                 log.info(
-                        "Resolving {} {} (since the version of {} installed in your machine is {})",
+                        "Using {} {} (since {} {} is installed in your machine)",
                         driverName, version, driverManagerType, browserVersion);
             }
         }
