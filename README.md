@@ -9,9 +9,9 @@
 
 # WebDriverManager [![][Logo]][GitHub Repository]
 
-This library is aimed to automate the [Selenium WebDriver] binaries management in runtime for Java.
+This library is aimed to automate the [Selenium WebDriver] binaries management.
 
-If you use [Selenium WebDriver], you will know that in order to use some browsers such as **Chrome**, **Firefox**, **Opera**, **PhantomJS**, **Microsoft Edge**, or **Internet Explorer**, first you need to download a binary file which allows WebDriver to handle browsers. In addition, the absolute path to this binary must be set as JVM properties, as follows:
+If you use [Selenium WebDriver], you will know that in order to use some browsers such as **Chrome**, **Firefox**, **Opera**, **PhantomJS**, **Microsoft Edge**, or **Internet Explorer**, first you need to download a binary file which allows WebDriver to handle browsers. In Java, the absolute path to this binary must be set as JVM properties, as follows:
 
 ```java
 System.setProperty("webdriver.chrome.driver", "/absolute/path/to/binary/chromedriver");
@@ -26,19 +26,18 @@ This is quite annoying since it forces you to link directly this binary file int
 
 WebDriverManager is open source, released under the terms of [Apache 2.0 License].
 
-## Usage
+## WebDriverManager as Java dependency
 
-In order to use WebDriverManager in a Maven project, you need to add the following dependency in your `pom.xml` (Java 7 or upper required):
+In order to use WebDriverManager from tests in a Maven project, you need to add the following dependency in your `pom.xml` (Java 8 or upper required):
 
 ```xml
 <dependency>
     <groupId>io.github.bonigarcia</groupId>
     <artifactId>webdrivermanager</artifactId>
-    <version>2.2.5</version>
+    <version>3.0.0</version>
+    <scope>test</scope>
 </dependency>
 ```
-
-WebDriverManager is typically used by tests, and therefore, the typical scope would be *test* (`<scope>test</scope>`).
 
 Once we have included this dependency, you can let WebDriverManager to manage the WebDriver binaries for you. Take a look at this JUnit 4 example which uses Chrome with Selenium WebDriver (in order to use WebDriverManager in conjunction with **JUnit 5**, the extension [Selenium-Jupiter] is highly recommended):
 
@@ -74,9 +73,10 @@ public class ChromeTest {
 
 Notice that simply adding ``WebDriverManager.chromedriver().setup();`` WebDriverManager does magic for you:
 
-1. It checks for the latest version of the WebDriver binary.
-2. It downloads the WebDriver binary if it's not present on your system.
-3. It exports the required WebDriver Java environment variables needed by Selenium.
+1. It checks the version of the browser installed in your machine (e.g. Chrome, Firefox).
+2. If checks the version of the driver (e.g. *chromedriver*, *geckodriver*). If unknown, it will use the latest version of the driver.
+3. It downloads the WebDriver binary if it's not present on your system.
+4. It exports the proper WebDriver Java environment variables required by Selenium.
 
 So far, WebDriverManager supports **Chrome**, **Firefox**, **Opera**, **PhantomJS**, **Microsoft Edge**, and **Internet Explorer**. For that, it provides several *drivers managers* for these browsers. These *drivers managers* can be used as follows:
 
@@ -88,8 +88,6 @@ WebDriverManager.phantomjs().setup();
 WebDriverManager.edgedriver().setup();
 WebDriverManager.iedriver().setup();
 ```
-
-**NOTE**: The old WebDriverManager API (version 1.x) is still supported (`ChromeDriverManager.getInstance().setup();`, `FirefoxDriverManager.getInstance().setup();`, and so on), although the 2.x fashion (`WebDriverManager.chromedriver()`, `WebDriverManager.firefoxdriver()`, and so on) is recommended.
 
 Moreover, WebDriverManager provides a generic *driver manager*. This manager which can be parameterized using Selenium driver classes (e.g. `org.openqa.selenium.chrome.ChromeDriver`, `org.openqa.selenium.firefox.FirefoxDriver`, etc), as follows: 
 
@@ -120,12 +118,12 @@ WebDriverManager.getInstance(CHROME).setup();
 WebDriver driver = new ChromeDriver();
 ```
 
-## Examples
+### Examples
 
 Check out the repository [WebDriverManager Examples] which contains different JUnit 4 test examples using WebDriverManager.
 
 
-## WebDriverManager API
+### WebDriverManager API
 
 WebDriverManager exposes its API by means of the **builder pattern**. This means that given a *WebDriverManger* instance, their capabilities can be tuned using different methods. The following table summarizes the WebDriverManager API, together with the equivalent configuration key:
 
@@ -153,6 +151,7 @@ WebDriverManager exposes its API by means of the **builder pattern**. This means
 | ``properties(String)``               | Properties file for configuration values (by default ``webdrivermanager.properties``).                                                                                                                                                                                                       | ``wdm.properties``                                                                                                                                                                    |
 | ``avoidExport()``                    | Avoid exporting JVM properties with the path of binaries (i.e. ``webdriver.chrome.driver``, ``webdriver.gecko.driver``, etc). Only recommended for interactive mode.                                                                                                                         | ``wdm.avoidExport``                                                                                                                                                                   |
 | ``avoidOutputTree()``                | Avoid create tree structure for downloaded binaries (e.g. ``webdriver/chromedriver/linux64/2.37/`` for ``chromedriver``). Used by default in interactive mode.                                                                                                                               | ``wdm.avoidOutputTree``                                                                                                                                                               |
+| ``avoidAutoVersion()``               | Avoid checking the version of the installed browser (e.g. Chrome, Firefox) to find out the proper version of the required driver (e.g. *chromedriver*, *geckodriver*). Only recommended for WebDriverManager as Java dependency mode.                                                        | ``wdm.avoidAutoVersion``                                                                                                                                                              |
 
 
 The following table contains some examples:
@@ -172,7 +171,7 @@ Three more methods are exposed by WebDriverManager, namely:
 * ``getDownloadedVersion()``: This method allows to find out the version of the latest resolved binary.
 
 
-## Configuration
+### Configuration
 
 Configuration parameters for WebDriverManager are set in the ``webdrivermanager.properties`` file:
 
@@ -184,7 +183,9 @@ wdm.useMirror=false
 wdm.useBetaVersions=false
 wdm.avoidExport=false
 wdm.avoidOutputTree=false
+wdm.avoidAutoVersion=false
 wdm.timeout=30
+wdm.serverPort=4041
 
 wdm.chromeDriverUrl=https://chromedriver.storage.googleapis.com/
 wdm.chromeDriverMirrorUrl=http://npm.taobao.org/mirrors/chromedriver
@@ -247,47 +248,6 @@ WebDriverManager.config().setForceCache(true);
 WebDriverManager.config().setOverride(true);
 ```
 
-## Interactive mode
-
-As of version 2.2.0, WebDriverManager can used interactively from the shell to resolve and download binaries for the supported browsers. There are two ways of using this feature:
-
-* Directly from the source code, using Maven. The command to be used is ``mvn exec:java -Dexec.args="browserName"``. For instance:
-
-```
-> mvn exec:java -Dexec.args="chrome"
-[INFO] Scanning for projects...
-[INFO]
-[INFO] ------------------------------------------------------------------------
-[INFO] Building WebDriverManager 2.2.0
-[INFO] ------------------------------------------------------------------------
-[INFO]
-[INFO] --- exec-maven-plugin:1.6.0:java (default-cli) @ webdrivermanager ---
-[INFO] Using WebDriverManager to resolve chrome
-[INFO] Reading https://chromedriver.storage.googleapis.com/ to seek chromedriver
-[INFO] Latest version of chromedriver is 2.37
-[INFO] Downloading https://chromedriver.storage.googleapis.com/2.37/chromedriver_win32.zip to folder D:\projects\webdrivermanager
-[INFO] Binary driver after extraction D:\projects\webdrivermanager\chromedriver.exe
-[INFO] Resulting binary D:\projects\webdrivermanager\chromedriver.exe
-[INFO] ------------------------------------------------------------------------
-[INFO] BUILD SUCCESS
-[INFO] ------------------------------------------------------------------------
-[INFO] Total time: 7.306 s
-[INFO] Finished at: 2018-03-23T09:53:58+01:00
-[INFO] Final Memory: 17M/247M
-[INFO] ------------------------------------------------------------------------
-```
-
-* Using WebDriverManager as a *fat-jar*. This jar can be created using the command ``mvn compile assembly:single`` from the source code, and then ``java -jar webdrivermanager.jar browserName`` . For instance:
-
-```
-> java -jar webdrivermanager-2.2.0-jar-with-dependencies.jar chrome
-[INFO] Using WebDriverManager to resolve chrome
-[INFO] Reading https://chromedriver.storage.googleapis.com/ to seek chromedriver
-[INFO] Latest version of chromedriver is 2.37
-[INFO] Downloading https://chromedriver.storage.googleapis.com/2.37/chromedriver_win32.zip to folder D:\projects\webdrivermanager
-[INFO] Resulting binary D:\projects\webdrivermanager\target\chromedriver.exe
-```
-
 ### HTTP Proxy
 
 If you use an HTTP Proxy in your Internet connection, you can configure your settings by exporting the Java environment variable ``HTTPS_PROXY`` using the following notation: ``my.http.proxy:1234`` or ``username:password@my.http.proxy:1234``.
@@ -347,6 +307,100 @@ WebDriverManager uses [Apache HTTP Client] to download WebDriver binaries from o
 
 You can find further information about others logging implementations in the [Apache HTTP Client logging practices] page.
 
+## WebDriverManager CLI
+
+As of version 2.2.0, WebDriverManager can used interactively from the Command Line Interface (CLI), i.e. the shell, to resolve and download binaries for the supported browsers. There are two ways of using this feature:
+
+* Directly from the source code, using Maven. The command to be used is ``mvn exec:java -Dexec.args="browserName"``. For instance:
+
+```
+> mvn exec:java -Dexec.args="chrome"
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] Building WebDriverManager 2.2.0
+[INFO] ------------------------------------------------------------------------
+[INFO]
+[INFO] --- exec-maven-plugin:1.6.0:java (default-cli) @ webdrivermanager ---
+[INFO] Using WebDriverManager to resolve chrome
+[INFO] Reading https://chromedriver.storage.googleapis.com/ to seek chromedriver
+[INFO] Latest version of chromedriver is 2.37
+[INFO] Downloading https://chromedriver.storage.googleapis.com/2.37/chromedriver_win32.zip to folder D:\projects\webdrivermanager
+[INFO] Binary driver after extraction D:\projects\webdrivermanager\chromedriver.exe
+[INFO] Resulting binary D:\projects\webdrivermanager\chromedriver.exe
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 7.306 s
+[INFO] Finished at: 2018-03-23T09:53:58+01:00
+[INFO] Final Memory: 17M/247M
+[INFO] ------------------------------------------------------------------------
+```
+
+* Using WebDriverManager as a *fat-jar*. This jar can be created using the command ``mvn compile assembly:single`` from the source code, and then ``java -jar webdrivermanager.jar browserName`` . For instance:
+
+```
+> java -jar webdrivermanager-2.2.0-fat.jar chrome
+[INFO] Using WebDriverManager to resolve chrome
+[INFO] Reading https://chromedriver.storage.googleapis.com/ to seek chromedriver
+[INFO] Latest version of chromedriver is 2.37
+[INFO] Downloading https://chromedriver.storage.googleapis.com/2.37/chromedriver_win32.zip to folder D:\projects\webdrivermanager
+[INFO] Resulting binary D:\projects\webdrivermanager\target\chromedriver.exe
+```
+
+## WebDriverManager Server
+
+As of version 3.0.0, WebDriverManager can used as a server. To start this mode, the shell is used. Once again, two options are allowed:
+
+* Directly from the source code and Maven. The command to be used is ``mvn exec:java -Dexec.args="server <port>"``. If the second argument is not specified, the default port will be used (4041):
+
+```
+$ mvn exec:java -Dexec.args="server"
+[INFO] Scanning for projects...
+[INFO]
+[INFO] ------------------------------------------------------------------------
+[INFO] Building WebDriverManager 3.0.0
+[INFO] ------------------------------------------------------------------------
+[INFO]
+[INFO] --- exec-maven-plugin:1.6.0:java (default-cli) @ webdrivermanager ---
+[INFO] WebDriverManager server listening on port 4041
+```
+
+* Using WebDriverManager as a *fat-jar*. For instance:
+
+```
+> java -jar webdrivermanager-3.0.0-fat.jar server
+[INFO] WebDriverManager server listening on port 4041
+```
+
+When the WebDriverManager is up and running, HTTP request can be done to resolve driver binaries (*chromedriver*, *geckodriver*, etc.). For instance, supposing that WebDriverManager is running the local host and in the default port:
+
+* http://localhost:4041/chromedriver : To download the latest version of *chromedriver*
+* http://localhost:4041/firefoxdriver : To download the latest version of *geckodriver*
+* http://localhost:4041/operadriver : To download the latest version of *operadriver*
+* http://localhost:4041/phantomjs : To download the latest version of *phantomjs* driver
+* http://localhost:4041/edgedriver : To download the latest version of *MicrosoftWebDriver*
+* http://localhost:4041/iedriver : To download the latest version of *IEDriverServer*
+
+These requests can be done using a normal browser. The driver binary is automatically downloaded by the browser since it is sent as an attachment in the HTTP response.
+
+In addition, configuration parameters can be specified in the URL using query arguments. The name of these arguments are identical to the parameters in the ``webdrivermanager.properties`` file but skipping the prefix ``wdm.`` (see configuration section). For instance: 
+
+| Example                                                           | Description                                                       |
+|-------------------------------------------------------------------|-------------------------------------------------------------------|
+| http://localhost:4041/chromedriver?chromeDriverVersion=2.40       | Downloads the version 2.40 of *chromedriver*                      |
+| http://localhost:4041/firefoxdriver?geckoDriverVersion=0.21.0     | FDownloads the version 0.21.0 of *geckodriver*                    |
+| http://localhost:4041/operadriver?forceCache=true                 | Force to use the cache version of *operadriver*                   |
+
+Finally, requests to WebDriverManager Server can be done interactively using tools such as [curl], as follows:
+
+```
+curl -O -J http://localhost:4041/chromedriver
+curl -O -J "http://localhost:4041/chromedriver?chromeDriverVersion=2.40&forceCache=true"
+
+```
+
+
 ## Help
 
 If you have questions on how to use WebDriverManager properly with a special configuration or suchlike, please consider asking a question on [Stack Overflow] and tag it with  *webdrivermanager-java*.
@@ -360,6 +414,7 @@ WebDriverManager (Copyright &copy; 2015-2018) is a project created by [Boni Garc
 [Apache 2.0 License]: http://www.apache.org/licenses/LICENSE-2.0
 [authenticated requests]: https://developer.github.com/v3/#rate-limiting
 [Boni Garcia]: http://bonigarcia.github.io/
+[curl]: https://curl.haxx.se/
 [GitHub account]: https://github.com/settings/tokens
 [GitHub Repository]: https://github.com/bonigarcia/webdrivermanager
 [Logback]: https://logback.qos.ch/
