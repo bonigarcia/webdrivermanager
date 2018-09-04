@@ -33,7 +33,8 @@ public class ForceDownloadTest {
 
     @Test
     public void test() {
-        WebDriverManager.chromedriver().forceDownload().setup();
+        WebDriverManager.chromedriver().forceDownload().avoidAutoVersion()
+                .timeout(20).setup();
         assertThat(WebDriverManager.chromedriver().getBinaryPath(),
                 notNullValue());
     }

@@ -343,6 +343,11 @@ public abstract class WebDriverManager {
         return instanceMap.get(driverManagerType);
     }
 
+    public WebDriverManager avoidAutoVersion() {
+        config().setAvoidAutoVersion(true);
+        return instanceMap.get(driverManagerType);
+    }
+
     // ------------
 
     public String getBinaryPath() {
