@@ -1,6 +1,12 @@
 webdrivermanager (3.0.0)
 
+  + Auto driver check for Chrome in Window, Linux, and Mac
+  + Auto driver check for Firefox in Window, Linux, and Mac
+  + Auto driver check for Opera in Window, Linux, and Mac
+  + Auto driver check for Edge in Window
+  + WebDriverManager Server
   + Drop compatibility with 1.x API, i.e. DriverManager.getInstance()
+  + Use a unique name for driver name (deprecate the use of wires for Firefox)
   + Set minimum Java compatibility version to 1.8
 
  -- Boni Garcia <boni.gg@gmail.com>
