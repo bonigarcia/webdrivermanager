@@ -51,17 +51,7 @@ public class Server {
 
     public Server(int port) {
         Javalin app = Javalin.create().start(port);
-        Handler handler = ctx -> {
-            String requestMethod = ctx.method();
-            String requestPath = ctx.path();
-            log.info("Server request: {} {}", requestMethod, requestPath);
-
-            Optional<WebDriverManager> driverManager = createDriverManager(
-                    requestPath);
-            if (driverManager.isPresent()) {
-                resolveDriver(ctx, driverManager.get());
-            }
-        };
+        Handler handler = this::handleRequest;
 
         app.get("/chromedriver", handler);
         app.get("/firefoxdriver", handler);
@@ -71,6 +61,18 @@ public class Server {
         app.get("/phantomjs", handler);
 
         log.info("WebDriverManager server listening on port {}", port);
+    }
+
+    private void handleRequest(Context ctx) throws IOException {
+        String requestMethod = ctx.method();
+        String requestPath = ctx.path();
+        log.info("Server request: {} {}", requestMethod, requestPath);
+
+        Optional<WebDriverManager> driverManager = createDriverManager(
+                requestPath);
+        if (driverManager.isPresent()) {
+            resolveDriver(ctx, driverManager.get());
+        }
     }
 
     private Optional<WebDriverManager> createDriverManager(String requestPath) {
