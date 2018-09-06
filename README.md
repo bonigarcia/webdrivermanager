@@ -45,7 +45,7 @@ In order to use WebDriverManager from tests in a Maven project, you need to add 
 
 ... or in Gradle project:
 
-```json
+```
 dependencies {
     testCompile("io.github.bonigarcia:webdrivermanager:3.0.0")
 }
