@@ -22,7 +22,11 @@ System.setProperty("webdriver.edge.driver", "C:/absolute/path/to/binary/Microsof
 System.setProperty("webdriver.ie.driver", "C:/absolute/path/to/binary/IEDriverServer.exe");
 ```
 
-This is quite annoying since it forces you to link directly this binary file into your Java source code. In addition, you have to check manually when new versions of the binaries are released. WebDriverManager comes to the rescue, performing in an automated way all this dirty job for you.
+This is quite annoying since it forces you to link directly this binary file into your source code. In addition, you have to check manually when new versions of the binaries are released. WebDriverManager comes to the rescue, performing in an automated way all this dirty job for you. WebDriverManager can be used in 3 different ways:
+
+1. WebDriverManager as Java dependency (typically from test cases)
+2. WebDriverManager as a Command Line Interface (CLI) tool (from the the shell)
+3. WebDriverManager as Server (using HTTP requests)
 
 WebDriverManager is open source, released under the terms of [Apache 2.0 License].
 
