@@ -90,7 +90,7 @@ Notice that simply adding ``WebDriverManager.chromedriver().setup();`` WebDriver
 3. It downloads the WebDriver binary if it is not present on the WebDriverManager cache (``~/.m2/repository/webdriver`` by default).
 4. It exports the proper WebDriver Java environment variables required by Selenium (not done when using WebDriverManager from the CLI or as a Server).
 
-So far, WebDriverManager supports **Chrome**, **Firefox**, **Opera**, **PhantomJS**, **Microsoft Edge**, and **Internet Explorer**. For that, it provides several *drivers managers* for these browsers. These *drivers managers* can be used as follows:
+WebDriverManager resolves the driver binaries for the browsers **Chrome**, **Firefox**, **Opera**, **PhantomJS**, **Microsoft Edge**, and **Internet Explorer**. For that, it provides several *drivers managers* for these browsers. These *drivers managers* can be used as follows:
 
 ```java
 WebDriverManager.chromedriver().setup();
@@ -100,6 +100,8 @@ WebDriverManager.phantomjs().setup();
 WebDriverManager.edgedriver().setup();
 WebDriverManager.iedriver().setup();
 ```
+
+**NOTE**: The old WebDriverManager API (version 1.x) has been deprecated as of version 3.x (`ChromeDriverManager.getInstance().setup();`, `FirefoxDriverManager.getInstance().setup();`, and so on).
 
 Moreover, WebDriverManager provides a generic *driver manager*. This manager which can be parameterized using Selenium driver classes (e.g. `org.openqa.selenium.chrome.ChromeDriver`, `org.openqa.selenium.firefox.FirefoxDriver`, etc), as follows: 
 
@@ -292,7 +294,7 @@ Caused by: java.io.IOException: Server returned HTTP response code: 403 for URL:
 
 In order to avoid this problem, [authenticated requests] should be done. The procedure is the following:
 
-1. Create a token/secret pair in your [GitHub account]
+1. Create a token/secret pair in your [GitHub account].
 2. Tell WebDriverManager the value of this pair token/secret. To do that you should use the configuration keys ``wdm.gitHubTokenName`` and ``wdm.gitHubTokenSecret``. You can pass them as command line Java parameters as follows:
 
 ```properties
