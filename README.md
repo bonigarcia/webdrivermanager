@@ -349,7 +349,7 @@ As of version 2.2.0, WebDriverManager can used interactively from the Command Li
 [INFO] ------------------------------------------------------------------------
 ```
 
-* Using WebDriverManager as a *fat-jar*. This jar can be created using the command ``mvn compile assembly:single`` from the source code, and then ``java -jar webdrivermanager.jar browserName`` . For instance:
+* Using WebDriverManager as a *fat-jar* (i.e. WebDriverManager with all its dependencies in a single executable JAR file). This JAR file can downloaded from [here](https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-3.0.0/webdrivermanager-3.0.0-fat.jar) and also it can be created using the command ``mvn compile assembly:single`` from the source code. Once you get the *fat-jar*, you simply need to use the command ``java -jar webdrivermanager-3.0.0-fat.jar browserName``, for instance:
 
 ```
 > java -jar webdrivermanager-3.0.0-fat.jar chrome
@@ -378,7 +378,7 @@ $ mvn exec:java -Dexec.args="server"
 [INFO] WebDriverManager server listening on port 4041
 ```
 
-* Using WebDriverManager as a *fat-jar*. For instance:
+* Using WebDriverManager as a [fat-jar](https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-3.0.0/webdrivermanager-3.0.0-fat.jar). For instance:
 
 ```
 > java -jar webdrivermanager-3.0.0-fat.jar server
@@ -411,7 +411,6 @@ curl -O -J http://localhost:4041/chromedriver
 curl -O -J "http://localhost:4041/chromedriver?chromeDriverVersion=2.40&forceCache=true"
 
 ```
-
 
 ## Help
 
