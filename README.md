@@ -43,6 +43,14 @@ In order to use WebDriverManager from tests in a Maven project, you need to add 
 </dependency>
 ```
 
+... or in Gradle project:
+
+```json
+dependencies {
+    testCompile("io.github.bonigarcia:webdrivermanager:3.0.0")
+}
+```
+
 Once we have included this dependency, you can let WebDriverManager to manage the WebDriver binaries for you. Take a look at this JUnit 4 example which uses Chrome with Selenium WebDriver (in order to use WebDriverManager in conjunction with **JUnit 5**, the extension [Selenium-Jupiter] is highly recommended):
 
 ```java
@@ -78,9 +86,9 @@ public class ChromeTest {
 Notice that simply adding ``WebDriverManager.chromedriver().setup();`` WebDriverManager does magic for you:
 
 1. It checks the version of the browser installed in your machine (e.g. Chrome, Firefox).
-2. If checks the version of the driver (e.g. *chromedriver*, *geckodriver*). If unknown, it will use the latest version of the driver.
-3. It downloads the WebDriver binary if it's not present on your system.
-4. It exports the proper WebDriver Java environment variables required by Selenium.
+2. If checks the version of the driver (e.g. *chromedriver*, *geckodriver*). If unknown, it uses the latest version of the driver.
+3. It downloads the WebDriver binary if it is not present on the WebDriverManager cache (``~/.m2/repository/webdriver`` by default).
+4. It exports the proper WebDriver Java environment variables required by Selenium (not done when using WebDriverManager from the CLI or as a Server).
 
 So far, WebDriverManager supports **Chrome**, **Firefox**, **Opera**, **PhantomJS**, **Microsoft Edge**, and **Internet Explorer**. For that, it provides several *drivers managers* for these browsers. These *drivers managers* can be used as follows:
 
@@ -149,8 +157,8 @@ WebDriverManager exposes its API by means of the **builder pattern**. This means
 | ``proxyUser(String)``                | Specify a username for HTTP proxy.                                                                                                                                                                                                                                                           | ``wdm.proxyUser``                                                                                                                                                                     |
 | ``proxyPass(String)``                | Specify a password for HTTP proxy.                                                                                                                                                                                                                                                           | ``wdm.proxyPass``                                                                                                                                                                     |
 | ``ignoreVersions(String...)``        | Ignore some versions to be downloaded.                                                                                                                                                                                                                                                       | ``wdm.ignoreVersions``                                                                                                                                                                |
-| ``gitHubTokenName(String)``          | Token name for authenticated requests (see "Known issues").                                                                                                                                                                                                                                  | ``wdm.gitHubTokenName``                                                                                                                                                               |
-| ``gitHubTokenSecret(String)``        | Secret for authenticated requests (see "Known issues").                                                                                                                                                                                                                                      | ``wdm.gitHubTokenSecret``                                                                                                                                                             |
+| ``gitHubTokenName(String)``          | Token name for authenticated requests (see [Known issues](#known-issues)).                                                                                                                                                                                                                   | ``wdm.gitHubTokenName``                                                                                                                                                               |
+| ``gitHubTokenSecret(String)``        | Secret for authenticated requests (see [Known issues](#known-issues)).                                                                                                                                                                                                                       | ``wdm.gitHubTokenSecret``                                                                                                                                                             |
 | ``timeout(int)``                     | Timeout (in seconds) to connect and download binaries from online repositories                                                                                                                                                                                                               | ``wdm.timeout``                                                                                                                                                                       |
 | ``properties(String)``               | Properties file for configuration values (by default ``webdrivermanager.properties``).                                                                                                                                                                                                       | ``wdm.properties``                                                                                                                                                                    |
 | ``avoidExport()``                    | Avoid exporting JVM properties with the path of binaries (i.e. ``webdriver.chrome.driver``, ``webdriver.gecko.driver``, etc). Only recommended for interactive mode.                                                                                                                         | ``wdm.avoidExport``                                                                                                                                                                   |
@@ -322,7 +330,7 @@ As of version 2.2.0, WebDriverManager can used interactively from the Command Li
 [INFO] Scanning for projects...
 [INFO]
 [INFO] ------------------------------------------------------------------------
-[INFO] Building WebDriverManager 2.2.0
+[INFO] Building WebDriverManager 3.0.0
 [INFO] ------------------------------------------------------------------------
 [INFO]
 [INFO] --- exec-maven-plugin:1.6.0:java (default-cli) @ webdrivermanager ---
@@ -344,7 +352,7 @@ As of version 2.2.0, WebDriverManager can used interactively from the Command Li
 * Using WebDriverManager as a *fat-jar*. This jar can be created using the command ``mvn compile assembly:single`` from the source code, and then ``java -jar webdrivermanager.jar browserName`` . For instance:
 
 ```
-> java -jar webdrivermanager-2.2.0-fat.jar chrome
+> java -jar webdrivermanager-3.0.0-fat.jar chrome
 [INFO] Using WebDriverManager to resolve chrome
 [INFO] Reading https://chromedriver.storage.googleapis.com/ to seek chromedriver
 [INFO] Latest version of chromedriver is 2.37
@@ -388,13 +396,13 @@ When the WebDriverManager is up and running, HTTP request can be done to resolve
 
 These requests can be done using a normal browser. The driver binary is automatically downloaded by the browser since it is sent as an attachment in the HTTP response.
 
-In addition, configuration parameters can be specified in the URL using query arguments. The name of these arguments are identical to the parameters in the ``webdrivermanager.properties`` file but skipping the prefix ``wdm.`` (see configuration section). For instance: 
+In addition, configuration parameters can be specified in the URL using query arguments. The name of these arguments are identical to the parameters in the ``webdrivermanager.properties`` file but skipping the prefix ``wdm.`` (see [configuration](#webdrivermanager-api) section). For instance: 
 
 | Example                                                           | Description                                                       |
 |-------------------------------------------------------------------|-------------------------------------------------------------------|
 | http://localhost:4041/chromedriver?chromeDriverVersion=2.40       | Downloads the version 2.40 of *chromedriver*                      |
-| http://localhost:4041/firefoxdriver?geckoDriverVersion=0.21.0     | FDownloads the version 0.21.0 of *geckodriver*                    |
-| http://localhost:4041/operadriver?forceCache=true                 | Force to use the cache version of *operadriver*                   |
+| http://localhost:4041/firefoxdriver?geckoDriverVersion=0.21.0     | Downloads the version 0.21.0 of *geckodriver*                     |
+| http://localhost:4041/operadriver?os=WIN&forceCache=true          | Force to use the cache version of *operadriver* for Windows       |
 
 Finally, requests to WebDriverManager Server can be done interactively using tools such as [curl], as follows:
 
