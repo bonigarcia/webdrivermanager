@@ -25,6 +25,7 @@ import static io.github.bonigarcia.wdm.DriverManagerType.FIREFOX;
 import static io.github.bonigarcia.wdm.DriverManagerType.IEXPLORER;
 import static io.github.bonigarcia.wdm.DriverManagerType.OPERA;
 import static io.github.bonigarcia.wdm.DriverManagerType.PHANTOMJS;
+import static io.github.bonigarcia.wdm.DriverManagerType.SELENIUM_SERVER_STANDALONE;
 import static io.github.bonigarcia.wdm.OperatingSystem.WIN;
 import static io.github.bonigarcia.wdm.Shell.getVersionFromPosixOutput;
 import static io.github.bonigarcia.wdm.Shell.getVersionFromWmicOutput;
@@ -166,6 +167,14 @@ public abstract class WebDriverManager {
         return instanceMap.get(PHANTOMJS);
     }
 
+    public static synchronized WebDriverManager seleniumServerStandalone() {
+        if (!instanceMap.containsKey(SELENIUM_SERVER_STANDALONE)) {
+            instanceMap.put(SELENIUM_SERVER_STANDALONE,
+                    new SeleniumServerStandaloneManager());
+        }
+        return instanceMap.get(SELENIUM_SERVER_STANDALONE);
+    }
+
     protected static synchronized WebDriverManager voiddriver() {
         return new WebDriverManager() {
             @Override
@@ -198,6 +207,8 @@ public abstract class WebDriverManager {
             return edgedriver();
         case PHANTOMJS:
             return phantomjs();
+        case SELENIUM_SERVER_STANDALONE:
+            return seleniumServerStandalone();
         default:
             return voiddriver();
         }
@@ -513,6 +524,7 @@ public abstract class WebDriverManager {
         String errorMessage = String.format(
                 "There was an error managing %s %s (%s)", driverName, version,
                 e.getMessage());
+        e.printStackTrace();
         if (!config().isForceCache()) {
             config().setForceCache(true);
             log.warn("{} ... trying again forcing to use cache", errorMessage,
@@ -552,7 +564,9 @@ public abstract class WebDriverManager {
             }
 
             // Filter by OS
-            if (!getDriverName().contains("IEDriverServer")) {
+            if (!getDriverName().equalsIgnoreCase("IEDriverServer")
+                    && !getDriverName()
+                            .equalsIgnoreCase("selenium-server-standalone")) {
                 candidateUrls = urlFilter.filterByOs(candidateUrls,
                         config().getOs());
             }
@@ -855,7 +869,7 @@ public abstract class WebDriverManager {
 
     protected void exportDriver(String variableValue) {
         binaryPath = variableValue;
-        if (!config.isAvoidExport()) {
+        if (!config.isAvoidExport() && exportParameterKey != null) {
             String variableName = config().getDriverExport(exportParameterKey);
             log.info("Exporting {} as {}", variableName, variableValue);
             System.setProperty(variableName, variableValue);

@@ -173,8 +173,12 @@ public class Downloader {
     private File extract(File compressedFile)
             throws IOException, InterruptedException {
         String fileName = compressedFile.getName().toLowerCase();
-        log.info("Extracting binary from compressed file {}", fileName);
 
+        boolean extractFile = !fileName.endsWith("exe")
+                && !fileName.endsWith("jar");
+        if (extractFile) {
+            log.info("Extracting binary from compressed file {}", fileName);
+        }
         if (fileName.endsWith("tar.bz2")) {
             unBZip2(compressedFile);
         } else if (fileName.endsWith("tar.gz")) {
@@ -186,7 +190,8 @@ public class Downloader {
         } else if (fileName.endsWith("zip")) {
             unZip(compressedFile);
         }
-        if (!fileName.endsWith("exe")) {
+
+        if (extractFile) {
             deleteFile(compressedFile);
         }
 

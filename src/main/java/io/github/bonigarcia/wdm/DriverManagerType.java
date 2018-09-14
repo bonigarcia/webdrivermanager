@@ -24,7 +24,7 @@ package io.github.bonigarcia.wdm;
  */
 public enum DriverManagerType {
 
-    CHROME, FIREFOX, OPERA, EDGE, PHANTOMJS, IEXPLORER;
+    CHROME, FIREFOX, OPERA, EDGE, PHANTOMJS, IEXPLORER, SELENIUM_SERVER_STANDALONE;
 
     @Override
     public String toString() {
@@ -41,6 +41,8 @@ public enum DriverManagerType {
             return "PhantomJS";
         case IEXPLORER:
             return "Internet Explorer";
+        case SELENIUM_SERVER_STANDALONE:
+            return "Selenium Server Standalone";
         default:
             throw new WebDriverManagerException(
                     "Invalid driver manager type: " + this.name());
