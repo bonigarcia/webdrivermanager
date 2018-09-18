@@ -55,6 +55,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.Iterator;
@@ -62,6 +64,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.stream.Stream;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -93,6 +96,7 @@ public abstract class WebDriverManager {
     static final Logger log = getLogger(lookup().lookupClass());
 
     protected static final String SLASH = "/";
+    private static final int MAX_DIR_SEARCH_DEPTH = 255;
 
     protected abstract List<URL> getDrivers() throws IOException;
 
@@ -403,15 +407,18 @@ public abstract class WebDriverManager {
 
     protected File postDownload(File archive) {
         File parentFolder = archive.getParentFile();
-        File[] ls = parentFolder.listFiles();
-        for (File f : ls) {
-            if (getDriverName().contains(removeExtension(f.getName()))) {
-                log.trace("Found binary in post-download: {}", f);
-                return f;
-            }
+
+        try (Stream<Path> files = Files.find(parentFolder.toPath(), MAX_DIR_SEARCH_DEPTH,
+                (path, attrib) -> driverName.contains(removeExtension(path.getFileName().toString()))
+                        && attrib.isRegularFile())) {
+            return files.findFirst().orElseThrow(() -> driverNotFoundException(parentFolder)).toFile();
+        } catch (IOException e) {
+            throw new WebDriverManagerException(e);
         }
-        throw new WebDriverManagerException("Driver " + driverName
-                + " not found (using temporal folder " + parentFolder + ")");
+    }
+
+    private WebDriverManagerException driverNotFoundException(File parentFolder) {
+        return new WebDriverManagerException("Driver " + driverName + " not found (using temporal folder " + parentFolder + ")");
     }
 
     protected String getCurrentVersion(URL url, String driverName) {
