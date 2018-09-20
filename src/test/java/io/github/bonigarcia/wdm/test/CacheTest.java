@@ -93,10 +93,10 @@ public class CacheTest {
                 String.class);
         method.setAccessible(true);
 
-        Optional<String> driverInChachePath = (Optional<String>) method
+        Optional<String> driverInCachePath = (Optional<String>) method
                 .invoke(browserManager, driverVersion, architecture, "");
 
-        assertThat(driverInChachePath.get(), notNullValue());
+        assertThat(driverInCachePath.get(), notNullValue());
     }
 
 }
