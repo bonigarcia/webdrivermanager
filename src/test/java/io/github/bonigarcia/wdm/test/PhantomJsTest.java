@@ -24,7 +24,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.base.BrowserTestParent;
 
 /**
- * Test with PhatomJS.
+ * Test with PhantomJS.
  *
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.4.0

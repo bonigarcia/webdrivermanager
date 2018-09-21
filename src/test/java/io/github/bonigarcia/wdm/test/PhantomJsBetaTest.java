@@ -25,7 +25,7 @@ import org.junit.Test;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 /**
- * Test with PhatomJS beta.
+ * Test with PhantomJS beta.
  *
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.4.0
