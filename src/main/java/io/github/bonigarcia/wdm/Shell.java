@@ -60,7 +60,7 @@ public class Shell {
             output = IOUtils.toString(process.getInputStream(), UTF_8);
             process.destroy();
         } catch (IOException e) {
-            log.warn("There was an error executin commannd {} on the shell",
+            log.warn("There was an error executing command {} on the shell",
                     command, e);
         }
         return output.trim();

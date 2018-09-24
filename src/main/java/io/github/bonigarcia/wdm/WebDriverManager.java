@@ -483,40 +483,36 @@ public abstract class WebDriverManager {
         }
     }
 
-    private String getVersionForInstalledBrowser(
-            DriverManagerType driverManagerType) {
-        Optional<String> optionalBrowserVersion = getBrowserVersion();
-        String version = "";
-        if (optionalBrowserVersion.isPresent()) {
-            String browserVersion = optionalBrowserVersion.get();
-            Optional<String> driverVersionForBrowser = getDriverVersionForBrowser(
-                    driverManagerType, browserVersion);
-            if (driverVersionForBrowser.isPresent()) {
-                version = driverVersionForBrowser.get();
+    private String getVersionForInstalledBrowser(DriverManagerType driverManagerType) {
+        return getBrowserVersion().map(browserVersion ->
+            getDriverVersionForBrowser(driverManagerType, browserVersion).map(version -> {
                 log.info(
-                        "Using {} {} (since {} {} is installed in your machine)",
-                        driverName, version, driverManagerType, browserVersion);
-            }
-        }
-        return version;
-    }
-
-    protected Optional<String> getDriverVersionForBrowser(
-            DriverManagerType driverManagerType, String browserVersion) {
-        try {
-            Properties props = new Properties();
-            InputStream inputStream = Config.class
-                    .getResourceAsStream("/versions.properties");
-            props.load(inputStream);
-            String key = driverManagerType.name().toLowerCase()
-                    + browserVersion;
-            return Optional.of(props.getProperty(key));
-        } catch (Exception e) {
-            log.warn(
+                    "Using {} {} (since {} {} is installed in your machine)",
+                    driverName, version, driverManagerType, browserVersion);
+                return version;
+            }).orElseGet(() -> {
+                log.warn(
                     "The driver version for {} {} is unknown ... trying with latest",
                     driverManagerType, browserVersion);
+                return "";
+            })
+        ).orElse("");
+    }
+
+    private Optional<String> getDriverVersionForBrowser(DriverManagerType driverManagerType, String browserVersion) {
+        String key = driverManagerType.name().toLowerCase() + browserVersion;
+        String value = getVersionsDescription().getProperty(key);
+        return value == null ? empty() : Optional.of(value);
+    }
+
+    private Properties getVersionsDescription() {
+        try (InputStream inputStream = Config.class.getResourceAsStream("/versions.properties")) {
+            Properties props = new Properties();
+            props.load(inputStream);
+            return props;
+        } catch (IOException e) {
+            throw new IllegalStateException("Cannot find file /versions.properties in classpath", e);
         }
-        return empty();
     }
 
     protected void handleException(Exception e, Architecture arch,

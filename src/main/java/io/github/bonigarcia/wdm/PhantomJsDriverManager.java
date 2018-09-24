@@ -93,11 +93,11 @@ public class PhantomJsDriverManager extends WebDriverManager {
 
     @Override
     protected File postDownload(File archive) {
-        log.trace("PhatomJS package name: {}", archive);
+        log.trace("PhantomJS package name: {}", archive);
 
         File extractFolder = archive.getParentFile()
                 .listFiles(getFolderFilter())[0];
-        log.trace("PhatomJS extract folder (to be deleted): {}", extractFolder);
+        log.trace("PhantomJS extract folder (to be deleted): {}", extractFolder);
 
         File binFolder = new File(
                 extractFolder.getAbsoluteFile() + separator + "bin");
@@ -108,14 +108,14 @@ public class PhantomJsDriverManager extends WebDriverManager {
             binaryIndex = 3;
         }
 
-        log.trace("PhatomJS bin folder: {} (index {})", binFolder, binaryIndex);
+        log.trace("PhantomJS bin folder: {} (index {})", binFolder, binaryIndex);
 
         File phantomjs = binFolder.listFiles()[binaryIndex];
-        log.trace("PhatomJS binary: {}", phantomjs);
+        log.trace("PhantomJS binary: {}", phantomjs);
 
         File target = new File(archive.getParentFile().getAbsolutePath(),
                 phantomjs.getName());
-        log.trace("PhatomJS target: {}", target);
+        log.trace("PhantomJS target: {}", target);
 
         downloader.renameFile(phantomjs, target);
         downloader.deleteFolder(extractFolder);

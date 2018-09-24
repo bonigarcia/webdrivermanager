@@ -47,21 +47,21 @@ public class PhantomJsFilterTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
-    protected WebDriverManager phatomJsManager;
+    protected WebDriverManager phantomJsManager;
     protected List<URL> driversUrls;
     protected final String phantomJsBinaryName = "phantomjs";
 
     @Before
     @SuppressWarnings("unchecked")
     public void setup() throws Exception {
-        phatomJsManager = WebDriverManager.phantomjs();
+        phantomJsManager = WebDriverManager.phantomjs();
         Field field = WebDriverManager.class.getDeclaredField("httpClient");
         field.setAccessible(true);
-        field.set(phatomJsManager, new HttpClient());
+        field.set(phantomJsManager, new HttpClient());
 
         Method method = WebDriverManager.class.getDeclaredMethod("getDrivers");
         method.setAccessible(true);
-        driversUrls = (List<URL>) method.invoke(phatomJsManager);
+        driversUrls = (List<URL>) method.invoke(phantomJsManager);
     }
 
     @Test
@@ -72,7 +72,7 @@ public class PhantomJsFilterTest {
         Method method = WebDriverManager.class.getDeclaredMethod("getLatest",
                 List.class, String.class);
         method.setAccessible(true);
-        List<URL> latestUrls = (List<URL>) method.invoke(phatomJsManager,
+        List<URL> latestUrls = (List<URL>) method.invoke(phantomJsManager,
                 driversUrls, phantomJsBinaryName);
 
         List<URL> filteredLatestUrls = new UrlFilter().filterByArch(latestUrls,
@@ -94,7 +94,7 @@ public class PhantomJsFilterTest {
                 List.class, String.class, String.class);
         method.setAccessible(true);
         List<URL> specificVersionUrls = (List<URL>) method.invoke(
-                phatomJsManager, driversUrls, phantomJsBinaryName,
+            phantomJsManager, driversUrls, phantomJsBinaryName,
                 specificVersion);
 
         List<URL> filteredVersionUrls = new UrlFilter()
