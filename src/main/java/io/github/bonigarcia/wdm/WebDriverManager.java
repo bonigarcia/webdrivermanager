@@ -33,6 +33,7 @@ import static io.github.bonigarcia.wdm.Shell.runAndWait;
 import static java.lang.Integer.parseInt;
 import static java.lang.Integer.signum;
 import static java.lang.Integer.valueOf;
+import static java.lang.System.getProperty;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.sort;
@@ -42,9 +43,7 @@ import static javax.xml.xpath.XPathFactory.newInstance;
 import static org.apache.commons.io.FileUtils.listFiles;
 import static org.apache.commons.io.FilenameUtils.removeExtension;
 import static org.apache.commons.lang3.StringUtils.isNumeric;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_LINUX;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
+import static org.apache.commons.lang3.SystemUtils.*;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.BufferedReader;
@@ -959,13 +958,25 @@ public abstract class WebDriverManager {
                 && name.toLowerCase().contains(driverName);
     }
 
-    protected Optional<String> getDefaultBrowserVersion(String programFilesEnv,
-            String winBrowserName, String linuxBrowserName,
-            String macBrowserName, String versionFlag,
-            String browserNameInOutput) {
-        if (IS_OS_WINDOWS) {
-            String programFiles = System.getenv(programFilesEnv)
-                    .replaceAll("\\\\", "\\\\\\\\");
+    protected Optional<String> getDefaultBrowserVersion(String winBrowserName, String linuxBrowserName,
+            String macBrowserName, String versionFlag, String browserNameInOutput) {
+
+        if(IS_OS_WINDOWS) {
+
+            boolean is64bit = false;
+            if (getProperty("os.name").contains("Windows")) {
+                is64bit = (System.getenv("ProgramFiles(x86)") != null);
+            } else {
+                is64bit = (getProperty("os.arch").contains("64"));
+            }
+
+            String programFiles;
+            if (is64bit)
+                programFiles = System.getenv("PROGRAMFILES(X86)").replaceAll("\\\\", "\\\\\\\\");
+            else
+                programFiles = System.getenv("PROGRAMFILES").replaceAll("\\\\", "\\\\\\\\");
+
+
             String browserVersionOutput = runAndWait("wmic", "datafile",
                     "where", "name='" + programFiles + winBrowserName + "'",
                     "get", "Version", "/value");
