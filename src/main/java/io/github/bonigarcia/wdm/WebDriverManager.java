@@ -491,7 +491,7 @@ public abstract class WebDriverManager {
                     driverName, version, driverManagerType, browserVersion);
                 return version;
             }).orElseGet(() -> {
-                log.warn(
+                log.trace(
                     "The driver version for {} {} is unknown ... trying with latest",
                     driverManagerType, browserVersion);
                 return "";
