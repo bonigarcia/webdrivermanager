@@ -520,7 +520,6 @@ public abstract class WebDriverManager {
         String errorMessage = String.format(
                 "There was an error managing %s %s (%s)", driverName, version,
                 e.getMessage());
-        e.printStackTrace();
         if (!config().isForceCache()) {
             config().setForceCache(true);
             log.warn("{} ... trying again forcing to use cache", errorMessage,
