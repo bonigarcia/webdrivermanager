@@ -992,6 +992,12 @@ public abstract class WebDriverManager {
         forcedArch = false;
     }
 
+    protected String getProgramFilesEnv() {
+        return System.getProperty("os.arch").contains("64")
+                ? "PROGRAMFILES(X86)"
+                : "PROGRAMFILES";
+    }
+
     public static void main(String[] args) {
         String validBrowsers = "chrome|firefox|opera|edge|phantomjs|iexplorer";
         if (args.length <= 0) {
