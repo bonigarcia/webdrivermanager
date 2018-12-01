@@ -103,7 +103,8 @@ public class OperaDriverManager extends WebDriverManager {
 
     @Override
     protected Optional<String> getBrowserVersion() {
-        return getDefaultBrowserVersion("\\\\Opera\\\\launcher.exe", "opera",
+        return getDefaultBrowserVersion("PROGRAMFILES",
+                "\\\\Opera\\\\launcher.exe", "opera",
                 "/Applications/Opera.app/Contents/MacOS/Opera", "--version",
                 "");
     }

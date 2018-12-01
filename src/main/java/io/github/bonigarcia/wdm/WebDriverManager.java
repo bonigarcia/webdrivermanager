@@ -958,13 +958,11 @@ public abstract class WebDriverManager {
                 && name.toLowerCase().contains(driverName);
     }
 
-    protected Optional<String> getDefaultBrowserVersion(String winBrowserName,
-            String linuxBrowserName, String macBrowserName, String versionFlag,
+    protected Optional<String> getDefaultBrowserVersion(String programFilesEnv,
+            String winBrowserName, String linuxBrowserName,
+            String macBrowserName, String versionFlag,
             String browserNameInOutput) {
-
         if (IS_OS_WINDOWS) {
-            String programFilesEnv = System.getProperty("os.arch")
-                    .contains("64") ? "PROGRAMFILES(X86)" : "PROGRAMFILES";
             String programFiles = System.getenv(programFilesEnv)
                     .replaceAll("\\\\", "\\\\\\\\");
             String browserVersionOutput = runAndWait("wmic", "datafile",
