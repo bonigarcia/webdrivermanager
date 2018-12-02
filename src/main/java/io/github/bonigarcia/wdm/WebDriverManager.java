@@ -443,9 +443,13 @@ public abstract class WebDriverManager {
                 getLatest = version.isEmpty();
             }
 
-            if (version.endsWith("MicrosoftWebDriver.exe")) {
-                if (new File(version).exists()) {
-                    exportDriver(version);
+            if (version.equals("insiders")) {
+                String systemRoot = System.getenv("SystemRoot");
+                File microsoftWebDriverFile = new File(
+                        systemRoot + File.separator + "System32"
+                                + File.separator + "MicrosoftWebDriver.exe");
+                if (microsoftWebDriverFile.exists()) {
+                    exportDriver(microsoftWebDriverFile.toString());
                     return;
                 } else {
                     retry = false;
