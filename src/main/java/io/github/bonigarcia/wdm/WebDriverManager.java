@@ -435,9 +435,8 @@ public abstract class WebDriverManager {
             downloader = new Downloader(driverManagerType);
             urlFilter = new UrlFilter();
 
-            boolean getLatest = isNullOrEmpty(version)
-                    || version.equalsIgnoreCase("latest");
-            boolean cache = config().isForceCache() || !isNetAvailable();
+            boolean getLatest = isVersionLatest(version);
+            boolean cache = isCacheUsed();
             if (getLatest && !config().isAvoidAutoVersion()) {
                 version = getVersionForInstalledBrowser(driverManagerType);
                 getLatest = version.isEmpty();
@@ -498,6 +497,15 @@ public abstract class WebDriverManager {
         } catch (Exception e) {
             handleException(e, arch, version);
         }
+    }
+
+    private boolean isCacheUsed() {
+        return config().isForceCache() || !isNetAvailable();
+    }
+
+    private boolean isVersionLatest(String version) {
+        return isNullOrEmpty(version)
+                || version.equalsIgnoreCase("latest");
     }
 
     private String getVersionForInstalledBrowser(DriverManagerType driverManagerType) {
