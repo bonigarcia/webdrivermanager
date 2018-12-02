@@ -117,6 +117,7 @@ public abstract class WebDriverManager {
     protected String driverMirrorUrlKey;
     protected String exportParameterKey;
     protected boolean forcedArch;
+    protected boolean retry = true;
 
     public static synchronized Config config() {
         if (config == null) {
@@ -442,6 +443,18 @@ public abstract class WebDriverManager {
                 getLatest = version.isEmpty();
             }
 
+            if (version.endsWith("MicrosoftWebDriver.exe")) {
+                if (new File(version).exists()) {
+                    exportDriver(version);
+                    return;
+                } else {
+                    retry = false;
+                    throw new WebDriverManagerException(
+                            "MicrosoftWebDriver.exe should be installed in an elevated command prompt executing: "
+                                    + "dism /Online /Add-Capability /CapabilityName:Microsoft.WebDriver~~~~0.0.1.0");
+                }
+            }
+
             String os = config().getOs();
             log.trace("Managing {} arch={} version={} getLatest={} cache={}",
                     driverName, arch, version, getLatest, cache);
@@ -486,15 +499,15 @@ public abstract class WebDriverManager {
     private String getVersionForInstalledBrowser(DriverManagerType driverManagerType) {
         return getBrowserVersion().map(browserVersion ->
             getDriverVersionForBrowser(driverManagerType, browserVersion).map(version -> {
-                log.info(
-                    "Using {} {} (since {} {} is installed in your machine)",
+                            log.info(
+                                    "Using {} {} (since {} {} is installed in your machine)",
                     driverName, version, driverManagerType, browserVersion);
-                return version;
-            }).orElseGet(() -> {
-                log.trace(
-                    "The driver version for {} {} is unknown ... trying with latest",
-                    driverManagerType, browserVersion);
-                return "";
+                            return version;
+                        }).orElseGet(() -> {
+                            log.trace(
+                                    "The driver version for {} {} is unknown ... trying with latest",
+                                    driverManagerType, browserVersion);
+                            return "";
             })
         ).orElse("");
     }
@@ -520,7 +533,7 @@ public abstract class WebDriverManager {
         String errorMessage = String.format(
                 "There was an error managing %s %s (%s)", driverName, version,
                 e.getMessage());
-        if (!config().isForceCache()) {
+        if (!config().isForceCache() && retry) {
             config().setForceCache(true);
             log.warn("{} ... trying again forcing to use cache", errorMessage,
                     e);
@@ -990,6 +1003,7 @@ public abstract class WebDriverManager {
         listVersions = null;
         versionToDownload = null;
         forcedArch = false;
+        retry = true;
     }
 
     protected String getProgramFilesEnv() {
