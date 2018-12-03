@@ -20,6 +20,7 @@ import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.slf4j.LoggerFactory.getLogger;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -41,21 +42,25 @@ public class Shell {
     }
 
     public static String runAndWait(String... command) {
-        return runAndWaitArray(command);
+        return runAndWaitArray(new File("."), command);
     }
 
-    public static String runAndWaitArray(String[] command) {
+    public static String runAndWait(File folder, String... command) {
+        return runAndWaitArray(folder, command);
+    }
+
+    public static String runAndWaitArray(File folder, String[] command) {
         String commandStr = Arrays.toString(command);
         log.trace("Running command on the shell: {}", commandStr);
-        String result = runAndWaitNoLog(command);
+        String result = runAndWaitNoLog(folder, command);
         log.trace("Result: {}", result);
         return result;
     }
 
-    public static String runAndWaitNoLog(String... command) {
+    public static String runAndWaitNoLog(File folder, String... command) {
         String output = "";
         try {
-            Process process = new ProcessBuilder(command)
+            Process process = new ProcessBuilder(command).directory(folder)
                     .redirectErrorStream(true).start();
             output = IOUtils.toString(process.getInputStream(), UTF_8);
             process.destroy();

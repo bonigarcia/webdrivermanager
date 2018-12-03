@@ -504,39 +504,44 @@ public abstract class WebDriverManager {
     }
 
     private boolean isVersionLatest(String version) {
-        return isNullOrEmpty(version)
-                || version.equalsIgnoreCase("latest");
+        return isNullOrEmpty(version) || version.equalsIgnoreCase("latest");
     }
 
-    private String getVersionForInstalledBrowser(DriverManagerType driverManagerType) {
-        return getBrowserVersion().map(browserVersion ->
-            getDriverVersionForBrowser(driverManagerType, browserVersion).map(version -> {
+    private String getVersionForInstalledBrowser(
+            DriverManagerType driverManagerType) {
+        return getBrowserVersion().map(
+                browserVersion -> getDriverVersionForBrowser(driverManagerType,
+                        browserVersion).map(version -> {
                             log.info(
                                     "Using {} {} (since {} {} is installed in your machine)",
-                    driverName, version, driverManagerType, browserVersion);
+                                    driverName, version, driverManagerType,
+                                    browserVersion);
                             return version;
                         }).orElseGet(() -> {
                             log.trace(
                                     "The driver version for {} {} is unknown ... trying with latest",
                                     driverManagerType, browserVersion);
                             return "";
-            })
-        ).orElse("");
+                        }))
+                .orElse("");
     }
 
-    private Optional<String> getDriverVersionForBrowser(DriverManagerType driverManagerType, String browserVersion) {
+    private Optional<String> getDriverVersionForBrowser(
+            DriverManagerType driverManagerType, String browserVersion) {
         String key = driverManagerType.name().toLowerCase() + browserVersion;
         String value = getVersionsDescription().getProperty(key);
         return value == null ? empty() : Optional.of(value);
     }
 
     private Properties getVersionsDescription() {
-        try (InputStream inputStream = Config.class.getResourceAsStream("/versions.properties")) {
+        try (InputStream inputStream = Config.class
+                .getResourceAsStream("/versions.properties")) {
             Properties props = new Properties();
             props.load(inputStream);
             return props;
         } catch (IOException e) {
-            throw new IllegalStateException("Cannot find file /versions.properties in classpath", e);
+            throw new IllegalStateException(
+                    "Cannot find file /versions.properties in classpath", e);
         }
     }
 
@@ -990,9 +995,10 @@ public abstract class WebDriverManager {
         if (IS_OS_WINDOWS) {
             String programFiles = System.getenv(programFilesEnv)
                     .replaceAll("\\\\", "\\\\\\\\");
-            String browserVersionOutput = runAndWait("wmic", "datafile",
-                    "where", "name='" + programFiles + winBrowserName + "'",
-                    "get", "Version", "/value");
+            String browserVersionOutput = runAndWait(getExecFile(), "wmic",
+                    "datafile", "where",
+                    "name='" + programFiles + winBrowserName + "'", "get",
+                    "Version", "/value");
             if (!isNullOrEmpty(browserVersionOutput)) {
                 return Optional
                         .of(getVersionFromWmicOutput(browserVersionOutput));
@@ -1007,6 +1013,15 @@ public abstract class WebDriverManager {
             }
         }
         return empty();
+    }
+
+    protected File getExecFile() {
+        String systemRoot = System.getenv("SystemRoot");
+        File system32 = new File(systemRoot, "System32");
+        if (IS_OS_WINDOWS && system32.exists() && system32.isDirectory()) {
+            return system32;
+        }
+        return new File(".");
     }
 
     protected void reset() {
