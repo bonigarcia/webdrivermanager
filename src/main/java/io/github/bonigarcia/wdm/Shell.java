@@ -61,7 +61,7 @@ public class Shell {
         String output = "";
         try {
             Process process = new ProcessBuilder(command).directory(folder)
-                    .redirectErrorStream(true).start();
+                    .redirectErrorStream(false).start();
             output = IOUtils.toString(process.getInputStream(), UTF_8);
             process.destroy();
         } catch (IOException e) {
