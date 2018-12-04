@@ -44,7 +44,7 @@ public class Shell {
         return runAndWaitArray(command);
     }
 
-    public static String runAndWaitArray(String[] command) {
+    private static String runAndWaitArray(String[] command) {
         String commandStr = Arrays.toString(command);
         log.trace("Running command on the shell: {}", commandStr);
         String result = runAndWaitNoLog(command);
@@ -52,11 +52,11 @@ public class Shell {
         return result;
     }
 
-    public static String runAndWaitNoLog(String... command) {
+    private static String runAndWaitNoLog(String... command) {
         String output = "";
         try {
             Process process = new ProcessBuilder(command)
-                    .redirectErrorStream(true).start();
+                    .redirectErrorStream(false).start();
             output = IOUtils.toString(process.getInputStream(), UTF_8);
             process.destroy();
         } catch (IOException e) {
