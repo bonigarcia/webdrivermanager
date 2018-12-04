@@ -38,7 +38,7 @@ public class TaobaoTest {
     @Test
     public void testTaobao() throws Exception {
         WebDriverManager.config().setAvoidAutoVersion(true).setDriverUrl(
-                new URL("http://npm.taobao.org/mirrors/chromedriver/2.33/"));
+                new URL("http://npm.taobao.org/mirrors/chromedriver/2.44/"));
         chromedriver().useMirror().setup();
 
         File binary = new File(chromedriver().getBinaryPath());
