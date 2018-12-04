@@ -436,7 +436,7 @@ public abstract class WebDriverManager {
             urlFilter = new UrlFilter();
 
             boolean getLatest = isVersionLatest(version);
-            boolean cache = isCacheUsed();
+            boolean cache = config().isForceCache();
             if (getLatest && !config().isAvoidAutoVersion()) {
                 version = getVersionForInstalledBrowser(driverManagerType);
                 getLatest = version.isEmpty();
@@ -497,10 +497,6 @@ public abstract class WebDriverManager {
         } catch (Exception e) {
             handleException(e, arch, version);
         }
-    }
-
-    private boolean isCacheUsed() {
-        return config().isForceCache() || !isNetAvailable();
     }
 
     private boolean isVersionLatest(String version) {
@@ -698,19 +694,6 @@ public abstract class WebDriverManager {
     protected List<File> getFilesInCache() {
         return (List<File>) listFiles(new File(downloader.getTargetPath()),
                 null, true);
-    }
-
-    protected boolean isNetAvailable() {
-        try {
-            if (!httpClient.isValid(config().getDriverUrl(driverUrlKey))) {
-                log.warn("Page not available. Forcing the use of cache");
-                return false;
-            }
-        } catch (IOException e) {
-            log.warn("Network not available. Forcing the use of cache");
-            return false;
-        }
-        return true;
     }
 
     protected List<URL> removeFromList(List<URL> list, String version) {

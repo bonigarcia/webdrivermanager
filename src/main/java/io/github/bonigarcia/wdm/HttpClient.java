@@ -25,7 +25,6 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Optional.empty;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
-import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
 import static org.apache.http.auth.AuthScope.ANY_REALM;
 import static org.apache.http.client.config.AuthSchemes.NTLM;
 import static org.apache.http.client.config.CookieSpecs.STANDARD;
@@ -58,7 +57,6 @@ import org.apache.http.auth.NTCredentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpOptions;
 import org.apache.http.client.methods.HttpRequestBase;
 import org.apache.http.config.Registry;
 import org.apache.http.config.RegistryBuilder;
@@ -167,17 +165,6 @@ public class HttpClient implements Closeable {
             throw new WebDriverManagerException(errorMessage);
         }
         return response;
-    }
-
-    public boolean isValid(URL url) throws IOException {
-        HttpResponse response = closeableHttpClient
-                .execute(new HttpOptions(url.toString()));
-        if (response.getStatusLine().getStatusCode() > SC_UNAUTHORIZED) {
-            log.debug("A response error is detected. {}",
-                    response.getStatusLine());
-            return false;
-        }
-        return true;
     }
 
     private Optional<URL> determineProxyUrl(String proxy)
