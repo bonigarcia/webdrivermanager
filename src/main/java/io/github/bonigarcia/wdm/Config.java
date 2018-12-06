@@ -92,6 +92,8 @@ public class Config {
     ConfigKey<Integer> serverPort = new ConfigKey<>("wdm.serverPort",
             Integer.class);
 
+    ConfigKey<Integer> ttl = new ConfigKey<>("wdm.ttl", Integer.class);
+
     private <T> T resolve(ConfigKey<T> configKey) {
         String name = configKey.getName();
         T tValue = configKey.getValue();
@@ -427,6 +429,15 @@ public class Config {
 
     public Config setServerPort(int value) {
         this.serverPort.setValue(value);
+        return this;
+    }
+
+    public int getTtl() {
+        return resolve(ttl);
+    }
+
+    public Config setTtl(int value) {
+        this.ttl.setValue(value);
         return this;
     }
 }

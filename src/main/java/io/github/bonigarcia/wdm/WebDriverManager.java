@@ -117,7 +117,9 @@ public abstract class WebDriverManager {
     protected String driverMirrorUrlKey;
     protected String exportParameterKey;
     protected boolean forcedArch;
+    protected boolean isLatest;
     protected boolean retry = true;
+    protected Preferences preferences = new Preferences();
 
     public static synchronized Config config() {
         if (config == null) {
@@ -238,8 +240,36 @@ public abstract class WebDriverManager {
     public synchronized void setup() {
         if (driverManagerType != null) {
             try {
-                manage(config().getArchitecture(),
-                        config().getDriverVersion(driverVersionKey));
+                Architecture architecture = config().getArchitecture();
+                String driverVersion = config()
+                        .getDriverVersion(driverVersionKey);
+
+                isLatest = isVersionLatest(driverVersion);
+                String key = getPreferenceKey();
+                String versionInPreferences = preferences
+                        .getVersionInPreferences(key);
+
+                if (isLatest && !isNullOrEmpty(versionInPreferences)) {
+                    long expirationTime = preferences
+                            .getExpirationTimeInPreferences(key);
+                    String expirationDate = preferences
+                            .formatTime(expirationTime);
+                    log.trace(
+                            "Version in preferences: {} (expiration date {}) (key {})",
+                            versionInPreferences, expirationDate, key);
+                    if (preferences.isValid(versionInPreferences,
+                            expirationTime)) {
+                        log.debug(
+                                "Using {} {} (value previously resolved, valid until {})",
+                                getDriverName(), versionInPreferences,
+                                expirationDate);
+                        driverVersion = versionInPreferences;
+                    } else {
+                        preferences.clearVersionFromPreferences(key);
+                    }
+                }
+                manage(architecture, driverVersion);
+
             } finally {
                 reset();
             }
@@ -474,7 +504,7 @@ public abstract class WebDriverManager {
 
             String versionStr = getLatest ? "(latest version)" : version;
             if (driverInCache.isPresent() && !config().isOverride()) {
-                versionToDownload = version;
+                storeVersionToDownload(version);
                 downloadedVersion = version;
                 log.debug("Driver {} {} found in cache", driverName,
                         versionStr);
@@ -576,7 +606,7 @@ public abstract class WebDriverManager {
         boolean continueSearchingVersion;
         do {
             // Get the latest or concrete version
-            candidateUrls = getLatest ? getLatest(urls, getDriverName())
+            candidateUrls = getLatest ? checkLatest(urls, getDriverName())
                     : getVersion(urls, getDriverName(), version);
             log.trace("Candidate URLs: {}", candidateUrls);
             if (versionToDownload == null
@@ -640,7 +670,7 @@ public abstract class WebDriverManager {
             driverInCache = getDriverFromCache(version, arch, os);
         }
         if (!version.isEmpty()) {
-            versionToDownload = version;
+            storeVersionToDownload(version);
         }
         return driverInCache;
     }
@@ -673,7 +703,7 @@ public abstract class WebDriverManager {
             }
         }
 
-        log.debug("{} not found in cache", driverName);
+        log.trace("{} not found in cache", driverName);
         return empty();
     }
 
@@ -723,12 +753,13 @@ public abstract class WebDriverManager {
                 out.add(url);
             }
         }
+
         versionToDownload = version;
-        log.debug("Using {} {}", driver, version);
+        log.trace("Using {} {}", driver, version);
         return out;
     }
 
-    protected List<URL> getLatest(List<URL> list, String driver) {
+    protected List<URL> checkLatest(List<URL> list, String driver) {
         log.trace("Checking the lastest version of {} with URL list {}", driver,
                 list);
         List<URL> out = new ArrayList<>();
@@ -743,9 +774,7 @@ public abstract class WebDriverManager {
                 list.remove(url);
             }
         }
-        if (versionToDownload != null && versionToDownload.startsWith(".")) {
-            versionToDownload = versionToDownload.substring(1);
-        }
+        storeVersionToDownload(versionToDownload);
         latestVersion = versionToDownload;
         log.info("Latest version of {} is {}", driver, versionToDownload);
         return out;
@@ -1014,6 +1043,7 @@ public abstract class WebDriverManager {
         versionToDownload = null;
         forcedArch = false;
         retry = true;
+        isLatest = true;
     }
 
     protected String getProgramFilesEnv() {
@@ -1073,6 +1103,22 @@ public abstract class WebDriverManager {
         log.error("2. WebDriverManager as a server:");
         log.error("\tWebDriverManager server <port>");
         log.error("\t(where default port is 4041)");
+    }
+
+    private String getPreferenceKey() {
+        return getDriverName().toLowerCase() + "-"
+                + config().getOs().toLowerCase() + config().getArchitecture();
+    }
+
+    private void storeVersionToDownload(String version) {
+        if (version.startsWith(".")) {
+            version = version.substring(1);
+        }
+        versionToDownload = version;
+        if (isLatest) {
+            preferences.putVersionInPreferencesIfEmpty(getPreferenceKey(),
+                    version);
+        }
     }
 
 }

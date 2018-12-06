@@ -105,7 +105,7 @@ public class EdgeDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected List<URL> getLatest(List<URL> list, String driver) {
+    protected List<URL> checkLatest(List<URL> list, String driver) {
         log.trace("Checking the lastest version of {} with URL list {}", driver,
                 list);
         List<URL> out = new ArrayList<>();

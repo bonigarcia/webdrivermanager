@@ -69,7 +69,7 @@ public class PhantomJsFilterTest {
     public void testFilterPhantomJs() throws NoSuchMethodException,
             SecurityException, IllegalAccessException, IllegalArgumentException,
             InvocationTargetException {
-        Method method = WebDriverManager.class.getDeclaredMethod("getLatest",
+        Method method = WebDriverManager.class.getDeclaredMethod("checkLatest",
                 List.class, String.class);
         method.setAccessible(true);
         List<URL> latestUrls = (List<URL>) method.invoke(phantomJsManager,
