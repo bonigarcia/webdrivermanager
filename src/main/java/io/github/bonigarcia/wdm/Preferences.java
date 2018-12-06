@@ -37,36 +37,38 @@ public class Preferences {
 
     final Logger log = getLogger(lookup().lookupClass());
 
-    final static String TTL = "-ttl";
+    static final String TTL = "-ttl";
 
-    java.util.prefs.Preferences preferences = userNodeForPackage(
+    java.util.prefs.Preferences prefs = userNodeForPackage(
             WebDriverManager.class);
 
     SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     public String getVersionInPreferences(String key) {
-        return preferences.get(key, null);
+        return prefs.get(key, null);
     }
 
     public long getExpirationTimeInPreferences(String key) {
-        return preferences.getLong(getExpirationKey(key), 0);
+        return prefs.getLong(getExpirationKey(key), 0);
     }
 
     public void putVersionInPreferencesIfEmpty(String key, String value) {
         if (getVersionInPreferences(key) == null) {
-            preferences.put(key, value);
+            prefs.put(key, value);
             long expirationTime = new Date().getTime()
                     + SECONDS.toMillis(config().getTtl());
-            preferences.putLong(getExpirationKey(key), expirationTime);
-            log.info(
-                    "Storing version {} for {} in preferences (expiration time {})",
-                    value, key, formatTime(expirationTime));
+            prefs.putLong(getExpirationKey(key), expirationTime);
+            if (log.isInfoEnabled()) {
+                log.info(
+                        "Storing version {} for {} in preferences (expiration time {})",
+                        value, key, formatTime(expirationTime));
+            }
         }
     }
 
     public void clearVersionFromPreferences(String key) {
-        preferences.remove(key);
-        preferences.remove(getExpirationKey(key));
+        prefs.remove(key);
+        prefs.remove(getExpirationKey(key));
         log.debug("Removing preference {}", key);
     }
 
@@ -74,8 +76,12 @@ public class Preferences {
         long now = new Date().getTime();
         boolean result = version != null && expirationTime != 0
                 && expirationTime > now;
-        log.trace("IsValid version={}? expirationDate={} now={} -- result={}",
-                version, formatTime(expirationTime), formatTime(now), result);
+        if (log.isTraceEnabled()) {
+            log.trace(
+                    "IsValid version={}? expirationDate={} now={} -- result={}",
+                    version, formatTime(expirationTime), formatTime(now),
+                    result);
+        }
         return result;
     }
 
