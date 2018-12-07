@@ -24,6 +24,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.prefs.BackingStoreException;
 
 import org.slf4j.Logger;
 
@@ -58,7 +59,7 @@ public class Preferences {
             long expirationTime = new Date().getTime()
                     + SECONDS.toMillis(config().getTtl());
             prefs.putLong(getExpirationKey(key), expirationTime);
-            if (log.isInfoEnabled()) {
+            if (log.isDebugEnabled()) {
                 log.debug(
                         "Storing version {} for {} as Java preferences (valid until {})",
                         value, key, formatTime(expirationTime));
@@ -71,19 +72,27 @@ public class Preferences {
         prefs.remove(getExpirationKey(key));
     }
 
+    public void clear() {
+        try {
+            log.info("Clearing WebDriverManager preferences");
+            prefs.clear();
+        } catch (BackingStoreException e) {
+            log.warn("Exception clearing preferences", e);
+        }
+    }
+
     public boolean checkVersionValidity(String key, String version,
             long expirationTime) {
         long now = new Date().getTime();
         boolean validVersion = version != null && expirationTime != 0
                 && expirationTime > now;
         String expirationDate = formatTime(expirationTime);
-        if (log.isTraceEnabled()) {
-            log.trace(
-                    "checkVersionValidity: version={}? expirationDate={} now={} -- result={}",
-                    version, expirationDate, formatTime(now), validVersion);
-        }
+        String nowDate = formatTime(now);
+        log.trace(
+                "checkVersionValidity: version={} expirationDate={} now={} -- result={}",
+                version, expirationDate, nowDate, validVersion);
         if (!validVersion) {
-            log.debug("Removing preference {} (expired on {})", version,
+            log.debug("Removing preference {} {} (expired on {})", key, version,
                     expirationDate);
             clearVersionFromPreferences(key);
         }

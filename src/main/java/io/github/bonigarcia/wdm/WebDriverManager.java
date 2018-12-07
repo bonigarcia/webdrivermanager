@@ -390,6 +390,11 @@ public abstract class WebDriverManager {
         return instanceMap.get(driverManagerType);
     }
 
+    public WebDriverManager ttl(int seconds) {
+        config().setTtl(seconds);
+        return instanceMap.get(driverManagerType);
+    }
+
     // ------------
 
     public String getBinaryPath() {
@@ -1076,6 +1081,8 @@ public abstract class WebDriverManager {
             String arg = args[0];
             if (arg.equalsIgnoreCase("server")) {
                 startServer(args);
+            } else if (arg.equalsIgnoreCase("clear-preferences")) {
+                new Preferences().clear();
             } else {
                 resolveLocal(validBrowsers, arg);
             }
@@ -1110,7 +1117,7 @@ public abstract class WebDriverManager {
     }
 
     private static void logCliError(String validBrowsers) {
-        log.error("There are 2 options to run WebDriverManager CLI");
+        log.error("There are 3 options to run WebDriverManager CLI");
         log.error(
                 "1. WebDriverManager used to resolve binary drivers locally:");
         log.error("\tWebDriverManager browserName");
@@ -1119,6 +1126,10 @@ public abstract class WebDriverManager {
         log.error("2. WebDriverManager as a server:");
         log.error("\tWebDriverManager server <port>");
         log.error("\t(where default port is 4041)");
+
+        log.error(
+                "3. To clear previously resolved driver versions (as Java preferences):");
+        log.error("\tWebDriverManager clear-preferences");
     }
 
     private String getPreferenceKey() {
