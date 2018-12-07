@@ -60,7 +60,7 @@ public class Preferences {
             prefs.putLong(getExpirationKey(key), expirationTime);
             if (log.isInfoEnabled()) {
                 log.info(
-                        "Storing version {} for {} in preferences (expiration time {})",
+                        "Storing version {} for {} as Java preferences (valid until {})",
                         value, key, formatTime(expirationTime));
             }
         }
@@ -69,18 +69,21 @@ public class Preferences {
     public void clearVersionFromPreferences(String key) {
         prefs.remove(key);
         prefs.remove(getExpirationKey(key));
-        log.debug("Removing preference {}", key);
     }
 
-    public boolean isValid(String version, long expirationTime) {
+    public boolean checkVersionValidity(String key, String version,
+            long expirationTime) {
         long now = new Date().getTime();
         boolean result = version != null && expirationTime != 0
                 && expirationTime > now;
-        if (log.isTraceEnabled()) {
-            log.trace(
-                    "IsValid version={}? expirationDate={} now={} -- result={}",
-                    version, formatTime(expirationTime), formatTime(now),
-                    result);
+        String expirationDate = formatTime(expirationTime);
+        log.trace(
+                "checkVersionValidity: version={}? expirationDate={} now={} -- result={}",
+                version, expirationDate, formatTime(now), result);
+        if (!result) {
+            log.debug("Removing preference {} (expired on {})", version,
+                    expirationDate);
+            clearVersionFromPreferences(key);
         }
         return result;
     }

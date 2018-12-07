@@ -258,15 +258,13 @@ public abstract class WebDriverManager {
                     log.trace(
                             "Version in preferences: {} (expiration date {}) (key {})",
                             versionInPreferences, expirationDate, key);
-                    if (preferences.isValid(versionInPreferences,
-                            expirationTime)) {
+                    if (preferences.checkVersionValidity(key,
+                            versionInPreferences, expirationTime)) {
                         log.debug(
                                 "Using {} {} (value previously resolved, valid until {})",
                                 getDriverName(), versionInPreferences,
                                 expirationDate);
                         driverVersion = versionInPreferences;
-                    } else {
-                        preferences.clearVersionFromPreferences(key);
                     }
                 }
                 manage(architecture, driverVersion);
@@ -756,7 +754,7 @@ public abstract class WebDriverManager {
         }
 
         versionToDownload = version;
-        log.trace("Using {} {}", driver, version);
+        log.info("Using {} {}", driver, version);
         return out;
     }
 
@@ -1054,7 +1052,7 @@ public abstract class WebDriverManager {
     }
 
     public static void main(String[] args) {
-        String validBrowsers = "chrome|firefox|opera|edge|phantomjs|iexplorer";
+        String validBrowsers = "chrome|firefox|opera|edge|phantomjs|iexplorer|selenium_server_standalone";
         if (args.length <= 0) {
             logCliError(validBrowsers);
         } else {
