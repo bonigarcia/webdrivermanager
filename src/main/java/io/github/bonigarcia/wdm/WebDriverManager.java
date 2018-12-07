@@ -249,7 +249,8 @@ public abstract class WebDriverManager {
                 String versionInPreferences = preferences
                         .getVersionInPreferences(key);
 
-                if (isLatest && !isNullOrEmpty(versionInPreferences)) {
+                if (isLatest && !isNullOrEmpty(versionInPreferences)
+                        && !config().isAvoidAutoVersion()) {
                     long expirationTime = preferences
                             .getExpirationTimeInPreferences(key);
                     String expirationDate = preferences
