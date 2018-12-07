@@ -93,6 +93,7 @@ public abstract class WebDriverManager {
     static final Logger log = getLogger(lookup().lookupClass());
 
     protected static final String SLASH = "/";
+    protected static final String INSIDERS = "insiders";
 
     protected abstract List<URL> getDrivers() throws IOException;
 
@@ -471,12 +472,13 @@ public abstract class WebDriverManager {
                 getLatest = version.isEmpty();
             }
 
-            if (version.equals("insiders")) {
+            if (version.equals(INSIDERS)) {
                 String systemRoot = System.getenv("SystemRoot");
                 File microsoftWebDriverFile = new File(
                         systemRoot + File.separator + "System32"
                                 + File.separator + "MicrosoftWebDriver.exe");
                 if (microsoftWebDriverFile.exists()) {
+                    downloadedVersion = INSIDERS;
                     exportDriver(microsoftWebDriverFile.toString());
                     return;
                 } else {
