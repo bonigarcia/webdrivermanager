@@ -566,19 +566,16 @@ public abstract class WebDriverManager {
     }
 
     private Properties getVersionsDescription(boolean online) {
-        try {
-            InputStream inputStream;
+        try (InputStream inputStream = online ? new URL(
+                "https://raw.githubusercontent.com/bonigarcia/webdrivermanager/master/src/main/resources/versions.properties")
+                        .openStream()
+                : Config.class.getResourceAsStream("/versions.properties")) {
             if (online) {
                 log.debug(
                         "Using online version.properties (from GitHub) to find out driver version");
-                inputStream = new URL(
-                        "https://raw.githubusercontent.com/bonigarcia/webdrivermanager/master/src/main/resources/versions.properties")
-                                .openStream();
             } else {
                 log.trace(
                         "Using local version.properties to find out driver version");
-                inputStream = Config.class
-                        .getResourceAsStream("/versions.properties");
             }
             Properties props = new Properties();
             props.load(inputStream);
