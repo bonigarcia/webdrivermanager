@@ -74,18 +74,20 @@ public class Preferences {
     public boolean checkVersionValidity(String key, String version,
             long expirationTime) {
         long now = new Date().getTime();
-        boolean result = version != null && expirationTime != 0
+        boolean validVersion = version != null && expirationTime != 0
                 && expirationTime > now;
         String expirationDate = formatTime(expirationTime);
-        log.trace(
-                "checkVersionValidity: version={}? expirationDate={} now={} -- result={}",
-                version, expirationDate, formatTime(now), result);
-        if (!result) {
+        if (log.isTraceEnabled()) {
+            log.trace(
+                    "checkVersionValidity: version={}? expirationDate={} now={} -- result={}",
+                    version, expirationDate, formatTime(now), validVersion);
+        }
+        if (!validVersion) {
             log.debug("Removing preference {} (expired on {})", version,
                     expirationDate);
             clearVersionFromPreferences(key);
         }
-        return result;
+        return validVersion;
     }
 
     public String formatTime(long time) {
