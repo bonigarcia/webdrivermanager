@@ -474,9 +474,8 @@ public abstract class WebDriverManager {
 
             if (version.equals(INSIDERS)) {
                 String systemRoot = System.getenv("SystemRoot");
-                File microsoftWebDriverFile = new File(
-                        systemRoot + File.separator + "System32"
-                                + File.separator + "MicrosoftWebDriver.exe");
+                File microsoftWebDriverFile = new File(systemRoot,
+                        "System32" + File.separator + "MicrosoftWebDriver.exe");
                 if (microsoftWebDriverFile.exists()) {
                     downloadedVersion = INSIDERS;
                     exportDriver(microsoftWebDriverFile.toString());
