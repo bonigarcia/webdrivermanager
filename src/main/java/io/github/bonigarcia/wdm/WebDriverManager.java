@@ -553,20 +553,39 @@ public abstract class WebDriverManager {
 
     private Optional<String> getDriverVersionForBrowser(
             DriverManagerType driverManagerType, String browserVersion) {
-        String key = driverManagerType.name().toLowerCase() + browserVersion;
-        String value = getVersionsDescription().getProperty(key);
+        String driverLowerCase = driverManagerType.name().toLowerCase();
+        String key = driverLowerCase + browserVersion;
+        String value = getVersionsDescription(false).getProperty(key);
+        if (value == null) {
+            log.debug(
+                    "Browser version {} {} not found in local versions.properties",
+                    driverLowerCase, browserVersion);
+            value = getVersionsDescription(true).getProperty(key);
+        }
         return value == null ? empty() : Optional.of(value);
     }
 
-    private Properties getVersionsDescription() {
-        try (InputStream inputStream = Config.class
-                .getResourceAsStream("/versions.properties")) {
+    private Properties getVersionsDescription(boolean online) {
+        try {
+            InputStream inputStream;
+            if (online) {
+                log.debug(
+                        "Using online version.properties (from GitHub) to find out driver version");
+                inputStream = new URL(
+                        "https://raw.githubusercontent.com/bonigarcia/webdrivermanager/master/src/main/resources/versions.properties")
+                                .openStream();
+            } else {
+                log.trace(
+                        "Using local version.properties to find out driver version");
+                inputStream = Config.class
+                        .getResourceAsStream("/versions.properties");
+            }
             Properties props = new Properties();
             props.load(inputStream);
             return props;
         } catch (IOException e) {
-            throw new IllegalStateException(
-                    "Cannot find file /versions.properties in classpath", e);
+            throw new IllegalStateException("Cannot read versions.properties",
+                    e);
         }
     }
 

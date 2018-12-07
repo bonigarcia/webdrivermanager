@@ -59,7 +59,7 @@ public class Preferences {
                     + SECONDS.toMillis(config().getTtl());
             prefs.putLong(getExpirationKey(key), expirationTime);
             if (log.isInfoEnabled()) {
-                log.info(
+                log.debug(
                         "Storing version {} for {} as Java preferences (valid until {})",
                         value, key, formatTime(expirationTime));
             }
