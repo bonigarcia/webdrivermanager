@@ -41,8 +41,8 @@ public class PropertiesTest {
         assertTrue(binary.exists());
     }
 
-    @Test(expected = Exception.class)
-    public void testBadProperties() {
+    @Test
+    public void testEmptyProperties() {
         WebDriverManager.chromedriver().properties("").setup();
     }
 

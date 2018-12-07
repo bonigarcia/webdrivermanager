@@ -27,6 +27,7 @@ import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.net.URL;
@@ -141,22 +142,36 @@ public class Config {
 
     private String getProperty(String key) {
         String value = null;
-        Properties props = new Properties();
+        String propertiesValue = "/" + getProperties();
+        String defaultProperties = "/webdrivermanager.properties";
         try {
-            InputStream inputStream = Config.class
-                    .getResourceAsStream("/" + getProperties());
-            props.load(inputStream);
-            value = props.getProperty(key);
-        } catch (Exception e) {
-            throw new WebDriverManagerException(e);
+            value = getPropertyFrom(propertiesValue, key);
+            if (value == null) {
+                log.trace(
+                        "Property {} not found in {}, using default values (in {})",
+                        key, propertiesValue, defaultProperties);
+                value = getPropertyFrom(defaultProperties, key);
+            }
         } finally {
             if (value == null) {
-                log.trace("Property key {} not found, using default value",
-                        key);
+                log.trace("Property {} not found in {}, using blank value", key,
+                        defaultProperties);
                 value = "";
             }
         }
         return value;
+    }
+
+    private String getPropertyFrom(String properties, String key) {
+        Properties props = new Properties();
+        try {
+            InputStream inputStream = Config.class
+                    .getResourceAsStream(properties);
+            props.load(inputStream);
+        } catch (IOException e) {
+            log.trace("Property {} not found in {}", key, properties);
+        }
+        return props.getProperty(key);
     }
 
     public void reset() {
