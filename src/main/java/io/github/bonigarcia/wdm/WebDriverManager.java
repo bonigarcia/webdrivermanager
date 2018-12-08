@@ -549,7 +549,7 @@ public abstract class WebDriverManager {
                                     browserVersion);
                             return version;
                         }).orElseGet(() -> {
-                            log.trace(
+                            log.debug(
                                     "The driver version for {} {} is unknown ... trying with latest",
                                     driverManagerType, browserVersion);
                             return "";
