@@ -119,6 +119,7 @@ public abstract class WebDriverManager {
     protected String exportParameterKey;
     protected boolean forcedArch;
     protected boolean isLatest;
+    protected String browserBinaryPath;
     protected boolean retry = true;
     protected Preferences preferences = new Preferences();
 
@@ -392,6 +393,11 @@ public abstract class WebDriverManager {
 
     public WebDriverManager ttl(int seconds) {
         config().setTtl(seconds);
+        return instanceMap.get(driverManagerType);
+    }
+
+    public WebDriverManager browserPath(String browserPath) {
+        browserBinaryPath = browserPath;
         return instanceMap.get(driverManagerType);
     }
 
@@ -1028,18 +1034,19 @@ public abstract class WebDriverManager {
         if (IS_OS_WINDOWS) {
             String programFiles = System.getenv(programFilesEnv)
                     .replaceAll("\\\\", "\\\\\\\\");
+            String browserPath = browserBinaryPath != null ? browserBinaryPath
+                    : programFiles + winBrowserName;
             String browserVersionOutput = runAndWait(getExecFile(), "wmic",
-                    "datafile", "where",
-                    "name='" + programFiles + winBrowserName + "'", "get",
+                    "datafile", "where", "name='" + browserPath + "'", "get",
                     "Version", "/value");
             if (!isNullOrEmpty(browserVersionOutput)) {
                 return Optional
                         .of(getVersionFromWmicOutput(browserVersionOutput));
             }
         } else if (IS_OS_LINUX || IS_OS_MAC) {
-            String browserName = IS_OS_LINUX ? linuxBrowserName
-                    : macBrowserName;
-            String browserVersionOutput = runAndWait(browserName, versionFlag);
+            String browserPath = browserBinaryPath != null ? browserBinaryPath
+                    : IS_OS_LINUX ? linuxBrowserName : macBrowserName;
+            String browserVersionOutput = runAndWait(browserPath, versionFlag);
             if (!isNullOrEmpty(browserVersionOutput)) {
                 return Optional.of(getVersionFromPosixOutput(
                         browserVersionOutput, browserNameInOutput));
@@ -1065,6 +1072,7 @@ public abstract class WebDriverManager {
         forcedArch = false;
         retry = true;
         isLatest = true;
+        browserBinaryPath = null;
     }
 
     protected String getProgramFilesEnv() {
