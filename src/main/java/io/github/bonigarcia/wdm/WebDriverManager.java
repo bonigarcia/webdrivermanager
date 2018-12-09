@@ -119,7 +119,6 @@ public abstract class WebDriverManager {
     protected String exportParameterKey;
     protected boolean forcedArch;
     protected boolean isLatest;
-    protected String browserBinaryPath;
     protected boolean retry = true;
     protected Preferences preferences = new Preferences();
 
@@ -397,7 +396,7 @@ public abstract class WebDriverManager {
     }
 
     public WebDriverManager browserPath(String browserPath) {
-        browserBinaryPath = browserPath;
+        config().setBinaryPath(browserPath);
         return instanceMap.get(driverManagerType);
     }
 
@@ -1033,6 +1032,7 @@ public abstract class WebDriverManager {
             String winBrowserName, String linuxBrowserName,
             String macBrowserName, String versionFlag,
             String browserNameInOutput) {
+        String browserBinaryPath = config().getBinaryPath();
         if (IS_OS_WINDOWS) {
             String programFiles = System.getenv(programFilesEnv)
                     .replaceAll("\\\\", "\\\\\\\\");
@@ -1078,7 +1078,6 @@ public abstract class WebDriverManager {
         forcedArch = false;
         retry = true;
         isLatest = true;
-        browserBinaryPath = null;
     }
 
     protected String getProgramFilesEnv() {

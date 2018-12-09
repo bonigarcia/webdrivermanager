@@ -93,6 +93,8 @@ public class Config {
     ConfigKey<Integer> serverPort = new ConfigKey<>("wdm.serverPort",
             Integer.class);
 
+    ConfigKey<String> binaryPath = new ConfigKey<>("wdm.binaryPath",
+            String.class);
     ConfigKey<Integer> ttl = new ConfigKey<>("wdm.ttl", Integer.class);
 
     private <T> T resolve(ConfigKey<T> configKey) {
@@ -455,4 +457,14 @@ public class Config {
         this.ttl.setValue(value);
         return this;
     }
+
+    public String getBinaryPath() {
+        return resolve(binaryPath);
+    }
+
+    public Config setBinaryPath(String value) {
+        this.binaryPath.setValue(value);
+        return this;
+    }
+
 }
