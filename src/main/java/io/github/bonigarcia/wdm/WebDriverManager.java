@@ -781,8 +781,10 @@ public abstract class WebDriverManager {
             }
         }
 
-        versionToDownload = version;
-        log.info("Using {} {}", driver, version);
+        if (versionToDownload != version) {
+            versionToDownload = version;
+            log.info("Using {} {}", driver, version);
+        }
         return out;
     }
 
