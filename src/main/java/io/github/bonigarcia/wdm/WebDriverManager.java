@@ -1044,8 +1044,12 @@ public abstract class WebDriverManager {
                         .of(getVersionFromWmicOutput(browserVersionOutput));
             }
         } else if (IS_OS_LINUX || IS_OS_MAC) {
-            String browserPath = browserBinaryPath != null ? browserBinaryPath
-                    : IS_OS_LINUX ? linuxBrowserName : macBrowserName;
+            String browserPath;
+            if (browserBinaryPath != null) {
+                browserPath = browserBinaryPath;
+            } else {
+                browserPath = IS_OS_LINUX ? linuxBrowserName : macBrowserName;
+            }
             String browserVersionOutput = runAndWait(browserPath, versionFlag);
             if (!isNullOrEmpty(browserVersionOutput)) {
                 return Optional.of(getVersionFromPosixOutput(
