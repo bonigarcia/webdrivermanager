@@ -1,3 +1,18 @@
+webdrivermanager (3.1.0)
+
+  + Store resolved latest versions as Java preferences with a time to live (ttl, by default 60 seconds)
+  + Reading versions.properties from GitHub if browser version not found in local
+  + Read Windows program file env depending on the platform (32|64 bits)
+  + Implement manager to download selenium-server-standalone jar files
+  + Support for Edge 44 (insiders)
+  + New API methods: ttl(), browserPath()
+  + Using default properties is some value is missing
+  + Include clear-preferences option in CLI
+  + Update versions.properties: Chrome 68, 69, 70, 71; Firefox 63; Opera 56; Edge 44
+
+ -- Boni Garcia <boni.gg@gmail.com>  Sun, 9 Dec 2018 04:09:00 +0200
+
+
 webdrivermanager (3.0.0)
 
   + Auto driver check for Chrome in Window, Linux, and Mac
@@ -9,7 +24,7 @@ webdrivermanager (3.0.0)
   + Use a unique name for driver name (deprecate the use of wires for Firefox)
   + Set minimum Java compatibility version to 1.8
 
- -- Boni Garcia <boni.gg@gmail.com>
+ -- Boni Garcia <boni.gg@gmail.com>  Tue, 4 Sep 2018 18:31:00 +0200
 
 
 webdrivermanager (2.2.5)
