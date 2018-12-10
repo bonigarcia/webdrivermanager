@@ -1,3 +1,11 @@
+webdrivermanager (3.1.1)
+
+  + Bug-fix: browser binary path for Linux and Mac was not correctly set
+  + Update versions.properties: Opera 57
+
+ -- Boni Garcia <boni.gg@gmail.com>  Mon, 10 Dec 2018 01:46:00 +0200
+
+
 webdrivermanager (3.1.0)
 
   + Store resolved latest versions as Java preferences with a time to live (ttl, by default 60 seconds)
