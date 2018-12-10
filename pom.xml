@@ -241,6 +241,7 @@
                 <configuration>
                     <mainClass>${wdm.mainClass}</mainClass>
                     <includePluginDependencies>false</includePluginDependencies>
+                    <cleanupDaemonThreads>false</cleanupDaemonThreads>
                     <classpathScope>test</classpathScope>
                     <systemProperties>
                         <systemProperty>
