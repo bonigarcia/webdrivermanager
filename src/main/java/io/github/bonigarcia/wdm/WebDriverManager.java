@@ -1047,7 +1047,7 @@ public abstract class WebDriverManager {
             }
         } else if (IS_OS_LINUX || IS_OS_MAC) {
             String browserPath;
-            if (browserBinaryPath != null) {
+            if (!isNullOrEmpty(browserBinaryPath)) {
                 browserPath = browserBinaryPath;
             } else {
                 browserPath = IS_OS_LINUX ? linuxBrowserName : macBrowserName;
