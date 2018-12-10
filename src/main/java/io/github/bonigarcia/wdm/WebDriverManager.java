@@ -262,7 +262,7 @@ public abstract class WebDriverManager {
                     if (preferences.checkVersionValidity(key,
                             versionInPreferences, expirationTime)) {
                         log.debug(
-                                "Using {} {} (value previously resolved, valid until {})",
+                                "Using {} {} (latest value previously resolved, stored as Java preferences and valid until {})",
                                 getDriverName(), versionInPreferences,
                                 expirationDate);
                         driverVersion = versionInPreferences;
