@@ -86,7 +86,7 @@ public class ChromeTest {
 Notice that simply adding ``WebDriverManager.chromedriver().setup();`` WebDriverManager does magic for you:
 
 1. It checks the version of the browser installed in your machine (e.g. Chrome, Firefox).
-2. If checks the version of the driver (e.g. *chromedriver*, *geckodriver*). If unknown, it uses the latest version of the driver.
+2. It checks the version of the driver (e.g. *chromedriver*, *geckodriver*). If unknown, it uses the latest version of the driver.
 3. It downloads the WebDriver binary if it is not present on the WebDriverManager cache (``~/.m2/repository/webdriver`` by default).
 4. It exports the proper WebDriver Java environment variables required by Selenium (not done when using WebDriverManager from the CLI or as a Server).
 
