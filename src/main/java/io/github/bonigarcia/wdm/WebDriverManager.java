@@ -236,10 +236,12 @@ public abstract class WebDriverManager {
 
             @Override
             protected void setDriverVersion(String version) {
+                // Nothing required
             }
 
             @Override
             protected void setDriverUrl(URL url) {
+                // Nothing required
             }
         };
     }
