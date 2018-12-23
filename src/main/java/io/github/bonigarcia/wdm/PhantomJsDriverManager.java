@@ -66,12 +66,12 @@ public class PhantomJsDriverManager extends WebDriverManager {
 
     @Override
     protected void setDriverVersion(String version) {
-        config().setOperaDriverVersion(version);
+        config().setPhantomjsDriverVersion(version);
     }
 
     @Override
     protected void setDriverUrl(URL url) {
-        config().setOperaDriverUrl(url);
+        config().setPhantomjsDriverUrl(url);
     }
 
     @Override
