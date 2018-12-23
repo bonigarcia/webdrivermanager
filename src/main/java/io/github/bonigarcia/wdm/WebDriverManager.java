@@ -370,13 +370,12 @@ public abstract class WebDriverManager {
     }
 
     public WebDriverManager useMirror() {
-        if (!getMirrorUrl().isPresent()) {
+        Optional<URL> mirrorUrl = getMirrorUrl();
+        if (!mirrorUrl.isPresent()) {
             throw new WebDriverManagerException("Mirror URL not available");
         }
         config().setUseMirror(true);
-        if (getMirrorUrl().isPresent()) {
-            setDriverUrl(getMirrorUrl().get());
-        }
+        setDriverUrl(mirrorUrl.get());
         return instanceMap.get(getDriverManagerType());
     }
 
@@ -988,8 +987,9 @@ public abstract class WebDriverManager {
 
     protected void exportDriver(String variableValue) {
         binaryPath = variableValue;
-        if (!config.isAvoidExport() && getExportParameter().isPresent()) {
-            String variableName = getExportParameter().get();
+        Optional<String> exportParameter = getExportParameter();
+        if (!config.isAvoidExport() && exportParameter.isPresent()) {
+            String variableName = exportParameter.get();
             log.info("Exporting {} as {}", variableName, variableValue);
             System.setProperty(variableName, variableValue);
         } else {
