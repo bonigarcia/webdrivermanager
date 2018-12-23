@@ -31,18 +31,49 @@ import java.util.Optional;
  */
 public class ChromeDriverManager extends WebDriverManager {
 
-    protected ChromeDriverManager() {
-        driverManagerType = CHROME;
-        exportParameterKey = "wdm.chromeDriverExport";
-        driverVersionKey = "wdm.chromeDriverVersion";
-        driverUrlKey = "wdm.chromeDriverUrl";
-        driverMirrorUrlKey = "wdm.chromeDriverMirrorUrl";
-        driverName = "chromedriver";
+    @Override
+    protected DriverManagerType getDriverManagerType() {
+        return CHROME;
+    }
+
+    @Override
+    protected String getDriverName() {
+        return "chromedriver";
+    }
+
+    @Override
+    protected String getDriverVersion() {
+        return config().getChromeDriverVersion();
+    }
+
+    @Override
+    protected URL getDriverUrl() {
+        return config().getChromeDriverUrl();
+    }
+
+    @Override
+    protected Optional<URL> getMirrorUrl() {
+        return Optional.of(config().getChromeDriverMirrorUrl());
+    }
+
+    @Override
+    protected Optional<String> getExportParameter() {
+        return Optional.of(config().getChromeDriverExport());
+    }
+
+    @Override
+    protected void setDriverVersion(String version) {
+        config().setChromeDriverVersion(version);
+    }
+
+    @Override
+    protected void setDriverUrl(URL url) {
+        config().setChromeDriverUrl(url);
     }
 
     @Override
     protected List<URL> getDrivers() throws IOException {
-        URL driverUrl = config().getDriverUrl(driverUrlKey);
+        URL driverUrl = getDriverUrl();
         List<URL> urls;
         if (isUsingTaobaoMirror()) {
             urls = getDriversFromMirror(driverUrl);
@@ -69,7 +100,7 @@ public class ChromeDriverManager extends WebDriverManager {
                 "\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe",
                 "google-chrome",
                 "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
-                "--version", driverManagerType.toString());
+                "--version", getDriverManagerType().toString());
     }
 
 }

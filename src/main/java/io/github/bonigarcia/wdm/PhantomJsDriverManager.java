@@ -34,21 +34,50 @@ import java.util.Optional;
  */
 public class PhantomJsDriverManager extends WebDriverManager {
 
-    private static final String BETA = "beta";
+    @Override
+    protected DriverManagerType getDriverManagerType() {
+        return PHANTOMJS;
+    }
 
-    protected PhantomJsDriverManager() {
-        driverManagerType = PHANTOMJS;
-        exportParameterKey = "wdm.phantomjsDriverExport";
-        driverVersionKey = "wdm.phantomjsDriverVersion";
-        driverUrlKey = "wdm.phantomjsDriverUrl";
-        driverMirrorUrlKey = "wdm.phantomjsDriverMirrorUrl";
-        driverName = "phantomjs";
+    @Override
+    protected String getDriverName() {
+        return "phantomjs";
+    }
+
+    @Override
+    protected String getDriverVersion() {
+        return config().getPhantomjsDriverVersion();
+    }
+
+    @Override
+    protected URL getDriverUrl() {
+        return config().getPhantomjsDriverUrl();
+    }
+
+    @Override
+    protected Optional<URL> getMirrorUrl() {
+        return Optional.of(config().getPhantomjsDriverMirrorUrl());
+    }
+
+    @Override
+    protected Optional<String> getExportParameter() {
+        return Optional.of(config().getPhantomjsDriverExport());
+    }
+
+    @Override
+    protected void setDriverVersion(String version) {
+        config().setOperaDriverVersion(version);
+    }
+
+    @Override
+    protected void setDriverUrl(URL url) {
+        config().setOperaDriverUrl(url);
     }
 
     @Override
     protected List<URL> getDrivers() throws IOException {
-        URL driverUrl = config().getDriverUrl(driverUrlKey);
-        log.info("Reading {} to seek {}", driverUrl, driverName);
+        URL driverUrl = getDriverUrl();
+        log.info("Reading {} to seek {}", driverUrl, getDriverName());
         return getDriversFromMirror(driverUrl);
     }
 
@@ -97,7 +126,8 @@ public class PhantomJsDriverManager extends WebDriverManager {
 
         File extractFolder = archive.getParentFile()
                 .listFiles(getFolderFilter())[0];
-        log.trace("PhantomJS extract folder (to be deleted): {}", extractFolder);
+        log.trace("PhantomJS extract folder (to be deleted): {}",
+                extractFolder);
 
         File binFolder = new File(
                 extractFolder.getAbsoluteFile() + separator + "bin");
@@ -108,7 +138,8 @@ public class PhantomJsDriverManager extends WebDriverManager {
             binaryIndex = 3;
         }
 
-        log.trace("PhantomJS bin folder: {} (index {})", binFolder, binaryIndex);
+        log.trace("PhantomJS bin folder: {} (index {})", binFolder,
+                binaryIndex);
 
         File phantomjs = binFolder.listFiles()[binaryIndex];
         log.trace("PhantomJS binary: {}", phantomjs);

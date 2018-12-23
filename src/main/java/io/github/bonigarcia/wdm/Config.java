@@ -85,14 +85,63 @@ public class Config {
     ConfigKey<String> gitHubTokenSecret = new ConfigKey<>(
             "wdm.gitHubTokenSecret", String.class);
 
-    ConfigKey<String> driverVersion = new ConfigKey<>(String.class);
-    ConfigKey<URL> driverUrl = new ConfigKey<>(URL.class);
-    ConfigKey<URL> driverMirrorUrl = new ConfigKey<>(URL.class);
-    ConfigKey<String> driverExport = new ConfigKey<>(String.class);
+    ConfigKey<String> chromeDriverVersion = new ConfigKey<>(
+            "wdm.chromeDriverVersion", String.class);
+    ConfigKey<String> chromeDriverExport = new ConfigKey<>(
+            "wdm.chromeDriverExport", String.class);
+    ConfigKey<URL> chromeDriverUrl = new ConfigKey<>("wdm.chromeDriverUrl",
+            URL.class);
+    ConfigKey<URL> chromeDriverMirrorUrl = new ConfigKey<>(
+            "wdm.chromeDriverMirrorUrl", URL.class);
+
+    ConfigKey<String> edgeDriverVersion = new ConfigKey<>(
+            "wdm.edgeDriverVersion", String.class);
+    ConfigKey<String> edgeDriverExport = new ConfigKey<>("wdm.edgeDriverExport",
+            String.class);
+    ConfigKey<URL> edgeDriverUrl = new ConfigKey<>("wdm.edgeDriverUrl",
+            URL.class);
+
+    ConfigKey<String> firefoxDriverVersion = new ConfigKey<>(
+            "wdm.geckoDriverVersion", String.class);
+    ConfigKey<String> firefoxDriverExport = new ConfigKey<>(
+            "wdm.geckoDriverExport", String.class);
+    ConfigKey<URL> firefoxDriverUrl = new ConfigKey<>("wdm.geckoDriverUrl",
+            URL.class);
+    ConfigKey<URL> firefoxDriverMirrorUrl = new ConfigKey<>(
+            "wdm.geckoDriverMirrorUrl", URL.class);
+
+    ConfigKey<String> internetExplorerDriverVersion = new ConfigKey<>(
+            "wdm.internetExplorerDriverVersion", String.class);
+    ConfigKey<String> internetExplorerDriverExport = new ConfigKey<>(
+            "wdm.internetExplorerDriverExport", String.class);
+    ConfigKey<URL> internetExplorerDriverUrl = new ConfigKey<>(
+            "wdm.internetExplorerDriverUrl", URL.class);
+
+    ConfigKey<String> operaDriverVersion = new ConfigKey<>(
+            "wdm.operaDriverVersion", String.class);
+    ConfigKey<String> operaDriverExport = new ConfigKey<>(
+            "wdm.operaDriverExport", String.class);
+    ConfigKey<URL> operaDriverUrl = new ConfigKey<>("wdm.operaDriverUrl",
+            URL.class);
+    ConfigKey<URL> operaDriverMirrorUrl = new ConfigKey<>(
+            "wdm.operaDriverMirrorUrl", URL.class);
+
+    ConfigKey<String> phantomjsDriverVersion = new ConfigKey<>(
+            "wdm.phantomjsDriverVersion", String.class);
+    ConfigKey<String> phantomjsDriverExport = new ConfigKey<>(
+            "wdm.phantomjsDriverExport", String.class);
+    ConfigKey<URL> phantomjsDriverUrl = new ConfigKey<>(
+            "wdm.phantomjsDriverUrl", URL.class);
+    ConfigKey<URL> phantomjsDriverMirrorUrl = new ConfigKey<>(
+            "wdm.phantomjsDriverMirrorUrl", URL.class);
+
+    ConfigKey<String> seleniumServerStandaloneVersion = new ConfigKey<>(
+            "wdm.seleniumServerStandaloneVersion", String.class);
+    ConfigKey<URL> seleniumServerStandaloneUrl = new ConfigKey<>(
+            "wdm.seleniumServerStandaloneUrl", URL.class);
 
     ConfigKey<Integer> serverPort = new ConfigKey<>("wdm.serverPort",
             Integer.class);
-
     ConfigKey<String> binaryPath = new ConfigKey<>("wdm.binaryPath",
             String.class);
     ConfigKey<Integer> ttl = new ConfigKey<>("wdm.ttl", Integer.class);
@@ -395,51 +444,6 @@ public class Config {
         return this;
     }
 
-    public String getDriverVersion(String name) {
-        return resolver(name, driverVersion.getValue(),
-                driverVersion.getType());
-    }
-
-    public Config setDriverVersion(String value) {
-        this.driverVersion.setValue(value);
-        return this;
-    }
-
-    public URL getDriverUrl(String name) {
-        return resolver(name, driverUrl.getValue(), driverUrl.getType());
-    }
-
-    public Config setDriverUrl(URL value) {
-        this.driverUrl.setValue(value);
-        return this;
-    }
-
-    public URL getDriverMirrorUrl(String name) {
-        return resolver(name, driverMirrorUrl.getValue(),
-                driverMirrorUrl.getType());
-    }
-
-    public Config setDriverMirrorUrl(URL value) {
-        this.driverMirrorUrl.setValue(value);
-        return this;
-    }
-
-    public String getDriverExport(String name) {
-        return resolver(name, driverExport.getValue(), driverExport.getType());
-    }
-
-    public Config setDriverExport(String value) {
-        this.driverExport.setValue(value);
-        return this;
-    }
-
-    public Boolean getUseMirror(String driverMirrorUrlKey) {
-        if (isNullOrEmpty(driverMirrorUrlKey)) {
-            throw new WebDriverManagerException("Mirror URL not available");
-        }
-        return resolve(useMirror);
-    }
-
     public int getServerPort() {
         return resolve(serverPort);
     }
@@ -464,6 +468,222 @@ public class Config {
 
     public Config setBinaryPath(String value) {
         this.binaryPath.setValue(value);
+        return this;
+    }
+
+    public String getChromeDriverVersion() {
+        return resolve(chromeDriverVersion);
+    }
+
+    public Config setChromeDriverVersion(String value) {
+        this.chromeDriverVersion.setValue(value);
+        return this;
+    }
+
+    public String getChromeDriverExport() {
+        return resolve(chromeDriverExport);
+    }
+
+    public Config setChromeDriverExport(String value) {
+        this.chromeDriverExport.setValue(value);
+        return this;
+    }
+
+    public URL getChromeDriverUrl() {
+        return resolve(chromeDriverUrl);
+    }
+
+    public Config setChromeDriverUrl(URL value) {
+        this.chromeDriverUrl.setValue(value);
+        return this;
+    }
+
+    public URL getChromeDriverMirrorUrl() {
+        return resolve(chromeDriverMirrorUrl);
+    }
+
+    public Config setChromeDriverMirrorUrl(URL value) {
+        this.chromeDriverMirrorUrl.setValue(value);
+        return this;
+    }
+
+    public String getEdgeDriverVersion() {
+        return resolve(edgeDriverVersion);
+    }
+
+    public Config setEdgeDriverVersion(String value) {
+        this.edgeDriverVersion.setValue(value);
+        return this;
+    }
+
+    public String getEdgeDriverExport() {
+        return resolve(edgeDriverExport);
+    }
+
+    public Config setEdgeDriverExport(String value) {
+        this.edgeDriverExport.setValue(value);
+        return this;
+    }
+
+    public URL getEdgeDriverUrl() {
+        return resolve(edgeDriverUrl);
+    }
+
+    public Config setEdgeDriverUrl(URL value) {
+        this.edgeDriverUrl.setValue(value);
+        return this;
+    }
+
+    public String getFirefoxDriverVersion() {
+        return resolve(firefoxDriverVersion);
+    }
+
+    public Config setFirefoxDriverVersion(String value) {
+        this.firefoxDriverVersion.setValue(value);
+        return this;
+    }
+
+    public String getFirefoxDriverExport() {
+        return resolve(firefoxDriverExport);
+    }
+
+    public Config setFirefoxDriverExport(String value) {
+        this.firefoxDriverExport.setValue(value);
+        return this;
+    }
+
+    public URL getFirefoxDriverUrl() {
+        return resolve(firefoxDriverUrl);
+    }
+
+    public Config setFirefoxDriverUrl(URL value) {
+        this.firefoxDriverUrl.setValue(value);
+        return this;
+    }
+
+    public URL getFirefoxDriverMirrorUrl() {
+        return resolve(firefoxDriverMirrorUrl);
+    }
+
+    public Config setFirefoxDriverMirrorUrl(URL value) {
+        this.firefoxDriverMirrorUrl.setValue(value);
+        return this;
+    }
+
+    public String getInternetExplorerDriverVersion() {
+        return resolve(internetExplorerDriverVersion);
+    }
+
+    public Config setInternetExplorerDriverVersion(String value) {
+        this.internetExplorerDriverVersion.setValue(value);
+        return this;
+    }
+
+    public String getInternetExplorerDriverExport() {
+        return resolve(internetExplorerDriverExport);
+    }
+
+    public Config setInternetExplorerDriverExport(String value) {
+        this.internetExplorerDriverExport.setValue(value);
+        return this;
+    }
+
+    public URL getInternetExplorerDriverUrl() {
+        return resolve(internetExplorerDriverUrl);
+    }
+
+    public Config setInternetExplorerDriverUrl(URL value) {
+        this.internetExplorerDriverUrl.setValue(value);
+        return this;
+    }
+
+    public String getOperaDriverVersion() {
+        return resolve(operaDriverVersion);
+    }
+
+    public Config setOperaDriverVersion(String value) {
+        this.operaDriverVersion.setValue(value);
+        return this;
+    }
+
+    public String getOperaDriverExport() {
+        return resolve(operaDriverExport);
+    }
+
+    public Config setOperaDriverExport(String value) {
+        this.operaDriverExport.setValue(value);
+        return this;
+    }
+
+    public URL getOperaDriverUrl() {
+        return resolve(operaDriverUrl);
+    }
+
+    public Config setOperaDriverUrl(URL value) {
+        this.operaDriverUrl.setValue(value);
+        return this;
+    }
+
+    public URL getOperaDriverMirrorUrl() {
+        return resolve(operaDriverMirrorUrl);
+    }
+
+    public Config setOperaDriverMirrorUrl(URL value) {
+        this.operaDriverMirrorUrl.setValue(value);
+        return this;
+    }
+
+    public String getPhantomjsDriverVersion() {
+        return resolve(phantomjsDriverVersion);
+    }
+
+    public Config setPhantomjsDriverVersion(String value) {
+        this.phantomjsDriverVersion.setValue(value);
+        return this;
+    }
+
+    public String getPhantomjsDriverExport() {
+        return resolve(phantomjsDriverExport);
+    }
+
+    public Config setPhantomjsDriverExport(String value) {
+        this.phantomjsDriverExport.setValue(value);
+        return this;
+    }
+
+    public URL getPhantomjsDriverUrl() {
+        return resolve(phantomjsDriverUrl);
+    }
+
+    public Config setPhantomjsDriverUrl(URL value) {
+        this.phantomjsDriverUrl.setValue(value);
+        return this;
+    }
+
+    public URL getPhantomjsDriverMirrorUrl() {
+        return resolve(phantomjsDriverMirrorUrl);
+    }
+
+    public Config setPhantomjsDriverMirrorUrl(URL value) {
+        this.phantomjsDriverMirrorUrl.setValue(value);
+        return this;
+    }
+
+    public String getSeleniumServerStandaloneVersion() {
+        return resolve(seleniumServerStandaloneVersion);
+    }
+
+    public Config setSeleniumServerStandaloneVersion(String value) {
+        this.seleniumServerStandaloneVersion.setValue(value);
+        return this;
+    }
+
+    public URL getSeleniumServerStandaloneUrl() {
+        return resolve(seleniumServerStandaloneUrl);
+    }
+
+    public Config setSeleniumServerStandaloneUrl(URL value) {
+        this.seleniumServerStandaloneUrl.setValue(value);
         return this;
     }
 

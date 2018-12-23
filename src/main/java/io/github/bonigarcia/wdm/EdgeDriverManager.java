@@ -46,12 +46,44 @@ import org.jsoup.select.Elements;
  */
 public class EdgeDriverManager extends WebDriverManager {
 
-    protected EdgeDriverManager() {
-        driverManagerType = EDGE;
-        exportParameterKey = "wdm.edgeDriverExport";
-        driverVersionKey = "wdm.edgeDriverVersion";
-        driverUrlKey = "wdm.edgeDriverUrl";
-        driverName = "MicrosoftWebDriver";
+    @Override
+    protected DriverManagerType getDriverManagerType() {
+        return EDGE;
+    }
+
+    @Override
+    protected String getDriverName() {
+        return "MicrosoftWebDriver";
+    }
+
+    @Override
+    protected String getDriverVersion() {
+        return config().getEdgeDriverVersion();
+    }
+
+    @Override
+    protected URL getDriverUrl() {
+        return config().getEdgeDriverUrl();
+    }
+
+    @Override
+    protected Optional<URL> getMirrorUrl() {
+        return empty();
+    }
+
+    @Override
+    protected Optional<String> getExportParameter() {
+        return Optional.of(config().getEdgeDriverExport());
+    }
+
+    @Override
+    protected void setDriverVersion(String version) {
+        config().setEdgeDriverVersion(version);
+    }
+
+    @Override
+    protected void setDriverUrl(URL url) {
+        config().setEdgeDriverUrl(url);
     }
 
     @Override
@@ -59,7 +91,7 @@ public class EdgeDriverManager extends WebDriverManager {
         listVersions = new ArrayList<>();
         List<URL> urlList = new ArrayList<>();
 
-        URL driverUrl = config().getDriverUrl(driverUrlKey);
+        URL driverUrl = getDriverUrl();
         log.debug("Reading {} to find out the latest version of Edge driver",
                 driverUrl);
 

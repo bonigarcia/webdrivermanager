@@ -33,11 +33,44 @@ import java.util.Optional;
  */
 public class SeleniumServerStandaloneManager extends WebDriverManager {
 
-    protected SeleniumServerStandaloneManager() {
-        driverName = "selenium-server-standalone";
-        driverUrlKey = "wdm.seleniumServerStandaloneUrl";
-        driverVersionKey = "wdm.seleniumServerStandaloneVersion";
-        driverManagerType = SELENIUM_SERVER_STANDALONE;
+    @Override
+    protected DriverManagerType getDriverManagerType() {
+        return SELENIUM_SERVER_STANDALONE;
+    }
+
+    @Override
+    protected String getDriverName() {
+        return "selenium-server-standalone";
+    }
+
+    @Override
+    protected String getDriverVersion() {
+        return config().getSeleniumServerStandaloneVersion();
+    }
+
+    @Override
+    protected URL getDriverUrl() {
+        return config().getSeleniumServerStandaloneUrl();
+    }
+
+    @Override
+    protected Optional<URL> getMirrorUrl() {
+        return empty();
+    }
+
+    @Override
+    protected Optional<String> getExportParameter() {
+        return empty();
+    }
+
+    @Override
+    protected void setDriverVersion(String version) {
+        config().setSeleniumServerStandaloneVersion(version);
+    }
+
+    @Override
+    protected void setDriverUrl(URL url) {
+        config().setSeleniumServerStandaloneUrl(url);
     }
 
     @Override
@@ -52,8 +85,7 @@ public class SeleniumServerStandaloneManager extends WebDriverManager {
 
     @Override
     protected List<URL> getDrivers() throws IOException {
-        URL driverUrl = config().getDriverUrl(driverUrlKey);
-        return getDriversFromXml(driverUrl);
+        return getDriversFromXml(getDriverUrl());
     }
 
 }

@@ -32,18 +32,49 @@ import java.util.Optional;
  */
 public class InternetExplorerDriverManager extends WebDriverManager {
 
-    protected InternetExplorerDriverManager() {
-        driverManagerType = IEXPLORER;
-        exportParameterKey = "wdm.internetExplorerDriverExport";
-        driverVersionKey = "wdm.internetExplorerDriverVersion";
-        driverUrlKey = "wdm.internetExplorerDriverUrl";
-        driverName = "IEDriverServer";
+    @Override
+    protected DriverManagerType getDriverManagerType() {
+        return IEXPLORER;
+    }
+
+    @Override
+    protected String getDriverName() {
+        return "IEDriverServer";
+    }
+
+    @Override
+    protected String getDriverVersion() {
+        return config().getInternetExplorerDriverVersion();
+    }
+
+    @Override
+    protected URL getDriverUrl() {
+        return config().getInternetExplorerDriverUrl();
+    }
+
+    @Override
+    protected Optional<URL> getMirrorUrl() {
+        return empty();
+    }
+
+    @Override
+    protected Optional<String> getExportParameter() {
+        return Optional.of(config().getInternetExplorerDriverExport());
+    }
+
+    @Override
+    protected void setDriverVersion(String version) {
+        config().setInternetExplorerDriverVersion(version);
+    }
+
+    @Override
+    protected void setDriverUrl(URL url) {
+        config().setInternetExplorerDriverUrl(url);
     }
 
     @Override
     protected List<URL> getDrivers() throws IOException {
-        URL driverUrl = config().getDriverUrl(driverUrlKey);
-        return getDriversFromXml(driverUrl);
+        return getDriversFromXml(getDriverUrl());
     }
 
     @Override
