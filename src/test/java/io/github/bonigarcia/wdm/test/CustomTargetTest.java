@@ -65,6 +65,7 @@ public class CustomTargetTest {
         log.info("Deleting temporal folder {}", tmpFolder);
         deleteDirectory(tmpFolder.toFile());
         System.getProperties().remove("wdm.targetPath");
+        WebDriverManager.config().reset();
     }
 
 }

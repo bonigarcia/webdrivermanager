@@ -20,6 +20,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
+import org.junit.After;
 import org.junit.Test;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -44,6 +45,11 @@ public class PropertiesTest {
     @Test
     public void testEmptyProperties() {
         WebDriverManager.chromedriver().properties("").setup();
+    }
+
+    @After
+    public void teardown() {
+        WebDriverManager.config().reset();
     }
 
 }
