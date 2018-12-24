@@ -321,7 +321,9 @@ public abstract class WebDriverManager {
                 manage(architecture, driverVersion);
 
             } finally {
-                reset();
+                if (!config().isAvoidAutoReset()) {
+                    reset();
+                }
             }
         }
     }
@@ -1119,6 +1121,7 @@ public abstract class WebDriverManager {
     }
 
     protected void reset() {
+        config().reset();
         mirrorLog = false;
         listVersions = null;
         versionToDownload = null;
