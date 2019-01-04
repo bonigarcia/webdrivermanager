@@ -17,7 +17,6 @@
 package io.github.bonigarcia.wdm;
 
 import static io.github.bonigarcia.wdm.Config.isNullOrEmpty;
-import static io.github.bonigarcia.wdm.WebDriverManager.config;
 import static java.lang.System.getenv;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.net.URLDecoder.decode;
@@ -81,24 +80,21 @@ public class HttpClient implements Closeable {
 
     final Logger log = getLogger(lookup().lookupClass());
 
+    Config config;
     CloseableHttpClient closeableHttpClient;
-    int timeout;
 
-    public HttpClient(int timeout) {
-        this();
-        this.timeout = (int) SECONDS.toMillis(timeout);
-    }
+    public HttpClient(Config config) {
+        this.config = config;
 
-    public HttpClient() {
         HttpClientBuilder builder = HttpClientBuilder.create()
                 .setConnectionManagerShared(true);
         try {
-            String proxy = config().getProxy();
+            String proxy = config.getProxy();
             Optional<HttpHost> proxyHost = createProxyHttpHost(proxy);
             if (proxyHost.isPresent()) {
                 builder.setProxy(proxyHost.get());
                 Optional<BasicCredentialsProvider> credentialsProvider = createBasicCredentialsProvider(
-                        proxy, config().getProxyUser(), config().getProxyPass(),
+                        proxy, config.getProxyUser(), config.getProxyPass(),
                         proxyHost.get());
                 if (credentialsProvider.isPresent()) {
                     builder.setDefaultCredentialsProvider(
@@ -131,6 +127,7 @@ public class HttpClient implements Closeable {
         }
 
         closeableHttpClient = builder.useSystemProperties().build();
+
     }
 
     public Optional<Proxy> createProxy(String proxy)
@@ -150,6 +147,8 @@ public class HttpClient implements Closeable {
         HttpGet httpGet = new HttpGet(url.toString());
         httpGet.addHeader("User-Agent", "Mozilla/5.0");
         httpGet.addHeader("Connection", "keep-alive");
+
+        int timeout = (int) SECONDS.toMillis(config.getTimeout());
         RequestConfig requestConfig = custom().setCookieSpec(STANDARD)
                 .setSocketTimeout(timeout).build();
         httpGet.setConfig(requestConfig);

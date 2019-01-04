@@ -120,7 +120,6 @@ public abstract class WebDriverManager {
 
     protected static Map<DriverManagerType, WebDriverManager> instanceMap = new EnumMap<>(
             DriverManagerType.class);
-    protected static Config config;
     protected HttpClient httpClient;
     protected Downloader downloader;
     protected UrlFilter urlFilter;
@@ -133,12 +132,10 @@ public abstract class WebDriverManager {
     protected boolean forcedArch;
     protected boolean isLatest;
     protected boolean retry = true;
-    protected Preferences preferences = new Preferences();
+    protected Config config = new Config();
+    protected Preferences preferences = new Preferences(config);
 
-    public static synchronized Config config() {
-        if (config == null) {
-            config = new Config();
-        }
+    public Config config() {
         return config;
     }
 
@@ -467,7 +464,7 @@ public abstract class WebDriverManager {
     }
 
     public List<String> getVersions() {
-        httpClient = new HttpClient(config().getTimeout());
+        httpClient = new HttpClient(config());
         try {
             List<URL> drivers = getDrivers();
             List<String> versions = new ArrayList<>();
@@ -526,7 +523,7 @@ public abstract class WebDriverManager {
     }
 
     protected void manage(Architecture arch, String version) {
-        httpClient = new HttpClient(config().getTimeout());
+        httpClient = new HttpClient(config());
         try (HttpClient wdmHttpClient = httpClient) {
             downloader = new Downloader(getDriverManagerType());
             urlFilter = new UrlFilter();
@@ -1147,7 +1144,7 @@ public abstract class WebDriverManager {
             if (arg.equalsIgnoreCase("server")) {
                 startServer(args);
             } else if (arg.equalsIgnoreCase("clear-preferences")) {
-                new Preferences().clear();
+                new Preferences(new Config()).clear();
             } else {
                 resolveLocal(validBrowsers, arg);
             }
@@ -1174,7 +1171,7 @@ public abstract class WebDriverManager {
     }
 
     private static void startServer(String[] args) {
-        int port = config().getServerPort();
+        int port = new Config().getServerPort();
         if (args.length > 1 && isNumeric(args[1])) {
             port = parseInt(args[1]);
         }

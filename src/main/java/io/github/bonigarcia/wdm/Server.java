@@ -124,8 +124,8 @@ public class Server {
         }
 
         // Resolve driver
-        WebDriverManager.config().setAvoidExport(true);
-        WebDriverManager.config().setAvoidAutoVersion(true);
+        driverManager.config().setAvoidExport(true);
+        driverManager.config().setAvoidAutoVersion(true);
         driverManager.setup();
         File binary = new File(driverManager.getBinaryPath());
         String binaryVersion = driverManager.getDownloadedVersion();

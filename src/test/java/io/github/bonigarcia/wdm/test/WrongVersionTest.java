@@ -22,7 +22,6 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.util.Collection;
 
-import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -63,11 +62,6 @@ public class WrongVersionTest {
         File binary = new File(
                 WebDriverManager.getInstance(driverClass).getBinaryPath());
         assertTrue(binary.exists());
-    }
-
-    @After
-    public void teardown() {
-        WebDriverManager.config().reset();
     }
 
 }

@@ -33,6 +33,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 
+import io.github.bonigarcia.wdm.Config;
 import io.github.bonigarcia.wdm.HttpClient;
 import io.github.bonigarcia.wdm.UrlFilter;
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -57,7 +58,7 @@ public class PhantomJsFilterTest {
         phantomJsManager = WebDriverManager.phantomjs();
         Field field = WebDriverManager.class.getDeclaredField("httpClient");
         field.setAccessible(true);
-        field.set(phantomJsManager, new HttpClient());
+        field.set(phantomJsManager, new HttpClient(new Config()));
 
         Method method = WebDriverManager.class.getDeclaredMethod("getDrivers");
         method.setAccessible(true);
@@ -94,7 +95,7 @@ public class PhantomJsFilterTest {
                 List.class, String.class, String.class);
         method.setAccessible(true);
         List<URL> specificVersionUrls = (List<URL>) method.invoke(
-            phantomJsManager, driversUrls, phantomJsBinaryName,
+                phantomJsManager, driversUrls, phantomJsBinaryName,
                 specificVersion);
 
         List<URL> filteredVersionUrls = new UrlFilter()

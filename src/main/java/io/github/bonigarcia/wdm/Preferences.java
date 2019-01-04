@@ -16,7 +16,6 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static io.github.bonigarcia.wdm.WebDriverManager.config;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static java.util.prefs.Preferences.userNodeForPackage;
@@ -40,6 +39,12 @@ public class Preferences {
 
     static final String TTL = "-ttl";
 
+    Config config;
+
+    public Preferences(Config config) {
+        this.config = config;
+    }
+
     java.util.prefs.Preferences prefs = userNodeForPackage(
             WebDriverManager.class);
 
@@ -57,7 +62,7 @@ public class Preferences {
         if (getVersionInPreferences(key) == null) {
             prefs.put(key, value);
             long expirationTime = new Date().getTime()
-                    + SECONDS.toMillis(config().getTtl());
+                    + SECONDS.toMillis(config.getTtl());
             prefs.putLong(getExpirationKey(key), expirationTime);
             if (log.isDebugEnabled()) {
                 log.debug(

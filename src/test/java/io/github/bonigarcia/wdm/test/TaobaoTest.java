@@ -22,7 +22,6 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.net.URL;
 
-import org.junit.After;
 import org.junit.Test;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -36,14 +35,9 @@ import io.github.bonigarcia.wdm.WebDriverManagerException;
  */
 public class TaobaoTest {
 
-    @After
-    public void teardown() {
-        WebDriverManager.config().reset();
-    }
-
     @Test
     public void testTaobao() throws Exception {
-        WebDriverManager.config().setAvoidAutoVersion(true)
+        chromedriver().config().setAvoidAutoVersion(true)
                 .setChromeDriverMirrorUrl(new URL(
                         "http://npm.taobao.org/mirrors/chromedriver/2.44/"));
         chromedriver().useMirror().setup();

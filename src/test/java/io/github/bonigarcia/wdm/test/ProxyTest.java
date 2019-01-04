@@ -41,7 +41,6 @@ import org.apache.http.auth.NTCredentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.junit.AfterClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -72,11 +71,6 @@ public class ProxyTest {
             "https://" + PROXY_URL + ":" + PROXY_PORT,
             "https://test:test@" + PROXY_URL + ":" + PROXY_PORT, };
 
-    @AfterClass
-    public static void teardown() {
-        WebDriverManager.config().reset();
-    }
-
     @Test
     public void testRealEnvProxyToNull() throws Exception {
         setSystemGetEnvMock(null);
@@ -94,9 +88,10 @@ public class ProxyTest {
 
     @Test
     public void testProxyCredentialsScope() throws Exception {
-        WebDriverManager.config().setProxy("myproxy:8081")
-                .setProxyUser("domain\\me").setProxyPass("pass");
-        HttpClient wdmClient = new HttpClient();
+        Config config = WebDriverManager.chromedriver().config();
+        config.setProxy("myproxy:8081").setProxyUser("domain\\me")
+                .setProxyPass("pass");
+        HttpClient wdmClient = new HttpClient(config);
         Field field = HttpClient.class.getDeclaredField("closeableHttpClient");
         field.setAccessible(true);
 
@@ -125,9 +120,10 @@ public class ProxyTest {
 
     @Test
     public void testProxyCredentials() throws Exception {
-        WebDriverManager.config().setProxy("myproxy:8081")
-                .setProxyUser("domain\\me").setProxyPass("pass");
-        HttpClient wdmClient = new HttpClient();
+        Config config = WebDriverManager.chromedriver().config();
+        config.setProxy("myproxy:8081").setProxyUser("domain\\me")
+                .setProxyPass("pass");
+        HttpClient wdmClient = new HttpClient(config);
         Field field = HttpClient.class.getDeclaredField("closeableHttpClient");
         field.setAccessible(true);
 
@@ -180,7 +176,7 @@ public class ProxyTest {
         Field httpClientField = WebDriverManager.class
                 .getDeclaredField("httpClient");
         httpClientField.setAccessible(true);
-        httpClientField.set(browserManager, new HttpClient());
+        httpClientField.set(browserManager, new HttpClient(new Config()));
 
         Field configField = WebDriverManager.class.getDeclaredField("config");
         configField.setAccessible(true);

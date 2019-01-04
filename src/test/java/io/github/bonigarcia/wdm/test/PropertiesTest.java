@@ -20,7 +20,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
-import org.junit.After;
 import org.junit.Test;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -35,9 +34,10 @@ public class PropertiesTest {
 
     @Test
     public void testCustomProperties() {
-        WebDriverManager.config().setProperties("wdm-test.properties");
-        WebDriverManager.chromedriver().setup();
-        String binaryPath = WebDriverManager.chromedriver().getBinaryPath();
+        WebDriverManager chromedriver = WebDriverManager.chromedriver();
+        chromedriver.config().setProperties("wdm-test.properties");
+        chromedriver.setup();
+        String binaryPath = chromedriver.getBinaryPath();
         File binary = new File(binaryPath);
         assertTrue(binary.exists());
     }
@@ -45,11 +45,6 @@ public class PropertiesTest {
     @Test
     public void testEmptyProperties() {
         WebDriverManager.chromedriver().properties("").setup();
-    }
-
-    @After
-    public void teardown() {
-        WebDriverManager.config().reset();
     }
 
 }

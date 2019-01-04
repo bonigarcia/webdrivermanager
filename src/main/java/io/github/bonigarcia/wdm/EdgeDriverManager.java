@@ -126,7 +126,7 @@ public class EdgeDriverManager extends WebDriverManager {
 
     @Override
     public List<String> getVersions() {
-        httpClient = new HttpClient(config().getTimeout());
+        httpClient = new HttpClient(config());
         try {
             getDrivers();
             sort(listVersions, new VersionComparator());
