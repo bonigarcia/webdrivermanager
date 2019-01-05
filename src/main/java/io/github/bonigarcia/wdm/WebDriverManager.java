@@ -56,6 +56,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Iterator;
 import java.util.List;
@@ -875,8 +876,12 @@ public abstract class WebDriverManager {
     }
 
     protected void handleDriver(URL url, String driver, List<URL> out) {
+        List<String> betaVersions = Arrays
+                .asList(config().getBetaVersions().split(","));
         if (!config().isUseBetaVersions()
-                && url.getFile().toLowerCase().contains("beta")) {
+                && (url.getFile().toLowerCase().contains("beta")
+                        || betaVersions.stream().anyMatch(
+                                beta -> url.getFile().contains(beta)))) {
             return;
         }
         if (url.getFile().contains(driver)) {
