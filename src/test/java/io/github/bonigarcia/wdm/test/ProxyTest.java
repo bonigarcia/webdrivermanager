@@ -16,7 +16,6 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import static io.github.bonigarcia.wdm.WebDriverManager.chromedriver;
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.apache.http.auth.AuthScope.ANY_HOST;
 import static org.apache.http.auth.AuthScope.ANY_PORT;
@@ -41,6 +40,7 @@ import org.apache.http.auth.NTCredentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.junit.AfterClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -64,6 +64,8 @@ public class ProxyTest {
 
     private static final String PROXY_URL = "my.http.proxy";
     private static final String PROXY_PORT = "1234";
+    private static WebDriverManager chromedriver = WebDriverManager
+            .chromedriver();
 
     private static final String[] PROXYS_TEST_STRINGS = {
             PROXY_URL + ":" + PROXY_PORT, PROXY_URL, "http://" + PROXY_URL,
@@ -71,24 +73,29 @@ public class ProxyTest {
             "https://" + PROXY_URL + ":" + PROXY_PORT,
             "https://test:test@" + PROXY_URL + ":" + PROXY_PORT, };
 
+    @AfterClass
+    public static void teardown() {
+        chromedriver.config().reset();
+    }
+
     @Test
     public void testRealEnvProxyToNull() throws Exception {
         setSystemGetEnvMock(null);
-        assertFalse(getProxy(chromedriver()).isPresent());
+        assertFalse(getProxy(chromedriver).isPresent());
     }
 
     @Test
     public void testRealEnvProxyToNotNull() throws Exception {
         setSystemGetEnvMock(PROXY_URL);
 
-        InetSocketAddress address = (InetSocketAddress) getProxy(chromedriver())
+        InetSocketAddress address = (InetSocketAddress) getProxy(chromedriver)
                 .get().address();
         assertThat(address.getHostName(), equalTo(PROXY_URL));
     }
 
     @Test
     public void testProxyCredentialsScope() throws Exception {
-        Config config = WebDriverManager.chromedriver().config();
+        Config config = chromedriver.config();
         config.setProxy("myproxy:8081").setProxyUser("domain\\me")
                 .setProxyPass("pass");
         HttpClient wdmClient = new HttpClient(config);
@@ -120,7 +127,7 @@ public class ProxyTest {
 
     @Test
     public void testProxyCredentials() throws Exception {
-        Config config = WebDriverManager.chromedriver().config();
+        Config config = chromedriver.config();
         config.setProxy("myproxy:8081").setProxyUser("domain\\me")
                 .setProxyPass("pass");
         HttpClient wdmClient = new HttpClient(config);
@@ -154,7 +161,7 @@ public class ProxyTest {
             log.info("Testing proxy {}", proxyTestString);
 
             InetSocketAddress address = (InetSocketAddress) getProxy(
-                    chromedriver()).get().address();
+                    chromedriver).get().address();
             assertThat(address.getHostName(), equalTo(PROXY_URL));
         }
     }
