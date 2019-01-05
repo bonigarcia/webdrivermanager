@@ -296,8 +296,12 @@ public abstract class WebDriverManager {
 
                 isLatest = isVersionLatest(driverVersion);
                 String key = getPreferenceKey();
-                String versionInPreferences = preferences
-                        .getVersionInPreferences(key);
+                String versionInPreferences = null;
+
+                if (!config.isOverride() && !config.isAvoidPreferences()) {
+                    versionInPreferences = preferences
+                            .getVersionInPreferences(key);
+                }
 
                 if (isLatest && !isNullOrEmpty(versionInPreferences)
                         && !config().isAvoidAutoVersion()) {
@@ -443,6 +447,11 @@ public abstract class WebDriverManager {
         return instanceMap.get(getDriverManagerType());
     }
 
+    public WebDriverManager avoidPreferences() {
+        config().setAvoidPreferences(true);
+        return instanceMap.get(getDriverManagerType());
+    }
+
     public WebDriverManager ttl(int seconds) {
         config().setTtl(seconds);
         return instanceMap.get(getDriverManagerType());
@@ -567,7 +576,9 @@ public abstract class WebDriverManager {
 
             String versionStr = getLatest ? "(latest version)" : version;
             if (driverInCache.isPresent() && !config().isOverride()) {
-                storeVersionToDownload(version);
+                if (!config.isAvoidPreferences()) {
+                    storeVersionToDownload(version);
+                }
                 downloadedVersion = version;
                 log.debug("Driver {} {} found in cache", getDriverName(),
                         versionStr);
@@ -748,7 +759,7 @@ public abstract class WebDriverManager {
         if (cache || !getLatest) {
             driverInCache = getDriverFromCache(version, arch, os);
         }
-        if (!version.isEmpty()) {
+        if (!version.isEmpty() && !config.isAvoidPreferences()) {
             storeVersionToDownload(version);
         }
         return driverInCache;
@@ -855,7 +866,9 @@ public abstract class WebDriverManager {
                 list.remove(url);
             }
         }
-        storeVersionToDownload(versionToDownload);
+        if (!config.isAvoidPreferences()) {
+            storeVersionToDownload(versionToDownload);
+        }
         latestVersion = versionToDownload;
         log.info("Latest version of {} is {}", driver, versionToDownload);
         return out;

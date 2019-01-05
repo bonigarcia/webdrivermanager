@@ -69,6 +69,8 @@ public class Config {
             "wdm.avoidAutoVersion", Boolean.class);
     ConfigKey<Boolean> avoidAutoReset = new ConfigKey<>("wdm.avoidAutoReset",
             Boolean.class);
+    ConfigKey<Boolean> avoidPreferences = new ConfigKey<>(
+            "wdm.avoidPreferences", Boolean.class);
     ConfigKey<Integer> timeout = new ConfigKey<>("wdm.timeout", Integer.class);
 
     ConfigKey<String> architecture = new ConfigKey<>("wdm.architecture",
@@ -366,6 +368,15 @@ public class Config {
 
     public Config setAvoidAutoReset(boolean value) {
         this.avoidAutoReset.setValue(value);
+        return this;
+    }
+
+    public boolean isAvoidPreferences() {
+        return resolve(avoidPreferences);
+    }
+
+    public Config setAvoidPreferences(boolean value) {
+        this.avoidPreferences.setValue(value);
         return this;
     }
 
