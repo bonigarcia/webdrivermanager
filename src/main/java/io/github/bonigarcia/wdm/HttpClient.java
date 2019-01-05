@@ -168,8 +168,11 @@ public class HttpClient implements Closeable {
 
     private Optional<URL> determineProxyUrl(String proxy)
             throws MalformedURLException {
-        String proxyInput = isNullOrEmpty(proxy) ? getenv("HTTPS_PROXY")
-                : proxy;
+        String proxyFromEnvCaps = getenv("HTTPS_PROXY");
+        String proxyFromEnv = isNullOrEmpty(proxyFromEnvCaps)
+                ? getenv("https_proxy")
+                : proxyFromEnvCaps;
+        String proxyInput = isNullOrEmpty(proxy) ? proxyFromEnv : proxy;
         if (!isNullOrEmpty(proxyInput)) {
             return Optional.of(
                     new URL(proxyInput.matches("^http[s]?://.*$") ? proxyInput
