@@ -545,20 +545,9 @@ public abstract class WebDriverManager {
                 getLatest = version.isEmpty();
             }
 
-            if (version.equals(INSIDERS)) {
-                String systemRoot = System.getenv("SystemRoot");
-                File microsoftWebDriverFile = new File(systemRoot,
-                        "System32" + File.separator + "MicrosoftWebDriver.exe");
-                if (microsoftWebDriverFile.exists()) {
-                    downloadedVersion = INSIDERS;
-                    exportDriver(microsoftWebDriverFile.toString());
-                    return;
-                } else {
-                    retry = false;
-                    throw new WebDriverManagerException(
-                            "MicrosoftWebDriver.exe should be installed in an elevated command prompt executing: "
-                                    + "dism /Online /Add-Capability /CapabilityName:Microsoft.WebDriver~~~~0.0.1.0");
-                }
+            // For Edge
+            if (checkInsiderVersion(version)) {
+                return;
             }
 
             String os = config().getOs();
@@ -602,6 +591,25 @@ public abstract class WebDriverManager {
         } catch (Exception e) {
             handleException(e, arch, version);
         }
+    }
+
+    private boolean checkInsiderVersion(String version) {
+        if (version.equals(INSIDERS)) {
+            String systemRoot = System.getenv("SystemRoot");
+            File microsoftWebDriverFile = new File(systemRoot,
+                    "System32" + File.separator + "MicrosoftWebDriver.exe");
+            if (microsoftWebDriverFile.exists()) {
+                downloadedVersion = INSIDERS;
+                exportDriver(microsoftWebDriverFile.toString());
+                return true;
+            } else {
+                retry = false;
+                throw new WebDriverManagerException(
+                        "MicrosoftWebDriver.exe should be installed in an elevated command prompt executing: "
+                                + "dism /Online /Add-Capability /CapabilityName:Microsoft.WebDriver~~~~0.0.1.0");
+            }
+        }
+        return false;
     }
 
     private boolean isVersionLatest(String version) {
