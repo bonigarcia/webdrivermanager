@@ -1111,8 +1111,10 @@ public abstract class WebDriverManager {
         if (IS_OS_WINDOWS) {
             String programFiles = System.getenv(programFilesEnv)
                     .replaceAll("\\\\", "\\\\\\\\");
-            String browserPath = browserBinaryPath != null ? browserBinaryPath
-                    : programFiles + winBrowserName;
+
+            String browserPath = isNullOrEmpty(browserBinaryPath)
+                    ? programFiles + winBrowserName
+                    : browserBinaryPath;
             String browserVersionOutput = runAndWait(getExecFile(), "wmic",
                     "datafile", "where", "name='" + browserPath + "'", "get",
                     "Version", "/value");
