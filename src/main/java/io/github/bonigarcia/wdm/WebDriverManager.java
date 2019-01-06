@@ -135,6 +135,7 @@ public abstract class WebDriverManager {
     protected boolean retry = true;
     protected Config config = new Config();
     protected Preferences preferences = new Preferences(config);
+    protected String preferenceKey;
 
     public Config config() {
         return config;
@@ -294,23 +295,14 @@ public abstract class WebDriverManager {
             try {
                 Architecture architecture = config().getArchitecture();
                 String driverVersion = getDriverVersion();
-
                 isLatest = isVersionLatest(driverVersion);
-                String key = getPreferenceKey();
-                if (isLatest && !config.isOverride()
-                        && !config().isAvoidAutoVersion()
-                        && preferences.checkKeyInPreferences(key)) {
-                    driverVersion = preferences.getValueFromPreferences(key);
-                }
                 manage(architecture, driverVersion);
-
             } finally {
                 if (!config().isAvoidAutoReset()) {
                     reset();
                 }
             }
         }
-
     }
 
     public WebDriverManager version(String version) {
@@ -521,8 +513,20 @@ public abstract class WebDriverManager {
 
             boolean getLatest = isVersionLatest(version);
             boolean cache = config().isForceCache();
-            if (getLatest && !config().isAvoidAutoVersion()) {
-                version = getVersionForInstalledBrowser(getDriverManagerType());
+
+            Optional<String> optionalBrowserVersion = getBrowserVersion();
+            if (optionalBrowserVersion.isPresent()) {
+                String browserVersion = optionalBrowserVersion.get();
+                preferenceKey = getDriverName().toLowerCase() + browserVersion;
+                if (getLatest && !config.isOverride()
+                        && !config().isAvoidAutoVersion()
+                        && preferences.checkKeyInPreferences(preferenceKey)) {
+                    version = preferences
+                            .getValueFromPreferences(preferenceKey);
+                } else {
+                    version = getVersionForInstalledBrowser(
+                            getDriverManagerType());
+                }
                 getLatest = version.isEmpty();
             }
 
@@ -547,9 +551,7 @@ public abstract class WebDriverManager {
 
             String versionStr = getLatest ? "(latest version)" : version;
             if (driverInCache.isPresent() && !config().isOverride()) {
-                if (!config.isAvoidPreferences()) {
-                    storeVersionToDownload(version);
-                }
+                storeVersionToDownload(version);
                 downloadedVersion = version;
                 log.debug("Driver {} {} found in cache", getDriverName(),
                         versionStr);
@@ -750,9 +752,7 @@ public abstract class WebDriverManager {
         if (cache || !getLatest) {
             driverInCache = getDriverFromCache(version, arch, os);
         }
-        if (!version.isEmpty() && !config.isAvoidPreferences()) {
-            storeVersionToDownload(version);
-        }
+        storeVersionToDownload(version);
         return driverInCache;
     }
 
@@ -858,9 +858,7 @@ public abstract class WebDriverManager {
                 list.remove(url);
             }
         }
-        if (!config.isAvoidPreferences()) {
-            storeVersionToDownload(versionToDownload);
-        }
+        storeVersionToDownload(versionToDownload);
         latestVersion = versionToDownload;
         log.info("Latest version of {} is {}", driver, versionToDownload);
         return out;
@@ -1219,19 +1217,16 @@ public abstract class WebDriverManager {
         log.error("\tWebDriverManager clear-preferences");
     }
 
-    private String getPreferenceKey() {
-        return getDriverName().toLowerCase() + "-"
-                + config().getOs().toLowerCase() + config().getArchitecture();
-    }
-
     private void storeVersionToDownload(String version) {
-        if (version.startsWith(".")) {
-            version = version.substring(1);
-        }
-        versionToDownload = version;
-        if (isLatest) {
-            preferences.putValueInPreferencesIfEmpty(getPreferenceKey(),
-                    version);
+        if (!version.isEmpty()) {
+            if (version.startsWith(".")) {
+                version = version.substring(1);
+            }
+            versionToDownload = version;
+            if (isLatest && !config.isAvoidPreferences()) {
+                preferences.putValueInPreferencesIfEmpty(preferenceKey,
+                        version);
+            }
         }
     }
 
