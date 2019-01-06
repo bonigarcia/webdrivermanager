@@ -514,20 +514,23 @@ public abstract class WebDriverManager {
             boolean getLatest = isVersionLatest(version);
             boolean cache = config().isForceCache();
 
-            Optional<String> optionalBrowserVersion = getBrowserVersion();
-            if (optionalBrowserVersion.isPresent()) {
-                String browserVersion = optionalBrowserVersion.get();
-                preferenceKey = getDriverName().toLowerCase() + browserVersion;
-                if (getLatest && !config.isOverride()
-                        && !config().isAvoidAutoVersion()
-                        && preferences.checkKeyInPreferences(preferenceKey)) {
-                    version = preferences
-                            .getValueFromPreferences(preferenceKey);
-                } else {
-                    version = getVersionForInstalledBrowser(
-                            getDriverManagerType());
+            if (getLatest) {
+                Optional<String> optionalBrowserVersion = getBrowserVersion();
+                if (optionalBrowserVersion.isPresent()) {
+                    String browserVersion = optionalBrowserVersion.get();
+                    preferenceKey = getDriverManagerType().name().toLowerCase()
+                            + browserVersion;
+                    if (getLatest && !config.isOverride()
+                            && !config().isAvoidAutoVersion() && preferences
+                                    .checkKeyInPreferences(preferenceKey)) {
+                        version = preferences
+                                .getValueFromPreferences(preferenceKey);
+                    } else {
+                        version = getVersionForInstalledBrowser(
+                                getDriverManagerType());
+                    }
+                    getLatest = version.isEmpty();
                 }
-                getLatest = version.isEmpty();
             }
 
             // For Edge

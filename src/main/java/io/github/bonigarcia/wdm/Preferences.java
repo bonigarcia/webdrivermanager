@@ -115,7 +115,7 @@ public class Preferences {
             valueInPreferences &= checkValidity(key, valueFromPreferences,
                     expirationTime);
             if (valueInPreferences) {
-                log.debug("Preference {}={} found (expiration date {})", key,
+                log.debug("Preference found {}={} (expiration date {})", key,
                         valueFromPreferences, expirationDate);
             }
         }
