@@ -39,40 +39,37 @@ public class Preferences {
 
     static final String TTL = "-ttl";
 
+    java.util.prefs.Preferences prefs = userNodeForPackage(
+            WebDriverManager.class);
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     Config config;
 
     public Preferences(Config config) {
         this.config = config;
     }
 
-    java.util.prefs.Preferences prefs = userNodeForPackage(
-            WebDriverManager.class);
-
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-    public String getVersionInPreferences(String key) {
+    public String getValueFromPreferences(String key) {
         return prefs.get(key, null);
     }
 
-    public long getExpirationTimeInPreferences(String key) {
+    private long getExpirationTimeFromPreferences(String key) {
         return prefs.getLong(getExpirationKey(key), 0);
     }
 
-    public void putVersionInPreferencesIfEmpty(String key, String value) {
-        if (getVersionInPreferences(key) == null) {
+    public void putValueInPreferencesIfEmpty(String key, String value) {
+        if (getValueFromPreferences(key) == null) {
             prefs.put(key, value);
             long expirationTime = new Date().getTime()
                     + SECONDS.toMillis(config.getTtl());
             prefs.putLong(getExpirationKey(key), expirationTime);
             if (log.isDebugEnabled()) {
-                log.debug(
-                        "Storing version {} for {} as Java preferences (valid until {})",
-                        value, key, formatTime(expirationTime));
+                log.debug("Storing preference {}={} (valid until {})", key,
+                        value, formatTime(expirationTime));
             }
         }
     }
 
-    public void clearVersionFromPreferences(String key) {
+    private void clearFromPreferences(String key) {
         prefs.remove(key);
         prefs.remove(getExpirationKey(key));
     }
@@ -86,30 +83,43 @@ public class Preferences {
         }
     }
 
-    public boolean checkVersionValidity(String key, String version,
+    private boolean checkValidity(String key, String value,
             long expirationTime) {
         long now = new Date().getTime();
-        boolean validVersion = version != null && expirationTime != 0
+        boolean isValid = value != null && expirationTime != 0
                 && expirationTime > now;
-        String expirationDate = formatTime(expirationTime);
-        String nowDate = formatTime(now);
-        log.trace(
-                "checkVersionValidity: version={} expirationDate={} now={} -- result={}",
-                version, expirationDate, nowDate, validVersion);
-        if (!validVersion) {
-            log.debug("Removing preference {} {} (expired on {})", key, version,
+        if (!isValid) {
+            String expirationDate = formatTime(expirationTime);
+            log.debug("Removing preference {}={} (expired on {})", key, value,
                     expirationDate);
-            clearVersionFromPreferences(key);
+            clearFromPreferences(key);
         }
-        return validVersion;
+        return isValid;
     }
 
-    public String formatTime(long time) {
+    private String formatTime(long time) {
         return dateFormat.format(new Date(time));
     }
 
     private String getExpirationKey(String key) {
         return key + TTL;
+    }
+
+    public boolean checkKeyInPreferences(String key) {
+        String valueFromPreferences = getValueFromPreferences(key);
+        boolean valueInPreferences = valueFromPreferences != null
+                && !valueFromPreferences.isEmpty();
+        if (valueInPreferences) {
+            long expirationTime = getExpirationTimeFromPreferences(key);
+            String expirationDate = formatTime(expirationTime);
+            valueInPreferences &= checkValidity(key, valueFromPreferences,
+                    expirationTime);
+            if (valueInPreferences) {
+                log.debug("Preference found {}={} (expiration date {})", key,
+                        valueFromPreferences, expirationDate);
+            }
+        }
+        return valueInPreferences;
     }
 
 }

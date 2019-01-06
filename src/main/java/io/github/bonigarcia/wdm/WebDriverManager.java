@@ -297,30 +297,10 @@ public abstract class WebDriverManager {
 
                 isLatest = isVersionLatest(driverVersion);
                 String key = getPreferenceKey();
-                String versionInPreferences = null;
-
-                if (!config.isOverride() && !config.isAvoidPreferences()) {
-                    versionInPreferences = preferences
-                            .getVersionInPreferences(key);
-                }
-
-                if (isLatest && !isNullOrEmpty(versionInPreferences)
-                        && !config().isAvoidAutoVersion()) {
-                    long expirationTime = preferences
-                            .getExpirationTimeInPreferences(key);
-                    String expirationDate = preferences
-                            .formatTime(expirationTime);
-                    log.trace(
-                            "Version in preferences: {} (expiration date {}) (key {})",
-                            versionInPreferences, expirationDate, key);
-                    if (preferences.checkVersionValidity(key,
-                            versionInPreferences, expirationTime)) {
-                        log.debug(
-                                "Using {} {} (latest value previously resolved, stored as Java preferences and valid until {})",
-                                getDriverName(), versionInPreferences,
-                                expirationDate);
-                        driverVersion = versionInPreferences;
-                    }
+                if (isLatest && !config.isOverride()
+                        && !config().isAvoidAutoVersion()
+                        && preferences.checkKeyInPreferences(key)) {
+                    driverVersion = preferences.getValueFromPreferences(key);
                 }
                 manage(architecture, driverVersion);
 
@@ -330,6 +310,7 @@ public abstract class WebDriverManager {
                 }
             }
         }
+
     }
 
     public WebDriverManager version(String version) {
@@ -1249,7 +1230,7 @@ public abstract class WebDriverManager {
         }
         versionToDownload = version;
         if (isLatest) {
-            preferences.putVersionInPreferencesIfEmpty(getPreferenceKey(),
+            preferences.putValueInPreferencesIfEmpty(getPreferenceKey(),
                     version);
         }
     }
