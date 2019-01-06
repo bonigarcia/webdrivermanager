@@ -38,9 +38,9 @@ public class TaobaoTest {
     @Test
     public void testTaobao() throws Exception {
         chromedriver().config().setAvoidAutoVersion(true)
-                .setChromeDriverMirrorUrl(new URL(
-                        "http://npm.taobao.org/mirrors/chromedriver/2.44/"));
-        chromedriver().useMirror().setup();
+                .setChromeDriverMirrorUrl(
+                        new URL("http://npm.taobao.org/mirrors/chromedriver/"));
+        chromedriver().useMirror().forceDownload().setup();
 
         File binary = new File(chromedriver().getBinaryPath());
         assertTrue(binary.exists());
