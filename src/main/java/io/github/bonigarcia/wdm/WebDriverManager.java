@@ -637,8 +637,9 @@ public abstract class WebDriverManager {
     }
 
     private Optional<String> getDriverVersionForBrowser(String key) {
+        log.trace("Getting driver version for browser {}", key);
         String value = getVersionsDescription(false).getProperty(key);
-        if (value == null) {
+        if (value == null && !key.contains(BETA)) {
             log.debug(
                     "Browser version {} not found in local versions.properties",
                     key);
@@ -659,8 +660,10 @@ public abstract class WebDriverManager {
                 log.trace(
                         "Using local version.properties to find out driver version");
             }
+
             Properties props = new Properties();
             props.load(inputStream);
+
             return props;
         } catch (IOException e) {
             throw new IllegalStateException("Cannot read versions.properties",
@@ -863,10 +866,11 @@ public abstract class WebDriverManager {
                 list);
         List<URL> out = new ArrayList<>();
         List<URL> copyOfList = new ArrayList<>(list);
+        List<String> betaVersions = getBetaVersions();
 
         for (URL url : copyOfList) {
             try {
-                handleDriver(url, driver, out);
+                handleDriver(url, driver, out, betaVersions);
             } catch (Exception e) {
                 log.trace("There was a problem with URL {} : {}", url,
                         e.getMessage());
@@ -881,12 +885,8 @@ public abstract class WebDriverManager {
         return out;
     }
 
-    protected void handleDriver(URL url, String driver, List<URL> out) {
-        List<String> betaVersions = emptyList();
-        Optional<String> betaVersionString = getDriverVersionForBrowser("beta");
-        if (betaVersionString.isPresent()) {
-            betaVersions = Arrays.asList(betaVersionString.get().split(","));
-        }
+    protected void handleDriver(URL url, String driver, List<URL> out,
+            List<String> betaVersions) {
         if (!config().isUseBetaVersions()
                 && (url.getFile().toLowerCase().contains("beta")
                         || betaVersions.stream().anyMatch(
@@ -911,6 +911,20 @@ public abstract class WebDriverManager {
                 out.add(url);
             }
         }
+    }
+
+    protected List<String> getBetaVersions() {
+        List<String> betaVersions = new ArrayList<>();
+        for (DriverManagerType driverManagerType : DriverManagerType.values()) {
+            String key = driverManagerType.name().toLowerCase() + BETA;
+            Optional<String> betaVersionString = getDriverVersionForBrowser(
+                    key);
+            if (betaVersionString.isPresent()) {
+                betaVersions.addAll(
+                        Arrays.asList(betaVersionString.get().split(",")));
+            }
+        }
+        return betaVersions;
     }
 
     protected boolean isUsingTaobaoMirror() {
