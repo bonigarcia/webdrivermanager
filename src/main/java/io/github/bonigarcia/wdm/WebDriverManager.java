@@ -515,13 +515,15 @@ public abstract class WebDriverManager {
             boolean cache = config().isForceCache();
 
             if (getLatest) {
-                Optional<String> optionalBrowserVersion = getBrowserVersion();
+                Optional<String> optionalBrowserVersion = config()
+                        .isAvoidAutoVersion() ? empty() : getBrowserVersion();
                 if (optionalBrowserVersion.isPresent()) {
                     String browserVersion = optionalBrowserVersion.get();
                     preferenceKey = getDriverManagerType().name().toLowerCase()
                             + browserVersion;
                     if (getLatest && !config.isOverride()
-                            && !config().isAvoidAutoVersion() && preferences
+                            && !config().isAvoidAutoVersion()
+                            && !config().isAvoidPreferences() && preferences
                                     .checkKeyInPreferences(preferenceKey)) {
                         version = preferences
                                 .getValueFromPreferences(preferenceKey);
