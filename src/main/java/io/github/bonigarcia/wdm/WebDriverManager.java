@@ -1226,7 +1226,8 @@ public abstract class WebDriverManager {
                 version = version.substring(1);
             }
             versionToDownload = version;
-            if (isLatest && !config.isAvoidPreferences()) {
+            if (isLatest && !config.isAvoidPreferences()
+                    && !isNullOrEmpty(preferenceKey)) {
                 preferences.putValueInPreferencesIfEmpty(preferenceKey,
                         version);
             }
