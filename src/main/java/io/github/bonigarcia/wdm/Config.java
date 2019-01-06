@@ -149,8 +149,6 @@ public class Config {
     ConfigKey<String> binaryPath = new ConfigKey<>("wdm.binaryPath",
             String.class);
     ConfigKey<Integer> ttl = new ConfigKey<>("wdm.ttl", Integer.class);
-    ConfigKey<String> betaVersions = new ConfigKey<>("wdm.betaVersions",
-            String.class);
 
     private <T> T resolve(ConfigKey<T> configKey) {
         String name = configKey.getName();
@@ -483,15 +481,6 @@ public class Config {
 
     public Config setTtl(int value) {
         this.ttl.setValue(value);
-        return this;
-    }
-
-    public String getBetaVersions() {
-        return resolve(betaVersions);
-    }
-
-    public Config setBetaVersions(String value) {
-        this.betaVersions.setValue(value);
         return this;
     }
 

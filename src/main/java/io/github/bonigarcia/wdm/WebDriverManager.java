@@ -618,9 +618,10 @@ public abstract class WebDriverManager {
 
     private String getVersionForInstalledBrowser(
             DriverManagerType driverManagerType) {
-        return getBrowserVersion().map(
-                browserVersion -> getDriverVersionForBrowser(driverManagerType,
-                        browserVersion).map(version -> {
+        String driverLowerCase = driverManagerType.name().toLowerCase();
+        return getBrowserVersion()
+                .map(browserVersion -> getDriverVersionForBrowser(
+                        driverLowerCase + browserVersion).map(version -> {
                             log.info(
                                     "Using {} {} (since {} {} is installed in your machine)",
                                     getDriverName(), version, driverManagerType,
@@ -635,15 +636,12 @@ public abstract class WebDriverManager {
                 .orElse("");
     }
 
-    private Optional<String> getDriverVersionForBrowser(
-            DriverManagerType driverManagerType, String browserVersion) {
-        String driverLowerCase = driverManagerType.name().toLowerCase();
-        String key = driverLowerCase + browserVersion;
+    private Optional<String> getDriverVersionForBrowser(String key) {
         String value = getVersionsDescription(false).getProperty(key);
         if (value == null) {
             log.debug(
-                    "Browser version {} {} not found in local versions.properties",
-                    driverLowerCase, browserVersion);
+                    "Browser version {} not found in local versions.properties",
+                    key);
             value = getVersionsDescription(true).getProperty(key);
         }
         return value == null ? empty() : Optional.of(value);
@@ -884,14 +882,18 @@ public abstract class WebDriverManager {
     }
 
     protected void handleDriver(URL url, String driver, List<URL> out) {
-        List<String> betaVersions = Arrays
-                .asList(config().getBetaVersions().split(","));
+        List<String> betaVersions = emptyList();
+        Optional<String> betaVersionString = getDriverVersionForBrowser("beta");
+        if (betaVersionString.isPresent()) {
+            betaVersions = Arrays.asList(betaVersionString.get().split(","));
+        }
         if (!config().isUseBetaVersions()
                 && (url.getFile().toLowerCase().contains("beta")
                         || betaVersions.stream().anyMatch(
                                 beta -> url.getFile().contains(beta)))) {
             return;
         }
+
         if (url.getFile().contains(driver)) {
             String currentVersion = getCurrentVersion(url, driver);
 
