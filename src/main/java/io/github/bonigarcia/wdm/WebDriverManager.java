@@ -54,7 +54,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -99,6 +98,10 @@ public abstract class WebDriverManager {
     protected static final String INSIDERS = "insiders";
 
     protected static final String BETA = "beta";
+
+    protected static final String ONLINE = "online";
+
+    protected static final String LOCAL = "local";
 
     protected abstract List<URL> getDrivers() throws IOException;
 
@@ -638,7 +641,7 @@ public abstract class WebDriverManager {
 
     private Optional<String> getDriverVersionForBrowserFromProperties(
             String key, boolean online) {
-        String onlineMessage = online ? "online" : "local";
+        String onlineMessage = online ? ONLINE : LOCAL;
         log.trace("Getting driver version from {} properties for {}",
                 onlineMessage, key);
         String value = getVersionFromProperties(online).getProperty(key);
@@ -671,8 +674,8 @@ public abstract class WebDriverManager {
     }
 
     private InputStream getVersionsInputStream(boolean online)
-            throws MalformedURLException, IOException {
-        String onlineMessage = online ? "online" : "local";
+            throws IOException {
+        String onlineMessage = online ? ONLINE : LOCAL;
         log.trace("Reading {} version.properties to find out driver version",
                 onlineMessage);
         InputStream inputStream;
@@ -683,7 +686,7 @@ public abstract class WebDriverManager {
                 inputStream = getLocalVersionsInputStream();
             }
         } catch (Exception e) {
-            String exceptionMessage = online ? "local" : "online";
+            String exceptionMessage = online ? LOCAL : ONLINE;
             log.warn("Error reading version.properties, using {} instead",
                     exceptionMessage);
             if (online) {
@@ -701,8 +704,7 @@ public abstract class WebDriverManager {
         return inputStream;
     }
 
-    private InputStream getOnlineVersionsInputStream()
-            throws IOException, MalformedURLException {
+    private InputStream getOnlineVersionsInputStream() throws IOException {
         return httpClient.execute(httpClient.createHttpGet(new URL(
                 "https://raw.githubusercontent.com/bonigarcia/webdrivermanager/master/src/main/resources/versions.properties")))
                 .getEntity().getContent();
