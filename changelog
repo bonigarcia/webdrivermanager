@@ -1,3 +1,17 @@
+webdrivermanager (3.2.0)
+
+  + Update versions.properties: Chrome 72; Firefox 64; Opera 57
+  + Use single configuration instance per driver manager singleton
+  + Read beta versions for driver from versions.properties
+  + Read also https_proxy (in lower case) from environemnt variables (issue #292)
+  + Fix issue #296 (Chrome version not being detected on Windows)
+  + Change preference key format to browser name plus version (e.g. chrome69)
+  + Use local (online if not found) versions.properties for stable and online (always) for beta versions
+  + Add method to clear preferences in WebDriverManagager API
+
+ -- Boni Garcia <boni.gg@gmail.com>  Mon, 07 Jan 2018 12:30:00 +0200
+
+
 webdrivermanager (3.1.1)
 
   + Bug-fix: browser binary path for Linux and Mac was not correctly set
