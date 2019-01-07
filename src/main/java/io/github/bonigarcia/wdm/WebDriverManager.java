@@ -54,6 +54,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -624,7 +625,7 @@ public abstract class WebDriverManager {
         DriverManagerType driverManagerType = getDriverManagerType();
         String driverLowerCase = driverManagerType.name().toLowerCase();
         Optional<String> driverVersionForBrowser = getDriverVersionForBrowserFromProperties(
-                driverLowerCase + browserVersion);
+                driverLowerCase + browserVersion, false);
         if (driverVersionForBrowser.isPresent()) {
             driverVersion = driverVersionForBrowser.get();
         } else {
@@ -636,25 +637,32 @@ public abstract class WebDriverManager {
     }
 
     private Optional<String> getDriverVersionForBrowserFromProperties(
-            String key) {
-        log.trace("Getting driver version from properties {}", key);
-        String value = getVersionFromProperties().getProperty(key);
+            String key, boolean online) {
+        String onlineMessage = online ? "online" : "local";
+        log.trace("Getting driver version from {} properties for {}",
+                onlineMessage, key);
+        String value = getVersionFromProperties(online).getProperty(key);
+        if (value == null) {
+            log.debug("Driver for {} not found in {} properties", key,
+                    onlineMessage);
+            versionsProperties = null;
+            value = getVersionFromProperties(!online).getProperty(key);
+        }
         return value == null ? empty() : Optional.of(value);
     }
 
-    private Properties getVersionFromProperties() {
+    private Properties getVersionFromProperties(boolean online) {
         if (versionsProperties != null) {
-            log.trace("Already created versions.properties");
+            log.debug("Already created versions.properties");
             return versionsProperties;
         } else {
             try {
-                log.trace(
-                        "Using online version.properties (from GitHub) to find out driver version");
-                InputStream inputStream = getVersionsInputStream();
+                InputStream inputStream = getVersionsInputStream(online);
                 versionsProperties = new Properties();
                 versionsProperties.load(inputStream);
                 inputStream.close();
             } catch (Exception e) {
+                versionsProperties = null;
                 throw new IllegalStateException(
                         "Cannot read versions.properties", e);
             }
@@ -662,19 +670,42 @@ public abstract class WebDriverManager {
         }
     }
 
-    private InputStream getVersionsInputStream() {
+    private InputStream getVersionsInputStream(boolean online)
+            throws MalformedURLException, IOException {
+        String onlineMessage = online ? "online" : "local";
+        log.trace("Reading {} version.properties to find out driver version",
+                onlineMessage);
         InputStream inputStream;
         try {
-            inputStream = httpClient.execute(httpClient.createHttpGet(new URL(
-                    "https://raw.githubusercontent.com/bonigarcia/webdrivermanager/master/src/main/resources/versions.properties")))
-                    .getEntity().getContent();
+            if (online) {
+                inputStream = getOnlineVersionsInputStream();
+            } else {
+                inputStream = getLocalVersionsInputStream();
+            }
         } catch (Exception e) {
-            log.warn(
-                    "Error reading online version.properties, using local instead");
-            inputStream = Config.class
-                    .getResourceAsStream("/versions.properties");
+            String exceptionMessage = online ? "local" : "online";
+            log.warn("Error reading version.properties, using {} instead",
+                    exceptionMessage);
+            if (online) {
+                inputStream = getLocalVersionsInputStream();
+            } else {
+                inputStream = getOnlineVersionsInputStream();
+            }
         }
         return inputStream;
+    }
+
+    private InputStream getLocalVersionsInputStream() {
+        InputStream inputStream;
+        inputStream = Config.class.getResourceAsStream("/versions.properties");
+        return inputStream;
+    }
+
+    private InputStream getOnlineVersionsInputStream()
+            throws IOException, MalformedURLException {
+        return httpClient.execute(httpClient.createHttpGet(new URL(
+                "https://raw.githubusercontent.com/bonigarcia/webdrivermanager/master/src/main/resources/versions.properties")))
+                .getEntity().getContent();
     }
 
     protected void handleException(Exception e, Architecture arch,
@@ -921,7 +952,7 @@ public abstract class WebDriverManager {
         for (DriverManagerType driverManagerType : browsersWithBeta) {
             String key = driverManagerType.name().toLowerCase() + BETA;
             Optional<String> betaVersionString = getDriverVersionForBrowserFromProperties(
-                    key);
+                    key, true);
             if (betaVersionString.isPresent()) {
                 betaVersions.addAll(
                         Arrays.asList(betaVersionString.get().split(",")));
