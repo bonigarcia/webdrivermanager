@@ -34,7 +34,6 @@ import static java.lang.Integer.parseInt;
 import static java.lang.Integer.signum;
 import static java.lang.Integer.valueOf;
 import static java.lang.invoke.MethodHandles.lookup;
-import static java.util.Collections.emptyList;
 import static java.util.Collections.sort;
 import static java.util.Optional.empty;
 import static javax.xml.xpath.XPathConstants.NODESET;
@@ -197,57 +196,7 @@ public abstract class WebDriverManager {
     }
 
     protected static synchronized WebDriverManager voiddriver() {
-        return new WebDriverManager() {
-            @Override
-            protected List<URL> getDrivers() throws IOException {
-                return emptyList();
-            }
-
-            @Override
-            protected Optional<String> getBrowserVersion() {
-                return empty();
-            }
-
-            @Override
-            protected String getDriverVersion() {
-                return "";
-            }
-
-            @Override
-            protected URL getDriverUrl() {
-                return null;
-            }
-
-            @Override
-            protected Optional<URL> getMirrorUrl() {
-                return empty();
-            }
-
-            @Override
-            protected Optional<String> getExportParameter() {
-                return empty();
-            }
-
-            @Override
-            protected DriverManagerType getDriverManagerType() {
-                return null;
-            }
-
-            @Override
-            protected String getDriverName() {
-                return "";
-            }
-
-            @Override
-            protected void setDriverVersion(String version) {
-                // Nothing required
-            }
-
-            @Override
-            protected void setDriverUrl(URL url) {
-                // Nothing required
-            }
-        };
+        return new VoidDriverManager();
     }
 
     public static synchronized WebDriverManager getInstance(
