@@ -650,18 +650,7 @@ public abstract class WebDriverManager {
             try {
                 log.trace(
                         "Using online version.properties (from GitHub) to find out driver version");
-                InputStream inputStream;
-                try {
-                    inputStream = httpClient
-                            .execute(httpClient.createHttpGet(new URL(
-                                    "https://raw.githubusercontent.com/bonigarcia/webdrivermanager/master/src/main/resources/versions.properties")))
-                            .getEntity().getContent();
-                } catch (Exception e) {
-                    log.warn(
-                            "Online version not available, using local version.properties instead");
-                    inputStream = Config.class
-                            .getResourceAsStream("/versions.properties");
-                }
+                InputStream inputStream = getVersionsInputStream();
                 versionsProperties = new Properties();
                 versionsProperties.load(inputStream);
                 inputStream.close();
@@ -671,6 +660,21 @@ public abstract class WebDriverManager {
             }
             return versionsProperties;
         }
+    }
+
+    private InputStream getVersionsInputStream() {
+        InputStream inputStream;
+        try {
+            inputStream = httpClient.execute(httpClient.createHttpGet(new URL(
+                    "https://raw.githubusercontent.com/bonigarcia/webdrivermanager/master/src/main/resources/versions.properties")))
+                    .getEntity().getContent();
+        } catch (Exception e) {
+            log.warn(
+                    "Error reading online version.properties, using local instead");
+            inputStream = Config.class
+                    .getResourceAsStream("/versions.properties");
+        }
+        return inputStream;
     }
 
     protected void handleException(Exception e, Architecture arch,
