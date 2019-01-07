@@ -424,6 +424,10 @@ public abstract class WebDriverManager {
         }
     }
 
+    public void clearPreferences() {
+        instanceMap.get(getDriverManagerType()).preferences.clear();
+    }
+
     // ------------
 
     protected String preDownload(String target, String version) {
