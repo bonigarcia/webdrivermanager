@@ -93,13 +93,9 @@ public abstract class WebDriverManager {
     static final Logger log = getLogger(lookup().lookupClass());
 
     protected static final String SLASH = "/";
-
     protected static final String INSIDERS = "insiders";
-
     protected static final String BETA = "beta";
-
     protected static final String ONLINE = "online";
-
     protected static final String LOCAL = "local";
 
     protected abstract List<URL> getDrivers() throws IOException;
@@ -124,6 +120,7 @@ public abstract class WebDriverManager {
 
     protected static Map<DriverManagerType, WebDriverManager> instanceMap = new EnumMap<>(
             DriverManagerType.class);
+
     protected HttpClient httpClient;
     protected Downloader downloader;
     protected UrlFilter urlFilter;
@@ -134,6 +131,7 @@ public abstract class WebDriverManager {
     protected boolean mirrorLog;
     protected List<String> listVersions;
     protected boolean forcedArch;
+    protected boolean forcedOs;
     protected boolean isLatest;
     protected boolean retry = true;
     protected Config config = new Config();
@@ -282,6 +280,7 @@ public abstract class WebDriverManager {
 
     public WebDriverManager operatingSystem(OperatingSystem os) {
         config().setOs(os.name());
+        forcedOs = true;
         return instanceMap.get(getDriverManagerType());
     }
 
@@ -530,13 +529,13 @@ public abstract class WebDriverManager {
                     browserVersion);
             preferenceKey = getDriverManagerType().name().toLowerCase()
                     + browserVersion;
-            if (!config.isOverride() && !config().isAvoidAutoVersion()
-                    && !config().isAvoidPreferences()
+
+            if (usePreferences()
                     && preferences.checkKeyInPreferences(preferenceKey)) {
-                // Read from preferences
+                // Get driver version from preferences
                 version = preferences.getValueFromPreferences(preferenceKey);
             } else {
-                // Read version from properties
+                // Get driver version from properties
                 version = getVersionForInstalledBrowser(browserVersion);
             }
             if (!isNullOrEmpty(version)) {
@@ -547,6 +546,13 @@ public abstract class WebDriverManager {
             }
         }
         return version;
+    }
+
+    private boolean usePreferences() {
+        boolean usePrefs = !config().isAvoidPreferences()
+                && !config().isOverride() && !forcedArch && !forcedOs;
+        log.trace("Using preferences {}", usePrefs);
+        return usePrefs;
     }
 
     private boolean checkInsiderVersion(String version) {
@@ -1154,6 +1160,7 @@ public abstract class WebDriverManager {
         listVersions = null;
         versionToDownload = null;
         forcedArch = false;
+        forcedOs = false;
         retry = true;
         isLatest = true;
     }
@@ -1229,8 +1236,7 @@ public abstract class WebDriverManager {
                 version = version.substring(1);
             }
             versionToDownload = version;
-            if (isLatest && !config.isAvoidPreferences()
-                    && !isNullOrEmpty(preferenceKey)) {
+            if (isLatest && usePreferences() && !isNullOrEmpty(preferenceKey)) {
                 preferences.putValueInPreferencesIfEmpty(preferenceKey,
                         version);
             }
