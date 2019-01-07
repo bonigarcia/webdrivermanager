@@ -136,6 +136,7 @@ public abstract class WebDriverManager {
     protected Config config = new Config();
     protected Preferences preferences = new Preferences(config);
     protected String preferenceKey;
+    protected Properties versionsProperties;
 
     public Config config() {
         return config;
@@ -515,25 +516,9 @@ public abstract class WebDriverManager {
             boolean cache = config().isForceCache();
 
             if (getLatest) {
-                Optional<String> optionalBrowserVersion = config()
-                        .isAvoidAutoVersion() ? empty() : getBrowserVersion();
-                if (optionalBrowserVersion.isPresent()) {
-                    String browserVersion = optionalBrowserVersion.get();
-                    preferenceKey = getDriverManagerType().name().toLowerCase()
-                            + browserVersion;
-                    if (getLatest && !config.isOverride()
-                            && !config().isAvoidAutoVersion()
-                            && !config().isAvoidPreferences() && preferences
-                                    .checkKeyInPreferences(preferenceKey)) {
-                        version = preferences
-                                .getValueFromPreferences(preferenceKey);
-                    } else {
-                        version = getVersionForInstalledBrowser(
-                                getDriverManagerType());
-                    }
-                    getLatest = version.isEmpty();
-                }
+                version = detectDriverVersionFromBrowser();
             }
+            getLatest = isNullOrEmpty(version);
 
             // For Edge
             if (checkInsiderVersion(version)) {
@@ -581,6 +566,36 @@ public abstract class WebDriverManager {
         }
     }
 
+    private String detectDriverVersionFromBrowser() {
+        String version = "";
+        Optional<String> optionalBrowserVersion = config().isAvoidAutoVersion()
+                ? empty()
+                : getBrowserVersion();
+        if (optionalBrowserVersion.isPresent()) {
+            String browserVersion = optionalBrowserVersion.get();
+            log.trace("Detected {} version {}", getDriverManagerType(),
+                    browserVersion);
+            preferenceKey = getDriverManagerType().name().toLowerCase()
+                    + browserVersion;
+            if (!config.isOverride() && !config().isAvoidAutoVersion()
+                    && !config().isAvoidPreferences()
+                    && preferences.checkKeyInPreferences(preferenceKey)) {
+                // Read from preferences
+                version = preferences.getValueFromPreferences(preferenceKey);
+            } else {
+                // Read version from properties
+                version = getVersionForInstalledBrowser(browserVersion);
+            }
+            if (!isNullOrEmpty(version)) {
+                log.info(
+                        "Using {} {} (since {} {} is installed in your machine)",
+                        getDriverName(), version, getDriverManagerType(),
+                        browserVersion);
+            }
+        }
+        return version;
+    }
+
     private boolean checkInsiderVersion(String version) {
         if (version.equals(INSIDERS)) {
             String systemRoot = System.getenv("SystemRoot");
@@ -604,58 +619,57 @@ public abstract class WebDriverManager {
         return isNullOrEmpty(version) || version.equalsIgnoreCase("latest");
     }
 
-    private String getVersionForInstalledBrowser(
-            DriverManagerType driverManagerType) {
+    private String getVersionForInstalledBrowser(String browserVersion) {
+        String driverVersion = "";
+        DriverManagerType driverManagerType = getDriverManagerType();
         String driverLowerCase = driverManagerType.name().toLowerCase();
-        return getBrowserVersion()
-                .map(browserVersion -> getDriverVersionForBrowser(
-                        driverLowerCase + browserVersion).map(version -> {
-                            log.info(
-                                    "Using {} {} (since {} {} is installed in your machine)",
-                                    getDriverName(), version, driverManagerType,
-                                    browserVersion);
-                            return version;
-                        }).orElseGet(() -> {
-                            log.debug(
-                                    "The driver version for {} {} is unknown ... trying with latest",
-                                    driverManagerType, browserVersion);
-                            return "";
-                        }))
-                .orElse("");
+        Optional<String> driverVersionForBrowser = getDriverVersionForBrowserFromProperties(
+                driverLowerCase + browserVersion);
+        if (driverVersionForBrowser.isPresent()) {
+            driverVersion = driverVersionForBrowser.get();
+        } else {
+            log.debug(
+                    "The driver version for {} {} is unknown ... trying with latest",
+                    driverManagerType, browserVersion);
+        }
+        return driverVersion;
     }
 
-    private Optional<String> getDriverVersionForBrowser(String key) {
-        log.trace("Getting driver version for browser {}", key);
-        String value = getVersionsDescription(false).getProperty(key);
-        if (value == null && !key.contains(BETA)) {
-            log.debug(
-                    "Browser version {} not found in local versions.properties",
-                    key);
-            value = getVersionsDescription(true).getProperty(key);
-        }
+    private Optional<String> getDriverVersionForBrowserFromProperties(
+            String key) {
+        log.trace("Getting driver version from properties {}", key);
+        String value = getVersionFromProperties().getProperty(key);
         return value == null ? empty() : Optional.of(value);
     }
 
-    private Properties getVersionsDescription(boolean online) {
-        try (InputStream inputStream = online ? new URL(
-                "https://raw.githubusercontent.com/bonigarcia/webdrivermanager/master/src/main/resources/versions.properties")
-                        .openStream()
-                : Config.class.getResourceAsStream("/versions.properties")) {
-            if (online) {
-                log.debug(
-                        "Using online version.properties (from GitHub) to find out driver version");
-            } else {
+    private Properties getVersionFromProperties() {
+        if (versionsProperties != null) {
+            log.trace("Already created versions.properties");
+            return versionsProperties;
+        } else {
+            try {
                 log.trace(
-                        "Using local version.properties to find out driver version");
+                        "Using online version.properties (from GitHub) to find out driver version");
+                InputStream inputStream;
+                try {
+                    inputStream = httpClient
+                            .execute(httpClient.createHttpGet(new URL(
+                                    "https://raw.githubusercontent.com/bonigarcia/webdrivermanager/master/src/main/resources/versions.properties")))
+                            .getEntity().getContent();
+                } catch (Exception e) {
+                    log.warn(
+                            "Online version not available, using local version.properties instead");
+                    inputStream = Config.class
+                            .getResourceAsStream("/versions.properties");
+                }
+                versionsProperties = new Properties();
+                versionsProperties.load(inputStream);
+                inputStream.close();
+            } catch (Exception e) {
+                throw new IllegalStateException(
+                        "Cannot read versions.properties", e);
             }
-
-            Properties props = new Properties();
-            props.load(inputStream);
-
-            return props;
-        } catch (IOException e) {
-            throw new IllegalStateException("Cannot read versions.properties",
-                    e);
+            return versionsProperties;
         }
     }
 
@@ -899,9 +913,10 @@ public abstract class WebDriverManager {
 
     protected List<String> getBetaVersions() {
         List<String> betaVersions = new ArrayList<>();
-        for (DriverManagerType driverManagerType : DriverManagerType.values()) {
+        DriverManagerType[] browsersWithBeta = { CHROME };
+        for (DriverManagerType driverManagerType : browsersWithBeta) {
             String key = driverManagerType.name().toLowerCase() + BETA;
-            Optional<String> betaVersionString = getDriverVersionForBrowser(
+            Optional<String> betaVersionString = getDriverVersionForBrowserFromProperties(
                     key);
             if (betaVersionString.isPresent()) {
                 betaVersions.addAll(

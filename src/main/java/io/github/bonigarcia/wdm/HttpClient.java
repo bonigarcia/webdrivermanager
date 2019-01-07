@@ -158,8 +158,9 @@ public class HttpClient implements Closeable {
     public HttpResponse execute(HttpRequestBase method) throws IOException {
         HttpResponse response = closeableHttpClient.execute(method);
         if (response.getStatusLine().getStatusCode() >= SC_BAD_REQUEST) {
-            String errorMessage = "A response error is detected: "
-                    + response.getStatusLine();
+            String errorMessage = "Error HTTP "
+                    + response.getStatusLine().getStatusCode() + " executing "
+                    + method;
             log.error(errorMessage);
             throw new WebDriverManagerException(errorMessage);
         }
