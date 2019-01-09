@@ -664,8 +664,9 @@ public abstract class WebDriverManager {
     }
 
     private InputStream getOnlineVersionsInputStream() throws IOException {
-        return httpClient.execute(httpClient.createHttpGet(new URL(
-                "https://raw.githubusercontent.com/bonigarcia/webdrivermanager/master/src/main/resources/versions.properties")))
+        return httpClient
+                .execute(httpClient
+                        .createHttpGet(config().getVersionsPropertiesUrl()))
                 .getEntity().getContent();
     }
 

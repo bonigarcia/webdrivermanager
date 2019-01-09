@@ -72,6 +72,8 @@ public class Config {
     ConfigKey<Boolean> avoidPreferences = new ConfigKey<>(
             "wdm.avoidPreferences", Boolean.class);
     ConfigKey<Integer> timeout = new ConfigKey<>("wdm.timeout", Integer.class);
+    ConfigKey<URL> versionsPropertiesUrl = new ConfigKey<>(
+            "wdm.versionsPropertiesUrl", URL.class);
 
     ConfigKey<String> architecture = new ConfigKey<>("wdm.architecture",
             String.class, defaultArchitecture());
@@ -386,6 +388,15 @@ public class Config {
 
     public Config setTimeout(int value) {
         this.timeout.setValue(value);
+        return this;
+    }
+
+    public URL getVersionsPropertiesUrl() {
+        return resolve(versionsPropertiesUrl);
+    }
+
+    public Config setVersionsPropertiesUrl(URL value) {
+        this.versionsPropertiesUrl.setValue(value);
         return this;
     }
 
