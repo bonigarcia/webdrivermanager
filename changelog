@@ -1,3 +1,10 @@
+webdrivermanager (3.2.1)
+
+  + Include version.properties URL as configuration key
+
+ -- Boni Garcia <boni.gg@gmail.com>
+
+
 webdrivermanager (3.2.0)
 
   + Update versions.properties: Chrome 72; Firefox 64; Opera 57
