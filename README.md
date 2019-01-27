@@ -9,17 +9,26 @@
 
 # WebDriverManager [![][Logo]][GitHub Repository]
 
-This library is aimed to automate the [Selenium WebDriver] binaries management.
+WebDriverManager allows to automate the management of binary drivers (e.g. *chromedriver*, *geckodriver*, etc.) required by [Selenium WebDriver].
 
-If you use [Selenium WebDriver], you will know that in order to use some browsers such as **Chrome**, **Firefox**, **Opera**, **PhantomJS**, **Microsoft Edge**, or **Internet Explorer**, first you need to download a binary file which allows WebDriver to handle browsers. In Java, the absolute path to this binary must be set as JVM properties, as follows:
+1. [Motivation](#motivation)
+2. [WebDriverManager as Java dependency](#webdrivermanager-as-java-dependency)
+3. [WebDriverManager CLI](#webdrivermanager-cli)
+4. [WebDriverManager Server](#webdrivermanager-server)
+5. [Help](#help)
+6. [About](#about)
+
+## Motivation
+
+If you use [Selenium WebDriver], you will know that in order to use some browsers such as **Chrome**, **Firefox**, **Opera**, **PhantomJS**, **Microsoft Edge**, or **Internet Explorer**, first you need to download a binary file which allows WebDriver to handle browsers. In Java, the path to this binary must be set as JVM properties, as follows:
 
 ```java
-System.setProperty("webdriver.chrome.driver", "/absolute/path/to/binary/chromedriver");
-System.setProperty("webdriver.gecko.driver", "/absolute/path/to/binary/geckodriver");
-System.setProperty("webdriver.opera.driver", "/absolute/path/to/binary/operadriver");
-System.setProperty("phantomjs.binary.path", "/absolute/path/to/binary/phantomjs");
-System.setProperty("webdriver.edge.driver", "C:/absolute/path/to/binary/MicrosoftWebDriver.exe");
-System.setProperty("webdriver.ie.driver", "C:/absolute/path/to/binary/IEDriverServer.exe");
+System.setProperty("webdriver.chrome.driver", "/path/to/binary/chromedriver");
+System.setProperty("webdriver.gecko.driver", "/path/to/binary/geckodriver");
+System.setProperty("webdriver.opera.driver", "/path/to/binary/operadriver");
+System.setProperty("phantomjs.binary.path", "/path/to/binary/phantomjs");
+System.setProperty("webdriver.edge.driver", "C:/path/to/binary/MicrosoftWebDriver.exe");
+System.setProperty("webdriver.ie.driver", "C:/path/to/binary/IEDriverServer.exe");
 ```
 
 This is quite annoying since it forces you to link directly this binary file into your source code. In addition, you have to check manually when new versions of the binaries are released. WebDriverManager comes to the rescue, performing in an automated way all this dirty job for you. WebDriverManager can be used in 3 different ways:
