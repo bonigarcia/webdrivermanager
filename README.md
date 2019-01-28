@@ -9,12 +9,21 @@
 
 # WebDriverManager [![][Logo]][GitHub Repository]
 
-WebDriverManager allows to automate the management of binary drivers (e.g. *chromedriver*, *geckodriver*, etc.) required by [Selenium WebDriver].
+WebDriverManager allows to automate the management of the binary drivers (e.g. *chromedriver*, *geckodriver*, etc.) required by [Selenium WebDriver].
+
+## Table of contents
 
 1. [Motivation](#motivation)
 2. [WebDriverManager as Java dependency](#webdrivermanager-as-java-dependency)
+   1. [Basic usage](#basic-usage)
+   2. [Examples](#examples)
+   3. [WebDriverManager API](#webdrivermanager-api)
+   4. [Driver versions](#driver-versions)
+   5. [Configuration](#configuration)
+   6. [HTTP proxy](#http-proxy)
+   7. [Known issues](#known-issues)
 3. [WebDriverManager CLI](#webdrivermanager-cli)
-4. [WebDriverManager Server](#webdrivermanager-server)
+4. [WebDriverManager server](#webdrivermanager-server)
 5. [Help](#help)
 6. [About](#about)
 
@@ -40,6 +49,8 @@ This is quite annoying since it forces you to link directly this binary file int
 WebDriverManager is open source, released under the terms of [Apache 2.0 License].
 
 ## WebDriverManager as Java dependency
+
+### Basic usage
 
 In order to use WebDriverManager from tests in a Maven project, you need to add the following dependency in your `pom.xml` (Java 8 or upper required):
 
@@ -284,12 +295,12 @@ WebDriverManager.config().setForceCache(true);
 WebDriverManager.config().setOverride(true);
 ```
 
-### HTTP Proxy
+### HTTP proxy
 
 If you use an HTTP Proxy in your Internet connection, you can configure your settings by exporting the Java environment variable ``HTTPS_PROXY`` using the following notation: ``my.http.proxy:1234`` or ``username:password@my.http.proxy:1234``.
 Also you can configure username and password using environment variables (``HTTPS_PROXY_USER`` and ``HTTPS_PROXY_PASS``).
 
-### Known Issues
+### Known issues
 
 #### HTTP response code 403
 
@@ -384,7 +395,7 @@ As of version 2.2.0, WebDriverManager can used interactively from the Command Li
 [INFO] Resulting binary D:\projects\webdrivermanager\target\chromedriver.exe
 ```
 
-## WebDriverManager Server
+## WebDriverManager server
 
 As of version 3.2.0, WebDriverManager can used as a server. To start this mode, the shell is used. Once again, two options are allowed:
 
@@ -428,7 +439,7 @@ In addition, configuration parameters can be specified in the URL using query ar
 | http://localhost:4041/firefoxdriver?geckoDriverVersion=0.21.0     | Downloads the version 0.21.0 of *geckodriver*                     |
 | http://localhost:4041/operadriver?os=WIN&forceCache=true          | Force to use the cache version of *operadriver* for Windows       |
 
-Finally, requests to WebDriverManager Server can be done interactively using tools such as [curl], as follows:
+Finally, requests to WebDriverManager server can be done interactively using tools such as [curl], as follows:
 
 ```
 curl -O -J http://localhost:4041/chromedriver
