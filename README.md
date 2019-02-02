@@ -210,7 +210,7 @@ Additional methods are exposed by WebDriverManager, namely:
 
 ### Driver versions
 
-The relationship between browser version and driver version is managed in a internal database by WebDriverManager stored as Java properties in the file [versions.properties]. The local version of this file (distributed within WebDriverManager) is used to find out the proper driver version.
+The relationship between browser version and driver version is managed in a internal database by WebDriverManager stored as Java properties in the file [versions.properties]. The local version of this file (distributed within WebDriverManager) is used to find out the proper driver version. The only version of [versions.properties] (master branch) is used when the relationship between browser and driver is not present in local. 
 
 In order to resolve the driver version for a given browser, first WebDriverManager try to find out the version of that browser. This mechanism depends on the browser (Chrome, Firefox, etc) and the platform (Linux, Windows, Mac). For instance, for Chrome in Linux, the command ``google-chrome --version`` is executed in the shell.  
 
