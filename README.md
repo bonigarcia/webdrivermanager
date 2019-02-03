@@ -21,11 +21,11 @@ WebDriverManager allows to automate the management of the binary drivers (e.g. *
    4. [Driver versions](#driver-versions)
    5. [Configuration](#configuration)
    6. [HTTP proxy](#http-proxy)
-   7. [Known issues](#known-issues)
 3. [WebDriverManager CLI](#webdrivermanager-cli)
 4. [WebDriverManager server](#webdrivermanager-server)
-5. [Help](#help)
-6. [About](#about)
+5. [Known issues](#known-issues)
+6. [Help](#help)
+7. [About](#about)
 
 ## Motivation
 
@@ -300,60 +300,6 @@ WebDriverManager.config().setOverride(true);
 If you use an HTTP Proxy in your Internet connection, you can configure your settings by exporting the Java environment variable ``HTTPS_PROXY`` using the following notation: ``my.http.proxy:1234`` or ``username:password@my.http.proxy:1234``.
 Also you can configure username and password using environment variables (``HTTPS_PROXY_USER`` and ``HTTPS_PROXY_PASS``).
 
-### Known issues
-
-#### HTTP response code 403
-
-Some of the binaries (for Opera and Firefox) are hosted on GitHub. When several consecutive requests are made by WebDriverManager, GitHub servers return an **HTTP 403 error** response as follows:
-
-```
-Caused by: java.io.IOException: Server returned HTTP response code: 403 for URL: https://api.github.com/repos/operasoftware/operachromiumdriver/releases
-    at sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1840)
-    at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1441)
-    at sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:254)
-    at io.github.bonigarcia.wdm.BrowserManager.openGitHubConnection(BrowserManager.java:463)
-    at io.github.bonigarcia.wdm.OperaDriverManager.getDrivers(OperaDriverManager.java:55)
-    at io.github.bonigarcia.wdm.BrowserManager.manage(BrowserManager.java:168)
-```
-
-```
-Caused by: java.io.IOException: Server returned HTTP response code: 403 for URL: https://api.github.com/repos/mozilla/geckodriver/releases
-    at sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1840)
-    at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1441)
-    at sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:254)
-    at io.github.bonigarcia.wdm.FirefoxDriverManager.getDrivers(FirefoxDriverManager.java:61)
-    at io.github.bonigarcia.wdm.BrowserManager.manage(BrowserManager.java:163)
-```
-
-In order to avoid this problem, [authenticated requests] should be done. The procedure is the following:
-
-1. Create a token/secret pair in your [GitHub account].
-2. Tell WebDriverManager the value of this pair token/secret. To do that you should use the configuration keys ``wdm.gitHubTokenName`` and ``wdm.gitHubTokenSecret``. You can pass them as command line Java parameters as follows:
-
-```properties
--Dwdm.gitHubTokenName=<your-token-name>
--Dwdm.gitHubTokenSecret=<your-token-secret>
-```
-
-... or as environment variables (e.g. in Travis CI) as follows:
-
-```properties
-WDM_GITHUBTOKENNAME=<your-token-name>
-WDM_GITHUBTOKENSECRET=<your-token-secret>
-```
-
-#### Tons of org.apache.http DEBUG log
-
-WebDriverManager uses [Apache HTTP Client] to download WebDriver binaries from online repositories. Internally, Apache HTTP client writes a lot of logging information using the `DEBUG` level of `org.apache.http` classes. To reduce this amount of logs, the level of this logger might be reduced. For instance, in the case of [Logback], the log configuration file should include the following:
-
-```xml
-<configuration>
-    <logger name="org.apache.http" level="WARN" />
-</configuration>
-```
-
-You can find further information about others logging implementations in the [Apache HTTP Client logging practices] page.
-
 ## WebDriverManager CLI
 
 As of version 2.2.0, WebDriverManager can used interactively from the Command Line Interface (CLI), i.e. the shell, to resolve and download binaries for the supported browsers. There are two ways of using this feature:
@@ -446,6 +392,61 @@ curl -O -J http://localhost:4041/chromedriver
 curl -O -J "http://localhost:4041/chromedriver?chromeDriverVersion=2.40&forceCache=true"
 
 ```
+
+## Known issues
+
+### HTTP response code 403
+
+Some of the binaries (for Opera and Firefox) are hosted on GitHub. When several consecutive requests are made by WebDriverManager, GitHub servers return an **HTTP 403 error** response as follows:
+
+```
+Caused by: java.io.IOException: Server returned HTTP response code: 403 for URL: https://api.github.com/repos/operasoftware/operachromiumdriver/releases
+    at sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1840)
+    at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1441)
+    at sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:254)
+    at io.github.bonigarcia.wdm.BrowserManager.openGitHubConnection(BrowserManager.java:463)
+    at io.github.bonigarcia.wdm.OperaDriverManager.getDrivers(OperaDriverManager.java:55)
+    at io.github.bonigarcia.wdm.BrowserManager.manage(BrowserManager.java:168)
+```
+
+```
+Caused by: java.io.IOException: Server returned HTTP response code: 403 for URL: https://api.github.com/repos/mozilla/geckodriver/releases
+    at sun.net.www.protocol.http.HttpURLConnection.getInputStream0(HttpURLConnection.java:1840)
+    at sun.net.www.protocol.http.HttpURLConnection.getInputStream(HttpURLConnection.java:1441)
+    at sun.net.www.protocol.https.HttpsURLConnectionImpl.getInputStream(HttpsURLConnectionImpl.java:254)
+    at io.github.bonigarcia.wdm.FirefoxDriverManager.getDrivers(FirefoxDriverManager.java:61)
+    at io.github.bonigarcia.wdm.BrowserManager.manage(BrowserManager.java:163)
+```
+
+In order to avoid this problem, [authenticated requests] should be done. The procedure is the following:
+
+1. Create a token/secret pair in your [GitHub account].
+2. Tell WebDriverManager the value of this pair token/secret. To do that you should use the configuration keys ``wdm.gitHubTokenName`` and ``wdm.gitHubTokenSecret``. You can pass them as command line Java parameters as follows:
+
+```properties
+-Dwdm.gitHubTokenName=<your-token-name>
+-Dwdm.gitHubTokenSecret=<your-token-secret>
+```
+
+... or as environment variables (e.g. in Travis CI) as follows:
+
+```properties
+WDM_GITHUBTOKENNAME=<your-token-name>
+WDM_GITHUBTOKENSECRET=<your-token-secret>
+```
+
+### Tons of org.apache.http DEBUG log
+
+WebDriverManager uses [Apache HTTP Client] to download WebDriver binaries from online repositories. Internally, Apache HTTP client writes a lot of logging information using the `DEBUG` level of `org.apache.http` classes. To reduce this amount of logs, the level of this logger might be reduced. For instance, in the case of [Logback], the log configuration file should include the following:
+
+```xml
+<configuration>
+    <logger name="org.apache.http" level="WARN" />
+</configuration>
+```
+
+You can find further information about others logging implementations in the [Apache HTTP Client logging practices] page.
+
 
 ## Help
 
