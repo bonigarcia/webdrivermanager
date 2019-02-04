@@ -157,6 +157,15 @@ WebDriver driver = new ChromeDriver();
 Check out the repository [WebDriverManager Examples] which contains different JUnit 4 test examples using WebDriverManager.
 
 
+### Driver versions
+
+The relationship between browser version and driver version is managed in a internal database by WebDriverManager stored as Java properties in the file [versions.properties]. The local version of this file (distributed within WebDriverManager) is used to find out the proper driver version. The only version of [versions.properties] (master branch) is used when the relationship between browser and driver is not present in local. 
+
+In order to resolve the driver version for a given browser, first WebDriverManager try to find out the version of that browser. This mechanism depends on the browser (Chrome, Firefox, etc) and the platform (Linux, Windows, Mac). For instance, for Chrome in Linux, the command ``google-chrome --version`` is executed in the shell.  
+
+Moreover in order to improve the performance of WebDriverManager, as of version 3.1.0, resolved driver versions for browsers are stored persistently as Java preferences. The validity of this relationship (browser version and driver version) stored as preferences is linked to a *time-to-live* (ttl). By default, this value is 3600 seconds.
+
+
 ### WebDriverManager API
 
 WebDriverManager exposes its API by means of the **builder pattern**. This means that given a *WebDriverManger* instance, their capabilities can be tuned using different methods. The following table summarizes the WebDriverManager API, together with the equivalent configuration key:
@@ -189,7 +198,6 @@ WebDriverManager exposes its API by means of the **builder pattern**. This means
 | ``browserPath()``                    | As of WebDriverManager 3.0.0, versions of drivers are contained in an internal database (versions.properties) wich matches the driver version to each browser version. In order to find the browser version, a command is executed on the shell (e.g. ``google-chrome --version`` in Linux). The path of the browser can be configured using this method     | ``wdm.binaryPath``                                                                                                                                                                    |
 | ``ttl()``                            | As of WebDriverManager 3.1.0, resolved versions of drivers are stored as Java preferences. These values has a expiration time based on this Time To Live (TTL) value, measured in **seconds**. By default this value is 3600 (i.e. 1 hour).                                                                                                                  | ``wdm.ttl``                                                                                                                                                                           |
 
-
 The following table contains some examples:
 
 | Example                                                           | Description                                                       |
@@ -207,14 +215,6 @@ Additional methods are exposed by WebDriverManager, namely:
 * ``getDownloadedVersion()``: This method allows to find out the version of the latest resolved binary.
 * ``clearPreferences()``: This methods allows to remove all Java preferences stored previously by WebDriverManager.
 
-
-### Driver versions
-
-The relationship between browser version and driver version is managed in a internal database by WebDriverManager stored as Java properties in the file [versions.properties]. The local version of this file (distributed within WebDriverManager) is used to find out the proper driver version. The only version of [versions.properties] (master branch) is used when the relationship between browser and driver is not present in local. 
-
-In order to resolve the driver version for a given browser, first WebDriverManager try to find out the version of that browser. This mechanism depends on the browser (Chrome, Firefox, etc) and the platform (Linux, Windows, Mac). For instance, for Chrome in Linux, the command ``google-chrome --version`` is executed in the shell.  
-
-Moreover in order to improve the performance of WebDriverManager, as of version 3.1.0, resolved driver versions for browsers are stored persistently as Java preferences. The validity of this relationship (browser version and driver version) stored as preferences is linked to a *time-to-live* (ttl). By default, this value is 3600 seconds.
 
 ### Configuration
 
