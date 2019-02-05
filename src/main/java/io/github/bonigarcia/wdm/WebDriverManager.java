@@ -851,7 +851,7 @@ public abstract class WebDriverManager {
             }
         }
 
-        if (versionToDownload != version) {
+        if (!versionToDownload.equals(version)) {
             versionToDownload = version;
             log.info("Using {} {}", driver, version);
         }
