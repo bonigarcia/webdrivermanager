@@ -615,7 +615,7 @@ public abstract class WebDriverManager {
 
     private Properties getVersionFromProperties(boolean online) {
         if (versionsProperties != null) {
-            log.debug("Already created versions.properties");
+            log.trace("Already created versions.properties");
             return versionsProperties;
         } else {
             try {
@@ -672,13 +672,14 @@ public abstract class WebDriverManager {
 
     protected void handleException(Exception e, Architecture arch,
             String version) {
+        String versionStr = isNullOrEmpty(version) ? "(latest version)"
+                : version;
         String errorMessage = String.format(
                 "There was an error managing %s %s (%s)", getDriverName(),
-                version, e.getMessage());
+                versionStr, e.getMessage());
         if (!config().isForceCache() && retry) {
             config().setForceCache(true);
-            log.warn("{} ... trying again forcing to use cache", errorMessage,
-                    e);
+            log.warn("{} ... trying again forcing to use cache", errorMessage);
             manage(arch, version);
         } else {
             log.error("{}", errorMessage, e);
@@ -793,10 +794,11 @@ public abstract class WebDriverManager {
             }
 
             // Filter by arch
-            filesInCache = filterCacheBy(filesInCache, arch.name());
+            filesInCache = filterCacheBy(filesInCache, arch.toString());
 
             if (!filesInCache.isEmpty()) {
-                return Optional.of(filesInCache.get(0).toString());
+                return Optional.of(
+                        filesInCache.get(filesInCache.size() - 1).toString());
             }
         }
 
