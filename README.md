@@ -57,7 +57,7 @@ In order to use WebDriverManager from tests in a Maven project, you need to add 
 <dependency>
     <groupId>io.github.bonigarcia</groupId>
     <artifactId>webdrivermanager</artifactId>
-    <version>3.2.0</version>
+    <version>3.3.0</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -66,7 +66,7 @@ In order to use WebDriverManager from tests in a Maven project, you need to add 
 
 ```
 dependencies {
-    testCompile("io.github.bonigarcia:webdrivermanager:3.2.0")
+    testCompile("io.github.bonigarcia:webdrivermanager:3.3.0")
 }
 ```
 
@@ -306,7 +306,7 @@ As of version 2.2.0, WebDriverManager can used interactively from the Command Li
 [INFO] Scanning for projects...
 [INFO]
 [INFO] ------------------------------------------------------------------------
-[INFO] Building WebDriverManager 3.2.0
+[INFO] Building WebDriverManager 3.3.0
 [INFO] ------------------------------------------------------------------------
 [INFO]
 [INFO] --- exec-maven-plugin:1.6.0:java (default-cli) @ webdrivermanager ---
@@ -325,10 +325,10 @@ As of version 2.2.0, WebDriverManager can used interactively from the Command Li
 [INFO] ------------------------------------------------------------------------
 ```
 
-* Using WebDriverManager as a *fat-jar* (i.e. WebDriverManager with all its dependencies in a single executable JAR file). This JAR file can downloaded from [here](https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-3.2.0/webdrivermanager-3.2.0-fat.jar) and also it can be created using the command ``mvn compile assembly:single`` from the source code. Once you get the *fat-jar*, you simply need to use the command ``java -jar webdrivermanager-3.2.0-fat.jar browserName``, for instance:
+* Using WebDriverManager as a *fat-jar* (i.e. WebDriverManager with all its dependencies in a single executable JAR file). This JAR file can downloaded from [here](https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-3.3.0/webdrivermanager-3.3.0-fat.jar) and also it can be created using the command ``mvn compile assembly:single`` from the source code. Once you get the *fat-jar*, you simply need to use the command ``java -jar webdrivermanager-3.3.0-fat.jar browserName``, for instance:
 
 ```
-> java -jar webdrivermanager-3.2.0-fat.jar chrome
+> java -jar webdrivermanager-3.3.0-fat.jar chrome
 [INFO] Using WebDriverManager to resolve chrome
 [INFO] Reading https://chromedriver.storage.googleapis.com/ to seek chromedriver
 [INFO] Latest version of chromedriver is 2.37
@@ -338,7 +338,7 @@ As of version 2.2.0, WebDriverManager can used interactively from the Command Li
 
 ## WebDriverManager server
 
-As of version 3.2.0, WebDriverManager can used as a server. To start this mode, the shell is used. Once again, two options are allowed:
+As of version 3.0.0, WebDriverManager can used as a server. To start this mode, the shell is used. Once again, two options are allowed:
 
 * Directly from the source code and Maven. The command to be used is ``mvn exec:java -Dexec.args="server <port>"``. If the second argument is not specified, the default port will be used (4041):
 
@@ -347,17 +347,17 @@ $ mvn exec:java -Dexec.args="server"
 [INFO] Scanning for projects...
 [INFO]
 [INFO] ------------------------------------------------------------------------
-[INFO] Building WebDriverManager 3.2.0
+[INFO] Building WebDriverManager 3.3.0
 [INFO] ------------------------------------------------------------------------
 [INFO]
 [INFO] --- exec-maven-plugin:1.6.0:java (default-cli) @ webdrivermanager ---
 [INFO] WebDriverManager server listening on port 4041
 ```
 
-* Using WebDriverManager as a [fat-jar](https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-3.2.0/webdrivermanager-3.2.0-fat.jar). For instance:
+* Using WebDriverManager as a [fat-jar](https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-3.3.0/webdrivermanager-3.3.0-fat.jar). For instance:
 
 ```
-> java -jar webdrivermanager-3.2.0-fat.jar server
+> java -jar webdrivermanager-3.3.0-fat.jar server
 [INFO] WebDriverManager server listening on port 4041
 ```
 
