@@ -51,7 +51,7 @@ public class PhantomJsDriverManager extends WebDriverManager {
 
     @Override
     protected URL getDriverUrl() {
-        return config().getPhantomjsDriverUrl();
+        return getDriverUrlCkeckingMirror(config().getPhantomjsDriverUrl());
     }
 
     @Override

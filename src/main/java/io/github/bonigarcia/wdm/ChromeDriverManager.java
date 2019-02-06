@@ -48,7 +48,7 @@ public class ChromeDriverManager extends WebDriverManager {
 
     @Override
     protected URL getDriverUrl() {
-        return config().getChromeDriverUrl();
+        return getDriverUrlCkeckingMirror(config().getChromeDriverUrl());
     }
 
     @Override

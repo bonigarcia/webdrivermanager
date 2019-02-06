@@ -679,7 +679,10 @@ public abstract class WebDriverManager {
                 versionStr, e.getMessage());
         if (!config().isForceCache() && retry) {
             config().setForceCache(true);
-            log.warn("{} ... trying again forcing to use cache", errorMessage);
+            config().setUseMirror(true);
+            retry = false;
+            log.warn("{} ... trying again using cache and mirror",
+                    errorMessage);
             manage(arch, version);
         } else {
             log.error("{}", errorMessage, e);
@@ -1176,6 +1179,16 @@ public abstract class WebDriverManager {
         return System.getProperty("os.arch").contains("64")
                 ? "PROGRAMFILES(X86)"
                 : "PROGRAMFILES";
+    }
+
+    protected URL getDriverUrlCkeckingMirror(URL url) {
+        if (config().isUseMirror()) {
+            Optional<URL> mirrorUrl = getMirrorUrl();
+            if (mirrorUrl.isPresent()) {
+                return mirrorUrl.get();
+            }
+        }
+        return url;
     }
 
     public static void main(String[] args) {

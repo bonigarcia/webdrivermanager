@@ -48,7 +48,7 @@ public class FirefoxDriverManager extends WebDriverManager {
 
     @Override
     protected URL getDriverUrl() {
-        return config().getFirefoxDriverUrl();
+        return getDriverUrlCkeckingMirror(config().getFirefoxDriverUrl());
     }
 
     @Override

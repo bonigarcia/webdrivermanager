@@ -49,7 +49,7 @@ public class OperaDriverManager extends WebDriverManager {
 
     @Override
     protected URL getDriverUrl() {
-        return config().getOperaDriverUrl();
+        return getDriverUrlCkeckingMirror(config().getOperaDriverUrl());
     }
 
     @Override
