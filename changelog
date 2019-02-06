@@ -3,10 +3,11 @@ webdrivermanager (3.3.0)
   + Force using mirror when first exception happens, e.g. 403 error (issue #302)
   + Improve cache handling for retries
   + Include version.properties URL as configuration key
+  + Set chromedriver version 2.46 for Chrome 71, 72, and 73 in versions.properties
   + Include geckodriver version 0.24.0 for Firefox 65 in versions.properties
   + Include operadriver version 2.42 for Opera 58 in versions.properties
 
- -- Boni Garcia <boni.gg@gmail.com>  Fri, 06 Feb 2019 12:21:00 +0200
+ -- Boni Garcia <boni.gg@gmail.com>  Fri, 06 Feb 2019 12:39:00 +0200
 
 
 webdrivermanager (3.2.0)
