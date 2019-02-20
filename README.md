@@ -26,7 +26,9 @@ WebDriverManager allows to automate the management of the binary drivers (e.g. *
 4. [WebDriverManager server](#webdrivermanager-server)
 5. [Known issues](#known-issues)
 6. [Help](#help)
-7. [About](#about)
+7. [Backers](#backers)
+8. [Sponsors](#sponsors)
+9. [About](#about)
 
 ## Motivation
 
@@ -448,6 +450,17 @@ You can find further information about others logging implementations in the [Ap
 ## Help
 
 If you have questions on how to use WebDriverManager properly with a special configuration or suchlike, please consider asking a question on [Stack Overflow] and tag it with  *webdrivermanager-java*.
+
+
+## Backers
+
+Thank you to all our backers! [[Become a backer](https://opencollective.com/webdrivermanager#backer)]
+
+<a href="https://opencollective.com/webdrivermanager#backers" target="_blank"><img src="https://opencollective.com/webdrivermanager/backers.svg?width=890"></a>
+
+## Sponsors
+
+Support this project by becoming a sponsor. Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/webdrivermanager#sponsor)]
 
 ## About
 
