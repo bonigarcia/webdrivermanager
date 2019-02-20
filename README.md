@@ -6,8 +6,8 @@
 [![License badge](https://img.shields.io/badge/license-Apache2-green.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 [![Backers on Open Collective](https://opencollective.com/webdrivermanager/backers/badge.svg)](#backers)
 [![Sponsors on Open Collective](https://opencollective.com/webdrivermanager/sponsors/badge.svg)](#sponsors)
-[![Support badge](https://img.shields.io/badge/support-sof-green.svg)](http://stackoverflow.com/questions/tagged/webdrivermanager-java)
-[![Twitter](https://img.shields.io/badge/follow-@boni_gg-green.svg)](https://twitter.com/boni_gg)
+[![Support badge](https://img.shields.io/badge/stackoverflow-webdrivermanager_java-green.svg)](http://stackoverflow.com/questions/tagged/webdrivermanager-java)
+[![Twitter Follow](https://img.shields.io/twitter/follow/boni_gg.svg?style=social)](https://twitter.com/boni_gg)
 
 # WebDriverManager [![][Logo]][GitHub Repository]
 
