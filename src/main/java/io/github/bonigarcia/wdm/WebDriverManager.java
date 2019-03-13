@@ -139,6 +139,20 @@ public abstract class WebDriverManager {
     protected String preferenceKey;
     protected Properties versionsProperties;
 
+    public static Config globalConfig() {
+        Config global = new Config();
+        for (DriverManagerType type : DriverManagerType.values()) {
+            WebDriverManager.getInstance(type).setConfig(global);
+        }
+        return global;
+    }
+
+    public static void resetGlobalConfig() {
+        for (DriverManagerType type : DriverManagerType.values()) {
+            WebDriverManager.getInstance(type).reset();
+        }
+    }
+
     public Config config() {
         return config;
     }
@@ -1261,6 +1275,10 @@ public abstract class WebDriverManager {
                         version);
             }
         }
+    }
+
+    private void setConfig(Config config) {
+        this.config = config;
     }
 
 }
