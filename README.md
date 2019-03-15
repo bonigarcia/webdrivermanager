@@ -278,7 +278,7 @@ By default, WebDriverManager downloads the latest version of the WebDriver binar
 
 ```properties
 -Dwdm.chromeDriverVersion=2.25
--Dwdm.internetExplorerVersion=2.46
+-Dwdm.internetExplorerDriverVersion=2.46
 -Dwdm.operaDriverVersion=0.2.0
 -Dwdm.edgeDriverVersion=3.14366
 -Dwdm.phantomjsDriverVersion=2.1.1
