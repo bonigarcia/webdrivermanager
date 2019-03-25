@@ -38,6 +38,7 @@ import static java.util.Collections.sort;
 import static java.util.Optional.empty;
 import static javax.xml.xpath.XPathConstants.NODESET;
 import static javax.xml.xpath.XPathFactory.newInstance;
+import static org.apache.commons.io.FileUtils.deleteDirectory;
 import static org.apache.commons.io.FileUtils.listFiles;
 import static org.apache.commons.io.FilenameUtils.removeExtension;
 import static org.apache.commons.lang3.StringUtils.isNumeric;
@@ -440,6 +441,15 @@ public abstract class WebDriverManager {
 
     public void clearPreferences() {
         instanceMap.get(getDriverManagerType()).preferences.clear();
+    }
+
+    public void clearCache() {
+        String targetPath = config().getTargetPath();
+        try {
+            deleteDirectory(new File(targetPath));
+        } catch (Exception e) {
+            log.warn("Exception deleting cache at {}", targetPath, e);
+        }
     }
 
     // ------------
