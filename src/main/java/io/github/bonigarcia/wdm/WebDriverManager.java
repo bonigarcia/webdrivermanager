@@ -56,7 +56,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.Iterator;
 import java.util.List;
@@ -894,11 +893,10 @@ public abstract class WebDriverManager {
                 list);
         List<URL> out = new ArrayList<>();
         List<URL> copyOfList = new ArrayList<>(list);
-        List<String> betaVersions = getBetaVersions();
 
         for (URL url : copyOfList) {
             try {
-                handleDriver(url, driver, out, betaVersions);
+                handleDriver(url, driver, out);
             } catch (Exception e) {
                 log.trace("There was a problem with URL {} : {}", url,
                         e.getMessage());
@@ -911,12 +909,9 @@ public abstract class WebDriverManager {
         return out;
     }
 
-    protected void handleDriver(URL url, String driver, List<URL> out,
-            List<String> betaVersions) {
+    protected void handleDriver(URL url, String driver, List<URL> out) {
         if (!config().isUseBetaVersions()
-                && (url.getFile().toLowerCase().contains("beta")
-                        || betaVersions.stream().anyMatch(
-                                beta -> url.getFile().contains(beta)))) {
+                && (url.getFile().toLowerCase().contains("beta"))) {
             return;
         }
 
@@ -937,21 +932,6 @@ public abstract class WebDriverManager {
                 out.add(url);
             }
         }
-    }
-
-    protected List<String> getBetaVersions() {
-        List<String> betaVersions = new ArrayList<>();
-        DriverManagerType[] browsersWithBeta = { CHROME };
-        for (DriverManagerType driverManagerType : browsersWithBeta) {
-            String key = driverManagerType.name().toLowerCase() + BETA;
-            Optional<String> betaVersionString = getDriverVersionForBrowserFromProperties(
-                    key, true);
-            if (betaVersionString.isPresent()) {
-                betaVersions.addAll(
-                        Arrays.asList(betaVersionString.get().split(",")));
-            }
-        }
-        return betaVersions;
     }
 
     protected boolean isUsingTaobaoMirror() {
