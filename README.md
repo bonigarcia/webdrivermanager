@@ -47,7 +47,7 @@ This is quite annoying since it forces you to link directly this binary file int
 
 1. [WebDriverManager as Java dependency](#webdrivermanager-as-java-dependency) (typically from test cases).
 2. [WebDriverManager as a Command Line Interface (CLI) tool](#webdrivermanager-cli) (from the the shell).
-3. [WebDriverManager as Server](#webdrivermanager-server) (using HTTP requests).
+3. [WebDriverManager as a Server](#webdrivermanager-server) (using a REST-like API).
 
 WebDriverManager is open source, released under the terms of [Apache 2.0 License].
 
@@ -376,7 +376,7 @@ $ mvn exec:java -Dexec.args="server"
 [INFO] WebDriverManager server listening on port 4041
 ```
 
-When the WebDriverManager is up and running, HTTP request can be done to resolve driver binaries (*chromedriver*, *geckodriver*, etc.). For instance, supposing that WebDriverManager is running the local host and in the default port:
+When the WebDriverManager is up and running, a REST-like API using HTTP request can be done to resolve driver binaries (*chromedriver*, *geckodriver*, etc.). For instance, supposing that WebDriverManager is running the local host and in the default port:
 
 * http://localhost:4041/chromedriver : To download the latest version of *chromedriver*
 * http://localhost:4041/firefoxdriver : To download the latest version of *geckodriver*
@@ -385,7 +385,7 @@ When the WebDriverManager is up and running, HTTP request can be done to resolve
 * http://localhost:4041/edgedriver : To download the latest version of *MicrosoftWebDriver*
 * http://localhost:4041/iedriver : To download the latest version of *IEDriverServer*
 
-These requests can be done using a normal browser. The driver binary is automatically downloaded by the browser since it is sent as an attachment in the HTTP response.
+These requests use HTTP GET and can be done using a normal browser. The driver binary is automatically downloaded by the browser since it is sent as an attachment in the HTTP response.
 
 In addition, configuration parameters can be specified in the URL using query arguments. The name of these arguments are identical to the parameters in the ``webdrivermanager.properties`` file but skipping the prefix ``wdm.`` (see [configuration](#webdrivermanager-api) section). For instance: 
 
