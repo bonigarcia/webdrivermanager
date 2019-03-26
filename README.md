@@ -234,6 +234,8 @@ wdm.useBetaVersions=false
 wdm.avoidExport=false
 wdm.avoidOutputTree=false
 wdm.avoidAutoVersion=false
+wdm.avoidAutoReset=false
+wdm.avoidPreferences=false
 wdm.timeout=30
 wdm.serverPort=4041
 wdm.ttl=3600
@@ -261,6 +263,8 @@ wdm.internetExplorerDriverUrl=https://selenium-release.storage.googleapis.com/
 wdm.internetExplorerDriverExport=webdriver.ie.driver
 
 wdm.seleniumServerStandaloneUrl=https://selenium-release.storage.googleapis.com/
+
+wdm.versionsPropertiesUrl=https://raw.githubusercontent.com/bonigarcia/webdrivermanager/master/src/main/resources/versions.properties
 ```
 
 For instance, the variable ``wdm.targetPath`` is the default folder in which WebDriver binaries are going to be stored. By default the path of the Maven local repository is used. This property can be overwritten by Java system properties, for example:
