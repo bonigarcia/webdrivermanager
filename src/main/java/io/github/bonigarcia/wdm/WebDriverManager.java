@@ -447,6 +447,7 @@ public abstract class WebDriverManager {
     public void clearCache() {
         String targetPath = config().getTargetPath();
         try {
+            log.debug("Clearing cache at {}", targetPath);
             deleteDirectory(new File(targetPath));
         } catch (Exception e) {
             log.warn("Exception deleting cache at {}", targetPath, e);
