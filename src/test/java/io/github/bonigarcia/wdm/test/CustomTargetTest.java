@@ -18,7 +18,6 @@ package io.github.bonigarcia.wdm.test;
 
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.file.Files.createTempDirectory;
-import static org.apache.commons.io.FileUtils.deleteDirectory;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.junit.Assert.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -62,9 +61,9 @@ public class CustomTargetTest {
 
     @After
     public void teardown() throws IOException {
-        WebDriverManager.resetGlobalConfig();
         log.info("Deleting temporal folder {}", tmpFolder);
-        deleteDirectory(tmpFolder.toFile());
+        WebDriverManager.chromedriver().clearCache();
+        WebDriverManager.resetGlobalConfig();
     }
 
 }
