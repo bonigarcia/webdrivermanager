@@ -287,16 +287,22 @@ By default, WebDriverManager downloads the latest version of the WebDriver binar
 
 If no version is specified, WebDriverManager sends a request to the server hosting the binary. In order to avoid this request and check if any binary has been previously downloaded, the key `wdm.forceCache` can be used.
 
-As of WebDriverManager 2, the value of these properties can be overridden by means of *environmental variables*. The name of these variables result from putting the name in uppercase and replacing the symbol `.` by `_`. For example, the property ``wdm.targetPath`` can be overridden by the environment variable ``WDM_TARGETPATH``.
+The value of these properties can be overridden by means of *environmental variables*. The name of these variables result from putting the name in uppercase and replacing the symbol `.` by `_`. For example, the property ``wdm.targetPath`` can be overridden by the environment variable ``WDM_TARGETPATH``.
 
-Moreover, as of WebDriverManager 2.2.x, configuration value can be customized using a *configuration manager*. This manager can be accessed using ``WebDriverManager.config()``. For example:
-
+Moreover, configuration values can be customized from Java code. The configuration object is unique per driver manager (i.e. ``WebDriverManager.chromedriver()``,  ``WebDriverManager.firefoxdriver()``, etc.) and is accessed using the method ``config()``. The configuration parameters can be reset to default values using the method ``reset()``. For example:
 
 ```java
-WebDriverManager.config().setTargetPath("/path/to/my-wdm-cache");
-WebDriverManager.config().setProperties("/path/to/my-wdm.properties");
-WebDriverManager.config().setForceCache(true);
-WebDriverManager.config().setOverride(true);
+WebDriverManager.chromedriver().config().setProperties("/path/to/my-wdm.properties");
+WebDriverManager.firefoxdriver().config().setForceCache(true);
+WebDriverManager.operadriver().config().setOverride(true);
+WebDriverManager.chromedriver().config().reset();
+```
+
+Finally, if a single configuration object needs to be specified for all the driver managers, it can be done using the static method ``globalConfig()``. This global configuration is reset as usual using the ``reset()`` method. For example:
+
+```java
+WebDriverManager.globalConfig().setTargetPath("/path/to/my-wdm-cache");
+WebDriverManager.globalConfig().reset();
 ```
 
 ## WebDriverManager CLI
