@@ -63,7 +63,7 @@ public class CustomTargetTest {
     public void teardown() throws IOException {
         log.info("Deleting temporal folder {}", tmpFolder);
         WebDriverManager.chromedriver().clearCache();
-        WebDriverManager.resetGlobalConfig();
+        WebDriverManager.globalConfig().reset();
     }
 
 }

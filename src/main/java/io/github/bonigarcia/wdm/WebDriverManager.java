@@ -148,12 +148,6 @@ public abstract class WebDriverManager {
         return global;
     }
 
-    public static void resetGlobalConfig() {
-        for (DriverManagerType type : DriverManagerType.values()) {
-            WebDriverManager.getInstance(type).reset();
-        }
-    }
-
     public Config config() {
         return config;
     }
