@@ -142,6 +142,7 @@ public abstract class WebDriverManager {
 
     public static Config globalConfig() {
         Config global = new Config();
+        global.setAvoidAutoReset(true);
         for (DriverManagerType type : DriverManagerType.values()) {
             WebDriverManager.getInstance(type).setConfig(global);
         }
