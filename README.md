@@ -218,6 +218,7 @@ Additional methods are exposed by WebDriverManager, namely:
 * ``getBinaryPath()``: This method allows to find out the path of the latest resolved binary.
 * ``getDownloadedVersion()``: This method allows to find out the version of the latest resolved binary.
 * ``clearPreferences()``: This methods allows to remove all Java preferences stored previously by WebDriverManager.
+* ``clearCache()``: This methods allows to remove all binaries previously downloaded by WebDriverManager.
 
 
 ### Configuration
