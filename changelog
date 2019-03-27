@@ -1,3 +1,13 @@
+webdrivermanager (3.4.0)
+
+  + Allow global configuration with method globalConfig() (issue #313)
+  + Include clearCache() method in WebDriverManager API to clear cache
+  + Set chromedriver version 73.0.3683.68 for Chrome 73 in versions.properties
+  + Set chromedriver version 74.0.3729.6 for Chrome 74 in versions.properties
+
+ -- Boni Garcia <boni.gg@gmail.com>  Fri, 27 Mar 2019 12:30:00 +0200
+
+
 webdrivermanager (3.3.0)
 
   + Force using mirror when first exception happens, e.g. 403 error (issue #302)
