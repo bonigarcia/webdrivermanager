@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static java.lang.String.join;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -65,8 +66,11 @@ public class Shell {
             output = IOUtils.toString(process.getInputStream(), UTF_8);
             process.destroy();
         } catch (IOException e) {
-            log.trace("There was an error executing command {} on the shell",
-                    command, e);
+            if (log.isDebugEnabled()) {
+                log.debug(
+                        "There was a problem executing command <{}> on the shell: {}",
+                        join(" ", command), e.getMessage());
+            }
         }
         return output.trim();
     }

@@ -543,9 +543,11 @@ public abstract class WebDriverManager {
 
     private String detectDriverVersionFromBrowser() {
         String version = "";
-        Optional<String> optionalBrowserVersion = config().isAvoidAutoVersion()
-                ? empty()
-                : getBrowserVersion();
+        if (config().isAvoidAutoVersion()) {
+            return version;
+        }
+
+        Optional<String> optionalBrowserVersion = getBrowserVersion();
         if (optionalBrowserVersion.isPresent()) {
             String browserVersion = optionalBrowserVersion.get();
             log.trace("Detected {} version {}", getDriverManagerType(),
@@ -567,7 +569,12 @@ public abstract class WebDriverManager {
                         getDriverName(), version, getDriverManagerType(),
                         browserVersion);
             }
+        } else {
+            log.debug(
+                    "The proper {} version for your {} is unknown ... trying with the latest",
+                    getDriverName(), getDriverManagerType());
         }
+
         return version;
     }
 
