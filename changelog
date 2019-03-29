@@ -4,6 +4,7 @@ webdrivermanager (3.4.0)
   + Include clearCache() method in WebDriverManager API to clear cache
   + Set chromedriver version 73.0.3683.68 for Chrome 73 in versions.properties
   + Set chromedriver version 74.0.3729.6 for Chrome 74 in versions.properties
+  + Improve logging when driver version in unknown
 
  -- Boni Garcia <boni.gg@gmail.com>  Fri, 27 Mar 2019 12:30:00 +0200
 
