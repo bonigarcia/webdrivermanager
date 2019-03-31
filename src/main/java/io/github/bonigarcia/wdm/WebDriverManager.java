@@ -1258,7 +1258,7 @@ public abstract class WebDriverManager {
     }
 
     private void storeVersionToDownload(String version) {
-        if (!version.isEmpty()) {
+        if (!isNullOrEmpty(version)) {
             if (version.startsWith(".")) {
                 version = version.substring(1);
             }
