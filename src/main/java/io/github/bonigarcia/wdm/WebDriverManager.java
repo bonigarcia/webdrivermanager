@@ -1016,7 +1016,7 @@ public abstract class WebDriverManager {
 
                 for (int i = 0; i < nodes.getLength(); ++i) {
                     Element e = (Element) nodes.item(i);
-                    urls.add(new URL(driverUrl
+                    urls.add(new URL(driverUrl.toURI().resolve(".")
                             + e.getChildNodes().item(0).getNodeValue()));
                 }
             }
