@@ -326,17 +326,16 @@ As of version 2.2.0, WebDriverManager can used interactively from the Command Li
 [INFO]
 [INFO] --- exec-maven-plugin:1.6.0:java (default-cli) @ webdrivermanager ---
 [INFO] Using WebDriverManager to resolve chrome
+[INFO] Using chromedriver 73.0.3683.68 (since Google Chrome 73 is installed in your machine)
 [INFO] Reading https://chromedriver.storage.googleapis.com/ to seek chromedriver
-[INFO] Latest version of chromedriver is 2.37
-[INFO] Downloading https://chromedriver.storage.googleapis.com/2.37/chromedriver_win32.zip to folder D:\projects\webdrivermanager
-[INFO] Binary driver after extraction D:\projects\webdrivermanager\chromedriver.exe
+[INFO] Downloading https://chromedriver.storage.googleapis.com/73.0.3683.68/chromedriver_win32.zip
+[INFO] Extracting binary from compressed file chromedriver_win32.zip
 [INFO] Resulting binary D:\projects\webdrivermanager\chromedriver.exe
 [INFO] ------------------------------------------------------------------------
 [INFO] BUILD SUCCESS
 [INFO] ------------------------------------------------------------------------
-[INFO] Total time: 7.306 s
-[INFO] Finished at: 2018-03-23T09:53:58+01:00
-[INFO] Final Memory: 17M/247M
+[INFO] Total time: 14.919 s
+[INFO] Finished at: 2019-04-11T00:36:32+02:00
 [INFO] ------------------------------------------------------------------------
 ```
 
@@ -345,10 +344,11 @@ As of version 2.2.0, WebDriverManager can used interactively from the Command Li
 ```
 > java -jar webdrivermanager-3.4.0-fat.jar chrome
 [INFO] Using WebDriverManager to resolve chrome
+[INFO] Using chromedriver 73.0.3683.68 (since Google Chrome 73 is installed in your machine)
 [INFO] Reading https://chromedriver.storage.googleapis.com/ to seek chromedriver
-[INFO] Latest version of chromedriver is 2.37
-[INFO] Downloading https://chromedriver.storage.googleapis.com/2.37/chromedriver_win32.zip to folder D:\projects\webdrivermanager
-[INFO] Resulting binary D:\projects\webdrivermanager\target\chromedriver.exe
+[INFO] Downloading https://chromedriver.storage.googleapis.com/73.0.3683.68/chromedriver_win32.zip
+[INFO] Extracting binary from compressed file chromedriver_win32.zip
+[INFO] Resulting binary D:\projects\webdrivermanager\chromedriver.exe
 ```
 
 ## WebDriverManager server
