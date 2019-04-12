@@ -16,6 +16,12 @@
  */
 package io.github.bonigarcia.wdm.test;
 
+import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
+import static org.junit.Assume.assumeTrue;
+
+import java.io.File;
+
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.openqa.selenium.opera.OperaDriver;
@@ -33,6 +39,13 @@ public class OperaTest extends BrowserTestParent {
 
     @BeforeClass
     public static void setupClass() {
+        String operaBinary = IS_OS_WINDOWS
+                ? "C:\\Program Files\\Opera\\launcher.exe"
+                : IS_OS_MAC ? "/Applications/Opera.app/Contents/MacOS/Opera"
+                        : "/usr/bin/opera";
+        File opera = new File(operaBinary);
+        assumeTrue(opera.exists());
+
         WebDriverManager.operadriver().setup();
     }
 
