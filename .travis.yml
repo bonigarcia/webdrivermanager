@@ -14,7 +14,7 @@ install:
     - sudo sed -i s/deb-src.*google.*//g /etc/apt/sources.list
     - wget -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
     - sudo apt-get update -qq
-    - sudo apt-get install -y google-chrome-stable
+    - sudo apt-get install -y --allow-unauthenticated google-chrome-stable
 
 before_script:
     - "export DISPLAY=:99.0"
