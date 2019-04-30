@@ -401,7 +401,14 @@ public class Config {
     }
 
     public Architecture getArchitecture() {
-        return Architecture.valueOf(resolve(architecture));
+        String architectureString = resolve(architecture);
+        if ( "32".equals(architectureString) ) {
+            return Architecture.X32;
+        }
+        if ( "64".equals(architectureString) ) {
+            return Architecture.X64;
+        }
+        return Architecture.valueOf(architectureString);
     }
 
     public Config setArchitecture(Architecture value) {
