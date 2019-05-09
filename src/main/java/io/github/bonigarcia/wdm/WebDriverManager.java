@@ -93,7 +93,7 @@ public abstract class WebDriverManager {
     static final Logger log = getLogger(lookup().lookupClass());
 
     protected static final String SLASH = "/";
-    protected static final String INSIDERS = "insiders";
+    protected static final String PRE_INSTALLED = "pre-installed";
     protected static final String BETA = "beta";
     protected static final String ONLINE = "online";
     protected static final String LOCAL = "local";
@@ -586,12 +586,12 @@ public abstract class WebDriverManager {
     }
 
     private boolean checkInsiderVersion(String version) {
-        if (version.equals(INSIDERS)) {
+        if (version.equals(PRE_INSTALLED)) {
             String systemRoot = System.getenv("SystemRoot");
             File microsoftWebDriverFile = new File(systemRoot,
                     "System32" + File.separator + "MicrosoftWebDriver.exe");
             if (microsoftWebDriverFile.exists()) {
-                downloadedVersion = INSIDERS;
+                downloadedVersion = PRE_INSTALLED;
                 exportDriver(microsoftWebDriverFile.toString());
                 return true;
             } else {

@@ -32,12 +32,12 @@ import org.slf4j.Logger;
 import io.github.bonigarcia.wdm.WebDriverManagerException;
 
 /**
- * Test with Microsoft Edge using insiders version.
+ * Test with Microsoft Edge using pre-installed version.
  *
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 3.0.0
  */
-public class EdgeInsidersTest {
+public class EdgePreInstalledTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
@@ -57,7 +57,7 @@ public class EdgeInsidersTest {
     }
 
     private void exerciseEdgeInsider() {
-        edgedriver().operatingSystem(WIN).version("insiders").setup();
+        edgedriver().operatingSystem(WIN).version("pre-installed").setup();
         File binary = new File(edgedriver().getBinaryPath());
         log.debug("Edge driver {}", binary);
         assertTrue(binary.getName().endsWith(".exe"));
