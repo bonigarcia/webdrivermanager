@@ -109,7 +109,10 @@ public class EdgeDriverManager extends WebDriverManager {
             // paragraphs note related with the version of the binaries
             versionParagraph.remove(0);
             versionParagraph.remove(0);
-            versionParagraph.remove(0);
+            versionParagraph.remove(1);
+            versionParagraph.remove(1);
+            versionParagraph.remove(1);
+            versionParagraph.remove(1);
 
             for (int i = 0; i < downloadLink.size(); i++) {
                 String[] version = versionParagraph.get(i).text().split(" ");
