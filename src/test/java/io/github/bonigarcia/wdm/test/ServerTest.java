@@ -69,7 +69,7 @@ public class ServerTest {
                 { "edgedriver", "MicrosoftWebDriver.exe" },
                 { "iedriver", "IEDriverServer.exe" },
                 { "selenium-server-standalone",
-                        "selenium-server-standalone-3.141.0.jar" },
+                        "selenium-server-standalone-4.0.0-alpha-1.jar" },
                 { "chromedriver?os=WIN", "chromedriver.exe" },
                 { "chromedriver?os=LINUX&chromeDriverVersion=2.41&forceCache=true",
                         "chromedriver" } });
