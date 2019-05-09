@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static io.github.bonigarcia.wdm.Architecture.X32;
 import static io.github.bonigarcia.wdm.Config.isNullOrEmpty;
 import static io.github.bonigarcia.wdm.DriverManagerType.EDGE;
 import static io.github.bonigarcia.wdm.Shell.getVersionFromPowerShellOutput;
@@ -113,13 +114,27 @@ public class EdgeDriverManager extends WebDriverManager {
             versionParagraph.remove(1);
             versionParagraph.remove(1);
             versionParagraph.remove(1);
+            log.trace("Version paragraphs:\n{}", versionParagraph);
+            log.trace("Download links:\n{}", downloadLink);
 
             for (int i = 0; i < downloadLink.size(); i++) {
                 String[] version = versionParagraph.get(i).text().split(" ");
                 String v = version[1];
-                if (!v.equalsIgnoreCase("version")) {
-                    listVersions.add(v);
-                    urlList.add(new URL(downloadLink.get(i).attr("href")));
+                listVersions.add(v);
+
+                if (isChromiumBased(v)) {
+                    // Edge driver version 75 and above
+                    Architecture architecture = config().getArchitecture();
+                    int childIndex = architecture == X32 ? 0 : 1;
+                    log.trace("Architecture {} bits (child index {})",
+                            architecture, childIndex);
+                    urlList.add(new URL(versionParagraph.get(i)
+                            .child(childIndex).attr("href")));
+                } else {
+                    // Older versions
+                    if (!v.equalsIgnoreCase("version")) {
+                        urlList.add(new URL(downloadLink.get(i).attr("href")));
+                    }
                 }
             }
 
@@ -152,6 +167,21 @@ public class EdgeDriverManager extends WebDriverManager {
     }
 
     @Override
+    protected String preDownload(String target, String version) {
+        if (isChromiumBased(version)) {
+            int iVersion = target.indexOf(version);
+            if (iVersion != -1) {
+                target = target.substring(0, iVersion)
+                        + config().getArchitecture().name().toLowerCase()
+                        + File.separator + target.substring(iVersion);
+            }
+        }
+        log.trace("Pre-download in EdgeDriver. target={}, version={}", target,
+                version);
+        return target;
+    }
+
+    @Override
     protected File postDownload(File archive) {
         Collection<File> listFiles = listFiles(new File(archive.getParent()),
                 new String[] { "exe" }, true);
@@ -169,6 +199,12 @@ public class EdgeDriverManager extends WebDriverManager {
             }
         }
         return empty();
+    }
+
+    private boolean isChromiumBased(String version) {
+        long countDot = version.chars().filter(ch -> ch == '.').count();
+        log.trace("Edge driver version {} ({} dots)", version, countDot);
+        return countDot > 1;
     }
 
 }

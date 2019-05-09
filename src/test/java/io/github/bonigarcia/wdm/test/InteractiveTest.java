@@ -54,7 +54,7 @@ public class InteractiveTest {
                 { "firefox", "geckodriver" + EXT },
                 { "opera", "operadriver" + EXT },
                 { "phantomjs", "phantomjs" + EXT },
-                { "edge", "MicrosoftWebDriver.exe" },
+                { "edge", "msedgedriver.exe" },
                 { "iexplorer", "IEDriverServer.exe" } });
     }
 
