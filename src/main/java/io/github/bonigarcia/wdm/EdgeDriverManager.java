@@ -190,8 +190,19 @@ public class EdgeDriverManager extends WebDriverManager {
     @Override
     protected Optional<String> getBrowserVersion() {
         if (IS_OS_WINDOWS) {
-            String browserVersionOutput = runAndWait("powershell",
-                    "get-appxpackage Microsoft.MicrosoftEdge");
+            Optional<String> msedgeVersion = getDefaultBrowserVersion(
+                    getProgramFilesEnv(),
+                    "\\\\Microsoft\\\\Edge Dev\\\\Application\\\\msedge.exe",
+                    "", "", "--version", getDriverManagerType().toString());
+            String browserVersionOutput;
+            if (msedgeVersion.isPresent()) {
+                browserVersionOutput = msedgeVersion.get();
+                log.debug("Edge Dev (based on Chromium) version {} found",
+                        browserVersionOutput);
+            } else {
+                browserVersionOutput = runAndWait("powershell",
+                        "get-appxpackage Microsoft.MicrosoftEdge");
+            }
             if (!isNullOrEmpty(browserVersionOutput)) {
                 return Optional.of(
                         getVersionFromPowerShellOutput(browserVersionOutput));
