@@ -30,7 +30,7 @@ import org.slf4j.Logger;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 /**
- * Test asserting MicrosoftWebDriver Edge versions.
+ * Test asserting Edge driver versions.
  *
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 3.5.0

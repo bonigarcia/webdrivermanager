@@ -496,7 +496,7 @@ public abstract class WebDriverManager {
             getLatest = isNullOrEmpty(version);
 
             // For Edge
-            if (checkInsiderVersion(version)) {
+            if (checkPreInstalledVersion(version)) {
                 return;
             }
 
@@ -585,7 +585,7 @@ public abstract class WebDriverManager {
         return usePrefs;
     }
 
-    private boolean checkInsiderVersion(String version) {
+    private boolean checkPreInstalledVersion(String version) {
         if (version.equals(PRE_INSTALLED)) {
             String systemRoot = System.getenv("SystemRoot");
             File microsoftWebDriverFile = new File(systemRoot,
@@ -597,7 +597,7 @@ public abstract class WebDriverManager {
             } else {
                 retry = false;
                 throw new WebDriverManagerException(
-                        "MicrosoftWebDriver.exe should be installed in an elevated command prompt executing: "
+                        "MicrosoftWebDriver.exe should be pre-installed in an elevated command prompt executing: "
                                 + "dism /Online /Add-Capability /CapabilityName:Microsoft.WebDriver~~~~0.0.1.0");
             }
         }
@@ -814,7 +814,7 @@ public abstract class WebDriverManager {
             filesInCache = filterCacheBy(filesInCache, driverVersion);
 
             // Filter by OS
-            if (!getDriverName().equals("MicrosoftWebDriver")) {
+            if (!getDriverName().equals("msedgedriver")) {
                 filesInCache = filterCacheBy(filesInCache, os.toLowerCase());
             }
 
@@ -867,7 +867,7 @@ public abstract class WebDriverManager {
     protected List<URL> getVersion(List<URL> list, String driver,
             String version) {
         List<URL> out = new ArrayList<>();
-        if (getDriverName().contains("MicrosoftWebDriver")) {
+        if (getDriverName().contains("msedgedriver")) {
             int i = listVersions.indexOf(version);
             if (i != -1) {
                 out.add(list.get(i));

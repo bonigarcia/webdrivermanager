@@ -39,7 +39,7 @@ System.setProperty("webdriver.chrome.driver", "/path/to/binary/chromedriver");
 System.setProperty("webdriver.gecko.driver", "/path/to/binary/geckodriver");
 System.setProperty("webdriver.opera.driver", "/path/to/binary/operadriver");
 System.setProperty("phantomjs.binary.path", "/path/to/binary/phantomjs");
-System.setProperty("webdriver.edge.driver", "C:/path/to/binary/MicrosoftWebDriver.exe");
+System.setProperty("webdriver.edge.driver", "C:/path/to/binary/msedgedriver.exe");
 System.setProperty("webdriver.ie.driver", "C:/path/to/binary/IEDriverServer.exe");
 ```
 
@@ -382,7 +382,7 @@ When the WebDriverManager is up and running, a REST-like API using HTTP request 
 * http://localhost:4041/firefoxdriver : To download the latest version of *geckodriver*
 * http://localhost:4041/operadriver : To download the latest version of *operadriver*
 * http://localhost:4041/phantomjs : To download the latest version of *phantomjs* driver
-* http://localhost:4041/edgedriver : To download the latest version of *MicrosoftWebDriver*
+* http://localhost:4041/edgedriver : To download the latest version of *msedgedriver*
 * http://localhost:4041/iedriver : To download the latest version of *IEDriverServer*
 
 These requests use HTTP GET and can be done using a normal browser. The driver binary is automatically downloaded by the browser since it is sent as an attachment in the HTTP response.

@@ -66,7 +66,7 @@ public class ServerTest {
                 { "firefoxdriver", "geckodriver" + EXT },
                 { "operadriver", "operadriver" + EXT },
                 { "phantomjs", "phantomjs" + EXT },
-                { "edgedriver", "MicrosoftWebDriver.exe" },
+                { "edgedriver", "msedgedriver.exe" },
                 { "iedriver", "IEDriverServer.exe" },
                 { "selenium-server-standalone",
                         "selenium-server-standalone-4.0.0-alpha-1.jar" },

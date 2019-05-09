@@ -54,7 +54,7 @@ public class EdgeDriverManager extends WebDriverManager {
 
     @Override
     protected String getDriverName() {
-        return "MicrosoftWebDriver";
+        return "msedgedriver";
     }
 
     @Override
@@ -161,8 +161,7 @@ public class EdgeDriverManager extends WebDriverManager {
         List<URL> out = new ArrayList<>();
         versionToDownload = listVersions.iterator().next();
         out.add(list.iterator().next());
-        log.info("Latest version of MicrosoftWebDriver is {}",
-                versionToDownload);
+        log.info("Latest version of Edge driver is {}", versionToDownload);
         return out;
     }
 
@@ -176,7 +175,7 @@ public class EdgeDriverManager extends WebDriverManager {
                         + File.separator + target.substring(iVersion);
             }
         }
-        log.trace("Pre-download in EdgeDriver. target={}, version={}", target,
+        log.trace("Pre-download in EdgeDriver -- target={}, version={}", target,
                 version);
         return target;
     }
