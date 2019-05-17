@@ -17,18 +17,15 @@
 package io.github.bonigarcia.wdm;
 
 import static io.github.bonigarcia.wdm.DriverManagerType.CHROME;
-import static org.apache.http.HttpHeaders.USER_AGENT;
+import static java.nio.charset.Charset.defaultCharset;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
 
 /**
  * Manager for Chrome.
@@ -113,21 +110,20 @@ public class ChromeDriverManager extends WebDriverManager {
     @Override
     protected Optional<String> getLatestVersion() {
         String url = config().getChromeDriverUrl() + "LATEST_RELEASE";
-        HttpGet request = new HttpGet(url);
-        request.addHeader("User-Agent", USER_AGENT);
-        HttpResponse response;
         Optional<String> version = Optional.empty();
         try {
-            response = httpClient.execute(request);
-            BufferedReader rd = new BufferedReader(
-                    new InputStreamReader(response.getEntity().getContent()));
-            version = Optional.of(IOUtils.toString(rd));
-        } catch (IOException e) {
+            InputStream response = httpClient
+                    .execute(httpClient.createHttpGet(new URL(url))).getEntity()
+                    .getContent();
+            version = Optional.of(IOUtils.toString(response, defaultCharset()));
+        } catch (Exception e) {
             log.warn("Exception reading {} to get latest version of {}", url,
                     getDriverName(), e);
         }
-        log.debug("Latest version of {} according to {} is {}", getDriverName(),
-                url, version);
+        if (version.isPresent()) {
+            log.debug("Latest version of {} according to {} is {}",
+                    getDriverName(), url, version.get());
+        }
         return version;
     }
 
