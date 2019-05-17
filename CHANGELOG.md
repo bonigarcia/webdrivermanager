@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.6.0] - 2019-05-17
+### Added
+- Read chromedriver LATEST_RELEASE page when not using useBetaVersions() (issues #333, #341, #342)
+
+### Fixed
+- Enable Edge Dev test (issue #337)
+
+### Changed
+- Increase default value of TTL to 86400 seconds (i.e. one day)
+- Change changelog format to Markdown (issue #331)
+
+
 ## [3.5.0] - 2019-05-05
 ### Added
 - Support for msedgedriver (Edge based on Chromium)
