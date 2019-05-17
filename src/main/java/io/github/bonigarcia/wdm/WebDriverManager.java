@@ -497,10 +497,10 @@ public abstract class WebDriverManager {
 
             // Check latest version
             if (getLatest && !config().isUseBetaVersions()) {
-                Optional<String> latestVersion = getLatestVersion();
-                getLatest = !latestVersion.isPresent();
+                Optional<String> lastVersion = getLatestVersion();
+                getLatest = !lastVersion.isPresent();
                 if (!getLatest) {
-                    version = latestVersion.get();
+                    version = lastVersion.get();
                 }
             }
 
