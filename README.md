@@ -166,7 +166,7 @@ The relationship between browser version and driver version is managed in a inte
 
 In order to resolve the driver version for a given browser, first WebDriverManager try to find out the version of that browser. This mechanism depends on the browser (Chrome, Firefox, etc) and the platform (Linux, Windows, Mac). For instance, for Chrome in Linux, the command ``google-chrome --version`` is executed in the shell.  
 
-Moreover in order to improve the performance of WebDriverManager, as of version 3.1.0, resolved driver versions for browsers are stored persistently as Java preferences. The validity of this relationship (browser version and driver version) stored as preferences is linked to a *time-to-live* (ttl). By default, this value is 3600 seconds.
+Moreover in order to improve the performance of WebDriverManager, as of version 3.1.0, resolved driver versions for browsers are stored persistently as Java preferences. The validity of this relationship (browser version and driver version) stored as preferences is linked to a *time-to-live* (ttl). By default, this value is 86400 seconds (i.e. 1 day).
 
 
 ### WebDriverManager API
@@ -199,7 +199,7 @@ WebDriverManager exposes its API by means of the **builder pattern**. This means
 | ``avoidOutputTree()``                | Avoid create tree structure for downloaded binaries (e.g. ``webdriver/chromedriver/linux64/2.37/`` for ``chromedriver``). Used by default in interactive mode.                                                                                                                                                                                               | ``wdm.avoidOutputTree``                                                                                                                                                               |
 | ``avoidAutoVersion()``               | Avoid checking the version of the installed browser (e.g. Chrome, Firefox) to find out the proper version of the required driver (e.g. *chromedriver*, *geckodriver*). Only recommended for WebDriverManager as Java dependency mode.                                                                                                                        | ``wdm.avoidAutoVersion``                                                                                                                                                              |
 | ``browserPath()``                    | As of WebDriverManager 3.0.0, versions of drivers are contained in an internal database (versions.properties) wich matches the driver version to each browser version. In order to find the browser version, a command is executed on the shell (e.g. ``google-chrome --version`` in Linux). The path of the browser can be configured using this method     | ``wdm.binaryPath``                                                                                                                                                                    |
-| ``ttl()``                            | As of WebDriverManager 3.1.0, resolved versions of drivers are stored as Java preferences. These values has a expiration time based on this Time To Live (TTL) value, measured in **seconds**. By default this value is 3600 (i.e. 1 hour).                                                                                                                  | ``wdm.ttl``                                                                                                                                                                           |
+| ``ttl()``                            | As of WebDriverManager 3.1.0, resolved versions of drivers are stored as Java preferences. These values has a expiration time based on this Time To Live (TTL) value, measured in **seconds**. By default this value is 86400 (i.e. 1 day).                                                                                                                  | ``wdm.ttl``                                                                                                                                                                           |
 | ``setVersionsPropertiesUrl(URL)``    | URL of the online ``version.properties`` file, used if the relationship between browser and driver is unknown in the local version of that file. By default this value targets to the master branch of GitHub.                                                                                                                                               | ``wdm.versionsPropertiesUrl``                                                                                                                                                         |
 
 The following table contains some examples:
@@ -238,7 +238,7 @@ wdm.avoidAutoReset=false
 wdm.avoidPreferences=false
 wdm.timeout=30
 wdm.serverPort=4041
-wdm.ttl=3600
+wdm.ttl=86400
 
 wdm.chromeDriverUrl=https://chromedriver.storage.googleapis.com/
 wdm.chromeDriverMirrorUrl=http://npm.taobao.org/mirrors/chromedriver
