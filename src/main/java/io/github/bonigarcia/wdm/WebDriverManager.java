@@ -495,6 +495,15 @@ public abstract class WebDriverManager {
             }
             getLatest = isNullOrEmpty(version);
 
+            // Check latest version
+            if (getLatest && !config().isUseBetaVersions()) {
+                Optional<String> latestVersion = getLatestVersion();
+                getLatest = latestVersion.isPresent();
+                if (getLatest) {
+                    version = latestVersion.get();
+                }
+            }
+
             // For Edge
             if (checkPreInstalledVersion(version)) {
                 return;
@@ -524,7 +533,6 @@ public abstract class WebDriverManager {
             } else {
                 List<URL> candidateUrls = filterCandidateUrls(arch, version,
                         getLatest);
-
                 if (candidateUrls.isEmpty()) {
                     String errorMessage = getDriverName() + " " + versionStr
                             + " for " + os + arch.toString() + " not found in "
@@ -1169,6 +1177,10 @@ public abstract class WebDriverManager {
             return system32;
         }
         return new File(".");
+    }
+
+    protected Optional<String> getLatestVersion() {
+        return empty();
     }
 
     protected void reset() {
