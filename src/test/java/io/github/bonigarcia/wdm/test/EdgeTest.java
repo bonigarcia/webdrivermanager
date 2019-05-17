@@ -21,8 +21,9 @@ import static org.junit.Assume.assumeTrue;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.base.BrowserTestParent;
@@ -33,7 +34,6 @@ import io.github.bonigarcia.wdm.base.BrowserTestParent;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.3.0
  */
-@Ignore
 public class EdgeTest extends BrowserTestParent {
 
     @BeforeClass
@@ -44,7 +44,11 @@ public class EdgeTest extends BrowserTestParent {
 
     @Before
     public void setupTest() {
-        driver = new EdgeDriver();
+        ChromeOptions chromeOptions = new ChromeOptions();
+        chromeOptions.setBinary(
+                "C:\\Program Files (x86)\\Microsoft\\Edge Dev\\Application\\msedge.exe");
+        EdgeOptions edgeOptions = new EdgeOptions().merge(chromeOptions);
+        driver = new EdgeDriver(edgeOptions);
     }
 
 }
