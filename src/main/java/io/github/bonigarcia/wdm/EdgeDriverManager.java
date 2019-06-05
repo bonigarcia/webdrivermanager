@@ -16,9 +16,10 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static io.github.bonigarcia.wdm.Architecture.X32;
+import static io.github.bonigarcia.wdm.Architecture.X64;
 import static io.github.bonigarcia.wdm.Config.isNullOrEmpty;
 import static io.github.bonigarcia.wdm.DriverManagerType.EDGE;
+import static io.github.bonigarcia.wdm.OperatingSystem.MAC;
 import static io.github.bonigarcia.wdm.Shell.getVersionFromPowerShellOutput;
 import static io.github.bonigarcia.wdm.Shell.runAndWait;
 import static java.util.Collections.sort;
@@ -37,6 +38,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 /**
@@ -108,36 +110,46 @@ public class EdgeDriverManager extends WebDriverManager {
 
             // Due to recent changes in Edge driver page, the first three
             // paragraphs note related with the version of the binaries
+            log.trace("[1] Download links:\n{}", downloadLink);
+            log.trace("[1] Version paragraphs:\n{}", versionParagraph);
+            downloadLink.remove(0);
             versionParagraph.remove(0);
             versionParagraph.remove(0);
-            versionParagraph.remove(1);
-            versionParagraph.remove(1);
-            versionParagraph.remove(1);
-            versionParagraph.remove(1);
-            log.trace("Version paragraphs:\n{}", versionParagraph);
-            log.trace("Download links:\n{}", downloadLink);
+            versionParagraph.remove(3);
+            versionParagraph.remove(3);
+            versionParagraph.remove(3);
+            versionParagraph.remove(3);
+            log.trace("[2] Download links:\n{}", downloadLink);
+            log.trace("[2] Version paragraphs:\n{}", versionParagraph);
 
-            for (int i = 0; i < downloadLink.size(); i++) {
-                String[] version = versionParagraph.get(i).text().split(" ");
+            for (int i = 0; i < versionParagraph.size(); i++) {
+                Element paragraph = versionParagraph.get(i);
+                String[] version = paragraph.text().split(" ");
                 String v = version[1];
                 listVersions.add(v);
 
                 if (isChromiumBased(v)) {
                     // Edge driver version 75 and above
-                    Architecture architecture = config().getArchitecture();
-                    int childIndex = architecture == X32 ? 0 : 1;
-                    log.trace("Architecture {} bits (child index {})",
-                            architecture, childIndex);
-                    urlList.add(new URL(versionParagraph.get(i)
-                            .child(childIndex).attr("href")));
+                    int childIndex = 0;
+                    if (!paragraph.text().contains("76.0.174.0")) {
+                        if (config().getOs().equals(MAC.name())) {
+                            childIndex = 2;
+                        } else if (config().getArchitecture() == X64) {
+                            childIndex = 1;
+                        }
+                    }
+                    urlList.add(
+                            new URL(paragraph.child(childIndex).attr("href")));
                 } else {
                     // Older versions
                     if (!v.equalsIgnoreCase("version")) {
-                        urlList.add(new URL(downloadLink.get(i).attr("href")));
+                        urlList.add(
+                                new URL(downloadLink.get(i - 3).attr("href")));
                     }
                 }
             }
 
+            log.trace("Edge driver URL list {}", urlList);
             return urlList;
         }
     }
@@ -183,7 +195,7 @@ public class EdgeDriverManager extends WebDriverManager {
     @Override
     protected File postDownload(File archive) {
         Collection<File> listFiles = listFiles(new File(archive.getParent()),
-                new String[] { "exe" }, true);
+                null, true);
         return listFiles.iterator().next();
     }
 

@@ -36,7 +36,8 @@ public class EdgeVersionTest extends VersionTestParent {
     public void setup() {
         browserManager = WebDriverManager.getInstance(EdgeDriver.class);
         os = WIN;
-        specificVersions = new String[] { "3.14393", "4.15063" };
+        specificVersions = new String[] { "1.10240", "2.10586", "75.0.137.0",
+                "76.0.168.0" };
     }
 
 }
