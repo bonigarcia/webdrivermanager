@@ -108,10 +108,9 @@ public class EdgeDriverManager extends WebDriverManager {
             Elements versionParagraph = doc.select(
                     "ul.driver-downloads li.driver-download p.driver-download__meta");
 
-            // Due to recent changes in Edge driver page, the first three
-            // paragraphs note related with the version of the binaries
-            log.trace("[1] Download links:\n{}", downloadLink);
-            log.trace("[1] Version paragraphs:\n{}", versionParagraph);
+            log.trace("[Original] Download links:\n{}", downloadLink);
+            log.trace("[Original] Version paragraphs:\n{}", versionParagraph);
+            // Remove non-necessary paragraphs and links elements
             downloadLink.remove(0);
             versionParagraph.remove(0);
             versionParagraph.remove(0);
@@ -119,8 +118,13 @@ public class EdgeDriverManager extends WebDriverManager {
             versionParagraph.remove(3);
             versionParagraph.remove(3);
             versionParagraph.remove(3);
-            log.trace("[2] Download links:\n{}", downloadLink);
-            log.trace("[2] Version paragraphs:\n{}", versionParagraph);
+            log.trace("[Clean] Download links:\n{}", downloadLink);
+            log.trace("[Clean] Version paragraphs:\n{}", versionParagraph);
+
+            int shiftLinks = versionParagraph.size() - downloadLink.size();
+            log.trace(
+                    "The difference between the size of versions and links is {}",
+                    shiftLinks);
 
             for (int i = 0; i < versionParagraph.size(); i++) {
                 Element paragraph = versionParagraph.get(i);
@@ -143,8 +147,8 @@ public class EdgeDriverManager extends WebDriverManager {
                 } else {
                     // Older versions
                     if (!v.equalsIgnoreCase("version")) {
-                        urlList.add(
-                                new URL(downloadLink.get(i - 3).attr("href")));
+                        urlList.add(new URL(
+                                downloadLink.get(i - shiftLinks).attr("href")));
                     }
                 }
             }
