@@ -1,5 +1,13 @@
 # Changelog
 
+## [3.6.1] - 2019-06-07
+### Added
+- Special case to find out Chromium version instead of Chrome (issue #348)
+
+### Fixed
+- Support for Edge driver 76 (issue #338 and #347)
+
+
 ## [3.6.0] - 2019-05-17
 ### Added
 - Read chromedriver LATEST_RELEASE page when not using useBetaVersions() (issues #333, #341, #342)
