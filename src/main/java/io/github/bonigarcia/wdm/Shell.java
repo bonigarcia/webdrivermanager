@@ -83,6 +83,10 @@ public class Shell {
 
     public static String getVersionFromPosixOutput(String output,
             String driverType) {
+        // Special case: using Chromium as Chrome
+        if (output.contains("Chromium")) {
+            driverType = "Chromium";
+        }
         int i = output.indexOf(driverType);
         int j = output.indexOf('.');
         return i != -1 && j != -1
