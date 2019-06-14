@@ -10,7 +10,7 @@
 
 **WebDriverManager use**: <!-- Copy here your code in which you are using WebDriverManager. -->
 
-**WebDriverManager traces**: <!-- Copy the WebDriverManager traces here. This information is very important to analyze your issue, so please do not skip this part. If you are not using a logger in your project (logback, log4j, etc), please consider using one before creating this issue. For instance:
+**WebDriverManager traces**: <!-- Copy the WebDriverManager traces here. This information is very important to analyze your issue, so please do not skip this part. If you are not using a logger in your project (logback, log4j, etc), please consider using one before creating this issue (see a tutorial here https://www.stubbornjava.com/posts/logging-in-java-with-slf4j-and-logback). For instance:
 
 2019-06-13 09:42:30 [main] INFO  i.g.bonigarcia.wdm.WebDriverManager.detectDriverVersionFromBrowser(575) -- Using chromedriver 75.0.3770.8 (since Google Chrome 75 is installed in your machine)
 2019-06-13 09:42:30 [main] DEBUG io.github.bonigarcia.wdm.Preferences.putValueInPreferencesIfEmpty(66) -- Storing preference chrome75=75.0.3770.8 (valid until 2019-06-14 09:42:30)
