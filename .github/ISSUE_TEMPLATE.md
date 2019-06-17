@@ -1,4 +1,4 @@
-<!- Please make sure that it is an issue or a feature request. If you have questions on how to use WebDriverManager properly with a special configuration or suchlike, please consider asking a question on Stack Overflow (https://stackoverflow.com/questions/tagged/webdrivermanager-java) and tag it with webdrivermanager-java -->
+<!-- Please make sure that it is an issue or a feature request. If you have questions on how to use WebDriverManager properly with a special configuration or suchlike, please consider asking a question on Stack Overflow (https://stackoverflow.com/questions/tagged/webdrivermanager-java) and tag it with webdrivermanager-java -->
 
 **Description of the problem**: <!-- Describe the expected and the actual behavior. -->
 
