@@ -207,6 +207,9 @@ public class EdgeDriverManager extends WebDriverManager {
         File file = null;
         while (iterator.hasNext()) {
             file = iterator.next();
+            if (file.getName().contains(getDriverName())) {
+                return file;
+            }
         }
         return file;
     }
