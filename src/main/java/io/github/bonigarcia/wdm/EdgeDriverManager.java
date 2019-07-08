@@ -34,6 +34,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -110,24 +111,26 @@ public class EdgeDriverManager extends WebDriverManager {
 
             log.trace("[Original] Download links:\n{}", downloadLink);
             log.trace("[Original] Version paragraphs:\n{}", versionParagraph);
-            // Remove non-necessary paragraphs and links elements
-            downloadLink.remove(0);
-            versionParagraph.remove(0);
-            versionParagraph.remove(0);
-            versionParagraph.remove(3);
-            versionParagraph.remove(3);
-            versionParagraph.remove(3);
-            versionParagraph.remove(3);
-            log.trace("[Clean] Download links:\n{}", downloadLink);
-            log.trace("[Clean] Version paragraphs:\n{}", versionParagraph);
 
-            int shiftLinks = versionParagraph.size() - downloadLink.size();
+            // Remove non-necessary paragraphs and links elements
+            Elements versionParagraphClean = new Elements();
+            for (int i = 0; i < versionParagraph.size(); i++) {
+                Element element = versionParagraph.get(i);
+                if (element.text().toLowerCase().startsWith("version")) {
+                    versionParagraphClean.add(element);
+                }
+            }
+
+            log.trace("[Clean] Download links:\n{}", downloadLink);
+            log.trace("[Clean] Version paragraphs:\n{}", versionParagraphClean);
+
+            int shiftLinks = versionParagraphClean.size() - downloadLink.size();
             log.trace(
                     "The difference between the size of versions and links is {}",
                     shiftLinks);
 
-            for (int i = 0; i < versionParagraph.size(); i++) {
-                Element paragraph = versionParagraph.get(i);
+            for (int i = 0; i < versionParagraphClean.size(); i++) {
+                Element paragraph = versionParagraphClean.get(i);
                 String[] version = paragraph.text().split(" ");
                 String v = version[1];
                 listVersions.add(v);
@@ -200,7 +203,12 @@ public class EdgeDriverManager extends WebDriverManager {
     protected File postDownload(File archive) {
         Collection<File> listFiles = listFiles(new File(archive.getParent()),
                 null, true);
-        return listFiles.iterator().next();
+        Iterator<File> iterator = listFiles.iterator();
+        File file = null;
+        while (iterator.hasNext()) {
+            file = iterator.next();
+        }
+        return file;
     }
 
     @Override
