@@ -37,7 +37,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import java.util.stream.Collectors;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -104,24 +103,31 @@ public class EdgeDriverManager extends WebDriverManager {
                 .getContent()) {
             Document doc = parse(in, null, "");
 
-            Elements downloadLinks = doc
+            Elements downloadLink = doc
                     .select("ul.driver-downloads li.driver-download > a");
-            List<Optional<Element>> versionParagraph = downloadLinks.stream()
-                  .map(link->link.parent().select("p.driver-download__meta"))
-                  .map(paragraphs->paragraphs.size() == 1 ? Optional.of(paragraphs.get(0)) : Optional.<Element>empty())
-                  .collect(Collectors.toList());
+            Elements versionParagraph = doc.select(
+                    "ul.driver-downloads li.driver-download p.driver-download__meta");
 
-            log.trace("Download links:\n{}", downloadLinks);
-            log.trace("Sibling version paragraphs:\n{}", versionParagraph);
+            log.trace("[Original] Download links:\n{}", downloadLink);
+            log.trace("[Original] Version paragraphs:\n{}", versionParagraph);
+            // Remove non-necessary paragraphs and links elements
+            downloadLink.remove(0);
+            versionParagraph.remove(0);
+            versionParagraph.remove(0);
+            versionParagraph.remove(3);
+            versionParagraph.remove(3);
+            versionParagraph.remove(3);
+            versionParagraph.remove(3);
+            log.trace("[Clean] Download links:\n{}", downloadLink);
+            log.trace("[Clean] Version paragraphs:\n{}", versionParagraph);
+
+            int shiftLinks = versionParagraph.size() - downloadLink.size();
+            log.trace(
+                    "The difference between the size of versions and links is {}",
+                    shiftLinks);
 
             for (int i = 0; i < versionParagraph.size(); i++) {
-                Element downloadLink = downloadLinks.get(i);
-                Optional<Element> optionalParagraph = versionParagraph.get(i);
-                if ( !optionalParagraph.isPresent() ) {
-                    log.trace("No describing paragraph was found for download link {}.", downloadLink);
-                    continue;
-                }
-                Element paragraph = optionalParagraph.get();
+                Element paragraph = versionParagraph.get(i);
                 String[] version = paragraph.text().split(" ");
                 String v = version[1];
                 listVersions.add(v);
@@ -142,7 +148,7 @@ public class EdgeDriverManager extends WebDriverManager {
                     // Older versions
                     if (!v.equalsIgnoreCase("version")) {
                         urlList.add(new URL(
-                                downloadLink.attr("href")));
+                                downloadLink.get(i - shiftLinks).attr("href")));
                     }
                 }
             }
