@@ -138,12 +138,10 @@ public class EdgeDriverManager extends WebDriverManager {
                 if (isChromiumBased(v)) {
                     // Edge driver version 75 and above
                     int childIndex = 0;
-                    if (!paragraph.text().contains("76.0.174.0")) {
-                        if (config().getOs().equals(MAC.name())) {
-                            childIndex = 2;
-                        } else if (config().getArchitecture() == X64) {
-                            childIndex = 1;
-                        }
+                    if (config().getOs().equals(MAC.name())) {
+                        childIndex = 2;
+                    } else if (config().getArchitecture() == X64) {
+                        childIndex = 1;
                     }
                     urlList.add(
                             new URL(paragraph.child(childIndex).attr("href")));
