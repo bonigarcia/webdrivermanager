@@ -38,7 +38,7 @@ public class EdgeVersionTest extends VersionTestParent {
         os = WIN;
         specificVersions = new String[] { "1.10240", "2.10586", "3.14393",
                 "4.15063", "5.16299", "6.17134", "75.0.139.20", "76.0.183.0",
-                "77.0.214.1" };
+                "77.0.216.0" };
     }
 
 }
