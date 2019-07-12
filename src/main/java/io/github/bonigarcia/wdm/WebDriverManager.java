@@ -639,8 +639,10 @@ public abstract class WebDriverManager {
                 onlineMessage, key);
         String value = getVersionFromProperties(online).getProperty(key);
         if (value == null) {
-            log.debug("Driver for {} not found in {} properties", key,
-                    onlineMessage);
+            String notOnlineMessage = online ? LOCAL : ONLINE;
+            log.debug(
+                    "Driver for {} not found in {} properties (using {} version)",
+                    key, onlineMessage, notOnlineMessage);
             versionsProperties = null;
             value = getVersionFromProperties(!online).getProperty(key);
         }
