@@ -39,7 +39,7 @@ public class EdgeTest extends BrowserTestParent {
     @BeforeClass
     public static void setupClass() {
         assumeTrue(IS_OS_WINDOWS);
-        WebDriverManager.edgedriver().setup();
+        WebDriverManager.edgedriver().avoidPreferences().setup();
     }
 
     @Before

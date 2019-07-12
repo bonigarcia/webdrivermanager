@@ -17,7 +17,7 @@
 package io.github.bonigarcia.wdm.test;
 
 import static java.lang.invoke.MethodHandles.lookup;
-import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.hasItems;
 import static org.junit.Assert.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -42,16 +42,15 @@ public class EdgeReadVersionTest {
     @Test
     public void edgeVersionsTest() {
         String[] expectedVersions = { "1.10240", "2.10586", "3.14393",
-                "4.15063", "5.16299", "6.17134", "75.0.139.20", "76.0.182.0",
-                "76.0.182.6", "76.0.183.0", "77.0.213.1", "77.0.214.1",
-                "77.0.216.0" };
+                "4.15063", "5.16299", "6.17134", "75.0.139.20", "76.0.183.0",
+                "77.0.217.0" };
         List<String> versions = WebDriverManager.edgedriver().getVersions();
 
         log.debug("Expected edge versions: {}",
                 Arrays.asList(expectedVersions));
         log.debug("Edge versions read from the web page: {}", versions);
 
-        assertThat(versions, contains(expectedVersions));
+        assertThat(versions, hasItems(expectedVersions));
     }
 
 }
