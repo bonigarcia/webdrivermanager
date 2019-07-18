@@ -1,5 +1,20 @@
 # Changelog
 
+## [3.6.2] - 2019-07-18
+### Added
+- Check PROGRAMFILES and PROGRAMFILES(X86) to find out browser versions in Windows (issue #351)
+
+### Fixed
+- Support for Edge driver 76 (issue #338 and #347)
+
+### Changed
+- Remove Edge 77 key from versions.properties for release (it will be maintained online)
+- Update edgedriver version 76.0.183.0 for Edge 76 in versions.properties
+- Update edgedriver version 75.0.139.20 for Edge 75 in versions.properties
+- Update chromedriver version 76.0.3809.68 for Chrome 76 in versions.properties
+- Update chromedriver version 75.0.3770.140 for Chrome 75 in versions.properties
+
+
 ## [3.6.1] - 2019-06-07
 ### Added
 - Special case to find out Chromium version instead of Chrome (issue #348)
