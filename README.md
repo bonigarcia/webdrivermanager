@@ -61,7 +61,7 @@ In order to use WebDriverManager from tests in a Maven project, you need to add 
 <dependency>
     <groupId>io.github.bonigarcia</groupId>
     <artifactId>webdrivermanager</artifactId>
-    <version>3.6.1</version>
+    <version>3.6.2</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -70,7 +70,7 @@ In order to use WebDriverManager from tests in a Maven project, you need to add 
 
 ```
 dependencies {
-    testCompile("io.github.bonigarcia:webdrivermanager:3.6.1")
+    testCompile("io.github.bonigarcia:webdrivermanager:3.6.2")
 }
 ```
 
@@ -321,7 +321,7 @@ As of version 2.2.0, WebDriverManager can used interactively from the Command Li
 [INFO] Scanning for projects...
 [INFO]
 [INFO] ------------------------------------------------------------------------
-[INFO] Building WebDriverManager 3.6.1
+[INFO] Building WebDriverManager 3.6.2
 [INFO] ------------------------------------------------------------------------
 [INFO]
 [INFO] --- exec-maven-plugin:1.6.0:java (default-cli) @ webdrivermanager ---
@@ -339,10 +339,10 @@ As of version 2.2.0, WebDriverManager can used interactively from the Command Li
 [INFO] ------------------------------------------------------------------------
 ```
 
-* Using WebDriverManager as a *fat-jar* (i.e. WebDriverManager with all its dependencies in a single executable JAR file). This JAR file can downloaded from [here](https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-3.6.1/webdrivermanager-3.6.1-fat.jar) and also it can be created using the command ``mvn compile assembly:single`` from the source code. Once you get the *fat-jar*, you simply need to use the command ``java -jar webdrivermanager-3.6.1-fat.jar browserName``, for instance:
+* Using WebDriverManager as a *fat-jar* (i.e. WebDriverManager with all its dependencies in a single executable JAR file). This JAR file can downloaded from [here](https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-3.6.2/webdrivermanager-3.6.2-fat.jar) and also it can be created using the command ``mvn compile assembly:single`` from the source code. Once you get the *fat-jar*, you simply need to use the command ``java -jar webdrivermanager-3.6.2-fat.jar browserName``, for instance:
 
 ```
-> java -jar webdrivermanager-3.6.1-fat.jar chrome
+> java -jar webdrivermanager-3.6.2-fat.jar chrome
 [INFO] Using WebDriverManager to resolve chrome
 [INFO] Using chromedriver 73.0.3683.68 (since Google Chrome 73 is installed in your machine)
 [INFO] Reading https://chromedriver.storage.googleapis.com/ to seek chromedriver
@@ -362,17 +362,17 @@ $ mvn exec:java -Dexec.args="server"
 [INFO] Scanning for projects...
 [INFO]
 [INFO] ------------------------------------------------------------------------
-[INFO] Building WebDriverManager 3.6.1
+[INFO] Building WebDriverManager 3.6.2
 [INFO] ------------------------------------------------------------------------
 [INFO]
 [INFO] --- exec-maven-plugin:1.6.0:java (default-cli) @ webdrivermanager ---
 [INFO] WebDriverManager server listening on port 4041
 ```
 
-* Using WebDriverManager as a [fat-jar](https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-3.6.1/webdrivermanager-3.6.1-fat.jar). For instance:
+* Using WebDriverManager as a [fat-jar](https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-3.6.2/webdrivermanager-3.6.2-fat.jar). For instance:
 
 ```
-> java -jar webdrivermanager-3.6.1-fat.jar server
+> java -jar webdrivermanager-3.6.2-fat.jar server
 [INFO] WebDriverManager server listening on port 4041
 ```
 
