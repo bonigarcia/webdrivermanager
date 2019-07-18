@@ -1143,16 +1143,18 @@ public abstract class WebDriverManager {
             String browserNameInOutput) {
         String browserBinaryPath = config().getBinaryPath();
         if (IS_OS_WINDOWS) {
-            String programFiles = System.getenv(programFilesEnv)
-                    .replaceAll("\\\\", "\\\\\\\\");
-
-            String browserPath = isNullOrEmpty(browserBinaryPath)
-                    ? programFiles + winBrowserName
-                    : browserBinaryPath;
-            String browserVersionOutput = runAndWait(getExecFile(), "wmic",
-                    "datafile", "where", "name='" + browserPath + "'", "get",
-                    "Version", "/value");
-            if (!isNullOrEmpty(browserVersionOutput)) {
+            String browserVersionOutput = getBrowserVersionInWindows(
+                    programFilesEnv, winBrowserName, browserBinaryPath);
+            if (isNullOrEmpty(browserVersionOutput)) {
+                String otherProgramFilesEnv = getOtherProgramFilesEnv();
+                browserVersionOutput = getBrowserVersionInWindows(
+                        otherProgramFilesEnv, winBrowserName,
+                        browserBinaryPath);
+                if (!isNullOrEmpty(browserVersionOutput)) {
+                    return Optional
+                            .of(getVersionFromWmicOutput(browserVersionOutput));
+                }
+            } else {
                 return Optional
                         .of(getVersionFromWmicOutput(browserVersionOutput));
             }
@@ -1170,6 +1172,19 @@ public abstract class WebDriverManager {
             }
         }
         return empty();
+    }
+
+    private String getBrowserVersionInWindows(String programFilesEnv,
+            String winBrowserName, String browserBinaryPath) {
+        String programFiles = System.getenv(programFilesEnv).replaceAll("\\\\",
+                "\\\\\\\\");
+        String browserPath = isNullOrEmpty(browserBinaryPath)
+                ? programFiles + winBrowserName
+                : browserBinaryPath;
+        String browserVersionOutput = runAndWait(getExecFile(), "wmic",
+                "datafile", "where", "name='" + browserPath + "'", "get",
+                "Version", "/value");
+        return browserVersionOutput;
     }
 
     protected File getExecFile() {
@@ -1200,6 +1215,11 @@ public abstract class WebDriverManager {
         return System.getProperty("os.arch").contains("64")
                 ? "PROGRAMFILES(X86)"
                 : "PROGRAMFILES";
+    }
+
+    protected String getOtherProgramFilesEnv() {
+        return System.getProperty("os.arch").contains("64") ? "PROGRAMFILES"
+                : "PROGRAMFILES(X86)";
     }
 
     protected URL getDriverUrlCkeckingMirror(URL url) {
