@@ -1146,15 +1146,11 @@ public abstract class WebDriverManager {
             String browserVersionOutput = getBrowserVersionInWindows(
                     programFilesEnv, winBrowserName, browserBinaryPath);
             if (isNullOrEmpty(browserVersionOutput)) {
-                String otherProgramFilesEnv = getOtherProgramFilesEnv();
                 browserVersionOutput = getBrowserVersionInWindows(
-                        otherProgramFilesEnv, winBrowserName,
+                        getOtherProgramFilesEnv(), winBrowserName,
                         browserBinaryPath);
-                if (!isNullOrEmpty(browserVersionOutput)) {
-                    return Optional
-                            .of(getVersionFromWmicOutput(browserVersionOutput));
-                }
-            } else {
+            }
+            if (!isNullOrEmpty(browserVersionOutput)) {
                 return Optional
                         .of(getVersionFromWmicOutput(browserVersionOutput));
             }
