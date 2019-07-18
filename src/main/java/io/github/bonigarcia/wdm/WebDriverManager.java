@@ -1181,10 +1181,8 @@ public abstract class WebDriverManager {
         String browserPath = isNullOrEmpty(browserBinaryPath)
                 ? programFiles + winBrowserName
                 : browserBinaryPath;
-        String browserVersionOutput = runAndWait(getExecFile(), "wmic",
-                "datafile", "where", "name='" + browserPath + "'", "get",
-                "Version", "/value");
-        return browserVersionOutput;
+        return runAndWait(getExecFile(), "wmic", "datafile", "where",
+                "name='" + browserPath + "'", "get", "Version", "/value");
     }
 
     protected File getExecFile() {
