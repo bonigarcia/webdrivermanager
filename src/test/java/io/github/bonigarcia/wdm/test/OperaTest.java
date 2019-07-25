@@ -24,8 +24,9 @@ import java.io.File;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.opera.OperaDriver;
+import org.openqa.selenium.opera.OperaOptions;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.base.BrowserTestParent;
@@ -36,11 +37,15 @@ import io.github.bonigarcia.wdm.base.BrowserTestParent;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.0.0
  */
-@Ignore
 public class OperaTest extends BrowserTestParent {
 
     @BeforeClass
     public static void setupClass() {
+        WebDriverManager.operadriver().setup();
+    }
+
+    @Before
+    public void setupTest() {
         String operaBinary = IS_OS_WINDOWS
                 ? "C:\\Program Files\\Opera\\launcher.exe"
                 : IS_OS_MAC ? "/Applications/Opera.app/Contents/MacOS/Opera"
@@ -48,12 +53,11 @@ public class OperaTest extends BrowserTestParent {
         File opera = new File(operaBinary);
         assumeTrue(opera.exists());
 
-        WebDriverManager.operadriver().setup();
-    }
+        ChromeOptions chromeOptions = new ChromeOptions();
+        chromeOptions.setBinary(opera);
+        OperaOptions operaOptions = new OperaOptions().merge(chromeOptions);
 
-    @Before
-    public void setupTest() {
-        driver = new OperaDriver();
+        driver = new OperaDriver(operaOptions);
     }
 
 }
