@@ -102,6 +102,17 @@ public class HttpClient implements Closeable {
                 }
             }
 
+            String localRepositoryUser = config.getLocalRepositoryUser().trim();
+            String localRepositoryPassword = config.getLocalRepositoryPassword().trim();
+
+            if(!isNullOrEmpty(localRepositoryUser) && !isNullOrEmpty(localRepositoryPassword)) {
+                BasicCredentialsProvider provider = new BasicCredentialsProvider();
+                UsernamePasswordCredentials credentials
+                        = new UsernamePasswordCredentials(localRepositoryUser, localRepositoryPassword);
+                provider.setCredentials(AuthScope.ANY, credentials);
+                builder.setDefaultCredentialsProvider(provider);
+            }
+
             HostnameVerifier allHostsValid = (hostname, session) -> hostname
                     .equalsIgnoreCase(session.getPeerHost());
             SSLContext sslContext = SSLContexts.custom()
@@ -127,7 +138,6 @@ public class HttpClient implements Closeable {
         }
 
         closeableHttpClient = builder.useSystemProperties().build();
-
     }
 
     public Optional<Proxy> createProxy(String proxy)
@@ -145,7 +155,7 @@ public class HttpClient implements Closeable {
 
     public HttpGet createHttpGet(URL url) {
         HttpGet httpGet = new HttpGet(url.toString());
-        httpGet.addHeader("User-Agent", "Mozilla/5.0");
+        httpGet.addHeader("User-Agent", "Apache-HttpClient/4.5.6");
         httpGet.addHeader("Connection", "keep-alive");
 
         int timeout = (int) SECONDS.toMillis(config.getTimeout());

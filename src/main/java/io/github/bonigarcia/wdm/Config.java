@@ -90,6 +90,10 @@ public class Config {
             String.class);
     ConfigKey<String> gitHubTokenSecret = new ConfigKey<>(
             "wdm.gitHubTokenSecret", String.class);
+    ConfigKey<String> localRepositoryUser = new ConfigKey<>("wdm.localRepositoryUser",
+            String.class);
+    ConfigKey<String> localRepositoryPassword = new ConfigKey<>(
+            "wdm.localRepositoryPassword", String.class);
 
     ConfigKey<String> chromeDriverVersion = new ConfigKey<>(
             "wdm.chromeDriverVersion", String.class);
@@ -481,6 +485,24 @@ public class Config {
 
     public Config setGitHubTokenSecret(String value) {
         this.gitHubTokenSecret.setValue(value);
+        return this;
+    }
+
+    public String getLocalRepositoryUser() {
+        return resolve(localRepositoryUser);
+    }
+
+    public Config setLocalRepositoryUser(String value) {
+        this.localRepositoryUser.setValue(value);
+        return this;
+    }
+
+    public String getLocalRepositoryPassword() {
+        return resolve(localRepositoryPassword);
+    }
+
+    public Config setLocalRepositoryPassword(String value) {
+        this.localRepositoryPassword.setValue(value);
         return this;
     }
 
