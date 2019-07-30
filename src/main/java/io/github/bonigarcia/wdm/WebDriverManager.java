@@ -343,13 +343,23 @@ public abstract class WebDriverManager {
         return instanceMap.get(getDriverManagerType());
     }
 
+    public WebDriverManager gitHubTokenSecret(String gitHubTokenSecret) {
+        config().setGitHubTokenSecret(gitHubTokenSecret);
+        return instanceMap.get(getDriverManagerType());
+    }
+
     public WebDriverManager gitHubTokenName(String gitHubTokenName) {
         config().setGitHubTokenName(gitHubTokenName);
         return instanceMap.get(getDriverManagerType());
     }
 
-    public WebDriverManager gitHubTokenSecret(String gitHubTokenSecret) {
-        config().setGitHubTokenSecret(gitHubTokenSecret);
+    public WebDriverManager localRepositoryUser(String localRepositoryUser) {
+        config().setLocalRepositoryUser(localRepositoryUser);
+        return instanceMap.get(getDriverManagerType());
+    }
+
+    public WebDriverManager localRepositoryPassword(String localRepositoryPassword) {
+        config().setLocalRepositoryPassword(localRepositoryPassword);
         return instanceMap.get(getDriverManagerType());
     }
 
