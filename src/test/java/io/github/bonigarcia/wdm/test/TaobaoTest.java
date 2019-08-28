@@ -46,6 +46,17 @@ public class TaobaoTest {
         assertTrue(binary.exists());
     }
 
+    @Test
+    public void testOtherMirrorUrl() throws  Exception {
+        chromedriver().config().setAvoidAutoVersion(true)
+                .setChromeDriverMirrorUrl(
+                        new URL("https://cnpmjs.org/mirrors/chromedriver/"));
+        chromedriver().useMirror().forceDownload().setup();
+
+        File binary = new File(chromedriver().getBinaryPath());
+        assertTrue(binary.exists());
+    }
+
     @Test(expected = WebDriverManagerException.class)
     public void testTaobaoException() {
         WebDriverManager.edgedriver().useMirror().setup();

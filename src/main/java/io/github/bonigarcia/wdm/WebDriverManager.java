@@ -314,7 +314,6 @@ public abstract class WebDriverManager {
             throw new WebDriverManagerException("Mirror URL not available");
         }
         config().setUseMirror(true);
-        setDriverUrl(mirrorUrl.get());
         return instanceMap.get(getDriverManagerType());
     }
 
@@ -955,10 +954,6 @@ public abstract class WebDriverManager {
         }
     }
 
-    protected boolean isUsingTaobaoMirror() {
-        return getDriverUrl().getHost().equalsIgnoreCase("npm.taobao.org");
-    }
-
     protected Integer versionCompare(String str1, String str2) {
         String[] vals1 = str1.replaceAll("v", "").split("\\.");
         String[] vals2 = str2.replaceAll("v", "").split("\\.");
@@ -1088,8 +1083,8 @@ public abstract class WebDriverManager {
         URL driverUrl = getDriverUrl();
         log.info("Reading {} to seek {}", driverUrl, getDriverName());
 
-        if (isUsingTaobaoMirror()) {
-            urls = getDriversFromMirror(driverUrl);
+        if (config.isUseMirror()) {
+            urls = getDriversFromMirror(getMirrorUrl().get());
 
         } else {
             String driverVersion = versionToDownload;
