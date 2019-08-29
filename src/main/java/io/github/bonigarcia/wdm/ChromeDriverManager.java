@@ -77,19 +77,16 @@ public class ChromeDriverManager extends WebDriverManager {
 
     @Override
     protected List<URL> getDrivers() throws IOException {
-        URL driverUrl = getDriverUrl();
-        List<URL> urls;
-        if (isUsingTaobaoMirror()) {
-            urls = getDriversFromMirror(driverUrl);
+        if (config().isUseMirror()) {
+            return getDriversFromMirror(getMirrorUrl().get());
         } else {
-            urls = getDriversFromXml(driverUrl);
+            return getDriversFromXml(getDriverUrl());
         }
-        return urls;
     }
 
     @Override
     protected String getCurrentVersion(URL url, String driverName) {
-        if (isUsingTaobaoMirror()) {
+        if (config().isUseMirror()) {
             int i = url.getFile().lastIndexOf(SLASH);
             int j = url.getFile().substring(0, i).lastIndexOf(SLASH) + 1;
             return url.getFile().substring(j, i);
@@ -110,6 +107,9 @@ public class ChromeDriverManager extends WebDriverManager {
     @Override
     protected Optional<String> getLatestVersion() {
         String url = config().getChromeDriverUrl() + "LATEST_RELEASE";
+        if (config.isUseMirror()) {
+            url = config().getChromeDriverMirrorUrl() + "LATEST_RELEASE";
+        }
         Optional<String> version = Optional.empty();
         try {
             InputStream response = httpClient
