@@ -1256,7 +1256,7 @@ public abstract class WebDriverManager {
                     .valueOf(arg.toUpperCase());
             WebDriverManager wdm = WebDriverManager
                     .getInstance(driverManagerType).avoidExport()
-                    .targetPath(".").avoidAutoVersion().forceDownload();
+                    .targetPath(".").forceDownload();
             if (arg.equalsIgnoreCase("edge")
                     || arg.equalsIgnoreCase("iexplorer")) {
                 wdm.operatingSystem(WIN);
