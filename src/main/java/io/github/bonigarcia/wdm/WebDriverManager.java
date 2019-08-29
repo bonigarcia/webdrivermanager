@@ -956,8 +956,8 @@ public abstract class WebDriverManager {
     }
 
     protected Integer versionCompare(String str1, String str2) {
-        String[] vals1 = str1.replaceAll("v", "").split("\\.");
-        String[] vals2 = str2.replaceAll("v", "").split("\\.");
+        String[] vals1 = str1.replace("v", "").split("\\.");
+        String[] vals2 = str2.replace("v", "").split("\\.");
 
         if (vals1[0].equals("")) {
             vals1[0] = "0";
