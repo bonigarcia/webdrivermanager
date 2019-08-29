@@ -22,6 +22,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.net.URL;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -46,8 +47,9 @@ public class TaobaoTest {
         assertTrue(binary.exists());
     }
 
+    @Ignore("Flaky test due to cnpmjs.org")
     @Test
-    public void testOtherMirrorUrl() throws  Exception {
+    public void testOtherMirrorUrl() throws Exception {
         chromedriver().config().setAvoidAutoVersion(true)
                 .setChromeDriverMirrorUrl(
                         new URL("https://cnpmjs.org/mirrors/chromedriver/"));
