@@ -357,7 +357,8 @@ public abstract class WebDriverManager {
         return instanceMap.get(getDriverManagerType());
     }
 
-    public WebDriverManager localRepositoryPassword(String localRepositoryPassword) {
+    public WebDriverManager localRepositoryPassword(
+            String localRepositoryPassword) {
         config().setLocalRepositoryPassword(localRepositoryPassword);
         return instanceMap.get(getDriverManagerType());
     }
@@ -1083,7 +1084,7 @@ public abstract class WebDriverManager {
         URL driverUrl = getDriverUrl();
         log.info("Reading {} to seek {}", driverUrl, getDriverName());
 
-        if (config.isUseMirror()) {
+        if (config.isUseMirror() && getMirrorUrl().isPresent()) {
             urls = getDriversFromMirror(getMirrorUrl().get());
 
         } else {
