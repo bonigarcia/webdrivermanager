@@ -1084,8 +1084,9 @@ public abstract class WebDriverManager {
         URL driverUrl = getDriverUrl();
         log.info("Reading {} to seek {}", driverUrl, getDriverName());
 
-        if (getMirrorUrl().isPresent() && config.isUseMirror()) {
-            urls = getDriversFromMirror(getMirrorUrl().get());
+        Optional<URL> mirrorUrl = getMirrorUrl();
+        if (mirrorUrl.isPresent() && config.isUseMirror()) {
+            urls = getDriversFromMirror(mirrorUrl.get());
 
         } else {
             String driverVersion = versionToDownload;
