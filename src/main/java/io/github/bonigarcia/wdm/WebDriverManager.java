@@ -835,7 +835,7 @@ public abstract class WebDriverManager {
 
             // Filter by OS
             if (!getDriverName().equals("msedgedriver")) {
-                filesInCache = filterCacheBy(filesInCache, os.toLowerCase());
+                filesInCache = filterCacheBy(filesInCache, os);
             }
 
             if (filesInCache.size() == 1) {
@@ -858,8 +858,9 @@ public abstract class WebDriverManager {
     protected List<File> filterCacheBy(List<File> input, String key) {
         List<File> output = new ArrayList<>(input);
         if (!key.isEmpty() && !input.isEmpty()) {
+            String keyInLowerCase = key.toLowerCase();
             for (File f : input) {
-                if (!f.toString().contains(key)) {
+                if (!f.toString().toLowerCase().contains(keyInLowerCase)) {
                     output.remove(f);
                 }
             }
