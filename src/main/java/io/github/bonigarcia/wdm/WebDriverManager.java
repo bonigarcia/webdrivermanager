@@ -1084,7 +1084,7 @@ public abstract class WebDriverManager {
         URL driverUrl = getDriverUrl();
         log.info("Reading {} to seek {}", driverUrl, getDriverName());
 
-        if (config.isUseMirror() && getMirrorUrl().isPresent()) {
+        if (getMirrorUrl().isPresent() && config.isUseMirror()) {
             urls = getDriversFromMirror(getMirrorUrl().get());
 
         } else {
