@@ -52,9 +52,9 @@ public class Shell {
 
     public static String runAndWaitArray(File folder, String[] command) {
         String commandStr = Arrays.toString(command);
-        log.trace("Running command on the shell: {}", commandStr);
+        log.debug("Running command on the shell: {}", commandStr);
         String result = runAndWaitNoLog(folder, command);
-        log.trace("Result: {}", result);
+        log.debug("Result: {}", result);
         return result;
     }
 

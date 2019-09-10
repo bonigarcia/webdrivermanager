@@ -568,7 +568,7 @@ public abstract class WebDriverManager {
         Optional<String> optionalBrowserVersion = getBrowserVersion();
         if (optionalBrowserVersion.isPresent()) {
             String browserVersion = optionalBrowserVersion.get();
-            log.trace("Detected {} version {}", getDriverManagerType(),
+            log.debug("Detected {} version {}", getDriverManagerType(),
                     browserVersion);
             preferenceKey = getDriverManagerType().name().toLowerCase()
                     + browserVersion;
