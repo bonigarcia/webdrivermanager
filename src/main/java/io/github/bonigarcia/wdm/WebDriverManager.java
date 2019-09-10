@@ -567,7 +567,7 @@ public abstract class WebDriverManager {
 
         String driverManagerTypeLowerCase = getDriverManagerType().name()
                 .toLowerCase();
-        Optional<String> optionalBrowserVersion = empty();
+        Optional<String> optionalBrowserVersion;
         if (usePreferences() && preferences
                 .checkKeyInPreferences(driverManagerTypeLowerCase)) {
             optionalBrowserVersion = Optional.of(preferences
