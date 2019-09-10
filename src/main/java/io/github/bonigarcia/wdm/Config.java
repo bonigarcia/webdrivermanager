@@ -72,6 +72,8 @@ public class Config {
     ConfigKey<Boolean> avoidPreferences = new ConfigKey<>(
             "wdm.avoidPreferences", Boolean.class);
     ConfigKey<Integer> timeout = new ConfigKey<>("wdm.timeout", Integer.class);
+    ConfigKey<Boolean> versionsPropertiesOnlineFirst = new ConfigKey<>(
+            "wdm.versionsPropertiesOnlineFirst", Boolean.class);
     ConfigKey<URL> versionsPropertiesUrl = new ConfigKey<>(
             "wdm.versionsPropertiesUrl", URL.class);
 
@@ -90,8 +92,8 @@ public class Config {
             String.class);
     ConfigKey<String> gitHubTokenSecret = new ConfigKey<>(
             "wdm.gitHubTokenSecret", String.class);
-    ConfigKey<String> localRepositoryUser = new ConfigKey<>("wdm.localRepositoryUser",
-            String.class);
+    ConfigKey<String> localRepositoryUser = new ConfigKey<>(
+            "wdm.localRepositoryUser", String.class);
     ConfigKey<String> localRepositoryPassword = new ConfigKey<>(
             "wdm.localRepositoryPassword", String.class);
 
@@ -395,6 +397,15 @@ public class Config {
         return this;
     }
 
+    public boolean getVersionsPropertiesOnlineFirst() {
+        return resolve(versionsPropertiesOnlineFirst);
+    }
+
+    public Config setVersionsPropertiesOnlineFirst(String value) {
+        this.versionsPropertiesOnlineFirst.setValue(value);
+        return this;
+    }
+
     public URL getVersionsPropertiesUrl() {
         return resolve(versionsPropertiesUrl);
     }
@@ -406,10 +417,10 @@ public class Config {
 
     public Architecture getArchitecture() {
         String architectureString = resolve(architecture);
-        if ( "32".equals(architectureString) ) {
+        if ("32".equals(architectureString)) {
             return Architecture.X32;
         }
-        if ( "64".equals(architectureString) ) {
+        if ("64".equals(architectureString)) {
             return Architecture.X64;
         }
         return Architecture.valueOf(architectureString);

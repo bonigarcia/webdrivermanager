@@ -642,8 +642,9 @@ public abstract class WebDriverManager {
         String driverVersion = "";
         DriverManagerType driverManagerType = getDriverManagerType();
         String driverLowerCase = driverManagerType.name().toLowerCase();
+
         Optional<String> driverVersionForBrowser = getDriverVersionForBrowserFromProperties(
-                driverLowerCase + browserVersion, false);
+                driverLowerCase + browserVersion);
         if (driverVersionForBrowser.isPresent()) {
             driverVersion = driverVersionForBrowser.get();
         } else {
@@ -655,10 +656,11 @@ public abstract class WebDriverManager {
     }
 
     private Optional<String> getDriverVersionForBrowserFromProperties(
-            String key, boolean online) {
+            String key) {
+        boolean online = config().getVersionsPropertiesOnlineFirst();
         String onlineMessage = online ? ONLINE : LOCAL;
-        log.trace("Getting driver version from {} properties for {}",
-                onlineMessage, key);
+        log.debug("Getting driver version for {} from {} versions.properties",
+                key, onlineMessage);
         String value = getVersionFromProperties(online).getProperty(key);
         if (value == null) {
             String notOnlineMessage = online ? LOCAL : ONLINE;
