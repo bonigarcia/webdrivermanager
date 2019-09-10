@@ -1,5 +1,25 @@
 # Changelog
 
+## [3.7.0] - 2019-09-10
+### Added
+- Store detected version of browser as preference
+
+### Fixed
+- Do not restrict mirrors to ones hosted on npm.taobao.org page (issue #379)
+
+### Removed
+- Remove avoidAutoVersion() by default in CLI mode (issue #369)
+
+### Changed
+- Read online version.properties by default to find driver version (configurable with wdm.versionsPropertiesOnlineFirst)
+- Set geckodriver version 0.24.0 for Firefox 66, 67, and 68 in versions.properties
+- Set operadriver version 75.0.3770.100 for Opera 62 in versions.properties
+- Set chromedriver version 77.0.3865.10 for Chrome 77 in versions.properties
+- Set msedgedriver version 77.0.237.0 for Edge 77 in versions.properties
+- Update chromedriver version 76.0.3809.126 for Chrome 76 in versions.properties
+- Update chromedriver version 77.0.3865.40 for Chrome 77 in versions.properties
+
+
 ## [3.6.2] - 2019-07-18
 ### Added
 - Check PROGRAMFILES and PROGRAMFILES(X86) to find out browser versions in Windows (issue #351)
