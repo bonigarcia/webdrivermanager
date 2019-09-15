@@ -21,7 +21,6 @@
 
         <junit.version>4.12</junit.version>
         <hamcrest.version>1.3</hamcrest.version>
-        <jmockit.version>1.48</jmockit.version>
         <mockserver.version>3.12</mockserver.version>
         <selenium-java.version>3.141.59</selenium-java.version>
         <phantomjsdriver.version>1.4.4</phantomjsdriver.version>
@@ -148,12 +147,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.jmockit</groupId>
-            <artifactId>jmockit</artifactId>
-            <version>${jmockit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.mock-server</groupId>
             <artifactId>mockserver-netty</artifactId>
             <version>${mockserver.version}</version>
@@ -207,11 +200,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
-                <configuration>
-                    <argLine>
-                        -javaagent:${settings.localRepository}/org/jmockit/jmockit/${jmockit.version}/jmockit-${jmockit.version}.jar
-                    </argLine>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
