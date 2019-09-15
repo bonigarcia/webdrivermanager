@@ -44,6 +44,10 @@
         <project.reporting.outputEncoding>${project.encondig}</project.reporting.outputEncoding>
 
         <wdm.mainClass>io.github.bonigarcia.wdm.WebDriverManager</wdm.mainClass>
+
+        <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
+        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+        <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
     </properties>
 
     <name>WebDriverManager</name>
@@ -231,6 +235,9 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <destFile>${sonar.jacoco.reportPath}</destFile>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
