@@ -69,8 +69,6 @@ public class ServerTest {
                 { "phantomjs", "phantomjs" + EXT },
                 { "edgedriver", "msedgedriver.exe" },
                 { "iedriver", "IEDriverServer.exe" },
-                { "selenium-server-standalone",
-                        "selenium-server-standalone-4.0.0-alpha-1.jar" },
                 { "chromedriver?os=WIN", "chromedriver.exe" },
                 { "chromedriver?os=LINUX&chromeDriverVersion=2.41&forceCache=true",
                         "chromedriver" } });
