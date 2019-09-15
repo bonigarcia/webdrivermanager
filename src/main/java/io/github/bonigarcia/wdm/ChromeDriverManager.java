@@ -98,7 +98,9 @@ public class ChromeDriverManager extends WebDriverManager {
 
     @Override
     protected Optional<String> getBrowserVersion() {
-        return getDefaultBrowserVersion(getProgramFilesEnv(),
+        String[] programFilesEnvs = { "LOCALAPPDATA", getProgramFilesEnv(),
+                getOtherProgramFilesEnv() };
+        return getDefaultBrowserVersion(programFilesEnvs,
                 "\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe",
                 "google-chrome",
                 "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",

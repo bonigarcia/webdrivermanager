@@ -215,8 +215,9 @@ public class EdgeDriverManager extends WebDriverManager {
     @Override
     protected Optional<String> getBrowserVersion() {
         if (IS_OS_WINDOWS) {
+            String[] programFilesEnvs = { getProgramFilesEnv() };
             Optional<String> msedgeVersion = getDefaultBrowserVersion(
-                    getProgramFilesEnv(),
+                    programFilesEnvs,
                     "\\\\Microsoft\\\\Edge Dev\\\\Application\\\\msedge.exe",
                     "", "", "--version", getDriverManagerType().toString());
             String browserVersionOutput;

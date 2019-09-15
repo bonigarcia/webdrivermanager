@@ -108,7 +108,8 @@ public class FirefoxDriverManager extends WebDriverManager {
 
     @Override
     protected Optional<String> getBrowserVersion() {
-        return getDefaultBrowserVersion(getProgramFilesEnv(),
+        String[] programFilesEnvs = { getProgramFilesEnv() };
+        return getDefaultBrowserVersion(programFilesEnvs,
                 "\\\\Mozilla Firefox\\\\firefox.exe", "firefox",
                 "/Applications/Firefox.app/Contents/MacOS/firefox", "-v",
                 getDriverManagerType().toString());
