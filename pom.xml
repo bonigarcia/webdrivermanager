@@ -19,7 +19,7 @@
 
         <junit.version>4.12</junit.version>
         <hamcrest.version>1.3</hamcrest.version>
-        <jmockit.version>1.30</jmockit.version>
+        <jmockit.version>1.48</jmockit.version>
         <mockserver.version>3.12</mockserver.version>
         <selenium-java.version>3.141.59</selenium-java.version>
         <phantomjsdriver.version>1.4.4</phantomjsdriver.version>
