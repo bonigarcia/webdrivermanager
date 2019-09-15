@@ -36,9 +36,9 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 
-import io.javalin.Context;
-import io.javalin.Handler;
 import io.javalin.Javalin;
+import io.javalin.http.Context;
+import io.javalin.http.Handler;
 
 /**
  * WebDriverManager server.
