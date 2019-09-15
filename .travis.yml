@@ -3,8 +3,11 @@ sudo: false
 dist: bionic
 install: true
 
+jdk:
+    - openjdk8
+
 services:
-  - xvfb
+    - xvfb
 
 addons:
     chrome: stable
