@@ -20,4 +20,4 @@ before_script:
 script:
     - mvn test
     - bash <(curl -s https://codecov.io/bash)
-    - if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then mvn sonar:sonar -Pcoverage; fi
+    - if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then mvn sonar:sonar; fi
