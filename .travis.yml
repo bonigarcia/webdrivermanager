@@ -1,10 +1,7 @@
 language: java
 sudo: false
-dist: bionic
+dist: xenial
 install: true
-
-jdk:
-    - openjdk8
 
 services:
     - xvfb
