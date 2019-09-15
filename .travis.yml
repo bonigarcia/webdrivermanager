@@ -18,6 +18,6 @@ before_script:
     - export DISPLAY=:99.0
 
 script:
-    - mvn test -Djdk.attach.allowAttachSelf
+    - mvn test
     - bash <(curl -s https://codecov.io/bash)
     - if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then mvn sonar:sonar; fi

@@ -42,7 +42,6 @@ import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.junit.AfterClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.Config;
@@ -50,14 +49,12 @@ import io.github.bonigarcia.wdm.HttpClient;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import mockit.Mock;
 import mockit.MockUp;
-import mockit.integration.junit4.JMockit;
 
 /**
  * Test for proxy.
  * 
  * @since 1.6.1
  */
-@RunWith(JMockit.class)
 public class ProxyTest {
 
     final Logger log = getLogger(lookup().lookupClass());
