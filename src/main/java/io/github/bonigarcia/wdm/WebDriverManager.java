@@ -408,6 +408,11 @@ public abstract class WebDriverManager {
         return instanceMap.get(getDriverManagerType());
     }
 
+    public WebDriverManager useLocalVersionsPropertiesFirst() {
+        config().setVersionsPropertiesOnlineFirst(false);
+        return instanceMap.get(getDriverManagerType());
+    }
+
     // ------------
 
     public String getBinaryPath() {

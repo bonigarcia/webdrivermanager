@@ -401,7 +401,7 @@ public class Config {
         return resolve(versionsPropertiesOnlineFirst);
     }
 
-    public Config setVersionsPropertiesOnlineFirst(String value) {
+    public Config setVersionsPropertiesOnlineFirst(boolean value) {
         this.versionsPropertiesOnlineFirst.setValue(value);
         return this;
     }
