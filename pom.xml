@@ -30,7 +30,7 @@
         <mockito-core.version>2.23.4</mockito-core.version>
 
         <maven-surefire-plugin.version>2.21.0</maven-surefire-plugin.version>
-        <jacoco-maven-plugin.version>0.8.3</jacoco-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.4</jacoco-maven-plugin.version>
         <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
         <exec-maven-plugin.version>1.6.0</exec-maven-plugin.version>
         <maven-jar-plugin.version>3.0.2</maven-jar-plugin.version>
@@ -44,10 +44,6 @@
         <project.reporting.outputEncoding>${project.encondig}</project.reporting.outputEncoding>
 
         <wdm.mainClass>io.github.bonigarcia.wdm.WebDriverManager</wdm.mainClass>
-
-        <sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
-        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
-        <sonar.jacoco.reportPath>${project.build.directory}/jacoco.exec</sonar.jacoco.reportPath>
     </properties>
 
     <name>WebDriverManager</name>
@@ -236,9 +232,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <destFile>${sonar.jacoco.reportPath}</destFile>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
