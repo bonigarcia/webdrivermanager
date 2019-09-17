@@ -1180,12 +1180,8 @@ public abstract class WebDriverManager {
                 }
             }
         } else if (IS_OS_LINUX || IS_OS_MAC) {
-            String browserPath;
-            if (!isNullOrEmpty(browserBinaryPath)) {
-                browserPath = browserBinaryPath;
-            } else {
-                browserPath = IS_OS_LINUX ? linuxBrowserName : macBrowserName;
-            }
+            String browserPath = getPosixBrowserPath(linuxBrowserName,
+                    macBrowserName, browserBinaryPath);
             String browserVersionOutput = runAndWait(browserPath, versionFlag);
             if (!isNullOrEmpty(browserVersionOutput)) {
                 return Optional.of(getVersionFromPosixOutput(
@@ -1193,6 +1189,15 @@ public abstract class WebDriverManager {
             }
         }
         return empty();
+    }
+
+    private String getPosixBrowserPath(String linuxBrowserName,
+            String macBrowserName, String browserBinaryPath) {
+        if (!isNullOrEmpty(browserBinaryPath)) {
+            return browserBinaryPath;
+        } else {
+            return IS_OS_LINUX ? linuxBrowserName : macBrowserName;
+        }
     }
 
     private String getBrowserVersionInWindows(String programFilesEnv,
