@@ -1,5 +1,17 @@
 # Changelog
 
+## [3.7.1] - 2019-09-17
+### Added
+- Read LOCALAPPDATA env to find out Chrome version in Windows (issue #381)
+- Add useLocalVersionsPropertiesFirst() in WebDriverManager API
+
+### Changed
+- Set chromedriver version 78.0.3904.11 for Chrome 78 in versions.properties
+- Set operadriver version 76.0.3809.132 for Opera 63 in versions.properties
+- Set geckodriver version 0.25.0 for Firefox 69 in versions.properties
+- Update geckodriver version 0.25.0 for Firefox 68 in versions.properties
+
+
 ## [3.7.0] - 2019-09-10
 ### Added
 - Store detected version of browser as preference
