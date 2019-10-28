@@ -24,9 +24,7 @@ import java.io.File;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.opera.OperaDriver;
-import org.openqa.selenium.opera.OperaOptions;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.base.BrowserTestParent;
@@ -53,11 +51,7 @@ public class OperaTest extends BrowserTestParent {
         File opera = new File(operaBinary);
         assumeTrue(opera.exists());
 
-        ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.setBinary(opera);
-        OperaOptions operaOptions = new OperaOptions().merge(chromeOptions);
-
-        driver = new OperaDriver(operaOptions);
+        driver = new OperaDriver();
     }
 
 }
