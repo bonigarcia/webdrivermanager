@@ -1028,6 +1028,7 @@ public abstract class WebDriverManager {
                     urlList.addAll(getDriversFromMirror(new URL(link)));
                 } else if (link.startsWith(driverStr) && !link.contains("icons") && (link.toLowerCase().endsWith(".bz2")
                                                                                   || link.toLowerCase().endsWith(".zip")
+                                                                                  || link.toLowerCase().endsWith(".msi")
                                                                                   || link.toLowerCase().endsWith(".gz"))) {
                     urlList.add(new URL(link));
                 }
