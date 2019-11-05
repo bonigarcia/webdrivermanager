@@ -1013,25 +1013,24 @@ public abstract class WebDriverManager {
         }
 
         String driverStr = driverUrl.toString();
-        String driverUrlContent = driverUrl.getPath();
 
         HttpResponse response = httpClient
                 .execute(httpClient.createHttpGet(driverUrl));
         try (InputStream in = response.getEntity().getContent()) {
-            org.jsoup.nodes.Document doc = Jsoup.parse(in, null, "");
+            org.jsoup.nodes.Document doc = Jsoup.parse(in, null, driverStr);
             Iterator<org.jsoup.nodes.Element> iterator = doc.select("a")
                     .iterator();
             List<URL> urlList = new ArrayList<>();
 
             while (iterator.hasNext()) {
-                String link = iterator.next().attr("href");
-                if (link.contains("mirror") && link.endsWith(SLASH)) {
-                    urlList.addAll(getDriversFromMirror(new URL(
-                            driverStr + link.replace(driverUrlContent, ""))));
-                } else if (link.startsWith(driverUrlContent)
-                        && !link.contains("icons")) {
-                    urlList.add(new URL(
-                            driverStr + link.replace(driverUrlContent, "")));
+                String link = iterator.next().attr("abs:href");
+                if (link.startsWith(driverStr) && link.endsWith(SLASH)) {
+                    urlList.addAll(getDriversFromMirror(new URL(link)));
+                } else if (link.startsWith(driverStr) && !link.contains("icons") && (link.toLowerCase().endsWith(".bz2")
+                                                                                  || link.toLowerCase().endsWith(".zip")
+                                                                                  || link.toLowerCase().endsWith(".msi")
+                                                                                  || link.toLowerCase().endsWith(".gz"))) {
+                    urlList.add(new URL(link));
                 }
             }
             return urlList;
