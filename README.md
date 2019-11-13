@@ -242,6 +242,7 @@ wdm.avoidPreferences=false
 wdm.timeout=30
 wdm.serverPort=4041
 wdm.ttl=86400
+wdm.architecture=X32
 
 wdm.chromeDriverUrl=https://chromedriver.storage.googleapis.com/
 wdm.chromeDriverMirrorUrl=http://npm.taobao.org/mirrors/chromedriver
