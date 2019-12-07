@@ -153,52 +153,38 @@ public abstract class WebDriverManager {
     }
 
     public static synchronized WebDriverManager chromedriver() {
-        if (!instanceMap.containsKey(CHROME)) {
-            instanceMap.put(CHROME, new ChromeDriverManager());
-        }
+        instanceMap.putIfAbsent(CHROME, new ChromeDriverManager());
         return instanceMap.get(CHROME);
     }
 
     public static synchronized WebDriverManager firefoxdriver() {
-        if (!instanceMap.containsKey(FIREFOX)) {
-            instanceMap.put(FIREFOX, new FirefoxDriverManager());
-        }
+        instanceMap.putIfAbsent(FIREFOX, new FirefoxDriverManager());
         return instanceMap.get(FIREFOX);
     }
 
     public static synchronized WebDriverManager operadriver() {
-        if (!instanceMap.containsKey(OPERA)) {
-            instanceMap.put(OPERA, new OperaDriverManager());
-        }
+        instanceMap.putIfAbsent(OPERA, new OperaDriverManager());
         return instanceMap.get(OPERA);
     }
 
     public static synchronized WebDriverManager edgedriver() {
-        if (!instanceMap.containsKey(EDGE)) {
-            instanceMap.put(EDGE, new EdgeDriverManager());
-        }
+        instanceMap.putIfAbsent(EDGE, new EdgeDriverManager());
         return instanceMap.get(EDGE);
     }
 
     public static synchronized WebDriverManager iedriver() {
-        if (!instanceMap.containsKey(IEXPLORER)) {
-            instanceMap.put(IEXPLORER, new InternetExplorerDriverManager());
-        }
+        instanceMap.putIfAbsent(IEXPLORER, new InternetExplorerDriverManager());
         return instanceMap.get(IEXPLORER);
     }
 
     public static synchronized WebDriverManager phantomjs() {
-        if (!instanceMap.containsKey(PHANTOMJS)) {
-            instanceMap.put(PHANTOMJS, new PhantomJsDriverManager());
-        }
+        instanceMap.putIfAbsent(PHANTOMJS, new PhantomJsDriverManager());
         return instanceMap.get(PHANTOMJS);
     }
 
     public static synchronized WebDriverManager seleniumServerStandalone() {
-        if (!instanceMap.containsKey(SELENIUM_SERVER_STANDALONE)) {
-            instanceMap.put(SELENIUM_SERVER_STANDALONE,
+        instanceMap.putIfAbsent(SELENIUM_SERVER_STANDALONE,
                     new SeleniumServerStandaloneManager());
-        }
         return instanceMap.get(SELENIUM_SERVER_STANDALONE);
     }
 
