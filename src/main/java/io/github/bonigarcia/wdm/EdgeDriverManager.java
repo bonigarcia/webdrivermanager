@@ -216,23 +216,35 @@ public class EdgeDriverManager extends WebDriverManager {
     protected Optional<String> getBrowserVersion() {
         if (IS_OS_WINDOWS) {
             String[] programFilesEnvs = { getProgramFilesEnv() };
-            Optional<String> msedgeVersion = getDefaultBrowserVersion(
-                    programFilesEnvs,
-                    "\\\\Microsoft\\\\Edge Dev\\\\Application\\\\msedge.exe",
-                    "", "", "--version", getDriverManagerType().toString());
-            String browserVersionOutput;
-            if (msedgeVersion.isPresent()) {
-                browserVersionOutput = msedgeVersion.get();
-                log.debug("Edge Dev (based on Chromium) version {} found",
-                        browserVersionOutput);
-            } else {
+            String[] msEdgePaths = {
+                    "\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe",
+                    "\\\\Microsoft\\\\Edge Beta\\\\Application\\\\msedge.exe",
+                    "\\\\Microsoft\\\\Edge Dev\\\\Application\\\\msedge.exe" };
+
+            String browserVersionOutput = null;
+            Optional<String> msedgeVersion = empty();
+            for (String msEdgePath : msEdgePaths) {
+                msedgeVersion = getDefaultBrowserVersion(programFilesEnvs,
+                        msEdgePath, "", "", "--version",
+                        getDriverManagerType().toString());
+                if (msedgeVersion.isPresent()) {
+                    browserVersionOutput = msedgeVersion.get();
+                    log.debug("Edge (based on Chromium) version {} found",
+                            browserVersionOutput);
+                    break;
+                }
+            }
+
+            if (!msedgeVersion.isPresent()) {
                 browserVersionOutput = runAndWait("powershell",
                         "get-appxpackage Microsoft.MicrosoftEdge");
             }
+
             if (!isNullOrEmpty(browserVersionOutput)) {
                 return Optional.of(
                         getVersionFromPowerShellOutput(browserVersionOutput));
             }
+
         }
         return empty();
     }
