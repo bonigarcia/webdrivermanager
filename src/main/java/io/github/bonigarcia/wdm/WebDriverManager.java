@@ -1026,10 +1026,11 @@ public abstract class WebDriverManager {
                 String link = iterator.next().attr("abs:href");
                 if (link.startsWith(driverStr) && link.endsWith(SLASH)) {
                     urlList.addAll(getDriversFromMirror(new URL(link)));
-                } else if (link.startsWith(driverStr) && !link.contains("icons") && (link.toLowerCase().endsWith(".bz2")
-                                                                                  || link.toLowerCase().endsWith(".zip")
-                                                                                  || link.toLowerCase().endsWith(".msi")
-                                                                                  || link.toLowerCase().endsWith(".gz"))) {
+                } else if (link.startsWith(driverStr) && !link.contains("icons")
+                        && (link.toLowerCase().endsWith(".bz2")
+                                || link.toLowerCase().endsWith(".zip")
+                                || link.toLowerCase().endsWith(".msi")
+                                || link.toLowerCase().endsWith(".gz"))) {
                     urlList.add(new URL(link));
                 }
             }
