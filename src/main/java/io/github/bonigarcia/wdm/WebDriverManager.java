@@ -669,11 +669,9 @@ public abstract class WebDriverManager {
             log.trace("Already created versions.properties");
             return versionsProperties;
         } else {
-            try {
-                InputStream inputStream = getVersionsInputStream(online);
+            try (InputStream inputStream = getVersionsInputStream(online)){
                 versionsProperties = new Properties();
                 versionsProperties.load(inputStream);
-                inputStream.close();
             } catch (Exception e) {
                 versionsProperties = null;
                 throw new IllegalStateException(

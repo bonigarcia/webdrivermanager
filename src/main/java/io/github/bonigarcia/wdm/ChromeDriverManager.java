@@ -114,10 +114,9 @@ public class ChromeDriverManager extends WebDriverManager {
             url = config().getChromeDriverMirrorUrl() + "LATEST_RELEASE";
         }
         Optional<String> version = Optional.empty();
-        try {
-            InputStream response = httpClient
+        try (InputStream response = httpClient
                     .execute(httpClient.createHttpGet(new URL(url))).getEntity()
-                    .getContent();
+                    .getContent()){
             version = Optional.of(IOUtils.toString(response, defaultCharset()));
         } catch (Exception e) {
             log.warn("Exception reading {} to get latest version of {}", url,

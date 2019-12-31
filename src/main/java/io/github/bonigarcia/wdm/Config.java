@@ -227,9 +227,8 @@ public class Config {
 
     private String getPropertyFrom(String properties, String key) {
         Properties props = new Properties();
-        try {
-            InputStream inputStream = Config.class
-                    .getResourceAsStream(properties);
+        try (InputStream inputStream = Config.class
+                    .getResourceAsStream(properties)){
             props.load(inputStream);
         } catch (IOException e) {
             log.trace("Property {} not found in {}", key, properties);
