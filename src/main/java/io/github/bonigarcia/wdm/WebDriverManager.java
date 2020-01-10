@@ -134,7 +134,7 @@ public abstract class WebDriverManager {
     protected boolean forcedArch;
     protected boolean forcedOs;
     protected boolean isLatest;
-    protected boolean retry = true;
+    protected int retryCount = 0;
     protected Config config = new Config();
     protected Preferences preferences = new Preferences(config);
     protected String preferenceKey;
@@ -617,7 +617,7 @@ public abstract class WebDriverManager {
                 exportDriver(microsoftWebDriverFile.toString());
                 return true;
             } else {
-                retry = false;
+                retryCount = -1;
                 throw new WebDriverManagerException(
                         "MicrosoftWebDriver.exe should be pre-installed in an elevated command prompt executing: "
                                 + "dism /Online /Add-Capability /CapabilityName:Microsoft.WebDriver~~~~0.0.1.0");
@@ -727,11 +727,17 @@ public abstract class WebDriverManager {
         String errorMessage = String.format(
                 "There was an error managing %s %s (%s)", getDriverName(),
                 versionStr, e.getMessage());
-        if (!config().isForceCache() && retry) {
+        if (!config().isForceCache() && retryCount == 0) {
             config().setForceCache(true);
             config().setUseMirror(true);
-            retry = false;
-            log.warn("{} ... trying again using cache and mirror",
+            retryCount++;
+            log.warn("{} ... trying again using mirror", errorMessage);
+            manage(arch, version);
+        } else if (retryCount == 1) {
+            config().setAvoidAutoVersion(true);
+            version = "";
+            retryCount++;
+            log.warn("{} ... trying again using latest from cache",
                     errorMessage);
             manage(arch, version);
         } else {
@@ -1219,7 +1225,7 @@ public abstract class WebDriverManager {
         versionToDownload = null;
         forcedArch = false;
         forcedOs = false;
-        retry = true;
+        retryCount = 0;
         isLatest = true;
     }
 

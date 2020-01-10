@@ -115,12 +115,12 @@ public class ChromeDriverManager extends WebDriverManager {
         }
         Optional<String> version = Optional.empty();
         try (InputStream response = httpClient
-                    .execute(httpClient.createHttpGet(new URL(url))).getEntity()
-                    .getContent()){
+                .execute(httpClient.createHttpGet(new URL(url))).getEntity()
+                .getContent()) {
             version = Optional.of(IOUtils.toString(response, defaultCharset()));
         } catch (Exception e) {
-            log.warn("Exception reading {} to get latest version of {}", url,
-                    getDriverName(), e);
+            log.warn("Exception reading {} to get latest version of {} ({})",
+                    url, getDriverName(), e.getMessage());
         }
         if (version.isPresent()) {
             log.debug("Latest version of {} according to {} is {}",
