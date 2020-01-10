@@ -861,7 +861,7 @@ public abstract class WebDriverManager {
 
     protected List<File> filterCacheBy(List<File> input, String key,
             boolean isVersion) {
-        String pathSeparator = isVersion ? separator.toString() : "";
+        String pathSeparator = isVersion ? separator : "";
         List<File> output = new ArrayList<>(input);
         if (!key.isEmpty() && !input.isEmpty()) {
             String keyInLowerCase = key.toLowerCase();
