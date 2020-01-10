@@ -30,6 +30,7 @@ import static io.github.bonigarcia.wdm.OperatingSystem.WIN;
 import static io.github.bonigarcia.wdm.Shell.getVersionFromPosixOutput;
 import static io.github.bonigarcia.wdm.Shell.getVersionFromWmicOutput;
 import static io.github.bonigarcia.wdm.Shell.runAndWait;
+import static java.io.File.separator;
 import static java.lang.Integer.parseInt;
 import static java.lang.Integer.signum;
 import static java.lang.Integer.valueOf;
@@ -184,7 +185,7 @@ public abstract class WebDriverManager {
 
     public static synchronized WebDriverManager seleniumServerStandalone() {
         instanceMap.putIfAbsent(SELENIUM_SERVER_STANDALONE,
-                    new SeleniumServerStandaloneManager());
+                new SeleniumServerStandaloneManager());
         return instanceMap.get(SELENIUM_SERVER_STANDALONE);
     }
 
@@ -669,7 +670,7 @@ public abstract class WebDriverManager {
             log.trace("Already created versions.properties");
             return versionsProperties;
         } else {
-            try (InputStream inputStream = getVersionsInputStream(online)){
+            try (InputStream inputStream = getVersionsInputStream(online)) {
                 versionsProperties = new Properties();
                 versionsProperties.load(inputStream);
             } catch (Exception e) {
@@ -831,14 +832,14 @@ public abstract class WebDriverManager {
         List<File> filesInCache = getFilesInCache();
         if (!filesInCache.isEmpty()) {
             // Filter by name
-            filesInCache = filterCacheBy(filesInCache, getDriverName());
+            filesInCache = filterCacheBy(filesInCache, getDriverName(), false);
 
             // Filter by version
-            filesInCache = filterCacheBy(filesInCache, driverVersion);
+            filesInCache = filterCacheBy(filesInCache, driverVersion, true);
 
             // Filter by OS
             if (!getDriverName().equals("msedgedriver")) {
-                filesInCache = filterCacheBy(filesInCache, os);
+                filesInCache = filterCacheBy(filesInCache, os, false);
             }
 
             if (filesInCache.size() == 1) {
@@ -846,7 +847,7 @@ public abstract class WebDriverManager {
             }
 
             // Filter by arch
-            filesInCache = filterCacheBy(filesInCache, arch.toString());
+            filesInCache = filterCacheBy(filesInCache, arch.toString(), false);
 
             if (!filesInCache.isEmpty()) {
                 return Optional.of(
@@ -858,12 +859,15 @@ public abstract class WebDriverManager {
         return empty();
     }
 
-    protected List<File> filterCacheBy(List<File> input, String key) {
+    protected List<File> filterCacheBy(List<File> input, String key,
+            boolean isVersion) {
+        String pathSeparator = isVersion ? separator.toString() : "";
         List<File> output = new ArrayList<>(input);
         if (!key.isEmpty() && !input.isEmpty()) {
             String keyInLowerCase = key.toLowerCase();
             for (File f : input) {
-                if (!f.toString().toLowerCase().contains(keyInLowerCase)) {
+                if (!f.toString().toLowerCase()
+                        .contains(pathSeparator + keyInLowerCase)) {
                     output.remove(f);
                 }
             }
