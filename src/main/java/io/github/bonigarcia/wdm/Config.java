@@ -76,6 +76,8 @@ public class Config {
             "wdm.versionsPropertiesOnlineFirst", Boolean.class);
     ConfigKey<URL> versionsPropertiesUrl = new ConfigKey<>(
             "wdm.versionsPropertiesUrl", URL.class);
+    ConfigKey<Boolean> clearPreferences = new ConfigKey<>(
+            "wdm.clearPreferences", Boolean.class);
 
     ConfigKey<String> architecture = new ConfigKey<>("wdm.architecture",
             String.class, defaultArchitecture());
@@ -409,6 +411,15 @@ public class Config {
 
     public Config setVersionsPropertiesUrl(URL value) {
         this.versionsPropertiesUrl.setValue(value);
+        return this;
+    }
+
+    public boolean getClearPreferences() {
+        return resolve(clearPreferences);
+    }
+
+    public Config setClearPreferences(Boolean value) {
+        this.clearPreferences.setValue(value);
         return this;
     }
 

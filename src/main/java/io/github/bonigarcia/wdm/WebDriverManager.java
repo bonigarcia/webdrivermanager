@@ -249,6 +249,9 @@ public abstract class WebDriverManager {
         DriverManagerType driverManagerType = getDriverManagerType();
         if (driverManagerType != null) {
             try {
+                if (config().getClearPreferences()) {
+                    clearPreferences();
+                }
                 Architecture architecture = config().getArchitecture();
                 String driverVersion = getDriverVersion();
                 isLatest = isVersionLatest(driverVersion);
@@ -408,6 +411,11 @@ public abstract class WebDriverManager {
         return instanceMap.get(getDriverManagerType());
     }
 
+    public WebDriverManager clearPreferences() {
+        instanceMap.get(getDriverManagerType()).preferences.clear();
+        return instanceMap.get(getDriverManagerType());
+    }
+
     // ------------
 
     public String getBinaryPath() {
@@ -441,10 +449,6 @@ public abstract class WebDriverManager {
         } catch (IOException e) {
             throw new WebDriverManagerException(e);
         }
-    }
-
-    public void clearPreferences() {
-        instanceMap.get(getDriverManagerType()).preferences.clear();
     }
 
     public void clearCache() {

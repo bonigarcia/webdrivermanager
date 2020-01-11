@@ -204,6 +204,7 @@ WebDriverManager exposes its API by means of the **builder pattern**. This means
 | ``ttl()``                             | As of WebDriverManager 3.1.0, resolved versions of drivers are stored as Java preferences. These values has a expiration time based on this Time To Live (TTL) value, measured in **seconds**. By default this value is 86400 (i.e. 1 day).                                                                                                                  | ``wdm.ttl``                                                                                                                                                                           |
 | ``setVersionsPropertiesUrl(URL)``     | URL of the online ``version.properties`` file, used if the relationship between browser and driver is unknown in the local version of that file. By default this value targets to the master branch of GitHub.                                                                                                                                               | ``wdm.versionsPropertiesUrl``                                                                                                                                                         |
 | ``useLocalVersionsPropertiesFirst()`` | As of WebDriverManager 3.7.1, the online ``version.properties`` file is read first to check the latest relationship browser-driver. If the local ``version.properties`` want to be used instead, this method should be invoked                                                                                                                               | ``wdm.versionsPropertiesOnlineFirst``                                                                                                                                                 |
+| ``clearPreferences()``                | This methods allows to remove all Java preferences stored previously by WebDriverManager.                                                                                                                                                                                                                                                                    | ``wdm.clearPreferences``                                                                                                                                                              |
 
 The following table contains some examples:
 
@@ -220,7 +221,6 @@ Additional methods are exposed by WebDriverManager, namely:
 * ``getVersions()``: This method allows to find out the list of of available binary versions for a given browser.
 * ``getBinaryPath()``: This method allows to find out the path of the latest resolved binary.
 * ``getDownloadedVersion()``: This method allows to find out the version of the latest resolved binary.
-* ``clearPreferences()``: This methods allows to remove all Java preferences stored previously by WebDriverManager.
 * ``clearCache()``: This methods allows to remove all binaries previously downloaded by WebDriverManager.
 
 
