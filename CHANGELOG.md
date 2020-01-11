@@ -1,5 +1,26 @@
 # Changelog
 
+## [3.8.0] - 2020-01-11
+### Added
+- Chromium support, included snap package (issues #400 and #403)
+- Include 2nd fallback mechanism using latest driver from cache (issue #415)
+- Enhance artifact mirror support (issue #390)
+
+### Changed
+- Include clearPreferences() as a builder method of WebDriverManager
+- Improve cache filtering by version (issue #391)
+- Check different versions of Edge (stable, beta, dev) to find out version
+- Set chromedriver version 80.0.3987.16 for Chrome 80 in versions.properties
+- Set chromedriver version 79.0.3945.16 for Chrome 79 in versions.properties
+- Set geckodriver version 0.26.0 for Firefox 69 in versions.properties
+- Set operadriver version 79.0.3945.79 for Opera 66 in versions.properties
+- Set operadriver version 78.0.3904.87 for Opera 65 in versions.properties
+- Set operadriver version 77.0.3865.120 for Opera 64 in versions.properties
+- Set msedgedriver version 80.0.361.23 for Edge 80 in versions.properties
+- Set msedgedriver version 79.0.313.0 for Edge 79 in versions.properties
+- Set msedgedriver version 78.0.277.0 for Edge 78 in versions.properties
+
+
 ## [3.7.1] - 2019-09-17
 ### Added
 - Read LOCALAPPDATA env to find out Chrome version in Windows (issue #381)
