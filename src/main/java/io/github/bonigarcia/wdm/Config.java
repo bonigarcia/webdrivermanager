@@ -210,15 +210,10 @@ public class Config {
         try {
             value = getPropertyFrom(propertiesValue, key);
             if (value == null) {
-                log.trace(
-                        "Property {} not found in {}, using default values (in {})",
-                        key, propertiesValue, defaultProperties);
                 value = getPropertyFrom(defaultProperties, key);
             }
         } finally {
             if (value == null) {
-                log.trace("Property {} not found in {}, using blank value", key,
-                        defaultProperties);
                 value = "";
             }
         }
@@ -228,7 +223,7 @@ public class Config {
     private String getPropertyFrom(String properties, String key) {
         Properties props = new Properties();
         try (InputStream inputStream = Config.class
-                    .getResourceAsStream(properties)){
+                .getResourceAsStream(properties)) {
             props.load(inputStream);
         } catch (IOException e) {
             log.trace("Property {} not found in {}", key, properties);
