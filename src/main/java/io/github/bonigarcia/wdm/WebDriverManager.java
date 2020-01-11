@@ -20,6 +20,7 @@ import static io.github.bonigarcia.wdm.Architecture.X32;
 import static io.github.bonigarcia.wdm.Architecture.X64;
 import static io.github.bonigarcia.wdm.Config.isNullOrEmpty;
 import static io.github.bonigarcia.wdm.DriverManagerType.CHROME;
+import static io.github.bonigarcia.wdm.DriverManagerType.CHROMIUM;
 import static io.github.bonigarcia.wdm.DriverManagerType.EDGE;
 import static io.github.bonigarcia.wdm.DriverManagerType.FIREFOX;
 import static io.github.bonigarcia.wdm.DriverManagerType.IEXPLORER;
@@ -134,6 +135,7 @@ public abstract class WebDriverManager {
     protected boolean forcedArch;
     protected boolean forcedOs;
     protected boolean isLatest;
+    protected boolean isSnap;
     protected int retryCount = 0;
     protected Config config = new Config();
     protected Preferences preferences = new Preferences(config);
@@ -156,6 +158,11 @@ public abstract class WebDriverManager {
     public static synchronized WebDriverManager chromedriver() {
         instanceMap.putIfAbsent(CHROME, new ChromeDriverManager());
         return instanceMap.get(CHROME);
+    }
+
+    public static synchronized WebDriverManager chromiumdriver() {
+        instanceMap.putIfAbsent(CHROMIUM, new ChromiumDriverManager());
+        return instanceMap.get(CHROMIUM);
     }
 
     public static synchronized WebDriverManager firefoxdriver() {
@@ -239,7 +246,8 @@ public abstract class WebDriverManager {
     }
 
     public synchronized void setup() {
-        if (getDriverManagerType() != null) {
+        DriverManagerType driverManagerType = getDriverManagerType();
+        if (driverManagerType != null) {
             try {
                 Architecture architecture = config().getArchitecture();
                 String driverVersion = getDriverVersion();
@@ -495,6 +503,13 @@ public abstract class WebDriverManager {
             if (getLatest) {
                 version = detectDriverVersionFromBrowser();
             }
+
+            // For Chromium snap
+            if (getDriverManagerType() == CHROMIUM && isSnap
+                    && ((ChromiumDriverManager) this).snapDriverExists()) {
+                return;
+            }
+
             getLatest = isNullOrEmpty(version);
 
             // Check latest version
@@ -634,6 +649,9 @@ public abstract class WebDriverManager {
         String driverVersion = "";
         DriverManagerType driverManagerType = getDriverManagerType();
         String driverLowerCase = driverManagerType.name().toLowerCase();
+        if (driverLowerCase.equalsIgnoreCase("chromium")) {
+            driverLowerCase = "chrome";
+        }
 
         Optional<String> driverVersionForBrowser = getDriverVersionForBrowserFromProperties(
                 driverLowerCase + browserVersion);
@@ -1177,6 +1195,9 @@ public abstract class WebDriverManager {
             String browserPath = getPosixBrowserPath(linuxBrowserName,
                     macBrowserName, browserBinaryPath);
             String browserVersionOutput = runAndWait(browserPath, versionFlag);
+            if (browserVersionOutput.toLowerCase().contains("snap")) {
+                isSnap = true;
+            }
             if (!isNullOrEmpty(browserVersionOutput)) {
                 return Optional.of(getVersionFromPosixOutput(
                         browserVersionOutput, browserNameInOutput));
@@ -1227,6 +1248,7 @@ public abstract class WebDriverManager {
         forcedOs = false;
         retryCount = 0;
         isLatest = true;
+        isSnap = false;
     }
 
     protected String getProgramFilesEnv() {

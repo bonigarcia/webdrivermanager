@@ -24,13 +24,16 @@ package io.github.bonigarcia.wdm;
  */
 public enum DriverManagerType {
 
-    CHROME, FIREFOX, OPERA, EDGE, PHANTOMJS, IEXPLORER, SELENIUM_SERVER_STANDALONE;
+    CHROME, FIREFOX, OPERA, EDGE, PHANTOMJS, IEXPLORER,
+    SELENIUM_SERVER_STANDALONE, CHROMIUM;
 
     @Override
     public String toString() {
         switch (this) {
         case CHROME:
             return "Google Chrome";
+        case CHROMIUM:
+            return "Chromium";
         case FIREFOX:
             return "Mozilla Firefox";
         case OPERA:
