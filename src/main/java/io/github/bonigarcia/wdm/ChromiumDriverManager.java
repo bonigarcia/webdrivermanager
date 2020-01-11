@@ -29,8 +29,6 @@ import java.util.Optional;
  */
 public class ChromiumDriverManager extends ChromeDriverManager {
 
-    public static final String SNAP_CHROMIUM_DRIVER_PATH = "/snap/bin/chromium.chromedriver";
-
     @Override
     protected DriverManagerType getDriverManagerType() {
         return CHROMIUM;
@@ -41,18 +39,18 @@ public class ChromiumDriverManager extends ChromeDriverManager {
         String[] programFilesEnvs = { getProgramFilesEnv(), "LOCALAPPDATA",
                 getOtherProgramFilesEnv() };
         return getDefaultBrowserVersion(programFilesEnvs,
-                "\\\\Chromium\\\\Application\\\\chrome.exe",
-                "chromium-browser",
+                "\\\\Chromium\\\\Application\\\\chrome.exe", "chromium-browser",
                 "/Applications/Chromium.app/Contents/MacOS/Chromium",
                 "--version", getDriverManagerType().toString());
     }
 
     protected boolean snapDriverExists() {
-        File snapChromiumDriverPath = new File(SNAP_CHROMIUM_DRIVER_PATH);
+        String chromiumDriverSnapPath = config().getChromiumDriverSnapPath();
+        File snapChromiumDriverPath = new File(chromiumDriverSnapPath);
         boolean existsSnap = snapChromiumDriverPath.exists();
         if (existsSnap) {
             log.debug("Found {} snap", getDriverManagerType());
-            exportDriver(SNAP_CHROMIUM_DRIVER_PATH);
+            exportDriver(chromiumDriverSnapPath);
         }
         return existsSnap;
     }
