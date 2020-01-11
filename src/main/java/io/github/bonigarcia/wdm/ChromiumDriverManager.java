@@ -41,7 +41,7 @@ public class ChromiumDriverManager extends ChromeDriverManager {
         String[] programFilesEnvs = { getProgramFilesEnv(), "LOCALAPPDATA",
                 getOtherProgramFilesEnv() };
         return getDefaultBrowserVersion(programFilesEnvs,
-                "\\\\Chromium\\\\Application\\\\chromium.exe",
+                "\\\\Chromium\\\\Application\\\\chrome.exe",
                 "chromium-browser",
                 "/Applications/Chromium.app/Contents/MacOS/Chromium",
                 "--version", getDriverManagerType().toString());

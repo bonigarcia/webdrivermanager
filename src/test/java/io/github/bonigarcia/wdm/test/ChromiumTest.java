@@ -45,17 +45,24 @@ public class ChromiumTest extends BrowserTestParent {
 
     @Before
     public void setupTest() {
-        String chromiumBinary = IS_OS_WINDOWS
-                ? "C:\\Program Files\\Chromium\\Application\\chromium.exe"
-                : IS_OS_MAC
-                        ? "/Applications/Chromium.app/Contents/MacOS/Chromium"
-                        : "/usr/bin/chromium-browser";
-        File chromium = new File(chromiumBinary);
+        File chromium = new File(getChromiumBinary());
         assumeTrue(chromium.exists());
 
         ChromeOptions options = new ChromeOptions();
         options.setBinary(chromium);
         driver = new ChromeDriver(options);
+    }
+
+    private String getChromiumBinary() {
+        if (IS_OS_WINDOWS) {
+            String localAppDat = System.getenv("LOCALAPPDATA")
+                    .replaceAll("\\\\", "\\\\\\\\");
+            return localAppDat + "\\Chromium\\Application\\chrome.exe";
+        } else {
+            return IS_OS_MAC
+                    ? "/Applications/Chromium.app/Contents/MacOS/Chromium"
+                    : "/usr/bin/chromium-browser";
+        }
     }
 
 }
