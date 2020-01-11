@@ -61,7 +61,7 @@ In order to use WebDriverManager from tests in a Maven project, you need to add 
 <dependency>
     <groupId>io.github.bonigarcia</groupId>
     <artifactId>webdrivermanager</artifactId>
-    <version>3.7.1</version>
+    <version>3.8.0</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -70,7 +70,7 @@ In order to use WebDriverManager from tests in a Maven project, you need to add 
 
 ```
 dependencies {
-    testCompile("io.github.bonigarcia:webdrivermanager:3.7.1")
+    testCompile("io.github.bonigarcia:webdrivermanager:3.8.0")
 }
 ```
 
@@ -113,7 +113,7 @@ Notice that simply adding ``WebDriverManager.chromedriver().setup();`` WebDriver
 3. It downloads the WebDriver binary if it is not present on the WebDriverManager cache (``~/.m2/repository/webdriver`` by default).
 4. It exports the proper WebDriver Java environment variables required by Selenium (not done when using WebDriverManager from the CLI or as a Server).
 
-WebDriverManager resolves the driver binaries for the browsers **Chrome**, **Firefox**, **Opera**, **PhantomJS**, **Microsoft Edge**, and **Internet Explorer**. For that, it provides several *drivers managers* for these browsers. These *drivers managers* can be used as follows:
+WebDriverManager resolves the driver binaries for the browsers **Chrome**, **Firefox**, **Opera**, **PhantomJS**, **Microsoft Edge**, **Internet Explorer**, and **Chromium**. For that, it provides several *drivers managers* for these browsers. These *drivers managers* can be used as follows:
 
 ```java
 WebDriverManager.chromedriver().setup();
@@ -122,6 +122,7 @@ WebDriverManager.operadriver().setup();
 WebDriverManager.phantomjs().setup();
 WebDriverManager.edgedriver().setup();
 WebDriverManager.iedriver().setup();
+WebDriverManager.chromiumdriver().setup();
 ```
 
 **NOTE**: The old WebDriverManager API (version 1.x) has been deprecated as of version 3.x (`ChromeDriverManager.getInstance().setup();`, `FirefoxDriverManager.getInstance().setup();`, and so on).
@@ -267,6 +268,8 @@ wdm.internetExplorerDriverExport=webdriver.ie.driver
 
 wdm.seleniumServerStandaloneUrl=https://selenium-release.storage.googleapis.com/
 
+wdm.chromiumDriverSnapPath=/snap/bin/chromium.chromedriver
+
 wdm.versionsPropertiesOnlineFirst=true
 wdm.versionsPropertiesUrl=https://raw.githubusercontent.com/bonigarcia/webdrivermanager/master/src/main/resources/versions.properties
 ```
@@ -325,7 +328,7 @@ As of version 2.2.0, WebDriverManager can used interactively from the Command Li
 [INFO] Scanning for projects...
 [INFO]
 [INFO] ------------------------------------------------------------------------
-[INFO] Building WebDriverManager 3.7.1
+[INFO] Building WebDriverManager 3.8.0
 [INFO] ------------------------------------------------------------------------
 [INFO]
 [INFO] --- exec-maven-plugin:1.6.0:java (default-cli) @ webdrivermanager ---
@@ -343,10 +346,10 @@ As of version 2.2.0, WebDriverManager can used interactively from the Command Li
 [INFO] ------------------------------------------------------------------------
 ```
 
-* Using WebDriverManager as a *fat-jar* (i.e. WebDriverManager with all its dependencies in a single executable JAR file). This JAR file can downloaded from [here](https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-3.7.1/webdrivermanager-3.7.1-fat.jar) and also it can be created using the command ``mvn compile assembly:single`` from the source code. Once you get the *fat-jar*, you simply need to use the command ``java -jar webdrivermanager-3.7.1-fat.jar browserName``, for instance:
+* Using WebDriverManager as a *fat-jar* (i.e. WebDriverManager with all its dependencies in a single executable JAR file). This JAR file can downloaded from [here](https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-3.8.0/webdrivermanager-3.8.0-fat.jar) and also it can be created using the command ``mvn compile assembly:single`` from the source code. Once you get the *fat-jar*, you simply need to use the command ``java -jar webdrivermanager-3.8.0-fat.jar browserName``, for instance:
 
 ```
-> java -jar webdrivermanager-3.7.1-fat.jar chrome
+> java -jar webdrivermanager-3.8.0-fat.jar chrome
 [INFO] Using WebDriverManager to resolve chrome
 [INFO] Using chromedriver 73.0.3683.68 (since Google Chrome 73 is installed in your machine)
 [INFO] Reading https://chromedriver.storage.googleapis.com/ to seek chromedriver
@@ -366,17 +369,17 @@ $ mvn exec:java -Dexec.args="server"
 [INFO] Scanning for projects...
 [INFO]
 [INFO] ------------------------------------------------------------------------
-[INFO] Building WebDriverManager 3.7.1
+[INFO] Building WebDriverManager 3.8.0
 [INFO] ------------------------------------------------------------------------
 [INFO]
 [INFO] --- exec-maven-plugin:1.6.0:java (default-cli) @ webdrivermanager ---
 [INFO] WebDriverManager server listening on port 4041
 ```
 
-* Using WebDriverManager as a [fat-jar](https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-3.7.1/webdrivermanager-3.7.1-fat.jar). For instance:
+* Using WebDriverManager as a [fat-jar](https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-3.8.0/webdrivermanager-3.8.0-fat.jar). For instance:
 
 ```
-> java -jar webdrivermanager-3.7.1-fat.jar server
+> java -jar webdrivermanager-3.8.0-fat.jar server
 [INFO] WebDriverManager server listening on port 4041
 ```
 

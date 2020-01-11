@@ -41,7 +41,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * FilterCacheBy test.
  *
  * @author Boni Garcia (boni.gg@gmail.com)
- * @since 3.7.2
+ * @since 3.8.0
  */
 @RunWith(Parameterized.class)
 public class VersionFilterTest {
