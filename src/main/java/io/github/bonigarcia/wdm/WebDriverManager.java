@@ -504,7 +504,7 @@ public abstract class WebDriverManager {
                 version = detectDriverVersionFromBrowser();
             }
 
-            // For Chromium snap
+            // Special case for Chromium snap packages
             if (getDriverManagerType() == CHROMIUM && isSnap
                     && ((ChromiumDriverManager) this).snapDriverExists()) {
                 return;
@@ -521,7 +521,7 @@ public abstract class WebDriverManager {
                 }
             }
 
-            // For Edge
+            // Special case for Edge
             if (checkPreInstalledVersion(version)) {
                 return;
             }
@@ -537,32 +537,39 @@ public abstract class WebDriverManager {
                 cache = true;
             }
 
-            Optional<String> driverInCache = handleCache(arch, version, os,
-                    getLatest, cache);
-
-            String versionStr = getLatest ? "(latest version)" : version;
-            if (driverInCache.isPresent() && !config().isOverride()) {
-                storeVersionToDownload(version);
-                downloadedVersion = version;
-                log.debug("Driver {} {} found in cache", getDriverName(),
-                        versionStr);
-                exportDriver(driverInCache.get());
-            } else {
-                List<URL> candidateUrls = filterCandidateUrls(arch, version,
-                        getLatest);
-                if (candidateUrls.isEmpty()) {
-                    String errorMessage = getDriverName() + " " + versionStr
-                            + " for " + os + arch.toString() + " not found in "
-                            + getDriverUrl();
-                    log.error(errorMessage);
-                    throw new WebDriverManagerException(errorMessage);
-                }
-
-                downloadCandidateUrls(candidateUrls);
-            }
+            // Manage driver
+            downloadAndExport(arch, version, getLatest, cache, os);
 
         } catch (Exception e) {
             handleException(e, arch, version);
+        }
+    }
+
+    private void downloadAndExport(Architecture arch, String version,
+            boolean getLatest, boolean cache, String os)
+            throws IOException, InterruptedException {
+        Optional<String> driverInCache = handleCache(arch, version, os,
+                getLatest, cache);
+        String versionStr = getLatest ? "(latest version)" : version;
+
+        if (driverInCache.isPresent() && !config().isOverride()) {
+            storeVersionToDownload(version);
+            downloadedVersion = version;
+            log.debug("Driver {} {} found in cache", getDriverName(),
+                    versionStr);
+            exportDriver(driverInCache.get());
+        } else {
+            List<URL> candidateUrls = filterCandidateUrls(arch, version,
+                    getLatest);
+            if (candidateUrls.isEmpty()) {
+                String errorMessage = getDriverName() + " " + versionStr
+                        + " for " + os + arch.toString() + " not found in "
+                        + getDriverUrl();
+                log.error(errorMessage);
+                throw new WebDriverManagerException(errorMessage);
+            }
+
+            downloadCandidateUrls(candidateUrls);
         }
     }
 
