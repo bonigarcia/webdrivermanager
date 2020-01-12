@@ -132,6 +132,23 @@ WebDriverManager.getInstance(CHROME).setup();
 WebDriver driver = new ChromeDriver();
 ```
 
+You can also use the `DriverManagerType` and get the complete driver class name. It might help you to create a browser instance without explicitly define the browser class.
+
+```java
+import static io.github.bonigarcia.wdm.DriverManagerType.CHROME;
+
+import org.openqa.selenium.WebDriver;
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+// ...
+
+DriverManagerType chrome = DriverManagerType.CHROME;
+WebDriverManager.getInstance(chrome).setup();
+Class<?> chromeClass =  Class.forName(chrome.browserClass());
+driver = (WebDriver) chromeClass.newInstance();
+```
+
+
 ### Examples
 
 Check out the repository [WebDriverManager Examples] which contains different JUnit 4 test examples using WebDriverManager.
