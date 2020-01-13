@@ -50,6 +50,7 @@ public class DriverManagerTypeTest {
     public static Collection<Object[]> data() {
         return asList(new Object[][] {
                 { "org.openqa.selenium.chrome.ChromeDriver", DriverManagerType.CHROME },
+                { "org.openqa.selenium.chromium.ChromiumDriver", DriverManagerType.CHROMIUM },
                 { "org.openqa.selenium.firefox.FirefoxDriver", DriverManagerType.FIREFOX },
                 { "org.openqa.selenium.opera.OperaDriver", DriverManagerType.OPERA },
                 { "org.openqa.selenium.edge.EdgeDriver", DriverManagerType.EDGE },
