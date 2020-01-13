@@ -31,7 +31,7 @@ public enum DriverManagerType {
     PHANTOMJS("org.openqa.selenium.phantomjs.PhantomJSDriver"),
     IEXPLORER("org.openqa.selenium.ie.InternetExplorerDriver"),
     SELENIUM_SERVER_STANDALONE("org.openqa.selenium.remote.server.SeleniumServer"),
-    CHROMIUM("org.openqa.selenium.chromium.ChromiumDriver");
+    CHROMIUM("org.openqa.selenium.chrome.ChromeDriver");
 
     String browserClass;
 
