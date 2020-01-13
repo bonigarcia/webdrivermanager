@@ -24,8 +24,24 @@ package io.github.bonigarcia.wdm;
  */
 public enum DriverManagerType {
 
-    CHROME, FIREFOX, OPERA, EDGE, PHANTOMJS, IEXPLORER,
-    SELENIUM_SERVER_STANDALONE, CHROMIUM;
+    CHROME("org.openqa.selenium.chrome.ChromeDriver"),
+    FIREFOX ("org.openqa.selenium.firefox.FirefoxDriver"),
+    OPERA("org.openqa.selenium.opera.OperaDriver"),
+    EDGE("org.openqa.selenium.edge.EdgeDriver"),
+    PHANTOMJS("org.openqa.selenium.phantomjs.PhantomJSDriver"),
+    IEXPLORER("org.openqa.selenium.ie.InternetExplorerDriver"),
+    SELENIUM_SERVER_STANDALONE("org.openqa.selenium.remote.server.SeleniumServer"),
+    CHROMIUM("org.openqa.selenium.chrome.ChromeDriver");
+
+    String browserClass;
+
+    DriverManagerType(String browserClass) {
+        this.browserClass = browserClass;
+    }
+
+    public String browserClass() {
+        return browserClass;
+    }
 
     @Override
     public String toString() {
