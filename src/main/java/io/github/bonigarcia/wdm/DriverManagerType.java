@@ -30,7 +30,8 @@ public enum DriverManagerType {
     EDGE("org.openqa.selenium.edge.EdgeDriver"),
     PHANTOMJS("org.openqa.selenium.phantomjs.PhantomJSDriver"),
     IEXPLORER("org.openqa.selenium.ie.InternetExplorerDriver"),
-    SELENIUM_SERVER_STANDALONE("org.openqa.selenium.remote.server.SeleniumServer");
+    SELENIUM_SERVER_STANDALONE("org.openqa.selenium.remote.server.SeleniumServer"),
+    CHROMIUM("org.openqa.selenium.chromium.ChromiumDriver");
 
     String browserClass;
 
