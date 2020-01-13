@@ -502,7 +502,7 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 
 ## About
 
-WebDriverManager (Copyright &copy; 2015-2019) is a project created by [Boni Garcia] and licensed under the terms of the [Apache 2.0 License]. Comments, questions and suggestions are always very [welcome][WebDriverManager issues]!
+WebDriverManager (Copyright &copy; 2015-2020) is a project created by [Boni Garcia] and licensed under the terms of the [Apache 2.0 License]. Comments, questions and suggestions are always very [welcome][WebDriverManager issues]!
 
 [Apache HTTP Client]: https://hc.apache.org/httpcomponents-client-ga/
 [Apache HTTP Client logging practices]: https://hc.apache.org/httpcomponents-client-ga/logging.html
