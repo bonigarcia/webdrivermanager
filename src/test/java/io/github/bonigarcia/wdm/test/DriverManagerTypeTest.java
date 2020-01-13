@@ -42,7 +42,7 @@ public class DriverManagerTypeTest {
     public DriverManagerType driverManagerType;
 
     @Test
-    public void test() {
+    public void shouldReturnTheCorrectDriverClass() {
         assertEquals(browserClass, driverManagerType.browserClass());
     }
 
@@ -50,7 +50,7 @@ public class DriverManagerTypeTest {
     public static Collection<Object[]> data() {
         return asList(new Object[][] {
                 { "org.openqa.selenium.chrome.ChromeDriver", DriverManagerType.CHROME },
-                { "org.openqa.selenium.chromium.ChromiumDriver", DriverManagerType.CHROMIUM },
+                { "org.openqa.selenium.chrome.ChromeDriver", DriverManagerType.CHROMIUM },
                 { "org.openqa.selenium.firefox.FirefoxDriver", DriverManagerType.FIREFOX },
                 { "org.openqa.selenium.opera.OperaDriver", DriverManagerType.OPERA },
                 { "org.openqa.selenium.edge.EdgeDriver", DriverManagerType.EDGE },
