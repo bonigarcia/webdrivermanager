@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm.test;
 
+import static io.github.bonigarcia.wdm.WebDriverManager.chromedriver;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -25,27 +26,20 @@ import org.junit.Test;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 /**
- * Using different properties.
+ * Test for preferences.
  *
  * @author Boni Garcia (boni.gg@gmail.com)
- * @since 2.1.1
+ * @since 3.0.0
  */
-public class PropertiesTest {
+public class PreferencesTest {
 
     @Test
-    public void testCustomProperties() {
-        WebDriverManager chromedriver = WebDriverManager.chromedriver();
-        chromedriver.config().setProperties("wdm-test.properties");
-        chromedriver.setup();
-        String binaryPath = chromedriver.getBinaryPath();
+    public void testEmptyTtl() {
+        WebDriverManager.main(new String[] { "clear-preferences" });
+        chromedriver().ttl(0).setup();
+        String binaryPath = chromedriver().getBinaryPath();
         File binary = new File(binaryPath);
         assertTrue(binary.exists());
-    }
-
-    @Test
-    public void testEmptyProperties() {
-        WebDriverManager.chromedriver().properties("").setup();
-        assertTrue(true);
     }
 
 }

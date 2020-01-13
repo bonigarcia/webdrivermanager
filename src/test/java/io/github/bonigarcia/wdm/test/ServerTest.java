@@ -25,6 +25,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.Collection;
+import java.util.List;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -66,10 +67,8 @@ public class ServerTest {
                 { "firefoxdriver", "geckodriver" + EXT },
                 { "operadriver", "operadriver" + EXT },
                 { "phantomjs", "phantomjs" + EXT },
-                { "edgedriver", "MicrosoftWebDriver.exe" },
+                { "edgedriver", "msedgedriver.exe" },
                 { "iedriver", "IEDriverServer.exe" },
-                { "selenium-server-standalone",
-                        "selenium-server-standalone-3.14.0.jar" },
                 { "chromedriver?os=WIN", "chromedriver.exe" },
                 { "chromedriver?os=LINUX&chromeDriverVersion=2.41&forceCache=true",
                         "chromedriver" } });
@@ -98,8 +97,11 @@ public class ServerTest {
         // Assert attachment
         String attachment = String.format("attachment; filename=\"%s\"",
                 driver);
-        assertTrue(response.headers().values("Content-Disposition")
-                .contains(attachment));
+
+        List<String> headers = response.headers().values("Content-Disposition");
+        log.debug("Assessing {} ... {} should contain {}", driver, headers,
+                attachment);
+        assertTrue(headers.contains(attachment));
     }
 
     public static String getFreePort() throws IOException {

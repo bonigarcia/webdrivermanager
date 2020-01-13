@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2015 Boni Garcia (http://bonigarcia.github.io/)
+ * (C) Copyright 2019 Boni Garcia (http://bonigarcia.github.io/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static io.github.bonigarcia.wdm.DriverManagerType.IEXPLORER;
+import static java.util.Collections.emptyList;
 import static java.util.Optional.empty;
 
 import java.io.IOException;
@@ -25,31 +25,31 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Manager for Internet Explorer.
+ * Void manager.
  *
  * @author Boni Garcia (boni.gg@gmail.com)
- * @since 1.0.0
+ * @since 3.2.0
  */
-public class InternetExplorerDriverManager extends WebDriverManager {
+public class VoidDriverManager extends WebDriverManager {
 
     @Override
-    protected DriverManagerType getDriverManagerType() {
-        return IEXPLORER;
+    protected List<URL> getDrivers() throws IOException {
+        return emptyList();
     }
 
     @Override
-    protected String getDriverName() {
-        return "IEDriverServer";
+    protected Optional<String> getBrowserVersion() {
+        return empty();
     }
 
     @Override
     protected String getDriverVersion() {
-        return config().getInternetExplorerDriverVersion();
+        return "";
     }
 
     @Override
     protected URL getDriverUrl() {
-        return config().getInternetExplorerDriverUrl();
+        return null;
     }
 
     @Override
@@ -59,27 +59,27 @@ public class InternetExplorerDriverManager extends WebDriverManager {
 
     @Override
     protected Optional<String> getExportParameter() {
-        return Optional.of(config().getInternetExplorerDriverExport());
+        return empty();
+    }
+
+    @Override
+    protected DriverManagerType getDriverManagerType() {
+        return null;
+    }
+
+    @Override
+    protected String getDriverName() {
+        return "";
     }
 
     @Override
     protected void setDriverVersion(String version) {
-        config().setInternetExplorerDriverVersion(version);
+        // Nothing required
     }
 
     @Override
     protected void setDriverUrl(URL url) {
-        config().setInternetExplorerDriverUrl(url);
-    }
-
-    @Override
-    protected List<URL> getDrivers() throws IOException {
-        return getDriversFromXml(getDriverUrl());
-    }
-
-    @Override
-    protected Optional<String> getBrowserVersion() {
-        return empty();
+        // Nothing required
     }
 
 }

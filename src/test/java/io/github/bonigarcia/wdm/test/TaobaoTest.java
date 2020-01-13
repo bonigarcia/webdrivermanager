@@ -22,6 +22,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.net.URL;
 
+import org.junit.Ignore;
 import org.junit.Test;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -37,9 +38,22 @@ public class TaobaoTest {
 
     @Test
     public void testTaobao() throws Exception {
-        WebDriverManager.config().setAvoidAutoVersion(true).setDriverUrl(
-                new URL("http://npm.taobao.org/mirrors/chromedriver/2.33/"));
-        chromedriver().useMirror().setup();
+        chromedriver().config().setAvoidAutoVersion(true)
+                .setChromeDriverMirrorUrl(
+                        new URL("http://npm.taobao.org/mirrors/chromedriver/"));
+        chromedriver().useMirror().forceDownload().setup();
+
+        File binary = new File(chromedriver().getBinaryPath());
+        assertTrue(binary.exists());
+    }
+
+    @Ignore("Flaky test due to cnpmjs.org")
+    @Test
+    public void testOtherMirrorUrl() throws Exception {
+        chromedriver().config().setAvoidAutoVersion(true)
+                .setChromeDriverMirrorUrl(
+                        new URL("https://cnpmjs.org/mirrors/chromedriver/"));
+        chromedriver().useMirror().forceDownload().setup();
 
         File binary = new File(chromedriver().getBinaryPath());
         assertTrue(binary.exists());

@@ -47,6 +47,8 @@ public enum DriverManagerType {
         switch (this) {
         case CHROME:
             return "Google Chrome";
+        case CHROMIUM:
+            return "Chromium";
         case FIREFOX:
             return "Mozilla Firefox";
         case OPERA:

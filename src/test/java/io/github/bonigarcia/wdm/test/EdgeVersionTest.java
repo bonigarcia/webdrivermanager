@@ -25,7 +25,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.base.VersionTestParent;
 
 /**
- * Test asserting MicrosoftWebDriver Edge versions.
+ * Test asserting Edge driver versions.
  *
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.3.0
@@ -36,7 +36,9 @@ public class EdgeVersionTest extends VersionTestParent {
     public void setup() {
         browserManager = WebDriverManager.getInstance(EdgeDriver.class);
         os = WIN;
-        specificVersions = new String[] { "3.14393", "4.15063" };
+        specificVersions = new String[] { "1.10240", "2.10586", "3.14393",
+                "4.15063", "5.16299", "6.17134", "75.0.139.20", "76.0.183.0",
+                "77.0.237.0" };
     }
 
 }

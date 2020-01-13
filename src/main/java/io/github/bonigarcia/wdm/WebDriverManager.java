@@ -20,6 +20,7 @@ import static io.github.bonigarcia.wdm.Architecture.X32;
 import static io.github.bonigarcia.wdm.Architecture.X64;
 import static io.github.bonigarcia.wdm.Config.isNullOrEmpty;
 import static io.github.bonigarcia.wdm.DriverManagerType.CHROME;
+import static io.github.bonigarcia.wdm.DriverManagerType.CHROMIUM;
 import static io.github.bonigarcia.wdm.DriverManagerType.EDGE;
 import static io.github.bonigarcia.wdm.DriverManagerType.FIREFOX;
 import static io.github.bonigarcia.wdm.DriverManagerType.IEXPLORER;
@@ -30,15 +31,16 @@ import static io.github.bonigarcia.wdm.OperatingSystem.WIN;
 import static io.github.bonigarcia.wdm.Shell.getVersionFromPosixOutput;
 import static io.github.bonigarcia.wdm.Shell.getVersionFromWmicOutput;
 import static io.github.bonigarcia.wdm.Shell.runAndWait;
+import static java.io.File.separator;
 import static java.lang.Integer.parseInt;
 import static java.lang.Integer.signum;
 import static java.lang.Integer.valueOf;
 import static java.lang.invoke.MethodHandles.lookup;
-import static java.util.Collections.emptyList;
 import static java.util.Collections.sort;
 import static java.util.Optional.empty;
 import static javax.xml.xpath.XPathConstants.NODESET;
 import static javax.xml.xpath.XPathFactory.newInstance;
+import static org.apache.commons.io.FileUtils.deleteDirectory;
 import static org.apache.commons.io.FileUtils.listFiles;
 import static org.apache.commons.io.FilenameUtils.removeExtension;
 import static org.apache.commons.lang3.StringUtils.isNumeric;
@@ -93,100 +95,109 @@ public abstract class WebDriverManager {
     static final Logger log = getLogger(lookup().lookupClass());
 
     protected static final String SLASH = "/";
+    protected static final String PRE_INSTALLED = "pre-installed";
+    protected static final String BETA = "beta";
+    protected static final String ONLINE = "online";
+    protected static final String LOCAL = "local";
 
     protected abstract List<URL> getDrivers() throws IOException;
 
     protected abstract Optional<String> getBrowserVersion();
 
+    protected abstract DriverManagerType getDriverManagerType();
+
+    protected abstract String getDriverName();
+
+    protected abstract void setDriverVersion(String version);
+
+    protected abstract String getDriverVersion();
+
+    protected abstract void setDriverUrl(URL url);
+
+    protected abstract URL getDriverUrl();
+
+    protected abstract Optional<URL> getMirrorUrl();
+
+    protected abstract Optional<String> getExportParameter();
+
     protected static Map<DriverManagerType, WebDriverManager> instanceMap = new EnumMap<>(
             DriverManagerType.class);
-    protected static Config config;
+
     protected HttpClient httpClient;
     protected Downloader downloader;
     protected UrlFilter urlFilter;
     protected String versionToDownload;
     protected String downloadedVersion;
     protected String latestVersion;
-    protected DriverManagerType driverManagerType;
     protected String binaryPath;
     protected boolean mirrorLog;
     protected List<String> listVersions;
-    protected String driverName;
-    protected String driverVersionKey;
-    protected String driverUrlKey;
-    protected String driverMirrorUrlKey;
-    protected String exportParameterKey;
     protected boolean forcedArch;
+    protected boolean forcedOs;
+    protected boolean isLatest;
+    protected boolean isSnap;
+    protected int retryCount = 0;
+    protected Config config = new Config();
+    protected Preferences preferences = new Preferences(config);
+    protected String preferenceKey;
+    protected Properties versionsProperties;
 
-    public static synchronized Config config() {
-        if (config == null) {
-            config = new Config();
+    public static Config globalConfig() {
+        Config global = new Config();
+        global.setAvoidAutoReset(true);
+        for (DriverManagerType type : DriverManagerType.values()) {
+            WebDriverManager.getInstance(type).setConfig(global);
         }
+        return global;
+    }
+
+    public Config config() {
         return config;
     }
 
     public static synchronized WebDriverManager chromedriver() {
-        if (!instanceMap.containsKey(CHROME)) {
-            instanceMap.put(CHROME, new ChromeDriverManager());
-        }
+        instanceMap.putIfAbsent(CHROME, new ChromeDriverManager());
         return instanceMap.get(CHROME);
     }
 
+    public static synchronized WebDriverManager chromiumdriver() {
+        instanceMap.putIfAbsent(CHROMIUM, new ChromiumDriverManager());
+        return instanceMap.get(CHROMIUM);
+    }
+
     public static synchronized WebDriverManager firefoxdriver() {
-        if (!instanceMap.containsKey(FIREFOX)) {
-            instanceMap.put(FIREFOX, new FirefoxDriverManager());
-        }
+        instanceMap.putIfAbsent(FIREFOX, new FirefoxDriverManager());
         return instanceMap.get(FIREFOX);
     }
 
     public static synchronized WebDriverManager operadriver() {
-        if (!instanceMap.containsKey(OPERA)) {
-            instanceMap.put(OPERA, new OperaDriverManager());
-        }
+        instanceMap.putIfAbsent(OPERA, new OperaDriverManager());
         return instanceMap.get(OPERA);
     }
 
     public static synchronized WebDriverManager edgedriver() {
-        if (!instanceMap.containsKey(EDGE)) {
-            instanceMap.put(EDGE, new EdgeDriverManager());
-        }
+        instanceMap.putIfAbsent(EDGE, new EdgeDriverManager());
         return instanceMap.get(EDGE);
     }
 
     public static synchronized WebDriverManager iedriver() {
-        if (!instanceMap.containsKey(IEXPLORER)) {
-            instanceMap.put(IEXPLORER, new InternetExplorerDriverManager());
-        }
+        instanceMap.putIfAbsent(IEXPLORER, new InternetExplorerDriverManager());
         return instanceMap.get(IEXPLORER);
     }
 
     public static synchronized WebDriverManager phantomjs() {
-        if (!instanceMap.containsKey(PHANTOMJS)) {
-            instanceMap.put(PHANTOMJS, new PhantomJsDriverManager());
-        }
+        instanceMap.putIfAbsent(PHANTOMJS, new PhantomJsDriverManager());
         return instanceMap.get(PHANTOMJS);
     }
 
     public static synchronized WebDriverManager seleniumServerStandalone() {
-        if (!instanceMap.containsKey(SELENIUM_SERVER_STANDALONE)) {
-            instanceMap.put(SELENIUM_SERVER_STANDALONE,
-                    new SeleniumServerStandaloneManager());
-        }
+        instanceMap.putIfAbsent(SELENIUM_SERVER_STANDALONE,
+                new SeleniumServerStandaloneManager());
         return instanceMap.get(SELENIUM_SERVER_STANDALONE);
     }
 
     protected static synchronized WebDriverManager voiddriver() {
-        return new WebDriverManager() {
-            @Override
-            protected List<URL> getDrivers() throws IOException {
-                return emptyList();
-            }
-
-            @Override
-            protected Optional<String> getBrowserVersion() {
-                return empty();
-            }
-        };
+        return new VoidDriverManager();
     }
 
     public static synchronized WebDriverManager getInstance(
@@ -235,147 +246,193 @@ public abstract class WebDriverManager {
     }
 
     public synchronized void setup() {
+        DriverManagerType driverManagerType = getDriverManagerType();
         if (driverManagerType != null) {
             try {
-                manage(config().getArchitecture(),
-                        config().getDriverVersion(driverVersionKey));
+                if (config().getClearPreferences()) {
+                    clearPreferences();
+                }
+                Architecture architecture = config().getArchitecture();
+                String driverVersion = getDriverVersion();
+                isLatest = isVersionLatest(driverVersion);
+                manage(architecture, driverVersion);
             } finally {
-                reset();
+                if (!config().isAvoidAutoReset()) {
+                    reset();
+                }
             }
         }
     }
 
     public WebDriverManager version(String version) {
-        config().setDriverVersion(version);
-        return instanceMap.get(driverManagerType);
+        setDriverVersion(version);
+        return instanceMap.get(getDriverManagerType());
     }
 
     public WebDriverManager architecture(Architecture architecture) {
         config().setArchitecture(architecture);
         forcedArch = true;
-        return instanceMap.get(driverManagerType);
+        return instanceMap.get(getDriverManagerType());
     }
 
     public WebDriverManager arch32() {
         architecture(X32);
-        return instanceMap.get(driverManagerType);
+        return instanceMap.get(getDriverManagerType());
     }
 
     public WebDriverManager arch64() {
         architecture(X64);
-        return instanceMap.get(driverManagerType);
+        return instanceMap.get(getDriverManagerType());
     }
 
     public WebDriverManager operatingSystem(OperatingSystem os) {
         config().setOs(os.name());
-        return instanceMap.get(driverManagerType);
+        forcedOs = true;
+        return instanceMap.get(getDriverManagerType());
     }
 
     public WebDriverManager forceCache() {
         config().setForceCache(true);
-        return instanceMap.get(driverManagerType);
+        return instanceMap.get(getDriverManagerType());
     }
 
     public WebDriverManager forceDownload() {
         config().setOverride(true);
-        return instanceMap.get(driverManagerType);
+        return instanceMap.get(getDriverManagerType());
     }
 
     public WebDriverManager driverRepositoryUrl(URL url) {
-        config().setDriverUrl(url);
-        return instanceMap.get(driverManagerType);
+        setDriverUrl(url);
+        return instanceMap.get(getDriverManagerType());
     }
 
     public WebDriverManager useMirror() {
-        config().setUseMirror(true);
-        if (config.getUseMirror(driverMirrorUrlKey)) {
-            config().setDriverUrl(config().getDriverUrl(driverMirrorUrlKey));
+        Optional<URL> mirrorUrl = getMirrorUrl();
+        if (!mirrorUrl.isPresent()) {
+            throw new WebDriverManagerException("Mirror URL not available");
         }
-        return instanceMap.get(driverManagerType);
+        config().setUseMirror(true);
+        return instanceMap.get(getDriverManagerType());
     }
 
     public WebDriverManager proxy(String proxy) {
         config().setProxy(proxy);
-        return instanceMap.get(driverManagerType);
+        return instanceMap.get(getDriverManagerType());
     }
 
     public WebDriverManager proxyUser(String proxyUser) {
         config().setProxyUser(proxyUser);
-        return instanceMap.get(driverManagerType);
+        return instanceMap.get(getDriverManagerType());
     }
 
     public WebDriverManager proxyPass(String proxyPass) {
         config().setProxyPass(proxyPass);
-        return instanceMap.get(driverManagerType);
+        return instanceMap.get(getDriverManagerType());
     }
 
     public WebDriverManager useBetaVersions() {
         config().setUseBetaVersions(true);
-        return instanceMap.get(driverManagerType);
+        return instanceMap.get(getDriverManagerType());
     }
 
     public WebDriverManager ignoreVersions(String... versions) {
         config().setIgnoreVersions(versions);
-        return instanceMap.get(driverManagerType);
-    }
-
-    public WebDriverManager gitHubTokenName(String gitHubTokenName) {
-        config().setGitHubTokenName(gitHubTokenName);
-        return instanceMap.get(driverManagerType);
+        return instanceMap.get(getDriverManagerType());
     }
 
     public WebDriverManager gitHubTokenSecret(String gitHubTokenSecret) {
         config().setGitHubTokenSecret(gitHubTokenSecret);
-        return instanceMap.get(driverManagerType);
+        return instanceMap.get(getDriverManagerType());
+    }
+
+    public WebDriverManager gitHubTokenName(String gitHubTokenName) {
+        config().setGitHubTokenName(gitHubTokenName);
+        return instanceMap.get(getDriverManagerType());
+    }
+
+    public WebDriverManager localRepositoryUser(String localRepositoryUser) {
+        config().setLocalRepositoryUser(localRepositoryUser);
+        return instanceMap.get(getDriverManagerType());
+    }
+
+    public WebDriverManager localRepositoryPassword(
+            String localRepositoryPassword) {
+        config().setLocalRepositoryPassword(localRepositoryPassword);
+        return instanceMap.get(getDriverManagerType());
     }
 
     public WebDriverManager timeout(int timeout) {
         config().setTimeout(timeout);
-        return instanceMap.get(driverManagerType);
+        return instanceMap.get(getDriverManagerType());
     }
 
     public WebDriverManager properties(String properties) {
         config().setProperties(properties);
-        return instanceMap.get(driverManagerType);
+        return instanceMap.get(getDriverManagerType());
     }
 
     public WebDriverManager targetPath(String targetPath) {
         config().setTargetPath(targetPath);
-        return instanceMap.get(driverManagerType);
+        return instanceMap.get(getDriverManagerType());
     }
 
     public WebDriverManager avoidExport() {
         config().setAvoidExport(true);
-        return instanceMap.get(driverManagerType);
+        return instanceMap.get(getDriverManagerType());
     }
 
     public WebDriverManager avoidOutputTree() {
         config().setAvoidOutputTree(true);
-        return instanceMap.get(driverManagerType);
+        return instanceMap.get(getDriverManagerType());
     }
 
     public WebDriverManager avoidAutoVersion() {
         config().setAvoidAutoVersion(true);
-        return instanceMap.get(driverManagerType);
+        return instanceMap.get(getDriverManagerType());
+    }
+
+    public WebDriverManager avoidPreferences() {
+        config().setAvoidPreferences(true);
+        return instanceMap.get(getDriverManagerType());
+    }
+
+    public WebDriverManager ttl(int seconds) {
+        config().setTtl(seconds);
+        return instanceMap.get(getDriverManagerType());
+    }
+
+    public WebDriverManager browserPath(String browserPath) {
+        config().setBinaryPath(browserPath);
+        return instanceMap.get(getDriverManagerType());
+    }
+
+    public WebDriverManager useLocalVersionsPropertiesFirst() {
+        config().setVersionsPropertiesOnlineFirst(false);
+        return instanceMap.get(getDriverManagerType());
+    }
+
+    public WebDriverManager clearPreferences() {
+        instanceMap.get(getDriverManagerType()).preferences.clear();
+        return instanceMap.get(getDriverManagerType());
     }
 
     // ------------
 
     public String getBinaryPath() {
-        return instanceMap.get(driverManagerType).binaryPath;
+        return instanceMap.get(getDriverManagerType()).binaryPath;
     }
 
     public String getDownloadedVersion() {
-        return instanceMap.get(driverManagerType).downloadedVersion;
+        return instanceMap.get(getDriverManagerType()).downloadedVersion;
     }
 
     public List<String> getVersions() {
-        httpClient = new HttpClient(config().getTimeout());
+        httpClient = new HttpClient(config());
         try {
             List<URL> drivers = getDrivers();
             List<String> versions = new ArrayList<>();
             for (URL url : drivers) {
-                String version = getCurrentVersion(url, driverName);
+                String version = getCurrentVersion(url, getDriverName());
                 if (version.isEmpty() || version.equalsIgnoreCase("icons")) {
                     continue;
                 }
@@ -391,6 +448,16 @@ public abstract class WebDriverManager {
             return versions;
         } catch (IOException e) {
             throw new WebDriverManagerException(e);
+        }
+    }
+
+    public void clearCache() {
+        String targetPath = config().getTargetPath();
+        try {
+            log.debug("Clearing cache at {}", targetPath);
+            deleteDirectory(new File(targetPath));
+        } catch (Exception e) {
+            log.warn("Exception deleting cache at {}", targetPath, e);
         }
     }
 
@@ -410,7 +477,7 @@ public abstract class WebDriverManager {
                 return f;
             }
         }
-        throw new WebDriverManagerException("Driver " + driverName
+        throw new WebDriverManagerException("Driver " + getDriverName()
                 + " not found (using temporal folder " + parentFolder + ")");
     }
 
@@ -429,102 +496,278 @@ public abstract class WebDriverManager {
     }
 
     protected void manage(Architecture arch, String version) {
-        httpClient = new HttpClient(config().getTimeout());
+        httpClient = new HttpClient(config());
         try (HttpClient wdmHttpClient = httpClient) {
-            downloader = new Downloader(driverManagerType);
+            downloader = new Downloader(getDriverManagerType());
             urlFilter = new UrlFilter();
 
-            boolean getLatest = isNullOrEmpty(version)
-                    || version.equalsIgnoreCase("latest");
-            boolean cache = config().isForceCache() || !isNetAvailable();
-            if (getLatest && !config().isAvoidAutoVersion()) {
-                version = getVersionForInstalledBrowser(driverManagerType);
-                getLatest = version.isEmpty();
+            boolean getLatest = isVersionLatest(version);
+            boolean cache = config().isForceCache();
+
+            if (getLatest) {
+                version = detectDriverVersionFromBrowser();
+            }
+
+            // Special case for Chromium snap packages
+            if (getDriverManagerType() == CHROMIUM && isSnap
+                    && ((ChromiumDriverManager) this).snapDriverExists()) {
+                return;
+            }
+
+            getLatest = isNullOrEmpty(version);
+
+            // Check latest version
+            if (getLatest && !config().isUseBetaVersions()) {
+                Optional<String> lastVersion = getLatestVersion();
+                getLatest = !lastVersion.isPresent();
+                if (!getLatest) {
+                    version = lastVersion.get();
+                }
+            }
+
+            // Special case for Edge
+            if (checkPreInstalledVersion(version)) {
+                return;
             }
 
             String os = config().getOs();
             log.trace("Managing {} arch={} version={} getLatest={} cache={}",
-                    driverName, arch, version, getLatest, cache);
+                    getDriverName(), arch, version, getLatest, cache);
 
             if (getLatest && latestVersion != null) {
                 log.debug("Latest version of {} is {} (recently resolved)",
-                        driverName, latestVersion);
+                        getDriverName(), latestVersion);
                 version = latestVersion;
                 cache = true;
             }
 
-            Optional<String> driverInCache = handleCache(arch, version, os,
-                    getLatest, cache);
-
-            String versionStr = getLatest ? "(latest version)" : version;
-            if (driverInCache.isPresent() && !config().isOverride()) {
-                versionToDownload = version;
-                downloadedVersion = version;
-                log.debug("Driver {} {} found in cache", driverName,
-                        versionStr);
-                exportDriver(driverInCache.get());
-            } else {
-                List<URL> candidateUrls = filterCandidateUrls(arch, version,
-                        getLatest);
-
-                if (candidateUrls.isEmpty()) {
-                    String errorMessage = driverName + " " + versionStr
-                            + " for " + os + arch.toString() + " not found in "
-                            + config().getDriverUrl(driverUrlKey);
-                    log.error(errorMessage);
-                    throw new WebDriverManagerException(errorMessage);
-                }
-
-                downloadCandidateUrls(candidateUrls);
-            }
+            // Manage driver
+            downloadAndExport(arch, version, getLatest, cache, os);
 
         } catch (Exception e) {
             handleException(e, arch, version);
         }
     }
 
-    private String getVersionForInstalledBrowser(DriverManagerType driverManagerType) {
-        return getBrowserVersion().map(browserVersion ->
-            getDriverVersionForBrowser(driverManagerType, browserVersion).map(version -> {
-                log.info(
-                    "Using {} {} (since {} {} is installed in your machine)",
-                    driverName, version, driverManagerType, browserVersion);
-                return version;
-            }).orElseGet(() -> {
-                log.warn(
-                    "The driver version for {} {} is unknown ... trying with latest",
-                    driverManagerType, browserVersion);
-                return "";
-            })
-        ).orElse("");
+    private void downloadAndExport(Architecture arch, String version,
+            boolean getLatest, boolean cache, String os)
+            throws IOException, InterruptedException {
+        Optional<String> driverInCache = handleCache(arch, version, os,
+                getLatest, cache);
+        String versionStr = getLatest ? "(latest version)" : version;
+
+        if (driverInCache.isPresent() && !config().isOverride()) {
+            storeVersionToDownload(version);
+            downloadedVersion = version;
+            log.debug("Driver {} {} found in cache", getDriverName(),
+                    versionStr);
+            exportDriver(driverInCache.get());
+        } else {
+            List<URL> candidateUrls = filterCandidateUrls(arch, version,
+                    getLatest);
+            if (candidateUrls.isEmpty()) {
+                String errorMessage = getDriverName() + " " + versionStr
+                        + " for " + os + arch.toString() + " not found in "
+                        + getDriverUrl();
+                log.error(errorMessage);
+                throw new WebDriverManagerException(errorMessage);
+            }
+
+            downloadCandidateUrls(candidateUrls);
+        }
     }
 
-    private Optional<String> getDriverVersionForBrowser(DriverManagerType driverManagerType, String browserVersion) {
-        String key = driverManagerType.name().toLowerCase() + browserVersion;
-        String value = getVersionsDescription().getProperty(key);
+    private String detectDriverVersionFromBrowser() {
+        String version = "";
+        if (config().isAvoidAutoVersion()) {
+            return version;
+        }
+
+        String driverManagerTypeLowerCase = getDriverManagerType().name()
+                .toLowerCase();
+        Optional<String> optionalBrowserVersion;
+        if (usePreferences() && preferences
+                .checkKeyInPreferences(driverManagerTypeLowerCase)) {
+            optionalBrowserVersion = Optional.of(preferences
+                    .getValueFromPreferences(driverManagerTypeLowerCase));
+        } else {
+            optionalBrowserVersion = getBrowserVersion();
+        }
+
+        if (optionalBrowserVersion.isPresent()) {
+            String browserVersion = optionalBrowserVersion.get();
+            log.trace("Detected {} version {}", getDriverManagerType(),
+                    browserVersion);
+
+            preferenceKey = driverManagerTypeLowerCase + browserVersion;
+
+            if (usePreferences()
+                    && preferences.checkKeyInPreferences(preferenceKey)) {
+                // Get driver version from preferences
+                version = preferences.getValueFromPreferences(preferenceKey);
+            } else {
+                // Get driver version from properties
+                version = getVersionForInstalledBrowser(browserVersion);
+            }
+            if (!isNullOrEmpty(version)) {
+                log.info(
+                        "Using {} {} (since {} {} is installed in your machine)",
+                        getDriverName(), version, getDriverManagerType(),
+                        browserVersion);
+                preferences.putValueInPreferencesIfEmpty(
+                        driverManagerTypeLowerCase, browserVersion);
+            }
+        } else {
+            log.debug(
+                    "The proper {} version for your {} is unknown ... trying with the latest",
+                    getDriverName(), getDriverManagerType());
+        }
+
+        return version;
+    }
+
+    private boolean usePreferences() {
+        boolean usePrefs = !config().isAvoidPreferences()
+                && !config().isOverride() && !forcedArch && !forcedOs;
+        log.trace("Using preferences {}", usePrefs);
+        return usePrefs;
+    }
+
+    private boolean checkPreInstalledVersion(String version) {
+        if (version.equals(PRE_INSTALLED)) {
+            String systemRoot = System.getenv("SystemRoot");
+            File microsoftWebDriverFile = new File(systemRoot,
+                    "System32" + File.separator + "MicrosoftWebDriver.exe");
+            if (microsoftWebDriverFile.exists()) {
+                downloadedVersion = PRE_INSTALLED;
+                exportDriver(microsoftWebDriverFile.toString());
+                return true;
+            } else {
+                retryCount = -1;
+                throw new WebDriverManagerException(
+                        "MicrosoftWebDriver.exe should be pre-installed in an elevated command prompt executing: "
+                                + "dism /Online /Add-Capability /CapabilityName:Microsoft.WebDriver~~~~0.0.1.0");
+            }
+        }
+        return false;
+    }
+
+    private boolean isVersionLatest(String version) {
+        return isNullOrEmpty(version) || version.equalsIgnoreCase("latest");
+    }
+
+    private String getVersionForInstalledBrowser(String browserVersion) {
+        String driverVersion = "";
+        DriverManagerType driverManagerType = getDriverManagerType();
+        String driverLowerCase = driverManagerType.name().toLowerCase();
+        if (driverLowerCase.equalsIgnoreCase("chromium")) {
+            driverLowerCase = "chrome";
+        }
+
+        Optional<String> driverVersionForBrowser = getDriverVersionForBrowserFromProperties(
+                driverLowerCase + browserVersion);
+        if (driverVersionForBrowser.isPresent()) {
+            driverVersion = driverVersionForBrowser.get();
+        } else {
+            log.debug(
+                    "The driver version for {} {} is unknown ... trying with latest",
+                    driverManagerType, browserVersion);
+        }
+        return driverVersion;
+    }
+
+    private Optional<String> getDriverVersionForBrowserFromProperties(
+            String key) {
+        boolean online = config().getVersionsPropertiesOnlineFirst();
+        String onlineMessage = online ? ONLINE : LOCAL;
+        log.debug("Getting driver version for {} from {} versions.properties",
+                key, onlineMessage);
+        String value = getVersionFromProperties(online).getProperty(key);
+        if (value == null) {
+            String notOnlineMessage = online ? LOCAL : ONLINE;
+            log.debug(
+                    "Driver for {} not found in {} properties (using {} version)",
+                    key, onlineMessage, notOnlineMessage);
+            versionsProperties = null;
+            value = getVersionFromProperties(!online).getProperty(key);
+        }
         return value == null ? empty() : Optional.of(value);
     }
 
-    private Properties getVersionsDescription() {
-        try (InputStream inputStream = Config.class.getResourceAsStream("/versions.properties")) {
-            Properties props = new Properties();
-            props.load(inputStream);
-            return props;
-        } catch (IOException e) {
-            throw new IllegalStateException("Cannot find file /versions.properties in classpath", e);
+    private Properties getVersionFromProperties(boolean online) {
+        if (versionsProperties != null) {
+            log.trace("Already created versions.properties");
+            return versionsProperties;
+        } else {
+            try (InputStream inputStream = getVersionsInputStream(online)) {
+                versionsProperties = new Properties();
+                versionsProperties.load(inputStream);
+            } catch (Exception e) {
+                versionsProperties = null;
+                throw new IllegalStateException(
+                        "Cannot read versions.properties", e);
+            }
+            return versionsProperties;
         }
+    }
+
+    private InputStream getVersionsInputStream(boolean online)
+            throws IOException {
+        String onlineMessage = online ? ONLINE : LOCAL;
+        log.trace("Reading {} version.properties to find out driver version",
+                onlineMessage);
+        InputStream inputStream;
+        try {
+            if (online) {
+                inputStream = getOnlineVersionsInputStream();
+            } else {
+                inputStream = getLocalVersionsInputStream();
+            }
+        } catch (Exception e) {
+            String exceptionMessage = online ? LOCAL : ONLINE;
+            log.warn("Error reading version.properties, using {} instead",
+                    exceptionMessage);
+            if (online) {
+                inputStream = getLocalVersionsInputStream();
+            } else {
+                inputStream = getOnlineVersionsInputStream();
+            }
+        }
+        return inputStream;
+    }
+
+    private InputStream getLocalVersionsInputStream() {
+        InputStream inputStream;
+        inputStream = Config.class.getResourceAsStream("/versions.properties");
+        return inputStream;
+    }
+
+    private InputStream getOnlineVersionsInputStream() throws IOException {
+        return httpClient
+                .execute(httpClient
+                        .createHttpGet(config().getVersionsPropertiesUrl()))
+                .getEntity().getContent();
     }
 
     protected void handleException(Exception e, Architecture arch,
             String version) {
+        String versionStr = isNullOrEmpty(version) ? "(latest version)"
+                : version;
         String errorMessage = String.format(
-                "There was an error managing %s %s (%s)", driverName, version,
-                e.getMessage());
-        e.printStackTrace();
-        if (!config().isForceCache()) {
+                "There was an error managing %s %s (%s)", getDriverName(),
+                versionStr, e.getMessage());
+        if (!config().isForceCache() && retryCount == 0) {
             config().setForceCache(true);
-            log.warn("{} ... trying again forcing to use cache", errorMessage,
-                    e);
+            config().setUseMirror(true);
+            retryCount++;
+            log.warn("{} ... trying again using mirror", errorMessage);
+            manage(arch, version);
+        } else if (retryCount == 1) {
+            config().setAvoidAutoVersion(true);
+            version = "";
+            retryCount++;
+            log.warn("{} ... trying again using latest from cache",
+                    errorMessage);
             manage(arch, version);
         } else {
             log.error("{}", errorMessage, e);
@@ -551,7 +794,7 @@ public abstract class WebDriverManager {
         boolean continueSearchingVersion;
         do {
             // Get the latest or concrete version
-            candidateUrls = getLatest ? getLatest(urls, getDriverName())
+            candidateUrls = getLatest ? checkLatest(urls, getDriverName())
                     : getVersion(urls, getDriverName(), version);
             log.trace("Candidate URLs: {}", candidateUrls);
             if (versionToDownload == null
@@ -582,7 +825,7 @@ public abstract class WebDriverManager {
             if (continueSearchingVersion) {
                 log.info(
                         "No binary found for {} {} ... seeking another version",
-                        driverName, versionToDownload);
+                        getDriverName(), versionToDownload);
                 urls = removeFromList(urls, versionToDownload);
                 versionToDownload = null;
             }
@@ -614,26 +857,24 @@ public abstract class WebDriverManager {
         if (cache || !getLatest) {
             driverInCache = getDriverFromCache(version, arch, os);
         }
-        if (!version.isEmpty()) {
-            versionToDownload = version;
-        }
+        storeVersionToDownload(version);
         return driverInCache;
     }
 
     protected Optional<String> getDriverFromCache(String driverVersion,
             Architecture arch, String os) {
-        log.trace("Checking if {} exists in cache", driverName);
+        log.trace("Checking if {} exists in cache", getDriverName());
         List<File> filesInCache = getFilesInCache();
         if (!filesInCache.isEmpty()) {
             // Filter by name
-            filesInCache = filterCacheBy(filesInCache, driverName);
+            filesInCache = filterCacheBy(filesInCache, getDriverName(), false);
 
             // Filter by version
-            filesInCache = filterCacheBy(filesInCache, driverVersion);
+            filesInCache = filterCacheBy(filesInCache, driverVersion, true);
 
             // Filter by OS
-            if (!driverName.equals("MicrosoftWebDriver")) {
-                filesInCache = filterCacheBy(filesInCache, os.toLowerCase());
+            if (!getDriverName().equals("msedgedriver")) {
+                filesInCache = filterCacheBy(filesInCache, os, false);
             }
 
             if (filesInCache.size() == 1) {
@@ -641,22 +882,27 @@ public abstract class WebDriverManager {
             }
 
             // Filter by arch
-            filesInCache = filterCacheBy(filesInCache, arch.name());
+            filesInCache = filterCacheBy(filesInCache, arch.toString(), false);
 
             if (!filesInCache.isEmpty()) {
-                return Optional.of(filesInCache.get(0).toString());
+                return Optional.of(
+                        filesInCache.get(filesInCache.size() - 1).toString());
             }
         }
 
-        log.debug("{} not found in cache", driverName);
+        log.trace("{} not found in cache", getDriverName());
         return empty();
     }
 
-    protected List<File> filterCacheBy(List<File> input, String key) {
+    protected List<File> filterCacheBy(List<File> input, String key,
+            boolean isVersion) {
+        String pathSeparator = isVersion ? separator : "";
         List<File> output = new ArrayList<>(input);
         if (!key.isEmpty() && !input.isEmpty()) {
+            String keyInLowerCase = key.toLowerCase();
             for (File f : input) {
-                if (!f.toString().contains(key)) {
+                if (!f.toString().toLowerCase()
+                        .contains(pathSeparator + keyInLowerCase)) {
                     output.remove(f);
                 }
             }
@@ -669,19 +915,6 @@ public abstract class WebDriverManager {
     protected List<File> getFilesInCache() {
         return (List<File>) listFiles(new File(downloader.getTargetPath()),
                 null, true);
-    }
-
-    protected boolean isNetAvailable() {
-        try {
-            if (!httpClient.isValid(config().getDriverUrl(driverUrlKey))) {
-                log.warn("Page not available. Forcing the use of cache");
-                return false;
-            }
-        } catch (IOException e) {
-            log.warn("Network not available. Forcing the use of cache");
-            return false;
-        }
-        return true;
     }
 
     protected List<URL> removeFromList(List<URL> list, String version) {
@@ -697,7 +930,7 @@ public abstract class WebDriverManager {
     protected List<URL> getVersion(List<URL> list, String driver,
             String version) {
         List<URL> out = new ArrayList<>();
-        if (getDriverName().contains("MicrosoftWebDriver")) {
+        if (getDriverName().contains("msedgedriver")) {
             int i = listVersions.indexOf(version);
             if (i != -1) {
                 out.add(list.get(i));
@@ -711,12 +944,15 @@ public abstract class WebDriverManager {
                 out.add(url);
             }
         }
-        versionToDownload = version;
-        log.debug("Using {} {}", driver, version);
+
+        if (versionToDownload != null && !versionToDownload.equals(version)) {
+            versionToDownload = version;
+            log.info("Using {} {}", driver, version);
+        }
         return out;
     }
 
-    protected List<URL> getLatest(List<URL> list, String driver) {
+    protected List<URL> checkLatest(List<URL> list, String driver) {
         log.trace("Checking the lastest version of {} with URL list {}", driver,
                 list);
         List<URL> out = new ArrayList<>();
@@ -731,9 +967,7 @@ public abstract class WebDriverManager {
                 list.remove(url);
             }
         }
-        if (versionToDownload != null && versionToDownload.startsWith(".")) {
-            versionToDownload = versionToDownload.substring(1);
-        }
+        storeVersionToDownload(versionToDownload);
         latestVersion = versionToDownload;
         log.info("Latest version of {} is {}", driver, versionToDownload);
         return out;
@@ -741,9 +975,10 @@ public abstract class WebDriverManager {
 
     protected void handleDriver(URL url, String driver, List<URL> out) {
         if (!config().isUseBetaVersions()
-                && url.getFile().toLowerCase().contains("beta")) {
+                && (url.getFile().toLowerCase().contains("beta"))) {
             return;
         }
+
         if (url.getFile().contains(driver)) {
             String currentVersion = getCurrentVersion(url, driver);
 
@@ -763,14 +998,9 @@ public abstract class WebDriverManager {
         }
     }
 
-    protected boolean isUsingTaobaoMirror() {
-        return config().getDriverUrl(driverUrlKey).getHost()
-                .equalsIgnoreCase("npm.taobao.org");
-    }
-
     protected Integer versionCompare(String str1, String str2) {
-        String[] vals1 = str1.replaceAll("v", "").split("\\.");
-        String[] vals2 = str2.replaceAll("v", "").split("\\.");
+        String[] vals1 = str1.replace("v", "").split("\\.");
+        String[] vals2 = str2.replace("v", "").split("\\.");
 
         if (vals1[0].equals("")) {
             vals1[0] = "0";
@@ -806,25 +1036,25 @@ public abstract class WebDriverManager {
         }
 
         String driverStr = driverUrl.toString();
-        String driverUrlContent = driverUrl.getPath();
 
         HttpResponse response = httpClient
                 .execute(httpClient.createHttpGet(driverUrl));
         try (InputStream in = response.getEntity().getContent()) {
-            org.jsoup.nodes.Document doc = Jsoup.parse(in, null, "");
+            org.jsoup.nodes.Document doc = Jsoup.parse(in, null, driverStr);
             Iterator<org.jsoup.nodes.Element> iterator = doc.select("a")
                     .iterator();
             List<URL> urlList = new ArrayList<>();
 
             while (iterator.hasNext()) {
-                String link = iterator.next().attr("href");
-                if (link.contains("mirror") && link.endsWith(SLASH)) {
-                    urlList.addAll(getDriversFromMirror(new URL(
-                            driverStr + link.replace(driverUrlContent, ""))));
-                } else if (link.startsWith(driverUrlContent)
-                        && !link.contains("icons")) {
-                    urlList.add(new URL(
-                            driverStr + link.replace(driverUrlContent, "")));
+                String link = iterator.next().attr("abs:href");
+                if (link.startsWith(driverStr) && link.endsWith(SLASH)) {
+                    urlList.addAll(getDriversFromMirror(new URL(link)));
+                } else if (link.startsWith(driverStr) && !link.contains("icons")
+                        && (link.toLowerCase().endsWith(".bz2")
+                                || link.toLowerCase().endsWith(".zip")
+                                || link.toLowerCase().endsWith(".msi")
+                                || link.toLowerCase().endsWith(".gz"))) {
+                    urlList.add(new URL(link));
                 }
             }
             return urlList;
@@ -832,7 +1062,7 @@ public abstract class WebDriverManager {
     }
 
     protected List<URL> getDriversFromXml(URL driverUrl) throws IOException {
-        log.info("Reading {} to seek {}", driverUrl, driverName);
+        log.info("Reading {} to seek {}", driverUrl, getDriverName());
         List<URL> urls = new ArrayList<>();
         HttpResponse response = httpClient
                 .execute(httpClient.createHttpGet(driverUrl));
@@ -845,7 +1075,7 @@ public abstract class WebDriverManager {
 
                 for (int i = 0; i < nodes.getLength(); ++i) {
                     Element e = (Element) nodes.item(i);
-                    urls.add(new URL(driverUrl
+                    urls.add(new URL(driverUrl.toURI().resolve(".")
                             + e.getChildNodes().item(0).getNodeValue()));
                 }
             }
@@ -865,8 +1095,9 @@ public abstract class WebDriverManager {
 
     protected void exportDriver(String variableValue) {
         binaryPath = variableValue;
-        if (!config.isAvoidExport() && exportParameterKey != null) {
-            String variableName = config().getDriverExport(exportParameterKey);
+        Optional<String> exportParameter = getExportParameter();
+        if (!config.isAvoidExport() && exportParameter.isPresent()) {
+            String variableName = exportParameter.get();
             log.info("Exporting {} as {}", variableName, variableValue);
             System.setProperty(variableName, variableValue);
         } else {
@@ -893,11 +1124,12 @@ public abstract class WebDriverManager {
 
     protected List<URL> getDriversFromGitHub() throws IOException {
         List<URL> urls;
-        URL driverUrl = config().getDriverUrl(driverUrlKey);
-        log.info("Reading {} to seek {}", driverUrl, driverName);
+        URL driverUrl = getDriverUrl();
+        log.info("Reading {} to seek {}", driverUrl, getDriverName());
 
-        if (isUsingTaobaoMirror()) {
-            urls = getDriversFromMirror(driverUrl);
+        Optional<URL> mirrorUrl = getMirrorUrl();
+        if (mirrorUrl.isPresent() && config.isUseMirror()) {
+            urls = getDriversFromMirror(mirrorUrl.get());
 
         } else {
             String driverVersion = versionToDownload;
@@ -946,42 +1178,75 @@ public abstract class WebDriverManager {
         return out;
     }
 
-    protected String getDriverName() {
-        return driverName;
-    }
-
     protected HttpClient getHttpClient() {
         return httpClient;
     }
 
     protected FilenameFilter getFolderFilter() {
         return (dir, name) -> dir.isDirectory()
-                && name.toLowerCase().contains(driverName);
+                && name.toLowerCase().contains(getDriverName());
     }
 
-    protected Optional<String> getDefaultBrowserVersion(String programFilesEnv,
-            String winBrowserName, String linuxBrowserName,
-            String macBrowserName, String versionFlag,
+    protected Optional<String> getDefaultBrowserVersion(
+            String[] programFilesEnvs, String winBrowserName,
+            String linuxBrowserName, String macBrowserName, String versionFlag,
             String browserNameInOutput) {
+
+        String browserBinaryPath = config().getBinaryPath();
         if (IS_OS_WINDOWS) {
-            String programFiles = System.getenv(programFilesEnv)
-                    .replaceAll("\\\\", "\\\\\\\\");
-            String browserVersionOutput = runAndWait("wmic", "datafile",
-                    "where", "name='" + programFiles + winBrowserName + "'",
-                    "get", "Version", "/value");
-            if (!isNullOrEmpty(browserVersionOutput)) {
-                return Optional
-                        .of(getVersionFromWmicOutput(browserVersionOutput));
+            for (String programFilesEnv : programFilesEnvs) {
+                String browserVersionOutput = getBrowserVersionInWindows(
+                        programFilesEnv, winBrowserName, browserBinaryPath);
+                if (!isNullOrEmpty(browserVersionOutput)) {
+                    return Optional
+                            .of(getVersionFromWmicOutput(browserVersionOutput));
+                }
             }
         } else if (IS_OS_LINUX || IS_OS_MAC) {
-            String browserName = IS_OS_LINUX ? linuxBrowserName
-                    : macBrowserName;
-            String browserVersionOutput = runAndWait(browserName, versionFlag);
+            String browserPath = getPosixBrowserPath(linuxBrowserName,
+                    macBrowserName, browserBinaryPath);
+            String browserVersionOutput = runAndWait(browserPath, versionFlag);
+            if (browserVersionOutput.toLowerCase().contains("snap")) {
+                isSnap = true;
+            }
             if (!isNullOrEmpty(browserVersionOutput)) {
                 return Optional.of(getVersionFromPosixOutput(
                         browserVersionOutput, browserNameInOutput));
             }
         }
+        return empty();
+    }
+
+    private String getPosixBrowserPath(String linuxBrowserName,
+            String macBrowserName, String browserBinaryPath) {
+        if (!isNullOrEmpty(browserBinaryPath)) {
+            return browserBinaryPath;
+        } else {
+            return IS_OS_LINUX ? linuxBrowserName : macBrowserName;
+        }
+    }
+
+    private String getBrowserVersionInWindows(String programFilesEnv,
+            String winBrowserName, String browserBinaryPath) {
+        String programFiles = System.getenv(programFilesEnv).replaceAll("\\\\",
+                "\\\\\\\\");
+        String browserPath = isNullOrEmpty(browserBinaryPath)
+                ? programFiles + winBrowserName
+                : browserBinaryPath;
+        return runAndWait(getExecFile(), "wmic", "datafile", "where",
+                "name='" + browserPath + "'", "get", "Version", "/value");
+    }
+
+    protected File getExecFile() {
+        String systemRoot = System.getenv("SystemRoot");
+        File system32 = new File(systemRoot, "System32");
+        if (IS_OS_WINDOWS && system32.exists() && system32.isDirectory()) {
+            return system32;
+        }
+        return new File(".");
+    }
+
+    protected Optional<String> getLatestVersion() {
         return empty();
     }
 
@@ -991,16 +1256,43 @@ public abstract class WebDriverManager {
         listVersions = null;
         versionToDownload = null;
         forcedArch = false;
+        forcedOs = false;
+        retryCount = 0;
+        isLatest = true;
+        isSnap = false;
+    }
+
+    protected String getProgramFilesEnv() {
+        return System.getProperty("os.arch").contains("64")
+                ? "PROGRAMFILES(X86)"
+                : "PROGRAMFILES";
+    }
+
+    protected String getOtherProgramFilesEnv() {
+        return System.getProperty("os.arch").contains("64") ? "PROGRAMFILES"
+                : "PROGRAMFILES(X86)";
+    }
+
+    protected URL getDriverUrlCkeckingMirror(URL url) {
+        if (config().isUseMirror()) {
+            Optional<URL> mirrorUrl = getMirrorUrl();
+            if (mirrorUrl.isPresent()) {
+                return mirrorUrl.get();
+            }
+        }
+        return url;
     }
 
     public static void main(String[] args) {
-        String validBrowsers = "chrome|firefox|opera|edge|phantomjs|iexplorer";
+        String validBrowsers = "chrome|firefox|opera|edge|phantomjs|iexplorer|selenium_server_standalone";
         if (args.length <= 0) {
             logCliError(validBrowsers);
         } else {
             String arg = args[0];
             if (arg.equalsIgnoreCase("server")) {
                 startServer(args);
+            } else if (arg.equalsIgnoreCase("clear-preferences")) {
+                new Preferences(new Config()).clear();
             } else {
                 resolveLocal(validBrowsers, arg);
             }
@@ -1027,7 +1319,7 @@ public abstract class WebDriverManager {
     }
 
     private static void startServer(String[] args) {
-        int port = config().getServerPort();
+        int port = new Config().getServerPort();
         if (args.length > 1 && isNumeric(args[1])) {
             port = parseInt(args[1]);
         }
@@ -1035,7 +1327,7 @@ public abstract class WebDriverManager {
     }
 
     private static void logCliError(String validBrowsers) {
-        log.error("There are 2 options to run WebDriverManager CLI");
+        log.error("There are 3 options to run WebDriverManager CLI");
         log.error(
                 "1. WebDriverManager used to resolve binary drivers locally:");
         log.error("\tWebDriverManager browserName");
@@ -1044,6 +1336,27 @@ public abstract class WebDriverManager {
         log.error("2. WebDriverManager as a server:");
         log.error("\tWebDriverManager server <port>");
         log.error("\t(where default port is 4041)");
+
+        log.error(
+                "3. To clear previously resolved driver versions (as Java preferences):");
+        log.error("\tWebDriverManager clear-preferences");
+    }
+
+    private void storeVersionToDownload(String version) {
+        if (!isNullOrEmpty(version)) {
+            if (version.startsWith(".")) {
+                version = version.substring(1);
+            }
+            versionToDownload = version;
+            if (isLatest && usePreferences() && !isNullOrEmpty(preferenceKey)) {
+                preferences.putValueInPreferencesIfEmpty(preferenceKey,
+                        version);
+            }
+        }
+    }
+
+    private void setConfig(Config config) {
+        this.config = config;
     }
 
 }

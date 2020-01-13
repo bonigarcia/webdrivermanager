@@ -31,13 +31,44 @@ import java.util.Optional;
  */
 public class FirefoxDriverManager extends WebDriverManager {
 
-    protected FirefoxDriverManager() {
-        driverManagerType = FIREFOX;
-        exportParameterKey = "wdm.geckoDriverExport";
-        driverVersionKey = "wdm.geckoDriverVersion";
-        driverUrlKey = "wdm.geckoDriverUrl";
-        driverMirrorUrlKey = "wdm.geckoDriverMirrorUrl";
-        driverName = "geckodriver";
+    @Override
+    protected DriverManagerType getDriverManagerType() {
+        return FIREFOX;
+    }
+
+    @Override
+    protected String getDriverName() {
+        return "geckodriver";
+    }
+
+    @Override
+    protected String getDriverVersion() {
+        return config().getFirefoxDriverVersion();
+    }
+
+    @Override
+    protected URL getDriverUrl() {
+        return getDriverUrlCkeckingMirror(config().getFirefoxDriverUrl());
+    }
+
+    @Override
+    protected Optional<URL> getMirrorUrl() {
+        return Optional.of(config().getFirefoxDriverMirrorUrl());
+    }
+
+    @Override
+    protected Optional<String> getExportParameter() {
+        return Optional.of(config().getFirefoxDriverExport());
+    }
+
+    @Override
+    protected void setDriverVersion(String version) {
+        config().setFirefoxDriverVersion(version);
+    }
+
+    @Override
+    protected void setDriverUrl(URL url) {
+        config().setFirefoxDriverUrl(url);
     }
 
     @Override
@@ -77,10 +108,11 @@ public class FirefoxDriverManager extends WebDriverManager {
 
     @Override
     protected Optional<String> getBrowserVersion() {
-        return getDefaultBrowserVersion("PROGRAMFILES(X86)",
+        String[] programFilesEnvs = { getProgramFilesEnv() };
+        return getDefaultBrowserVersion(programFilesEnvs,
                 "\\\\Mozilla Firefox\\\\firefox.exe", "firefox",
                 "/Applications/Firefox.app/Contents/MacOS/firefox", "-v",
-                driverManagerType.toString());
+                getDriverManagerType().toString());
     }
 
 }

@@ -16,9 +16,11 @@
  */
 package io.github.bonigarcia.wdm.test;
 
+import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.asList;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 import static org.junit.Assert.assertTrue;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
 import java.util.Collection;
@@ -28,6 +30,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
+import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
@@ -39,6 +42,8 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  */
 @RunWith(Parameterized.class)
 public class InteractiveTest {
+
+    public static final Logger log = getLogger(lookup().lookupClass());
 
     public static final String EXT = IS_OS_WINDOWS ? ".exe" : "";
 
@@ -54,16 +59,18 @@ public class InteractiveTest {
                 { "firefox", "geckodriver" + EXT },
                 { "opera", "operadriver" + EXT },
                 { "phantomjs", "phantomjs" + EXT },
-                { "edge", "MicrosoftWebDriver.exe" },
+                { "edge", "msedgedriver.exe" },
                 { "iexplorer", "IEDriverServer.exe" } });
     }
 
     @Test
     public void testInteractive() {
+        log.debug("Running interactive wdm with arguments: {}", argument);
         WebDriverManager.main(new String[] { argument });
         File binary = new File(driver);
         assertTrue(binary.exists());
         binary.delete();
+        log.debug("Interactive test with {} OK", argument);
     }
 
 }

@@ -110,6 +110,11 @@ public class TargetTest {
                         "/MicrosoftWebDriver/3.14361/MicrosoftWebDriver.exe",
                         EDGE },
 
+                // Edge Windows #3
+                { "75.0.137.0",
+                        "https://az813057.vo.msecnd.net/webdriver/msedgedriver_x86/msedgedriver.exe",
+                        "/msedgedriver/x64/75.0.137.0/msedgedriver.exe", EDGE },
+
                 // Firefox Mac OS X
                 { "0.6.2",
                         "https://github.com/jgraham/wires/releases/download/v0.6.2/wires-0.6.2-OSX.gz",
