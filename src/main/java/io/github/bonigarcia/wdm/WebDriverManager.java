@@ -208,6 +208,8 @@ public abstract class WebDriverManager {
         switch (driverManagerType) {
         case CHROME:
             return chromedriver();
+        case CHROMIUM:
+            return chromiumdriver();
         case FIREFOX:
             return firefoxdriver();
         case OPERA:
