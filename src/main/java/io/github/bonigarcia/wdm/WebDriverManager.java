@@ -888,7 +888,7 @@ public abstract class WebDriverManager {
                     || getDriverManagerType() == CHROMIUM)) {
                 log.trace(
                         "Avoid filtering for architecture {} with {} in Windows",
-                        arch.toString(), getDriverName());
+                        arch, getDriverName());
             } else {
                 filesInCache = filterCacheBy(filesInCache, arch.toString(),
                         false);
