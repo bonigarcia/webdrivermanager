@@ -446,7 +446,7 @@ public abstract class WebDriverManager {
                 }
             }
             log.trace("Version list before sorting {}", versions);
-            sort(versions, new VersionComparator<>());
+            sort(versions, new VersionComparator());
             return versions;
         } catch (IOException e) {
             throw new WebDriverManagerException(e);
@@ -915,10 +915,8 @@ public abstract class WebDriverManager {
     }
 
     protected List<File> getFilesInCache() {
-        List<File> listFiles = (List<File>) listFiles(
-                new File(downloader.getTargetPath()), null, true);
-        sort(listFiles, new VersionComparator<>());
-        return listFiles;
+        return (List<File>) listFiles(new File(downloader.getTargetPath()),
+                null, true);
     }
 
     protected List<URL> removeFromList(List<URL> list, String version) {

@@ -31,14 +31,14 @@ import org.slf4j.Logger;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 2.1.0
  */
-public class VersionComparator<T> implements Comparator<T> {
+public class VersionComparator implements Comparator<String> {
 
     final Logger log = getLogger(lookup().lookupClass());
 
     @Override
-    public int compare(T v1, T v2) {
-        String[] v1split = v1.toString().split("\\.");
-        String[] v2split = v2.toString().split("\\.");
+    public int compare(String v1, String v2) {
+        String[] v1split = v1.split("\\.");
+        String[] v2split = v2.split("\\.");
         int length = max(v1split.length, v2split.length);
         for (int i = 0; i < length; i++) {
             try {
