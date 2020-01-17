@@ -915,8 +915,10 @@ public abstract class WebDriverManager {
     }
 
     protected List<File> getFilesInCache() {
-        return (List<File>) listFiles(new File(downloader.getTargetPath()),
-                null, true);
+        List<File> listFiles = (List<File>) listFiles(
+                new File(downloader.getTargetPath()), null, true);
+        sort(listFiles);
+        return listFiles;
     }
 
     protected List<URL> removeFromList(List<URL> list, String version) {
