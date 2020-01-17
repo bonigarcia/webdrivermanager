@@ -884,7 +884,15 @@ public abstract class WebDriverManager {
             }
 
             // Filter by arch
-            filesInCache = filterCacheBy(filesInCache, arch.toString(), false);
+            if (IS_OS_WINDOWS && (getDriverManagerType() == CHROME
+                    || getDriverManagerType() == CHROMIUM)) {
+                log.trace(
+                        "Avoid filtering for architecture {} with {} in Windows",
+                        arch.toString(), getDriverName());
+            } else {
+                filesInCache = filterCacheBy(filesInCache, arch.toString(),
+                        false);
+            }
 
             if (!filesInCache.isEmpty()) {
                 return Optional.of(
