@@ -1,5 +1,18 @@
 # Changelog
 
+## [3.8.1] - 2020-01-19
+### Fixed
+- Fix Chromium support (issue #429, PR #430)
+- Avoid filtering for architecture with chromedriver in Windows
+- Order files in cache alphabetically
+- Include last / in URL for chromedriver mirror (to read properly LATEST_RELEASE)
+
+### Changed
+- Read from env LOCALAPPDATA first to detect Chromium version in Windows
+- Update msedgedriver version 80.0.361.33 for Edge 80 in versions.properties
+- Set geckodriver version 0.26.0 for Firefox 70, 71, and 72 in versions.properties
+
+
 ## [3.8.0] - 2020-01-11
 ### Added
 - Chromium support, included snap package (issues #400 and #403)
