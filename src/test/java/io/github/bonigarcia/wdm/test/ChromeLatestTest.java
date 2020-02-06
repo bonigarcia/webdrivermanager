@@ -22,6 +22,7 @@ import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.slf4j.Logger;
 
@@ -37,6 +38,7 @@ public class ChromeLatestTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
+    @Ignore
     @Test
     public void testLatestAndBetaChromedriver() {
         WebDriverManager.chromedriver().avoidPreferences().avoidAutoVersion()
