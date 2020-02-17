@@ -49,7 +49,7 @@ This is quite annoying since it forces you to link directly this binary file int
 2. [WebDriverManager as a Command Line Interface (CLI) tool](#webdrivermanager-cli) (from the shell).
 3. [WebDriverManager as a Server](#webdrivermanager-server) (using a REST-like API).
 
-WebDriverManager is open source, released under the terms of [Apache 2.0 License].
+WebDriverManager is open-source, released under the terms of [Apache 2.0 License].
 
 ## WebDriverManager as Java dependency
 
