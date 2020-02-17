@@ -182,7 +182,7 @@ Check out the repository [WebDriverManager Examples] which contains different JU
 
 The relationship between browser version and driver version is managed in a internal database by WebDriverManager stored as Java properties in the file [versions.properties]. This file is maintained updated when a new driver or browser version is released. In order to use always the latest relationships between browser and driver, and due to its rapid change, the online version of [versions.properties] (master branch) is used. As alternative, the local version of this file (distributed within WebDriverManager) can be used.
 
-In order to resolve the driver version for a given browser, first WebDriverManager try to find out the version of that browser. This mechanism depends on the browser (Chrome, Firefox, etc) and the platform (Linux, Windows, Mac). For instance, for Chrome in Linux, the command ``google-chrome --version`` is executed in the shell.  
+In order to resolve the driver version for a given browser, first WebDriverManager try to find out the version of that browser. This mechanism depends on the browser (Chrome, Firefox, etc) and the platform (Linux, Windows, Mac). For instance, for Chrome in Linux, the command ``google-chrome --version`` is executed in the shell.
 
 Moreover in order to improve the performance of WebDriverManager, as of version 3.1.0, resolved driver versions for browsers are stored persistently as Java preferences. The validity of this relationship (browser version and driver version) stored as preferences is linked to a *time-to-live* (ttl). By default, this value is 86400 seconds (i.e. 1 day).
 
