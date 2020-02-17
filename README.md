@@ -32,7 +32,7 @@ WebDriverManager allows to automate the management of the binary drivers (e.g. *
 
 ## Motivation
 
-If you use [Selenium WebDriver], you probably know that to use some browsers such as **Chrome**, **Firefox**, **Opera**, **PhantomJS**, **Microsoft Edge**, or **Internet Explorer**, first you need to download a binary file which allows WebDriver to handle browsers. In Java, the path to this binary must be set as JVM properties, as follows:
+If you use [Selenium WebDriver], you probably know that to use some browsers such as **Chrome**, **Firefox**, **Opera**, **PhantomJS**, **Microsoft Edge**, or **Internet Explorer**, first you need to download the so-called *driver*, i.e. a binary file which allows WebDriver to handle browsers. In Java, the path to this driver must be set as JVM properties, as follows:
 
 ```java
 System.setProperty("webdriver.chrome.driver", "/path/to/binary/chromedriver");
