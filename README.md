@@ -32,7 +32,7 @@ WebDriverManager allows to automate the management of the binary drivers (e.g. *
 
 ## Motivation
 
-If you use [Selenium WebDriver], you will know that in order to use some browsers such as **Chrome**, **Firefox**, **Opera**, **PhantomJS**, **Microsoft Edge**, or **Internet Explorer**, first you need to download a binary file which allows WebDriver to handle browsers. In Java, the path to this binary must be set as JVM properties, as follows:
+If you use [Selenium WebDriver], you probably know that to use some browsers such as **Chrome**, **Firefox**, **Opera**, **PhantomJS**, **Microsoft Edge**, or **Internet Explorer**, first you need to download a binary file which allows WebDriver to handle browsers. In Java, the path to this binary must be set as JVM properties, as follows:
 
 ```java
 System.setProperty("webdriver.chrome.driver", "/path/to/binary/chromedriver");
@@ -55,7 +55,7 @@ WebDriverManager is open source, released under the terms of [Apache 2.0 License
 
 ### Basic usage
 
-In order to use WebDriverManager from tests in a Maven project, you need to add the following dependency in your `pom.xml` (Java 8 or upper required):
+To use WebDriverManager from tests in a Maven project, you need to add the following dependency in your `pom.xml` (Java 8 or upper required):
 
 ```xml
 <dependency>
@@ -74,7 +74,7 @@ dependencies {
 }
 ```
 
-Once we have included this dependency, you can let WebDriverManager to manage the WebDriver binaries for you. Take a look at this JUnit 4 example which uses Chrome with Selenium WebDriver (in order to use WebDriverManager in conjunction with **JUnit 5**, the extension [Selenium-Jupiter] is highly recommended):
+Once we have included this dependency, you can let WebDriverManager to manage the WebDriver binaries for you. Take a look at this JUnit 4 example which uses Chrome with Selenium WebDriver (to use WebDriverManager in conjunction with **JUnit 5**, the extension [Selenium-Jupiter] is highly recommended):
 
 ```java
 public class ChromeTest {
@@ -180,11 +180,11 @@ Check out the repository [WebDriverManager Examples] which contains different JU
 
 ### Driver versions
 
-The relationship between browser version and driver version is managed in a internal database by WebDriverManager stored as Java properties in the file [versions.properties]. This file is maintained updated when a new driver or browser version is released. In order to use always the latest relationships between browser and driver, and due to its rapid change, the online version of [versions.properties] (master branch) is used. As alternative, the local version of this file (distributed within WebDriverManager) can be used.
+The relationship between browser version and driver version is managed in a internal database by WebDriverManager stored as Java properties in the file [versions.properties]. This file is maintained updated when a new driver or browser version is released. To use always the latest relationships between browser and driver, and due to its rapid change, the online version of [versions.properties] (master branch) is used. As alternative, the local version of this file (distributed within WebDriverManager) can be used.
 
-In order to resolve the driver version for a given browser, first WebDriverManager try to find out the version of that browser. This mechanism depends on the browser (Chrome, Firefox, etc) and the platform (Linux, Windows, Mac). For instance, for Chrome in Linux, the command ``google-chrome --version`` is executed in the shell.
+To resolve the driver version for a given browser, first WebDriverManager try to find out the version of that browser. This mechanism depends on the browser (Chrome, Firefox, etc) and the platform (Linux, Windows, Mac). For instance, for Chrome in Linux, the command ``google-chrome --version`` is executed in the shell.
 
-Moreover in order to improve the performance of WebDriverManager, as of version 3.1.0, resolved driver versions for browsers are stored persistently as Java preferences. The validity of this relationship (browser version and driver version) stored as preferences is linked to a *time-to-live* (ttl). By default, this value is 86400 seconds (i.e. 1 day).
+Moreover, to improve the performance of WebDriverManager, as of version 3.1.0, resolved driver versions for browsers are stored persistently as Java preferences. The validity of this relationship (browser version and driver version) stored as preferences is linked to a *time-to-live* (ttl). By default, this value is 86400 seconds (i.e. 1 day).
 
 
 ### WebDriverManager API
@@ -218,7 +218,7 @@ WebDriverManager exposes its API by means of the **builder pattern**. This means
 | ``avoidExport()``                     | Avoid exporting JVM properties with the path of binaries (i.e. ``webdriver.chrome.driver``, ``webdriver.gecko.driver``, etc). Only recommended for interactive mode.                                                                                                                                                                                         | ``wdm.avoidExport``                                                                                                                                                                   |
 | ``avoidOutputTree()``                 | Avoid create tree structure for downloaded binaries (e.g. ``webdriver/chromedriver/linux64/2.37/`` for ``chromedriver``). Used by default in interactive mode.                                                                                                                                                                                               | ``wdm.avoidOutputTree``                                                                                                                                                               |
 | ``avoidAutoVersion()``                | Avoid checking the version of the installed browser (e.g. Chrome, Firefox) to find out the proper version of the required driver (e.g. *chromedriver*, *geckodriver*). Only recommended for WebDriverManager as Java dependency mode.                                                                                                                        | ``wdm.avoidAutoVersion``                                                                                                                                                              |
-| ``browserPath()``                     | As of WebDriverManager 3.0.0, versions of drivers are contained in an internal database (versions.properties) which matches the driver version to each browser version. In order to find the browser version, a command is executed on the shell (e.g. ``google-chrome --version`` in Linux). The path of the browser can be configured using this method    | ``wdm.binaryPath``                                                                                                                                                                    |
+| ``browserPath()``                     | As of WebDriverManager 3.0.0, versions of drivers are contained in an internal database (versions.properties) which matches the driver version to each browser version. To find the browser version, a command is executed on the shell (e.g. ``google-chrome --version`` in Linux). The path of the browser can be configured using this method    | ``wdm.binaryPath``                                                                                                                                                                    |
 | ``ttl()``                             | As of WebDriverManager 3.1.0, resolved versions of drivers are stored as Java preferences. These values has a expiration time based on this Time To Live (TTL) value, measured in **seconds**. By default this value is 86400 (i.e. 1 day).                                                                                                                  | ``wdm.ttl``                                                                                                                                                                           |
 | ``setVersionsPropertiesUrl(URL)``     | URL of the online ``version.properties`` file, used if the relationship between browser and driver is unknown in the local version of that file. By default this value targets to the master branch of GitHub.                                                                                                                                               | ``wdm.versionsPropertiesUrl``                                                                                                                                                         |
 | ``useLocalVersionsPropertiesFirst()`` | As of WebDriverManager 3.7.1, the online ``version.properties`` file is read first to check the latest relationship browser-driver. If the local ``version.properties`` want to be used instead, this method should be invoked                                                                                                                               | ``wdm.versionsPropertiesOnlineFirst``                                                                                                                                                 |
@@ -314,7 +314,7 @@ By default, WebDriverManager downloads the latest version of the WebDriver binar
 -Dwdm.geckoDriverVersion=0.11.1
 ```
 
-If no version is specified, WebDriverManager sends a request to the server hosting the binary. In order to avoid this request and check if any binary has been previously downloaded, the key `wdm.forceCache` can be used.
+If no version is specified, WebDriverManager sends a request to the server hosting the binary. To avoid this request and check if any binary has been previously downloaded, the key `wdm.forceCache` can be used.
 
 The value of these properties can be overridden by means of *environmental variables*. The name of these variables result from putting the name in uppercase and replacing the symbol `.` by `_`. For example, the property ``wdm.targetPath`` can be overridden by the environment variable ``WDM_TARGETPATH``.
 
@@ -452,7 +452,7 @@ Caused by: java.io.IOException: Server returned HTTP response code: 403 for URL:
     at io.github.bonigarcia.wdm.BrowserManager.manage(BrowserManager.java:163)
 ```
 
-In order to avoid this problem, [authenticated requests] should be done. The procedure is the following:
+To avoid this problem, [authenticated requests] should be done. The procedure is the following:
 
 1. Create a token/secret pair in your [GitHub account].
 2. Tell WebDriverManager the value of this pair token/secret. To do that you should use the configuration keys ``wdm.gitHubTokenName`` and ``wdm.gitHubTokenSecret``. You can pass them as command line Java parameters as follows:
