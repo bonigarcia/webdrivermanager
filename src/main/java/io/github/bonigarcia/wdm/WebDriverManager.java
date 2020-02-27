@@ -64,6 +64,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -485,15 +487,14 @@ public abstract class WebDriverManager {
 
     protected String getCurrentVersion(URL url, String driverName) {
         String currentVersion = "";
-        try {
-            currentVersion = url.getFile().substring(
-                    url.getFile().indexOf(SLASH) + 1,
-                    url.getFile().lastIndexOf(SLASH));
-        } catch (StringIndexOutOfBoundsException e) {
-            log.trace("Exception getting version of URL {} ({})", url,
-                    e.getMessage());
+        String pattern="/([^/]*?)/[^/]*?" + driverName;
+        Pattern r = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
+        Matcher m = r.matcher(url.getFile());
+        if (m.find()) {
+            currentVersion = m.group(1);
+        }else{
+            log.trace("Exception getting version of URL {}", url);
         }
-
         return currentVersion;
     }
 
