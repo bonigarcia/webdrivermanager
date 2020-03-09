@@ -38,6 +38,8 @@ import static java.lang.Integer.valueOf;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Collections.sort;
 import static java.util.Optional.empty;
+import static java.util.regex.Pattern.CASE_INSENSITIVE;
+import static java.util.regex.Pattern.compile;
 import static javax.xml.xpath.XPathConstants.NODESET;
 import static javax.xml.xpath.XPathFactory.newInstance;
 import static org.apache.commons.io.FileUtils.deleteDirectory;
@@ -65,7 +67,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -487,13 +488,13 @@ public abstract class WebDriverManager {
 
     protected String getCurrentVersion(URL url, String driverName) {
         String currentVersion = "";
-        String pattern="/([^/]*?)/[^/]*?" + driverName;
-        Pattern r = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE);
-        Matcher m = r.matcher(url.getFile());
-        if (m.find()) {
-            currentVersion = m.group(1);
-        }else{
-            log.trace("Exception getting version of URL {}", url);
+        String pattern = "/([^/]*?)/[^/]*?" + driverName;
+        Matcher matcher = compile(pattern, CASE_INSENSITIVE)
+                .matcher(url.getFile());
+        if (matcher.find()) {
+            currentVersion = matcher.group(1);
+        } else {
+            log.debug("Version not found in URL {}", url);
         }
         return currentVersion;
     }
