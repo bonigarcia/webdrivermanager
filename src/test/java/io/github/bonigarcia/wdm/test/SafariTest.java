@@ -16,7 +16,7 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC_OSX;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
 import static org.junit.Assume.assumeTrue;
 
 import io.github.bonigarcia.wdm.base.BrowserTestParent;
@@ -34,7 +34,7 @@ public class SafariTest extends BrowserTestParent {
 
     @BeforeClass
     public static void setupClass() {
-        assumeTrue(IS_OS_MAC_OSX);
+        assumeTrue(IS_OS_MAC);
     }
 
     @Before
