@@ -31,7 +31,7 @@ import org.openqa.selenium.edge.EdgeDriver;
  * @author Elias Nogueira (elias.nogueira@gmail.com)
  * @since 3.8.2
  */
-public class EdgeMacVersion extends VersionTestParent {
+public class EdgeMacVersionTest extends VersionTestParent {
 
     @Before
     public void setup() {
