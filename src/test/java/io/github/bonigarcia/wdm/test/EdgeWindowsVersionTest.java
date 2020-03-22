@@ -25,12 +25,12 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.base.VersionTestParent;
 
 /**
- * Test asserting Edge driver versions.
+ * Test asserting Edge driver versions on Windows.
  *
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.3.0
  */
-public class EdgeVersionTest extends VersionTestParent {
+public class EdgeWindowsVersionTest extends VersionTestParent {
 
     @Before
     public void setup() {
