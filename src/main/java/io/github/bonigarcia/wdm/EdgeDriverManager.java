@@ -25,6 +25,7 @@ import static io.github.bonigarcia.wdm.Shell.runAndWait;
 import static java.util.Collections.sort;
 import static java.util.Optional.empty;
 import static org.apache.commons.io.FileUtils.listFiles;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC_OSX;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 import static org.jsoup.Jsoup.parse;
 
@@ -38,6 +39,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -214,8 +216,9 @@ public class EdgeDriverManager extends WebDriverManager {
 
     @Override
     protected Optional<String> getBrowserVersion() {
+        String[] programFilesEnvs = { getProgramFilesEnv() };
+
         if (IS_OS_WINDOWS) {
-            String[] programFilesEnvs = { getProgramFilesEnv() };
             String[] msEdgePaths = {
                     "\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe",
                     "\\\\Microsoft\\\\Edge Beta\\\\Application\\\\msedge.exe",
@@ -244,7 +247,12 @@ public class EdgeDriverManager extends WebDriverManager {
                 return Optional.of(
                         getVersionFromPowerShellOutput(browserVersionOutput));
             }
+        }
+        if (IS_OS_MAC_OSX) {
+            String macBrowserName = "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge";
 
+            return getDefaultBrowserVersion(programFilesEnvs, StringUtils.EMPTY, StringUtils.EMPTY, macBrowserName,
+                "-version", getDriverManagerType().toString());
         }
         return empty();
     }
