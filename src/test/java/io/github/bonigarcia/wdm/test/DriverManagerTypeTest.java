@@ -56,6 +56,7 @@ public class DriverManagerTypeTest {
                 { "org.openqa.selenium.edge.EdgeDriver", DriverManagerType.EDGE },
                 { "org.openqa.selenium.phantomjs.PhantomJSDriver", DriverManagerType.PHANTOMJS },
                 { "org.openqa.selenium.ie.InternetExplorerDriver", DriverManagerType.IEXPLORER },
+                { "org.openqa.selenium.safari.SafariDriver", DriverManagerType.SAFARI },
                 { "org.openqa.selenium.remote.server.SeleniumServer", DriverManagerType.SELENIUM_SERVER_STANDALONE } });
     }
 }

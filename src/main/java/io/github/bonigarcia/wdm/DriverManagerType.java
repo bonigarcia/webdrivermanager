@@ -31,7 +31,8 @@ public enum DriverManagerType {
     PHANTOMJS("org.openqa.selenium.phantomjs.PhantomJSDriver"),
     IEXPLORER("org.openqa.selenium.ie.InternetExplorerDriver"),
     SELENIUM_SERVER_STANDALONE("org.openqa.selenium.remote.server.SeleniumServer"),
-    CHROMIUM("org.openqa.selenium.chrome.ChromeDriver");
+    CHROMIUM("org.openqa.selenium.chrome.ChromeDriver"),
+    SAFARI("org.openqa.selenium.safari.SafariDriver");
 
     String browserClass;
 
@@ -60,6 +61,8 @@ public enum DriverManagerType {
             return "PhantomJS";
         case IEXPLORER:
             return "Internet Explorer";
+            case SAFARI:
+                return "Safari";
         case SELENIUM_SERVER_STANDALONE:
             return "Selenium Server Standalone";
         default:
