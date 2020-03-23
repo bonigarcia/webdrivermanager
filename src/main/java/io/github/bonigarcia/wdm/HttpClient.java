@@ -237,8 +237,8 @@ public class HttpClient implements Closeable {
         password = (envProxyPass != null) ? envProxyPass : password;
 
         // apply option value
-        username = (proxyUser != null) ? proxyUser : username;
-        password = (proxyPass != null) ? proxyPass : password;
+        username = isNullOrEmpty(proxyUser) ? username : proxyUser;
+        password = isNullOrEmpty(proxyPass) ? password : proxyPass;
 
         if (username == null) {
             return empty();
