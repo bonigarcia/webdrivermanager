@@ -16,34 +16,28 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
-import static org.junit.Assume.assumeTrue;
+import static io.github.bonigarcia.wdm.OperatingSystem.WIN;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.openqa.selenium.edge.EdgeDriver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import io.github.bonigarcia.wdm.base.BrowserTestParent;
+import io.github.bonigarcia.wdm.base.VersionTestParent;
 
 /**
- * Test with Microsoft Edge.
+ * Test asserting Edge driver versions on Windows.
  *
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.3.0
  */
-public class EdgeTest extends BrowserTestParent {
-
-    @BeforeClass
-    public static void setupClass() {
-        assumeTrue(IS_OS_WINDOWS || IS_OS_MAC);
-        WebDriverManager.edgedriver().setup();
-    }
+public class EdgeWindowsVersionTest extends VersionTestParent {
 
     @Before
-    public void setupTest() {
-        driver = new EdgeDriver();
+    public void setup() {
+        browserManager = WebDriverManager.getInstance(EdgeDriver.class);
+        os = WIN;
+        specificVersions = new String[] { "1.10240", "2.10586", "3.14393",
+                "4.15063", "5.16299", "6.17134" };
     }
 
 }
