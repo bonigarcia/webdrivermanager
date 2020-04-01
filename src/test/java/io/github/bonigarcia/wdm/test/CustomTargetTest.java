@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm.test;
 
+import io.github.bonigarcia.wdm.Config;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.file.Files.createTempDirectory;
 import static org.hamcrest.CoreMatchers.startsWith;
@@ -42,28 +43,55 @@ public class CustomTargetTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
-    Path tmpFolder;
+    Config globalConfig;
 
     @Before
-    public void setup() throws IOException {
-        tmpFolder = createTempDirectory("").toRealPath();
-        WebDriverManager.globalConfig().setTargetPath(tmpFolder.toString());
-        log.info("Using temporal folder {} as cache", tmpFolder);
+    public void setup() {
+        globalConfig = WebDriverManager.globalConfig();
     }
 
     @Test
-    public void testTargetPath() {
+    public void testTargetPath() throws IOException {
+        Path tmpFolder = createTempDirectory("").toRealPath();
+        globalConfig.setTargetPath(tmpFolder.toString());
+        log.info("Using temporary folder {} as cache", tmpFolder);
         WebDriverManager.chromedriver().setup();
         String binaryPath = WebDriverManager.chromedriver().getBinaryPath();
         log.info("Binary path {}", binaryPath);
         assertThat(binaryPath, startsWith(tmpFolder.toString()));
+        log.info("Deleting temporary folder {}", tmpFolder);
+        WebDriverManager.chromedriver().clearCache();
+    }
+
+    @Test
+    public void testTargetPathContainsTilde() {
+        String customPath = "C:\\user\\abcdef~1\\path";
+        globalConfig.setTargetPath(customPath);
+        String targetPath = globalConfig.getTargetPath();
+        log.info("Using {} got {}", customPath, targetPath);
+        assertThat(targetPath, startsWith(customPath));
+    }
+    
+    @Test
+    public void testTargetPathStartsWithTildeSlash() {
+        String customPath = "~/webdrivers";
+        globalConfig.setTargetPath(customPath);
+        String targetPath = globalConfig.getTargetPath();
+        log.info("Using {} got {}", customPath, targetPath);
+        assertThat(targetPath, startsWith(System.getProperty("user.home")));
+    }
+
+    @Test
+    public void testTargetPathStartsWithTilde() {
+        String customPath = "~webdrivers";
+        globalConfig.setTargetPath(customPath);
+        String targetPath = globalConfig.getTargetPath();
+        log.info("Using {} got {}", customPath, targetPath);
+        assertThat(targetPath, startsWith(customPath));
     }
 
     @After
     public void teardown() throws IOException {
-        log.info("Deleting temporal folder {}", tmpFolder);
-        WebDriverManager.chromedriver().clearCache();
-        WebDriverManager.globalConfig().reset();
+        globalConfig.reset();
     }
-
 }
