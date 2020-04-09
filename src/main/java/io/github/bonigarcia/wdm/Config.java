@@ -291,10 +291,10 @@ public class Config {
 
         if (resolved != null) {
             path = resolved;
-            if (path.contains(HOME)) {
-                path = path.replace(HOME, System.getProperty("user.home"));
-            }
-            if (path.equals(".")) {
+            // Partial support for Bash tilde expansion: http://www.gnu.org/software/bash/manual/html_node/Tilde-Expansion.html
+            if (path.startsWith(HOME + '/')) {
+                path = Paths.get(System.getProperty("user.home"), path.substring(1)).toString();
+            } else if (path.equals(".")) {
                 path = Paths.get("").toAbsolutePath().toString();
             }
         }
