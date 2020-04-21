@@ -38,6 +38,6 @@ public class EdgeMacVersionTest extends VersionTestParent {
     public void setup() {
         browserManager = WebDriverManager.getInstance(EdgeDriver.class);
         os = MAC;
-        specificVersions = new String[] { "81.0.416.45", "82.0.459.1" };
+        specificVersions = new String[] { "80.0.361.111", "81.0.410.0" };
     }
 }
