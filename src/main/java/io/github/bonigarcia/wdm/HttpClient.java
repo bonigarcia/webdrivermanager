@@ -268,7 +268,6 @@ public class HttpClient implements Closeable {
         BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
 
         AuthScope authScope = new AuthScope(proxyHost, null, NTLM);
-        password.toCharArray();
         char[] passwd = (password == null) ? new char[0]
                 : password.toCharArray();
 
