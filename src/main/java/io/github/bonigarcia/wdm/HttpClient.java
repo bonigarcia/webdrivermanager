@@ -22,12 +22,10 @@ import static java.lang.invoke.MethodHandles.lookup;
 import static java.net.URLDecoder.decode;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Optional.empty;
-import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.apache.http.HttpStatus.SC_BAD_REQUEST;
-import static org.apache.http.auth.AuthScope.ANY_REALM;
-import static org.apache.http.client.config.AuthSchemes.NTLM;
-import static org.apache.http.client.config.CookieSpecs.STANDARD;
-import static org.apache.http.client.config.RequestConfig.custom;
+import static org.apache.hc.client5.http.auth.StandardAuthScheme.NTLM;
+import static org.apache.hc.client5.http.config.RequestConfig.custom;
+import static org.apache.hc.client5.http.cookie.StandardCookieSpec.STRICT;
+import static org.apache.hc.core5.http.HttpStatus.SC_BAD_REQUEST;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.Closeable;
@@ -44,30 +42,31 @@ import java.security.cert.X509Certificate;
 import java.util.Map;
 import java.util.Optional;
 import java.util.StringTokenizer;
+import java.util.concurrent.TimeUnit;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 
-import org.apache.http.HttpHost;
-import org.apache.http.HttpResponse;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.Credentials;
-import org.apache.http.auth.NTCredentials;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpRequestBase;
-import org.apache.http.config.Registry;
-import org.apache.http.config.RegistryBuilder;
-import org.apache.http.conn.socket.ConnectionSocketFactory;
-import org.apache.http.conn.socket.PlainConnectionSocketFactory;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
-import org.apache.http.ssl.SSLContexts;
-import org.apache.http.ssl.TrustStrategy;
+import org.apache.hc.client5.http.auth.AuthScope;
+import org.apache.hc.client5.http.auth.Credentials;
+import org.apache.hc.client5.http.auth.NTCredentials;
+import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.socket.ConnectionSocketFactory;
+import org.apache.hc.client5.http.socket.PlainConnectionSocketFactory;
+import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.core5.http.ClassicHttpRequest;
+import org.apache.hc.core5.http.HttpHost;
+import org.apache.hc.core5.http.config.Registry;
+import org.apache.hc.core5.http.config.RegistryBuilder;
+import org.apache.hc.core5.ssl.SSLContexts;
+import org.apache.hc.core5.ssl.TrustStrategy;
 import org.slf4j.Logger;
 
 /**
@@ -89,29 +88,7 @@ public class HttpClient implements Closeable {
         HttpClientBuilder builder = HttpClientBuilder.create()
                 .setConnectionManagerShared(true);
         try {
-            String proxy = config.getProxy();
-            Optional<HttpHost> proxyHost = createProxyHttpHost(proxy);
-            if (proxyHost.isPresent()) {
-                builder.setProxy(proxyHost.get());
-                Optional<BasicCredentialsProvider> credentialsProvider = createBasicCredentialsProvider(
-                        proxy, config.getProxyUser(), config.getProxyPass(),
-                        proxyHost.get());
-                if (credentialsProvider.isPresent()) {
-                    builder.setDefaultCredentialsProvider(
-                            credentialsProvider.get());
-                }
-            }
-
-            String localRepositoryUser = config.getLocalRepositoryUser().trim();
-            String localRepositoryPassword = config.getLocalRepositoryPassword().trim();
-
-            if(!isNullOrEmpty(localRepositoryUser) && !isNullOrEmpty(localRepositoryPassword)) {
-                BasicCredentialsProvider provider = new BasicCredentialsProvider();
-                UsernamePasswordCredentials credentials
-                        = new UsernamePasswordCredentials(localRepositoryUser, localRepositoryPassword);
-                provider.setCredentials(AuthScope.ANY, credentials);
-                builder.setDefaultCredentialsProvider(provider);
-            }
+            setupProxyIfRequired(builder);
 
             HostnameVerifier allHostsValid = (hostname, session) -> hostname
                     .equalsIgnoreCase(session.getPeerHost());
@@ -140,7 +117,66 @@ public class HttpClient implements Closeable {
         closeableHttpClient = builder.useSystemProperties().build();
     }
 
-    public Optional<Proxy> createProxy(String proxy)
+    public HttpGet createHttpGet(URL url) {
+        HttpGet httpGet = new HttpGet(url.toString());
+        httpGet.addHeader("User-Agent", "Apache-HttpClient/5.0");
+        httpGet.addHeader("Connection", "keep-alive");
+
+        RequestConfig requestConfig = custom().setCookieSpec(STRICT)
+                .setConnectTimeout(config.getTimeout(), TimeUnit.SECONDS)
+                .build();
+        httpGet.setConfig(requestConfig);
+        return httpGet;
+    }
+
+    public CloseableHttpResponse execute(ClassicHttpRequest method)
+            throws IOException {
+        CloseableHttpResponse response = closeableHttpClient.execute(method);
+        int responseCode = response.getCode();
+        if (responseCode >= SC_BAD_REQUEST) {
+            String errorMessage = "Error HTTP " + responseCode + " executing "
+                    + method;
+            log.error(errorMessage);
+            throw new WebDriverManagerException(errorMessage);
+        }
+        return response;
+    }
+
+    private void setupProxyIfRequired(HttpClientBuilder builder)
+            throws MalformedURLException, UnsupportedEncodingException {
+        String proxy = config.getProxy();
+        Optional<HttpHost> proxyHost = createProxyHttpHost(proxy);
+
+        if (proxyHost.isPresent()) {
+            builder.setProxy(proxyHost.get());
+            Optional<BasicCredentialsProvider> credentialsProvider = createBasicCredentialsProvider(
+                    proxy, config.getProxyUser(), config.getProxyPass(),
+                    proxyHost.get());
+            if (credentialsProvider.isPresent()) {
+                builder.setDefaultCredentialsProvider(
+                        credentialsProvider.get());
+            }
+
+            String localRepositoryUser = config.getLocalRepositoryUser().trim();
+            String localRepositoryPassword = config.getLocalRepositoryPassword()
+                    .trim();
+
+            if (!isNullOrEmpty(localRepositoryUser)
+                    && !isNullOrEmpty(localRepositoryPassword)) {
+                BasicCredentialsProvider provider = new BasicCredentialsProvider();
+                UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(
+                        localRepositoryUser,
+                        localRepositoryPassword.toCharArray());
+
+                AuthScope authScope = new AuthScope(proxyHost.get());
+
+                provider.setCredentials(authScope, credentials);
+                builder.setDefaultCredentialsProvider(provider);
+            }
+        }
+    }
+
+    private Optional<Proxy> createProxy(String proxy)
             throws MalformedURLException {
         Optional<URL> url = determineProxyUrl(proxy);
         if (url.isPresent()) {
@@ -151,30 +187,6 @@ public class HttpClient implements Closeable {
                     new InetSocketAddress(proxyHost, proxyPort)));
         }
         return empty();
-    }
-
-    public HttpGet createHttpGet(URL url) {
-        HttpGet httpGet = new HttpGet(url.toString());
-        httpGet.addHeader("User-Agent", "Apache-HttpClient/4.5.6");
-        httpGet.addHeader("Connection", "keep-alive");
-
-        int timeout = (int) SECONDS.toMillis(config.getTimeout());
-        RequestConfig requestConfig = custom().setCookieSpec(STANDARD)
-                .setSocketTimeout(timeout).build();
-        httpGet.setConfig(requestConfig);
-        return httpGet;
-    }
-
-    public HttpResponse execute(HttpRequestBase method) throws IOException {
-        HttpResponse response = closeableHttpClient.execute(method);
-        if (response.getStatusLine().getStatusCode() >= SC_BAD_REQUEST) {
-            String errorMessage = "Error HTTP "
-                    + response.getStatusLine().getStatusCode() + " executing "
-                    + method;
-            log.error(errorMessage);
-            throw new WebDriverManagerException(errorMessage);
-        }
-        return response;
     }
 
     private Optional<URL> determineProxyUrl(String proxy)
@@ -254,14 +266,15 @@ public class HttpClient implements Closeable {
         }
 
         BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-        AuthScope authScope = new AuthScope(proxyHost.getHostName(),
-                proxyHost.getPort(), ANY_REALM, NTLM);
-        Credentials creds = new NTCredentials(ntlmUsername, password,
-                getWorkstation(), ntlmDomain);
+
+        AuthScope authScope = new AuthScope(proxyHost, null, NTLM);
+        Credentials creds = new NTCredentials(ntlmUsername,
+                password.toCharArray(), getWorkstation(), ntlmDomain);
         credentialsProvider.setCredentials(authScope, creds);
 
         authScope = new AuthScope(proxyHost.getHostName(), proxyHost.getPort());
-        creds = new UsernamePasswordCredentials(username, password);
+        creds = new UsernamePasswordCredentials(username,
+                password.toCharArray());
         credentialsProvider.setCredentials(authScope, creds);
 
         return Optional.of(credentialsProvider);

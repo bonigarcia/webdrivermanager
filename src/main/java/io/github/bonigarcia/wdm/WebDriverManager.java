@@ -73,8 +73,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
 import org.w3c.dom.Document;
@@ -1050,11 +1050,12 @@ public abstract class WebDriverManager {
         }
 
         String driverStr = driverUrl.toString();
-        String driverOrigin = String.format("%s://%s", driverUrl.getProtocol(), driverUrl.getAuthority());
+        String driverOrigin = String.format("%s://%s", driverUrl.getProtocol(),
+                driverUrl.getAuthority());
 
-        HttpResponse response = httpClient
-                .execute(httpClient.createHttpGet(driverUrl));
-        try (InputStream in = response.getEntity().getContent()) {
+        try (CloseableHttpResponse response = httpClient
+                .execute(httpClient.createHttpGet(driverUrl))) {
+            InputStream in = response.getEntity().getContent();
             org.jsoup.nodes.Document doc = Jsoup.parse(in, null, driverStr);
             Iterator<org.jsoup.nodes.Element> iterator = doc.select("a")
                     .iterator();
@@ -1064,7 +1065,8 @@ public abstract class WebDriverManager {
                 String link = iterator.next().attr("abs:href");
                 if (link.startsWith(driverStr) && link.endsWith(SLASH)) {
                     urlList.addAll(getDriversFromMirror(new URL(link)));
-                } else if (link.startsWith(driverOrigin) && !link.contains("icons")
+                } else if (link.startsWith(driverOrigin)
+                        && !link.contains("icons")
                         && (link.toLowerCase().endsWith(".bz2")
                                 || link.toLowerCase().endsWith(".zip")
                                 || link.toLowerCase().endsWith(".msi")
@@ -1079,11 +1081,12 @@ public abstract class WebDriverManager {
     protected List<URL> getDriversFromXml(URL driverUrl) throws IOException {
         log.info("Reading {} to seek {}", driverUrl, getDriverName());
         List<URL> urls = new ArrayList<>();
-        HttpResponse response = httpClient
-                .execute(httpClient.createHttpGet(driverUrl));
         try {
-            try (BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(response.getEntity().getContent()))) {
+            try (CloseableHttpResponse response = httpClient
+                    .execute(httpClient.createHttpGet(driverUrl))) {
+                BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(
+                                response.getEntity().getContent()));
                 Document xml = loadXML(reader);
                 NodeList nodes = (NodeList) newInstance().newXPath().evaluate(
                         "//Contents/Key", xml.getDocumentElement(), NODESET);
