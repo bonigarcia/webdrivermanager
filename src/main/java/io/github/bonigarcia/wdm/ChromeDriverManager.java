@@ -17,15 +17,12 @@
 package io.github.bonigarcia.wdm;
 
 import static io.github.bonigarcia.wdm.DriverManagerType.CHROME;
-import static java.nio.charset.Charset.defaultCharset;
+import static java.util.Optional.empty;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
-
-import org.apache.commons.io.IOUtils;
 
 /**
  * Manager for Chrome.
@@ -109,24 +106,7 @@ public class ChromeDriverManager extends WebDriverManager {
 
     @Override
     protected Optional<String> getLatestVersion() {
-        String url = config().getChromeDriverUrl() + "LATEST_RELEASE";
-        if (config.isUseMirror()) {
-            url = config().getChromeDriverMirrorUrl() + "LATEST_RELEASE";
-        }
-        Optional<String> version = Optional.empty();
-        try (InputStream response = httpClient
-                .execute(httpClient.createHttpGet(new URL(url))).getEntity()
-                .getContent()) {
-            version = Optional.of(IOUtils.toString(response, defaultCharset()));
-        } catch (Exception e) {
-            log.warn("Exception reading {} to get latest version of {} ({})",
-                    url, getDriverName(), e.getMessage());
-        }
-        if (version.isPresent()) {
-            log.debug("Latest version of {} according to {} is {}",
-                    getDriverName(), url, version.get());
-        }
-        return version;
+        return getLatestFromRepository(empty());
     }
 
 }

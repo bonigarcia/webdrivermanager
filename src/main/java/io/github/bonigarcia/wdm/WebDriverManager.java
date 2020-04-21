@@ -36,6 +36,7 @@ import static java.lang.Integer.parseInt;
 import static java.lang.Integer.signum;
 import static java.lang.Integer.valueOf;
 import static java.lang.invoke.MethodHandles.lookup;
+import static java.nio.charset.Charset.defaultCharset;
 import static java.util.Collections.sort;
 import static java.util.Optional.empty;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
@@ -73,6 +74,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.jsoup.Jsoup;
@@ -102,6 +104,7 @@ public abstract class WebDriverManager {
     protected static final String BETA = "beta";
     protected static final String ONLINE = "online";
     protected static final String LOCAL = "local";
+    protected static final String LATEST_RELEASE = "LATEST_RELEASE";
 
     protected abstract List<URL> getDrivers() throws IOException;
 
@@ -661,21 +664,31 @@ public abstract class WebDriverManager {
     }
 
     private String getVersionForInstalledBrowser(String browserVersion) {
+        // TODO here
         String driverVersion = "";
         DriverManagerType driverManagerType = getDriverManagerType();
         String driverLowerCase = driverManagerType.name().toLowerCase();
-        if (driverLowerCase.equalsIgnoreCase("chromium")) {
+        if (driverLowerCase.equals("chromium")) {
             driverLowerCase = "chrome";
         }
 
-        Optional<String> driverVersionForBrowser = getDriverVersionForBrowserFromProperties(
-                driverLowerCase + browserVersion);
-        if (driverVersionForBrowser.isPresent()) {
-            driverVersion = driverVersionForBrowser.get();
+        Optional<String> driverVersionForBrowser = empty();
+        if (driverLowerCase.equals("chrome")) {
+            driverVersionForBrowser = getLatestFromRepository(
+                    Optional.of(browserVersion));
+        }
+        if (!driverVersionForBrowser.isPresent()) {
+            driverVersionForBrowser = getDriverVersionForBrowserFromProperties(
+                    driverLowerCase + browserVersion);
+            if (driverVersionForBrowser.isPresent()) {
+                driverVersion = driverVersionForBrowser.get();
+            } else {
+                log.debug(
+                        "The driver version for {} {} is unknown ... trying with latest",
+                        driverManagerType, browserVersion);
+            }
         } else {
-            log.debug(
-                    "The driver version for {} {} is unknown ... trying with latest",
-                    driverManagerType, browserVersion);
+            driverVersion = driverVersionForBrowser.get();
         }
         return driverVersion;
     }
@@ -1375,6 +1388,28 @@ public abstract class WebDriverManager {
 
     private void setConfig(Config config) {
         this.config = config;
+    }
+
+    protected Optional<String> getLatestFromRepository(
+            Optional<String> version) {
+        String url = getDriverUrl() + LATEST_RELEASE;
+        if (version.isPresent()) {
+            url += "_" + version.get();
+        }
+        Optional<String> result = Optional.empty();
+        try (InputStream response = httpClient
+                .execute(httpClient.createHttpGet(new URL(url))).getEntity()
+                .getContent()) {
+            result = Optional.of(IOUtils.toString(response, defaultCharset()));
+        } catch (Exception e) {
+            log.warn("Exception reading {} to get latest version of {} ({})",
+                    url, getDriverName(), e.getMessage());
+        }
+        if (result.isPresent()) {
+            log.debug("Latest version of {} according to {} is {}",
+                    getDriverName(), url, result.get());
+        }
+        return result;
     }
 
 }
