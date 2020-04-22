@@ -18,6 +18,7 @@ package io.github.bonigarcia.wdm.test;
 
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.asList;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 import static org.junit.Assert.assertTrue;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -67,7 +68,7 @@ public class ServerTest {
                 { "firefoxdriver", "geckodriver" + EXT },
                 { "operadriver", "operadriver" + EXT },
                 { "phantomjs", "phantomjs" + EXT },
-                { "edgedriver", "msedgedriver" + EXT },
+                { "edgedriver", "msedgedriver.exe" },
                 { "iedriver", "IEDriverServer.exe" },
                 { "chromedriver?os=WIN", "chromedriver.exe" },
                 { "chromedriver?os=LINUX&chromeDriverVersion=2.41&forceCache=true",
@@ -87,7 +88,13 @@ public class ServerTest {
     public void testServer() throws IOException {
         String serverUrl = String.format("http://localhost:%s/%s", serverPort,
                 path);
-        OkHttpClient client = new OkHttpClient();
+
+        int timeoutSeconds = 60;
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(timeoutSeconds, SECONDS)
+                .readTimeout(timeoutSeconds, SECONDS)
+                .callTimeout(timeoutSeconds, SECONDS).build();
+
         Request request = new Request.Builder().url(serverUrl).build();
 
         // Assert response
