@@ -53,13 +53,14 @@ import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.Iterator;
@@ -137,7 +138,6 @@ public abstract class WebDriverManager {
     protected String latestVersion;
     protected String binaryPath;
     protected boolean mirrorLog;
-    protected List<String> listVersions;
     protected boolean forcedArch;
     protected boolean forcedOs;
     protected boolean isLatest;
@@ -664,7 +664,6 @@ public abstract class WebDriverManager {
     }
 
     private String getVersionForInstalledBrowser(String browserVersion) {
-        // TODO here
         String driverVersion = "";
         DriverManagerType driverManagerType = getDriverManagerType();
         String driverLowerCase = driverManagerType.name().toLowerCase();
@@ -673,9 +672,10 @@ public abstract class WebDriverManager {
         }
 
         Optional<String> driverVersionForBrowser = empty();
-        if (driverLowerCase.equals("chrome")) {
+        if (driverLowerCase.equals("chrome")
+                || driverLowerCase.equals("edge")) {
             driverVersionForBrowser = getLatestFromRepository(
-                    Optional.of(browserVersion));
+                    Optional.of(browserVersion), getVersionCharset());
         }
         if (!driverVersionForBrowser.isPresent()) {
             driverVersionForBrowser = getDriverVersionForBrowserFromProperties(
@@ -811,11 +811,13 @@ public abstract class WebDriverManager {
         boolean continueSearchingVersion;
         do {
             // Get the latest or concrete version
-            candidateUrls = getLatest ? checkLatest(urls, getDriverName())
-                    : getVersion(urls, getDriverName(), version);
+            String filterName = getDriverName().equalsIgnoreCase("msedgedriver")
+                    ? "edgedriver"
+                    : getDriverName();
+            candidateUrls = getLatest ? checkLatest(urls, filterName)
+                    : getVersion(urls, filterName, version);
             log.trace("Candidate URLs: {}", candidateUrls);
-            if (versionToDownload == null
-                    || this.getClass().equals(EdgeDriverManager.class)) {
+            if (versionToDownload == null) {
                 break;
             }
 
@@ -957,13 +959,6 @@ public abstract class WebDriverManager {
     protected List<URL> getVersion(List<URL> list, String driver,
             String version) {
         List<URL> out = new ArrayList<>();
-        if (getDriverName().contains("msedgedriver")) {
-            int i = listVersions.indexOf(version);
-            if (i != -1) {
-                out.add(list.get(i));
-            }
-        }
-
         for (URL url : list) {
             if (url.getFile().contains(driver)
                     && url.getFile().contains(version)
@@ -1091,18 +1086,16 @@ public abstract class WebDriverManager {
         }
     }
 
-    protected List<URL> getDriversFromXml(URL driverUrl) throws IOException {
+    protected List<URL> getDriversFromXml(URL driverUrl, String xpath)
+            throws IOException {
         log.info("Reading {} to seek {}", driverUrl, getDriverName());
         List<URL> urls = new ArrayList<>();
         try {
             try (CloseableHttpResponse response = httpClient
                     .execute(httpClient.createHttpGet(driverUrl))) {
-                BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(
-                                response.getEntity().getContent()));
-                Document xml = loadXML(reader);
-                NodeList nodes = (NodeList) newInstance().newXPath().evaluate(
-                        "//Contents/Key", xml.getDocumentElement(), NODESET);
+                Document xml = loadXML(response.getEntity().getContent());
+                NodeList nodes = (NodeList) newInstance().newXPath()
+                        .evaluate(xpath, xml.getDocumentElement(), NODESET);
 
                 for (int i = 0; i < nodes.getLength(); ++i) {
                     Element e = (Element) nodes.item(i);
@@ -1116,12 +1109,12 @@ public abstract class WebDriverManager {
         return urls;
     }
 
-    protected Document loadXML(Reader reader)
+    Document loadXML(InputStream inputStream)
             throws SAXException, IOException, ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
-        InputSource is = new InputSource(reader);
-        return builder.parse(is);
+        return builder.parse(new InputSource(
+                new ByteArrayInputStream(IOUtils.toByteArray(inputStream))));
     }
 
     protected void exportDriver(String variableValue) {
@@ -1281,10 +1274,17 @@ public abstract class WebDriverManager {
         return empty();
     }
 
+    protected Charset getVersionCharset() {
+        return defaultCharset();
+    }
+
+    protected String getLatestVersionLabel() {
+        return LATEST_RELEASE;
+    }
+
     protected void reset() {
         config().reset();
         mirrorLog = false;
-        listVersions = null;
         versionToDownload = null;
         forcedArch = false;
         forcedOs = false;
@@ -1390,17 +1390,19 @@ public abstract class WebDriverManager {
         this.config = config;
     }
 
-    protected Optional<String> getLatestFromRepository(
-            Optional<String> version) {
-        String url = getDriverUrl() + LATEST_RELEASE;
+    protected Optional<String> getLatestFromRepository(Optional<String> version,
+            Charset charset) {
+        String url = getDriverUrl() + getLatestVersionLabel();
         if (version.isPresent()) {
             url += "_" + version.get();
+
         }
         Optional<String> result = Optional.empty();
         try (InputStream response = httpClient
                 .execute(httpClient.createHttpGet(new URL(url))).getEntity()
                 .getContent()) {
-            result = Optional.of(IOUtils.toString(response, defaultCharset()));
+            result = Optional.of(
+                    IOUtils.toString(response, charset).replaceAll("\r\n", ""));
         } catch (Exception e) {
             log.warn("Exception reading {} to get latest version of {} ({})",
                     url, getDriverName(), e.getMessage());

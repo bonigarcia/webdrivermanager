@@ -134,8 +134,16 @@ public class HttpClient implements Closeable {
         CloseableHttpResponse response = closeableHttpClient.execute(method);
         int responseCode = response.getCode();
         if (responseCode >= SC_BAD_REQUEST) {
-            String errorMessage = "Error HTTP " + responseCode + " executing "
-                    + method;
+            String errorMessage;
+            String methodUri = "";
+            try {
+                methodUri = method.getUri().toString();
+            } catch (Exception e) {
+                log.trace("Exception reading URI from method: {}",
+                        e.getMessage());
+            }
+            errorMessage = "Error HTTP " + responseCode + " executing "
+                    + methodUri;
             log.error(errorMessage);
             throw new WebDriverManagerException(errorMessage);
         }

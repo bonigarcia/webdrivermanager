@@ -302,7 +302,6 @@ public class Downloader {
     }
 
     protected void setFileExecutable(File file) {
-        log.trace("Setting file {} as executable", file);
         if (!file.setExecutable(true)) {
             log.warn("Error setting file {} as executable", file);
         }

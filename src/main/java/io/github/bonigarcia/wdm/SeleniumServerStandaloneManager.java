@@ -85,7 +85,7 @@ public class SeleniumServerStandaloneManager extends WebDriverManager {
 
     @Override
     protected List<URL> getDrivers() throws IOException {
-        return getDriversFromXml(getDriverUrl());
+        return getDriversFromXml(getDriverUrl(), "//Contents/Key");
     }
 
 }

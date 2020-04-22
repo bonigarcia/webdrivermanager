@@ -21,6 +21,8 @@ import static java.util.Optional.empty;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 
@@ -78,7 +80,7 @@ public class ChromeDriverManager extends WebDriverManager {
         if (mirrorUrl.isPresent() && config().isUseMirror()) {
             return getDriversFromMirror(mirrorUrl.get());
         } else {
-            return getDriversFromXml(getDriverUrl());
+            return getDriversFromXml(getDriverUrl(), "//Contents/Key");
         }
     }
 
@@ -106,7 +108,12 @@ public class ChromeDriverManager extends WebDriverManager {
 
     @Override
     protected Optional<String> getLatestVersion() {
-        return getLatestFromRepository(empty());
+        return getLatestFromRepository(empty(), getVersionCharset());
+    }
+
+    @Override
+    protected Charset getVersionCharset() {
+        return StandardCharsets.UTF_8;
     }
 
 }
