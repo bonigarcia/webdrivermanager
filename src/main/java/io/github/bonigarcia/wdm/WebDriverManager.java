@@ -101,7 +101,6 @@ public abstract class WebDriverManager {
     static final Logger log = getLogger(lookup().lookupClass());
 
     protected static final String SLASH = "/";
-    protected static final String PRE_INSTALLED = "pre-installed";
     protected static final String BETA = "beta";
     protected static final String ONLINE = "online";
     protected static final String LOCAL = "local";
@@ -532,11 +531,6 @@ public abstract class WebDriverManager {
                 }
             }
 
-            // Special case for Edge
-            if (checkPreInstalledVersion(version)) {
-                return;
-            }
-
             String os = config().getOs();
             log.trace("Managing {} arch={} version={} getLatest={} cache={}",
                     getDriverName(), arch, version, getLatest, cache);
@@ -638,25 +632,6 @@ public abstract class WebDriverManager {
                 && !config().isOverride() && !forcedArch && !forcedOs;
         log.trace("Using preferences {}", usePrefs);
         return usePrefs;
-    }
-
-    private boolean checkPreInstalledVersion(String version) {
-        if (version.equals(PRE_INSTALLED)) {
-            String systemRoot = System.getenv("SystemRoot");
-            File microsoftWebDriverFile = new File(systemRoot,
-                    "System32" + File.separator + "MicrosoftWebDriver.exe");
-            if (microsoftWebDriverFile.exists()) {
-                downloadedVersion = PRE_INSTALLED;
-                exportDriver(microsoftWebDriverFile.toString());
-                return true;
-            } else {
-                retryCount = -1;
-                throw new WebDriverManagerException(
-                        "MicrosoftWebDriver.exe should be pre-installed in an elevated command prompt executing: "
-                                + "dism /Online /Add-Capability /CapabilityName:Microsoft.WebDriver~~~~0.0.1.0");
-            }
-        }
-        return false;
     }
 
     private boolean isVersionLatest(String version) {
