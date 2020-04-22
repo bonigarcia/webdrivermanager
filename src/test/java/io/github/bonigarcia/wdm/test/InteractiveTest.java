@@ -59,7 +59,7 @@ public class InteractiveTest {
                 { "firefox", "geckodriver" + EXT },
                 { "opera", "operadriver" + EXT },
                 { "phantomjs", "phantomjs" + EXT },
-                { "edge", "msedgedriver" + EXT },
+                { "edge", "msedgedriver.exe" },
                 { "iexplorer", "IEDriverServer.exe" } });
     }
 
@@ -68,8 +68,9 @@ public class InteractiveTest {
         log.debug("Running interactive wdm with arguments: {}", argument);
         WebDriverManager.main(new String[] { argument });
         File binary = new File(driver);
-        assertTrue(binary.exists());
-        binary.delete();
+        boolean exists = binary.exists();
+        boolean delete = binary.delete();
+        assertTrue(exists && delete);
         log.debug("Interactive test with {} OK", argument);
     }
 
