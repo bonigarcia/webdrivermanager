@@ -41,8 +41,9 @@ public class EdgeReadVersionTest {
 
     @Test
     public void edgeVersionsTest() {
-        String[] expectedVersions = { "1.10240", "2.10586", "3.14393",
-                "4.15063", "5.16299", "6.17134" };
+        String[] expectedVersions = { "75.0.139.20", "76.0.183.0", "77.0.237.0",
+                "78.0.277.0", "79.0.313.0", "80.0.361.111", "81.0.409.0",
+                "82.0.459.1" };
         List<String> versions = WebDriverManager.edgedriver().getVersions();
 
         log.debug("Expected edge versions: {}",
