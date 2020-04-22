@@ -98,19 +98,7 @@ public class TargetTest {
                         "/phantomjs/macosx/2.1.1/phantomjs-2.1.1-macosx.zip",
                         PHANTOMJS },
 
-                // Edge Windows #1
-                { "8D0D08CF-790D-4586-B726-C6469A9ED49C",
-                        "https://download.microsoft.com/download/1/4/1/14156DA0-D40F-460A-B14D-1B264CA081A5/MicrosoftWebDriver.exe",
-                        "/MicrosoftWebDriver/8D0D08CF-790D-4586-B726-C6469A9ED49C/MicrosoftWebDriver.exe",
-                        EDGE },
-
-                // Edge Windows #2
-                { "3.14361",
-                        "https://download.microsoft.com/download/1/4/1/14156DA0-D40F-460A-B14D-1B264CA081A5/MicrosoftWebDriver.exe",
-                        "/MicrosoftWebDriver/3.14361/MicrosoftWebDriver.exe",
-                        EDGE },
-
-                // Edge Windows #3
+                // Edge Windows
                 { "75.0.137.0",
                         "https://az813057.vo.msecnd.net/webdriver/msedgedriver_x86/msedgedriver.exe",
                         "/msedgedriver/x64/75.0.137.0/msedgedriver.exe", EDGE },
