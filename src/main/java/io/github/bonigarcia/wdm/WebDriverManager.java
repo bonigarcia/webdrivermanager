@@ -1077,7 +1077,6 @@ public abstract class WebDriverManager {
                         && !link.contains("icons")
                         && (link.toLowerCase().endsWith(".bz2")
                                 || link.toLowerCase().endsWith(".zip")
-                                || link.toLowerCase().endsWith(".msi")
                                 || link.toLowerCase().endsWith(".gz"))) {
                     urlList.add(new URL(link));
                 }

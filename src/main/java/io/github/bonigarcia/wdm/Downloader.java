@@ -17,11 +17,9 @@
 package io.github.bonigarcia.wdm;
 
 import static java.io.File.separator;
-import static java.lang.Runtime.getRuntime;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.file.Files.createTempDirectory;
 import static java.nio.file.Files.delete;
-import static java.nio.file.Files.move;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
@@ -98,8 +96,7 @@ public class Downloader {
 
         String folder = zip.substring(0, iLast).replace(".zip", "")
                 .replace(".tar.bz2", "").replace(".tar.gz", "")
-                .replace(".msi", "").replace(".exe", "")
-                .replace("_", separator);
+                .replace(".exe", "").replace("_", separator);
         String path = config.isAvoidOutputTree() ? getTargetPath() + zip
                 : getTargetPath() + folder + separator + version + zip;
         String target = WebDriverManager.getInstance(driverManagerType)
@@ -188,8 +185,6 @@ public class Downloader {
             unTarGz(compressedFile);
         } else if (fileName.endsWith("gz")) {
             unGzip(compressedFile);
-        } else if (fileName.endsWith("msi")) {
-            extractMsi(compressedFile);
         } else if (fileName.endsWith("zip")) {
             unZip(compressedFile);
         }
@@ -281,24 +276,6 @@ public class Downloader {
         Archiver archiver = createArchiver(TAR, BZIP2);
         archiver.extract(archive, archive.getParentFile());
         log.trace("Unbzip2 {}", archive);
-    }
-
-    private void extractMsi(File msi) throws IOException, InterruptedException {
-        File tmpMsi = new File(
-                createTempDirectory("").toFile().getAbsoluteFile() + separator
-                        + msi.getName());
-        move(msi.toPath(), tmpMsi.toPath());
-        log.trace("Temporal msi file: {}", tmpMsi);
-
-        Process process = getRuntime().exec(new String[] { "msiexec", "/a",
-                tmpMsi.toString(), "/qb", "TARGETDIR=" + msi.getParent() });
-        try {
-            process.waitFor();
-        } finally {
-            process.destroy();
-        }
-
-        deleteFolder(tmpMsi.getParentFile());
     }
 
     protected void setFileExecutable(File file) {
