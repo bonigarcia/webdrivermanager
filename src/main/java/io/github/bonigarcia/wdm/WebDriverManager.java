@@ -865,9 +865,7 @@ public abstract class WebDriverManager {
             filesInCache = filterCacheBy(filesInCache, driverVersion, true);
 
             // Filter by OS
-            if (!getDriverName().equals("msedgedriver")) {
-                filesInCache = filterCacheBy(filesInCache, os, false);
-            }
+            filesInCache = filterCacheBy(filesInCache, os, false);
 
             if (filesInCache.size() == 1) {
                 return Optional.of(filesInCache.get(0).toString());
