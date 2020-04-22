@@ -1391,11 +1391,9 @@ public abstract class WebDriverManager {
 
     protected Optional<String> getLatestFromRepository(Optional<String> version,
             Charset charset) {
-        String url = getDriverUrl() + getLatestVersionLabel();
-        if (version.isPresent()) {
-            url += "_" + version.get();
-
-        }
+        String url = version.isPresent()
+                ? getDriverUrl() + LATEST_RELEASE + "_" + version.get()
+                : getDriverUrl() + getLatestVersionLabel();
         Optional<String> result = Optional.empty();
         try (InputStream response = httpClient
                 .execute(httpClient.createHttpGet(new URL(url))).getEntity()
