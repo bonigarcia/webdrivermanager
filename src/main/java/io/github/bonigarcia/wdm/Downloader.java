@@ -72,7 +72,7 @@ public class Downloader {
     }
 
     public synchronized String download(URL url, String version,
-            String driverName) throws IOException, InterruptedException {
+            String driverName) throws IOException {
         File targetFile = getTarget(version, url);
         Optional<File> binary = checkBinary(driverName, targetFile);
         if (!binary.isPresent()) {
@@ -121,7 +121,7 @@ public class Downloader {
     }
 
     private Optional<File> downloadAndExtract(URL url, File targetFile)
-            throws IOException, InterruptedException {
+            throws IOException {
         log.info("Downloading {}", url);
         File targetFolder = targetFile.getParentFile();
         File tempDir = createTempDirectory("").toFile();
