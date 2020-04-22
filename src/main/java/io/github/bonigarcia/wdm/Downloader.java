@@ -170,8 +170,7 @@ public class Downloader {
         return empty();
     }
 
-    private File extract(File compressedFile)
-            throws IOException, InterruptedException {
+    private File extract(File compressedFile) throws IOException {
         String fileName = compressedFile.getName().toLowerCase();
 
         boolean extractFile = !fileName.endsWith("exe")

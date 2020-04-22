@@ -48,7 +48,7 @@ public class EdgeReadVersionTest {
 
         log.debug("Expected edge versions: {}",
                 Arrays.asList(expectedVersions));
-        log.debug("Edge versions read from the web page: {}", versions);
+        log.debug("Edge versions read from the repository: {}", versions);
 
         assertThat(versions, hasItems(expectedVersions));
     }

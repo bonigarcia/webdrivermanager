@@ -82,7 +82,8 @@ public class PhantomJsDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected String getCurrentVersion(URL url, String driverName) {
+    protected String getCurrentVersion(URL url) {
+        String driverName = getDriverName();
         String file = url.getFile();
         file = url.getFile().substring(file.lastIndexOf(SLASH), file.length());
         int matchIndex = file.indexOf(driverName);

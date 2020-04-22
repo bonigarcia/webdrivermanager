@@ -85,13 +85,13 @@ public class ChromeDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected String getCurrentVersion(URL url, String driverName) {
+    protected String getCurrentVersion(URL url) {
         if (config().isUseMirror()) {
             int i = url.getFile().lastIndexOf(SLASH);
             int j = url.getFile().substring(0, i).lastIndexOf(SLASH) + 1;
             return url.getFile().substring(j, i);
         } else {
-            return super.getCurrentVersion(url, driverName);
+            return super.getCurrentVersion(url);
         }
     }
 

@@ -77,7 +77,7 @@ public class FirefoxDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected String getCurrentVersion(URL url, String driverName) {
+    protected String getCurrentVersion(URL url) {
         String currentVersion = url.getFile().substring(
                 url.getFile().indexOf('-') + 1, url.getFile().lastIndexOf('-'));
         if (currentVersion.startsWith("v")) {

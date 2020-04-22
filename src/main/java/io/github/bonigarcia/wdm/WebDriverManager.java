@@ -439,7 +439,7 @@ public abstract class WebDriverManager {
             List<URL> drivers = getDrivers();
             List<String> versions = new ArrayList<>();
             for (URL url : drivers) {
-                String version = getCurrentVersion(url, getDriverName());
+                String version = getCurrentVersion(url);
                 if (version.isEmpty() || version.equalsIgnoreCase("icons")) {
                     continue;
                 }
@@ -488,7 +488,7 @@ public abstract class WebDriverManager {
                 + " not found (using temporal folder " + parentFolder + ")");
     }
 
-    protected String getCurrentVersion(URL url, String driverName) {
+    protected String getCurrentVersion(URL url) {
         String currentVersion = "";
         String pattern = "/([^/]*?)/[^/]*?" + getShortDriverName();
         Matcher matcher = compile(pattern, CASE_INSENSITIVE)
@@ -975,7 +975,7 @@ public abstract class WebDriverManager {
         }
 
         if (url.getFile().contains(driver)) {
-            String currentVersion = getCurrentVersion(url, driver);
+            String currentVersion = getCurrentVersion(url);
 
             if (currentVersion.equalsIgnoreCase(driver)) {
                 return;
