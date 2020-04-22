@@ -490,13 +490,13 @@ public abstract class WebDriverManager {
 
     protected String getCurrentVersion(URL url, String driverName) {
         String currentVersion = "";
-        String pattern = "/([^/]*?)/[^/]*?" + driverName;
+        String pattern = "/([^/]*?)/[^/]*?" + getShortDriverName();
         Matcher matcher = compile(pattern, CASE_INSENSITIVE)
                 .matcher(url.getFile());
         if (matcher.find()) {
             currentVersion = matcher.group(1);
         } else {
-            log.debug("Version not found in URL {}", url);
+            log.trace("Version not found in URL {}", url);
         }
         return currentVersion;
     }
@@ -786,9 +786,7 @@ public abstract class WebDriverManager {
         boolean continueSearchingVersion;
         do {
             // Get the latest or concrete version
-            String filterName = getDriverName().equalsIgnoreCase("msedgedriver")
-                    ? "edgedriver"
-                    : getDriverName();
+            String filterName = getShortDriverName();
             candidateUrls = getLatest ? checkLatest(urls, filterName)
                     : getVersion(urls, filterName, version);
             log.trace("Candidate URLs: {}", candidateUrls);
@@ -1384,6 +1382,11 @@ public abstract class WebDriverManager {
                     getDriverName(), url, result.get());
         }
         return result;
+    }
+
+    // Exception required since msedgedriver sometimes is called edgedriver
+    protected String getShortDriverName() {
+        return getDriverName();
     }
 
 }

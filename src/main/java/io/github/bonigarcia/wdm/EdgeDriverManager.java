@@ -57,6 +57,11 @@ public class EdgeDriverManager extends WebDriverManager {
     }
 
     @Override
+    protected String getShortDriverName() {
+        return "edgedriver";
+    }
+
+    @Override
     protected String getDriverVersion() {
         return config().getEdgeDriverVersion();
     }
