@@ -1229,17 +1229,30 @@ public abstract class WebDriverManager {
         String browserPath = isNullOrEmpty(browserBinaryPath)
                 ? programFiles + winBrowserName
                 : browserBinaryPath;
-        return runAndWait(getExecFile(), "wmic", "datafile", "where",
+        String wmic = "wmic.exe";
+        return runAndWait(findFileLocation(wmic), wmic, "datafile", "where",
                 "name='" + browserPath + "'", "get", "Version", "/value");
     }
 
-    protected File getExecFile() {
-        String systemRoot = System.getenv("SystemRoot");
-        File system32 = new File(systemRoot, "System32");
-        if (IS_OS_WINDOWS && system32.exists() && system32.isDirectory()) {
-            return system32;
+    protected File findFileLocation(String filename) {
+        // Alternative #1: in System32 folder
+        File system32Folder = new File(System.getenv("SystemRoot"), "System32");
+        File system32File = new File(system32Folder, filename);
+        if (checkFileAndFolder(system32Folder, system32File)) {
+            return system32Folder;
+        }
+        // Alternative #2: in wbem folder
+        File wbemFolder = new File(system32Folder, "wbem");
+        File wbemFile = new File(wbemFolder, filename);
+        if (checkFileAndFolder(wbemFolder, wbemFile)) {
+            return wbemFolder;
         }
         return new File(".");
+    }
+
+    protected boolean checkFileAndFolder(File folder, File file) {
+        return folder.exists() && folder.isDirectory() && file.exists()
+                && file.isFile();
     }
 
     protected Optional<String> getLatestVersion() {
