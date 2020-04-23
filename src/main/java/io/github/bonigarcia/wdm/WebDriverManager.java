@@ -551,8 +551,7 @@ public abstract class WebDriverManager {
     }
 
     private void downloadAndExport(Architecture arch, String version,
-            boolean getLatest, boolean cache, String os)
-            throws IOException, InterruptedException {
+            boolean getLatest, boolean cache, String os) throws IOException {
         Optional<String> driverInCache = handleCache(arch, version, os,
                 getLatest, cache);
         String versionStr = getLatest ? "(latest version)" : version;
@@ -768,7 +767,7 @@ public abstract class WebDriverManager {
     }
 
     protected void downloadCandidateUrls(List<URL> candidateUrls)
-            throws IOException, InterruptedException {
+            throws IOException {
         URL url = candidateUrls.iterator().next();
 
         String exportValue = downloader.download(url, versionToDownload,
