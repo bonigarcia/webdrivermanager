@@ -16,15 +16,10 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static io.github.bonigarcia.wdm.Config.isNullOrEmpty;
 import static io.github.bonigarcia.wdm.DriverManagerType.EDGE;
-import static io.github.bonigarcia.wdm.Shell.getVersionFromPowerShellOutput;
-import static io.github.bonigarcia.wdm.Shell.runAndWait;
 import static java.util.Optional.empty;
 import static org.apache.commons.io.FileUtils.listFiles;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC_OSX;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 
 import java.io.File;
 import java.io.IOException;
@@ -129,45 +124,15 @@ public class EdgeDriverManager extends WebDriverManager {
     @Override
     protected Optional<String> getBrowserVersion() {
         String[] programFilesEnvs = { getProgramFilesEnv() };
+        String[] winBrowserNames = {
+                "\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe",
+                "\\\\Microsoft\\\\Edge Beta\\\\Application\\\\msedge.exe",
+                "\\\\Microsoft\\\\Edge Dev\\\\Application\\\\msedge.exe" };
+        String macBrowserName = "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge";
+        String version = IS_OS_MAC_OSX ? "-version" : "--version";
 
-        if (IS_OS_WINDOWS) {
-            String[] msEdgePaths = {
-                    "\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe",
-                    "\\\\Microsoft\\\\Edge Beta\\\\Application\\\\msedge.exe",
-                    "\\\\Microsoft\\\\Edge Dev\\\\Application\\\\msedge.exe" };
-
-            String browserVersionOutput = null;
-            Optional<String> msedgeVersion = empty();
-            for (String msEdgePath : msEdgePaths) {
-                msedgeVersion = getDefaultBrowserVersion(programFilesEnvs,
-                        msEdgePath, "", "", "--version",
-                        getDriverManagerType().toString());
-                if (msedgeVersion.isPresent()) {
-                    browserVersionOutput = msedgeVersion.get();
-                    log.debug("Edge (based on Chromium) version {} found",
-                            browserVersionOutput);
-                    break;
-                }
-            }
-
-            if (!msedgeVersion.isPresent()) {
-                browserVersionOutput = runAndWait("powershell",
-                        "get-appxpackage Microsoft.MicrosoftEdge");
-            }
-
-            if (!isNullOrEmpty(browserVersionOutput)) {
-                return Optional.of(
-                        getVersionFromPowerShellOutput(browserVersionOutput));
-            }
-        }
-        if (IS_OS_MAC_OSX) {
-            String macBrowserName = "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge";
-
-            return getDefaultBrowserVersion(programFilesEnvs, EMPTY, EMPTY,
-                    macBrowserName, "-version",
-                    getDriverManagerType().toString());
-        }
-        return empty();
+        return getDefaultBrowserVersion(programFilesEnvs, winBrowserNames, "",
+                macBrowserName, version, getDriverManagerType().toString());
     }
 
     @Override

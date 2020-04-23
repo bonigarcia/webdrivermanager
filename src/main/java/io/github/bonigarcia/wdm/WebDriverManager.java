@@ -1182,15 +1182,18 @@ public abstract class WebDriverManager {
     }
 
     protected Optional<String> getDefaultBrowserVersion(
-            String[] programFilesEnvs, String winBrowserName,
+            String[] programFilesEnvs, String[] winBrowserNames,
             String linuxBrowserName, String macBrowserName, String versionFlag,
             String browserNameInOutput) {
 
         String browserBinaryPath = config().getBinaryPath();
         if (IS_OS_WINDOWS) {
-            for (String programFilesEnv : programFilesEnvs) {
+            String winName = "";
+            for (int i = 0; i < programFilesEnvs.length; i++) {
+                winName = winBrowserNames.length > 1 ? winBrowserNames[0]
+                        : winBrowserNames[i];
                 String browserVersionOutput = getBrowserVersionInWindows(
-                        programFilesEnv, winBrowserName, browserBinaryPath);
+                        programFilesEnvs[i], winName, browserBinaryPath);
                 if (!isNullOrEmpty(browserVersionOutput)) {
                     return Optional
                             .of(getVersionFromWmicOutput(browserVersionOutput));

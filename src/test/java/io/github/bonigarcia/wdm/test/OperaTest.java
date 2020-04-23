@@ -39,13 +39,13 @@ public class OperaTest extends BrowserTestParent {
 
     @BeforeClass
     public static void setupClass() {
-        WebDriverManager.operadriver().setup();
+        WebDriverManager.operadriver().clearPreferences().setup();
     }
 
     @Before
     public void setupTest() {
         String operaBinary = IS_OS_WINDOWS
-                ? "C:\\Program Files\\Opera\\launcher.exe"
+                ? "C:\\Users\\boni\\AppData\\Local\\Programs\\Opera\\launcher.exe"
                 : IS_OS_MAC ? "/Applications/Opera.app/Contents/MacOS/Opera"
                         : "/usr/bin/opera";
         File opera = new File(operaBinary);
