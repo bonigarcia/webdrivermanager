@@ -63,8 +63,14 @@ public class Shell {
         try {
             Process process = new ProcessBuilder(command).directory(folder)
                     .redirectErrorStream(false).start();
+            try {
+                process.waitFor();
+            } catch (InterruptedException e){
+                if(log.isDebugEnabled()){
+                    log.debug("Damn this shouldn't happen");
+                }
+            }
             output = IOUtils.toString(process.getInputStream(), UTF_8);
-            process.destroy();
         } catch (IOException e) {
             if (log.isDebugEnabled()) {
                 log.debug(
