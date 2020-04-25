@@ -22,7 +22,6 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 
 import org.apache.commons.io.IOUtils;
@@ -63,24 +62,16 @@ public class Shell {
         try {
             Process process = new ProcessBuilder(command).directory(folder)
                     .redirectErrorStream(false).start();
-            try {
-                process.waitFor();
-            } catch (InterruptedException e) {
-                handleShellException(e, command);
-            }
+            process.waitFor();
             output = IOUtils.toString(process.getInputStream(), UTF_8);
-        } catch (IOException e) {
-            handleShellException(e, command);
+        } catch (Exception e) {
+            if (log.isDebugEnabled()) {
+                log.debug(
+                        "There was a problem executing command <{}> on the shell: {}",
+                        join(" ", command), e.getMessage());
+            }
         }
         return output.trim();
-    }
-
-    private static void handleShellException(Exception e, String... command) {
-        if (log.isDebugEnabled()) {
-            log.debug(
-                    "There was a problem executing command <{}> on the shell: {}",
-                    join(" ", command), e.getMessage());
-        }
     }
 
     public static String getVersionFromWmicOutput(String output) {
