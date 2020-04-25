@@ -13,9 +13,9 @@ addons:
     chrome: stable
     firefox: latest
     sonarcloud:
-        organization: $(SONARCLOUD_ORGANIZATION)
+        organization: "$(SONARCLOUD_ORGANIZATION)"
         token:
-            secure: $(SONAR_TOKEN)
+            secure: "$(SONAR_TOKEN)"
 
 before_script:
     - export DISPLAY=:99.0
