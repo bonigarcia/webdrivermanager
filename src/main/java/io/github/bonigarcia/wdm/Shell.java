@@ -65,20 +65,22 @@ public class Shell {
                     .redirectErrorStream(false).start();
             try {
                 process.waitFor();
-            } catch (InterruptedException e){
-                if(log.isDebugEnabled()){
-                    log.debug("Damn this shouldn't happen");
-                }
+            } catch (InterruptedException e) {
+                handleShellException(e, command);
             }
             output = IOUtils.toString(process.getInputStream(), UTF_8);
         } catch (IOException e) {
-            if (log.isDebugEnabled()) {
-                log.debug(
-                        "There was a problem executing command <{}> on the shell: {}",
-                        join(" ", command), e.getMessage());
-            }
+            handleShellException(e, command);
         }
         return output.trim();
+    }
+
+    private static void handleShellException(Exception e, String... command) {
+        if (log.isDebugEnabled()) {
+            log.debug(
+                    "There was a problem executing command <{}> on the shell: {}",
+                    join(" ", command), e.getMessage());
+        }
     }
 
     public static String getVersionFromWmicOutput(String output) {
