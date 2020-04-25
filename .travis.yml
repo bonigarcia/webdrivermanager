@@ -13,9 +13,9 @@ addons:
     chrome: stable
     firefox: latest
     sonarcloud:
-        organization: "bonigarcia-github"
+        organization: $(SONARCLOUD_ORGANIZATION)
         token:
-            secure: "HuPhAM1MHtPNSiApWzjnkKZE70+G7FNQFFDPO0NOfTRx5H7i6k7EgmWCOaYcFY20G+Ny1Qu2UBOrff28IudxizYd3oUZC/r9QKo1mOeoOjvl8UFvD4a1tFYO9TUi5wQ+G4ahZrNElsnXkToxUJP0ixvb2qD8mt1mH4M9wE24utIO9CE2mBwrBqJnYCtBDgdqaCqWXgYw1DHJKialPI/kmZEe/nsEwlnI0IHBrbgMMWnQ3DGd5f9m8N539OC9iUFPkkUW25QOxkT2feMyR9cb3m8Q75fZMwMHAT+z/5NJYPij0hQ0LFWsn6Dk8YiDuP+O9znmS9ht12HqC5+JMlFCHnJHJZZmHQJs29tTGMtvmNvXMD0hFsfEIiI5l1g0K57bgmIF5rIlk0Y6QQpb2mk2Z5j/88VO6xfiP684EFnU63B/bX9j9bw+0hSPCyfCezBje3luJC2qSt/xawHGS0QDPmMrr39DrYH5EQ7OzXpeWaJ/Rrh0GSEDn1ZbiO4gdkKXL3qTjGooOKVlsp+VIQ+0uQ2wuUEeGi47zuSavCEvpLSrzCmnB8Vpet6JXVmwMAA71WuraUtWcsK+IJ8Yn2kBDhz0UTasql24s0ktp4E3bMAqR5cwDR1UZ2SvPcZJ0Pki4lYXUUWzuVU8vZd7SMQwT9tgYPCDukn/5jbSe+TwPVE="
+            secure: $(SONAR_TOKEN)
 
 before_script:
     - export DISPLAY=:99.0
