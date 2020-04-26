@@ -261,13 +261,105 @@ public abstract class WebDriverManager {
                 }
                 Architecture architecture = config().getArchitecture();
                 String driverVersion = getDriverVersion();
-                isLatest = isVersionLatest(driverVersion);
+                isLatest = isUnknown(driverVersion);
                 manage(architecture, driverVersion);
             } finally {
                 if (!config().isAvoidAutoReset()) {
                     reset();
                 }
             }
+        }
+    }
+
+    protected void manage(Architecture arch, String driverVersion) {
+        httpClient = new HttpClient(config());
+        try (HttpClient wdmHttpClient = httpClient) {
+            downloader = new Downloader(getDriverManagerType());
+            urlFilter = new UrlFilter();
+
+            if (isUnknown(driverVersion)) {
+                preferenceKey = getDriverManagerType().getNameInLowerCase();
+                Optional<String> browserVersion = empty();
+                if (usePreferences()
+                        && preferences.checkKeyInPreferences(preferenceKey)) {
+                    browserVersion = Optional.of(
+                            preferences.getValueFromPreferences(preferenceKey));
+                }
+                if (!browserVersion.isPresent()) {
+                    browserVersion = detectBrowserVersion();
+                }
+
+                if (browserVersion.isPresent()) {
+                    // Calculate driverVersion using browserVersion
+                    preferenceKey = getDriverManagerType().getNameInLowerCase()
+                            + browserVersion.get();
+                    if (usePreferences() && preferences
+                            .checkKeyInPreferences(preferenceKey)) {
+                        driverVersion = preferences
+                                .getValueFromPreferences(preferenceKey);
+                    }
+                    if (isUnknown(driverVersion)) {
+                        Optional<String> driverVersionFromRepository = getDriverVersionFromRepository(
+                                browserVersion);
+                        if (driverVersionFromRepository.isPresent()) {
+                            driverVersion = driverVersionFromRepository.get();
+                        }
+                    }
+                    if (isUnknown(driverVersion)) {
+                        Optional<String> driverVersionFromProperties = getDriverVersionFromProperties(
+                                browserVersion.get());
+                        if (driverVersionFromProperties.isPresent()) {
+                            driverVersion = driverVersionFromProperties.get();
+                        }
+                    } else {
+                        log.info(
+                                "Using {} {} (since {} {} is installed in your machine)",
+                                getDriverName(), driverVersion,
+                                getDriverManagerType(), browserVersion.get());
+
+                        if (usePreferences()) {
+                            preferences.putValueInPreferencesIfEmpty(
+                                    getDriverManagerType().getNameInLowerCase(),
+                                    browserVersion.get());
+                            preferences.putValueInPreferencesIfEmpty(
+                                    preferenceKey, driverVersion);
+                        }
+                    }
+                    if (isUnknown(driverVersion)) {
+                        log.debug(
+                                "The driver version for {} {} is unknown ... trying with latest",
+                                getDriverManagerType(), browserVersion.get());
+                    }
+                }
+
+                // if driverVersion is still unknown, try with latest
+                if (isUnknown(driverVersion)) {
+                    Optional<String> latestDriverVersionFromRepository = getLatestDriverVersionFromRepository();
+                    if (latestDriverVersionFromRepository.isPresent()) {
+                        driverVersion = latestDriverVersionFromRepository.get();
+                    }
+                }
+
+            }
+
+            boolean getLatest = isUnknown(driverVersion);
+
+            String os = config().getOs();
+            boolean cache = config().isForceCache();
+            log.trace("Managing {} arch={} version={} getLatest={} cache={}",
+                    getDriverName(), arch, driverVersion, getLatest, cache);
+
+            if (getLatest && latestVersion != null) {
+                log.debug("Latest version of {} is {} (recently resolved)",
+                        getDriverName(), latestVersion);
+                driverVersion = latestVersion;
+                cache = true;
+            }
+
+            downloadAndExport(arch, driverVersion, getLatest, cache, os);
+
+        } catch (Exception e) {
+            handleException(e, arch, driverVersion);
         }
     }
 
@@ -501,55 +593,6 @@ public abstract class WebDriverManager {
         return currentVersion;
     }
 
-    protected void manage(Architecture arch, String version) {
-        httpClient = new HttpClient(config());
-        try (HttpClient wdmHttpClient = httpClient) {
-            downloader = new Downloader(getDriverManagerType());
-            urlFilter = new UrlFilter();
-
-            boolean getLatest = isVersionLatest(version);
-            boolean cache = config().isForceCache();
-
-            if (getLatest) {
-                version = detectDriverVersionFromBrowser();
-            }
-
-            // Special case for Chromium snap packages
-            if (getDriverManagerType() == CHROMIUM && isSnap
-                    && ((ChromiumDriverManager) this).snapDriverExists()) {
-                return;
-            }
-
-            getLatest = isNullOrEmpty(version);
-
-            // Check latest version
-            if (getLatest && !config().isUseBetaVersions()) {
-                Optional<String> lastVersion = getLatestVersion();
-                getLatest = !lastVersion.isPresent();
-                if (!getLatest) {
-                    version = lastVersion.get();
-                }
-            }
-
-            String os = config().getOs();
-            log.trace("Managing {} arch={} version={} getLatest={} cache={}",
-                    getDriverName(), arch, version, getLatest, cache);
-
-            if (getLatest && latestVersion != null) {
-                log.debug("Latest version of {} is {} (recently resolved)",
-                        getDriverName(), latestVersion);
-                version = latestVersion;
-                cache = true;
-            }
-
-            // Manage driver
-            downloadAndExport(arch, version, getLatest, cache, os);
-
-        } catch (Exception e) {
-            handleException(e, arch, version);
-        }
-    }
-
     private void downloadAndExport(Architecture arch, String version,
             boolean getLatest, boolean cache, String os) throws IOException {
         Optional<String> driverInCache = handleCache(arch, version, os,
@@ -577,53 +620,25 @@ public abstract class WebDriverManager {
         }
     }
 
-    private String detectDriverVersionFromBrowser() {
-        String version = "";
+    private Optional<String> detectBrowserVersion() {
         if (config().isAvoidAutoVersion()) {
-            return version;
+            return empty();
         }
 
         String driverManagerTypeLowerCase = getDriverManagerType().name()
                 .toLowerCase();
-        Optional<String> optionalBrowserVersion;
+        Optional<String> browserVersion;
         if (usePreferences() && preferences
                 .checkKeyInPreferences(driverManagerTypeLowerCase)) {
-            optionalBrowserVersion = Optional.of(preferences
+            browserVersion = Optional.of(preferences
                     .getValueFromPreferences(driverManagerTypeLowerCase));
-        } else {
-            optionalBrowserVersion = getBrowserVersion();
-        }
 
-        if (optionalBrowserVersion.isPresent()) {
-            String browserVersion = optionalBrowserVersion.get();
             log.trace("Detected {} version {}", getDriverManagerType(),
                     browserVersion);
-
-            preferenceKey = driverManagerTypeLowerCase + browserVersion;
-
-            if (usePreferences()
-                    && preferences.checkKeyInPreferences(preferenceKey)) {
-                // Get driver version from preferences
-                version = preferences.getValueFromPreferences(preferenceKey);
-            } else {
-                // Get driver version from properties
-                version = getVersionForInstalledBrowser(browserVersion);
-            }
-            if (!isNullOrEmpty(version)) {
-                log.info(
-                        "Using {} {} (since {} {} is installed in your machine)",
-                        getDriverName(), version, getDriverManagerType(),
-                        browserVersion);
-                preferences.putValueInPreferencesIfEmpty(
-                        driverManagerTypeLowerCase, browserVersion);
-            }
         } else {
-            log.debug(
-                    "The proper {} version for your {} is unknown ... trying with the latest",
-                    getDriverName(), getDriverManagerType());
+            browserVersion = getBrowserVersion();
         }
-
-        return version;
+        return browserVersion;
     }
 
     private boolean usePreferences() {
@@ -633,42 +648,12 @@ public abstract class WebDriverManager {
         return usePrefs;
     }
 
-    private boolean isVersionLatest(String version) {
-        return isNullOrEmpty(version) || version.equalsIgnoreCase("latest");
+    private boolean isUnknown(String driverVersion) {
+        return isNullOrEmpty(driverVersion)
+                || driverVersion.equalsIgnoreCase("latest");
     }
 
-    private String getVersionForInstalledBrowser(String browserVersion) {
-        String driverVersion = "";
-        DriverManagerType driverManagerType = getDriverManagerType();
-        String driverLowerCase = driverManagerType.name().toLowerCase();
-        if (driverLowerCase.equals("chromium")) {
-            driverLowerCase = "chrome";
-        }
-
-        Optional<String> driverVersionForBrowser = empty();
-        if (driverLowerCase.equals("chrome")
-                || driverLowerCase.equals("edge")) {
-            driverVersionForBrowser = getLatestFromRepository(
-                    Optional.of(browserVersion), getVersionCharset());
-        }
-        if (!driverVersionForBrowser.isPresent()) {
-            driverVersionForBrowser = getDriverVersionForBrowserFromProperties(
-                    driverLowerCase + browserVersion);
-            if (driverVersionForBrowser.isPresent()) {
-                driverVersion = driverVersionForBrowser.get();
-            } else {
-                log.debug(
-                        "The driver version for {} {} is unknown ... trying with latest",
-                        driverManagerType, browserVersion);
-            }
-        } else {
-            driverVersion = driverVersionForBrowser.get();
-        }
-        return driverVersion;
-    }
-
-    private Optional<String> getDriverVersionForBrowserFromProperties(
-            String key) {
+    private Optional<String> getDriverVersionFromProperties(String key) {
         boolean online = config().getVersionsPropertiesOnlineFirst();
         String onlineMessage = online ? ONLINE : LOCAL;
         log.debug("Getting driver version for {} from {} versions.properties",
@@ -1255,10 +1240,6 @@ public abstract class WebDriverManager {
                 && file.isFile();
     }
 
-    protected Optional<String> getLatestVersion() {
-        return empty();
-    }
-
     protected Charset getVersionCharset() {
         return defaultCharset();
     }
@@ -1364,10 +1345,6 @@ public abstract class WebDriverManager {
                 version = version.substring(1);
             }
             versionToDownload = version;
-            if (isLatest && usePreferences() && !isNullOrEmpty(preferenceKey)) {
-                preferences.putValueInPreferencesIfEmpty(preferenceKey,
-                        version);
-            }
         }
     }
 
@@ -1375,8 +1352,12 @@ public abstract class WebDriverManager {
         this.config = config;
     }
 
-    protected Optional<String> getLatestFromRepository(Optional<String> version,
-            Charset charset) {
+    protected Optional<String> getLatestDriverVersionFromRepository() {
+        return empty();
+    }
+
+    protected Optional<String> getDriverVersionFromRepository(
+            Optional<String> version) {
         String url = version.isPresent()
                 ? getDriverUrl() + LATEST_RELEASE + "_" + version.get()
                 : getDriverUrl() + getLatestVersionLabel();
@@ -1384,8 +1365,8 @@ public abstract class WebDriverManager {
         try (InputStream response = httpClient
                 .execute(httpClient.createHttpGet(new URL(url))).getEntity()
                 .getContent()) {
-            result = Optional.of(
-                    IOUtils.toString(response, charset).replaceAll("\r\n", ""));
+            result = Optional.of(IOUtils.toString(response, getVersionCharset())
+                    .replaceAll("\r\n", ""));
         } catch (Exception e) {
             log.warn("Exception reading {} to get latest version of {} ({})",
                     url, getDriverName(), e.getMessage());

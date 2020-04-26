@@ -108,8 +108,8 @@ public class ChromeDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected Optional<String> getLatestVersion() {
-        return getLatestFromRepository(empty(), getVersionCharset());
+    protected Optional<String> getLatestDriverVersionFromRepository() {
+        return getDriverVersionFromRepository(empty());
     }
 
     @Override

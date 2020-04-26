@@ -25,12 +25,13 @@ package io.github.bonigarcia.wdm;
 public enum DriverManagerType {
 
     CHROME("org.openqa.selenium.chrome.ChromeDriver"),
-    FIREFOX ("org.openqa.selenium.firefox.FirefoxDriver"),
+    FIREFOX("org.openqa.selenium.firefox.FirefoxDriver"),
     OPERA("org.openqa.selenium.opera.OperaDriver"),
     EDGE("org.openqa.selenium.edge.EdgeDriver"),
     PHANTOMJS("org.openqa.selenium.phantomjs.PhantomJSDriver"),
     IEXPLORER("org.openqa.selenium.ie.InternetExplorerDriver"),
-    SELENIUM_SERVER_STANDALONE("org.openqa.selenium.remote.server.SeleniumServer"),
+    SELENIUM_SERVER_STANDALONE(
+            "org.openqa.selenium.remote.server.SeleniumServer"),
     CHROMIUM("org.openqa.selenium.chrome.ChromeDriver"),
     SAFARI("org.openqa.selenium.safari.SafariDriver");
 
@@ -61,14 +62,22 @@ public enum DriverManagerType {
             return "PhantomJS";
         case IEXPLORER:
             return "Internet Explorer";
-            case SAFARI:
-                return "Safari";
+        case SAFARI:
+            return "Safari";
         case SELENIUM_SERVER_STANDALONE:
             return "Selenium Server Standalone";
         default:
             throw new WebDriverManagerException(
                     "Invalid driver manager type: " + this.name());
         }
+    }
+
+    public String getNameInLowerCase() {
+        String driverLowerCase = this.name().toLowerCase();
+        if (driverLowerCase.equals("chromium")) {
+            driverLowerCase = "chrome";
+        }
+        return driverLowerCase;
     }
 
 }
