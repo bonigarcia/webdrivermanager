@@ -138,7 +138,6 @@ public abstract class WebDriverManager {
     protected boolean mirrorLog;
     protected boolean forcedArch;
     protected boolean forcedOs;
-    protected boolean isLatest;
     protected boolean isSnap;
     protected int retryCount = 0;
     protected Config config = new Config();
@@ -259,7 +258,6 @@ public abstract class WebDriverManager {
                     clearPreferences();
                 }
                 String driverVersion = getDriverVersion();
-                isLatest = isUnknown(driverVersion);
                 manage(driverVersion);
             } finally {
                 if (!config().isAvoidAutoReset()) {
@@ -1242,7 +1240,6 @@ public abstract class WebDriverManager {
         forcedArch = false;
         forcedOs = false;
         retryCount = 0;
-        isLatest = true;
         isSnap = false;
     }
 
