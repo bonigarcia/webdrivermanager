@@ -134,7 +134,6 @@ public abstract class WebDriverManager {
     protected UrlFilter urlFilter;
     protected String versionToDownload;
     protected String downloadedVersion;
-    protected String latestVersion;
     protected String binaryPath;
     protected boolean mirrorLog;
     protected boolean forcedArch;
@@ -259,10 +258,9 @@ public abstract class WebDriverManager {
                 if (config().getClearPreferences()) {
                     clearPreferences();
                 }
-                Architecture architecture = config().getArchitecture();
                 String driverVersion = getDriverVersion();
                 isLatest = isUnknown(driverVersion);
-                manage(architecture, driverVersion);
+                manage(driverVersion);
             } finally {
                 if (!config().isAvoidAutoReset()) {
                     reset();
@@ -271,7 +269,7 @@ public abstract class WebDriverManager {
         }
     }
 
-    protected void manage(Architecture arch, String driverVersion) {
+    protected void manage(String driverVersion) {
         httpClient = new HttpClient(config());
         try (HttpClient wdmHttpClient = httpClient) {
             downloader = new Downloader(getDriverManagerType());
@@ -342,24 +340,10 @@ public abstract class WebDriverManager {
 
             }
 
-            boolean getLatest = isUnknown(driverVersion);
-
-            String os = config().getOs();
-            boolean cache = config().isForceCache();
-            log.trace("Managing {} arch={} version={} getLatest={} cache={}",
-                    getDriverName(), arch, driverVersion, getLatest, cache);
-
-            if (getLatest && latestVersion != null) {
-                log.debug("Latest version of {} is {} (recently resolved)",
-                        getDriverName(), latestVersion);
-                driverVersion = latestVersion;
-                cache = true;
-            }
-
-            downloadAndExport(arch, driverVersion, getLatest, cache, os);
+            downloadAndExport(driverVersion);
 
         } catch (Exception e) {
-            handleException(e, arch, driverVersion);
+            handleException(e, driverVersion);
         }
     }
 
@@ -593,22 +577,22 @@ public abstract class WebDriverManager {
         return currentVersion;
     }
 
-    private void downloadAndExport(Architecture arch, String version,
-            boolean getLatest, boolean cache, String os) throws IOException {
-        Optional<String> driverInCache = handleCache(arch, version, os,
-                getLatest, cache);
-        String versionStr = getLatest ? "(latest version)" : version;
+    private void downloadAndExport(String driverVersion) throws IOException {
+        Optional<String> driverInCache = handleCache(driverVersion);
+        String versionStr = isUnknown(driverVersion) ? "(latest version)"
+                : driverVersion;
 
         if (driverInCache.isPresent() && !config().isOverride()) {
-            storeVersionToDownload(version);
-            downloadedVersion = version;
+            storeVersionToDownload(driverVersion);
+            downloadedVersion = driverVersion;
             log.debug("Driver {} {} found in cache", getDriverName(),
                     versionStr);
             exportDriver(driverInCache.get());
         } else {
-            List<URL> candidateUrls = filterCandidateUrls(arch, version,
-                    getLatest);
+            List<URL> candidateUrls = filterCandidateUrls(driverVersion);
             if (candidateUrls.isEmpty()) {
+                Architecture arch = config().getArchitecture();
+                String os = config().getOs();
                 String errorMessage = getDriverName() + " " + versionStr
                         + " for " + os + arch.toString() + " not found in "
                         + getDriverUrl();
@@ -725,8 +709,7 @@ public abstract class WebDriverManager {
                 .getEntity().getContent();
     }
 
-    protected void handleException(Exception e, Architecture arch,
-            String version) {
+    protected void handleException(Exception e, String version) {
         String versionStr = isNullOrEmpty(version) ? "(latest version)"
                 : version;
         String errorMessage = String.format(
@@ -737,14 +720,14 @@ public abstract class WebDriverManager {
             config().setUseMirror(true);
             retryCount++;
             log.warn("{} ... trying again using mirror", errorMessage);
-            manage(arch, version);
+            manage(version);
         } else if (retryCount == 1) {
             config().setAvoidAutoVersion(true);
             version = "";
             retryCount++;
             log.warn("{} ... trying again using latest from cache",
                     errorMessage);
-            manage(arch, version);
+            manage(version);
         } else {
             log.error("{}", errorMessage, e);
             throw new WebDriverManagerException(e);
@@ -761,18 +744,20 @@ public abstract class WebDriverManager {
         downloadedVersion = versionToDownload;
     }
 
-    protected List<URL> filterCandidateUrls(Architecture arch, String version,
-            boolean getLatest) throws IOException {
+    protected List<URL> filterCandidateUrls(String driverVersion)
+            throws IOException {
         List<URL> urls = getDrivers();
         List<URL> candidateUrls;
         log.trace("All URLs: {}", urls);
-
+        boolean getLatest = isUnknown(driverVersion);
+        Architecture arch = config().getArchitecture();
         boolean continueSearchingVersion;
+
         do {
             // Get the latest or concrete version
             String filterName = getShortDriverName();
             candidateUrls = getLatest ? checkLatest(urls, filterName)
-                    : getVersion(urls, filterName, version);
+                    : getVersion(urls, filterName, driverVersion);
             log.trace("Candidate URLs: {}", candidateUrls);
             if (versionToDownload == null) {
                 break;
@@ -827,19 +812,22 @@ public abstract class WebDriverManager {
         return candidateUrls;
     }
 
-    protected Optional<String> handleCache(Architecture arch, String version,
-            String os, boolean getLatest, boolean cache) {
+    protected Optional<String> handleCache(String driverVersion) {
         Optional<String> driverInCache = empty();
+        boolean getLatest = isUnknown(driverVersion);
+        boolean cache = config().isForceCache();
+
         if (cache || !getLatest) {
-            driverInCache = getDriverFromCache(version, arch, os);
+            driverInCache = getDriverFromCache(driverVersion);
         }
-        storeVersionToDownload(version);
+        storeVersionToDownload(driverVersion);
         return driverInCache;
     }
 
-    protected Optional<String> getDriverFromCache(String driverVersion,
-            Architecture arch, String os) {
+    protected Optional<String> getDriverFromCache(String driverVersion) {
         log.trace("Checking if {} exists in cache", getDriverName());
+        Architecture arch = config().getArchitecture();
+        String os = config().getOs();
         List<File> filesInCache = getFilesInCache();
         if (!filesInCache.isEmpty()) {
             // Filter by name
@@ -945,7 +933,6 @@ public abstract class WebDriverManager {
             }
         }
         storeVersionToDownload(versionToDownload);
-        latestVersion = versionToDownload;
         log.info("Latest version of {} is {}", driver, versionToDownload);
         return out;
     }
