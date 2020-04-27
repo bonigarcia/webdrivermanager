@@ -43,6 +43,20 @@ public class UrlFilter {
 
     final Logger log = getLogger(lookup().lookupClass());
 
+    public List<URL> filterByBeta(List<URL> list, boolean useBeta) {
+        List<URL> out = new ArrayList<>(list);
+        if (!useBeta) {
+            log.trace("URLs before filtering by beta versions: {}", list);
+            for (URL url : list) {
+                if (url.getFile().toLowerCase().contains("beta")) {
+                    out.remove(url);
+                }
+            }
+            log.trace("URLs after filtering by beta versions: {}", out);
+        }
+        return out;
+    }
+
     public List<URL> filterByOs(List<URL> list, String osName) {
         log.trace("URLs before filtering by OS ({}): {}", osName, list);
         List<URL> out = new ArrayList<>();

@@ -516,9 +516,6 @@ public abstract class WebDriverManager {
                 if (version.isEmpty() || version.equalsIgnoreCase("icons")) {
                     continue;
                 }
-                if (version.startsWith(".")) {
-                    version = version.substring(1);
-                }
                 if (!versions.contains(version)) {
                     versions.add(version);
                 }
@@ -566,7 +563,8 @@ public abstract class WebDriverManager {
         String pattern = "/([^/]*?)/[^/]*?" + getShortDriverName();
         Matcher matcher = compile(pattern, CASE_INSENSITIVE)
                 .matcher(url.getFile());
-        if (matcher.find()) {
+        boolean find = matcher.find();
+        if (find) {
             currentVersion = matcher.group(1);
         } else {
             log.trace("Version not found in URL {}", url);
@@ -630,7 +628,6 @@ public abstract class WebDriverManager {
     private boolean usePreferences() {
         boolean usePrefs = !config().isAvoidPreferences()
                 && !config().isOverride() && !forcedArch && !forcedOs;
-        log.trace("Using preferences {}", usePrefs);
         return usePrefs;
     }
 
@@ -772,6 +769,10 @@ public abstract class WebDriverManager {
 
             // Filter by ignored versions
             candidateUrls = filterByIgnoredVersions(candidateUrls);
+
+            // Filter by beta
+            candidateUrls = urlFilter.filterByBeta(candidateUrls,
+                    config().isUseBetaVersions());
 
             // Find out if driver version has been found or not
             continueSearchingVersion = candidateUrls.isEmpty() && getLatest;
@@ -917,10 +918,31 @@ public abstract class WebDriverManager {
 
         for (URL url : copyOfList) {
             try {
-                handleDriver(url, driver, out);
+                if (!config().isUseBetaVersions()
+                        && (url.getFile().toLowerCase().contains(BETA))) {
+                    continue;
+                }
+                if (url.getFile().contains(driver)) {
+                    String currentVersion = getCurrentVersion(url);
+
+                    if (currentVersion.equalsIgnoreCase(driver)) {
+                        continue;
+                    }
+                    if (versionToDownload == null) {
+                        versionToDownload = currentVersion;
+                    }
+                    if (versionCompare(currentVersion, versionToDownload) > 0) {
+                        versionToDownload = currentVersion;
+                        out.clear();
+                    }
+                    if (url.getFile().contains(versionToDownload)) {
+                        out.add(url);
+                    }
+                }
             } catch (Exception e) {
                 log.trace("There was a problem with URL {} : {}", url,
                         e.getMessage());
+                e.printStackTrace();
                 list.remove(url);
             }
         }
@@ -929,34 +951,11 @@ public abstract class WebDriverManager {
         return out;
     }
 
-    protected void handleDriver(URL url, String driver, List<URL> out) {
-        if (!config().isUseBetaVersions()
-                && (url.getFile().toLowerCase().contains("beta"))) {
-            return;
-        }
-
-        if (url.getFile().contains(driver)) {
-            String currentVersion = getCurrentVersion(url);
-
-            if (currentVersion.equalsIgnoreCase(driver)) {
-                return;
-            }
-            if (versionToDownload == null) {
-                versionToDownload = currentVersion;
-            }
-            if (versionCompare(currentVersion, versionToDownload) > 0) {
-                versionToDownload = currentVersion;
-                out.clear();
-            }
-            if (url.getFile().contains(versionToDownload)) {
-                out.add(url);
-            }
-        }
-    }
-
     protected Integer versionCompare(String str1, String str2) {
-        String[] vals1 = str1.replace("v", "").split("\\.");
-        String[] vals2 = str2.replace("v", "").split("\\.");
+        String[] vals1 = str1.replace("v", "").replace("-beta", "")
+                .split("\\.");
+        String[] vals2 = str2.replace("v", "").replace("-beta", "")
+                .split("\\.");
 
         if (vals1[0].equals("")) {
             vals1[0] = "0";
