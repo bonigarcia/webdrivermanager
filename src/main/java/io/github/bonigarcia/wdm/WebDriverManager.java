@@ -131,7 +131,6 @@ public abstract class WebDriverManager {
 
     protected HttpClient httpClient;
     protected Downloader downloader;
-    protected UrlFilter urlFilter;
     protected String versionToDownload;
     protected String downloadedVersion;
     protected String binaryPath;
@@ -142,7 +141,7 @@ public abstract class WebDriverManager {
     protected int retryCount = 0;
     protected Config config = new Config();
     protected Preferences preferences = new Preferences(config);
-    protected String preferenceKey;
+    protected UrlFilter urlFilter = new UrlFilter();
     protected Properties versionsProperties;
 
     public static Config globalConfig() {
@@ -467,7 +466,6 @@ public abstract class WebDriverManager {
         httpClient = new HttpClient(config());
         try (HttpClient wdmHttpClient = httpClient) {
             downloader = new Downloader(getDriverManagerType());
-            urlFilter = new UrlFilter();
 
             if (isUnknown(driverVersion)) {
                 driverVersion = resolveDriverVersion(driverVersion);
@@ -485,9 +483,9 @@ public abstract class WebDriverManager {
     }
 
     protected String resolveDriverVersion(String driverVersion) {
-        preferenceKey = getKeyForPreferences();
+        String preferenceKey = getKeyForPreferences();
         Optional<String> browserVersion = empty();
-        browserVersion = getValueFromPreferences(browserVersion);
+        browserVersion = getValueFromPreferences(preferenceKey, browserVersion);
         if (!browserVersion.isPresent()) {
             browserVersion = detectBrowserVersion();
         }
@@ -516,7 +514,8 @@ public abstract class WebDriverManager {
                         "Using {} {} (since {} {} is installed in your machine)",
                         getDriverName(), driverVersion, getDriverManagerType(),
                         browserVersion.get());
-                storeInPreferences(driverVersion, browserVersion.get());
+                storeInPreferences(preferenceKey, driverVersion,
+                        browserVersion.get());
             }
         }
 
@@ -530,8 +529,8 @@ public abstract class WebDriverManager {
         return driverVersion;
     }
 
-    protected void storeInPreferences(String driverVersion,
-            String browserVersion) {
+    protected void storeInPreferences(String preferenceKey,
+            String driverVersion, String browserVersion) {
         if (usePreferences()) {
             preferences.putValueInPreferencesIfEmpty(getKeyForPreferences(),
                     browserVersion);
@@ -540,7 +539,7 @@ public abstract class WebDriverManager {
         }
     }
 
-    protected Optional<String> getValueFromPreferences(
+    protected Optional<String> getValueFromPreferences(String preferenceKey,
             Optional<String> browserVersion) {
         if (usePreferences()
                 && preferences.checkKeyInPreferences(preferenceKey)) {
