@@ -72,8 +72,4 @@ public enum DriverManagerType {
         }
     }
 
-    public String getNameInLowerCase() {
-        return this.name().toLowerCase();
-    }
-
 }

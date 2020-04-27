@@ -480,16 +480,19 @@ public abstract class WebDriverManager {
         }
     }
 
+    protected String getKeyForPreferences() {
+        return getDriverManagerType().name().toLowerCase();
+    }
+
     protected String resolveDriverVersion(String driverVersion) {
-        preferenceKey = getDriverManagerType().getNameInLowerCase();
+        preferenceKey = getKeyForPreferences();
         Optional<String> browserVersion = empty();
         browserVersion = getValueFromPreferences(browserVersion);
         if (!browserVersion.isPresent()) {
             browserVersion = detectBrowserVersion();
         }
         if (browserVersion.isPresent()) {
-            preferenceKey = getDriverManagerType().getNameInLowerCase()
-                    + browserVersion.get();
+            preferenceKey = getKeyForPreferences() + browserVersion.get();
             driverVersion = preferences.getValueFromPreferences(preferenceKey);
 
             Optional<String> optionalDriverVersion = empty();
@@ -530,8 +533,7 @@ public abstract class WebDriverManager {
     protected void storeInPreferences(String driverVersion,
             String browserVersion) {
         if (usePreferences()) {
-            preferences.putValueInPreferencesIfEmpty(
-                    getDriverManagerType().getNameInLowerCase(),
+            preferences.putValueInPreferencesIfEmpty(getKeyForPreferences(),
                     browserVersion);
             preferences.putValueInPreferencesIfEmpty(preferenceKey,
                     driverVersion);
@@ -644,6 +646,11 @@ public abstract class WebDriverManager {
     }
 
     protected Optional<String> getDriverVersionFromProperties(String key) {
+        // Chromium values are the same than Chrome
+        if (key.contains("chromium")) {
+            key = key.replace("chromium", "chrome");
+        }
+
         boolean online = config().getVersionsPropertiesOnlineFirst();
         String onlineMessage = online ? ONLINE : LOCAL;
         log.debug("Getting driver version for {} from {} versions.properties",
