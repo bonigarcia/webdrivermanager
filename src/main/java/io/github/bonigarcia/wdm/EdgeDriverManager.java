@@ -137,7 +137,11 @@ public class EdgeDriverManager extends WebDriverManager {
 
     @Override
     protected Optional<String> getLatestDriverVersionFromRepository() {
-        return getDriverVersionFromRepository(empty());
+        if (config().isUseBetaVersions()) {
+            return empty();
+        } else {
+            return getDriverVersionFromRepository(empty());
+        }
     }
 
     @Override
