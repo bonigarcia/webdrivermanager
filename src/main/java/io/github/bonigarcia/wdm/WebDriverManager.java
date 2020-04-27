@@ -513,7 +513,7 @@ public abstract class WebDriverManager {
                         "Using {} {} (since {} {} is installed in your machine)",
                         getDriverName(), driverVersion, getDriverManagerType(),
                         browserVersion.get());
-                storeInPreferences(driverVersion, browserVersion);
+                storeInPreferences(driverVersion, browserVersion.get());
             }
         }
 
@@ -528,11 +528,11 @@ public abstract class WebDriverManager {
     }
 
     protected void storeInPreferences(String driverVersion,
-            Optional<String> browserVersion) {
+            String browserVersion) {
         if (usePreferences()) {
             preferences.putValueInPreferencesIfEmpty(
                     getDriverManagerType().getNameInLowerCase(),
-                    browserVersion.get());
+                    browserVersion);
             preferences.putValueInPreferencesIfEmpty(preferenceKey,
                     driverVersion);
         }
