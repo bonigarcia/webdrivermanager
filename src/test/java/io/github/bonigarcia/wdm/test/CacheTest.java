@@ -17,9 +17,7 @@
 package io.github.bonigarcia.wdm.test;
 
 import static io.github.bonigarcia.wdm.DriverManagerType.CHROME;
-import static io.github.bonigarcia.wdm.DriverManagerType.EDGE;
 import static io.github.bonigarcia.wdm.DriverManagerType.FIREFOX;
-import static io.github.bonigarcia.wdm.DriverManagerType.OPERA;
 import static java.util.Arrays.asList;
 import static org.apache.commons.io.FileUtils.cleanDirectory;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -61,7 +59,6 @@ public class CacheTest {
     @Parameters(name = "{index}: {0} {1}")
     public static Collection<Object[]> data() {
         return asList(new Object[][] { { CHROME, "81.0.4044.69" },
-                { OPERA, "81.0.4044.113" }, { EDGE, "81.0.409.0" },
                 { FIREFOX, "0.26.0" } });
     }
 
