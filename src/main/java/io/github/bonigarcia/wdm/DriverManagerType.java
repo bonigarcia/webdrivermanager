@@ -73,11 +73,7 @@ public enum DriverManagerType {
     }
 
     public String getNameInLowerCase() {
-        String driverLowerCase = this.name().toLowerCase();
-        if (driverLowerCase.equals("chromium")) {
-            driverLowerCase = "chrome";
-        }
-        return driverLowerCase;
+        return this.name().toLowerCase();
     }
 
 }
