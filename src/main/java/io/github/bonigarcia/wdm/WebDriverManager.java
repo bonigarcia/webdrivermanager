@@ -540,9 +540,10 @@ public abstract class WebDriverManager {
         if (candidateUrls.isEmpty()) {
             Architecture arch = config().getArchitecture();
             String os = config().getOs();
-            String errorMessage = String.format("%s for %s %s not found in %s",
-                    getDriverName(), getLabel(driverVersion), os,
-                    arch.toString(), getDriverUrl());
+            String errorMessage = String.format(
+                    "%s %s for %s %s not found in %s", getDriverName(),
+                    getLabel(driverVersion), os, arch.toString(),
+                    getDriverUrl());
             log.error(errorMessage);
             throw new WebDriverManagerException(errorMessage);
         }
