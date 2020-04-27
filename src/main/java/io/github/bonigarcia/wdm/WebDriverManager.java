@@ -105,6 +105,7 @@ public abstract class WebDriverManager {
     protected static final String ONLINE = "online";
     protected static final String LOCAL = "local";
     protected static final String LATEST_RELEASE = "LATEST_RELEASE";
+    protected static final String REG_SZ = "REG_SZ";
 
     protected abstract List<URL> getDrivers() throws IOException;
 
@@ -1200,6 +1201,20 @@ public abstract class WebDriverManager {
         String wmic = "wmic.exe";
         return runAndWait(findFileLocation(wmic), wmic, "datafile", "where",
                 "name='" + browserPath + "'", "get", "Version", "/value");
+    }
+
+    protected Optional<String> getBrowserVersionFromWinRegistry(String key,
+            String value) {
+        Optional<String> browserVersion = empty();
+        String regQueryResult = Shell.runAndWait("REG", "QUERY", key, "/v",
+                value);
+        int i = regQueryResult.indexOf("REG_SZ");
+        int j = regQueryResult.indexOf(".", i);
+        if (i != -1 && j != -1) {
+            browserVersion = Optional.of(
+                    regQueryResult.substring(i + REG_SZ.length(), j).trim());
+        }
+        return browserVersion;
     }
 
     protected File findFileLocation(String filename) {

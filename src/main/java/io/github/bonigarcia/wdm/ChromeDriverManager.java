@@ -18,6 +18,7 @@ package io.github.bonigarcia.wdm;
 
 import static io.github.bonigarcia.wdm.DriverManagerType.CHROME;
 import static java.util.Optional.empty;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 
 import java.io.IOException;
 import java.net.URL;
@@ -101,10 +102,19 @@ public class ChromeDriverManager extends WebDriverManager {
                 getProgramFilesEnv() };
         String[] winBrowserNames = {
                 "\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe" };
-        return getDefaultBrowserVersion(programFilesEnvs, winBrowserNames,
-                "google-chrome",
+        Optional<String> browserVersion = getDefaultBrowserVersion(
+                programFilesEnvs, winBrowserNames, "google-chrome",
                 "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
                 "--version", getDriverManagerType().toString());
+
+        if (IS_OS_WINDOWS && !browserVersion.isPresent()) {
+            log.debug(
+                    "Chrome version not discovered using wmic... trying reading the registry");
+            browserVersion = getBrowserVersionFromWinRegistry(
+                    "HKCU\\Software\\Google\\Chrome\\BLBeacon", "version");
+        }
+
+        return browserVersion;
     }
 
     @Override
