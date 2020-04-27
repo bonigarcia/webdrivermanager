@@ -757,9 +757,9 @@ public abstract class WebDriverManager {
 
         do {
             // Get the latest or concrete version
-            String filterName = getShortDriverName();
-            candidateUrls = getLatest ? checkLatest(urls, filterName)
-                    : getVersion(urls, filterName, driverVersion);
+            String shortDriverName = getShortDriverName();
+            candidateUrls = getLatest ? checkLatest(urls, shortDriverName)
+                    : getVersion(urls, shortDriverName, driverVersion);
             log.trace("Candidate URLs: {}", candidateUrls);
             if (versionToDownload == null) {
                 break;
@@ -923,19 +923,18 @@ public abstract class WebDriverManager {
         return out;
     }
 
-    protected List<URL> checkLatest(List<URL> list, String driver) {
-        log.trace("Checking the lastest version of {} with URL list {}", driver,
-                list);
+    protected List<URL> checkLatest(List<URL> list, String driverName) {
+        log.trace("Checking the lastest version of {} with URL list {}",
+                driverName, list);
         List<URL> out = new ArrayList<>();
         List<URL> copyOfList = new ArrayList<>(list);
 
         for (URL url : copyOfList) {
             try {
-                if (!config().isUseBetaVersions()
-                        && (url.getFile().toLowerCase().contains(BETA))) {
+                if (fileIsBeta(url)) {
                     continue;
                 }
-                if (url.getFile().contains(driver)) {
+                if (url.getFile().contains(driverName)) {
                     String currentVersion = getCurrentVersion(url);
                     if (versionToDownload == null) {
                         versionToDownload = currentVersion;
@@ -955,14 +954,19 @@ public abstract class WebDriverManager {
             }
         }
         storeVersionToDownload(versionToDownload);
-        log.info("Latest version of {} is {}", driver, versionToDownload);
+        log.info("Latest version of {} is {}", driverName, versionToDownload);
         return out;
     }
 
+    protected boolean fileIsBeta(URL url) {
+        return !config().isUseBetaVersions()
+                && (url.getFile().toLowerCase().contains(BETA));
+    }
+
     protected Integer versionCompare(String str1, String str2) {
-        String[] vals1 = str1.replace("v", "").replace("-beta", "")
+        String[] vals1 = str1.replace("v", "").replace("-" + BETA, "")
                 .split("\\.");
-        String[] vals2 = str2.replace("v", "").replace("-beta", "")
+        String[] vals2 = str2.replace("v", "").replace("-" + BETA, "")
                 .split("\\.");
 
         if (vals1[0].equals("")) {
@@ -991,7 +995,7 @@ public abstract class WebDriverManager {
      */
     protected List<URL> getDriversFromMirror(URL driverUrl) throws IOException {
         if (mirrorLog) {
-            log.info("Crawling driver list from mirror {}", driverUrl);
+            log.debug("Crawling driver list from mirror {}", driverUrl);
             mirrorLog = true;
         } else {
             log.trace("[Recursive call] Crawling driver list from mirror {}",
