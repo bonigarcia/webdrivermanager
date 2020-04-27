@@ -10,6 +10,7 @@
     <logger name="io" level="WARN" />
     <logger name="org" level="WARN" />
     <logger name="com" level="WARN" />
+    <logger name="io.javalin" level="OFF" />
 
     <root level="INFO">
         <appender-ref ref="STDOUT" />
