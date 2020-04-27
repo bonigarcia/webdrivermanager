@@ -16,15 +16,12 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import static io.github.bonigarcia.wdm.Architecture.X32;
-import static io.github.bonigarcia.wdm.Architecture.X64;
 import static io.github.bonigarcia.wdm.DriverManagerType.CHROME;
+import static io.github.bonigarcia.wdm.DriverManagerType.EDGE;
 import static io.github.bonigarcia.wdm.DriverManagerType.FIREFOX;
 import static io.github.bonigarcia.wdm.DriverManagerType.OPERA;
-import static io.github.bonigarcia.wdm.DriverManagerType.PHANTOMJS;
 import static java.util.Arrays.asList;
 import static org.apache.commons.io.FileUtils.cleanDirectory;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
 
@@ -42,7 +39,6 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
-import io.github.bonigarcia.wdm.Architecture;
 import io.github.bonigarcia.wdm.Downloader;
 import io.github.bonigarcia.wdm.DriverManagerType;
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -62,15 +58,11 @@ public class CacheTest {
     @Parameter(1)
     public String driverVersion;
 
-    @Parameter(2)
-    public Architecture architecture;
-
-    @Parameters(name = "{index}: {0} {1} {2}")
+    @Parameters(name = "{index}: {0} {1}")
     public static Collection<Object[]> data() {
-        return asList(
-                new Object[][] { { CHROME, "2.27", IS_OS_MAC ? X64 : X32 },
-                        { OPERA, "0.2.2", X64 }, { PHANTOMJS, "2.1.1", X64 },
-                        { FIREFOX, "0.17.0", X64 } });
+        return asList(new Object[][] { { CHROME, "81.0.4044.69" },
+                { OPERA, "81.0.4044.113" }, { EDGE, "81.0.409.0" },
+                { FIREFOX, "0.26.0" } });
     }
 
     @Before
@@ -85,16 +77,15 @@ public class CacheTest {
     public void testCache() throws Exception {
         WebDriverManager browserManager = WebDriverManager
                 .getInstance(driverManagerType);
-        browserManager.forceCache().forceDownload().architecture(architecture)
-                .version(driverVersion).setup();
+        browserManager.forceCache().forceDownload().version(driverVersion)
+                .setup();
 
-        Method method = WebDriverManager.class.getDeclaredMethod(
-                "getDriverFromCache", String.class, Architecture.class,
-                String.class);
+        Method method = WebDriverManager.class
+                .getDeclaredMethod("getDriverFromCache", String.class);
         method.setAccessible(true);
 
         Optional<String> driverInCachePath = (Optional<String>) method
-                .invoke(browserManager, driverVersion, architecture, "");
+                .invoke(browserManager, driverVersion);
 
         assertThat(driverInCachePath.get(), notNullValue());
     }
