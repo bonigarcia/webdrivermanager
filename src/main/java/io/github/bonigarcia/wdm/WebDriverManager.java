@@ -471,7 +471,18 @@ public abstract class WebDriverManager {
                 driverVersion = resolveDriverVersion(driverVersion);
             }
 
-            downloadAndExport(driverVersion);
+            Optional<String> driverInCache = searchDriverInCache(driverVersion);
+            String exportValue;
+            if (driverInCache.isPresent() && !config().isOverride()) {
+                log.debug("Driver {} {} found in cache", getDriverName(),
+                        getLabel(driverVersion));
+                storeVersionToDownload(driverVersion);
+                exportValue = driverInCache.get();
+            } else {
+                exportValue = download(driverVersion);
+            }
+
+            exportDriver(exportValue);
 
         } catch (Exception e) {
             handleException(e, driverVersion);
@@ -515,8 +526,7 @@ public abstract class WebDriverManager {
             }
         }
 
-        // if driverVersion is still unknown, try with latest
-        if (isUnknown(driverVersion)) {
+        if (isUnknown(driverVersion)) { // if still unknown, try with latest
             Optional<String> latestDriverVersionFromRepository = getLatestDriverVersionFromRepository();
             if (latestDriverVersionFromRepository.isPresent()) {
                 driverVersion = latestDriverVersionFromRepository.get();
@@ -525,35 +535,34 @@ public abstract class WebDriverManager {
         return driverVersion;
     }
 
-    protected void downloadAndExport(String driverVersion) throws IOException {
-        Optional<String> driverInCache = searchDriverInCache(driverVersion);
-        String versionStr = isUnknown(driverVersion) ? "(latest version)"
-                : driverVersion;
-
-        if (driverInCache.isPresent() && !config().isOverride()) {
-            storeVersionToDownload(driverVersion);
-            log.debug("Driver {} {} found in cache", getDriverName(),
-                    versionStr);
-            exportDriver(driverInCache.get());
-        } else {
-            List<URL> candidateUrls = getCandidateUrls(driverVersion);
-            if (candidateUrls.isEmpty()) {
-                Architecture arch = config().getArchitecture();
-                String os = config().getOs();
-                String errorMessage = getDriverName() + " " + versionStr
-                        + " for " + os + arch.toString() + " not found in "
-                        + getDriverUrl();
-                log.error(errorMessage);
-                throw new WebDriverManagerException(errorMessage);
-            }
-
-            // Download first candidate URL
-            URL url = candidateUrls.iterator().next();
-            String exportValue = downloader.download(url, versionToDownload,
-                    getDriverName());
-            exportDriver(exportValue);
+    protected String download(String driverVersion) throws IOException {
+        List<URL> candidateUrls = getCandidateUrls(driverVersion);
+        if (candidateUrls.isEmpty()) {
+            Architecture arch = config().getArchitecture();
+            String os = config().getOs();
+            String errorMessage = String.format("{} for {} {} not found in {}",
+                    getDriverName(), getLabel(driverVersion), os,
+                    arch.toString(), getDriverUrl());
+            log.error(errorMessage);
+            throw new WebDriverManagerException(errorMessage);
         }
+
+        // Download first candidate URL
+        URL url = candidateUrls.iterator().next();
+        return downloader.download(url, versionToDownload, getDriverName());
+    }
+
+    protected void exportDriver(String variableValue) {
         downloadedVersion = versionToDownload;
+        binaryPath = variableValue;
+        Optional<String> exportParameter = getExportParameter();
+        if (!config.isAvoidExport() && exportParameter.isPresent()) {
+            String variableName = exportParameter.get();
+            log.info("Exporting {} as {}", variableName, variableValue);
+            System.setProperty(variableName, variableValue);
+        } else {
+            log.info("Resulting binary {}", variableValue);
+        }
     }
 
     protected void storeInPreferences(String preferenceKey,
@@ -1056,18 +1065,6 @@ public abstract class WebDriverManager {
                 new ByteArrayInputStream(IOUtils.toByteArray(inputStream))));
     }
 
-    protected void exportDriver(String variableValue) {
-        binaryPath = variableValue;
-        Optional<String> exportParameter = getExportParameter();
-        if (!config.isAvoidExport() && exportParameter.isPresent()) {
-            String variableName = exportParameter.get();
-            log.info("Exporting {} as {}", variableName, variableValue);
-            System.setProperty(variableName, variableValue);
-        } else {
-            log.info("Resulting binary {}", variableValue);
-        }
-    }
-
     protected InputStream openGitHubConnection(URL driverUrl)
             throws IOException {
         HttpGet get = httpClient.createHttpGet(driverUrl);
@@ -1352,6 +1349,10 @@ public abstract class WebDriverManager {
 
     protected String getKeyForPreferences() {
         return getDriverManagerType().name().toLowerCase();
+    }
+
+    protected String getLabel(String driverVersion) {
+        return isUnknown(driverVersion) ? "(latest version)" : driverVersion;
     }
 
     public static void main(String[] args) {
