@@ -267,83 +267,6 @@ public abstract class WebDriverManager {
         }
     }
 
-    protected void manage(String driverVersion) {
-        httpClient = new HttpClient(config());
-        try (HttpClient wdmHttpClient = httpClient) {
-            downloader = new Downloader(getDriverManagerType());
-            urlFilter = new UrlFilter();
-
-            if (isUnknown(driverVersion)) {
-                preferenceKey = getDriverManagerType().getNameInLowerCase();
-                Optional<String> browserVersion = empty();
-                if (usePreferences()
-                        && preferences.checkKeyInPreferences(preferenceKey)) {
-                    browserVersion = Optional.of(
-                            preferences.getValueFromPreferences(preferenceKey));
-                }
-                if (!browserVersion.isPresent()) {
-                    browserVersion = detectBrowserVersion();
-                }
-
-                if (browserVersion.isPresent()) {
-                    // Calculate driverVersion using browserVersion
-                    preferenceKey = getDriverManagerType().getNameInLowerCase()
-                            + browserVersion.get();
-                    if (usePreferences() && preferences
-                            .checkKeyInPreferences(preferenceKey)) {
-                        driverVersion = preferences
-                                .getValueFromPreferences(preferenceKey);
-                    }
-                    if (isUnknown(driverVersion)) {
-                        Optional<String> driverVersionFromRepository = getDriverVersionFromRepository(
-                                browserVersion);
-                        if (driverVersionFromRepository.isPresent()) {
-                            driverVersion = driverVersionFromRepository.get();
-                        }
-                    }
-                    if (isUnknown(driverVersion)) {
-                        Optional<String> driverVersionFromProperties = getDriverVersionFromProperties(
-                                preferenceKey);
-                        if (driverVersionFromProperties.isPresent()) {
-                            driverVersion = driverVersionFromProperties.get();
-                        }
-                    } else {
-                        log.info(
-                                "Using {} {} (since {} {} is installed in your machine)",
-                                getDriverName(), driverVersion,
-                                getDriverManagerType(), browserVersion.get());
-                    }
-                    if (usePreferences()) {
-                        preferences.putValueInPreferencesIfEmpty(
-                                getDriverManagerType().getNameInLowerCase(),
-                                browserVersion.get());
-                        preferences.putValueInPreferencesIfEmpty(preferenceKey,
-                                driverVersion);
-                    }
-                    if (isUnknown(driverVersion)) {
-                        log.debug(
-                                "The driver version for {} {} is unknown ... trying with latest",
-                                getDriverManagerType(), browserVersion.get());
-                    }
-                }
-
-                // if driverVersion is still unknown, try with latest
-                if (isUnknown(driverVersion)) {
-                    Optional<String> latestDriverVersionFromRepository = getLatestDriverVersionFromRepository();
-                    if (latestDriverVersionFromRepository.isPresent()) {
-                        driverVersion = latestDriverVersionFromRepository.get();
-                    }
-                }
-
-            }
-
-            downloadAndExport(driverVersion);
-
-        } catch (Exception e) {
-            handleException(e, driverVersion);
-        }
-    }
-
     public WebDriverManager version(String version) {
         setDriverVersion(version);
         return instanceMap.get(getDriverManagerType());
@@ -539,6 +462,91 @@ public abstract class WebDriverManager {
     }
 
     // ------------
+
+    protected void manage(String driverVersion) {
+        httpClient = new HttpClient(config());
+        try (HttpClient wdmHttpClient = httpClient) {
+            downloader = new Downloader(getDriverManagerType());
+            urlFilter = new UrlFilter();
+
+            if (isUnknown(driverVersion)) {
+                driverVersion = resolveDriverVersion(driverVersion);
+            }
+
+            downloadAndExport(driverVersion);
+
+        } catch (Exception e) {
+            handleException(e, driverVersion);
+        }
+    }
+
+    protected String resolveDriverVersion(String driverVersion) {
+        preferenceKey = getDriverManagerType().getNameInLowerCase();
+        Optional<String> browserVersion = empty();
+        browserVersion = getValueFromPreferences(browserVersion);
+        if (!browserVersion.isPresent()) {
+            browserVersion = detectBrowserVersion();
+        }
+        if (browserVersion.isPresent()) {
+            preferenceKey = getDriverManagerType().getNameInLowerCase()
+                    + browserVersion.get();
+            driverVersion = preferences.getValueFromPreferences(preferenceKey);
+
+            Optional<String> optionalDriverVersion = empty();
+            if (isUnknown(driverVersion)) {
+                optionalDriverVersion = getDriverVersionFromRepository(
+                        browserVersion);
+            }
+            if (isUnknown(driverVersion)) {
+                optionalDriverVersion = getDriverVersionFromProperties(
+                        preferenceKey);
+            }
+            if (optionalDriverVersion.isPresent()) {
+                driverVersion = optionalDriverVersion.get();
+            }
+            if (isUnknown(driverVersion)) {
+                log.debug(
+                        "The driver version for {} {} is unknown ... trying with latest",
+                        getDriverManagerType(), browserVersion.get());
+            } else if (!isUnknown(driverVersion)) {
+                log.info(
+                        "Using {} {} (since {} {} is installed in your machine)",
+                        getDriverName(), driverVersion, getDriverManagerType(),
+                        browserVersion.get());
+                storeInPreferences(driverVersion, browserVersion);
+            }
+        }
+
+        // if driverVersion is still unknown, try with latest
+        if (isUnknown(driverVersion)) {
+            Optional<String> latestDriverVersionFromRepository = getLatestDriverVersionFromRepository();
+            if (latestDriverVersionFromRepository.isPresent()) {
+                driverVersion = latestDriverVersionFromRepository.get();
+            }
+        }
+        return driverVersion;
+    }
+
+    protected void storeInPreferences(String driverVersion,
+            Optional<String> browserVersion) {
+        if (usePreferences()) {
+            preferences.putValueInPreferencesIfEmpty(
+                    getDriverManagerType().getNameInLowerCase(),
+                    browserVersion.get());
+            preferences.putValueInPreferencesIfEmpty(preferenceKey,
+                    driverVersion);
+        }
+    }
+
+    protected Optional<String> getValueFromPreferences(
+            Optional<String> browserVersion) {
+        if (usePreferences()
+                && preferences.checkKeyInPreferences(preferenceKey)) {
+            browserVersion = Optional
+                    .of(preferences.getValueFromPreferences(preferenceKey));
+        }
+        return browserVersion;
+    }
 
     protected String preDownload(String target, String version) {
         log.trace("Pre-download. target={}, version={}", target, version);
