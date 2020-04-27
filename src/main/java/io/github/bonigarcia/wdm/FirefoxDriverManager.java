@@ -17,6 +17,7 @@
 package io.github.bonigarcia.wdm;
 
 import static io.github.bonigarcia.wdm.DriverManagerType.FIREFOX;
+import static java.util.Optional.empty;
 
 import java.io.IOException;
 import java.net.URL;
@@ -109,13 +110,16 @@ public class FirefoxDriverManager extends WebDriverManager {
     @Override
     protected Optional<String> getBrowserVersion() {
         String[] programFilesEnvs = { getProgramFilesEnv() };
-        //String[] programFilesEnvs = { getOtherProgramFilesEnv() };
-//        String[] programFilesEnvs = { getProgramFilesEnv(),
-//                getOtherProgramFilesEnv() };
         String[] winBrowserNames = { "\\\\Mozilla Firefox\\\\firefox.exe" };
         return getDefaultBrowserVersion(programFilesEnvs, winBrowserNames,
                 "firefox", "/Applications/Firefox.app/Contents/MacOS/firefox",
                 "-v", getDriverManagerType().toString());
+    }
+
+    @Override
+    protected Optional<String> getDriverVersionFromRepository(
+            Optional<String> version) {
+        return empty();
     }
 
 }

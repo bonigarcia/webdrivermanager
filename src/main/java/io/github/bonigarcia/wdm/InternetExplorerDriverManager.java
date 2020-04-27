@@ -82,4 +82,10 @@ public class InternetExplorerDriverManager extends WebDriverManager {
         return empty();
     }
 
+    @Override
+    protected Optional<String> getDriverVersionFromRepository(
+            Optional<String> version) {
+        return empty();
+    }
+
 }

@@ -17,6 +17,7 @@
 package io.github.bonigarcia.wdm;
 
 import static io.github.bonigarcia.wdm.DriverManagerType.OPERA;
+import static java.util.Optional.empty;
 
 import java.io.File;
 import java.io.IOException;
@@ -140,6 +141,12 @@ public class OperaDriverManager extends WebDriverManager {
         return getDefaultBrowserVersion(programFilesEnvs, winBrowserNames,
                 "opera", "/Applications/Opera.app/Contents/MacOS/Opera",
                 "--version", "");
+    }
+
+    @Override
+    protected Optional<String> getDriverVersionFromRepository(
+            Optional<String> version) {
+        return empty();
     }
 
 }

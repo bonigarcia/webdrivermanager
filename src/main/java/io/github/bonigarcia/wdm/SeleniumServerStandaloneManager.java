@@ -88,4 +88,10 @@ public class SeleniumServerStandaloneManager extends WebDriverManager {
         return getDriversFromXml(getDriverUrl(), "//Contents/Key");
     }
 
+    @Override
+    protected Optional<String> getDriverVersionFromRepository(
+            Optional<String> version) {
+        return empty();
+    }
+
 }

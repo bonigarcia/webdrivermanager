@@ -82,4 +82,10 @@ public class VoidDriverManager extends WebDriverManager {
         // Nothing required
     }
 
+    @Override
+    protected Optional<String> getDriverVersionFromRepository(
+            Optional<String> version) {
+        return empty();
+    }
+
 }
