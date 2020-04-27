@@ -575,7 +575,7 @@ public abstract class WebDriverManager {
     }
 
     private void downloadAndExport(String driverVersion) throws IOException {
-        Optional<String> driverInCache = handleCache(driverVersion);
+        Optional<String> driverInCache = searchDriverInCache(driverVersion);
         String versionStr = isUnknown(driverVersion) ? "(latest version)"
                 : driverVersion;
 
@@ -586,7 +586,7 @@ public abstract class WebDriverManager {
                     versionStr);
             exportDriver(driverInCache.get());
         } else {
-            List<URL> candidateUrls = filterCandidateUrls(driverVersion);
+            List<URL> candidateUrls = getCandidateUrls(driverVersion);
             if (candidateUrls.isEmpty()) {
                 Architecture arch = config().getArchitecture();
                 String os = config().getOs();
@@ -597,7 +597,12 @@ public abstract class WebDriverManager {
                 throw new WebDriverManagerException(errorMessage);
             }
 
-            downloadCandidateUrls(candidateUrls);
+            // Download first candidate URL
+            URL url = candidateUrls.iterator().next();
+            String exportValue = downloader.download(url, versionToDownload,
+                    getDriverName());
+            exportDriver(exportValue);
+            downloadedVersion = versionToDownload;
         }
     }
 
@@ -731,17 +736,7 @@ public abstract class WebDriverManager {
         }
     }
 
-    protected void downloadCandidateUrls(List<URL> candidateUrls)
-            throws IOException {
-        URL url = candidateUrls.iterator().next();
-
-        String exportValue = downloader.download(url, versionToDownload,
-                getDriverName());
-        exportDriver(exportValue);
-        downloadedVersion = versionToDownload;
-    }
-
-    protected List<URL> filterCandidateUrls(String driverVersion)
+    protected List<URL> getCandidateUrls(String driverVersion)
             throws IOException {
         List<URL> urls = getDrivers();
         List<URL> candidateUrls;
@@ -809,7 +804,7 @@ public abstract class WebDriverManager {
         return candidateUrls;
     }
 
-    protected Optional<String> handleCache(String driverVersion) {
+    protected Optional<String> searchDriverInCache(String driverVersion) {
         Optional<String> driverInCache = empty();
         boolean getLatest = isUnknown(driverVersion);
         boolean cache = config().isForceCache();
