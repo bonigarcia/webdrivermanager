@@ -70,14 +70,7 @@ public class UrlFilter {
 
         if ((forcedArch || out.size() > 1) && arch != null) {
             for (URL url : list) {
-                if (!url.getFile().contains("x86")
-                        && !url.getFile().contains("64")
-                        && !url.getFile().contains("i686")
-                        && !url.getFile().contains("32")) {
-                    continue;
-                }
-
-                if (!url.getFile().contains(arch.toString())) {
+                if (!arch.matchUrl(url)) {
                     out.remove(url);
                 }
             }

@@ -16,6 +16,13 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+
+import java.net.URL;
+import java.util.List;
+import java.util.stream.Stream;
+
 /**
  * Supported architecture enumeration (32/64 bits).
  *
@@ -23,7 +30,22 @@ package io.github.bonigarcia.wdm;
  * @since 1.0.0
  */
 public enum Architecture {
-    DEFAULT, X32, X64;
+    DEFAULT(emptyList()), X32(asList("i686", "x86")), X64(emptyList());
+
+    List<String> archLabels;
+
+    Architecture(List<String> archLabels) {
+        this.archLabels = archLabels;
+    }
+
+    public Stream<String> archLabelsStream() {
+        return this.archLabels.stream();
+    }
+
+    public boolean matchUrl(URL url) {
+        return archLabelsStream().anyMatch(x -> url.getFile().contains(x))
+                || url.getFile().contains(this.toString());
+    }
 
     @Override
     public String toString() {
