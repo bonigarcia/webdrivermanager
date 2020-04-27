@@ -1241,14 +1241,14 @@ public abstract class WebDriverManager {
     }
 
     protected String getProgramFilesEnv() {
-        return System.getProperty("os.arch").contains("64")
-                ? "PROGRAMFILES(X86)"
-                : "PROGRAMFILES";
+        return System.getProperty("os.arch").contains("64") ? "PROGRAMFILES"
+                : "PROGRAMFILES(X86)";
     }
 
     protected String getOtherProgramFilesEnv() {
-        return System.getProperty("os.arch").contains("64") ? "PROGRAMFILES"
-                : "PROGRAMFILES(X86)";
+        return System.getProperty("os.arch").contains("64")
+                ? "PROGRAMFILES(X86)"
+                : "PROGRAMFILES";
     }
 
     protected URL getDriverUrlCkeckingMirror(URL url) {
