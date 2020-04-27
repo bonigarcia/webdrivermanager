@@ -931,10 +931,6 @@ public abstract class WebDriverManager {
                 }
                 if (url.getFile().contains(driver)) {
                     String currentVersion = getCurrentVersion(url);
-
-                    if (currentVersion.equalsIgnoreCase(driver)) {
-                        continue;
-                    }
                     if (versionToDownload == null) {
                         versionToDownload = currentVersion;
                     }
