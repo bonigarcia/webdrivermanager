@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm.test;
 
+import static io.github.bonigarcia.wdm.OperatingSystem.WIN;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.asList;
 import static org.hamcrest.core.IsEqual.equalTo;
@@ -35,6 +36,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.slf4j.Logger;
 
+import io.github.bonigarcia.wdm.OperatingSystem;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 /**
@@ -60,13 +62,14 @@ public class LatestAndBetaTest {
     @Test
     public void testLatestAndBetaedgedriver() {
         WebDriverManager.getInstance(driverClass).avoidPreferences()
-                .avoidAutoVersion().setup();
+                .avoidAutoVersion().operatingSystem(WIN).setup();
         String edgedriverStable = WebDriverManager.getInstance(driverClass)
                 .getDownloadedVersion();
         log.debug("edgedriver LATEST version: {}", edgedriverStable);
 
         WebDriverManager.getInstance(driverClass).avoidPreferences()
-                .avoidAutoVersion().useBetaVersions().setup();
+                .avoidAutoVersion().useBetaVersions().operatingSystem(WIN)
+                .setup();
         String edgedriverBeta = WebDriverManager.getInstance(driverClass)
                 .getDownloadedVersion();
         log.debug("edgedriver BETA version: {}", edgedriverBeta);
