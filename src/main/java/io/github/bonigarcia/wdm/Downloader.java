@@ -71,9 +71,9 @@ public class Downloader {
         httpClient = webDriverManager.getHttpClient();
     }
 
-    public synchronized String download(URL url, String version,
+    public synchronized String download(URL url, String driverVersion,
             String driverName) throws IOException {
-        File targetFile = getTarget(version, url);
+        File targetFile = getTarget(driverVersion, url);
         Optional<File> binary = checkBinary(driverName, targetFile);
         if (!binary.isPresent()) {
             binary = downloadAndExtract(url, targetFile);

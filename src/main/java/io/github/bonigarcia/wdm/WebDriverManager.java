@@ -478,10 +478,6 @@ public abstract class WebDriverManager {
         }
     }
 
-    protected String getKeyForPreferences() {
-        return getDriverManagerType().name().toLowerCase();
-    }
-
     protected String resolveDriverVersion(String driverVersion) {
         String preferenceKey = getKeyForPreferences();
         Optional<String> browserVersion = empty();
@@ -527,6 +523,37 @@ public abstract class WebDriverManager {
             }
         }
         return driverVersion;
+    }
+
+    protected void downloadAndExport(String driverVersion) throws IOException {
+        Optional<String> driverInCache = searchDriverInCache(driverVersion);
+        String versionStr = isUnknown(driverVersion) ? "(latest version)"
+                : driverVersion;
+
+        if (driverInCache.isPresent() && !config().isOverride()) {
+            storeVersionToDownload(driverVersion);
+            log.debug("Driver {} {} found in cache", getDriverName(),
+                    versionStr);
+            exportDriver(driverInCache.get());
+        } else {
+            List<URL> candidateUrls = getCandidateUrls(driverVersion);
+            if (candidateUrls.isEmpty()) {
+                Architecture arch = config().getArchitecture();
+                String os = config().getOs();
+                String errorMessage = getDriverName() + " " + versionStr
+                        + " for " + os + arch.toString() + " not found in "
+                        + getDriverUrl();
+                log.error(errorMessage);
+                throw new WebDriverManagerException(errorMessage);
+            }
+
+            // Download first candidate URL
+            URL url = candidateUrls.iterator().next();
+            String exportValue = downloader.download(url, versionToDownload,
+                    getDriverName());
+            exportDriver(exportValue);
+        }
+        downloadedVersion = versionToDownload;
     }
 
     protected void storeInPreferences(String preferenceKey,
@@ -579,38 +606,6 @@ public abstract class WebDriverManager {
             log.trace("Version not found in URL {}", url);
         }
         return currentVersion;
-    }
-
-    protected void downloadAndExport(String driverVersion) throws IOException {
-        Optional<String> driverInCache = searchDriverInCache(driverVersion);
-        String versionStr = isUnknown(driverVersion) ? "(latest version)"
-                : driverVersion;
-
-        if (driverInCache.isPresent() && !config().isOverride()) {
-            storeVersionToDownload(driverVersion);
-            downloadedVersion = driverVersion;
-            log.debug("Driver {} {} found in cache", getDriverName(),
-                    versionStr);
-            exportDriver(driverInCache.get());
-        } else {
-            List<URL> candidateUrls = getCandidateUrls(driverVersion);
-            if (candidateUrls.isEmpty()) {
-                Architecture arch = config().getArchitecture();
-                String os = config().getOs();
-                String errorMessage = getDriverName() + " " + versionStr
-                        + " for " + os + arch.toString() + " not found in "
-                        + getDriverUrl();
-                log.error(errorMessage);
-                throw new WebDriverManagerException(errorMessage);
-            }
-
-            // Download first candidate URL
-            URL url = candidateUrls.iterator().next();
-            String exportValue = downloader.download(url, versionToDownload,
-                    getDriverName());
-            exportDriver(exportValue);
-            downloadedVersion = versionToDownload;
-        }
     }
 
     protected Optional<String> detectBrowserVersion() {
@@ -1312,12 +1307,12 @@ public abstract class WebDriverManager {
         log.error("\tWebDriverManager clear-preferences");
     }
 
-    protected void storeVersionToDownload(String version) {
-        if (!isNullOrEmpty(version)) {
-            if (version.startsWith(".")) {
-                version = version.substring(1);
+    protected void storeVersionToDownload(String driverVersion) {
+        if (!isUnknown(driverVersion)) {
+            if (driverVersion.startsWith(".")) {
+                driverVersion = driverVersion.substring(1);
             }
-            versionToDownload = version;
+            versionToDownload = driverVersion;
         }
     }
 
@@ -1353,6 +1348,10 @@ public abstract class WebDriverManager {
 
     protected String getShortDriverName() {
         return getDriverName();
+    }
+
+    protected String getKeyForPreferences() {
+        return getDriverManagerType().name().toLowerCase();
     }
 
     public static void main(String[] args) {
