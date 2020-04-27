@@ -303,7 +303,7 @@ public abstract class WebDriverManager {
                     }
                     if (isUnknown(driverVersion)) {
                         Optional<String> driverVersionFromProperties = getDriverVersionFromProperties(
-                                browserVersion.get());
+                                preferenceKey);
                         if (driverVersionFromProperties.isPresent()) {
                             driverVersion = driverVersionFromProperties.get();
                         }
@@ -312,14 +312,13 @@ public abstract class WebDriverManager {
                                 "Using {} {} (since {} {} is installed in your machine)",
                                 getDriverName(), driverVersion,
                                 getDriverManagerType(), browserVersion.get());
-
-                        if (usePreferences()) {
-                            preferences.putValueInPreferencesIfEmpty(
-                                    getDriverManagerType().getNameInLowerCase(),
-                                    browserVersion.get());
-                            preferences.putValueInPreferencesIfEmpty(
-                                    preferenceKey, driverVersion);
-                        }
+                    }
+                    if (usePreferences()) {
+                        preferences.putValueInPreferencesIfEmpty(
+                                getDriverManagerType().getNameInLowerCase(),
+                                browserVersion.get());
+                        preferences.putValueInPreferencesIfEmpty(preferenceKey,
+                                driverVersion);
                     }
                     if (isUnknown(driverVersion)) {
                         log.debug(
