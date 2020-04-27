@@ -634,9 +634,8 @@ public abstract class WebDriverManager {
     }
 
     private boolean usePreferences() {
-        boolean usePrefs = !config().isAvoidPreferences()
-                && !config().isOverride() && !forcedArch && !forcedOs;
-        return usePrefs;
+        return !config().isAvoidPreferences() && !config().isOverride()
+                && !forcedArch && !forcedOs;
     }
 
     private boolean isUnknown(String driverVersion) {
@@ -950,7 +949,6 @@ public abstract class WebDriverManager {
             } catch (Exception e) {
                 log.trace("There was a problem with URL {} : {}", url,
                         e.getMessage());
-                e.printStackTrace();
                 list.remove(url);
             }
         }
