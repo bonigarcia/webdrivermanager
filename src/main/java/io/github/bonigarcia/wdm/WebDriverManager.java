@@ -580,7 +580,7 @@ public abstract class WebDriverManager {
         return currentVersion;
     }
 
-    private void downloadAndExport(String driverVersion) throws IOException {
+    protected void downloadAndExport(String driverVersion) throws IOException {
         Optional<String> driverInCache = searchDriverInCache(driverVersion);
         String versionStr = isUnknown(driverVersion) ? "(latest version)"
                 : driverVersion;
@@ -612,7 +612,7 @@ public abstract class WebDriverManager {
         }
     }
 
-    private Optional<String> detectBrowserVersion() {
+    protected Optional<String> detectBrowserVersion() {
         if (config().isAvoidAutoVersion()) {
             return empty();
         }
@@ -633,17 +633,17 @@ public abstract class WebDriverManager {
         return browserVersion;
     }
 
-    private boolean usePreferences() {
+    protected boolean usePreferences() {
         return !config().isAvoidPreferences() && !config().isOverride()
                 && !forcedArch && !forcedOs;
     }
 
-    private boolean isUnknown(String driverVersion) {
+    protected boolean isUnknown(String driverVersion) {
         return isNullOrEmpty(driverVersion)
                 || driverVersion.equalsIgnoreCase("latest");
     }
 
-    private Optional<String> getDriverVersionFromProperties(String key) {
+    protected Optional<String> getDriverVersionFromProperties(String key) {
         boolean online = config().getVersionsPropertiesOnlineFirst();
         String onlineMessage = online ? ONLINE : LOCAL;
         log.debug("Getting driver version for {} from {} versions.properties",
@@ -660,7 +660,7 @@ public abstract class WebDriverManager {
         return value == null ? empty() : Optional.of(value);
     }
 
-    private Properties getVersionFromProperties(boolean online) {
+    protected Properties getVersionFromProperties(boolean online) {
         if (versionsProperties != null) {
             log.trace("Already created versions.properties");
             return versionsProperties;
@@ -677,7 +677,7 @@ public abstract class WebDriverManager {
         }
     }
 
-    private InputStream getVersionsInputStream(boolean online)
+    protected InputStream getVersionsInputStream(boolean online)
             throws IOException {
         String onlineMessage = online ? ONLINE : LOCAL;
         log.trace("Reading {} version.properties to find out driver version",
@@ -702,13 +702,13 @@ public abstract class WebDriverManager {
         return inputStream;
     }
 
-    private InputStream getLocalVersionsInputStream() {
+    protected InputStream getLocalVersionsInputStream() {
         InputStream inputStream;
         inputStream = Config.class.getResourceAsStream("/versions.properties");
         return inputStream;
     }
 
-    private InputStream getOnlineVersionsInputStream() throws IOException {
+    protected InputStream getOnlineVersionsInputStream() throws IOException {
         return httpClient
                 .execute(httpClient
                         .createHttpGet(config().getVersionsPropertiesUrl()))
@@ -1043,7 +1043,7 @@ public abstract class WebDriverManager {
         return urls;
     }
 
-    Document loadXML(InputStream inputStream)
+    protected Document loadXML(InputStream inputStream)
             throws SAXException, IOException, ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -1178,7 +1178,7 @@ public abstract class WebDriverManager {
         return empty();
     }
 
-    private String getPosixBrowserPath(String linuxBrowserName,
+    protected String getPosixBrowserPath(String linuxBrowserName,
             String macBrowserName, String browserBinaryPath) {
         if (!isNullOrEmpty(browserBinaryPath)) {
             return browserBinaryPath;
@@ -1187,7 +1187,7 @@ public abstract class WebDriverManager {
         }
     }
 
-    private String getBrowserVersionInWindows(String programFilesEnv,
+    protected String getBrowserVersionInWindows(String programFilesEnv,
             String winBrowserName, String browserBinaryPath) {
         String programFiles = System.getenv(programFilesEnv).replaceAll("\\\\",
                 "\\\\\\\\");
@@ -1259,23 +1259,7 @@ public abstract class WebDriverManager {
         return url;
     }
 
-    public static void main(String[] args) {
-        String validBrowsers = "chrome|firefox|opera|edge|phantomjs|iexplorer|selenium_server_standalone";
-        if (args.length <= 0) {
-            logCliError(validBrowsers);
-        } else {
-            String arg = args[0];
-            if (arg.equalsIgnoreCase("server")) {
-                startServer(args);
-            } else if (arg.equalsIgnoreCase("clear-preferences")) {
-                new Preferences(new Config()).clear();
-            } else {
-                resolveLocal(validBrowsers, arg);
-            }
-        }
-    }
-
-    private static void resolveLocal(String validBrowsers, String arg) {
+    protected static void resolveLocal(String validBrowsers, String arg) {
         log.info("Using WebDriverManager to resolve {}", arg);
         try {
             DriverManagerType driverManagerType = DriverManagerType
@@ -1294,7 +1278,7 @@ public abstract class WebDriverManager {
         }
     }
 
-    private static void startServer(String[] args) {
+    protected static void startServer(String[] args) {
         int port = new Config().getServerPort();
         if (args.length > 1 && isNumeric(args[1])) {
             port = parseInt(args[1]);
@@ -1302,7 +1286,7 @@ public abstract class WebDriverManager {
         new Server(port);
     }
 
-    private static void logCliError(String validBrowsers) {
+    protected static void logCliError(String validBrowsers) {
         log.error("There are 3 options to run WebDriverManager CLI");
         log.error(
                 "1. WebDriverManager used to resolve binary drivers locally:");
@@ -1318,7 +1302,7 @@ public abstract class WebDriverManager {
         log.error("\tWebDriverManager clear-preferences");
     }
 
-    private void storeVersionToDownload(String version) {
+    protected void storeVersionToDownload(String version) {
         if (!isNullOrEmpty(version)) {
             if (version.startsWith(".")) {
                 version = version.substring(1);
@@ -1327,7 +1311,7 @@ public abstract class WebDriverManager {
         }
     }
 
-    private void setConfig(Config config) {
+    protected void setConfig(Config config) {
         this.config = config;
     }
 
@@ -1357,9 +1341,24 @@ public abstract class WebDriverManager {
         return result;
     }
 
-    // Exception required since msedgedriver sometimes is called edgedriver
     protected String getShortDriverName() {
         return getDriverName();
+    }
+
+    public static void main(String[] args) {
+        String validBrowsers = "chrome|firefox|opera|edge|phantomjs|iexplorer|selenium_server_standalone";
+        if (args.length <= 0) {
+            logCliError(validBrowsers);
+        } else {
+            String arg = args[0];
+            if (arg.equalsIgnoreCase("server")) {
+                startServer(args);
+            } else if (arg.equalsIgnoreCase("clear-preferences")) {
+                new Preferences(new Config()).clear();
+            } else {
+                resolveLocal(validBrowsers, arg);
+            }
+        }
     }
 
 }
