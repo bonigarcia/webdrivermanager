@@ -1156,8 +1156,8 @@ public abstract class WebDriverManager {
         if (IS_OS_WINDOWS) {
             String winName = "";
             for (int i = 0; i < programFilesEnvs.length; i++) {
-                winName = winBrowserNames.length > 1 ? winBrowserNames[0]
-                        : winBrowserNames[i];
+                winName = winBrowserNames.length > 1 ? winBrowserNames[i]
+                        : winBrowserNames[0];
                 String browserVersionOutput = getBrowserVersionInWindows(
                         programFilesEnvs[i], winName, browserBinaryPath);
                 if (!isNullOrEmpty(browserVersionOutput)) {
