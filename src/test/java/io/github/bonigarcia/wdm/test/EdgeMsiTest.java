@@ -21,6 +21,7 @@ import static java.lang.invoke.MethodHandles.lookup;
 import static org.junit.Assert.assertTrue;
 import static org.slf4j.LoggerFactory.getLogger;
 
+import io.github.bonigarcia.wdm.OperatingSystem;
 import java.io.File;
 
 import org.junit.Test;
@@ -38,7 +39,7 @@ public class EdgeMsiTest {
 
     @Test
     public void testMsiInWindows() {
-        edgedriver().version("2.10586").setup();
+        edgedriver().version("2.10586").operatingSystem(OperatingSystem.WIN).setup();
         File binary = new File(edgedriver().getBinaryPath());
         log.debug("Edge driver {}", binary);
         assertTrue(binary.getName().endsWith(".exe"));
