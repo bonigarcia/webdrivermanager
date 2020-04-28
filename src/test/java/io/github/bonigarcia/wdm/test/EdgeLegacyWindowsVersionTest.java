@@ -16,11 +16,17 @@
  */
 package io.github.bonigarcia.wdm.test;
 
+import static io.github.bonigarcia.wdm.OperatingSystem.*;
 import static java.lang.invoke.MethodHandles.lookup;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 import static org.hamcrest.Matchers.hasItems;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assume.assumeTrue;
 import static org.slf4j.LoggerFactory.getLogger;
 
+import io.github.bonigarcia.wdm.Config;
+import io.github.bonigarcia.wdm.OperatingSystem;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,15 +41,19 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 3.5.0
  */
-public class EdgeReadVersionTest {
+public class EdgeLegacyWindowsVersionTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
     @Test
     public void edgeVersionsTest() {
-        String[] expectedVersions = { "1.10240", "2.10586", "3.14393",
+        Config config = new Config();
+        config.setOs(WIN.toString());
+
+        String baseVersion = "1.10240";
+        String[] expectedVersions = { baseVersion, "2.10586", "3.14393",
                 "4.15063", "5.16299", "6.17134" };
-        List<String> versions = WebDriverManager.edgedriver().getVersions();
+        List<String> versions = WebDriverManager.edgedriver().version(baseVersion).getVersions();
 
         log.debug("Expected edge versions: {}",
                 Arrays.asList(expectedVersions));
