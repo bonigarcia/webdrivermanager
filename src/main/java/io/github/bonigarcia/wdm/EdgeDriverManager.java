@@ -16,33 +16,51 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static io.github.bonigarcia.wdm.Architecture.X64;
 import static io.github.bonigarcia.wdm.Config.isNullOrEmpty;
 import static io.github.bonigarcia.wdm.DriverManagerType.EDGE;
-import static io.github.bonigarcia.wdm.OperatingSystem.MAC;
 import static io.github.bonigarcia.wdm.Shell.getVersionFromPowerShellOutput;
 import static io.github.bonigarcia.wdm.Shell.runAndWait;
-import static java.util.Collections.sort;
+import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Optional.empty;
 import static org.apache.commons.io.FileUtils.listFiles;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC_OSX;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
-import static org.jsoup.Jsoup.parse;
+import static org.slf4j.LoggerFactory.getLogger;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-
+import java.util.TreeMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathExpressionException;
+import javax.xml.xpath.XPathFactory;
 import org.apache.commons.lang3.StringUtils;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
+import org.jsoup.Jsoup;
 import org.jsoup.select.Elements;
+import org.slf4j.Logger;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  * Manager for Microsoft Edge.
@@ -52,6 +70,15 @@ import org.jsoup.select.Elements;
  */
 public class EdgeDriverManager extends WebDriverManager {
 
+    static final Logger log = getLogger(lookup().lookupClass());
+
+    private static final String BASE_EDGE_URL = "https://msedgewebdriverstorage.blob.core.windows.net/";
+    private static final String URL_EDGE_CHROMIUM_VERSIONS = BASE_EDGE_URL +
+        "edgewebdriver?delimiter=%2F&restype=container&comp=list&timeout=60000";
+    private static final String URL_EDGE_CHROMIUM_LINKS = BASE_EDGE_URL +
+        "edgewebdriver?restype=container&comp=list";
+    private static final String URL_EDGE_LEGACY = "https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/";
+
     @Override
     protected DriverManagerType getDriverManagerType() {
         return EDGE;
@@ -59,7 +86,7 @@ public class EdgeDriverManager extends WebDriverManager {
 
     @Override
     protected String getDriverName() {
-        return "msedgedriver";
+        return "edgedriver";
     }
 
     @Override
@@ -94,71 +121,23 @@ public class EdgeDriverManager extends WebDriverManager {
 
     @Override
     protected List<URL> getDrivers() throws IOException {
-        listVersions = new ArrayList<>();
-        List<URL> urlList = new ArrayList<>();
+        List<URL> linksLegacy;
+        List<URL> linkChromiumBased;
 
-        URL driverUrl = getDriverUrl();
-        log.debug("Reading {} to find out the latest version of Edge driver",
-                driverUrl);
+        linkChromiumBased = getChromiumBasedLinks();
 
-        try (InputStream in = httpClient
-                .execute(httpClient.createHttpGet(driverUrl)).getEntity()
-                .getContent()) {
-            Document doc = parse(in, null, "");
+        Map<String, URL> legacy = getLegacyVersions();
+        linksLegacy = new ArrayList<>(legacy.values());
 
-            Elements downloadLink = doc
-                    .select("ul.driver-downloads li.driver-download > a");
-            Elements versionParagraph = doc.select(
-                    "ul.driver-downloads li.driver-download p.driver-download__meta");
+        List<URL> links = Stream.of(linkChromiumBased, linksLegacy)
+            .flatMap(Collection::stream)
+            .collect(Collectors.toList());
 
-            log.trace("[Original] Download links:\n{}", downloadLink);
-            log.trace("[Original] Version paragraphs:\n{}", versionParagraph);
+        listVersions = new ArrayList<>(legacy.keySet());
+        // normalize the versions removing /
+        getChromiumBasedVersions().forEach(version -> listVersions.add(version.replace("/", StringUtils.EMPTY)));
 
-            // Remove non-necessary paragraphs and links elements
-            Elements versionParagraphClean = new Elements();
-            for (int i = 0; i < versionParagraph.size(); i++) {
-                Element element = versionParagraph.get(i);
-                if (element.text().toLowerCase().startsWith("version")) {
-                    versionParagraphClean.add(element);
-                }
-            }
-
-            log.trace("[Clean] Download links:\n{}", downloadLink);
-            log.trace("[Clean] Version paragraphs:\n{}", versionParagraphClean);
-
-            int shiftLinks = versionParagraphClean.size() - downloadLink.size();
-            log.trace(
-                    "The difference between the size of versions and links is {}",
-                    shiftLinks);
-
-            for (int i = 0; i < versionParagraphClean.size(); i++) {
-                Element paragraph = versionParagraphClean.get(i);
-                String[] version = paragraph.text().split(" ");
-                String v = version[1];
-                listVersions.add(v);
-
-                if (isChromiumBased(v)) {
-                    // Edge driver version 75 and above
-                    int childIndex = 0;
-                    if (config().getOs().equals(MAC.name())) {
-                        childIndex = 2;
-                    } else if (config().getArchitecture() == X64) {
-                        childIndex = 1;
-                    }
-                    urlList.add(
-                            new URL(paragraph.child(childIndex).attr("href")));
-                } else {
-                    // Older versions
-                    if (!v.equalsIgnoreCase("version")) {
-                        urlList.add(new URL(
-                                downloadLink.get(i - shiftLinks).attr("href")));
-                    }
-                }
-            }
-
-            log.trace("Edge driver URL list {}", urlList);
-            return urlList;
-        }
+        return links;
     }
 
     @Override
@@ -166,7 +145,7 @@ public class EdgeDriverManager extends WebDriverManager {
         httpClient = new HttpClient(config());
         try {
             getDrivers();
-            sort(listVersions, new VersionComparator());
+            listVersions.sort(new VersionComparator());
             return listVersions;
         } catch (IOException e) {
             throw new WebDriverManagerException(e);
@@ -257,10 +236,112 @@ public class EdgeDriverManager extends WebDriverManager {
         return empty();
     }
 
+    @Override
+    protected Optional<String> getLatestVersion() {
+        Optional<String> latestVersion = Optional.empty();
+        String latestVersionUrl = MessageFormat
+            .format("{0}/{1}", "https://msedgedriver.azureedge.net/", "LATEST_STABLE");
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new URL(latestVersionUrl).openStream(),
+            StandardCharsets.UTF_16))) {
+            latestVersion = Optional.of(reader.readLine().trim());
+        } catch (IOException e) {
+            log.warn("Error getting the latest version: {}", e.getMessage());
+        }
+        return latestVersion;
+    }
+
     private boolean isChromiumBased(String version) {
         long countDot = version.chars().filter(ch -> ch == '.').count();
         log.trace("Edge driver version {} ({} dots)", version, countDot);
         return countDot > 1;
+    }
+
+    private List<String> getChromiumBasedVersions() {
+        String listVersions = "/EnumerationResults/Blobs/BlobPrefix/Name";
+        NodeList nodeList = returnNodeListFromExpression(listVersions, URL_EDGE_CHROMIUM_VERSIONS);
+
+        int bound = nodeList.getLength();
+
+        return IntStream.range(0, bound).mapToObj(nodeList::item).map(Node::getTextContent)
+            .collect(Collectors.toList());
+    }
+
+    private List<URL> getChromiumBasedLinks() throws IOException {
+        List<URL> links = new ArrayList<>();
+
+        // necessary to no download the wrong version
+        String os = config.getOs().toLowerCase();
+        String architecture = config.getArchitecture().toString();
+
+        String listVersions = "/EnumerationResults/Blobs/Blob/Url";
+        NodeList urlList = returnNodeListFromExpression(listVersions, URL_EDGE_CHROMIUM_LINKS);
+        String chromiumUrls;
+        for (int i = 0; i < urlList.getLength(); i++) {
+            chromiumUrls = urlList.item(i).getTextContent();
+            if (chromiumUrls.contains(os) && chromiumUrls.contains(architecture))
+                links.add(new URL(chromiumUrls));
+        }
+
+        return links;
+    }
+
+    private NodeList returnNodeListFromExpression(String expression, String url) {
+        NodeList nodeList = null;
+        XPath xPath = XPathFactory.newInstance().newXPath();
+
+        XPathExpression xPathExpression;
+        try {
+            xPathExpression = xPath.compile(expression);
+            nodeList = (NodeList) xPathExpression
+                .evaluate(returnURLDocument(url), XPathConstants.NODESET);
+        } catch (XPathExpressionException | ParserConfigurationException | IOException | SAXException e) {
+            log.warn("Error during xpath evaluation: {}", e.getMessage());
+            log.error(e.getMessage());
+        }
+
+        return nodeList;
+    }
+
+    private org.w3c.dom.Document returnURLDocument(String url)
+        throws ParserConfigurationException, IOException, SAXException {
+        DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = builderFactory.newDocumentBuilder();
+        return builder.parse(url);
+    }
+
+    public Map<String, URL> getLegacyVersions() {
+        org.jsoup.nodes.Document document;
+        String cssSelectorLegacySection = "section[id='downloads'] > div[class*='layout'] > div:nth-of-type(2) "
+            + "> ul > li[class='driver-download']";
+        Map<String, URL> versions = new TreeMap<>();
+
+        try {
+            document = Jsoup.connect(URL_EDGE_LEGACY).get();
+            Elements legacyDownloadElementList = document.select(cssSelectorLegacySection);
+
+            String version;
+            URL url;
+            // starting with 1 because the first element is the description
+            int bound = legacyDownloadElementList.size();
+            for (int i = 1; i < bound; i++) {
+                version = returnProperlyLegacyVersion(
+                    legacyDownloadElementList.get(i).getElementsByClass("driver-download__meta").text());
+                url = new URL(legacyDownloadElementList.get(i).getElementsByClass("subtitle").attr("href"));
+                versions.put(version, url);
+            }
+        } catch (IOException e) {
+            log.warn("Error getting the legacy versions: {}", e.getMessage());
+        }
+
+        return versions;
+    }
+
+    private String returnProperlyLegacyVersion(String text) {
+        String regexp = "[0-9]{1}[.]\\d{5}";
+        Matcher matcher = Pattern.compile(regexp).matcher(text);
+
+        return !matcher.find() ? null : matcher.group(0);
     }
 
 }
