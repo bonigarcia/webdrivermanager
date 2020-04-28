@@ -18,6 +18,7 @@ package io.github.bonigarcia.wdm.test;
 
 import static io.github.bonigarcia.wdm.OperatingSystem.MAC;
 
+import io.github.bonigarcia.wdm.Architecture;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.base.VersionTestParent;
 import org.junit.Before;
@@ -37,10 +38,20 @@ public class EdgeMacVersionTest extends VersionTestParent {
     public void setup() {
         browserManager = WebDriverManager.getInstance(EdgeDriver.class);
         os = MAC;
+        architecture = Architecture.X64;
+
+        // latest of each major version
         specificVersions = new String[] {
-            "80.0.361.62", "80.0.361.66", "80.0.361.69",
-            "81.0.416.28", "81.0.416.31", "81.0.416.34",
-            "82.0.456.0", "82.0.457.0", "82.0.458.0"
+            "75.0.139.20",
+            "76.0.183.0",
+            "77.0.235.7",
+            "78.0.277.0",
+            "79.0.313.0",
+            "80.0.361.9",
+            "81.0.410.0",
+            "82.0.459.1",
+            "83.0.478.18",
+            "84.0.498.0"
         };
     }
 }
