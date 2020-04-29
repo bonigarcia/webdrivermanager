@@ -469,6 +469,15 @@ WDM_GITHUBTOKENNAME=<your-token-name>
 WDM_GITHUBTOKENSECRET=<your-token-secret>
 ```
 
+### TravisCI fork builds
+
+If you have a fork and want to build using the same `travis.yml`you have to add some enviroment variables to your TravisCI instance configuration:
+
+- SONARCLOUD_ORGANIZATION = Your sonarcloud user organization
+- SONAR_TOKEN = A user token you create on your sonar account <https://docs.travis-ci.com/user/sonarcloud/>
+
+If you want disable the SonarSource validation add a variable `TRAVIS_PULL_REQUEST` with value true
+
 ### Tons of org.apache.http DEBUG log
 
 WebDriverManager uses [Apache HTTP Client] to download WebDriver binaries from online repositories. Internally, Apache HTTP client writes a lot of logging information using the `DEBUG` level of `org.apache.http` classes. To reduce this amount of logs, the level of this logger might be reduced. For instance, in the case of [Logback], the log configuration file should include the following:
@@ -514,7 +523,7 @@ WebDriverManager (Copyright &copy; 2015-2020) is a project created by [Boni Garc
 [GitHub Repository]: https://github.com/bonigarcia/webdrivermanager
 [Logback]: https://logback.qos.ch/
 [Logo]: http://bonigarcia.github.io/img/webdrivermanager.png
-[npm.taobao.org]: http://npm.taobao.org/mirrors/
+[npm.taobao.org]: http://npm.taobao.org/mirrors/https://docs.travis-ci.com/user/sonarcloud/
 [Selenium WebDriver]: http://docs.seleniumhq.org/projects/webdriver/
 [Selenium-Jupiter]: https://github.com/bonigarcia/selenium-jupiter/
 [Stack Overflow]: https://stackoverflow.com/questions/tagged/webdrivermanager-java
