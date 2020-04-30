@@ -735,15 +735,10 @@ public abstract class WebDriverManager {
                 versionStr, e.getMessage());
         if (!config().isForceCache() && retryCount == 0) {
             config().setForceCache(true);
-            config().setUseMirror(true);
-            retryCount++;
-            log.warn("{} ... trying again using mirror", errorMessage);
-            manage(version);
-        } else if (retryCount == 1) {
             config().setAvoidAutoVersion(true);
             version = "";
             retryCount++;
-            log.warn("{} ... trying again using latest from cache",
+            log.warn("{} ... trying again using latest driver stored in cache",
                     errorMessage);
             manage(version);
         } else {
