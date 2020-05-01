@@ -39,7 +39,7 @@ public class OperaTest extends BrowserTestParent {
 
     @BeforeClass
     public static void setupClass() {
-        WebDriverManager.operadriver().clearPreferences().setup();
+        WebDriverManager.operadriver().clearResolutionCache().setup();
     }
 
     @Before

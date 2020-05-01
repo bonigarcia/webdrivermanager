@@ -31,7 +31,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 3.0.0
  */
-public class PreferencesTest {
+public class ResolutionCacheTest {
 
     @Test
     public void testEmptyTtl() {

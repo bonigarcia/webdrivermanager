@@ -33,7 +33,7 @@ public class ChromeTest extends BrowserTestParent {
 
     @BeforeClass
     public static void setupClass() {
-        WebDriverManager.chromedriver().clearPreferences().setup();
+        WebDriverManager.chromedriver().clearResolutionCache().setup();
     }
 
     @Before

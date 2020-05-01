@@ -141,7 +141,7 @@ public abstract class WebDriverManager {
     protected boolean isSnap;
     protected int retryCount = 0;
     protected Config config = new Config();
-    protected Preferences preferences = new Preferences(config);
+    protected ResolutionCache resolutionCache = new ResolutionCache(config);
     protected UrlFilter urlFilter = new UrlFilter();
     protected Properties versionsProperties;
 
@@ -254,8 +254,8 @@ public abstract class WebDriverManager {
         DriverManagerType driverManagerType = getDriverManagerType();
         if (driverManagerType != null) {
             try {
-                if (config().getClearPreferences()) {
-                    clearPreferences();
+                if (config().getClearingResolutionCache()) {
+                    clearResolutionCache();
                 }
                 String driverVersion = getDriverVersion();
                 manage(driverVersion);
@@ -394,8 +394,8 @@ public abstract class WebDriverManager {
         return instanceMap.get(getDriverManagerType());
     }
 
-    public WebDriverManager avoidPreferences() {
-        config().setAvoidPreferences(true);
+    public WebDriverManager avoidResolutionCache() {
+        config().setAvoidResolutionCache(true);
         return instanceMap.get(getDriverManagerType());
     }
 
@@ -414,8 +414,8 @@ public abstract class WebDriverManager {
         return instanceMap.get(getDriverManagerType());
     }
 
-    public WebDriverManager clearPreferences() {
-        instanceMap.get(getDriverManagerType()).preferences.clear();
+    public WebDriverManager clearResolutionCache() {
+        instanceMap.get(getDriverManagerType()).resolutionCache.clear();
         return instanceMap.get(getDriverManagerType());
     }
 
@@ -491,15 +491,17 @@ public abstract class WebDriverManager {
     }
 
     protected String resolveDriverVersion(String driverVersion) {
-        String preferenceKey = getKeyForPreferences();
+        String preferenceKey = getKeyForResolutionCache();
         Optional<String> browserVersion = empty();
-        browserVersion = getValueFromPreferences(preferenceKey, browserVersion);
+        browserVersion = getValueFromResolutionCache(preferenceKey,
+                browserVersion);
         if (!browserVersion.isPresent()) {
             browserVersion = detectBrowserVersion();
         }
         if (browserVersion.isPresent()) {
-            preferenceKey = getKeyForPreferences() + browserVersion.get();
-            driverVersion = preferences.getValueFromPreferences(preferenceKey);
+            preferenceKey = getKeyForResolutionCache() + browserVersion.get();
+            driverVersion = resolutionCache
+                    .getValueFromResolutionCache(preferenceKey);
 
             Optional<String> optionalDriverVersion = empty();
             if (isUnknown(driverVersion)) {
@@ -522,7 +524,7 @@ public abstract class WebDriverManager {
                         "Using {} {} (since {} {} is installed in your machine)",
                         getDriverName(), driverVersion, getDriverManagerType(),
                         browserVersion.get());
-                storeInPreferences(preferenceKey, driverVersion,
+                storeInResolutionCache(preferenceKey, driverVersion,
                         browserVersion.get());
             }
         }
@@ -567,22 +569,22 @@ public abstract class WebDriverManager {
         }
     }
 
-    protected void storeInPreferences(String preferenceKey,
+    protected void storeInResolutionCache(String preferenceKey,
             String driverVersion, String browserVersion) {
-        if (usePreferences()) {
-            preferences.putValueInPreferencesIfEmpty(getKeyForPreferences(),
-                    browserVersion);
-            preferences.putValueInPreferencesIfEmpty(preferenceKey,
+        if (useResolutionCache()) {
+            resolutionCache.putValueInResolutionCacheIfEmpty(
+                    getKeyForResolutionCache(), browserVersion);
+            resolutionCache.putValueInResolutionCacheIfEmpty(preferenceKey,
                     driverVersion);
         }
     }
 
-    protected Optional<String> getValueFromPreferences(String preferenceKey,
+    protected Optional<String> getValueFromResolutionCache(String preferenceKey,
             Optional<String> browserVersion) {
-        if (usePreferences()
-                && preferences.checkKeyInPreferences(preferenceKey)) {
-            browserVersion = Optional
-                    .of(preferences.getValueFromPreferences(preferenceKey));
+        if (useResolutionCache()
+                && resolutionCache.checkKeyInResolutionCache(preferenceKey)) {
+            browserVersion = Optional.of(
+                    resolutionCache.getValueFromResolutionCache(preferenceKey));
         }
         return browserVersion;
     }
@@ -627,10 +629,10 @@ public abstract class WebDriverManager {
         String driverManagerTypeLowerCase = getDriverManagerType().name()
                 .toLowerCase();
         Optional<String> browserVersion;
-        if (usePreferences() && preferences
-                .checkKeyInPreferences(driverManagerTypeLowerCase)) {
-            browserVersion = Optional.of(preferences
-                    .getValueFromPreferences(driverManagerTypeLowerCase));
+        if (useResolutionCache() && resolutionCache
+                .checkKeyInResolutionCache(driverManagerTypeLowerCase)) {
+            browserVersion = Optional.of(resolutionCache
+                    .getValueFromResolutionCache(driverManagerTypeLowerCase));
 
             log.trace("Detected {} version {}", getDriverManagerType(),
                     browserVersion);
@@ -640,8 +642,8 @@ public abstract class WebDriverManager {
         return browserVersion;
     }
 
-    protected boolean usePreferences() {
-        return !config().isAvoidPreferences() && !config().isOverride()
+    protected boolean useResolutionCache() {
+        return !config().isAvoidingResolutionCache() && !config().isOverride()
                 && !forcedArch && !forcedOs;
     }
 
@@ -1311,8 +1313,8 @@ public abstract class WebDriverManager {
         log.error("\t(where default port is 4041)");
 
         log.error(
-                "3. To clear previously resolved driver versions (as Java preferences):");
-        log.error("\tWebDriverManager clear-preferences");
+                "3. To clear resolution cache (i.e. previously resolved driver versions):");
+        log.error("\tWebDriverManager clear-resolution-cache");
     }
 
     protected void storeVersionToDownload(String driverVersion) {
@@ -1358,7 +1360,7 @@ public abstract class WebDriverManager {
         return getDriverName();
     }
 
-    protected String getKeyForPreferences() {
+    protected String getKeyForResolutionCache() {
         return getDriverManagerType().name().toLowerCase();
     }
 
@@ -1374,8 +1376,8 @@ public abstract class WebDriverManager {
             String arg = args[0];
             if (arg.equalsIgnoreCase("server")) {
                 startServer(args);
-            } else if (arg.equalsIgnoreCase("clear-preferences")) {
-                new Preferences(new Config()).clear();
+            } else if (arg.equalsIgnoreCase("clear-resolution-cache")) {
+                new ResolutionCache(new Config()).clear();
             } else {
                 resolveLocal(validBrowsers, arg);
             }

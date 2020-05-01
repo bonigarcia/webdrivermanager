@@ -69,15 +69,15 @@ public class Config {
             "wdm.avoidAutoVersion", Boolean.class);
     ConfigKey<Boolean> avoidAutoReset = new ConfigKey<>("wdm.avoidAutoReset",
             Boolean.class);
-    ConfigKey<Boolean> avoidPreferences = new ConfigKey<>(
-            "wdm.avoidPreferences", Boolean.class);
+    ConfigKey<Boolean> avoidResolutionCache = new ConfigKey<>(
+            "wdm.avoidResolutionCache", Boolean.class);
     ConfigKey<Integer> timeout = new ConfigKey<>("wdm.timeout", Integer.class);
     ConfigKey<Boolean> versionsPropertiesOnlineFirst = new ConfigKey<>(
             "wdm.versionsPropertiesOnlineFirst", Boolean.class);
     ConfigKey<URL> versionsPropertiesUrl = new ConfigKey<>(
             "wdm.versionsPropertiesUrl", URL.class);
-    ConfigKey<Boolean> clearPreferences = new ConfigKey<>(
-            "wdm.clearPreferences", Boolean.class);
+    ConfigKey<Boolean> clearResolutionCache = new ConfigKey<>(
+            "wdm.clearResolutionCache", Boolean.class);
 
     ConfigKey<String> architecture = new ConfigKey<>("wdm.architecture",
             String.class, defaultArchitecture());
@@ -378,12 +378,12 @@ public class Config {
         return this;
     }
 
-    public boolean isAvoidPreferences() {
-        return resolve(avoidPreferences);
+    public boolean isAvoidingResolutionCache() {
+        return resolve(avoidResolutionCache);
     }
 
-    public Config setAvoidPreferences(boolean value) {
-        this.avoidPreferences.setValue(value);
+    public Config setAvoidResolutionCache(boolean value) {
+        this.avoidResolutionCache.setValue(value);
         return this;
     }
 
@@ -414,12 +414,12 @@ public class Config {
         return this;
     }
 
-    public boolean getClearPreferences() {
-        return resolve(clearPreferences);
+    public boolean getClearingResolutionCache() {
+        return resolve(clearResolutionCache);
     }
 
-    public Config setClearPreferences(Boolean value) {
-        this.clearPreferences.setValue(value);
+    public Config setClearResolutionCache(Boolean value) {
+        this.clearResolutionCache.setValue(value);
         return this;
     }
 
