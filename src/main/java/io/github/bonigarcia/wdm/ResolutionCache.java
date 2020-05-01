@@ -18,12 +18,21 @@ package io.github.bonigarcia.wdm;
 
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static java.util.prefs.Preferences.userNodeForPackage;
 import static org.slf4j.LoggerFactory.getLogger;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
-import java.util.prefs.BackingStoreException;
+import java.util.Enumeration;
+import java.util.Properties;
+import java.util.TreeSet;
 
 import org.slf4j.Logger;
 
@@ -38,58 +47,124 @@ public class ResolutionCache {
     final Logger log = getLogger(lookup().lookupClass());
 
     static final String TTL = "-ttl";
+    static final String RESOLUTION_CACHE_INFO = "WebDriverManager Resolution Cache (relationship between browsers and drivers versions previously resolved)";
 
-    java.util.prefs.Preferences prefs = userNodeForPackage(
-            WebDriverManager.class);
-    SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    Properties props = new Properties() {
+        private static final long serialVersionUID = 3734950329657085291L;
+
+        @Override
+        public synchronized Enumeration<Object> keys() {
+            return Collections.enumeration(new TreeSet<Object>(super.keySet()));
+        }
+    };
+
+    SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss dd/MM/yyyy z");
     Config config;
+    File resolutionCacheFile;
 
     public ResolutionCache(Config config) {
         this.config = config;
+        this.resolutionCacheFile = new File(config.getTargetPath(),
+                config.getResolutionCache());
+        InputStream fis = null;
+        try {
+            if (!resolutionCacheFile.exists()) {
+                resolutionCacheFile.createNewFile();
+            }
+            fis = new FileInputStream(resolutionCacheFile);
+            props.load(fis);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new WebDriverManagerException(
+                    "Exception reading resolution cache as a properties file",
+                    e);
+        } finally {
+            if (fis != null) {
+                try {
+                    fis.close();
+                } catch (IOException e) {
+                    log.warn(
+                            "Exception closing resolution cache as a properties file {}",
+                            e.getCause());
+                }
+            }
+        }
     }
 
     public String getValueFromResolutionCache(String key) {
-        return prefs.get(key, null);
+        return props.getProperty(key, null);
     }
 
-    private long getExpirationTimeFromResolutionCache(String key) {
-        return prefs.getLong(getExpirationKey(key), 0);
+    private Date getExpirationDateFromResolutionCache(String key) {
+        Date result = null;
+        try {
+            result = dateFormat.parse(props.getProperty(getExpirationKey(key)));
+            return result;
+        } catch (ParseException e) {
+            log.warn("Exception parsing date ({}) from resolution cache {}",
+                    key, e.getMessage());
+        }
+        return result;
     }
 
     public void putValueInResolutionCacheIfEmpty(String key, String value) {
         if (getValueFromResolutionCache(key) == null) {
-            prefs.put(key, value);
-            long expirationTime = new Date().getTime()
-                    + SECONDS.toMillis(config.getTtl());
-            prefs.putLong(getExpirationKey(key), expirationTime);
+            props.put(key, value);
+
+            long now = new Date().getTime();
+            Date expirationDate = new Date(
+                    now + SECONDS.toMillis(config.getTtl()));
+            String expirationDateStr = formatDate(expirationDate);
+            props.put(getExpirationKey(key), expirationDateStr);
             if (log.isDebugEnabled()) {
                 log.debug("Storing resolution {}={} in cache (valid until {})",
-                        key, value, formatTime(expirationTime));
+                        key, value, expirationDateStr);
+            }
+            storeProperties();
+        }
+    }
+
+    private void storeProperties() {
+        OutputStream fos = null;
+        try {
+            fos = new FileOutputStream(resolutionCacheFile);
+            props.store(fos, RESOLUTION_CACHE_INFO);
+        } catch (Exception e) {
+            log.warn(
+                    "Exception writing resolution cache as a properties file {}",
+                    e.getClass().getName());
+            e.printStackTrace();
+        } finally {
+            if (fos != null) {
+                try {
+                    fos.close();
+                } catch (IOException e) {
+                    log.warn(
+                            "Exception closing resolution cache as a properties file {}",
+                            e.getCause());
+                }
             }
         }
     }
 
     private void clearFromResolutionCache(String key) {
-        prefs.remove(key);
-        prefs.remove(getExpirationKey(key));
+        props.remove(key);
+        props.remove(getExpirationKey(key));
     }
 
     public void clear() {
-        try {
-            log.info("Clearing WebDriverManager resolution cache");
-            prefs.clear();
-        } catch (BackingStoreException e) {
-            log.warn("Exception clearing resolution cache", e);
-        }
+        log.info("Clearing WebDriverManager resolution cache");
+        props.clear();
+        storeProperties();
     }
 
     private boolean checkValidity(String key, String value,
-            long expirationTime) {
+            Date expirationDate) {
         long now = new Date().getTime();
+        long expirationTime = expirationDate.getTime();
         boolean isValid = value != null && expirationTime != 0
                 && expirationTime > now;
         if (!isValid) {
-            String expirationDate = formatTime(expirationTime);
             log.debug("Removing resolution {}={} from cache (expired on {})",
                     key, value, expirationDate);
             clearFromResolutionCache(key);
@@ -97,8 +172,8 @@ public class ResolutionCache {
         return isValid;
     }
 
-    private String formatTime(long time) {
-        return dateFormat.format(new Date(time));
+    private String formatDate(Date date) {
+        return dateFormat.format(date);
     }
 
     private String getExpirationKey(String key) {
@@ -110,13 +185,12 @@ public class ResolutionCache {
         boolean valueInResolutionCache = valueFromResolutionCache != null
                 && !valueFromResolutionCache.isEmpty();
         if (valueInResolutionCache) {
-            long expirationTime = getExpirationTimeFromResolutionCache(key);
-            String expirationDate = formatTime(expirationTime);
+            Date expirationDate = getExpirationDateFromResolutionCache(key);
             valueInResolutionCache &= checkValidity(key,
-                    valueFromResolutionCache, expirationTime);
+                    valueFromResolutionCache, expirationDate);
             if (valueInResolutionCache) {
                 log.debug("Resolution {}={} in cache (valid until {})", key,
-                        valueFromResolutionCache, expirationDate);
+                        valueFromResolutionCache, formatDate(expirationDate));
             }
         }
         return valueInResolutionCache;

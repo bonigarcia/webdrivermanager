@@ -162,6 +162,8 @@ public class Config {
     ConfigKey<String> binaryPath = new ConfigKey<>("wdm.binaryPath",
             String.class);
     ConfigKey<Integer> ttl = new ConfigKey<>("wdm.ttl", Integer.class);
+    ConfigKey<String> resolutionCache = new ConfigKey<>("wdm.resolutionCache",
+            String.class);
 
     private <T> T resolve(ConfigKey<T> configKey) {
         String name = configKey.getName();
@@ -291,9 +293,12 @@ public class Config {
 
         if (resolved != null) {
             path = resolved;
-            // Partial support for Bash tilde expansion: http://www.gnu.org/software/bash/manual/html_node/Tilde-Expansion.html
+            // Partial support for Bash tilde expansion:
+            // http://www.gnu.org/software/bash/manual/html_node/Tilde-Expansion.html
             if (path.startsWith(HOME + '/')) {
-                path = Paths.get(System.getProperty("user.home"), path.substring(1)).toString();
+                path = Paths
+                        .get(System.getProperty("user.home"), path.substring(1))
+                        .toString();
             } else if (path.equals(".")) {
                 path = Paths.get("").toAbsolutePath().toString();
             }
@@ -540,6 +545,15 @@ public class Config {
 
     public Config setTtl(int value) {
         this.ttl.setValue(value);
+        return this;
+    }
+
+    public String getResolutionCache() {
+        return resolve(resolutionCache);
+    }
+
+    public Config setResolutionCache(String value) {
+        this.resolutionCache.setValue(value);
         return this;
     }
 

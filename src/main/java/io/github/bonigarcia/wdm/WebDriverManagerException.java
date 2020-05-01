@@ -34,4 +34,8 @@ public class WebDriverManagerException extends RuntimeException {
         super(cause);
     }
 
+    public WebDriverManagerException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
 }
