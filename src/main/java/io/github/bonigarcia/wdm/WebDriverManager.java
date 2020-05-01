@@ -792,7 +792,7 @@ public abstract class WebDriverManager {
             continueSearchingVersion = candidateUrls.isEmpty() && getLatest;
             if (continueSearchingVersion) {
                 log.info(
-                        "No binary found for {} {} ... seeking another version",
+                        "No proper driver found for {} {} ... seeking another version",
                         getDriverName(), versionToDownload);
                 urls = removeFromList(urls, versionToDownload);
                 versionToDownload = null;
