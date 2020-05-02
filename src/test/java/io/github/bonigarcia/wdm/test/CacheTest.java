@@ -37,6 +37,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
+import io.github.bonigarcia.wdm.Downloader;
 import io.github.bonigarcia.wdm.DriverManagerType;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
@@ -64,8 +65,8 @@ public class CacheTest {
     @Before
     @After
     public void cleanCache() throws IOException {
-        String cachePath = WebDriverManager.globalConfig().getTargetPath();
-        cleanDirectory(new File(cachePath));
+        cleanDirectory(
+                new File(new Downloader(driverManagerType).getTargetPath()));
     }
 
     @Test
