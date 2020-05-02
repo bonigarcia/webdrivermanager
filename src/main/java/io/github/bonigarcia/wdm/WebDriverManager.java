@@ -479,11 +479,12 @@ public abstract class WebDriverManager {
             }
 
             Optional<String> driverInCache = getDriverFromCache(driverVersion);
+            storeVersionToDownload(driverVersion);
+
             String exportValue;
             if (driverInCache.isPresent() && !config().isForceDownload()) {
                 log.debug("Driver {} {} found in cache", getDriverName(),
                         getDriverVersionLabel(driverVersion));
-                storeVersionToDownload(driverVersion);
                 exportValue = driverInCache.get();
             } else {
                 exportValue = download(driverVersion);
@@ -657,8 +658,8 @@ public abstract class WebDriverManager {
     }
 
     protected boolean useResolutionCache() {
-        return !config().isAvoidingResolutionCache() && !config().isForceDownload()
-                && !forcedArch && !forcedOs;
+        return !config().isAvoidingResolutionCache()
+                && !config().isForceDownload() && !forcedArch && !forcedOs;
     }
 
     protected boolean isUnknown(String driverVersion) {
