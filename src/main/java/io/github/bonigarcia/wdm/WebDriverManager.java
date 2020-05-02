@@ -76,6 +76,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.jsoup.Jsoup;
@@ -505,7 +506,9 @@ public abstract class WebDriverManager {
     protected String resolveDriverVersion(String driverVersion) {
         String preferenceKey = getKeyForResolutionCache();
         Optional<String> optionalBrowserVersion = Optional
-                .ofNullable(getBrowserVersion());
+                .ofNullable(getBrowserVersion())
+                .filter(StringUtils::isNotEmpty);
+
         if (!optionalBrowserVersion.isPresent()) {
             optionalBrowserVersion = getValueFromResolutionCache(preferenceKey,
                     optionalBrowserVersion);
