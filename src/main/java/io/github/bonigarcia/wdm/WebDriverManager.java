@@ -997,7 +997,7 @@ public abstract class WebDriverManager {
      * https://bitbucket.org/ mirrors.
      */
     protected List<URL> getDriversFromMirror(URL driverUrl) throws IOException {
-        if (mirrorLog) {
+        if (!mirrorLog) {
             log.debug("Crawling driver list from mirror {}", driverUrl);
             mirrorLog = true;
         } else {
