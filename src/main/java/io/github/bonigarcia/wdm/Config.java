@@ -149,6 +149,8 @@ public class Config {
     ConfigKey<URL> phantomjsDriverMirrorUrl = new ConfigKey<>(
             "wdm.phantomjsDriverMirrorUrl", URL.class);
 
+    ConfigKey<String> chromiumDriverVersion = new ConfigKey<>(
+            "wdm.chromiumDriverVersion", String.class);
     ConfigKey<String> chromiumDriverSnapPath = new ConfigKey<>(
             "wdm.chromiumDriverSnapPath", String.class);
 
@@ -761,6 +763,15 @@ public class Config {
 
     public Config setPhantomjsDriverMirrorUrl(URL value) {
         this.phantomjsDriverMirrorUrl.setValue(value);
+        return this;
+    }
+
+    public String getChromiumDriverVersion() {
+        return resolve(chromiumDriverVersion);
+    }
+
+    public Config setChromiumDriverVersion(String value) {
+        this.chromiumDriverVersion.setValue(value);
         return this;
     }
 
