@@ -34,7 +34,7 @@ import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 import org.slf4j.Logger;
 
-import io.github.bonigarcia.wdm.VoidDriverManager;
+import io.github.bonigarcia.wdm.CacheFilter;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 /**
@@ -61,17 +61,13 @@ public class VersionFilterTest {
 
     @Test
     public void testFilterCacheBy() {
-        new VoidDriverManager() {
-            public WebDriverManager callFilterCacheBy(List<File> input,
-                    String key) {
-                List<File> filteredList = filterCacheBy(input, key, true);
-                log.debug("Version {} -- Output {}", version, filteredList);
-                assertTrue(filteredList.size() == expectedVersions);
-                return this;
-            }
-        }.callFilterCacheBy(getInputFileList(), version);
+        String cachePath = WebDriverManager.globalConfig().getCachePath();
+        CacheFilter cacheFilter = new CacheFilter(cachePath);
+        List<File> filteredList = cacheFilter.filterCacheBy(getInputFileList(),
+                version, true);
 
-        assertTrue(true);
+        log.debug("Version {} -- Output {}", version, filteredList);
+        assertTrue(filteredList.size() == expectedVersions);
     }
 
     private List<File> getInputFileList() {
