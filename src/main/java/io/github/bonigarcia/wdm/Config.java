@@ -53,8 +53,6 @@ public class Config {
 
     ConfigKey<String> cachePath = new ConfigKey<>("wdm.cachePath",
             String.class);
-    ConfigKey<Boolean> forceCache = new ConfigKey<>("wdm.forceCache",
-            Boolean.class);
     ConfigKey<Boolean> override = new ConfigKey<>("wdm.override",
             Boolean.class);
     ConfigKey<Boolean> useMirror = new ConfigKey<>("wdm.useMirror",
@@ -320,15 +318,6 @@ public class Config {
 
     public Config setCachePath(String value) {
         this.cachePath.setValue(value);
-        return this;
-    }
-
-    public boolean isForceCache() {
-        return resolve(forceCache);
-    }
-
-    public Config setForceCache(boolean value) {
-        this.forceCache.setValue(value);
         return this;
     }
 

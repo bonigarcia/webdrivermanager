@@ -304,11 +304,6 @@ public abstract class WebDriverManager {
         return instanceMap.get(getDriverManagerType());
     }
 
-    public WebDriverManager forceCache() {
-        config().setForceCache(true);
-        return instanceMap.get(getDriverManagerType());
-    }
-
     public WebDriverManager forceDownload() {
         config().setOverride(true);
         return instanceMap.get(getDriverManagerType());
@@ -484,7 +479,7 @@ public abstract class WebDriverManager {
                 driverVersion = resolveDriverVersion(driverVersion);
             }
 
-            Optional<String> driverInCache = searchDriverInCache(driverVersion);
+            Optional<String> driverInCache = getDriverFromCache(driverVersion);
             String exportValue;
             if (driverInCache.isPresent() && !config().isOverride()) {
                 log.debug("Driver {} {} found in cache", getDriverName(),
@@ -754,8 +749,7 @@ public abstract class WebDriverManager {
         String errorMessage = String.format(
                 "There was an error managing %s %s (%s)", getDriverName(),
                 driverVersionStr, e.getMessage());
-        if (!config().isForceCache() && retryCount == 0) {
-            config().setForceCache(true);
+        if (retryCount == 0) {
             config().setAvoidAutoVersion(true);
             driverVersion = "";
             setBrowserVersion("");
@@ -846,55 +840,46 @@ public abstract class WebDriverManager {
         return candidateUrls;
     }
 
-    protected Optional<String> searchDriverInCache(String driverVersion) {
-        Optional<String> driverInCache = empty();
-        boolean getLatest = isUnknown(driverVersion);
-        boolean cache = config().isForceCache();
-
-        if (cache || !getLatest) {
-            driverInCache = getDriverFromCache(driverVersion);
-        }
-        storeVersionToDownload(driverVersion);
-        return driverInCache;
-    }
-
     protected Optional<String> getDriverFromCache(String driverVersion) {
-        log.trace("Checking if {} exists in cache", getDriverName());
-        Architecture arch = config().getArchitecture();
-        String os = config().getOs();
-        List<File> filesInCache = getFilesInCache();
-        if (!filesInCache.isEmpty()) {
-            // Filter by name
-            filesInCache = filterCacheBy(filesInCache, getDriverName(), false);
-
-            // Filter by version
-            filesInCache = filterCacheBy(filesInCache, driverVersion, true);
-
-            // Filter by OS
-            filesInCache = filterCacheBy(filesInCache, os, false);
-
-            if (filesInCache.size() == 1) {
-                return Optional.of(filesInCache.get(0).toString());
-            }
-
-            // Filter by arch
-            if (IS_OS_WINDOWS && (getDriverManagerType() == CHROME
-                    || getDriverManagerType() == CHROMIUM)) {
-                log.trace(
-                        "Avoid filtering for architecture {} with {} in Windows",
-                        arch, getDriverName());
-            } else {
-                filesInCache = filterCacheBy(filesInCache, arch.toString(),
-                        false);
-            }
-
+        if (!isUnknown(driverVersion)) {
+            log.trace("Checking if {} exists in cache", getDriverName());
+            Architecture arch = config().getArchitecture();
+            String os = config().getOs();
+            List<File> filesInCache = getFilesInCache();
             if (!filesInCache.isEmpty()) {
-                return Optional.of(
-                        filesInCache.get(filesInCache.size() - 1).toString());
-            }
-        }
+                // Filter by name
+                filesInCache = filterCacheBy(filesInCache, getDriverName(),
+                        false);
 
-        log.trace("{} not found in cache", getDriverName());
+                // Filter by version
+                filesInCache = filterCacheBy(filesInCache, driverVersion, true);
+
+                // Filter by OS
+                filesInCache = filterCacheBy(filesInCache, os, false);
+
+                if (filesInCache.size() == 1) {
+                    return Optional.of(filesInCache.get(0).toString());
+                }
+
+                // Filter by arch
+                if (IS_OS_WINDOWS && (getDriverManagerType() == CHROME
+                        || getDriverManagerType() == CHROMIUM)) {
+                    log.trace(
+                            "Avoid filtering for architecture {} with {} in Windows",
+                            arch, getDriverName());
+                } else {
+                    filesInCache = filterCacheBy(filesInCache, arch.toString(),
+                            false);
+                }
+
+                if (!filesInCache.isEmpty()) {
+                    return Optional.of(filesInCache.get(filesInCache.size() - 1)
+                            .toString());
+                }
+            }
+
+            log.trace("{} not found in cache", getDriverName());
+        }
         return empty();
     }
 
