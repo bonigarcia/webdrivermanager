@@ -1232,16 +1232,16 @@ public abstract class WebDriverManager {
 
     protected Optional<String> getBrowserVersionFromWinRegistry(String key,
             String value) {
-        Optional<String> browserVersion = empty();
+        Optional<String> browserVersionFromRegistry = empty();
         String regQueryResult = Shell.runAndWait("REG", "QUERY", key, "/v",
                 value);
         int i = regQueryResult.indexOf(REG_SZ);
         int j = regQueryResult.indexOf('.', i);
         if (i != -1 && j != -1) {
-            browserVersion = Optional.of(
+            browserVersionFromRegistry = Optional.of(
                     regQueryResult.substring(i + REG_SZ.length(), j).trim());
         }
-        return browserVersion;
+        return browserVersionFromRegistry;
     }
 
     protected File findFileLocation(String filename) {
