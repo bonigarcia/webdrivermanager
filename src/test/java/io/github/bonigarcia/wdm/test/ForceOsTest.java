@@ -43,6 +43,7 @@ import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.Downloader;
 import io.github.bonigarcia.wdm.OperatingSystem;
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 /**
  * Test for ignore versions.
@@ -68,12 +69,17 @@ public class ForceOsTest {
     @Before
     public void setup() throws IOException {
         initMocks(this);
-        cleanDirectory(new File(downloader.getTargetPath()));
+        cleanCache();
+    }
+
+    private void cleanCache() throws IOException {
+        String cachePath = WebDriverManager.globalConfig().getTargetPath();
+        cleanDirectory(new File(cachePath));
     }
 
     @After
     public void teardown() throws IOException {
-        cleanDirectory(new File(downloader.getTargetPath()));
+        cleanCache();
     }
 
     @Test

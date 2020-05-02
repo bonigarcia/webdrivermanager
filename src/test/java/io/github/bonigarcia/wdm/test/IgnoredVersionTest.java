@@ -37,6 +37,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.Downloader;
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 /**
  * Test for ignore versions.
@@ -54,7 +55,8 @@ public class IgnoredVersionTest {
     @Before
     @After
     public void cleanCache() throws IOException {
-        cleanDirectory(new File(downloader.getTargetPath()));
+        String cachePath = WebDriverManager.globalConfig().getTargetPath();
+        cleanDirectory(new File(cachePath));
     }
 
     @Test

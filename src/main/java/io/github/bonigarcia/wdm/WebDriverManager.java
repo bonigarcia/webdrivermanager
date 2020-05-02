@@ -893,7 +893,7 @@ public abstract class WebDriverManager {
 
     protected List<File> getFilesInCache() {
         List<File> listFiles = (List<File>) listFiles(
-                new File(downloader.getTargetPath()), null, true);
+                new File(config.getTargetPath()), null, true);
         sort(listFiles);
         return listFiles;
     }

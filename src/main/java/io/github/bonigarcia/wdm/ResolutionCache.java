@@ -64,6 +64,13 @@ public class ResolutionCache {
 
     public ResolutionCache(Config config) {
         this.config = config;
+
+        // Create cache folder if not exits
+        File cachePath = new File(config.getTargetPath());
+        if (!cachePath.exists()) {
+            cachePath.mkdirs();
+        }
+
         this.resolutionCacheFile = new File(config.getTargetPath(),
                 config.getResolutionCache());
         InputStream fis = null;

@@ -97,8 +97,9 @@ public class Downloader {
         String folder = zip.substring(0, iLast).replace(".zip", "")
                 .replace(".tar.bz2", "").replace(".tar.gz", "")
                 .replace(".exe", "").replace("_", separator);
-        String path = config.isAvoidOutputTree() ? getTargetPath() + zip
-                : getTargetPath() + folder + separator + version + zip;
+        String cachePath = config.getTargetPath();
+        String path = config.isAvoidOutputTree() ? cachePath + zip
+                : cachePath + folder + separator + version + zip;
         String target = WebDriverManager.getInstance(driverManagerType)
                 .preDownload(path, version);
 
@@ -109,15 +110,7 @@ public class Downloader {
     }
 
     public String getTargetPath() {
-        String targetPath = config.getTargetPath();
-        log.trace("Target path {}", targetPath);
-
-        // Create repository folder if not exits
-        File repository = new File(targetPath);
-        if (!repository.exists()) {
-            repository.mkdirs();
-        }
-        return targetPath;
+        return config.getTargetPath();
     }
 
     private Optional<File> downloadAndExtract(URL url, File targetFile)
