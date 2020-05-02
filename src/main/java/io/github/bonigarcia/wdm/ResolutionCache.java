@@ -76,9 +76,11 @@ public class ResolutionCache {
         InputStream fis = null;
         try {
             if (!resolutionCacheFile.exists()) {
-                log.debug("Creating new resolution cache file at {}",
-                        resolutionCacheFile);
-                resolutionCacheFile.createNewFile();
+                boolean createNewFile = resolutionCacheFile.createNewFile();
+                if (createNewFile) {
+                    log.debug("Created new resolution cache file at {}",
+                            resolutionCacheFile);
+                }
             }
             fis = new FileInputStream(resolutionCacheFile);
             props.load(fis);
@@ -93,7 +95,7 @@ public class ResolutionCache {
                 } catch (IOException e) {
                     log.warn(
                             "Exception closing resolution cache as a properties file {}",
-                            e.getCause());
+                            e.getMessage());
                 }
             }
         }
@@ -148,7 +150,7 @@ public class ResolutionCache {
                 } catch (IOException e) {
                     log.warn(
                             "Exception closing resolution cache as a properties file {}",
-                            e.getCause());
+                            e.getMessage());
                 }
             }
         }
@@ -180,7 +182,7 @@ public class ResolutionCache {
     }
 
     private String formatDate(Date date) {
-        return dateFormat.format(date);
+        return date != null ? dateFormat.format(date) : "";
     }
 
     private String getExpirationKey(String key) {
