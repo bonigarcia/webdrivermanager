@@ -51,7 +51,7 @@ public class Config {
     ConfigKey<String> properties = new ConfigKey<>("wdm.properties",
             String.class, "webdrivermanager.properties");
 
-    ConfigKey<String> targetPath = new ConfigKey<>("wdm.targetPath",
+    ConfigKey<String> cachePath = new ConfigKey<>("wdm.cachePath",
             String.class);
     ConfigKey<Boolean> forceCache = new ConfigKey<>("wdm.forceCache",
             Boolean.class);
@@ -287,8 +287,8 @@ public class Config {
         return this;
     }
 
-    public String getTargetPath() {
-        String resolved = resolve(targetPath);
+    public String getCachePath() {
+        String resolved = resolve(cachePath);
         String path = null;
 
         if (resolved != null) {
@@ -306,8 +306,8 @@ public class Config {
         return path;
     }
 
-    public Config setTargetPath(String value) {
-        this.targetPath.setValue(value);
+    public Config setCachePath(String value) {
+        this.cachePath.setValue(value);
         return this;
     }
 

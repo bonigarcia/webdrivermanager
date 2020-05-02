@@ -374,8 +374,8 @@ public abstract class WebDriverManager {
         return instanceMap.get(getDriverManagerType());
     }
 
-    public WebDriverManager targetPath(String targetPath) {
-        config().setTargetPath(targetPath);
+    public WebDriverManager cachePath(String cachePath) {
+        config().setCachePath(cachePath);
         return instanceMap.get(getDriverManagerType());
     }
 
@@ -452,12 +452,12 @@ public abstract class WebDriverManager {
     }
 
     public void clearCache() {
-        String targetPath = config().getTargetPath();
+        String cachePath = config().getCachePath();
         try {
-            log.debug("Clearing cache at {}", targetPath);
-            deleteDirectory(new File(targetPath));
+            log.debug("Clearing cache at {}", cachePath);
+            deleteDirectory(new File(cachePath));
         } catch (Exception e) {
-            log.warn("Exception deleting cache at {}", targetPath, e);
+            log.warn("Exception deleting cache at {}", cachePath, e);
         }
     }
 
@@ -893,7 +893,7 @@ public abstract class WebDriverManager {
 
     protected List<File> getFilesInCache() {
         List<File> listFiles = (List<File>) listFiles(
-                new File(config.getTargetPath()), null, true);
+                new File(config.getCachePath()), null, true);
         sort(listFiles);
         return listFiles;
     }
@@ -1280,8 +1280,8 @@ public abstract class WebDriverManager {
             DriverManagerType driverManagerType = DriverManagerType
                     .valueOf(arg.toUpperCase());
             WebDriverManager wdm = WebDriverManager
-                    .getInstance(driverManagerType).avoidExport()
-                    .targetPath(".").forceDownload();
+                    .getInstance(driverManagerType).avoidExport().cachePath(".")
+                    .forceDownload();
             if (arg.equalsIgnoreCase("edge")
                     || arg.equalsIgnoreCase("iexplorer")) {
                 wdm.operatingSystem(WIN);

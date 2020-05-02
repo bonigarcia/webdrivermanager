@@ -68,12 +68,12 @@ public class ForceOsTest {
     @Before
     public void setup() throws IOException {
         initMocks(this);
-        cleanDirectory(new File(downloader.getTargetPath()));
+        cleanDirectory(new File(downloader.getCachePath()));
     }
 
     @After
     public void teardown() throws IOException {
-        cleanDirectory(new File(downloader.getTargetPath()));
+        cleanDirectory(new File(downloader.getCachePath()));
     }
 
     @Test

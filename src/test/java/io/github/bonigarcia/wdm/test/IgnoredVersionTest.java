@@ -54,7 +54,7 @@ public class IgnoredVersionTest {
     @Before
     @After
     public void cleanCache() throws IOException {
-        cleanDirectory(new File(downloader.getTargetPath()));
+        cleanDirectory(new File(downloader.getCachePath()));
     }
 
     @Test

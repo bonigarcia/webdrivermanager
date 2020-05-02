@@ -66,7 +66,7 @@ public class CacheTest {
     @After
     public void cleanCache() throws IOException {
         cleanDirectory(
-                new File(new Downloader(driverManagerType).getTargetPath()));
+                new File(new Downloader(driverManagerType).getCachePath()));
     }
 
     @Test

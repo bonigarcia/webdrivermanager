@@ -39,7 +39,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.7.2
  */
-public class CustomTargetTest {
+public class CustomCacheTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
@@ -51,9 +51,9 @@ public class CustomTargetTest {
     }
 
     @Test
-    public void testTargetPath() throws IOException {
+    public void testCachePath() throws IOException {
         Path tmpFolder = createTempDirectory("").toRealPath();
-        globalConfig.setTargetPath(tmpFolder.toString());
+        globalConfig.setCachePath(tmpFolder.toString());
         log.info("Using temporary folder {} as cache", tmpFolder);
         WebDriverManager.chromedriver().setup();
         String binaryPath = WebDriverManager.chromedriver().getBinaryPath();
@@ -64,30 +64,30 @@ public class CustomTargetTest {
     }
 
     @Test
-    public void testTargetPathContainsTilde() {
+    public void testCachePathContainsTilde() {
         String customPath = "C:\\user\\abcdef~1\\path";
-        globalConfig.setTargetPath(customPath);
-        String targetPath = globalConfig.getTargetPath();
-        log.info("Using {} got {}", customPath, targetPath);
-        assertThat(targetPath, startsWith(customPath));
+        globalConfig.setCachePath(customPath);
+        String cachePath = globalConfig.getCachePath();
+        log.info("Using {} got {}", customPath, cachePath);
+        assertThat(cachePath, startsWith(customPath));
     }
     
     @Test
-    public void testTargetPathStartsWithTildeSlash() {
+    public void testCachePathStartsWithTildeSlash() {
         String customPath = "~/webdrivers";
-        globalConfig.setTargetPath(customPath);
-        String targetPath = globalConfig.getTargetPath();
-        log.info("Using {} got {}", customPath, targetPath);
-        assertThat(targetPath, startsWith(System.getProperty("user.home")));
+        globalConfig.setCachePath(customPath);
+        String cachePath = globalConfig.getCachePath();
+        log.info("Using {} got {}", customPath, cachePath);
+        assertThat(cachePath, startsWith(System.getProperty("user.home")));
     }
 
     @Test
-    public void testTargetPathStartsWithTilde() {
+    public void testCachePathStartsWithTilde() {
         String customPath = "~webdrivers";
-        globalConfig.setTargetPath(customPath);
-        String targetPath = globalConfig.getTargetPath();
-        log.info("Using {} got {}", customPath, targetPath);
-        assertThat(targetPath, startsWith(customPath));
+        globalConfig.setCachePath(customPath);
+        String cachePath = globalConfig.getCachePath();
+        log.info("Using {} got {}", customPath, cachePath);
+        assertThat(cachePath, startsWith(customPath));
     }
 
     @After

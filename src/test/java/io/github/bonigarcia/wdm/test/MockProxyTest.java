@@ -58,7 +58,7 @@ public class MockProxyTest {
 
     @Before
     public void setup() throws IOException {
-        File wdmCache = new File(downloader.getTargetPath());
+        File wdmCache = new File(downloader.getCachePath());
         log.debug("Cleaning local cache {}", wdmCache);
         cleanDirectory(wdmCache);
 

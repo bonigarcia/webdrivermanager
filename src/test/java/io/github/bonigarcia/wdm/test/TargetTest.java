@@ -128,13 +128,13 @@ public class TargetTest {
     @Test
     public void testTarget() throws IOException {
         Downloader downloader = new Downloader(driverManagerType);
-        String targetPath = downloader.getTargetPath();
+        String cachePath = downloader.getCachePath();
 
         File result = downloader.getTarget(version, new URL(url));
         log.info("{}", result);
-        log.info(targetPath + target);
+        log.info(cachePath + target);
 
-        File fileReal = new File(targetPath + target);
+        File fileReal = new File(cachePath + target);
 
         assertThat(result, equalTo(fileReal));
     }

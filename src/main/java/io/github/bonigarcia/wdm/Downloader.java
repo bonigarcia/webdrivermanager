@@ -97,7 +97,7 @@ public class Downloader {
         String folder = zip.substring(0, iLast).replace(".zip", "")
                 .replace(".tar.bz2", "").replace(".tar.gz", "")
                 .replace(".exe", "").replace("_", separator);
-        String cachePath = config.getTargetPath();
+        String cachePath = config.getCachePath();
         String path = config.isAvoidOutputTree() ? cachePath + zip
                 : cachePath + folder + separator + version + zip;
         String target = WebDriverManager.getInstance(driverManagerType)
@@ -109,8 +109,8 @@ public class Downloader {
         return new File(target);
     }
 
-    public String getTargetPath() {
-        return config.getTargetPath();
+    public String getCachePath() {
+        return config.getCachePath();
     }
 
     private Optional<File> downloadAndExtract(URL url, File targetFile)
