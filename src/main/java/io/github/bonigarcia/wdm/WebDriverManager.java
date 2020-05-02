@@ -31,7 +31,6 @@ import static io.github.bonigarcia.wdm.OperatingSystem.WIN;
 import static io.github.bonigarcia.wdm.Shell.getVersionFromPosixOutput;
 import static io.github.bonigarcia.wdm.Shell.getVersionFromWmicOutput;
 import static io.github.bonigarcia.wdm.Shell.runAndWait;
-import static java.io.File.separator;
 import static java.lang.Integer.parseInt;
 import static java.lang.Integer.signum;
 import static java.lang.Integer.valueOf;
@@ -44,7 +43,6 @@ import static java.util.regex.Pattern.compile;
 import static javax.xml.xpath.XPathConstants.NODESET;
 import static javax.xml.xpath.XPathFactory.newInstance;
 import static org.apache.commons.io.FileUtils.deleteDirectory;
-import static org.apache.commons.io.FileUtils.listFiles;
 import static org.apache.commons.io.FilenameUtils.removeExtension;
 import static org.apache.commons.lang3.StringUtils.isNumeric;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_LINUX;
@@ -148,6 +146,7 @@ public abstract class WebDriverManager {
     protected Config config = new Config();
     protected ResolutionCache resolutionCache = new ResolutionCache(config);
     protected UrlFilter urlFilter = new UrlFilter();
+    protected CacheFilter cacheFilter = new CacheFilter(config.getCachePath());
     protected Properties versionsProperties;
 
     public static Config globalConfig() {
@@ -845,17 +844,19 @@ public abstract class WebDriverManager {
             log.trace("Checking if {} exists in cache", getDriverName());
             Architecture arch = config().getArchitecture();
             String os = config().getOs();
-            List<File> filesInCache = getFilesInCache();
+            List<File> filesInCache = cacheFilter.getFilesInCache();
             if (!filesInCache.isEmpty()) {
                 // Filter by name
-                filesInCache = filterCacheBy(filesInCache, getDriverName(),
-                        false);
+                filesInCache = cacheFilter.filterCacheBy(filesInCache,
+                        getDriverName(), false);
 
                 // Filter by version
-                filesInCache = filterCacheBy(filesInCache, driverVersion, true);
+                filesInCache = cacheFilter.filterCacheBy(filesInCache,
+                        driverVersion, true);
 
                 // Filter by OS
-                filesInCache = filterCacheBy(filesInCache, os, false);
+                filesInCache = cacheFilter.filterCacheBy(filesInCache, os,
+                        false);
 
                 if (filesInCache.size() == 1) {
                     return Optional.of(filesInCache.get(0).toString());
@@ -868,8 +869,8 @@ public abstract class WebDriverManager {
                             "Avoid filtering for architecture {} with {} in Windows",
                             arch, getDriverName());
                 } else {
-                    filesInCache = filterCacheBy(filesInCache, arch.toString(),
-                            false);
+                    filesInCache = cacheFilter.filterCacheBy(filesInCache,
+                            arch.toString(), false);
                 }
 
                 if (!filesInCache.isEmpty()) {
@@ -881,31 +882,6 @@ public abstract class WebDriverManager {
             log.trace("{} not found in cache", getDriverName());
         }
         return empty();
-    }
-
-    protected List<File> filterCacheBy(List<File> input, String key,
-            boolean isVersion) {
-        String pathSeparator = isVersion ? separator : "";
-        List<File> output = new ArrayList<>(input);
-        if (!key.isEmpty() && !input.isEmpty()) {
-            String keyInLowerCase = key.toLowerCase();
-            for (File f : input) {
-                if (!f.toString().toLowerCase()
-                        .contains(pathSeparator + keyInLowerCase)) {
-                    output.remove(f);
-                }
-            }
-        }
-        log.trace("Filter cache by {} -- input list {} -- output list {} ", key,
-                input, output);
-        return output;
-    }
-
-    protected List<File> getFilesInCache() {
-        List<File> listFiles = (List<File>) listFiles(
-                new File(config.getCachePath()), null, true);
-        sort(listFiles);
-        return listFiles;
     }
 
     protected List<URL> removeFromList(List<URL> list, String driverVersion) {
