@@ -83,7 +83,6 @@ public class ResolutionCache {
             fis = new FileInputStream(resolutionCacheFile);
             props.load(fis);
         } catch (Exception e) {
-            e.printStackTrace();
             throw new WebDriverManagerException(
                     "Exception reading resolution cache as a properties file",
                     e);
@@ -133,7 +132,7 @@ public class ResolutionCache {
         }
     }
 
-    private void storeProperties() {
+    private synchronized void storeProperties() {
         OutputStream fos = null;
         try {
             fos = new FileOutputStream(resolutionCacheFile);
@@ -142,7 +141,6 @@ public class ResolutionCache {
             log.warn(
                     "Exception writing resolution cache as a properties file {}",
                     e.getClass().getName());
-            e.printStackTrace();
         } finally {
             if (fos != null) {
                 try {
