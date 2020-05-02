@@ -33,7 +33,7 @@ import java.util.Optional;
 public class VoidDriverManager extends WebDriverManager {
 
     @Override
-    protected List<URL> getDrivers() throws IOException {
+    protected List<URL> getDriverUrls() throws IOException {
         return emptyList();
     }
 

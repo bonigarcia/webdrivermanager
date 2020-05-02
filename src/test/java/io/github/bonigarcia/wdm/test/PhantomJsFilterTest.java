@@ -60,7 +60,8 @@ public class PhantomJsFilterTest {
         field.setAccessible(true);
         field.set(phantomJsManager, new HttpClient(new Config()));
 
-        Method method = WebDriverManager.class.getDeclaredMethod("getDrivers");
+        Method method = WebDriverManager.class
+                .getDeclaredMethod("getDriverUrls");
         method.setAccessible(true);
         driversUrls = (List<URL>) method.invoke(phantomJsManager);
     }
@@ -70,8 +71,8 @@ public class PhantomJsFilterTest {
     public void testFilterPhantomJs() throws NoSuchMethodException,
             SecurityException, IllegalAccessException, IllegalArgumentException,
             InvocationTargetException {
-        Method method = WebDriverManager.class.getDeclaredMethod("checkLatest",
-                List.class, String.class);
+        Method method = WebDriverManager.class.getDeclaredMethod(
+                "filterDriverListByLatest", List.class, String.class);
         method.setAccessible(true);
         List<URL> latestUrls = (List<URL>) method.invoke(phantomJsManager,
                 driversUrls, phantomJsBinaryName);
@@ -91,8 +92,9 @@ public class PhantomJsFilterTest {
             SecurityException, IllegalAccessException, IllegalArgumentException,
             InvocationTargetException {
         String specificVersion = "1.9.6";
-        Method method = WebDriverManager.class.getDeclaredMethod("getVersion",
-                List.class, String.class, String.class);
+        Method method = WebDriverManager.class.getDeclaredMethod(
+                "filterDriverListByVersion", List.class, String.class,
+                String.class);
         method.setAccessible(true);
         List<URL> specificVersionUrls = (List<URL>) method.invoke(
                 phantomJsManager, driversUrls, phantomJsBinaryName,

@@ -76,7 +76,7 @@ public class ChromeDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected List<URL> getDrivers() throws IOException {
+    protected List<URL> getDriverUrls() throws IOException {
         Optional<URL> mirrorUrl = getMirrorUrl();
         if (mirrorUrl.isPresent() && config().isUseMirror()) {
             return getDriversFromMirror(mirrorUrl.get());

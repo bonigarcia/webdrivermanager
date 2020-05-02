@@ -75,7 +75,7 @@ public class PhantomJsDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected List<URL> getDrivers() throws IOException {
+    protected List<URL> getDriverUrls() throws IOException {
         URL driverUrl = getDriverUrl();
         log.info("Reading {} to seek {}", driverUrl, getDriverName());
         return getDriversFromMirror(driverUrl);

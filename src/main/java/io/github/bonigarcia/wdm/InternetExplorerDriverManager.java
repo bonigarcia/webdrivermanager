@@ -73,7 +73,7 @@ public class InternetExplorerDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected List<URL> getDrivers() throws IOException {
+    protected List<URL> getDriverUrls() throws IOException {
         return getDriversFromXml(getDriverUrl(), "//Contents/Key");
     }
 

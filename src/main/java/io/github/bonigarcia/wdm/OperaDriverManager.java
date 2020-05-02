@@ -93,7 +93,7 @@ public class OperaDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected List<URL> getDrivers() throws IOException {
+    protected List<URL> getDriverUrls() throws IOException {
         return getDriversFromGitHub();
     }
 

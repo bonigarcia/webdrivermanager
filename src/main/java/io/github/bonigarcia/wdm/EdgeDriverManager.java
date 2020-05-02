@@ -87,7 +87,7 @@ public class EdgeDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected List<URL> getDrivers() throws IOException {
+    protected List<URL> getDriverUrls() throws IOException {
         return getDriversFromXml(
                 new URL(getDriverUrl() + "?restype=container&comp=list"),
                 "//Blob/Name");

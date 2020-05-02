@@ -107,7 +107,7 @@ public abstract class WebDriverManager {
     protected static final String LATEST_RELEASE = "LATEST_RELEASE";
     protected static final String REG_SZ = "REG_SZ";
 
-    protected abstract List<URL> getDrivers() throws IOException;
+    protected abstract List<URL> getDriverUrls() throws IOException;
 
     protected abstract Optional<String> getBrowserVersion();
 
@@ -432,9 +432,9 @@ public abstract class WebDriverManager {
     public List<String> getDriverVersions() {
         httpClient = new HttpClient(config());
         try {
-            List<URL> drivers = getDrivers();
+            List<URL> driverUrls = getDriverUrls();
             List<String> driverVersionList = new ArrayList<>();
-            for (URL url : drivers) {
+            for (URL url : driverUrls) {
                 String driverVersion = getCurrentVersion(url);
                 if (driverVersion.isEmpty()
                         || driverVersion.equalsIgnoreCase("icons")) {
@@ -754,9 +754,9 @@ public abstract class WebDriverManager {
 
     protected List<URL> getCandidateUrls(String driverVersion)
             throws IOException {
-        List<URL> urls = getDrivers();
-        List<URL> candidateUrls;
-        log.trace("All URLs: {}", urls);
+        List<URL> driverUrls = getDriverUrls();
+        List<URL> candidateDriverUrls;
+        log.trace("All driver URLs: {}", driverUrls);
         boolean getLatest = isUnknown(driverVersion);
         Architecture arch = config().getArchitecture();
         boolean continueSearchingVersion;
@@ -764,11 +764,11 @@ public abstract class WebDriverManager {
         do {
             // Get the latest or concrete driver version
             String shortDriverName = getShortDriverName();
-            candidateUrls = getLatest
-                    ? filterDriverListByLatest(urls, shortDriverName)
-                    : filterDriverListByVersion(urls, shortDriverName,
+            candidateDriverUrls = getLatest
+                    ? filterDriverListByLatest(driverUrls, shortDriverName)
+                    : filterDriverListByVersion(driverUrls, shortDriverName,
                             driverVersion);
-            log.trace("Candidate URLs: {}", candidateUrls);
+            log.trace("Candidate driver URLs: {}", candidateDriverUrls);
             if (driverVersionToDownload == null) {
                 break;
             }
@@ -777,35 +777,38 @@ public abstract class WebDriverManager {
             if (!getDriverName().equalsIgnoreCase("IEDriverServer")
                     && !getDriverName()
                             .equalsIgnoreCase("selenium-server-standalone")) {
-                candidateUrls = urlFilter.filterByOs(candidateUrls,
+                candidateDriverUrls = urlFilter.filterByOs(candidateDriverUrls,
                         config().getOs());
             }
 
             // Filter by architecture
-            candidateUrls = urlFilter.filterByArch(candidateUrls, arch,
-                    forcedArch);
+            candidateDriverUrls = urlFilter.filterByArch(candidateDriverUrls,
+                    arch, forcedArch);
 
             // Filter by distro
-            candidateUrls = filterByDistro(candidateUrls);
+            candidateDriverUrls = filterByDistro(candidateDriverUrls);
 
             // Filter by ignored driver versions
-            candidateUrls = filterByIgnoredDriverVersions(candidateUrls);
+            candidateDriverUrls = filterByIgnoredDriverVersions(
+                    candidateDriverUrls);
 
             // Filter by beta
-            candidateUrls = urlFilter.filterByBeta(candidateUrls,
+            candidateDriverUrls = urlFilter.filterByBeta(candidateDriverUrls,
                     config().isUseBetaVersions());
 
             // Find out if driver version has been found or not
-            continueSearchingVersion = candidateUrls.isEmpty() && getLatest;
+            continueSearchingVersion = candidateDriverUrls.isEmpty()
+                    && getLatest;
             if (continueSearchingVersion) {
                 log.info(
                         "No proper driver found for {} {} ... seeking another version",
                         getDriverName(), driverVersionToDownload);
-                urls = removeFromList(urls, driverVersionToDownload);
+                driverUrls = removeFromList(driverUrls,
+                        driverVersionToDownload);
                 driverVersionToDownload = null;
             }
         } while (continueSearchingVersion);
-        return candidateUrls;
+        return candidateDriverUrls;
     }
 
     protected List<URL> filterByIgnoredDriverVersions(List<URL> candidateUrls) {
