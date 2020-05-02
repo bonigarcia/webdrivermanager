@@ -23,7 +23,6 @@ import static org.slf4j.LoggerFactory.getLogger;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.ParseException;
@@ -73,8 +72,7 @@ public class ResolutionCache {
 
         this.resolutionCacheFile = new File(config.getTargetPath(),
                 config.getResolutionCache());
-        InputStream fis = null;
-        try {
+        try (InputStream fis = new FileInputStream(resolutionCacheFile)) {
             if (!resolutionCacheFile.exists()) {
                 boolean createNewFile = resolutionCacheFile.createNewFile();
                 if (createNewFile) {
@@ -82,22 +80,11 @@ public class ResolutionCache {
                             resolutionCacheFile);
                 }
             }
-            fis = new FileInputStream(resolutionCacheFile);
             props.load(fis);
         } catch (Exception e) {
             throw new WebDriverManagerException(
                     "Exception reading resolution cache as a properties file",
                     e);
-        } finally {
-            if (fis != null) {
-                try {
-                    fis.close();
-                } catch (IOException e) {
-                    log.warn(
-                            "Exception closing resolution cache as a properties file {}",
-                            e.getMessage());
-                }
-            }
         }
     }
 
@@ -135,24 +122,12 @@ public class ResolutionCache {
     }
 
     private synchronized void storeProperties() {
-        OutputStream fos = null;
-        try {
-            fos = new FileOutputStream(resolutionCacheFile);
+        try (OutputStream fos = new FileOutputStream(resolutionCacheFile)) {
             props.store(fos, RESOLUTION_CACHE_INFO);
         } catch (Exception e) {
             log.warn(
                     "Exception writing resolution cache as a properties file {}",
                     e.getClass().getName());
-        } finally {
-            if (fos != null) {
-                try {
-                    fos.close();
-                } catch (IOException e) {
-                    log.warn(
-                            "Exception closing resolution cache as a properties file {}",
-                            e.getMessage());
-                }
-            }
         }
     }
 
@@ -170,7 +145,8 @@ public class ResolutionCache {
     private boolean checkValidity(String key, String value,
             Date expirationDate) {
         long now = new Date().getTime();
-        long expirationTime = expirationDate.getTime();
+        long expirationTime = expirationDate != null ? expirationDate.getTime()
+                : 0;
         boolean isValid = value != null && expirationTime != 0
                 && expirationTime > now;
         if (!isValid) {
@@ -198,8 +174,9 @@ public class ResolutionCache {
             valueInResolutionCache &= checkValidity(key,
                     valueFromResolutionCache, expirationDate);
             if (valueInResolutionCache) {
+                String strDate = formatDate(expirationDate);
                 log.debug("Resolution {}={} in cache (valid until {})", key,
-                        valueFromResolutionCache, formatDate(expirationDate));
+                        valueFromResolutionCache, strDate);
             }
         }
         return valueInResolutionCache;
