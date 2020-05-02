@@ -755,6 +755,10 @@ public abstract class WebDriverManager {
             retryCount++;
             log.warn("{} ... trying again using latest driver stored in cache",
                     errorMessage);
+            if (log.isTraceEnabled()) {
+                log.trace("Error trace: ", e);
+            }
+
             manage(driverVersion);
         } else {
             log.error("{}", errorMessage, e);
