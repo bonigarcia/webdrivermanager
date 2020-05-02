@@ -38,7 +38,7 @@ public class VoidDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected Optional<String> getBrowserVersion() {
+    protected Optional<String> getBrowserVersionFromTheShell() {
         return empty();
     }
 
@@ -86,6 +86,16 @@ public class VoidDriverManager extends WebDriverManager {
     protected Optional<String> getDriverVersionFromRepository(
             Optional<String> driverVersion) {
         return empty();
+    }
+
+    @Override
+    protected String getBrowserVersion() {
+        return "";
+    }
+
+    @Override
+    protected void setBrowserVersion(String browserVersion) {
+        // Nothing required
     }
 
 }

@@ -155,7 +155,7 @@ public class PhantomJsDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected Optional<String> getBrowserVersion() {
+    protected Optional<String> getBrowserVersionFromTheShell() {
         return empty();
     }
 
@@ -163,6 +163,17 @@ public class PhantomJsDriverManager extends WebDriverManager {
     protected Optional<String> getDriverVersionFromRepository(
             Optional<String> driverVersion) {
         return empty();
+    }
+
+    @Override
+    protected String getBrowserVersion() {
+        return "";
+    }
+
+    @Override
+    protected void setBrowserVersion(String browserVersion) {
+        throw new WebDriverManagerException(
+                "The version of PhantomJS is not related to any browser version");
     }
 
 }

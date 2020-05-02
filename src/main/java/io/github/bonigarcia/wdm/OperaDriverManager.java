@@ -49,6 +49,21 @@ public class OperaDriverManager extends WebDriverManager {
     }
 
     @Override
+    protected String getBrowserVersion() {
+        return config().getOperaVersion();
+    }
+
+    @Override
+    protected void setDriverVersion(String driverVersion) {
+        config().setOperaDriverVersion(driverVersion);
+    }
+
+    @Override
+    protected void setBrowserVersion(String browserVersion) {
+        config().setOperaVersion(browserVersion);
+    }
+
+    @Override
     protected URL getDriverUrl() {
         return getDriverUrlCkeckingMirror(config().getOperaDriverUrl());
     }
@@ -61,11 +76,6 @@ public class OperaDriverManager extends WebDriverManager {
     @Override
     protected Optional<String> getExportParameter() {
         return Optional.of(config().getOperaDriverExport());
-    }
-
-    @Override
-    protected void setDriverVersion(String driverVersion) {
-        config().setOperaDriverVersion(driverVersion);
     }
 
     @Override
@@ -140,7 +150,7 @@ public class OperaDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected Optional<String> getBrowserVersion() {
+    protected Optional<String> getBrowserVersionFromTheShell() {
         String[] programFilesEnvs = { "LOCALAPPDATA", "PROGRAMFILES" };
         String[] winBrowserNames = { "\\\\Programs\\\\Opera\\\\launcher.exe",
                 "\\\\Opera\\\\launcher.exe" };

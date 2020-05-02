@@ -51,6 +51,21 @@ public class ChromeDriverManager extends WebDriverManager {
     }
 
     @Override
+    protected String getBrowserVersion() {
+        return config().getChromeVersion();
+    }
+
+    @Override
+    protected void setDriverVersion(String driverVersion) {
+        config().setChromeDriverVersion(driverVersion);
+    }
+
+    @Override
+    protected void setBrowserVersion(String browserVersion) {
+        config().setChromeVersion(browserVersion);
+    }
+
+    @Override
     protected URL getDriverUrl() {
         return getDriverUrlCkeckingMirror(config().getChromeDriverUrl());
     }
@@ -63,11 +78,6 @@ public class ChromeDriverManager extends WebDriverManager {
     @Override
     protected Optional<String> getExportParameter() {
         return Optional.of(config().getChromeDriverExport());
-    }
-
-    @Override
-    protected void setDriverVersion(String driverVersion) {
-        config().setChromeDriverVersion(driverVersion);
     }
 
     @Override
@@ -97,7 +107,7 @@ public class ChromeDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected Optional<String> getBrowserVersion() {
+    protected Optional<String> getBrowserVersionFromTheShell() {
         String[] programFilesEnvs = { getOtherProgramFilesEnv(), "LOCALAPPDATA",
                 getProgramFilesEnv() };
         String[] winBrowserNames = {

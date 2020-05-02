@@ -40,6 +40,21 @@ public class ChromiumDriverManager extends ChromeDriverManager {
     }
 
     @Override
+    protected String getBrowserVersion() {
+        return config().getChromiumVersion();
+    }
+
+    @Override
+    protected void setDriverVersion(String driverVersion) {
+        config().setChromiumDriverVersion(driverVersion);
+    }
+
+    @Override
+    protected void setBrowserVersion(String browserVersion) {
+        config().setChromiumVersion(browserVersion);
+    }
+
+    @Override
     protected void manage(String driverVersion) {
         // Special case for Chromium snap packages
         if (isSnap && snapDriverExists()) {
@@ -49,7 +64,7 @@ public class ChromiumDriverManager extends ChromeDriverManager {
     }
 
     @Override
-    protected Optional<String> getBrowserVersion() {
+    protected Optional<String> getBrowserVersionFromTheShell() {
         String[] programFilesEnvs = { "LOCALAPPDATA", getOtherProgramFilesEnv(),
                 getProgramFilesEnv() };
         String[] winBrowserNames = {

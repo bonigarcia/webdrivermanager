@@ -109,15 +109,19 @@ public abstract class WebDriverManager {
 
     protected abstract List<URL> getDriverUrls() throws IOException;
 
-    protected abstract Optional<String> getBrowserVersion();
+    protected abstract Optional<String> getBrowserVersionFromTheShell();
 
     protected abstract DriverManagerType getDriverManagerType();
 
     protected abstract String getDriverName();
 
+    protected abstract String getDriverVersion();
+
     protected abstract void setDriverVersion(String driverVersion);
 
-    protected abstract String getDriverVersion();
+    protected abstract String getBrowserVersion();
+
+    protected abstract void setBrowserVersion(String browserVersion);
 
     protected abstract void setDriverUrl(URL url);
 
@@ -135,6 +139,7 @@ public abstract class WebDriverManager {
     protected String driverVersionToDownload;
     protected String downloadedDriverVersion;
     protected String binaryPath;
+    protected String browserVersion;
     protected boolean mirrorLog;
     protected boolean forcedArch;
     protected boolean forcedOs;
@@ -269,6 +274,11 @@ public abstract class WebDriverManager {
 
     public WebDriverManager driverVersion(String driverVersion) {
         setDriverVersion(driverVersion);
+        return instanceMap.get(getDriverManagerType());
+    }
+
+    public WebDriverManager browserVersion(String browserVersion) {
+        setBrowserVersion(browserVersion);
         return instanceMap.get(getDriverManagerType());
     }
 
@@ -494,21 +504,25 @@ public abstract class WebDriverManager {
 
     protected String resolveDriverVersion(String driverVersion) {
         String preferenceKey = getKeyForResolutionCache();
-        Optional<String> browserVersion = empty();
-        browserVersion = getValueFromResolutionCache(preferenceKey,
-                browserVersion);
-        if (!browserVersion.isPresent()) {
-            browserVersion = detectBrowserVersion();
+        Optional<String> optionalBrowserVersion = Optional
+                .ofNullable(getBrowserVersion());
+        if (!optionalBrowserVersion.isPresent()) {
+            optionalBrowserVersion = getValueFromResolutionCache(preferenceKey,
+                    optionalBrowserVersion);
         }
-        if (browserVersion.isPresent()) {
-            preferenceKey = getKeyForResolutionCache() + browserVersion.get();
+        if (!optionalBrowserVersion.isPresent()) {
+            optionalBrowserVersion = detectBrowserVersion();
+        }
+        if (optionalBrowserVersion.isPresent()) {
+            preferenceKey = getKeyForResolutionCache()
+                    + optionalBrowserVersion.get();
             driverVersion = resolutionCache
                     .getValueFromResolutionCache(preferenceKey);
 
             Optional<String> optionalDriverVersion = empty();
             if (isUnknown(driverVersion)) {
                 optionalDriverVersion = getDriverVersionFromRepository(
-                        browserVersion);
+                        optionalBrowserVersion);
             }
             if (isUnknown(driverVersion)) {
                 optionalDriverVersion = getDriverVersionFromProperties(
@@ -520,14 +534,14 @@ public abstract class WebDriverManager {
             if (isUnknown(driverVersion)) {
                 log.debug(
                         "The driver version for {} {} is unknown ... trying with latest",
-                        getDriverManagerType(), browserVersion.get());
+                        getDriverManagerType(), optionalBrowserVersion.get());
             } else if (!isUnknown(driverVersion)) {
                 log.info(
                         "Using {} {} (since {} {} is installed in your machine)",
                         getDriverName(), driverVersion, getDriverManagerType(),
-                        browserVersion.get());
+                        optionalBrowserVersion.get());
                 storeInResolutionCache(preferenceKey, driverVersion,
-                        browserVersion.get());
+                        optionalBrowserVersion.get());
             }
         }
 
@@ -573,23 +587,23 @@ public abstract class WebDriverManager {
     }
 
     protected void storeInResolutionCache(String preferenceKey,
-            String driverVersion, String browserVersion) {
+            String resolvedDriverVersion, String resolvedBrowserVersion) {
         if (useResolutionCache()) {
             resolutionCache.putValueInResolutionCacheIfEmpty(
-                    getKeyForResolutionCache(), browserVersion);
+                    getKeyForResolutionCache(), resolvedBrowserVersion);
             resolutionCache.putValueInResolutionCacheIfEmpty(preferenceKey,
-                    driverVersion);
+                    resolvedDriverVersion);
         }
     }
 
     protected Optional<String> getValueFromResolutionCache(String preferenceKey,
-            Optional<String> browserVersion) {
+            Optional<String> optionalBrowserVersion) {
         if (useResolutionCache()
                 && resolutionCache.checkKeyInResolutionCache(preferenceKey)) {
-            browserVersion = Optional.of(
+            optionalBrowserVersion = Optional.of(
                     resolutionCache.getValueFromResolutionCache(preferenceKey));
         }
-        return browserVersion;
+        return optionalBrowserVersion;
     }
 
     protected String preDownload(String target, String driverVersion) {
@@ -632,18 +646,18 @@ public abstract class WebDriverManager {
 
         String driverManagerTypeLowerCase = getDriverManagerType().name()
                 .toLowerCase();
-        Optional<String> browserVersion;
+        Optional<String> optionalBrowserVersion;
         if (useResolutionCache() && resolutionCache
                 .checkKeyInResolutionCache(driverManagerTypeLowerCase)) {
-            browserVersion = Optional.of(resolutionCache
+            optionalBrowserVersion = Optional.of(resolutionCache
                     .getValueFromResolutionCache(driverManagerTypeLowerCase));
 
             log.trace("Detected {} version {}", getDriverManagerType(),
-                    browserVersion);
+                    optionalBrowserVersion);
         } else {
-            browserVersion = getBrowserVersion();
+            optionalBrowserVersion = getBrowserVersionFromTheShell();
         }
-        return browserVersion;
+        return optionalBrowserVersion;
     }
 
     protected boolean useResolutionCache() {

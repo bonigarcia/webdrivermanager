@@ -48,6 +48,22 @@ public class InternetExplorerDriverManager extends WebDriverManager {
     }
 
     @Override
+    protected String getBrowserVersion() {
+        return "";
+    }
+
+    @Override
+    protected void setDriverVersion(String driverVersion) {
+        config().setInternetExplorerDriverVersion(driverVersion);
+    }
+
+    @Override
+    protected void setBrowserVersion(String browserVersion) {
+        throw new WebDriverManagerException(
+                "The version of the driver for Internet Explorer cannot be known using the browser version");
+    }
+
+    @Override
     protected URL getDriverUrl() {
         return config().getInternetExplorerDriverUrl();
     }
@@ -63,11 +79,6 @@ public class InternetExplorerDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected void setDriverVersion(String driverVersion) {
-        config().setInternetExplorerDriverVersion(driverVersion);
-    }
-
-    @Override
     protected void setDriverUrl(URL url) {
         config().setInternetExplorerDriverUrl(url);
     }
@@ -78,7 +89,7 @@ public class InternetExplorerDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected Optional<String> getBrowserVersion() {
+    protected Optional<String> getBrowserVersionFromTheShell() {
         return empty();
     }
 

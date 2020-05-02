@@ -101,6 +101,8 @@ public class Config {
 
     ConfigKey<String> chromeDriverVersion = new ConfigKey<>(
             "wdm.chromeDriverVersion", String.class);
+    ConfigKey<String> chromeVersion = new ConfigKey<>("wdm.chromeVersion",
+            String.class);
     ConfigKey<String> chromeDriverExport = new ConfigKey<>(
             "wdm.chromeDriverExport", String.class);
     ConfigKey<URL> chromeDriverUrl = new ConfigKey<>("wdm.chromeDriverUrl",
@@ -110,13 +112,17 @@ public class Config {
 
     ConfigKey<String> edgeDriverVersion = new ConfigKey<>(
             "wdm.edgeDriverVersion", String.class);
+    ConfigKey<String> edgeVersion = new ConfigKey<>("wdm.edgeVersion",
+            String.class);
     ConfigKey<String> edgeDriverExport = new ConfigKey<>("wdm.edgeDriverExport",
             String.class);
     ConfigKey<URL> edgeDriverUrl = new ConfigKey<>("wdm.edgeDriverUrl",
             URL.class);
 
-    ConfigKey<String> firefoxDriverVersion = new ConfigKey<>(
+    ConfigKey<String> geckoDriverVersion = new ConfigKey<>(
             "wdm.geckoDriverVersion", String.class);
+    ConfigKey<String> firefoxVersion = new ConfigKey<>("wdm.firefoxVersion",
+            String.class);
     ConfigKey<String> firefoxDriverExport = new ConfigKey<>(
             "wdm.geckoDriverExport", String.class);
     ConfigKey<URL> firefoxDriverUrl = new ConfigKey<>("wdm.geckoDriverUrl",
@@ -133,6 +139,8 @@ public class Config {
 
     ConfigKey<String> operaDriverVersion = new ConfigKey<>(
             "wdm.operaDriverVersion", String.class);
+    ConfigKey<String> operaVersion = new ConfigKey<>("wdm.operaVersion",
+            String.class);
     ConfigKey<String> operaDriverExport = new ConfigKey<>(
             "wdm.operaDriverExport", String.class);
     ConfigKey<URL> operaDriverUrl = new ConfigKey<>("wdm.operaDriverUrl",
@@ -151,6 +159,8 @@ public class Config {
 
     ConfigKey<String> chromiumDriverVersion = new ConfigKey<>(
             "wdm.chromiumDriverVersion", String.class);
+    ConfigKey<String> chromiumVersion = new ConfigKey<>("wdm.chromiumVersion",
+            String.class);
     ConfigKey<String> chromiumDriverSnapPath = new ConfigKey<>(
             "wdm.chromiumDriverSnapPath", String.class);
 
@@ -577,6 +587,15 @@ public class Config {
         return this;
     }
 
+    public String getChromeVersion() {
+        return resolve(chromeVersion);
+    }
+
+    public Config setChromeVersion(String value) {
+        this.chromeVersion.setValue(value);
+        return this;
+    }
+
     public String getChromeDriverExport() {
         return resolve(chromeDriverExport);
     }
@@ -613,6 +632,15 @@ public class Config {
         return this;
     }
 
+    public String getEdgeVersion() {
+        return resolve(edgeVersion);
+    }
+
+    public Config setEdgeVersion(String value) {
+        this.edgeVersion.setValue(value);
+        return this;
+    }
+
     public String getEdgeDriverExport() {
         return resolve(edgeDriverExport);
     }
@@ -631,12 +659,21 @@ public class Config {
         return this;
     }
 
-    public String getFirefoxDriverVersion() {
-        return resolve(firefoxDriverVersion);
+    public String getGeckoDriverVersion() {
+        return resolve(geckoDriverVersion);
     }
 
-    public Config setFirefoxDriverVersion(String value) {
-        this.firefoxDriverVersion.setValue(value);
+    public Config setGeckoDriverVersion(String value) {
+        this.geckoDriverVersion.setValue(value);
+        return this;
+    }
+
+    public String getFirefoxVersion() {
+        return resolve(firefoxVersion);
+    }
+
+    public Config setFirefoxVersion(String value) {
+        this.firefoxVersion.setValue(value);
         return this;
     }
 
@@ -700,6 +737,15 @@ public class Config {
 
     public Config setOperaDriverVersion(String value) {
         this.operaDriverVersion.setValue(value);
+        return this;
+    }
+
+    public String getOperaVersion() {
+        return resolve(operaVersion);
+    }
+
+    public Config setOperaVersion(String value) {
+        this.operaVersion.setValue(value);
         return this;
     }
 
@@ -772,6 +818,15 @@ public class Config {
 
     public Config setChromiumDriverVersion(String value) {
         this.chromiumDriverVersion.setValue(value);
+        return this;
+    }
+
+    public String getChromiumVersion() {
+        return resolve(chromiumVersion);
+    }
+
+    public Config setChromiumVersion(String value) {
+        this.chromiumVersion.setValue(value);
         return this;
     }
 

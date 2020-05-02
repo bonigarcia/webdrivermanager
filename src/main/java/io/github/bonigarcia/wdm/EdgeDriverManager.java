@@ -62,6 +62,21 @@ public class EdgeDriverManager extends WebDriverManager {
     }
 
     @Override
+    protected String getBrowserVersion() {
+        return config().getEdgeVersion();
+    }
+
+    @Override
+    protected void setDriverVersion(String driverVersion) {
+        config().setEdgeDriverVersion(driverVersion);
+    }
+
+    @Override
+    protected void setBrowserVersion(String browserVersion) {
+        config().setEdgeVersion(browserVersion);
+    }
+
+    @Override
     protected URL getDriverUrl() {
         return config().getEdgeDriverUrl();
     }
@@ -74,11 +89,6 @@ public class EdgeDriverManager extends WebDriverManager {
     @Override
     protected Optional<String> getExportParameter() {
         return Optional.of(config().getEdgeDriverExport());
-    }
-
-    @Override
-    protected void setDriverVersion(String driverVersion) {
-        config().setEdgeDriverVersion(driverVersion);
     }
 
     @Override
@@ -122,7 +132,7 @@ public class EdgeDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected Optional<String> getBrowserVersion() {
+    protected Optional<String> getBrowserVersionFromTheShell() {
         String[] programFilesEnvs = { getProgramFilesEnv() };
         String[] winBrowserNames = {
                 "\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe",

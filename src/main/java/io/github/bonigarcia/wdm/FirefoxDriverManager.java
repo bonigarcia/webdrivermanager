@@ -44,7 +44,22 @@ public class FirefoxDriverManager extends WebDriverManager {
 
     @Override
     protected String getDriverVersion() {
-        return config().getFirefoxDriverVersion();
+        return config().getGeckoDriverVersion();
+    }
+
+    @Override
+    protected String getBrowserVersion() {
+        return config().getFirefoxVersion();
+    }
+
+    @Override
+    protected void setDriverVersion(String driverVersion) {
+        config().setGeckoDriverVersion(driverVersion);
+    }
+
+    @Override
+    protected void setBrowserVersion(String browserVersion) {
+        config().setFirefoxVersion(browserVersion);
     }
 
     @Override
@@ -60,11 +75,6 @@ public class FirefoxDriverManager extends WebDriverManager {
     @Override
     protected Optional<String> getExportParameter() {
         return Optional.of(config().getFirefoxDriverExport());
-    }
-
-    @Override
-    protected void setDriverVersion(String driverVersion) {
-        config().setFirefoxDriverVersion(driverVersion);
     }
 
     @Override
@@ -108,7 +118,7 @@ public class FirefoxDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected Optional<String> getBrowserVersion() {
+    protected Optional<String> getBrowserVersionFromTheShell() {
         String[] programFilesEnvs = { getProgramFilesEnv(),
                 getOtherProgramFilesEnv() };
 
