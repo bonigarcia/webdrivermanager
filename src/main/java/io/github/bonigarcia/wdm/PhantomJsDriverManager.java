@@ -65,8 +65,8 @@ public class PhantomJsDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected void setDriverVersion(String version) {
-        config().setPhantomjsDriverVersion(version);
+    protected void setDriverVersion(String driverVersion) {
+        config().setPhantomjsDriverVersion(driverVersion);
     }
 
     @Override
@@ -108,9 +108,9 @@ public class PhantomJsDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected String preDownload(String target, String version) {
-        int iSeparator = target.indexOf(version) - 1;
-        int iDash = target.lastIndexOf(version) + version.length();
+    protected String preDownload(String target, String driverVersion) {
+        int iSeparator = target.indexOf(driverVersion) - 1;
+        int iDash = target.lastIndexOf(driverVersion) + driverVersion.length();
         int iPoint = target.lastIndexOf(".tar") != -1
                 ? target.lastIndexOf(".tar")
                 : target.lastIndexOf(".zip");
@@ -132,7 +132,7 @@ public class PhantomJsDriverManager extends WebDriverManager {
 
         File binFolder = new File(
                 extractFolder.getAbsoluteFile() + separator + "bin");
-        // Exception for older version of PhantomJS
+        // Exception for older versions of PhantomJS
         int binaryIndex = 0;
         if (!binFolder.exists()) {
             binFolder = extractFolder;
@@ -161,7 +161,7 @@ public class PhantomJsDriverManager extends WebDriverManager {
 
     @Override
     protected Optional<String> getDriverVersionFromRepository(
-            Optional<String> version) {
+            Optional<String> driverVersion) {
         return empty();
     }
 

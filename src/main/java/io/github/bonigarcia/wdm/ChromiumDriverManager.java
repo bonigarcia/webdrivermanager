@@ -35,12 +35,12 @@ public class ChromiumDriverManager extends ChromeDriverManager {
     }
 
     @Override
-    protected void manage(String version) {
+    protected void manage(String driverVersion) {
         // Special case for Chromium snap packages
         if (isSnap && snapDriverExists()) {
             return;
         }
-        super.manage(version);
+        super.manage(driverVersion);
     }
 
     @Override

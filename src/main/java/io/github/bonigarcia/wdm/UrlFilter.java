@@ -107,7 +107,7 @@ public class UrlFilter {
         return out;
     }
 
-    public List<URL> filterByDistro(List<URL> list, String version)
+    public List<URL> filterByDistro(List<URL> list, String driverVersion)
             throws IOException {
         String distro = getDistroName();
         log.trace("URLs before filtering by Linux distribution ({}): {}",
@@ -115,7 +115,7 @@ public class UrlFilter {
         List<URL> out = new ArrayList<>(list);
 
         for (URL url : list) {
-            if (url.getFile().contains(version)
+            if (url.getFile().contains(driverVersion)
                     && !url.getFile().contains(distro)) {
                 out.remove(url);
             }

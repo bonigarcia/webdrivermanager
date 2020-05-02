@@ -44,13 +44,14 @@ public class EdgeReadVersionTest {
         String[] expectedVersions = { "75.0.139.20", "76.0.183.0", "77.0.237.0",
                 "78.0.277.0", "79.0.313.0", "80.0.361.111", "81.0.409.0",
                 "82.0.459.1" };
-        List<String> versions = WebDriverManager.edgedriver().getVersions();
+        List<String> driverVersions = WebDriverManager.edgedriver()
+                .getDriverVersions();
 
         log.debug("Expected edge versions: {}",
                 Arrays.asList(expectedVersions));
-        log.debug("Edge versions read from the repository: {}", versions);
+        log.debug("Edge versions read from the repository: {}", driverVersions);
 
-        assertThat(versions, hasItems(expectedVersions));
+        assertThat(driverVersions, hasItems(expectedVersions));
     }
 
 }

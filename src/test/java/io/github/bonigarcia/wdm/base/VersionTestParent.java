@@ -84,7 +84,7 @@ public abstract class VersionTestParent {
     @Test
     public void testSpecificVersions() throws Exception {
         for (String specificVersion : specificVersions) {
-            log.info("Test specific version arch={} version={}", architecture,
+            log.info("Test specific driver version arch={} version={}", architecture,
                     specificVersion);
             if (architecture != DEFAULT) {
                 browserManager.architecture(architecture);
@@ -92,7 +92,7 @@ public abstract class VersionTestParent {
             if (os != null) {
                 browserManager.operatingSystem(os);
             }
-            browserManager.version(specificVersion).setup();
+            browserManager.driverVersion(specificVersion).setup();
 
             assertThat(browserManager.getDownloadedVersion(),
                     equalTo(specificVersion));

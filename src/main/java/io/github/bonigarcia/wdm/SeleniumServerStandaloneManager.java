@@ -64,8 +64,8 @@ public class SeleniumServerStandaloneManager extends WebDriverManager {
     }
 
     @Override
-    protected void setDriverVersion(String version) {
-        config().setSeleniumServerStandaloneVersion(version);
+    protected void setDriverVersion(String driverVersion) {
+        config().setSeleniumServerStandaloneVersion(driverVersion);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class SeleniumServerStandaloneManager extends WebDriverManager {
 
     @Override
     protected Optional<String> getDriverVersionFromRepository(
-            Optional<String> version) {
+            Optional<String> driverVersion) {
         return empty();
     }
 

@@ -64,8 +64,8 @@ public class OperaDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected void setDriverVersion(String version) {
-        config().setOperaDriverVersion(version);
+    protected void setDriverVersion(String driverVersion) {
+        config().setOperaDriverVersion(driverVersion);
     }
 
     @Override
@@ -151,7 +151,7 @@ public class OperaDriverManager extends WebDriverManager {
 
     @Override
     protected Optional<String> getDriverVersionFromRepository(
-            Optional<String> version) {
+            Optional<String> driverVersion) {
         return empty();
     }
 

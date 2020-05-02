@@ -77,8 +77,8 @@ public class EdgeDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected void setDriverVersion(String version) {
-        config().setEdgeDriverVersion(version);
+    protected void setDriverVersion(String driverVersion) {
+        config().setEdgeDriverVersion(driverVersion);
     }
 
     @Override
@@ -94,15 +94,15 @@ public class EdgeDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected String preDownload(String target, String version) {
-        int iVersion = target.indexOf(version);
+    protected String preDownload(String target, String driverVersion) {
+        int iVersion = target.indexOf(driverVersion);
         if (iVersion != -1) {
             target = target.substring(0, iVersion)
                     + config().getArchitecture().name().toLowerCase()
                     + File.separator + target.substring(iVersion);
         }
-        log.trace("Pre-download in EdgeDriver -- target={}, version={}", target,
-                version);
+        log.trace("Pre-download in EdgeDriver -- target={}, driverVersion={}",
+                target, driverVersion);
         return target;
     }
 
@@ -129,10 +129,10 @@ public class EdgeDriverManager extends WebDriverManager {
                 "\\\\Microsoft\\\\Edge Beta\\\\Application\\\\msedge.exe",
                 "\\\\Microsoft\\\\Edge Dev\\\\Application\\\\msedge.exe" };
         String macBrowserName = "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge";
-        String version = IS_OS_MAC_OSX ? "-version" : "--version";
+        String versionFlag = IS_OS_MAC_OSX ? "-version" : "--version";
 
         return getDefaultBrowserVersion(programFilesEnvs, winBrowserNames, "",
-                macBrowserName, version, getDriverManagerType().toString());
+                macBrowserName, versionFlag, getDriverManagerType().toString());
     }
 
     @Override

@@ -66,8 +66,8 @@ public class ChromeDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected void setDriverVersion(String version) {
-        config().setChromeDriverVersion(version);
+    protected void setDriverVersion(String driverVersion) {
+        config().setChromeDriverVersion(driverVersion);
     }
 
     @Override

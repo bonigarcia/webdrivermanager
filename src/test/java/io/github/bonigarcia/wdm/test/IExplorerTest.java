@@ -45,7 +45,7 @@ public class IExplorerTest {
 
     @Test
     public void testIExplorerVersion() {
-        iedriver().operatingSystem(WIN).version("3.11").setup();
+        iedriver().operatingSystem(WIN).driverVersion("3.11").setup();
         assertIEDriverBinary();
     }
 

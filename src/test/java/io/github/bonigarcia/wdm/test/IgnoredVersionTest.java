@@ -60,7 +60,7 @@ public class IgnoredVersionTest {
     @Test
     public void testIgnoreVersions() {
         String[] ignoredVersions = { "2.33", "2.32" };
-        chromedriver().ignoreVersions(ignoredVersions).setup();
+        chromedriver().ignoreDriverVersions(ignoredVersions).setup();
         File binary = new File(chromedriver().getBinaryPath());
         log.debug("Using binary {} (ignoring {})", binary,
                 Arrays.toString(ignoredVersions));

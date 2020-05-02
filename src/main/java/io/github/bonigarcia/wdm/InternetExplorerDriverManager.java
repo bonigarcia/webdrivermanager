@@ -63,8 +63,8 @@ public class InternetExplorerDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected void setDriverVersion(String version) {
-        config().setInternetExplorerDriverVersion(version);
+    protected void setDriverVersion(String driverVersion) {
+        config().setInternetExplorerDriverVersion(driverVersion);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class InternetExplorerDriverManager extends WebDriverManager {
 
     @Override
     protected Optional<String> getDriverVersionFromRepository(
-            Optional<String> version) {
+            Optional<String> driverVersion) {
         return empty();
     }
 

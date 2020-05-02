@@ -81,8 +81,8 @@ public class Downloader {
         return binary.get().toString();
     }
 
-    public File getTarget(String version, URL url) {
-        log.trace("getTarget {} {}", version, url);
+    public File getTarget(String driverVersion, URL url) {
+        log.trace("getTarget {} {}", driverVersion, url);
         String zip = url.getFile().substring(url.getFile().lastIndexOf('/'));
 
         int iFirst = zip.indexOf('_');
@@ -99,12 +99,12 @@ public class Downloader {
                 .replace(".exe", "").replace("_", separator);
         String cachePath = config.getCachePath();
         String path = config.isAvoidOutputTree() ? cachePath + zip
-                : cachePath + folder + separator + version + zip;
+                : cachePath + folder + separator + driverVersion + zip;
         String target = WebDriverManager.getInstance(driverManagerType)
-                .preDownload(path, version);
+                .preDownload(path, driverVersion);
 
-        log.trace("Target file for URL {} version {} = {}", url, version,
-                target);
+        log.trace("Target file for URL {} driver version {} = {}", url,
+                driverVersion, target);
 
         return new File(target);
     }

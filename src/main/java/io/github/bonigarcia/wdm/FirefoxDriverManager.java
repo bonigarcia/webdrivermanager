@@ -63,8 +63,8 @@ public class FirefoxDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected void setDriverVersion(String version) {
-        config().setFirefoxDriverVersion(version);
+    protected void setDriverVersion(String driverVersion) {
+        config().setFirefoxDriverVersion(driverVersion);
     }
 
     @Override
@@ -88,9 +88,9 @@ public class FirefoxDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected String preDownload(String target, String version) {
-        int iSeparator = target.indexOf(version) - 1;
-        int iDash = target.lastIndexOf(version) + version.length();
+    protected String preDownload(String target, String driverVersion) {
+        int iSeparator = target.indexOf(driverVersion) - 1;
+        int iDash = target.lastIndexOf(driverVersion) + driverVersion.length();
         int iPoint = target.lastIndexOf(".zip");
         int iPointTazGz = target.lastIndexOf(".tar.gz");
         int iPointGz = target.lastIndexOf(".gz");
@@ -120,7 +120,7 @@ public class FirefoxDriverManager extends WebDriverManager {
 
     @Override
     protected Optional<String> getDriverVersionFromRepository(
-            Optional<String> version) {
+            Optional<String> driverVersion) {
         return empty();
     }
 

@@ -67,7 +67,7 @@ public class VersionsTest {
 
     @Test
     public void testChromeDriverVersions() {
-        List<String> versions = driverManager.getVersions();
+        List<String> versions = driverManager.getDriverVersions();
         log.debug("Versions of {} {}", driverManager.getClass().getSimpleName(),
                 versions);
         assertThat(versions, notNullValue());

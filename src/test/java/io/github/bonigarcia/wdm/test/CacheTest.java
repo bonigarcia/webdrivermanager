@@ -74,7 +74,7 @@ public class CacheTest {
     public void testCache() throws Exception {
         WebDriverManager browserManager = WebDriverManager
                 .getInstance(driverManagerType);
-        browserManager.forceCache().forceDownload().version(driverVersion)
+        browserManager.forceCache().forceDownload().driverVersion(driverVersion)
                 .setup();
 
         Method method = WebDriverManager.class

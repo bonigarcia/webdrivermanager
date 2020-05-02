@@ -44,7 +44,7 @@ public class SeleniumServerStandaloneTest {
 
     @Test
     public void testSeleniumServerVersion() {
-        seleniumServerStandalone().version("3.13").setup();
+        seleniumServerStandalone().driverVersion("3.13").setup();
         assertBinary();
     }
 

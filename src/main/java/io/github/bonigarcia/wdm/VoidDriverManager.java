@@ -73,7 +73,7 @@ public class VoidDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected void setDriverVersion(String version) {
+    protected void setDriverVersion(String driverVersion) {
         // Nothing required
     }
 
@@ -84,7 +84,7 @@ public class VoidDriverManager extends WebDriverManager {
 
     @Override
     protected Optional<String> getDriverVersionFromRepository(
-            Optional<String> version) {
+            Optional<String> driverVersion) {
         return empty();
     }
 
