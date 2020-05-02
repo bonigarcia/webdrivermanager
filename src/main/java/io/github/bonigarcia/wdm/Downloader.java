@@ -129,7 +129,7 @@ public class Downloader {
         File resultingBinary = new File(targetFolder, extractedFile.getName());
         boolean binaryExists = resultingBinary.exists();
 
-        if (!binaryExists || config.isOverride()) {
+        if (!binaryExists || config.isForceDownload()) {
             if (binaryExists) {
                 log.info("Overriding former binary {}", resultingBinary);
                 deleteFile(resultingBinary);
@@ -147,7 +147,7 @@ public class Downloader {
 
     private Optional<File> checkBinary(String driverName, File targetFile) {
         File parentFolder = targetFile.getParentFile();
-        if (parentFolder.exists() && !config.isOverride()) {
+        if (parentFolder.exists() && !config.isForceDownload()) {
             // Check if binary exits in parent folder and it is valid
 
             Collection<File> listFiles = listFiles(parentFolder, null, true);
@@ -207,7 +207,7 @@ public class Downloader {
                         name, size, compressedSize);
 
                 file = new File(compressedFile.getParentFile(), name);
-                if (!file.exists() || config.isOverride()) {
+                if (!file.exists() || config.isForceDownload()) {
                     if (name.endsWith("/")) {
                         file.mkdirs();
                         continue;

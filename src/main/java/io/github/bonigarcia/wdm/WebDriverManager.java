@@ -304,7 +304,7 @@ public abstract class WebDriverManager {
     }
 
     public WebDriverManager forceDownload() {
-        config().setOverride(true);
+        config().setForceDownload(true);
         return instanceMap.get(getDriverManagerType());
     }
 
@@ -480,7 +480,7 @@ public abstract class WebDriverManager {
 
             Optional<String> driverInCache = getDriverFromCache(driverVersion);
             String exportValue;
-            if (driverInCache.isPresent() && !config().isOverride()) {
+            if (driverInCache.isPresent() && !config().isForceDownload()) {
                 log.debug("Driver {} {} found in cache", getDriverName(),
                         getDriverVersionLabel(driverVersion));
                 storeVersionToDownload(driverVersion);
@@ -657,7 +657,7 @@ public abstract class WebDriverManager {
     }
 
     protected boolean useResolutionCache() {
-        return !config().isAvoidingResolutionCache() && !config().isOverride()
+        return !config().isAvoidingResolutionCache() && !config().isForceDownload()
                 && !forcedArch && !forcedOs;
     }
 

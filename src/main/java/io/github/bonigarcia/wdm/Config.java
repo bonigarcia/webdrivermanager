@@ -53,7 +53,7 @@ public class Config {
 
     ConfigKey<String> cachePath = new ConfigKey<>("wdm.cachePath",
             String.class);
-    ConfigKey<Boolean> override = new ConfigKey<>("wdm.override",
+    ConfigKey<Boolean> forceDownload = new ConfigKey<>("wdm.forceDownload",
             Boolean.class);
     ConfigKey<Boolean> useMirror = new ConfigKey<>("wdm.useMirror",
             Boolean.class);
@@ -321,12 +321,12 @@ public class Config {
         return this;
     }
 
-    public boolean isOverride() {
-        return resolve(override);
+    public boolean isForceDownload() {
+        return resolve(forceDownload);
     }
 
-    public Config setOverride(boolean value) {
-        this.override.setValue(value);
+    public Config setForceDownload(boolean value) {
+        this.forceDownload.setValue(value);
         return this;
     }
 
