@@ -172,8 +172,7 @@ public class PhantomJsDriverManager extends WebDriverManager {
 
     @Override
     protected void setBrowserVersion(String browserVersion) {
-        throw new WebDriverManagerException(
-                "The version of PhantomJS is not related to any browser version");
+        // Nothing required
     }
 
 }

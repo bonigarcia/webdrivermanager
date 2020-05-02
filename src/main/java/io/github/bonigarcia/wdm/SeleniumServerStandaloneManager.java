@@ -101,8 +101,7 @@ public class SeleniumServerStandaloneManager extends WebDriverManager {
 
     @Override
     protected void setBrowserVersion(String browserVersion) {
-        throw new WebDriverManagerException(
-                "The version of Selenium Server is not related to any browser");
+        // Nothing required
     }
 
 }

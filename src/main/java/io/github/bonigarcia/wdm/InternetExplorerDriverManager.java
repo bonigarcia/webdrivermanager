@@ -59,8 +59,7 @@ public class InternetExplorerDriverManager extends WebDriverManager {
 
     @Override
     protected void setBrowserVersion(String browserVersion) {
-        throw new WebDriverManagerException(
-                "The version of the driver for Internet Explorer cannot be known using the browser version");
+        // Nothing required
     }
 
     @Override

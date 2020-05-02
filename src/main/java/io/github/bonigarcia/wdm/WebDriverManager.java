@@ -140,7 +140,6 @@ public abstract class WebDriverManager {
     protected String driverVersionToDownload;
     protected String downloadedDriverVersion;
     protected String binaryPath;
-    protected String browserVersion;
     protected boolean mirrorLog;
     protected boolean forcedArch;
     protected boolean forcedOs;
@@ -759,6 +758,7 @@ public abstract class WebDriverManager {
             config().setForceCache(true);
             config().setAvoidAutoVersion(true);
             driverVersion = "";
+            setBrowserVersion("");
             retryCount++;
             log.warn("{} ... trying again using latest driver stored in cache",
                     errorMessage);
