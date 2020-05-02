@@ -69,6 +69,8 @@ public class ResolutionCache {
         InputStream fis = null;
         try {
             if (!resolutionCacheFile.exists()) {
+                log.debug("Creating new resolution cache file at {}",
+                        resolutionCacheFile);
                 resolutionCacheFile.createNewFile();
             }
             fis = new FileInputStream(resolutionCacheFile);
