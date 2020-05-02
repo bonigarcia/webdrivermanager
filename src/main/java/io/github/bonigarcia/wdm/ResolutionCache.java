@@ -72,7 +72,7 @@ public class ResolutionCache {
 
         this.resolutionCacheFile = new File(config.getTargetPath(),
                 config.getResolutionCache());
-        try (InputStream fis = new FileInputStream(resolutionCacheFile)) {
+        try {
             if (!resolutionCacheFile.exists()) {
                 boolean createNewFile = resolutionCacheFile.createNewFile();
                 if (createNewFile) {
@@ -80,7 +80,9 @@ public class ResolutionCache {
                             resolutionCacheFile);
                 }
             }
-            props.load(fis);
+            try (InputStream fis = new FileInputStream(resolutionCacheFile)) {
+                props.load(fis);
+            }
         } catch (Exception e) {
             throw new WebDriverManagerException(
                     "Exception reading resolution cache as a properties file",
