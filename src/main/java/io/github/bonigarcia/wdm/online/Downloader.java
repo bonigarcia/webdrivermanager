@@ -302,12 +302,16 @@ public class Downloader {
     }
 
     public void deleteFolder(File folder) {
-        assert folder.isDirectory();
-        log.trace("Deleting folder {}", folder);
-        try {
-            deleteDirectory(folder);
-        } catch (IOException e) {
-            throw new WebDriverManagerException(e);
+        if (folder.isDirectory()) {
+            log.trace("Deleting folder {}", folder);
+            try {
+                deleteDirectory(folder);
+            } catch (IOException e) {
+                throw new WebDriverManagerException(e);
+            }
+        } else {
+            log.trace("{} cannot be deleted since it is not a directory",
+                    folder);
         }
     }
 
