@@ -41,7 +41,8 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Optional;
-import java.util.function.Function;
+import java.util.function.BinaryOperator;
+import java.util.function.UnaryOperator;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -64,12 +65,12 @@ public class Downloader {
 
     HttpClient httpClient;
     Config config;
-    PreDownloadFunction<String, String, String> preDownloadFunction;
-    Function<File, File> postDownloadFunction;
+    BinaryOperator<String> preDownloadFunction;
+    UnaryOperator<File> postDownloadFunction;
 
     public Downloader(HttpClient httpClient, Config config,
-            PreDownloadFunction<String, String, String> preDownloadFunction,
-            Function<File, File> postDownloadFunction) {
+            BinaryOperator<String> preDownloadFunction,
+            UnaryOperator<File> postDownloadFunction) {
         this.httpClient = httpClient;
         this.config = config;
         this.preDownloadFunction = preDownloadFunction;
