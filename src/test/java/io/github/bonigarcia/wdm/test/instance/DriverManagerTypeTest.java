@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package io.github.bonigarcia.wdm.test.misc;
+package io.github.bonigarcia.wdm.test.instance;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
