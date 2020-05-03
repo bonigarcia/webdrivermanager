@@ -39,7 +39,6 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.mockserver.integration.ClientAndProxy;
 import org.slf4j.Logger;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.etc.Config;
 import io.github.bonigarcia.wdm.online.Downloader;
 
@@ -57,7 +56,7 @@ public class MockProxyTest {
     public Downloader downloader;
 
     @Spy
-    public Config config = WebDriverManager.globalConfig();
+    public Config config = new Config();
 
     private ClientAndProxy proxy;
     private int proxyPort;

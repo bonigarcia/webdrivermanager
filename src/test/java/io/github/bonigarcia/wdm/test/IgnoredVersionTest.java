@@ -31,30 +31,23 @@ import java.util.Arrays;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.Logger;
 
-import io.github.bonigarcia.wdm.online.Downloader;
+import io.github.bonigarcia.wdm.etc.Config;
 
 /**
  * Test for ignore versions.
  * 
  * @since 1.7.2
  */
-@RunWith(MockitoJUnitRunner.class)
 public class IgnoredVersionTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
-    @InjectMocks
-    public Downloader downloader;
-
     @Before
     @After
     public void cleanCache() throws IOException {
-        cleanDirectory(new File(downloader.getCachePath()));
+        cleanDirectory(new File(new Config().getCachePath()));
     }
 
     @Test

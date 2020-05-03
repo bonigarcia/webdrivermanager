@@ -34,8 +34,8 @@ import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 import org.slf4j.Logger;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.cache.CacheFilter;
+import io.github.bonigarcia.wdm.etc.Config;
 
 /**
  * FilterCacheBy test.
@@ -61,7 +61,7 @@ public class VersionFilterTest {
 
     @Test
     public void testFilterCacheBy() {
-        String cachePath = WebDriverManager.globalConfig().getCachePath();
+        String cachePath = new Config().getCachePath();
         CacheFilter cacheFilter = new CacheFilter(cachePath);
         List<File> filteredList = cacheFilter.filterCacheBy(getInputFileList(),
                 version, true);

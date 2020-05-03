@@ -38,6 +38,7 @@ import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import io.github.bonigarcia.wdm.etc.Config;
 import io.github.bonigarcia.wdm.etc.DriverManagerType;
 
 /**
@@ -64,8 +65,8 @@ public class CacheTest {
     @Before
     @After
     public void cleanCache() throws IOException {
-        cleanDirectory(
-                new File(WebDriverManager.globalConfig().getCachePath()));
+        String cachePath = new Config().getCachePath();
+        cleanDirectory(new File(cachePath));
     }
 
     @Test

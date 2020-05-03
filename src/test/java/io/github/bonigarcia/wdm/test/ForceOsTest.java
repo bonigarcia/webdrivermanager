@@ -42,7 +42,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.slf4j.Logger;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.etc.Config;
 import io.github.bonigarcia.wdm.etc.OperatingSystem;
 import io.github.bonigarcia.wdm.online.Downloader;
@@ -64,7 +63,7 @@ public class ForceOsTest {
     public Downloader downloader;
 
     @Spy
-    public Config config = WebDriverManager.globalConfig();
+    public Config config = new Config();
 
     @Parameters(name = "{index}: {0}")
     public static Collection<Object[]> data() {
