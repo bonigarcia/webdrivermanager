@@ -61,8 +61,7 @@ public class VersionFilterTest {
 
     @Test
     public void testFilterCacheBy() {
-        String cachePath = new Config().getCachePath();
-        CacheFilter cacheFilter = new CacheFilter(cachePath);
+        CacheFilter cacheFilter = new CacheFilter(new Config());
         List<File> filteredList = cacheFilter.filterCacheBy(getInputFileList(),
                 version, true);
 
