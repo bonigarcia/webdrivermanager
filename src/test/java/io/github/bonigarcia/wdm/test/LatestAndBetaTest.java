@@ -16,7 +16,7 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import static io.github.bonigarcia.wdm.OperatingSystem.WIN;
+import static io.github.bonigarcia.wdm.etc.OperatingSystem.WIN;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.asList;
 import static org.hamcrest.core.IsEqual.equalTo;

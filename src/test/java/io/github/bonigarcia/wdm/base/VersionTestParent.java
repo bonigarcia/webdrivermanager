@@ -16,9 +16,9 @@
  */
 package io.github.bonigarcia.wdm.base;
 
-import static io.github.bonigarcia.wdm.Architecture.DEFAULT;
-import static io.github.bonigarcia.wdm.Architecture.X32;
-import static io.github.bonigarcia.wdm.Architecture.X64;
+import static io.github.bonigarcia.wdm.etc.Architecture.DEFAULT;
+import static io.github.bonigarcia.wdm.etc.Architecture.X32;
+import static io.github.bonigarcia.wdm.etc.Architecture.X64;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -35,9 +35,9 @@ import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 import org.slf4j.Logger;
 
-import io.github.bonigarcia.wdm.Architecture;
-import io.github.bonigarcia.wdm.OperatingSystem;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import io.github.bonigarcia.wdm.etc.Architecture;
+import io.github.bonigarcia.wdm.etc.OperatingSystem;
 
 /**
  * Parent class for version based tests.

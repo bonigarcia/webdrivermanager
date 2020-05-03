@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package io.github.bonigarcia.wdm;
+package io.github.bonigarcia.wdm.online;
 
 import static java.io.File.separator;
 import static java.lang.invoke.MethodHandles.lookup;
@@ -32,6 +32,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
+
+import io.github.bonigarcia.wdm.etc.Architecture;
+import io.github.bonigarcia.wdm.etc.OperatingSystem;
 
 /**
  * URL filtering logic.

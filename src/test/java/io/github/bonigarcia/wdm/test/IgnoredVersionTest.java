@@ -36,7 +36,7 @@ import org.mockito.InjectMocks;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.slf4j.Logger;
 
-import io.github.bonigarcia.wdm.Downloader;
+import io.github.bonigarcia.wdm.online.Downloader;
 
 /**
  * Test for ignore versions.

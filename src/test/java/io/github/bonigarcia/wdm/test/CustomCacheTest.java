@@ -16,7 +16,6 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import io.github.bonigarcia.wdm.Config;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.file.Files.createTempDirectory;
 import static org.hamcrest.CoreMatchers.startsWith;
@@ -32,6 +31,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import io.github.bonigarcia.wdm.etc.Config;
 
 /**
  * Test for custom target.
@@ -55,7 +55,7 @@ public class CustomCacheTest {
         Path tmpFolder = createTempDirectory("").toRealPath();
         globalConfig.setCachePath(tmpFolder.toString());
         log.info("Using temporary folder {} as cache", tmpFolder);
-        WebDriverManager.chromedriver().setup();
+        WebDriverManager.chromedriver().forceDownload().setup();
         String binaryPath = WebDriverManager.chromedriver().getBinaryPath();
         log.info("Binary path {}", binaryPath);
         assertThat(binaryPath, startsWith(tmpFolder.toString()));
@@ -71,7 +71,7 @@ public class CustomCacheTest {
         log.info("Using {} got {}", customPath, cachePath);
         assertThat(cachePath, startsWith(customPath));
     }
-    
+
     @Test
     public void testCachePathStartsWithTildeSlash() {
         String customPath = "~/webdrivers";

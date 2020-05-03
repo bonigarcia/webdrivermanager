@@ -16,7 +16,7 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import static io.github.bonigarcia.wdm.DriverManagerType.CHROME;
+import static io.github.bonigarcia.wdm.etc.DriverManagerType.CHROME;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
@@ -28,7 +28,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
-import io.github.bonigarcia.wdm.Shell;
+import io.github.bonigarcia.wdm.etc.Shell;
 
 /**
  * Shell utilities test.

@@ -16,10 +16,10 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import static io.github.bonigarcia.wdm.OperatingSystem.LINUX;
-import static io.github.bonigarcia.wdm.OperatingSystem.MAC;
-import static io.github.bonigarcia.wdm.OperatingSystem.WIN;
 import static io.github.bonigarcia.wdm.WebDriverManager.chromedriver;
+import static io.github.bonigarcia.wdm.etc.OperatingSystem.LINUX;
+import static io.github.bonigarcia.wdm.etc.OperatingSystem.MAC;
+import static io.github.bonigarcia.wdm.etc.OperatingSystem.WIN;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.asList;
 import static org.apache.commons.io.FileUtils.cleanDirectory;
@@ -39,10 +39,13 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 import org.mockito.InjectMocks;
+import org.mockito.Spy;
 import org.slf4j.Logger;
 
-import io.github.bonigarcia.wdm.Downloader;
-import io.github.bonigarcia.wdm.OperatingSystem;
+import io.github.bonigarcia.wdm.WebDriverManager;
+import io.github.bonigarcia.wdm.etc.Config;
+import io.github.bonigarcia.wdm.etc.OperatingSystem;
+import io.github.bonigarcia.wdm.online.Downloader;
 
 /**
  * Test for ignore versions.
@@ -60,6 +63,9 @@ public class ForceOsTest {
     @InjectMocks
     public Downloader downloader;
 
+    @Spy
+    public Config config = WebDriverManager.globalConfig();
+
     @Parameters(name = "{index}: {0}")
     public static Collection<Object[]> data() {
         return asList(new Object[][] { { WIN }, { LINUX }, { MAC } });
@@ -68,6 +74,8 @@ public class ForceOsTest {
     @Before
     public void setup() throws IOException {
         initMocks(this);
+        System.out.println(downloader);
+        System.out.println(downloader.getCachePath());
         cleanDirectory(new File(downloader.getCachePath()));
     }
 

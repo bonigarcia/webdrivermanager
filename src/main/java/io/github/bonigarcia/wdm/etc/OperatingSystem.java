@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2017 Boni Garcia (http://bonigarcia.github.io/)
+ * (C) Copyright 2015 Boni Garcia (http://bonigarcia.github.io/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,28 +14,14 @@
  * limitations under the License.
  *
  */
-package io.github.bonigarcia.wdm;
+package io.github.bonigarcia.wdm.etc;
 
 /**
- * Custom exception for WebDriverManager.
+ * Supported operative system enumeration.
  *
  * @author Boni Garcia (boni.gg@gmail.com)
- * @since 1.7.2
+ * @since 1.0.0
  */
-public class WebDriverManagerException extends RuntimeException {
-
-    private static final long serialVersionUID = 635198548542132913L;
-
-    public WebDriverManagerException(String message) {
-        super(message);
-    }
-
-    public WebDriverManagerException(Throwable cause) {
-        super(cause);
-    }
-
-    public WebDriverManagerException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
+public enum OperatingSystem {
+    WIN, LINUX, MAC
 }

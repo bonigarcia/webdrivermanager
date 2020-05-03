@@ -16,8 +16,8 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import static io.github.bonigarcia.wdm.DriverManagerType.CHROME;
-import static io.github.bonigarcia.wdm.DriverManagerType.FIREFOX;
+import static io.github.bonigarcia.wdm.etc.DriverManagerType.CHROME;
+import static io.github.bonigarcia.wdm.etc.DriverManagerType.FIREFOX;
 import static java.util.Arrays.asList;
 import static org.apache.commons.io.FileUtils.cleanDirectory;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -37,9 +37,8 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
-import io.github.bonigarcia.wdm.Downloader;
-import io.github.bonigarcia.wdm.DriverManagerType;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import io.github.bonigarcia.wdm.etc.DriverManagerType;
 
 /**
  * Test for driver cache.
@@ -66,7 +65,7 @@ public class CacheTest {
     @After
     public void cleanCache() throws IOException {
         cleanDirectory(
-                new File(new Downloader(driverManagerType).getCachePath()));
+                new File(WebDriverManager.globalConfig().getCachePath()));
     }
 
     @Test

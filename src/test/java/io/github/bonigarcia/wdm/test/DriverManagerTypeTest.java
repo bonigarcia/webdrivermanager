@@ -16,10 +16,11 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import io.github.bonigarcia.wdm.DriverManagerType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
+
+import io.github.bonigarcia.wdm.etc.DriverManagerType;
 
 import java.util.Collection;
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package io.github.bonigarcia.wdm;
+package io.github.bonigarcia.wdm.cache;
 
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -34,6 +34,9 @@ import java.util.Properties;
 import java.util.TreeSet;
 
 import org.slf4j.Logger;
+
+import io.github.bonigarcia.wdm.etc.Config;
+import io.github.bonigarcia.wdm.etc.WebDriverManagerException;
 
 /**
  * Resolution cache.

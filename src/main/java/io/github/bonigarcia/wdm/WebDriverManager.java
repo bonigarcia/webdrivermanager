@@ -16,21 +16,21 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static io.github.bonigarcia.wdm.Architecture.X32;
-import static io.github.bonigarcia.wdm.Architecture.X64;
-import static io.github.bonigarcia.wdm.Config.isNullOrEmpty;
-import static io.github.bonigarcia.wdm.DriverManagerType.CHROME;
-import static io.github.bonigarcia.wdm.DriverManagerType.CHROMIUM;
-import static io.github.bonigarcia.wdm.DriverManagerType.EDGE;
-import static io.github.bonigarcia.wdm.DriverManagerType.FIREFOX;
-import static io.github.bonigarcia.wdm.DriverManagerType.IEXPLORER;
-import static io.github.bonigarcia.wdm.DriverManagerType.OPERA;
-import static io.github.bonigarcia.wdm.DriverManagerType.PHANTOMJS;
-import static io.github.bonigarcia.wdm.DriverManagerType.SELENIUM_SERVER_STANDALONE;
-import static io.github.bonigarcia.wdm.OperatingSystem.WIN;
-import static io.github.bonigarcia.wdm.Shell.getVersionFromPosixOutput;
-import static io.github.bonigarcia.wdm.Shell.getVersionFromWmicOutput;
-import static io.github.bonigarcia.wdm.Shell.runAndWait;
+import static io.github.bonigarcia.wdm.etc.Architecture.X32;
+import static io.github.bonigarcia.wdm.etc.Architecture.X64;
+import static io.github.bonigarcia.wdm.etc.Config.isNullOrEmpty;
+import static io.github.bonigarcia.wdm.etc.DriverManagerType.CHROME;
+import static io.github.bonigarcia.wdm.etc.DriverManagerType.CHROMIUM;
+import static io.github.bonigarcia.wdm.etc.DriverManagerType.EDGE;
+import static io.github.bonigarcia.wdm.etc.DriverManagerType.FIREFOX;
+import static io.github.bonigarcia.wdm.etc.DriverManagerType.IEXPLORER;
+import static io.github.bonigarcia.wdm.etc.DriverManagerType.OPERA;
+import static io.github.bonigarcia.wdm.etc.DriverManagerType.PHANTOMJS;
+import static io.github.bonigarcia.wdm.etc.DriverManagerType.SELENIUM_SERVER_STANDALONE;
+import static io.github.bonigarcia.wdm.etc.OperatingSystem.WIN;
+import static io.github.bonigarcia.wdm.etc.Shell.getVersionFromPosixOutput;
+import static io.github.bonigarcia.wdm.etc.Shell.getVersionFromWmicOutput;
+import static io.github.bonigarcia.wdm.etc.Shell.runAndWait;
 import static java.lang.Integer.parseInt;
 import static java.lang.Integer.signum;
 import static java.lang.Integer.valueOf;
@@ -89,6 +89,29 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.internal.LinkedTreeMap;
 
+import io.github.bonigarcia.wdm.cache.CacheFilter;
+import io.github.bonigarcia.wdm.cache.ResolutionCache;
+import io.github.bonigarcia.wdm.etc.Architecture;
+import io.github.bonigarcia.wdm.etc.Config;
+import io.github.bonigarcia.wdm.etc.DriverManagerType;
+import io.github.bonigarcia.wdm.etc.OperatingSystem;
+import io.github.bonigarcia.wdm.etc.Shell;
+import io.github.bonigarcia.wdm.etc.VersionComparator;
+import io.github.bonigarcia.wdm.etc.WebDriverManagerException;
+import io.github.bonigarcia.wdm.managers.ChromeDriverManager;
+import io.github.bonigarcia.wdm.managers.ChromiumDriverManager;
+import io.github.bonigarcia.wdm.managers.EdgeDriverManager;
+import io.github.bonigarcia.wdm.managers.FirefoxDriverManager;
+import io.github.bonigarcia.wdm.managers.InternetExplorerDriverManager;
+import io.github.bonigarcia.wdm.managers.OperaDriverManager;
+import io.github.bonigarcia.wdm.managers.PhantomJsDriverManager;
+import io.github.bonigarcia.wdm.managers.SeleniumServerStandaloneManager;
+import io.github.bonigarcia.wdm.managers.VoidDriverManager;
+import io.github.bonigarcia.wdm.online.Downloader;
+import io.github.bonigarcia.wdm.online.GitHubApi;
+import io.github.bonigarcia.wdm.online.HttpClient;
+import io.github.bonigarcia.wdm.online.UrlFilter;
+
 /**
  * Parent driver manager.
  *
@@ -97,7 +120,7 @@ import com.google.gson.internal.LinkedTreeMap;
  */
 public abstract class WebDriverManager {
 
-    static final Logger log = getLogger(lookup().lookupClass());
+    protected static final Logger log = getLogger(lookup().lookupClass());
 
     protected static final String SLASH = "/";
     protected static final String BETA = "beta";
@@ -472,7 +495,8 @@ public abstract class WebDriverManager {
     protected void manage(String driverVersion) {
         httpClient = new HttpClient(config());
         try (HttpClient wdmHttpClient = httpClient) {
-            downloader = new Downloader(getDriverManagerType());
+            downloader = new Downloader(httpClient, config(), this::preDownload,
+                    this::postDownload);
 
             if (isUnknown(driverVersion)) {
                 driverVersion = resolveDriverVersion(driverVersion);

@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package io.github.bonigarcia.wdm;
+package io.github.bonigarcia.wdm.etc;
 
 import static java.lang.Integer.parseInt;
 import static java.lang.Math.max;

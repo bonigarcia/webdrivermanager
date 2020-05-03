@@ -14,12 +14,14 @@
  * limitations under the License.
  *
  */
-package io.github.bonigarcia.wdm;
+package io.github.bonigarcia.wdm.managers;
 
-import static io.github.bonigarcia.wdm.DriverManagerType.CHROMIUM;
+import static io.github.bonigarcia.wdm.etc.DriverManagerType.CHROMIUM;
 
 import java.io.File;
 import java.util.Optional;
+
+import io.github.bonigarcia.wdm.etc.DriverManagerType;
 
 /**
  * Manager for Chrome.

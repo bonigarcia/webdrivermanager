@@ -16,7 +16,7 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import static io.github.bonigarcia.wdm.OperatingSystem.MAC;
+import static io.github.bonigarcia.wdm.etc.OperatingSystem.MAC;
 
 import org.junit.Before;
 import org.openqa.selenium.edge.EdgeDriver;

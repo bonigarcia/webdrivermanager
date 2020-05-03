@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package io.github.bonigarcia.wdm;
+package io.github.bonigarcia.wdm.cache;
 
 import static java.io.File.separator;
 import static java.lang.invoke.MethodHandles.lookup;

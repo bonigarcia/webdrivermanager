@@ -14,9 +14,9 @@
  * limitations under the License.
  *
  */
-package io.github.bonigarcia.wdm;
+package io.github.bonigarcia.wdm.online;
 
-import static io.github.bonigarcia.wdm.Config.isNullOrEmpty;
+import static io.github.bonigarcia.wdm.etc.Config.isNullOrEmpty;
 import static java.lang.System.getenv;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.net.URLDecoder.decode;
@@ -68,6 +68,9 @@ import org.apache.hc.core5.http.config.RegistryBuilder;
 import org.apache.hc.core5.ssl.SSLContexts;
 import org.apache.hc.core5.ssl.TrustStrategy;
 import org.slf4j.Logger;
+
+import io.github.bonigarcia.wdm.etc.Config;
+import io.github.bonigarcia.wdm.etc.WebDriverManagerException;
 
 /**
  * HTTP Client.

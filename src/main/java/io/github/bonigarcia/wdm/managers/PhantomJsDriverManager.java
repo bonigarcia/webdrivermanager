@@ -14,9 +14,9 @@
  * limitations under the License..
  *
  */
-package io.github.bonigarcia.wdm;
+package io.github.bonigarcia.wdm.managers;
 
-import static io.github.bonigarcia.wdm.DriverManagerType.PHANTOMJS;
+import static io.github.bonigarcia.wdm.etc.DriverManagerType.PHANTOMJS;
 import static java.io.File.separator;
 import static java.util.Optional.empty;
 
@@ -25,6 +25,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+import io.github.bonigarcia.wdm.etc.DriverManagerType;
 
 /**
  * Manager for PhantomJs.

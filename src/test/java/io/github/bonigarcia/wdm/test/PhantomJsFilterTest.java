@@ -16,7 +16,7 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import static io.github.bonigarcia.wdm.Architecture.X64;
+import static io.github.bonigarcia.wdm.etc.Architecture.X64;
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
@@ -33,10 +33,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 
-import io.github.bonigarcia.wdm.Config;
-import io.github.bonigarcia.wdm.HttpClient;
-import io.github.bonigarcia.wdm.UrlFilter;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import io.github.bonigarcia.wdm.etc.Config;
+import io.github.bonigarcia.wdm.online.HttpClient;
+import io.github.bonigarcia.wdm.online.UrlFilter;
 
 /**
  * Filter verifications for phantomjs.

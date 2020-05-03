@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package io.github.bonigarcia.wdm;
+package io.github.bonigarcia.wdm.etc;
 
 import static java.lang.String.join;
 import static java.lang.invoke.MethodHandles.lookup;

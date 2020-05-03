@@ -14,11 +14,11 @@
  * limitations under the License.
  *
  */
-package io.github.bonigarcia.wdm;
+package io.github.bonigarcia.wdm.etc;
 
-import static io.github.bonigarcia.wdm.OperatingSystem.LINUX;
-import static io.github.bonigarcia.wdm.OperatingSystem.MAC;
-import static io.github.bonigarcia.wdm.OperatingSystem.WIN;
+import static io.github.bonigarcia.wdm.etc.OperatingSystem.LINUX;
+import static io.github.bonigarcia.wdm.etc.OperatingSystem.MAC;
+import static io.github.bonigarcia.wdm.etc.OperatingSystem.WIN;
 import static java.lang.String.join;
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_LINUX;

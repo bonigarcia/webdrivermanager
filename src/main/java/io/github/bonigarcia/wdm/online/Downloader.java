@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package io.github.bonigarcia.wdm;
+package io.github.bonigarcia.wdm.online;
 
 import static java.io.File.separator;
 import static java.lang.invoke.MethodHandles.lookup;
@@ -41,12 +41,16 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import org.rauschig.jarchivelib.Archiver;
 import org.slf4j.Logger;
+
+import io.github.bonigarcia.wdm.etc.Config;
+import io.github.bonigarcia.wdm.etc.WebDriverManagerException;
 
 /**
  * Downloader class.
@@ -58,17 +62,19 @@ public class Downloader {
 
     final Logger log = getLogger(lookup().lookupClass());
 
-    DriverManagerType driverManagerType;
     HttpClient httpClient;
     Config config;
+    PreDownloadFunction<String, String, String> preDownloadFunction;
+    Function<File, File> postDownloadFunction;
 
-    public Downloader(DriverManagerType driverManagerType) {
-        this.driverManagerType = driverManagerType;
+    public Downloader(HttpClient httpClient, Config config,
+            PreDownloadFunction<String, String, String> preDownloadFunction,
+            Function<File, File> postDownloadFunction) {
+        this.httpClient = httpClient;
+        this.config = config;
+        this.preDownloadFunction = preDownloadFunction;
+        this.postDownloadFunction = postDownloadFunction;
 
-        WebDriverManager webDriverManager = WebDriverManager
-                .getInstance(driverManagerType);
-        config = webDriverManager.config();
-        httpClient = webDriverManager.getHttpClient();
     }
 
     public synchronized String download(URL url, String driverVersion,
@@ -100,9 +106,8 @@ public class Downloader {
         String cachePath = config.getCachePath();
         String path = config.isAvoidOutputTree() ? cachePath + zip
                 : cachePath + folder + separator + driverVersion + zip;
-        String target = WebDriverManager.getInstance(driverManagerType)
-                .preDownload(path, driverVersion);
 
+        String target = preDownloadFunction.apply(path, driverVersion);
         log.trace("Target file for URL {} driver version {} = {}", url,
                 driverVersion, target);
 
@@ -185,8 +190,8 @@ public class Downloader {
             deleteFile(compressedFile);
         }
 
-        File result = WebDriverManager.getInstance(driverManagerType)
-                .postDownload(compressedFile).getAbsoluteFile();
+        File result = postDownloadFunction.apply(compressedFile)
+                .getAbsoluteFile();
         log.trace("Resulting binary file {}", result);
 
         return result;
@@ -276,7 +281,7 @@ public class Downloader {
         }
     }
 
-    protected void renameFile(File from, File to) {
+    public void renameFile(File from, File to) {
         log.trace("Renaming file from {} to {}", from, to);
         if (to.exists()) {
             deleteFile(to);
@@ -295,7 +300,7 @@ public class Downloader {
         }
     }
 
-    protected void deleteFolder(File folder) {
+    public void deleteFolder(File folder) {
         assert folder.isDirectory();
         log.trace("Deleting folder {}", folder);
         try {

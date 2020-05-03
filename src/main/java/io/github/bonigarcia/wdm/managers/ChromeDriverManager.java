@@ -14,9 +14,9 @@
  * limitations under the License.
  *
  */
-package io.github.bonigarcia.wdm;
+package io.github.bonigarcia.wdm.managers;
 
-import static io.github.bonigarcia.wdm.DriverManagerType.CHROME;
+import static io.github.bonigarcia.wdm.etc.DriverManagerType.CHROME;
 import static java.util.Optional.empty;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 
@@ -26,6 +26,9 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+import io.github.bonigarcia.wdm.etc.DriverManagerType;
 
 /**
  * Manager for Chrome.

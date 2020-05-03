@@ -14,9 +14,9 @@
  * limitations under the License.
  *
  */
-package io.github.bonigarcia.wdm;
+package io.github.bonigarcia.wdm.managers;
 
-import static io.github.bonigarcia.wdm.DriverManagerType.OPERA;
+import static io.github.bonigarcia.wdm.etc.DriverManagerType.OPERA;
 import static java.util.Optional.empty;
 
 import java.io.File;
@@ -24,6 +24,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Optional;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+import io.github.bonigarcia.wdm.etc.DriverManagerType;
+import io.github.bonigarcia.wdm.etc.WebDriverManagerException;
 
 /**
  * Manager for Opera.

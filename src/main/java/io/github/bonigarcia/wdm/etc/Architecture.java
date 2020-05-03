@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package io.github.bonigarcia.wdm;
+package io.github.bonigarcia.wdm.etc;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;

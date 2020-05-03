@@ -16,11 +16,11 @@
  */
 package io.github.bonigarcia.wdm.test;
 
-import static io.github.bonigarcia.wdm.DriverManagerType.CHROME;
-import static io.github.bonigarcia.wdm.DriverManagerType.EDGE;
-import static io.github.bonigarcia.wdm.DriverManagerType.FIREFOX;
-import static io.github.bonigarcia.wdm.DriverManagerType.OPERA;
-import static io.github.bonigarcia.wdm.DriverManagerType.PHANTOMJS;
+import static io.github.bonigarcia.wdm.etc.DriverManagerType.CHROME;
+import static io.github.bonigarcia.wdm.etc.DriverManagerType.EDGE;
+import static io.github.bonigarcia.wdm.etc.DriverManagerType.FIREFOX;
+import static io.github.bonigarcia.wdm.etc.DriverManagerType.OPERA;
+import static io.github.bonigarcia.wdm.etc.DriverManagerType.PHANTOMJS;
 import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -35,8 +35,8 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
-import io.github.bonigarcia.wdm.DriverManagerType;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import io.github.bonigarcia.wdm.etc.DriverManagerType;
 
 /**
  * Current version test.
