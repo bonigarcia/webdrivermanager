@@ -132,8 +132,9 @@ public class OperaDriverManager extends WebDriverManager {
                                 "Driver binary for Opera not found in zip file");
                     }
                     operadriver = listFiles[i];
-                    isOperaDriver = config().isExecutable(operadriver)
-                            && operadriver.getName().contains(getDriverName());
+                    isOperaDriver = operadriver.getName()
+                            .contains(getDriverName());
+
                     i++;
                     log.trace("{} is valid: {}", operadriver, isOperaDriver);
                 } while (!isOperaDriver);

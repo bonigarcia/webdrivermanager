@@ -25,7 +25,6 @@ import static org.junit.Assert.assertThat;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -38,6 +37,7 @@ import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import io.github.bonigarcia.wdm.cache.CacheFilter;
 import io.github.bonigarcia.wdm.etc.Config;
 import io.github.bonigarcia.wdm.etc.DriverManagerType;
 
@@ -54,12 +54,16 @@ public class CacheTest {
     public DriverManagerType driverManagerType;
 
     @Parameter(1)
+    public String driverName;
+
+    @Parameter(2)
     public String driverVersion;
 
     @Parameters(name = "{index}: {0} {1}")
     public static Collection<Object[]> data() {
-        return asList(new Object[][] { { CHROME, "81.0.4044.69" },
-                { FIREFOX, "0.26.0" } });
+        return asList(
+                new Object[][] { { CHROME, "chromedriver", "81.0.4044.69" },
+                        { FIREFOX, "geckodriver", "0.26.0" } });
     }
 
     @Before
@@ -70,20 +74,15 @@ public class CacheTest {
     }
 
     @Test
-    @SuppressWarnings("unchecked")
     public void testCache() throws Exception {
         WebDriverManager browserManager = WebDriverManager
                 .getInstance(driverManagerType);
         browserManager.forceDownload().driverVersion(driverVersion).setup();
 
-        Method method = WebDriverManager.class
-                .getDeclaredMethod("getDriverFromCache", String.class);
-        method.setAccessible(true);
-
-        Optional<String> driverInCachePath = (Optional<String>) method
-                .invoke(browserManager, driverVersion);
-
-        assertThat(driverInCachePath.get(), notNullValue());
+        CacheFilter cacheFilter = new CacheFilter(new Config());
+        Optional<String> driverFromCache = cacheFilter.getDriverFromCache(
+                driverVersion, driverName, driverManagerType);
+        assertThat(driverFromCache.get(), notNullValue());
     }
 
 }
