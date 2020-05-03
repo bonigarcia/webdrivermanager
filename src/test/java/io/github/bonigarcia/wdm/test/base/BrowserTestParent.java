@@ -18,7 +18,7 @@ package io.github.bonigarcia.wdm.test.base;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.junit.After;
 import org.junit.Test;

@@ -18,7 +18,7 @@ package io.github.bonigarcia.wdm.test.edge;
 
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.hamcrest.Matchers.hasItems;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.util.Arrays;

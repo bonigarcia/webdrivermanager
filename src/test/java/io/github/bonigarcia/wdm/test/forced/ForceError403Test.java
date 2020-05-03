@@ -19,7 +19,7 @@ package io.github.bonigarcia.wdm.test.forced;
 import static io.github.bonigarcia.wdm.WebDriverManager.firefoxdriver;
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import org.junit.Ignore;

@@ -17,15 +17,13 @@
 package io.github.bonigarcia.wdm.test.other;
 
 import static java.util.Arrays.asList;
-import static org.junit.rules.ExpectedException.none;
+import static org.junit.Assert.assertThrows;
 
 import java.util.Collection;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
@@ -54,9 +52,6 @@ public class OtherWebDriverTest {
     @Parameter(1)
     public Class<? extends Throwable> exception;
 
-    @Rule
-    public ExpectedException thrown = none();
-
     protected WebDriver driver;
 
     @Parameters(name = "{index}: {0} {1}")
@@ -81,10 +76,15 @@ public class OtherWebDriverTest {
     }
 
     @Test
-    public void test() throws InstantiationException, IllegalAccessException {
+    public void test() {
         if (exception != null) {
-            thrown.expect(exception);
+            assertThrows(exception, this::createInstace);
         }
+
+    }
+
+    private void createInstace()
+            throws InstantiationException, IllegalAccessException {
         driver = driverClass.newInstance();
     }
 

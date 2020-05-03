@@ -20,7 +20,7 @@ import static io.github.bonigarcia.wdm.WebDriverManager.chromedriver;
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.apache.commons.io.FileUtils.cleanDirectory;
 import static org.junit.Assert.assertTrue;
-import static org.mockserver.integration.ClientAndProxy.startClientAndProxy;
+import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
@@ -36,7 +36,8 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.mockserver.integration.ClientAndProxy;
+import org.mockserver.integration.ClientAndServer;
+//import org.mockserver.integration.ClientAndProxy;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.config.Config;
@@ -58,7 +59,7 @@ public class MockProxyTest {
     @Spy
     public Config config = new Config();
 
-    private ClientAndProxy proxy;
+    private ClientAndServer proxy;
     private int proxyPort;
 
     @Before
@@ -71,7 +72,7 @@ public class MockProxyTest {
             proxyPort = serverSocket.getLocalPort();
         }
         log.debug("Starting mock proxy on port {}", proxyPort);
-        proxy = startClientAndProxy(proxyPort);
+        proxy = startClientAndServer(proxyPort);
     }
 
     @After
