@@ -42,13 +42,13 @@ import io.github.bonigarcia.wdm.etc.DriverManagerType;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 4.0.0
  */
-public class CacheFilter {
+public class CacheHandler {
 
     final Logger log = getLogger(lookup().lookupClass());
 
     private Config config;
 
-    public CacheFilter(Config config) {
+    public CacheHandler(Config config) {
         this.config = config;
     }
 

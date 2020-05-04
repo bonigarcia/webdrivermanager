@@ -42,7 +42,7 @@ import org.junit.runners.Parameterized.Parameters;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import io.github.bonigarcia.wdm.cache.CacheFilter;
+import io.github.bonigarcia.wdm.cache.CacheHandler;
 import io.github.bonigarcia.wdm.etc.Architecture;
 import io.github.bonigarcia.wdm.etc.Config;
 import io.github.bonigarcia.wdm.etc.DriverManagerType;
@@ -94,8 +94,8 @@ public class CacheTest {
         browserManager.forceDownload().operatingSystem(os)
                 .driverVersion(driverVersion).setup();
 
-        CacheFilter cacheFilter = new CacheFilter(new Config());
-        Optional<String> driverFromCache = cacheFilter.getDriverFromCache(
+        CacheHandler cacheHandler = new CacheHandler(new Config());
+        Optional<String> driverFromCache = cacheHandler.getDriverFromCache(
                 driverVersion, driverName, driverManagerType, arch, os.name());
 
         log.debug("Driver from cache: {}", driverFromCache);

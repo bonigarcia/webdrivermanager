@@ -87,7 +87,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.internal.LinkedTreeMap;
 
-import io.github.bonigarcia.wdm.cache.CacheFilter;
+import io.github.bonigarcia.wdm.cache.CacheHandler;
 import io.github.bonigarcia.wdm.cache.ResolutionCache;
 import io.github.bonigarcia.wdm.etc.Architecture;
 import io.github.bonigarcia.wdm.etc.Config;
@@ -164,7 +164,7 @@ public abstract class WebDriverManager {
     protected int retryCount = 0;
     protected Config config = new Config();
     protected ResolutionCache resolutionCache = new ResolutionCache(config);
-    protected CacheFilter cacheFilter = new CacheFilter(config);
+    protected CacheHandler cacheHandler = new CacheHandler(config);
     protected Properties versionsProperties;
 
     public static Config globalConfig() {
@@ -499,7 +499,7 @@ public abstract class WebDriverManager {
 
             Optional<String> driverInCache = empty();
             if (!isUnknown(driverVersion)) {
-                driverInCache = cacheFilter.getDriverFromCache(driverVersion,
+                driverInCache = cacheHandler.getDriverFromCache(driverVersion,
                         getDriverName(), getDriverManagerType(),
                         config().getArchitecture(), config().getOs());
             }

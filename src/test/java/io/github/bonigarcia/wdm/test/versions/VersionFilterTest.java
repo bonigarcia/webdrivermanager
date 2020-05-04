@@ -34,7 +34,7 @@ import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 import org.slf4j.Logger;
 
-import io.github.bonigarcia.wdm.cache.CacheFilter;
+import io.github.bonigarcia.wdm.cache.CacheHandler;
 import io.github.bonigarcia.wdm.etc.Config;
 
 /**
@@ -61,8 +61,8 @@ public class VersionFilterTest {
 
     @Test
     public void testFilterCacheBy() {
-        CacheFilter cacheFilter = new CacheFilter(new Config());
-        List<File> filteredList = cacheFilter.filterCacheBy(getInputFileList(),
+        CacheHandler cacheHandler = new CacheHandler(new Config());
+        List<File> filteredList = cacheHandler.filterCacheBy(getInputFileList(),
                 version, true);
 
         log.debug("Version {} -- Output {}", version, filteredList);
