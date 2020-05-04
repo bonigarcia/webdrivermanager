@@ -801,24 +801,28 @@ public abstract class WebDriverManager {
 
         boolean getLatest = isUnknown(driverVersion);
         boolean continueSearchingVersion;
+        String shortDriverName = getShortDriverName();
 
         do {
+            // Filter by driver name
+            urlHandler.filterByDriverName(shortDriverName);
+
             // Filter for latest or concrete driver version
-            String shortDriverName = getShortDriverName();
             if (getLatest) {
-                urlHandler.filterByLatestVersion(shortDriverName,
-                        this::getCurrentVersion);
+                urlHandler.filterByLatestVersion(this::getCurrentVersion);
             } else {
-                urlHandler.filterByVersion(shortDriverName, driverVersion);
+                urlHandler.filterByVersion(driverVersion);
             }
+
+            log.info("Latest version of {} is {}", shortDriverName,
+                    urlHandler.getDriverVersion());
             log.trace("Driver URLs after filtering for version: {}",
                     urlHandler.getCandidateUrls());
-
             if (urlHandler.hasNoCandidateUrl()) {
                 noCandidateUrlFound(driverVersion);
             }
 
-            // Filters
+            // Rest of filters
             urlHandler.filterByOs(getDriverName(), config().getOs());
             urlHandler.filterByArch(config().getArchitecture(), forcedArch);
             urlHandler.filterByDistro(config().getOs(), getDriverName());

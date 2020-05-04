@@ -65,19 +65,23 @@ public class UrlHandler {
         this.isUseBeta = isUseBeta;
     }
 
-    public void filterByVersion(String driverName, String driverVersion) {
-        this.driverVersion = driverVersion;
+    public void filterByDriverName(String driverName) {
         candidateUrls = candidateUrls.stream()
                 .filter(url -> url.getFile().contains(driverName)
-                        && url.getFile().contains(driverVersion)
                         && !url.getFile().contains("-symbols"))
                 .collect(toList());
     }
 
-    public void filterByLatestVersion(String driverName,
-            Function<URL, String> getCurrentVersion) {
-        log.trace("Checking the lastest version of {} with URL list {}",
-                driverName, candidateUrls);
+    public void filterByVersion(String driverVersion) {
+        this.driverVersion = driverVersion;
+        candidateUrls = candidateUrls.stream()
+                .filter(url -> url.getFile().contains(driverVersion))
+                .collect(toList());
+    }
+
+    public void filterByLatestVersion(Function<URL, String> getCurrentVersion) {
+        log.trace("Checking the lastest version using URL list {}",
+                candidateUrls);
         List<URL> out = new ArrayList<>();
         List<URL> copyOfList = new ArrayList<>(candidateUrls);
         String foundFriverVersion = null;
@@ -87,19 +91,16 @@ public class UrlHandler {
                 if (fileIsBeta(url)) {
                     continue;
                 }
-                if (url.getFile().contains(driverName)) {
-                    String currentVersion = getCurrentVersion.apply(url);
-                    if (isNullOrEmpty(foundFriverVersion)) {
-                        foundFriverVersion = currentVersion;
-                    }
-                    if (versionCompare(currentVersion,
-                            foundFriverVersion) > 0) {
-                        foundFriverVersion = currentVersion;
-                        out.clear();
-                    }
-                    if (url.getFile().contains(foundFriverVersion)) {
-                        out.add(url);
-                    }
+                String currentVersion = getCurrentVersion.apply(url);
+                if (isNullOrEmpty(foundFriverVersion)) {
+                    foundFriverVersion = currentVersion;
+                }
+                if (versionCompare(currentVersion, foundFriverVersion) > 0) {
+                    foundFriverVersion = currentVersion;
+                    out.clear();
+                }
+                if (url.getFile().contains(foundFriverVersion)) {
+                    out.add(url);
                 }
             } catch (Exception e) {
                 log.trace("There was a problem with URL {} : {}", url,
@@ -107,7 +108,6 @@ public class UrlHandler {
                 candidateUrls.remove(url);
             }
         }
-        log.info("Latest version of {} is {}", driverName, foundFriverVersion);
         this.driverVersion = foundFriverVersion;
         this.candidateUrls = out;
     }
