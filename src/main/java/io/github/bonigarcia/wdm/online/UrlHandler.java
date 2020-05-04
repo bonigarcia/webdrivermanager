@@ -23,6 +23,7 @@ import static java.lang.Integer.valueOf;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.copyOf;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.BufferedReader;
@@ -65,16 +66,12 @@ public class UrlHandler {
     }
 
     public void filterByVersion(String driverName, String driverVersion) {
-        List<URL> out = new ArrayList<>();
-        for (URL url : candidateUrls) {
-            if (url.getFile().contains(driverName)
-                    && url.getFile().contains(driverVersion)
-                    && !url.getFile().contains("-symbols")) {
-                out.add(url);
-            }
-        }
         this.driverVersion = driverVersion;
-        this.candidateUrls = out;
+        candidateUrls = candidateUrls.stream()
+                .filter(url -> url.getFile().contains(driverName)
+                        && url.getFile().contains(driverVersion)
+                        && !url.getFile().contains("-symbols"))
+                .collect(toList());
     }
 
     public void filterByLatestVersion(String driverName,
@@ -113,36 +110,6 @@ public class UrlHandler {
         log.info("Latest version of {} is {}", driverName, foundFriverVersion);
         this.driverVersion = foundFriverVersion;
         this.candidateUrls = out;
-    }
-
-    public boolean fileIsBeta(URL url) {
-        return !isUseBeta && (url.getFile().toLowerCase().contains(BETA));
-    }
-
-    public Integer versionCompare(String str1, String str2) {
-        String[] vals1 = str1.replace("v", "").replace("-" + BETA, "")
-                .split("\\.");
-        String[] vals2 = str2.replace("v", "").replace("-" + BETA, "")
-                .split("\\.");
-
-        if (vals1[0].equals("")) {
-            vals1[0] = "0";
-        }
-        if (vals2[0].equals("")) {
-            vals2[0] = "0";
-        }
-
-        int i = 0;
-        while (i < vals1.length && i < vals2.length
-                && vals1[i].equals(vals2[i])) {
-            i++;
-        }
-
-        if (i < vals1.length && i < vals2.length) {
-            return signum(valueOf(vals1[i]).compareTo(valueOf(vals2[i])));
-        } else {
-            return signum(vals1.length - vals2.length);
-        }
     }
 
     public void filterByBeta(boolean useBeta) {
@@ -262,7 +229,7 @@ public class UrlHandler {
         }
     }
 
-    private String getDistroName() throws IOException {
+    public String getDistroName() throws IOException {
         String out = "";
         final String key = "UBUNTU_CODENAME";
         File dir = new File(separator + "etc");
@@ -302,6 +269,36 @@ public class UrlHandler {
             }
         }
         candidateUrls = out;
+    }
+
+    public boolean fileIsBeta(URL url) {
+        return !isUseBeta && (url.getFile().toLowerCase().contains(BETA));
+    }
+
+    public Integer versionCompare(String str1, String str2) {
+        String[] vals1 = str1.replace("v", "").replace("-" + BETA, "")
+                .split("\\.");
+        String[] vals2 = str2.replace("v", "").replace("-" + BETA, "")
+                .split("\\.");
+
+        if (vals1[0].equals("")) {
+            vals1[0] = "0";
+        }
+        if (vals2[0].equals("")) {
+            vals2[0] = "0";
+        }
+
+        int i = 0;
+        while (i < vals1.length && i < vals2.length
+                && vals1[i].equals(vals2[i])) {
+            i++;
+        }
+
+        if (i < vals1.length && i < vals2.length) {
+            return signum(valueOf(vals1[i]).compareTo(valueOf(vals2[i])));
+        } else {
+            return signum(vals1.length - vals2.length);
+        }
     }
 
     public List<URL> getCandidateUrls() {
