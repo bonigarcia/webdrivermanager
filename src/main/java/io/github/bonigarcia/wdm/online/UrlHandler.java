@@ -84,7 +84,7 @@ public class UrlHandler {
                 driverName, candidateUrls);
         List<URL> out = new ArrayList<>();
         List<URL> copyOfList = new ArrayList<>(candidateUrls);
-        String driverVersion = null;
+        String foundFriverVersion = null;
 
         for (URL url : copyOfList) {
             try {
@@ -93,14 +93,15 @@ public class UrlHandler {
                 }
                 if (url.getFile().contains(driverName)) {
                     String currentVersion = getCurrentVersion.apply(url);
-                    if (isNullOrEmpty(driverVersion)) {
-                        driverVersion = currentVersion;
+                    if (isNullOrEmpty(foundFriverVersion)) {
+                        foundFriverVersion = currentVersion;
                     }
-                    if (versionCompare(currentVersion, driverVersion) > 0) {
-                        driverVersion = currentVersion;
+                    if (versionCompare(currentVersion,
+                            foundFriverVersion) > 0) {
+                        foundFriverVersion = currentVersion;
                         out.clear();
                     }
-                    if (url.getFile().contains(driverVersion)) {
+                    if (url.getFile().contains(foundFriverVersion)) {
                         out.add(url);
                     }
                 }
@@ -110,8 +111,8 @@ public class UrlHandler {
                 candidateUrls.remove(url);
             }
         }
-        log.info("Latest version of {} is {}", driverName, driverVersion);
-        this.driverVersion = driverVersion;
+        log.info("Latest version of {} is {}", driverName, foundFriverVersion);
+        this.driverVersion = foundFriverVersion;
         this.candidateUrls = out;
     }
 

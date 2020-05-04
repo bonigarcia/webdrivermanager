@@ -959,11 +959,6 @@ public abstract class WebDriverManager {
                 GitHubApi[] releaseArray = gson.fromJson(reader,
                         GitHubApi[].class);
 
-//                if (driverVersion != null) {
-//                    releaseArray = new GitHubApi[] {
-//                            getVersionFromGitHub(releaseArray, driverVersion) };
-//                }
-
                 urls = new ArrayList<>();
                 for (GitHubApi release : releaseArray) {
                     if (release != null) {
