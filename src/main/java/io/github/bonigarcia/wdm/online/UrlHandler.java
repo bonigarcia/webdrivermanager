@@ -64,8 +64,7 @@ public class UrlHandler {
         this.isUseBeta = isUseBeta;
     }
 
-    public void filterDriverListByVersion(String driverName,
-            String driverVersion) {
+    public void filterByVersion(String driverName, String driverVersion) {
         List<URL> out = new ArrayList<>();
         for (URL url : candidateUrls) {
             if (url.getFile().contains(driverName)
@@ -78,7 +77,7 @@ public class UrlHandler {
         this.candidateUrls = out;
     }
 
-    public void filterDriverListByLatest(String driverName,
+    public void filterByLatestVersion(String driverName,
             Function<URL, String> getCurrentVersion) {
         log.trace("Checking the lastest version of {} with URL list {}",
                 driverName, candidateUrls);
@@ -161,25 +160,28 @@ public class UrlHandler {
         }
     }
 
-    public void filterByOs(String osName) {
-        log.trace("URLs before filtering by OS ({}): {}", osName,
-                candidateUrls);
-        List<URL> out = new ArrayList<>();
+    public void filterByOs(String driverName, String osName) {
+        if (!driverName.equalsIgnoreCase("IEDriverServer")
+                && !driverName.equalsIgnoreCase("selenium-server-standalone")) {
+            log.trace("URLs before filtering by OS ({}): {}", osName,
+                    candidateUrls);
+            List<URL> out = new ArrayList<>();
 
-        for (URL url : candidateUrls) {
-            for (OperatingSystem os : OperatingSystem.values()) {
-                if (((osName.contains(os.name())
-                        && url.getFile().toUpperCase().contains(os.name()))
-                        || (osName.equalsIgnoreCase("mac")
-                                && url.getFile().toLowerCase().contains("osx")))
-                        && !out.contains(url)) {
-                    out.add(url);
+            for (URL url : candidateUrls) {
+                for (OperatingSystem os : OperatingSystem.values()) {
+                    if (((osName.contains(os.name())
+                            && url.getFile().toUpperCase().contains(os.name()))
+                            || (osName.equalsIgnoreCase("mac") && url.getFile()
+                                    .toLowerCase().contains("osx")))
+                            && !out.contains(url)) {
+                        out.add(url);
+                    }
                 }
             }
-        }
 
-        log.trace("URLs after filtering by OS ({}): {}", osName, out);
-        candidateUrls = out;
+            log.trace("URLs after filtering by OS ({}): {}", osName, out);
+            candidateUrls = out;
+        }
     }
 
     public void filterByArch(Architecture arch, boolean forcedArch) {

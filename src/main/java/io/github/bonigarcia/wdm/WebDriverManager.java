@@ -803,44 +803,31 @@ public abstract class WebDriverManager {
         boolean continueSearchingVersion;
 
         do {
-            // Get the latest or concrete driver version
+            // Filter for latest or concrete driver version
             String shortDriverName = getShortDriverName();
             if (getLatest) {
-                urlHandler.filterDriverListByLatest(shortDriverName,
+                urlHandler.filterByLatestVersion(shortDriverName,
                         this::getCurrentVersion);
             } else {
-                urlHandler.filterDriverListByVersion(shortDriverName,
-                        driverVersion);
+                urlHandler.filterByVersion(shortDriverName, driverVersion);
             }
-            log.trace("Candidate driver URLs: {}",
+            log.trace("Driver URLs after filtering for version: {}",
                     urlHandler.getCandidateUrls());
 
             if (urlHandler.hasNoCandidateUrl()) {
                 noCandidateUrlFound(driverVersion);
             }
 
-            // Filter by OS
-            if (!getDriverName().equalsIgnoreCase("IEDriverServer")
-                    && !getDriverName()
-                            .equalsIgnoreCase("selenium-server-standalone")) {
-                urlHandler.filterByOs(config().getOs());
-            }
-
-            // Filter by architecture
+            // Filters
+            urlHandler.filterByOs(getDriverName(), config().getOs());
             urlHandler.filterByArch(config().getArchitecture(), forcedArch);
-
-            // Filter by distro
             urlHandler.filterByDistro(config().getOs(), getDriverName());
-
-            // Filter by ignored driver versions
             urlHandler.filterByIgnoredVersions(config().getIgnoreVersions());
-
-            // Filter by beta
             urlHandler.filterByBeta(config().isUseBetaVersions());
 
-            // Find out if driver version has been found or not
             continueSearchingVersion = urlHandler.hasNoCandidateUrl()
                     && getLatest;
+
             if (continueSearchingVersion) {
                 log.info(
                         "No proper driver found for {} {} ... seeking another version",
