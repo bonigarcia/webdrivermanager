@@ -64,6 +64,8 @@ public abstract class VersionTestParent {
 
     @Test
     public void testLatestVersion() throws Exception {
+        log.info("Test latest driver version [arch={} os={}]", architecture,
+                os);
         if (os != null) {
             browserManager.operatingSystem(os);
         }
@@ -84,8 +86,8 @@ public abstract class VersionTestParent {
     @Test
     public void testSpecificVersions() throws Exception {
         for (String specificVersion : specificVersions) {
-            log.info("Test specific driver version arch={} version={}", architecture,
-                    specificVersion);
+            log.info("Test specific driver version={} [arch={} os={}]",
+                    specificVersion, architecture, os);
             if (architecture != DEFAULT) {
                 browserManager.architecture(architecture);
             }

@@ -500,7 +500,8 @@ public abstract class WebDriverManager {
             Optional<String> driverInCache = empty();
             if (!isUnknown(driverVersion)) {
                 driverInCache = cacheFilter.getDriverFromCache(driverVersion,
-                        getDriverName(), getDriverManagerType());
+                        getDriverName(), getDriverManagerType(),
+                        config().getArchitecture(), config().getOs());
             }
 
             String exportValue;

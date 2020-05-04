@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm.test.cache;
 
+import static io.github.bonigarcia.wdm.etc.Architecture.DEFAULT;
 import static io.github.bonigarcia.wdm.etc.DriverManagerType.CHROME;
 import static io.github.bonigarcia.wdm.etc.DriverManagerType.FIREFOX;
 import static java.util.Arrays.asList;
@@ -38,6 +39,7 @@ import org.junit.runners.Parameterized.Parameters;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.cache.CacheFilter;
+import io.github.bonigarcia.wdm.etc.Architecture;
 import io.github.bonigarcia.wdm.etc.Config;
 import io.github.bonigarcia.wdm.etc.DriverManagerType;
 
@@ -59,11 +61,17 @@ public class CacheTest {
     @Parameter(2)
     public String driverVersion;
 
+    @Parameter(3)
+    public Architecture arch;
+
+    @Parameter(4)
+    public String os;
+
     @Parameters(name = "{index}: {0} {1}")
     public static Collection<Object[]> data() {
-        return asList(
-                new Object[][] { { CHROME, "chromedriver", "81.0.4044.69" },
-                        { FIREFOX, "geckodriver", "0.26.0" } });
+        return asList(new Object[][] {
+                { CHROME, "chromedriver", "81.0.4044.69", DEFAULT, "linux" },
+                { FIREFOX, "geckodriver", "0.26.0", DEFAULT, "linux" } });
     }
 
     @Before
@@ -81,7 +89,7 @@ public class CacheTest {
 
         CacheFilter cacheFilter = new CacheFilter(new Config());
         Optional<String> driverFromCache = cacheFilter.getDriverFromCache(
-                driverVersion, driverName, driverManagerType);
+                driverVersion, driverName, driverManagerType, arch, os);
         assertThat(driverFromCache.get(), notNullValue());
     }
 

@@ -78,10 +78,9 @@ public class CacheFilter {
     }
 
     public Optional<String> getDriverFromCache(String driverVersion,
-            String driverName, DriverManagerType driverManagerType) {
+            String driverName, DriverManagerType driverManagerType,
+            Architecture arch, String os) {
         log.trace("Checking if {} exists in cache", driverName);
-        Architecture arch = config.getArchitecture();
-        String os = config.getOs();
         List<File> filesInCache = getFilesInCache();
         if (!filesInCache.isEmpty()) {
             // Filter by name
