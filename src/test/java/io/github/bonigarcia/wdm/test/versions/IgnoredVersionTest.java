@@ -33,7 +33,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.etc.Config;
+import io.github.bonigarcia.wdm.etc.WebDriverManagerException;
 
 /**
  * Test for ignore versions.
@@ -50,16 +52,18 @@ public class IgnoredVersionTest {
         cleanDirectory(new File(new Config().getCachePath()));
     }
 
-    @Test
-    public void testIgnoreVersions() {
-        String[] ignoredVersions = { "2.33", "2.32" };
-        chromedriver().ignoreDriverVersions(ignoredVersions).setup();
+    @Test(expected = WebDriverManagerException.class)
+    public void ignoredVersions() {
+        String driverVersion = "81.0.4044.69";
+        String[] ignoredVersions = { driverVersion };
+        WebDriverManager.chromedriver().driverVersion(driverVersion)
+                .ignoreDriverVersions(ignoredVersions).setup();
         File binary = new File(chromedriver().getBinaryPath());
         log.debug("Using binary {} (ignoring {})", binary,
                 Arrays.toString(ignoredVersions));
 
-        for (String version : ignoredVersions) {
-            assertThat(binary.getName(), not(containsString(version)));
+        for (String v : ignoredVersions) {
+            assertThat(binary.getName(), not(containsString(v)));
         }
     }
 

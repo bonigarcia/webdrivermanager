@@ -40,6 +40,7 @@ import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.etc.Architecture;
 import io.github.bonigarcia.wdm.etc.OperatingSystem;
+import io.github.bonigarcia.wdm.etc.WebDriverManagerException;
 
 /**
  * Handler for URLs.
@@ -60,9 +61,10 @@ public class UrlHandler {
     boolean isUseBeta;
 
     public UrlHandler(List<URL> candidateUrls, String driverVersion,
-            boolean isUseBeta) {
+            String shortDriverName, boolean isUseBeta) {
         this.candidateUrls = candidateUrls;
         this.driverVersion = driverVersion;
+        this.shortDriverName = shortDriverName;
         this.isUseBeta = isUseBeta;
     }
 
@@ -298,6 +300,14 @@ public class UrlHandler {
     }
 
     public URL getCandidateUrl() {
+        if (hasNoCandidateUrl()) {
+            String driverVersionLabel = isNullOrEmpty(driverVersion) ? ""
+                    : " " + driverVersion;
+            String errorMessage = String.format(
+                    "No proper candidate URL to download %s%s", shortDriverName,
+                    driverVersionLabel);
+            throw new WebDriverManagerException(errorMessage);
+        }
         return candidateUrls.iterator().next();
     }
 

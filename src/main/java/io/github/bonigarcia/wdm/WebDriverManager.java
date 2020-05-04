@@ -795,13 +795,13 @@ public abstract class WebDriverManager {
     protected UrlHandler createUrlHandler(String driverVersion)
             throws IOException {
         List<URL> candidateUrls = getDriverUrls();
+        String shortDriverName = getShortDriverName();
         UrlHandler urlHandler = new UrlHandler(candidateUrls, driverVersion,
-                config().isUseBetaVersions());
+                shortDriverName, config().isUseBetaVersions());
         log.trace("All driver URLs: {}", candidateUrls);
 
         boolean getLatest = isUnknown(driverVersion);
         boolean continueSearchingVersion;
-        String shortDriverName = getShortDriverName();
 
         do {
             // Filter by driver name
