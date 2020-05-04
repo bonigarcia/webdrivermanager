@@ -28,7 +28,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
 
-import io.github.bonigarcia.wdm.etc.Shell;
+import io.github.bonigarcia.wdm.versions.Shell;
 
 /**
  * Shell utilities test.

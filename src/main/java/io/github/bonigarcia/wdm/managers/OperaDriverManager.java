@@ -159,9 +159,10 @@ public class OperaDriverManager extends WebDriverManager {
         String[] programFilesEnvs = { "LOCALAPPDATA", "PROGRAMFILES" };
         String[] winBrowserNames = { "\\\\Programs\\\\Opera\\\\launcher.exe",
                 "\\\\Opera\\\\launcher.exe" };
-        return getDefaultBrowserVersion(programFilesEnvs, winBrowserNames,
-                "opera", "/Applications/Opera.app/Contents/MacOS/Opera",
-                "--version", "");
+        return versionDetector.getDefaultBrowserVersion(programFilesEnvs,
+                winBrowserNames, "opera",
+                "/Applications/Opera.app/Contents/MacOS/Opera", "--version",
+                "");
     }
 
     @Override

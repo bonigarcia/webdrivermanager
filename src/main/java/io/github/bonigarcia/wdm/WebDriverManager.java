@@ -28,9 +28,6 @@ import static io.github.bonigarcia.wdm.etc.DriverManagerType.OPERA;
 import static io.github.bonigarcia.wdm.etc.DriverManagerType.PHANTOMJS;
 import static io.github.bonigarcia.wdm.etc.DriverManagerType.SELENIUM_SERVER_STANDALONE;
 import static io.github.bonigarcia.wdm.etc.OperatingSystem.WIN;
-import static io.github.bonigarcia.wdm.etc.Shell.getVersionFromPosixOutput;
-import static io.github.bonigarcia.wdm.etc.Shell.getVersionFromWmicOutput;
-import static io.github.bonigarcia.wdm.etc.Shell.runAndWait;
 import static java.lang.Integer.parseInt;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.charset.Charset.defaultCharset;
@@ -43,9 +40,6 @@ import static javax.xml.xpath.XPathFactory.newInstance;
 import static org.apache.commons.io.FileUtils.deleteDirectory;
 import static org.apache.commons.io.FilenameUtils.removeExtension;
 import static org.apache.commons.lang3.StringUtils.isNumeric;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_LINUX;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.BufferedReader;
@@ -63,7 +57,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.regex.Matcher;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -93,8 +86,6 @@ import io.github.bonigarcia.wdm.etc.Architecture;
 import io.github.bonigarcia.wdm.etc.Config;
 import io.github.bonigarcia.wdm.etc.DriverManagerType;
 import io.github.bonigarcia.wdm.etc.OperatingSystem;
-import io.github.bonigarcia.wdm.etc.Shell;
-import io.github.bonigarcia.wdm.etc.VersionComparator;
 import io.github.bonigarcia.wdm.etc.WebDriverManagerException;
 import io.github.bonigarcia.wdm.managers.ChromeDriverManager;
 import io.github.bonigarcia.wdm.managers.ChromiumDriverManager;
@@ -109,6 +100,8 @@ import io.github.bonigarcia.wdm.online.Downloader;
 import io.github.bonigarcia.wdm.online.GitHubApi;
 import io.github.bonigarcia.wdm.online.HttpClient;
 import io.github.bonigarcia.wdm.online.UrlHandler;
+import io.github.bonigarcia.wdm.versions.VersionComparator;
+import io.github.bonigarcia.wdm.versions.VersionDetector;
 
 /**
  * Parent driver manager.
@@ -121,10 +114,7 @@ public abstract class WebDriverManager {
     protected static final Logger log = getLogger(lookup().lookupClass());
 
     protected static final String SLASH = "/";
-    protected static final String ONLINE = "online";
-    protected static final String LOCAL = "local";
     protected static final String LATEST_RELEASE = "LATEST_RELEASE";
-    protected static final String REG_SZ = "REG_SZ";
 
     protected abstract List<URL> getDriverUrls() throws IOException;
 
@@ -160,12 +150,11 @@ public abstract class WebDriverManager {
     protected boolean mirrorLog;
     protected boolean forcedArch;
     protected boolean forcedOs;
-    protected boolean isSnap;
     protected int retryCount = 0;
     protected Config config = new Config();
     protected ResolutionCache resolutionCache = new ResolutionCache(config);
     protected CacheHandler cacheHandler = new CacheHandler(config);
-    protected Properties versionsProperties;
+    protected VersionDetector versionDetector;
 
     public static Config globalConfig() {
         Config global = new Config();
@@ -490,11 +479,23 @@ public abstract class WebDriverManager {
     protected void manage(String driverVersion) {
         httpClient = new HttpClient(config());
         try (HttpClient wdmHttpClient = httpClient) {
+            versionDetector = new VersionDetector(config, httpClient);
             downloader = new Downloader(httpClient, config(), this::preDownload,
                     this::postDownload);
 
             if (isUnknown(driverVersion)) {
                 driverVersion = resolveDriverVersion(driverVersion);
+            }
+            if (versionDetector.isSnap()) {
+                String chromiumDriverSnapPath = config()
+                        .getChromiumDriverSnapPath();
+                File snapChromiumDriverPath = new File(chromiumDriverSnapPath);
+                boolean existsSnap = snapChromiumDriverPath.exists();
+                if (existsSnap) {
+                    log.debug("Found {} snap", getDriverManagerType());
+                    exportDriver(chromiumDriverSnapPath);
+                }
+                return;
             }
 
             Optional<String> driverInCache = empty();
@@ -546,8 +547,8 @@ public abstract class WebDriverManager {
                         optionalBrowserVersion);
             }
             if (isUnknown(driverVersion)) {
-                optionalDriverVersion = getDriverVersionFromProperties(
-                        preferenceKey);
+                optionalDriverVersion = versionDetector
+                        .getDriverVersionFromProperties(preferenceKey);
             }
             if (optionalDriverVersion.isPresent()) {
                 driverVersion = optionalDriverVersion.get();
@@ -586,7 +587,7 @@ public abstract class WebDriverManager {
                 getDriverName());
     }
 
-    private void noCandidateUrlFound(String driverVersion) {
+    protected void noCandidateUrlFound(String driverVersion) {
         Architecture arch = config().getArchitecture();
         String os = config().getOs();
         String errorMessage = String.format("%s %s for %s %s not found in %s",
@@ -690,83 +691,6 @@ public abstract class WebDriverManager {
             log.trace("Version not found in URL {}", url);
         }
         return currentVersion;
-    }
-
-    protected Optional<String> getDriverVersionFromProperties(String key) {
-        // Chromium values are the same than Chrome
-        if (key.contains("chromium")) {
-            key = key.replace("chromium", "chrome");
-        }
-
-        boolean online = config().getVersionsPropertiesOnlineFirst();
-        String onlineMessage = online ? ONLINE : LOCAL;
-        log.debug("Getting driver version for {} from {} versions.properties",
-                key, onlineMessage);
-        String value = getVersionFromProperties(online).getProperty(key);
-        if (value == null) {
-            String notOnlineMessage = online ? LOCAL : ONLINE;
-            log.debug(
-                    "Driver for {} not found in {} properties (using {} version.properties)",
-                    key, onlineMessage, notOnlineMessage);
-            versionsProperties = null;
-            value = getVersionFromProperties(!online).getProperty(key);
-        }
-        return value == null ? empty() : Optional.of(value);
-    }
-
-    protected Properties getVersionFromProperties(boolean online) {
-        if (versionsProperties != null) {
-            log.trace("Already created versions.properties");
-            return versionsProperties;
-        } else {
-            try (InputStream inputStream = getVersionsInputStream(online)) {
-                versionsProperties = new Properties();
-                versionsProperties.load(inputStream);
-            } catch (Exception e) {
-                versionsProperties = null;
-                throw new IllegalStateException(
-                        "Cannot read versions.properties", e);
-            }
-            return versionsProperties;
-        }
-    }
-
-    protected InputStream getVersionsInputStream(boolean online)
-            throws IOException {
-        String onlineMessage = online ? ONLINE : LOCAL;
-        log.trace("Reading {} version.properties to find out driver version",
-                onlineMessage);
-        InputStream inputStream;
-        try {
-            if (online) {
-                inputStream = getOnlineVersionsInputStream();
-            } else {
-                inputStream = getLocalVersionsInputStream();
-            }
-        } catch (Exception e) {
-            String exceptionMessage = online ? LOCAL : ONLINE;
-            log.warn("Error reading version.properties, using {} instead",
-                    exceptionMessage);
-            if (online) {
-                inputStream = getLocalVersionsInputStream();
-            } else {
-                inputStream = getOnlineVersionsInputStream();
-            }
-        }
-        return inputStream;
-    }
-
-    protected InputStream getLocalVersionsInputStream() {
-        InputStream inputStream;
-        inputStream = Config.class.getResourceAsStream("/versions.properties");
-        return inputStream;
-    }
-
-    protected InputStream getOnlineVersionsInputStream() throws IOException {
-        return httpClient
-                .execute(httpClient
-                        .createHttpGet(config().getVersionsPropertiesUrl()))
-                .getEntity().getContent();
     }
 
     protected void handleException(Exception e, String driverVersion) {
@@ -975,95 +899,6 @@ public abstract class WebDriverManager {
                 && name.toLowerCase().contains(getDriverName());
     }
 
-    protected Optional<String> getDefaultBrowserVersion(
-            String[] programFilesEnvs, String[] winBrowserNames,
-            String linuxBrowserName, String macBrowserName, String versionFlag,
-            String browserNameInOutput) {
-
-        String browserBinaryPath = config().getBinaryPath();
-        if (IS_OS_WINDOWS) {
-            String winName = "";
-            for (int i = 0; i < programFilesEnvs.length; i++) {
-                winName = winBrowserNames.length > 1 ? winBrowserNames[i]
-                        : winBrowserNames[0];
-                String browserVersionOutput = getBrowserVersionInWindows(
-                        programFilesEnvs[i], winName, browserBinaryPath);
-                if (!isNullOrEmpty(browserVersionOutput)) {
-                    return Optional
-                            .of(getVersionFromWmicOutput(browserVersionOutput));
-                }
-            }
-        } else if (IS_OS_LINUX || IS_OS_MAC) {
-            String browserPath = getPosixBrowserPath(linuxBrowserName,
-                    macBrowserName, browserBinaryPath);
-            String browserVersionOutput = runAndWait(browserPath, versionFlag);
-            if (browserVersionOutput.toLowerCase().contains("snap")) {
-                isSnap = true;
-            }
-            if (!isNullOrEmpty(browserVersionOutput)) {
-                return Optional.of(getVersionFromPosixOutput(
-                        browserVersionOutput, browserNameInOutput));
-            }
-        }
-        return empty();
-    }
-
-    protected String getPosixBrowserPath(String linuxBrowserName,
-            String macBrowserName, String browserBinaryPath) {
-        if (!isNullOrEmpty(browserBinaryPath)) {
-            return browserBinaryPath;
-        } else {
-            return IS_OS_LINUX ? linuxBrowserName : macBrowserName;
-        }
-    }
-
-    protected String getBrowserVersionInWindows(String programFilesEnv,
-            String winBrowserName, String browserBinaryPath) {
-        String programFiles = System.getenv(programFilesEnv).replaceAll("\\\\",
-                "\\\\\\\\");
-        String browserPath = isNullOrEmpty(browserBinaryPath)
-                ? programFiles + winBrowserName
-                : browserBinaryPath;
-        String wmic = "wmic.exe";
-        return runAndWait(findFileLocation(wmic), wmic, "datafile", "where",
-                "name='" + browserPath + "'", "get", "Version", "/value");
-    }
-
-    protected Optional<String> getBrowserVersionFromWinRegistry(String key,
-            String value) {
-        Optional<String> browserVersionFromRegistry = empty();
-        String regQueryResult = Shell.runAndWait("REG", "QUERY", key, "/v",
-                value);
-        int i = regQueryResult.indexOf(REG_SZ);
-        int j = regQueryResult.indexOf('.', i);
-        if (i != -1 && j != -1) {
-            browserVersionFromRegistry = Optional.of(
-                    regQueryResult.substring(i + REG_SZ.length(), j).trim());
-        }
-        return browserVersionFromRegistry;
-    }
-
-    protected File findFileLocation(String filename) {
-        // Alternative #1: in System32 folder
-        File system32Folder = new File(System.getenv("SystemRoot"), "System32");
-        File system32File = new File(system32Folder, filename);
-        if (checkFileAndFolder(system32Folder, system32File)) {
-            return system32Folder;
-        }
-        // Alternative #2: in wbem folder
-        File wbemFolder = new File(system32Folder, "wbem");
-        File wbemFile = new File(wbemFolder, filename);
-        if (checkFileAndFolder(wbemFolder, wbemFile)) {
-            return wbemFolder;
-        }
-        return new File(".");
-    }
-
-    protected boolean checkFileAndFolder(File folder, File file) {
-        return folder.exists() && folder.isDirectory() && file.exists()
-                && file.isFile();
-    }
-
     protected Charset getVersionCharset() {
         return defaultCharset();
     }
@@ -1072,13 +907,19 @@ public abstract class WebDriverManager {
         return LATEST_RELEASE;
     }
 
+    protected Optional<String> getDriverVersionFromRepository(
+            Optional<String> driverVersion) {
+        return versionDetector.getDriverVersionFromRepository(driverVersion,
+                getDriverUrl(), getVersionCharset(), getDriverName(),
+                getLatestVersionLabel(), LATEST_RELEASE);
+    }
+
     protected void reset() {
         config().reset();
         mirrorLog = false;
         forcedArch = false;
         forcedOs = false;
         retryCount = 0;
-        isSnap = false;
     }
 
     protected String getProgramFilesEnv() {
@@ -1151,28 +992,6 @@ public abstract class WebDriverManager {
 
     protected Optional<String> getLatestDriverVersionFromRepository() {
         return empty();
-    }
-
-    protected Optional<String> getDriverVersionFromRepository(
-            Optional<String> driverVersion) {
-        String url = driverVersion.isPresent()
-                ? getDriverUrl() + LATEST_RELEASE + "_" + driverVersion.get()
-                : getDriverUrl() + getLatestVersionLabel();
-        Optional<String> result = Optional.empty();
-        try (InputStream response = httpClient
-                .execute(httpClient.createHttpGet(new URL(url))).getEntity()
-                .getContent()) {
-            result = Optional.of(IOUtils.toString(response, getVersionCharset())
-                    .replaceAll("\r\n", ""));
-        } catch (Exception e) {
-            log.warn("Exception reading {} to get latest version of {} ({})",
-                    url, getDriverName(), e.getMessage());
-        }
-        if (result.isPresent()) {
-            log.debug("Latest version of {} according to {} is {}",
-                    getDriverName(), url, result.get());
-        }
-        return result;
     }
 
     protected String getShortDriverName() {

@@ -126,9 +126,10 @@ public class FirefoxDriverManager extends WebDriverManager {
                 getOtherProgramFilesEnv() };
 
         String[] winBrowserNames = { "\\\\Mozilla Firefox\\\\firefox.exe" };
-        return getDefaultBrowserVersion(programFilesEnvs, winBrowserNames,
-                "firefox", "/Applications/Firefox.app/Contents/MacOS/firefox",
-                "-v", getDriverManagerType().toString());
+        return versionDetector.getDefaultBrowserVersion(programFilesEnvs,
+                winBrowserNames, "firefox",
+                "/Applications/Firefox.app/Contents/MacOS/firefox", "-v",
+                getDriverManagerType().toString());
     }
 
     @Override

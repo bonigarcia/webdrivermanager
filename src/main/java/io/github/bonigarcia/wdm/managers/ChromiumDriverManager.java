@@ -18,7 +18,6 @@ package io.github.bonigarcia.wdm.managers;
 
 import static io.github.bonigarcia.wdm.etc.DriverManagerType.CHROMIUM;
 
-import java.io.File;
 import java.util.Optional;
 
 import io.github.bonigarcia.wdm.etc.DriverManagerType;
@@ -57,35 +56,15 @@ public class ChromiumDriverManager extends ChromeDriverManager {
     }
 
     @Override
-    protected void manage(String driverVersion) {
-        // Special case for Chromium snap packages
-        if (isSnap && snapDriverExists()) {
-            return;
-        }
-        super.manage(driverVersion);
-    }
-
-    @Override
     protected Optional<String> getBrowserVersionFromTheShell() {
         String[] programFilesEnvs = { "LOCALAPPDATA", getOtherProgramFilesEnv(),
                 getProgramFilesEnv() };
         String[] winBrowserNames = {
                 "\\\\Chromium\\\\Application\\\\chrome.exe" };
-        return getDefaultBrowserVersion(programFilesEnvs, winBrowserNames,
-                "chromium-browser",
+        return versionDetector.getDefaultBrowserVersion(programFilesEnvs,
+                winBrowserNames, "chromium-browser",
                 "/Applications/Chromium.app/Contents/MacOS/Chromium",
                 "--version", getDriverManagerType().toString());
-    }
-
-    protected boolean snapDriverExists() {
-        String chromiumDriverSnapPath = config().getChromiumDriverSnapPath();
-        File snapChromiumDriverPath = new File(chromiumDriverSnapPath);
-        boolean existsSnap = snapChromiumDriverPath.exists();
-        if (existsSnap) {
-            log.debug("Found {} snap", getDriverManagerType());
-            exportDriver(chromiumDriverSnapPath);
-        }
-        return existsSnap;
     }
 
 }

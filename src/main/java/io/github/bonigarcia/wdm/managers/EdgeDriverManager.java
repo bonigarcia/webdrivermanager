@@ -144,8 +144,9 @@ public class EdgeDriverManager extends WebDriverManager {
         String macBrowserName = "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge";
         String versionFlag = IS_OS_MAC_OSX ? "-version" : "--version";
 
-        return getDefaultBrowserVersion(programFilesEnvs, winBrowserNames, "",
-                macBrowserName, versionFlag, getDriverManagerType().toString());
+        return versionDetector.getDefaultBrowserVersion(programFilesEnvs,
+                winBrowserNames, "", macBrowserName, versionFlag,
+                getDriverManagerType().toString());
     }
 
     @Override
