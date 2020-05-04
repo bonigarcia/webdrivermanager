@@ -21,6 +21,7 @@ import static io.github.bonigarcia.wdm.etc.DriverManagerType.CHROMIUM;
 import static java.io.File.separator;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Collections.sort;
+import static java.util.stream.Collectors.toList;
 import static org.apache.commons.io.FileUtils.listFiles;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -57,13 +58,10 @@ public class CacheHandler {
         String pathSeparator = isVersion ? separator : "";
         List<File> output = new ArrayList<>(input);
         if (!key.isEmpty() && !input.isEmpty()) {
-            String keyInLowerCase = key.toLowerCase();
-            for (File f : input) {
-                if (!f.toString().toLowerCase()
-                        .contains(pathSeparator + keyInLowerCase)) {
-                    output.remove(f);
-                }
-            }
+            output = input.stream()
+                    .filter(file -> file.toString().toLowerCase()
+                            .contains(pathSeparator + key.toLowerCase()))
+                    .collect(toList());
         }
         log.trace("Filter cache by {} -- input list {} -- output list {} ", key,
                 input, output);
