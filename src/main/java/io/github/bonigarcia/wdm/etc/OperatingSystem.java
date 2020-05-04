@@ -16,6 +16,12 @@
  */
 package io.github.bonigarcia.wdm.etc;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+
+import java.util.List;
+import java.util.stream.Stream;
+
 /**
  * Supported operative system enumeration.
  *
@@ -23,5 +29,20 @@ package io.github.bonigarcia.wdm.etc;
  * @since 1.0.0
  */
 public enum OperatingSystem {
-    WIN, LINUX, MAC
+    WIN(emptyList()), LINUX(emptyList()), MAC(asList("osx"));
+
+    List<String> osLabels;
+
+    OperatingSystem(List<String> osLabels) {
+        this.osLabels = osLabels;
+    }
+
+    public Stream<String> osLabelsStream() {
+        return this.osLabels.stream();
+    }
+
+    public boolean matchOs(String os) {
+        return osLabelsStream().anyMatch(x -> os.contains(x))
+                || os.contains(this.name().toLowerCase());
+    }
 }

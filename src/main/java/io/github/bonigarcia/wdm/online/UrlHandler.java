@@ -133,22 +133,10 @@ public class UrlHandler {
                 && !driverName.equalsIgnoreCase("selenium-server-standalone")) {
             log.trace("URLs before filtering by OS ({}): {}", osName,
                     candidateUrls);
-            List<URL> out = new ArrayList<>();
-
-            for (URL url : candidateUrls) {
-                for (OperatingSystem os : OperatingSystem.values()) {
-                    if (((osName.contains(os.name())
-                            && url.getFile().toUpperCase().contains(os.name()))
-                            || (osName.equalsIgnoreCase("mac") && url.getFile()
-                                    .toLowerCase().contains("osx")))
-                            && !out.contains(url)) {
-                        out.add(url);
-                    }
-                }
-            }
-
-            log.trace("URLs after filtering by OS ({}): {}", osName, out);
-            candidateUrls = out;
+            candidateUrls = candidateUrls.stream().filter(url -> OperatingSystem
+                    .valueOf(osName).matchOs(url.getFile())).collect(toList());
+            log.trace("URLs after filtering by OS ({}): {}", osName,
+                    candidateUrls);
         }
     }
 
