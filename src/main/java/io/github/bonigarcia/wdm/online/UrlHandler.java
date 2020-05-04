@@ -202,22 +202,13 @@ public class UrlHandler {
                 log.trace("URLs before filtering by ignored versions ({}): {}",
                         Arrays.toString(ignoredVersions), candidateUrls);
             }
-            List<URL> out = new ArrayList<>(candidateUrls);
-
-            for (URL url : candidateUrls) {
-                for (String s : ignoredVersions) {
-                    if (url.getFile().contains(s)) {
-                        log.info("Ignoring version {}", s);
-                        out.remove(url);
-                    }
-                }
-            }
-
+            candidateUrls = candidateUrls.stream().filter(url -> Arrays
+                    .asList(ignoredVersions).contains(url.getFile()))
+                    .collect(toList());
             if (log.isTraceEnabled()) {
                 log.trace("URLs after filtering by ignored versions ({}): {}",
-                        Arrays.toString(ignoredVersions), out);
+                        Arrays.toString(ignoredVersions), candidateUrls);
             }
-            candidateUrls = out;
         }
     }
 
