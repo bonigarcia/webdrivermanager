@@ -49,15 +49,15 @@ public enum DriverManagerType {
     public String toString() {
         switch (this) {
         case CHROME:
-            return "Google Chrome";
+            return "Chrome";
         case CHROMIUM:
             return "Chromium";
         case FIREFOX:
-            return "Mozilla Firefox";
+            return "Firefox";
         case OPERA:
             return "Opera";
         case EDGE:
-            return "Microsoft Edge";
+            return "Edge";
         case PHANTOMJS:
             return "PhantomJS";
         case IEXPLORER:

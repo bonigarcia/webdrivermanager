@@ -64,11 +64,14 @@ public abstract class VersionTestParent {
 
     @Test
     public void testLatestVersion() throws Exception {
-        log.info("Test latest driver version [arch={} os={}]", architecture,
-                os);
+        String osLabel = "";
         if (os != null) {
             browserManager.operatingSystem(os);
+            osLabel = " os=" + os;
         }
+        log.debug("Test latest {} [arch={}{}]",
+                browserManager.getDriverManagerType(), architecture, osLabel);
+
         switch (architecture) {
         case X32:
             browserManager.arch32().setup();
@@ -86,14 +89,18 @@ public abstract class VersionTestParent {
     @Test
     public void testSpecificVersions() throws Exception {
         for (String specificVersion : specificVersions) {
-            log.info("Test specific driver version={} [arch={} os={}]",
-                    specificVersion, architecture, os);
             if (architecture != DEFAULT) {
                 browserManager.architecture(architecture);
             }
+            String osLabel = "";
             if (os != null) {
                 browserManager.operatingSystem(os);
+                osLabel = " os=" + os;
             }
+            log.debug("Test {} version={} [arch={}{}]",
+                    browserManager.getDriverManagerType(), specificVersion,
+                    architecture, osLabel);
+
             browserManager.driverVersion(specificVersion).setup();
 
             assertThat(browserManager.getDownloadedVersion(),

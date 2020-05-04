@@ -66,7 +66,7 @@ public class VoidDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected DriverManagerType getDriverManagerType() {
+    public DriverManagerType getDriverManagerType() {
         return null;
     }
 

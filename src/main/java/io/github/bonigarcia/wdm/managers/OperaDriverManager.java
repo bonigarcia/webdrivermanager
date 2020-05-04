@@ -38,7 +38,7 @@ import io.github.bonigarcia.wdm.etc.WebDriverManagerException;
 public class OperaDriverManager extends WebDriverManager {
 
     @Override
-    protected DriverManagerType getDriverManagerType() {
+    public DriverManagerType getDriverManagerType() {
         return OPERA;
     }
 

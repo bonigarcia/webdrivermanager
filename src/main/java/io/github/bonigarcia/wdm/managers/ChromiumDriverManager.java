@@ -32,7 +32,7 @@ import io.github.bonigarcia.wdm.etc.DriverManagerType;
 public class ChromiumDriverManager extends ChromeDriverManager {
 
     @Override
-    protected DriverManagerType getDriverManagerType() {
+    public DriverManagerType getDriverManagerType() {
         return CHROMIUM;
     }
 

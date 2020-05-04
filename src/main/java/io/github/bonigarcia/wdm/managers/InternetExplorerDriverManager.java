@@ -36,7 +36,7 @@ import io.github.bonigarcia.wdm.etc.DriverManagerType;
 public class InternetExplorerDriverManager extends WebDriverManager {
 
     @Override
-    protected DriverManagerType getDriverManagerType() {
+    public DriverManagerType getDriverManagerType() {
         return IEXPLORER;
     }
 

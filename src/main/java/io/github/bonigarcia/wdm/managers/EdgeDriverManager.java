@@ -45,7 +45,7 @@ public class EdgeDriverManager extends WebDriverManager {
     protected static final String LATEST_STABLE = "LATEST_STABLE";
 
     @Override
-    protected DriverManagerType getDriverManagerType() {
+    public DriverManagerType getDriverManagerType() {
         return EDGE;
     }
 

@@ -130,8 +130,6 @@ public abstract class WebDriverManager {
 
     protected abstract Optional<String> getBrowserVersionFromTheShell();
 
-    protected abstract DriverManagerType getDriverManagerType();
-
     protected abstract String getDriverName();
 
     protected abstract String getDriverVersion();
@@ -152,6 +150,8 @@ public abstract class WebDriverManager {
 
     protected static Map<DriverManagerType, WebDriverManager> instanceMap = new EnumMap<>(
             DriverManagerType.class);
+
+    public abstract DriverManagerType getDriverManagerType();
 
     protected HttpClient httpClient;
     protected Downloader downloader;
