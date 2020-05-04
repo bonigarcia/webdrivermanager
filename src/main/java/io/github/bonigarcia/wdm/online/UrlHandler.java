@@ -43,7 +43,7 @@ import io.github.bonigarcia.wdm.etc.OperatingSystem;
 import io.github.bonigarcia.wdm.etc.WebDriverManagerException;
 
 /**
- * Handler for URLs.
+ * Handler for URLs (filtering, version selection).
  *
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 4.0.0
@@ -156,8 +156,8 @@ public class UrlHandler {
         log.trace("URLs before filtering by architecture ({}): {}", arch,
                 candidateUrls);
         if ((forcedArch || candidateUrls.size() > 1) && arch != null) {
-            candidateUrls = candidateUrls.stream()
-                    .filter(url -> arch.matchUrl(url)).collect(toList());
+            candidateUrls = candidateUrls.stream().filter(arch::matchUrl)
+                    .collect(toList());
         }
         log.trace("URLs after filtering by architecture ({}): {}", arch,
                 candidateUrls);
