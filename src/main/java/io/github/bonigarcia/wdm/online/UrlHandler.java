@@ -248,13 +248,9 @@ public class UrlHandler {
     }
 
     public void resetList(List<URL> newCandidateUrls) {
-        List<URL> out = new ArrayList<>(newCandidateUrls);
-        for (URL url : newCandidateUrls) {
-            if (url.getFile().contains(driverVersion)) {
-                out.remove(url);
-            }
-        }
-        candidateUrls = out;
+        candidateUrls = candidateUrls.stream()
+                .filter(url -> !url.getFile().contains(driverVersion))
+                .collect(toList());
     }
 
     public boolean isNotStable(URL url) {
