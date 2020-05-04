@@ -73,8 +73,6 @@ public class ForceOsTest {
     @Before
     public void setup() throws IOException {
         initMocks(this);
-        System.out.println(downloader);
-        System.out.println(downloader.getCachePath());
         cleanDirectory(new File(downloader.getCachePath()));
     }
 

@@ -248,7 +248,7 @@ public class UrlHandler {
     }
 
     public void resetList(List<URL> newCandidateUrls) {
-        candidateUrls = candidateUrls.stream()
+        candidateUrls = newCandidateUrls.stream()
                 .filter(url -> !url.getFile().contains(driverVersion))
                 .collect(toList());
     }
