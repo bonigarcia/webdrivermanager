@@ -67,6 +67,8 @@ public class Config {
             "wdm.avoidBrowserDetection", Boolean.class);
     ConfigKey<Boolean> avoidAutoReset = new ConfigKey<>("wdm.avoidAutoReset",
             Boolean.class);
+    ConfigKey<Boolean> avoidFallback = new ConfigKey<>("wdm.avoidFallback",
+            Boolean.class);
     ConfigKey<Boolean> avoidResolutionCache = new ConfigKey<>(
             "wdm.avoidResolutionCache", Boolean.class);
     ConfigKey<Integer> timeout = new ConfigKey<>("wdm.timeout", Integer.class);
@@ -381,6 +383,15 @@ public class Config {
 
     public Config setAvoidAutoReset(boolean value) {
         this.avoidAutoReset.setValue(value);
+        return this;
+    }
+
+    public boolean isAvoidFallback() {
+        return resolve(avoidFallback);
+    }
+
+    public Config setAvoidFallback(boolean value) {
+        this.avoidFallback.setValue(value);
         return this;
     }
 

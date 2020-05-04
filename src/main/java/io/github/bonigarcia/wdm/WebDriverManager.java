@@ -410,6 +410,11 @@ public abstract class WebDriverManager {
         return instanceMap.get(getDriverManagerType());
     }
 
+    public WebDriverManager avoidFallback() {
+        config().setAvoidFallback(true);
+        return instanceMap.get(getDriverManagerType());
+    }
+
     public WebDriverManager ttl(int seconds) {
         config().setTtl(seconds);
         return instanceMap.get(getDriverManagerType());
@@ -698,7 +703,7 @@ public abstract class WebDriverManager {
         String errorMessage = String.format(
                 "There was an error managing %s %s (%s)", getDriverName(),
                 driverVersionStr, e.getMessage());
-        if (retryCount == 0) {
+        if (retryCount == 0 && !config().isAvoidFallback()) {
             config().setAvoidBrowserDetection(true);
             driverVersion = "";
             setBrowserVersion("");

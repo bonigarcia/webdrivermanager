@@ -57,7 +57,7 @@ public class IgnoredVersionTest {
         String driverVersion = "81.0.4044.69";
         String[] ignoredVersions = { driverVersion };
         WebDriverManager.chromedriver().driverVersion(driverVersion)
-                .ignoreDriverVersions(ignoredVersions).setup();
+                .ignoreDriverVersions(ignoredVersions).avoidFallback().setup();
         File binary = new File(chromedriver().getBinaryPath());
         log.debug("Using binary {} (ignoring {})", binary,
                 Arrays.toString(ignoredVersions));
