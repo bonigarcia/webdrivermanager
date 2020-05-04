@@ -19,10 +19,13 @@ package io.github.bonigarcia.wdm.test.cache;
 import static io.github.bonigarcia.wdm.etc.Architecture.DEFAULT;
 import static io.github.bonigarcia.wdm.etc.DriverManagerType.CHROME;
 import static io.github.bonigarcia.wdm.etc.DriverManagerType.FIREFOX;
+import static io.github.bonigarcia.wdm.etc.OperatingSystem.LINUX;
+import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.asList;
 import static org.apache.commons.io.FileUtils.cleanDirectory;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertThat;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,12 +39,14 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
+import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.cache.CacheFilter;
 import io.github.bonigarcia.wdm.etc.Architecture;
 import io.github.bonigarcia.wdm.etc.Config;
 import io.github.bonigarcia.wdm.etc.DriverManagerType;
+import io.github.bonigarcia.wdm.etc.OperatingSystem;
 
 /**
  * Test for driver cache.
@@ -51,6 +56,8 @@ import io.github.bonigarcia.wdm.etc.DriverManagerType;
  */
 @RunWith(Parameterized.class)
 public class CacheTest {
+
+    static final Logger log = getLogger(lookup().lookupClass());
 
     @Parameter(0)
     public DriverManagerType driverManagerType;
@@ -65,31 +72,33 @@ public class CacheTest {
     public Architecture arch;
 
     @Parameter(4)
-    public String os;
+    public OperatingSystem os;
 
     @Parameters(name = "{index}: {0} {1}")
     public static Collection<Object[]> data() {
         return asList(new Object[][] {
-                { CHROME, "chromedriver", "81.0.4044.69", DEFAULT, "linux" },
-                { FIREFOX, "geckodriver", "0.26.0", DEFAULT, "linux" } });
+                { CHROME, "chromedriver", "81.0.4044.69", DEFAULT, LINUX },
+                { FIREFOX, "geckodriver", "0.26.0", DEFAULT, LINUX } });
     }
 
     @Before
     @After
     public void cleanCache() throws IOException {
-        String cachePath = new Config().getCachePath();
-        cleanDirectory(new File(cachePath));
+        cleanDirectory(new File(new Config().getCachePath()));
     }
 
     @Test
     public void testCache() throws Exception {
         WebDriverManager browserManager = WebDriverManager
                 .getInstance(driverManagerType);
-        browserManager.forceDownload().driverVersion(driverVersion).setup();
+        browserManager.forceDownload().operatingSystem(os)
+                .driverVersion(driverVersion).setup();
 
         CacheFilter cacheFilter = new CacheFilter(new Config());
         Optional<String> driverFromCache = cacheFilter.getDriverFromCache(
-                driverVersion, driverName, driverManagerType, arch, os);
+                driverVersion, driverName, driverManagerType, arch, os.name());
+
+        log.debug("Driver from cache: {}", driverFromCache);
         assertThat(driverFromCache.get(), notNullValue());
     }
 
