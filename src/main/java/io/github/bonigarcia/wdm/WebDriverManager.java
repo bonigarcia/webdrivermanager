@@ -400,8 +400,8 @@ public abstract class WebDriverManager {
         return instanceMap.get(getDriverManagerType());
     }
 
-    public WebDriverManager avoidAutoVersion() {
-        config().setAvoidAutoVersion(true);
+    public WebDriverManager avoidBrowserDetection() {
+        config().setAvoidBrowserDetection(true);
         return instanceMap.get(getDriverManagerType());
     }
 
@@ -649,7 +649,7 @@ public abstract class WebDriverManager {
     }
 
     protected Optional<String> detectBrowserVersion() {
-        if (config().isAvoidAutoVersion()) {
+        if (config().isAvoidBrowserDetection()) {
             return empty();
         }
 
@@ -699,7 +699,7 @@ public abstract class WebDriverManager {
                 "There was an error managing %s %s (%s)", getDriverName(),
                 driverVersionStr, e.getMessage());
         if (retryCount == 0) {
-            config().setAvoidAutoVersion(true);
+            config().setAvoidBrowserDetection(true);
             driverVersion = "";
             setBrowserVersion("");
             retryCount++;

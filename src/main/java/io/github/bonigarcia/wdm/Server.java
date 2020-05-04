@@ -136,7 +136,7 @@ public class Server {
 
         // Resolve driver
         driverManager.config().setAvoidExport(true);
-        driverManager.config().setAvoidAutoVersion(true);
+        driverManager.config().setAvoidBrowserDetection(true);
         driverManager.setup();
         File binary = new File(driverManager.getBinaryPath());
         String binaryVersion = driverManager.getDownloadedVersion();

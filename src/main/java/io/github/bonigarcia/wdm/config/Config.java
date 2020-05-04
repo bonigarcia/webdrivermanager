@@ -63,8 +63,8 @@ public class Config {
             Boolean.class);
     ConfigKey<Boolean> avoidOutputTree = new ConfigKey<>("wdm.avoidOutputTree",
             Boolean.class);
-    ConfigKey<Boolean> avoidAutoVersion = new ConfigKey<>(
-            "wdm.avoidAutoVersion", Boolean.class);
+    ConfigKey<Boolean> avoidBrowserDetection = new ConfigKey<>(
+            "wdm.avoidBrowserDetection", Boolean.class);
     ConfigKey<Boolean> avoidAutoReset = new ConfigKey<>("wdm.avoidAutoReset",
             Boolean.class);
     ConfigKey<Boolean> avoidResolutionCache = new ConfigKey<>(
@@ -366,12 +366,12 @@ public class Config {
         return this;
     }
 
-    public boolean isAvoidAutoVersion() {
-        return resolve(avoidAutoVersion);
+    public boolean isAvoidBrowserDetection() {
+        return resolve(avoidBrowserDetection);
     }
 
-    public Config setAvoidAutoVersion(boolean value) {
-        this.avoidAutoVersion.setValue(value);
+    public Config setAvoidBrowserDetection(boolean value) {
+        this.avoidBrowserDetection.setValue(value);
         return this;
     }
 

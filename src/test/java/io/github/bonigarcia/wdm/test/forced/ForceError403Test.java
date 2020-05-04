@@ -43,7 +43,8 @@ public class ForceError403Test {
     public void test403() {
         for (int i = 0; i < NUM; i++) {
             log.debug("Forcing 403 error {}/{}", i + 1, NUM);
-            firefoxdriver().avoidAutoVersion().avoidResolutionCache().setup();
+            firefoxdriver().avoidBrowserDetection().avoidResolutionCache()
+                    .setup();
             assertThat(firefoxdriver().getBinaryPath(), notNullValue());
         }
     }

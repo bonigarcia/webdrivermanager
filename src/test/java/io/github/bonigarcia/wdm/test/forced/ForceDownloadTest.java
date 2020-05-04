@@ -62,7 +62,7 @@ public class ForceDownloadTest {
     public void testLatestChrome() {
         WebDriverManager driverManager = WebDriverManager
                 .getInstance(driverClass);
-        driverManager.forceDownload().avoidAutoVersion().timeout(TIMEOUT)
+        driverManager.forceDownload().avoidBrowserDetection().timeout(TIMEOUT)
                 .operatingSystem(OS).setup();
         assertThat(driverManager.getBinaryPath(), notNullValue());
     }

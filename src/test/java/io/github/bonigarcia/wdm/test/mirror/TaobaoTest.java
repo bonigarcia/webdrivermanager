@@ -38,7 +38,7 @@ public class TaobaoTest {
 
     @Test
     public void testTaobao() throws Exception {
-        chromedriver().config().setAvoidAutoVersion(true)
+        chromedriver().config().setAvoidBrowserDetection(true)
                 .setChromeDriverMirrorUrl(
                         new URL("http://npm.taobao.org/mirrors/chromedriver/"));
         chromedriver().useMirror().forceDownload().setup();
@@ -50,7 +50,7 @@ public class TaobaoTest {
     @Ignore("Flaky test due to cnpmjs.org")
     @Test
     public void testOtherMirrorUrl() throws Exception {
-        chromedriver().config().setAvoidAutoVersion(true)
+        chromedriver().config().setAvoidBrowserDetection(true)
                 .setChromeDriverMirrorUrl(
                         new URL("https://cnpmjs.org/mirrors/chromedriver/"));
         chromedriver().useMirror().forceDownload().setup();
