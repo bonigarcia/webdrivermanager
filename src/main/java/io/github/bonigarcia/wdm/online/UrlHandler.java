@@ -291,9 +291,9 @@ public class UrlHandler {
         return out;
     }
 
-    public void resetList() {
-        List<URL> out = new ArrayList<>(candidateUrls);
-        for (URL url : candidateUrls) {
+    public void resetList(List<URL> newCandidateUrls) {
+        List<URL> out = new ArrayList<>(newCandidateUrls);
+        for (URL url : newCandidateUrls) {
             if (url.getFile().contains(driverVersion)) {
                 out.remove(url);
             }

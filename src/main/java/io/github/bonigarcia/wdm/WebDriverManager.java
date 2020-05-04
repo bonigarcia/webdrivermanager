@@ -844,7 +844,7 @@ public abstract class WebDriverManager {
                 log.info(
                         "No proper driver found for {} {} ... seeking another version",
                         getDriverName(), getDriverVersionLabel(driverVersion));
-                urlHandler.resetList();
+                urlHandler.resetList(candidateUrls);
             }
         } while (continueSearchingVersion);
         return urlHandler;
