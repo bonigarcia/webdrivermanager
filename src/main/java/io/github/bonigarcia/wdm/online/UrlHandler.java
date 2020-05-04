@@ -155,31 +155,21 @@ public class UrlHandler {
     public void filterByArch(Architecture arch, boolean forcedArch) {
         log.trace("URLs before filtering by architecture ({}): {}", arch,
                 candidateUrls);
-        List<URL> out = new ArrayList<>(candidateUrls);
-
-        if ((forcedArch || out.size() > 1) && arch != null) {
-            for (URL url : candidateUrls) {
-                if (!url.getFile().contains("x86")
-                        && !url.getFile().contains("64")
-                        && !url.getFile().contains("i686")
-                        && !url.getFile().contains("32")) {
-                    continue;
-                }
-                if (!arch.matchUrl(url)) {
-                    out.remove(url);
-                }
-            }
+        if ((forcedArch || candidateUrls.size() > 1) && arch != null) {
+            candidateUrls = candidateUrls.stream()
+                    .filter(url -> arch.matchUrl(url)).collect(toList());
         }
+        log.trace("URLs after filtering by architecture ({}): {}", arch,
+                candidateUrls);
 
-        log.trace("URLs after filtering by architecture ({}): {}", arch, out);
-
-        if (out.isEmpty() && !forcedArch && !candidateUrls.isEmpty()) {
-            out = singletonList(candidateUrls.get(candidateUrls.size() - 1));
+        if (candidateUrls.isEmpty() && !forcedArch
+                && !candidateUrls.isEmpty()) {
+            candidateUrls = singletonList(
+                    candidateUrls.get(candidateUrls.size() - 1));
             log.trace(
                     "Empty URL list after filtering by architecture ... using last candidate: {}",
-                    out);
+                    candidateUrls);
         }
-        candidateUrls = out;
     }
 
     public void filterByDistro(String os, String driverName)
