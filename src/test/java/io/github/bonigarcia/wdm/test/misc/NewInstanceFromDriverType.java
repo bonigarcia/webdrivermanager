@@ -17,7 +17,7 @@
 package io.github.bonigarcia.wdm.test.misc;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import io.github.bonigarcia.wdm.etc.DriverManagerType;
+import io.github.bonigarcia.wdm.config.DriverManagerType;
 
 import org.junit.*;
 import org.openqa.selenium.WebDriver;

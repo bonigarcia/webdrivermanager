@@ -20,7 +20,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import io.github.bonigarcia.wdm.etc.DriverManagerType;
+import io.github.bonigarcia.wdm.config.DriverManagerType;
 
 import java.util.Collection;
 

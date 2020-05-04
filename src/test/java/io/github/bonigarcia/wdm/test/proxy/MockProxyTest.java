@@ -39,7 +39,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.mockserver.integration.ClientAndProxy;
 import org.slf4j.Logger;
 
-import io.github.bonigarcia.wdm.etc.Config;
+import io.github.bonigarcia.wdm.config.Config;
 import io.github.bonigarcia.wdm.online.Downloader;
 
 /**

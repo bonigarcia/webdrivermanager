@@ -16,7 +16,7 @@
  */
 package io.github.bonigarcia.wdm.test.other;
 
-import static io.github.bonigarcia.wdm.etc.OperatingSystem.WIN;
+import static io.github.bonigarcia.wdm.config.OperatingSystem.WIN;
 
 import org.junit.Before;
 import org.openqa.selenium.ie.InternetExplorerDriver;

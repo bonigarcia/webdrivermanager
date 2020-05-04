@@ -31,7 +31,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import io.github.bonigarcia.wdm.etc.Config;
+import io.github.bonigarcia.wdm.config.Config;
 
 /**
  * Test for custom target.

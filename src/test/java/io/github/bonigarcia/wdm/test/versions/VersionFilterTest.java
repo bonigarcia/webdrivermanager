@@ -35,7 +35,7 @@ import org.junit.runners.Parameterized.Parameters;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.cache.CacheHandler;
-import io.github.bonigarcia.wdm.etc.Config;
+import io.github.bonigarcia.wdm.config.Config;
 
 /**
  * FilterCacheBy test.

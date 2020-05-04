@@ -16,7 +16,7 @@
  */
 package io.github.bonigarcia.wdm.test.interactive;
 
-import static io.github.bonigarcia.wdm.etc.DriverManagerType.CHROME;
+import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROME;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 

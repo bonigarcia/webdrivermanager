@@ -16,11 +16,11 @@
  */
 package io.github.bonigarcia.wdm.managers;
 
-import static io.github.bonigarcia.wdm.etc.DriverManagerType.CHROMIUM;
+import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROMIUM;
 
 import java.util.Optional;
 
-import io.github.bonigarcia.wdm.etc.DriverManagerType;
+import io.github.bonigarcia.wdm.config.DriverManagerType;
 
 /**
  * Manager for Chrome.

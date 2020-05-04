@@ -34,7 +34,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.opera.OperaDriver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import io.github.bonigarcia.wdm.etc.OperatingSystem;
+import io.github.bonigarcia.wdm.config.OperatingSystem;
 
 /**
  * Force download test.

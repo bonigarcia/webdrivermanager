@@ -16,7 +16,7 @@
  */
 package io.github.bonigarcia.wdm.managers;
 
-import static io.github.bonigarcia.wdm.etc.DriverManagerType.IEXPLORER;
+import static io.github.bonigarcia.wdm.config.DriverManagerType.IEXPLORER;
 import static java.util.Optional.empty;
 
 import java.io.IOException;
@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import io.github.bonigarcia.wdm.etc.DriverManagerType;
+import io.github.bonigarcia.wdm.config.DriverManagerType;
 
 /**
  * Manager for Internet Explorer.

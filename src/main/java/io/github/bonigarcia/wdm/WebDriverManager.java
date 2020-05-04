@@ -16,18 +16,18 @@
  */
 package io.github.bonigarcia.wdm;
 
-import static io.github.bonigarcia.wdm.etc.Architecture.X32;
-import static io.github.bonigarcia.wdm.etc.Architecture.X64;
-import static io.github.bonigarcia.wdm.etc.Config.isNullOrEmpty;
-import static io.github.bonigarcia.wdm.etc.DriverManagerType.CHROME;
-import static io.github.bonigarcia.wdm.etc.DriverManagerType.CHROMIUM;
-import static io.github.bonigarcia.wdm.etc.DriverManagerType.EDGE;
-import static io.github.bonigarcia.wdm.etc.DriverManagerType.FIREFOX;
-import static io.github.bonigarcia.wdm.etc.DriverManagerType.IEXPLORER;
-import static io.github.bonigarcia.wdm.etc.DriverManagerType.OPERA;
-import static io.github.bonigarcia.wdm.etc.DriverManagerType.PHANTOMJS;
-import static io.github.bonigarcia.wdm.etc.DriverManagerType.SELENIUM_SERVER_STANDALONE;
-import static io.github.bonigarcia.wdm.etc.OperatingSystem.WIN;
+import static io.github.bonigarcia.wdm.config.Architecture.X32;
+import static io.github.bonigarcia.wdm.config.Architecture.X64;
+import static io.github.bonigarcia.wdm.config.Config.isNullOrEmpty;
+import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROME;
+import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROMIUM;
+import static io.github.bonigarcia.wdm.config.DriverManagerType.EDGE;
+import static io.github.bonigarcia.wdm.config.DriverManagerType.FIREFOX;
+import static io.github.bonigarcia.wdm.config.DriverManagerType.IEXPLORER;
+import static io.github.bonigarcia.wdm.config.DriverManagerType.OPERA;
+import static io.github.bonigarcia.wdm.config.DriverManagerType.PHANTOMJS;
+import static io.github.bonigarcia.wdm.config.DriverManagerType.SELENIUM_SERVER_STANDALONE;
+import static io.github.bonigarcia.wdm.config.OperatingSystem.WIN;
 import static java.lang.Integer.parseInt;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.charset.Charset.defaultCharset;
@@ -82,11 +82,11 @@ import com.google.gson.internal.LinkedTreeMap;
 
 import io.github.bonigarcia.wdm.cache.CacheHandler;
 import io.github.bonigarcia.wdm.cache.ResolutionCache;
-import io.github.bonigarcia.wdm.etc.Architecture;
-import io.github.bonigarcia.wdm.etc.Config;
-import io.github.bonigarcia.wdm.etc.DriverManagerType;
-import io.github.bonigarcia.wdm.etc.OperatingSystem;
-import io.github.bonigarcia.wdm.etc.WebDriverManagerException;
+import io.github.bonigarcia.wdm.config.Architecture;
+import io.github.bonigarcia.wdm.config.Config;
+import io.github.bonigarcia.wdm.config.DriverManagerType;
+import io.github.bonigarcia.wdm.config.OperatingSystem;
+import io.github.bonigarcia.wdm.config.WebDriverManagerException;
 import io.github.bonigarcia.wdm.managers.ChromeDriverManager;
 import io.github.bonigarcia.wdm.managers.ChromiumDriverManager;
 import io.github.bonigarcia.wdm.managers.EdgeDriverManager;

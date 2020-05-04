@@ -14,43 +14,35 @@
  * limitations under the License.
  *
  */
-package io.github.bonigarcia.wdm.etc;
+package io.github.bonigarcia.wdm.config;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
-import java.net.URL;
 import java.util.List;
 import java.util.stream.Stream;
 
 /**
- * Supported architecture enumeration (32/64 bits).
+ * Supported operative system enumeration.
  *
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.0.0
  */
-public enum Architecture {
-    DEFAULT(emptyList()), X32(asList("i686", "x86")), X64(emptyList());
+public enum OperatingSystem {
+    WIN(emptyList()), LINUX(emptyList()), MAC(asList("osx"));
 
-    List<String> archLabels;
+    List<String> osLabels;
 
-    Architecture(List<String> archLabels) {
-        this.archLabels = archLabels;
+    OperatingSystem(List<String> osLabels) {
+        this.osLabels = osLabels;
     }
 
-    public Stream<String> archLabelsStream() {
-        return this.archLabels.stream();
+    public Stream<String> osLabelsStream() {
+        return this.osLabels.stream();
     }
 
-    public boolean matchUrl(URL url) {
-        return archLabelsStream().anyMatch(x -> url.getFile().contains(x))
-                || url.getFile().contains(this.toString());
+    public boolean matchOs(String os) {
+        return osLabelsStream().anyMatch(os::contains)
+                || os.contains(this.name().toLowerCase());
     }
-
-    @Override
-    public String toString() {
-        return this.name().contains("X") ? this.name().replace("X", "")
-                : this.name();
-    }
-
 }

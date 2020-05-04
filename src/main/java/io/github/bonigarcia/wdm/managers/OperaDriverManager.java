@@ -16,7 +16,7 @@
  */
 package io.github.bonigarcia.wdm.managers;
 
-import static io.github.bonigarcia.wdm.etc.DriverManagerType.OPERA;
+import static io.github.bonigarcia.wdm.config.DriverManagerType.OPERA;
 import static java.util.Optional.empty;
 
 import java.io.File;
@@ -26,8 +26,8 @@ import java.util.List;
 import java.util.Optional;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import io.github.bonigarcia.wdm.etc.DriverManagerType;
-import io.github.bonigarcia.wdm.etc.WebDriverManagerException;
+import io.github.bonigarcia.wdm.config.DriverManagerType;
+import io.github.bonigarcia.wdm.config.WebDriverManagerException;
 
 /**
  * Manager for Opera.

@@ -26,7 +26,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import io.github.bonigarcia.wdm.etc.WebDriverManagerException;
+import io.github.bonigarcia.wdm.config.WebDriverManagerException;
 
 /**
  * Test for taobao.org mirror.

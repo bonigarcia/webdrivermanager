@@ -17,7 +17,7 @@
 package io.github.bonigarcia.wdm.test.other;
 
 import static io.github.bonigarcia.wdm.WebDriverManager.iedriver;
-import static io.github.bonigarcia.wdm.etc.OperatingSystem.WIN;
+import static io.github.bonigarcia.wdm.config.OperatingSystem.WIN;
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.junit.Assert.assertTrue;
 import static org.slf4j.LoggerFactory.getLogger;

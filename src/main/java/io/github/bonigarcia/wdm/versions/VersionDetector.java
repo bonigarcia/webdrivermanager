@@ -16,7 +16,7 @@
  */
 package io.github.bonigarcia.wdm.versions;
 
-import static io.github.bonigarcia.wdm.etc.Config.isNullOrEmpty;
+import static io.github.bonigarcia.wdm.config.Config.isNullOrEmpty;
 import static io.github.bonigarcia.wdm.versions.Shell.getVersionFromPosixOutput;
 import static io.github.bonigarcia.wdm.versions.Shell.getVersionFromWmicOutput;
 import static io.github.bonigarcia.wdm.versions.Shell.runAndWait;
@@ -38,7 +38,7 @@ import java.util.Properties;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 
-import io.github.bonigarcia.wdm.etc.Config;
+import io.github.bonigarcia.wdm.config.Config;
 import io.github.bonigarcia.wdm.online.HttpClient;
 
 /**

@@ -16,8 +16,8 @@
  */
 package io.github.bonigarcia.wdm.cache;
 
-import static io.github.bonigarcia.wdm.etc.DriverManagerType.CHROME;
-import static io.github.bonigarcia.wdm.etc.DriverManagerType.CHROMIUM;
+import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROME;
+import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROMIUM;
 import static java.io.File.separator;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Collections.sort;
@@ -33,9 +33,9 @@ import java.util.Optional;
 
 import org.slf4j.Logger;
 
-import io.github.bonigarcia.wdm.etc.Architecture;
-import io.github.bonigarcia.wdm.etc.Config;
-import io.github.bonigarcia.wdm.etc.DriverManagerType;
+import io.github.bonigarcia.wdm.config.Architecture;
+import io.github.bonigarcia.wdm.config.Config;
+import io.github.bonigarcia.wdm.config.DriverManagerType;
 
 /**
  * Logic for filtering driver cache.

@@ -50,8 +50,8 @@ import java.util.zip.ZipFile;
 import org.rauschig.jarchivelib.Archiver;
 import org.slf4j.Logger;
 
-import io.github.bonigarcia.wdm.etc.Config;
-import io.github.bonigarcia.wdm.etc.WebDriverManagerException;
+import io.github.bonigarcia.wdm.config.Config;
+import io.github.bonigarcia.wdm.config.WebDriverManagerException;
 
 /**
  * Downloader class.

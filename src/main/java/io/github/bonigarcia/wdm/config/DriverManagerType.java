@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package io.github.bonigarcia.wdm.etc;
+package io.github.bonigarcia.wdm.config;
 
 /**
  * Types for driver managers.

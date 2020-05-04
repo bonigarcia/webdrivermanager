@@ -16,7 +16,7 @@
  */
 package io.github.bonigarcia.wdm.managers;
 
-import static io.github.bonigarcia.wdm.etc.DriverManagerType.SELENIUM_SERVER_STANDALONE;
+import static io.github.bonigarcia.wdm.config.DriverManagerType.SELENIUM_SERVER_STANDALONE;
 import static java.util.Optional.empty;
 
 import java.io.File;
@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Optional;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import io.github.bonigarcia.wdm.etc.DriverManagerType;
+import io.github.bonigarcia.wdm.config.DriverManagerType;
 
 /**
  * Manager for selenium-server-standalone.

@@ -16,10 +16,10 @@
  */
 package io.github.bonigarcia.wdm.test.cache;
 
-import static io.github.bonigarcia.wdm.etc.Architecture.DEFAULT;
-import static io.github.bonigarcia.wdm.etc.DriverManagerType.CHROME;
-import static io.github.bonigarcia.wdm.etc.DriverManagerType.FIREFOX;
-import static io.github.bonigarcia.wdm.etc.OperatingSystem.LINUX;
+import static io.github.bonigarcia.wdm.config.Architecture.DEFAULT;
+import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROME;
+import static io.github.bonigarcia.wdm.config.DriverManagerType.FIREFOX;
+import static io.github.bonigarcia.wdm.config.OperatingSystem.LINUX;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.asList;
 import static org.apache.commons.io.FileUtils.cleanDirectory;
@@ -43,10 +43,10 @@ import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.cache.CacheHandler;
-import io.github.bonigarcia.wdm.etc.Architecture;
-import io.github.bonigarcia.wdm.etc.Config;
-import io.github.bonigarcia.wdm.etc.DriverManagerType;
-import io.github.bonigarcia.wdm.etc.OperatingSystem;
+import io.github.bonigarcia.wdm.config.Architecture;
+import io.github.bonigarcia.wdm.config.Config;
+import io.github.bonigarcia.wdm.config.DriverManagerType;
+import io.github.bonigarcia.wdm.config.OperatingSystem;
 
 /**
  * Test for driver cache.

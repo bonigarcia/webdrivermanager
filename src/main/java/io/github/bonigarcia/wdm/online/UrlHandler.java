@@ -16,7 +16,7 @@
  */
 package io.github.bonigarcia.wdm.online;
 
-import static io.github.bonigarcia.wdm.etc.Config.isNullOrEmpty;
+import static io.github.bonigarcia.wdm.config.Config.isNullOrEmpty;
 import static java.io.File.separator;
 import static java.lang.Integer.signum;
 import static java.lang.Integer.valueOf;
@@ -38,9 +38,9 @@ import java.util.function.Function;
 
 import org.slf4j.Logger;
 
-import io.github.bonigarcia.wdm.etc.Architecture;
-import io.github.bonigarcia.wdm.etc.OperatingSystem;
-import io.github.bonigarcia.wdm.etc.WebDriverManagerException;
+import io.github.bonigarcia.wdm.config.Architecture;
+import io.github.bonigarcia.wdm.config.OperatingSystem;
+import io.github.bonigarcia.wdm.config.WebDriverManagerException;
 
 /**
  * Handler for URLs (filtering, version selection).

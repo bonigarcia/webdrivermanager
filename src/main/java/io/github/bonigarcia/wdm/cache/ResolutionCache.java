@@ -35,8 +35,8 @@ import java.util.TreeSet;
 
 import org.slf4j.Logger;
 
-import io.github.bonigarcia.wdm.etc.Config;
-import io.github.bonigarcia.wdm.etc.WebDriverManagerException;
+import io.github.bonigarcia.wdm.config.Config;
+import io.github.bonigarcia.wdm.config.WebDriverManagerException;
 
 /**
  * Resolution cache.
