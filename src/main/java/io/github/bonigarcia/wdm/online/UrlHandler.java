@@ -199,7 +199,8 @@ public class UrlHandler {
     }
 
     public void filterByIgnoredVersions(String... ignoredVersions) {
-        if (ignoredVersions != null && !candidateUrls.isEmpty()) {
+        if (ignoredVersions != null && ignoredVersions.length > 0
+                && !candidateUrls.isEmpty()) {
             if (log.isTraceEnabled()) {
                 log.trace("URLs before filtering by ignored versions ({}): {}",
                         Arrays.toString(ignoredVersions), candidateUrls);
