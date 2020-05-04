@@ -42,7 +42,7 @@ public enum OperatingSystem {
     }
 
     public boolean matchOs(String os) {
-        return osLabelsStream().anyMatch(x -> os.contains(x))
+        return osLabelsStream().anyMatch(os::contains)
                 || os.contains(this.name().toLowerCase());
     }
 }
