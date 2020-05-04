@@ -89,7 +89,7 @@ public class UrlHandler {
 
         for (URL url : copyOfList) {
             try {
-                if (fileIsBeta(url)) {
+                if (isNotStable(url)) {
                     continue;
                 }
                 String currentVersion = getCurrentVersion.apply(url);
@@ -187,19 +187,12 @@ public class UrlHandler {
             String versionToFilter = "2.5.0";
             log.trace("URLs before filtering by Linux distribution ({}): {}",
                     distro, candidateUrls);
-            List<URL> out = new ArrayList<>(candidateUrls);
-
-            for (URL url : candidateUrls) {
-                if (url.getFile().contains(versionToFilter)
-                        && !url.getFile().contains(distro)) {
-                    out.remove(url);
-                }
-            }
-
+            candidateUrls = candidateUrls.stream()
+                    .filter(url -> !url.getFile().contains(versionToFilter)
+                            || url.getFile().contains(distro))
+                    .collect(toList());
             log.trace("URLs after filtering by Linux distribution ({}): {}",
-                    distro, out);
-
-            candidateUrls = out;
+                    distro, candidateUrls);
         }
     }
 
@@ -270,7 +263,7 @@ public class UrlHandler {
         candidateUrls = out;
     }
 
-    public boolean fileIsBeta(URL url) {
+    public boolean isNotStable(URL url) {
         return !isUseBeta && (url.getFile().toLowerCase().contains(BETA)
                 || url.getFile().toLowerCase().contains(ALPHA));
     }
