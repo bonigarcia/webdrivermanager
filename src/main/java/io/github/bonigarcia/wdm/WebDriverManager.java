@@ -604,7 +604,7 @@ public abstract class WebDriverManager {
             log.info("Exporting {} as {}", variableName, variableValue);
             System.setProperty(variableName, variableValue);
         } else {
-            log.info("Resulting binary {}", variableValue);
+            log.info("Driver location: {}", variableValue);
         }
     }
 
@@ -814,7 +814,7 @@ public abstract class WebDriverManager {
                 urlHandler.filterByVersion(driverVersion);
             }
 
-            log.info("Latest version of {} is {}", shortDriverName,
+            log.debug("Driver to be downloaded {} {}", shortDriverName,
                     urlHandler.getDriverVersion());
             log.trace("Driver URLs after filtering for version: {}",
                     urlHandler.getCandidateUrls());

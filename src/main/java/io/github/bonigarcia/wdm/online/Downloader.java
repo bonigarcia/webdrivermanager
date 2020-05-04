@@ -137,7 +137,7 @@ public class Downloader {
 
         if (!binaryExists || config.isForceDownload()) {
             if (binaryExists) {
-                log.info("Overriding former binary {}", resultingBinary);
+                log.debug("Overriding former binary {}", resultingBinary);
                 deleteFile(resultingBinary);
             }
             moveFileToDirectory(extractedFile, targetFolder, true);
@@ -160,7 +160,7 @@ public class Downloader {
             for (File file : listFiles) {
                 if (file.getName().startsWith(driverName)
                         && config.isExecutable(file)) {
-                    log.info("Using binary driver previously downloaded");
+                    log.trace("Using {} previously downloaded", driverName);
                     return of(file);
                 }
             }

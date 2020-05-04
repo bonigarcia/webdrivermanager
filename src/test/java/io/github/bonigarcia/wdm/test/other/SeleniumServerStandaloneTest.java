@@ -37,8 +37,14 @@ public class SeleniumServerStandaloneTest {
     final Logger log = getLogger(lookup().lookupClass());
 
     @Test
-    public void testSeleniumServerLatest() {
+    public void testSeleniumServerLatestStable() {
         seleniumServerStandalone().setup();
+        assertBinary();
+    }
+
+    @Test
+    public void testSeleniumServerLatestBeta() {
+        seleniumServerStandalone().useBetaVersions().setup();
         assertBinary();
     }
 

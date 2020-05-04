@@ -49,6 +49,7 @@ import io.github.bonigarcia.wdm.etc.OperatingSystem;
  */
 public class UrlHandler {
 
+    public static final String ALPHA = "alpha";
     public static final String BETA = "beta";
 
     final Logger log = getLogger(lookup().lookupClass());
@@ -113,17 +114,15 @@ public class UrlHandler {
     }
 
     public void filterByBeta(boolean useBeta) {
-        List<URL> out = new ArrayList<>(candidateUrls);
         if (!useBeta) {
             log.trace("URLs before filtering by beta versions: {}",
                     candidateUrls);
-            for (URL url : candidateUrls) {
-                if (url.getFile().toLowerCase().contains("beta")) {
-                    out.remove(url);
-                }
-            }
-            log.trace("URLs after filtering by beta versions: {}", out);
-            candidateUrls = out;
+            candidateUrls = candidateUrls.stream()
+                    .filter(url -> !url.getFile().toLowerCase().contains(BETA)
+                            && !url.getFile().toLowerCase().contains(ALPHA))
+                    .collect(toList());
+            log.trace("URLs after filtering by beta versions: {}",
+                    candidateUrls);
         }
     }
 
@@ -272,7 +271,8 @@ public class UrlHandler {
     }
 
     public boolean fileIsBeta(URL url) {
-        return !isUseBeta && (url.getFile().toLowerCase().contains(BETA));
+        return !isUseBeta && (url.getFile().toLowerCase().contains(BETA)
+                || url.getFile().toLowerCase().contains(ALPHA));
     }
 
     public Integer versionCompare(String str1, String str2) {
