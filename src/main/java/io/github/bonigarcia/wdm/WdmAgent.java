@@ -44,6 +44,11 @@ public class WdmAgent {
 
     static final Logger log = getLogger(lookup().lookupClass());
 
+    private WdmAgent() {
+        throw new IllegalStateException(
+                "WebDriverManager agent is used for static instrumentation");
+    }
+
     public static void premain(String args, Instrumentation instrumentation) {
         instrumentation.addTransformer(new DefineTransformer(), true);
     }
@@ -74,9 +79,11 @@ public class WdmAgent {
             case "org/openqa/selenium/ie/InternetExplorerDriver":
                 driverManagerType = IEXPLORER;
                 break;
+            default:
+                break;
             }
             if (driverManagerType != null) {
-                log.info(
+                log.debug(
                         "WebDriverManager Agent is going to resolve the driver for {}",
                         driverManagerType);
                 WebDriverManager.getInstance(driverManagerType).setup();
