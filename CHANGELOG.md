@@ -5,11 +5,11 @@
 - Full support for Edge (Chromium-based) using https://msedgedriver.azureedge.net/
 - Include resolution cache (former preferences) stored as properties (resolution.properties) in the cache folder
 - Read Chrome version from registry when wmic does not discover the version (issue #394)
-- Support for different locations of Opera in Windows (also in LOCALAPPDATA env)
 - Add Safari support for DriverManagerType
 - Look for wmic.exe program also in wbem folder (issue #438)
 - Improve driver version resolution algorithm
 - Include label "alpha" for detecting beta versions
+- Include WebDriverManager as Java agent using premain entry point
 - New method in WebDriverManager API: broweserVersion() -> to specify major browser version
 - New method in WebDriverManager API: avoidFallback() -> to avoid the fallback mechanism if some exception happens
 - New method in WebDriverManager API: getDriverManagerType() -> to get manager type (enum)
@@ -23,6 +23,7 @@
 ### Changed
 - Use LATEST_RELEASE_x from chromedriver and msedgedriver repository (x = given version)
 - Use latest from cache as primary fallback mechanism
+- Support for different locations of Opera in Windows (also in LOCALAPPDATA env)
 - Refactor main and test logic in different packages
 - Use streams for filtering URLs and cache
 - Bump all dependencies (main and test) to latest stable versions
