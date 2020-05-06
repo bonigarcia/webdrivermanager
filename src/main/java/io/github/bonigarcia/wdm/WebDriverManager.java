@@ -972,7 +972,7 @@ public abstract class WebDriverManager {
         if (args.length > 1 && isNumeric(args[1])) {
             port = parseInt(args[1]);
         }
-        new Server(port);
+        new WdmServer(port);
     }
 
     protected static void logCliError(String validBrowsers) {

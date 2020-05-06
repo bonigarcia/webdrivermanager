@@ -48,11 +48,11 @@ import io.javalin.http.Handler;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 3.0.0
  */
-public class Server {
+public class WdmServer {
 
     final Logger log = getLogger(lookup().lookupClass());
 
-    public Server(int port) {
+    public WdmServer(int port) {
         Javalin app = Javalin.create().start(port);
         Handler handler = this::handleRequest;
 
