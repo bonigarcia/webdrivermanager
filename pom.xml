@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
@@ -43,6 +42,8 @@
         <project.reporting.outputEncoding>${project.encondig}</project.reporting.outputEncoding>
 
         <wdm.mainClass>io.github.bonigarcia.wdm.WebDriverManager</wdm.mainClass>
+        <wdm.agentClass>io.github.bonigarcia.wdm.WdmAgent</wdm.agentClass>
+        <wdm.manifest>src/main/resources/META-INF/MANIFEST.MF</wdm.manifest>
     </properties>
 
     <name>WebDriverManager</name>
@@ -263,6 +264,11 @@
                         <manifest>
                             <mainClass>${wdm.mainClass}</mainClass>
                         </manifest>
+                        <manifestEntries>
+                            <Premain-Class>${wdm.agentClass}</Premain-Class>
+                            <Can-Redefine-Classes>true</Can-Redefine-Classes>
+                            <Can-Retransform-Classes>true</Can-Retransform-Classes>
+                        </manifestEntries>
                     </archive>
                     <descriptors>
                         <descriptor>src/main/resources/assembly.xml</descriptor>
@@ -277,6 +283,9 @@
                     <excludes>
                         <exclude>**/*.xml</exclude>
                     </excludes>
+                    <archive>
+                        <manifestFile>${wdm.manifest}</manifestFile>
+                    </archive>
                 </configuration>
             </plugin>
         </plugins>
