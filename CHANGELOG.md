@@ -10,6 +10,7 @@
 - Improve driver version resolution algorithm
 - Include label "alpha" for detecting beta versions
 - Include WebDriverManager as Java agent using premain entry point
+- Release WebDriverManager as Docker container (for CLI and Server) in Docker Hub
 - New method in WebDriverManager API: broweserVersion() -> to specify major browser version
 - New method in WebDriverManager API: avoidFallback() -> to avoid the fallback mechanism if some exception happens
 - New method in WebDriverManager API: getDriverManagerType() -> to get manager type (enum)
