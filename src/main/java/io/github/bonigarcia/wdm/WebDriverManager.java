@@ -265,6 +265,11 @@ public abstract class WebDriverManager {
         DriverManagerType driverManagerType = getDriverManagerType();
         if (driverManagerType != null) {
             try {
+                // WebDriverManager survey link (to be removed in next version)
+                log.info(
+                        "Please answer the following questionnaire based on your experience with WebDriverManager. Thanks a lot!");
+                log.info("====> http://tiny.cc/wdm-survey <====");
+
                 if (config().getClearingResolutionCache()) {
                     clearResolutionCache();
                 }
