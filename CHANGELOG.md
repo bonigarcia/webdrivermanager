@@ -32,6 +32,7 @@
 - Changed method in WebDriverManager API: cachePath() -> to path of cache [old targetPath()]
 - Changed method in WebDriverManager API: driverVersion() -> to specify driver version [old version()]
 - Changed method in WebDriverManager API: avoidBrowserDetection() -> to avoid the detection of the browser version [old avoidAutoVersion()]
+- Changed method in WebDriverManager API: getDriverVersions() -> to get the list of available driver versions [old getVersions()]
 - Logo
 
 ### Removed
