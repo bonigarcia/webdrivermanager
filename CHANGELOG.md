@@ -12,7 +12,7 @@
 - Include WebDriverManager as Java agent using premain entry point
 - Release WebDriverManager as Docker container (for CLI and Server) in Docker Hub
 - Include WebDriverManager survey link in INFO traces: http://tiny.cc/wdm-survey
-- New method in WebDriverManager API: broweserVersion() -> to specify major browser version
+- New method in WebDriverManager API: browserVersion() -> to specify major browser version
 - New method in WebDriverManager API: avoidFallback() -> to avoid the fallback mechanism if some exception happens
 - New method in WebDriverManager API: getDriverManagerType() -> to get manager type (enum)
 
