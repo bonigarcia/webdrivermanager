@@ -35,18 +35,18 @@ WebDriverManager is a library which allows to automate the management of the bin
 
 ## Motivation
 
-If you use [Selenium WebDriver], you probably know that to use some browsers such as **Chrome**, **Firefox**, **Opera**, **PhantomJS**, **Microsoft Edge**, or **Internet Explorer**, first you need to download the so-called *driver*, i.e. a binary file which allows WebDriver to handle browsers. In Java, the path to this driver must be set as JVM properties, as follows:
+If you use [Selenium WebDriver], you probably know that to use some browsers such as **Chrome**, **Firefox**, **Edge**, **Opera**, **PhantomJS**, or **Internet Explorer**, first you need to download the so-called *driver*, i.e. a binary file which allows WebDriver to handle browsers. In Java, the path to this driver must be set as JVM properties, as follows:
 
 ```java
-System.setProperty("webdriver.chrome.driver", "/path/to/binary/chromedriver");
-System.setProperty("webdriver.gecko.driver", "/path/to/binary/geckodriver");
-System.setProperty("webdriver.opera.driver", "/path/to/binary/operadriver");
-System.setProperty("phantomjs.binary.path", "/path/to/binary/phantomjs");
-System.setProperty("webdriver.edge.driver", "C:/path/to/binary/msedgedriver.exe");
-System.setProperty("webdriver.ie.driver", "C:/path/to/binary/IEDriverServer.exe");
+System.setProperty("webdriver.chrome.driver", "/path/to/chromedriver");
+System.setProperty("webdriver.gecko.driver", "/path/to/geckodriver");
+System.setProperty("webdriver.edge.driver", "/path/to/msedgedriver.exe");
+System.setProperty("webdriver.opera.driver", "/path/to/operadriver");
+System.setProperty("phantomjs.binary.path", "/path/to/phantomjs");
+System.setProperty("webdriver.ie.driver", "C:/path/to/IEDriverServer.exe");
 ```
 
-This is quite annoying since it forces you to link directly this binary file into your source code. In addition, you have to check manually when new versions of the binaries are released. WebDriverManager comes to the rescue, performing in an automated way all this dirty job for you. WebDriverManager can be used in different ways:
+This is quite annoying since it forces you to link directly this driver into your source code. In addition, you have to check manually when new versions of the binaries are released. WebDriverManager comes to the rescue, performing in an automated way all this dirty job for you. WebDriverManager can be used in different ways:
 
 1. [WebDriverManager as Java dependency](#webdrivermanager-as-java-dependency) (typically from test cases).
 2. [WebDriverManager as Command Line Interface (CLI) tool](#webdrivermanager-cli) (from the shell).
@@ -118,14 +118,14 @@ Notice that simply adding ``WebDriverManager.chromedriver().setup();`` WebDriver
 3. It downloads the WebDriver binary if it is not present on the WebDriverManager cache (``~/.m2/repository/webdriver`` by default).
 4. It exports the proper WebDriver Java environment variables required by Selenium (not done when using WebDriverManager from the CLI or as a Server).
 
-WebDriverManager resolves the driver binaries for the browsers **Chrome**, **Firefox**, **Opera**, **PhantomJS**, **Microsoft Edge**, **Internet Explorer**, and **Chromium**. For that, it provides several *drivers managers* for these browsers. These *drivers managers* can be used as follows:
+WebDriverManager resolves the driver binaries for the browsers **Chrome**, **Firefox**, **Edge**, **Opera**, **PhantomJS**, **Internet Explorer**, and **Chromium**. For that, it provides several *drivers managers* for these browsers. These *drivers managers* can be used as follows:
 
 ```java
 WebDriverManager.chromedriver().setup();
 WebDriverManager.firefoxdriver().setup();
+WebDriverManager.edgedriver().setup();
 WebDriverManager.operadriver().setup();
 WebDriverManager.phantomjs().setup();
-WebDriverManager.edgedriver().setup();
 WebDriverManager.iedriver().setup();
 WebDriverManager.chromiumdriver().setup();
 ```
