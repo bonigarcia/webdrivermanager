@@ -438,7 +438,7 @@ curl -O -J "http://localhost:4041/chromedriver?chromeDriverVersion=81.0.4044.138
 
 ## WebDriverManager Agent
 
-As of version 4.x, WebDriverManager cab be used as Java Agent. To configure that, we need to specify the the path of the WebDriverManager [fat-jar] using the JVM flag ``-javaagent:/path/to/webdrivermanager.jar``. Alternatively, it can be done using Maven (see a complete project example [here](https://github.com/bonigarcia/wdm-agent-example)).
+As of version 4.x, WebDriverManager can be used as Java Agent. To configure that, we need to specify the the path of the WebDriverManager [fat-jar] using the JVM flag ``-javaagent:/path/to/webdrivermanager.jar``. Alternatively, it can be done using Maven (see a complete project example [here](https://github.com/bonigarcia/wdm-agent-example)).
 
 Using this approach, Selenium WebDriver tests can drop the driver setup for *chromedriver*, *geckodriver*, etc. For example:
 
