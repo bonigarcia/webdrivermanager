@@ -19,13 +19,14 @@ package io.github.bonigarcia.wdm.test.versions;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.WIN;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.asList;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNot.not;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.util.Collection;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -45,6 +46,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @since 3.6.0
  */
 @RunWith(Parameterized.class)
+@Ignore
 public class LatestAndBetaTest {
 
     final Logger log = getLogger(lookup().lookupClass());
