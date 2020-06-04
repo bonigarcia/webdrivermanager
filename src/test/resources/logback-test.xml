@@ -6,7 +6,7 @@
         </encoder>
     </appender>
 
-    <logger name="io.github.bonigarcia" level="DEBUG" />
+    <logger name="io.github.bonigarcia" level="TRACE" />
     <logger name="io" level="WARN" />
     <logger name="org" level="WARN" />
     <logger name="com" level="WARN" />
