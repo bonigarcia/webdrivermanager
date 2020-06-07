@@ -19,7 +19,7 @@ package io.github.bonigarcia.wdm.test.versions;
 import static java.io.File.separator;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
@@ -66,7 +66,7 @@ public class VersionFilterTest {
                 version, true);
 
         log.debug("Version {} -- Output {}", version, filteredList);
-        assertTrue(filteredList.size() == expectedVersions);
+        assertEquals(filteredList.size(), expectedVersions);
     }
 
     private List<File> getInputFileList() {
