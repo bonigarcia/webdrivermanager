@@ -14,7 +14,7 @@
         <jarchivelib.version>1.0.0</jarchivelib.version>
         <jsoup.version>1.13.1</jsoup.version>
         <httpclient.version>5.0</httpclient.version>
-        <javalin.version>3.8.0</javalin.version>
+        <javalin.version>3.9.0</javalin.version>
         <okhttp.version>4.7.2</okhttp.version>
 
         <junit.version>4.13</junit.version>
