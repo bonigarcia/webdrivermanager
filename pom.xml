@@ -13,7 +13,7 @@
         <commons-lang3.version>3.10</commons-lang3.version>
         <jarchivelib.version>1.0.0</jarchivelib.version>
         <jsoup.version>1.13.1</jsoup.version>
-        <httpclient.version>5.0</httpclient.version>
+        <httpclient.version>5.0.1</httpclient.version>
         <javalin.version>3.9.0</javalin.version>
         <okhttp.version>4.7.2</okhttp.version>
 
