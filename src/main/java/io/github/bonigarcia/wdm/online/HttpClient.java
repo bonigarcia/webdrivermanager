@@ -122,8 +122,9 @@ public class HttpClient implements Closeable {
 
     public HttpGet createHttpGet(URL url) {
         HttpGet httpGet = new HttpGet(url.toString());
-        httpGet.addHeader("User-Agent", "Apache-HttpClient/5.0");
-        httpGet.addHeader("Connection", "keep-alive");
+        httpGet.addHeader("user-agent", "Apache-HttpClient/5.0");
+        httpGet.addHeader("accept-encoding", "gzip, deflate, br");
+        httpGet.addHeader("cache-control", "max-age=0");
 
         RequestConfig requestConfig = custom().setCookieSpec(STRICT)
                 .setConnectTimeout(config.getTimeout(), TimeUnit.SECONDS)
