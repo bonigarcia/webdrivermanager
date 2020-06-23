@@ -30,26 +30,7 @@ public class S3BucketListNamespaceContext implements NamespaceContext {
     @Override
     public Iterator<String> getPrefixes(String namespaceURI) {
         if (S3_BUCKET_LIST_NS.equals(namespaceURI)) {
-            return new Iterator() {
-                boolean more = true;
-
-                public boolean hasNext() {
-                    return this.more;
-                }
-
-                public Object next() {
-                    if (!this.hasNext()) {
-                        throw new NoSuchElementException();
-                    } else {
-                        this.more = false;
-                        return S3_PREFIX;
-                    }
-                }
-
-                public void remove() {
-                    throw new UnsupportedOperationException();
-                }
-            };
+            return Collections.singletonList(S3_PREFIX).iterator();
         } else {
             return Collections.EMPTY_LIST.iterator();
         }
