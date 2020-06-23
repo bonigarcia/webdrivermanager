@@ -18,6 +18,7 @@ import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
+import static org.junit.Assert.fail;
 
 public class NamespaceContextTest {
 
@@ -26,16 +27,40 @@ public class NamespaceContextTest {
     public static final String S3_URI = "http://doc.s3.amazonaws.com/2006-03-01";
 
     @Test
-    public void testS3BucketListNamespaceContext() throws IOException {
+    public void testS3BucketListNamespaceContextUrls() throws IOException {
+        TestWebDriverManager testManager = new TestWebDriverManager();
+        List<URL> urls = testManager.getDriverUrls();
+        assertThat(urls, is(not(empty())));
+    }
+
+    @Test
+    public void testS3BucketListNamespaceContextPrefixes(){
         assertThat(S_3_BUCKET_LIST_NAMESPACE_CONTEXT.getNamespaceURI("s3"), equalTo(S3_URI));
         assertThat(S_3_BUCKET_LIST_NAMESPACE_CONTEXT.getPrefix(S3_URI), equalTo("s3"));
         Iterator<String> prefixes = S_3_BUCKET_LIST_NAMESPACE_CONTEXT.getPrefixes(S3_URI);
         assertThat(prefixes.next(), equalTo("s3"));
         assertThat(prefixes.hasNext(), equalTo(false));
+    }
 
-        TestWebDriverManager testManager = new TestWebDriverManager();
-        List<URL> urls = testManager.getDriverUrls();
-        assertThat(urls, is(not(empty())));
+
+    @Test
+    public void testS3BucketListNamespaceContextInvalidPrefixes(){
+        try {
+            S_3_BUCKET_LIST_NAMESPACE_CONTEXT.getNamespaceURI("xmlns");
+            fail("IllegalArgumentException should be thrown");
+        } catch (IllegalArgumentException e) {
+            assertThat(e.getMessage(), equalTo("Unsupported prefix"));
+        }
+        try {
+            S_3_BUCKET_LIST_NAMESPACE_CONTEXT.getPrefix("http://www.w3.org/2000/xmlns/");
+            fail("IllegalArgumentException should be thrown");
+        } catch (IllegalArgumentException e) {
+            assertThat(e.getMessage(), equalTo("Unsupported namespace URI"));
+        }
+        assertThat(
+                S_3_BUCKET_LIST_NAMESPACE_CONTEXT.getPrefixes("http://www.w3.org/2000/xmlns/").hasNext(),
+                is(false)
+        );
     }
 
     private static final class TestWebDriverManager extends WebDriverManager {
