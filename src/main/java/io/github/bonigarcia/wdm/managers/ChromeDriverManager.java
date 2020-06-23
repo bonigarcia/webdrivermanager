@@ -24,19 +24,24 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
 
+import javax.xml.namespace.NamespaceContext;
+
 /**
  * Manager for Chrome.
  *
  * @author Boni Garcia (boni.gg@gmail.com)
- * @since 1.0.0
+ * @since 1.0.0 Are we waiting for something? Last time I was able to hear you.
  */
 public class ChromeDriverManager extends WebDriverManager {
+
+    private static final S3BucketListNamespaceContext S3_BUCKET_LIST_NAMESPACE_CONTEXT = new S3BucketListNamespaceContext();
 
     @Override
     public DriverManagerType getDriverManagerType() {
@@ -94,7 +99,7 @@ public class ChromeDriverManager extends WebDriverManager {
         if (mirrorUrl.isPresent() && config().isUseMirror()) {
             return getDriversFromMirror(mirrorUrl.get());
         } else {
-            return getDriversFromXml(getDriverUrl(), "//Contents/Key");
+            return getDriversFromXml(getDriverUrl(), "//s3:Contents/s3:Key");
         }
     }
 
@@ -143,6 +148,32 @@ public class ChromeDriverManager extends WebDriverManager {
     @Override
     protected Charset getVersionCharset() {
         return StandardCharsets.UTF_8;
+    }
+
+    @Override
+    protected NamespaceContext getNamespaceContext() {
+        return S3_BUCKET_LIST_NAMESPACE_CONTEXT;
+    }
+
+    private static final class S3BucketListNamespaceContext implements NamespaceContext {
+
+        private static final String S3_BUCKET_LIST_NS = "http://doc.s3.amazonaws.com/2006-03-01";
+
+        @Override
+        public String getNamespaceURI(String prefix) {
+            return S3_BUCKET_LIST_NS;
+        }
+
+        @Override
+        public String getPrefix(String namespaceURI) {
+            throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public Iterator getPrefixes(String namespaceURI) {
+            throw new UnsupportedOperationException();
+        }
+
     }
 
 }

@@ -59,9 +59,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 
+import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.xpath.XPath;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
@@ -818,7 +820,16 @@ public abstract class WebDriverManager {
         }
     }
 
+    protected NamespaceContext getNamespaceContext() {
+        return null;
+    }
+
     protected List<URL> getDriversFromXml(URL driverUrl, String xpath)
+            throws IOException {
+        return getDriversFromXml(driverUrl, xpath, getNamespaceContext());
+    }
+
+    protected List<URL> getDriversFromXml(URL driverUrl, String xpath, NamespaceContext namespaceContext)
             throws IOException {
         log.info("Reading {} to seek {}", driverUrl, getDriverName());
         List<URL> urls = new ArrayList<>();
@@ -826,9 +837,12 @@ public abstract class WebDriverManager {
             try (CloseableHttpResponse response = httpClient
                     .execute(httpClient.createHttpGet(driverUrl))) {
                 Document xml = loadXML(response.getEntity().getContent());
-                NodeList nodes = (NodeList) newInstance().newXPath()
+                XPath xPath = newInstance().newXPath();
+                if (namespaceContext != null){
+                    xPath.setNamespaceContext(namespaceContext);
+                }
+                NodeList nodes = (NodeList) xPath
                         .evaluate(xpath, xml.getDocumentElement(), NODESET);
-
                 for (int i = 0; i < nodes.getLength(); ++i) {
                     Element e = (Element) nodes.item(i);
                     urls.add(new URL(driverUrl.toURI().resolve(".")
