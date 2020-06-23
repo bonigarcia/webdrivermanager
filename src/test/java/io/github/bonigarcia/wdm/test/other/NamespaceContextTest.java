@@ -9,28 +9,40 @@ import org.junit.Test;
 import javax.xml.namespace.NamespaceContext;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
 
 public class NamespaceContextTest {
 
+    public static final S3BucketListNamespaceContext S_3_BUCKET_LIST_NAMESPACE_CONTEXT = new S3BucketListNamespaceContext();
+
+    public static final String S3_URI = "http://doc.s3.amazonaws.com/2006-03-01";
+
     @Test
     public void testS3BucketListNamespaceContext() throws IOException {
+        assertThat(S_3_BUCKET_LIST_NAMESPACE_CONTEXT.getNamespaceURI("s3"), equalTo(S3_URI));
+        assertThat(S_3_BUCKET_LIST_NAMESPACE_CONTEXT.getPrefix(S3_URI), equalTo("s3"));
+        Iterator<String> prefixes = S_3_BUCKET_LIST_NAMESPACE_CONTEXT.getPrefixes(S3_URI);
+        assertThat(prefixes.next(), equalTo("s3"));
+        assertThat(prefixes.hasNext(), equalTo(false));
+
         TestWebDriverManager testManager = new TestWebDriverManager();
         List<URL> urls = testManager.getDriverUrls();
         assertThat(urls, is(not(empty())));
     }
 
-    private static final class TestWebDriverManager extends WebDriverManager{
+    private static final class TestWebDriverManager extends WebDriverManager {
 
         @Override
         protected NamespaceContext getNamespaceContext() {
-            return new S3BucketListNamespaceContext();
+            return S_3_BUCKET_LIST_NAMESPACE_CONTEXT;
         }
 
         @Override
