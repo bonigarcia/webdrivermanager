@@ -3,7 +3,7 @@
 
     <groupId>io.github.bonigarcia</groupId>
     <artifactId>webdrivermanager</artifactId>
-    <version>4.0.1-SP1-UM</version>
+    <version>4.0.1-SNAPSHOT</version>
 
     <properties>
         <slf4j.version>1.7.30</slf4j.version>
