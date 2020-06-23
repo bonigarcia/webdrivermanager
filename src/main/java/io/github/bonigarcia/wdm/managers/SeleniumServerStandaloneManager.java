@@ -27,6 +27,9 @@ import java.util.Optional;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
+import io.github.bonigarcia.wdm.online.S3BucketListNamespaceContext;
+
+import javax.xml.namespace.NamespaceContext;
 
 /**
  * Manager for selenium-server-standalone.
@@ -35,6 +38,8 @@ import io.github.bonigarcia.wdm.config.DriverManagerType;
  * @since 3.0.1
  */
 public class SeleniumServerStandaloneManager extends WebDriverManager {
+
+    private static final S3BucketListNamespaceContext S3_BUCKET_LIST_NAMESPACE_CONTEXT = new S3BucketListNamespaceContext();
 
     @Override
     public DriverManagerType getDriverManagerType() {
@@ -88,7 +93,7 @@ public class SeleniumServerStandaloneManager extends WebDriverManager {
 
     @Override
     protected List<URL> getDriverUrls() throws IOException {
-        return getDriversFromXml(getDriverUrl(), "//Contents/Key");
+        return getDriversFromXml(getDriverUrl(), "//s3:Contents/s3:Key");
     }
 
     @Override
@@ -105,6 +110,11 @@ public class SeleniumServerStandaloneManager extends WebDriverManager {
     @Override
     protected void setBrowserVersion(String browserVersion) {
         // Nothing required
+    }
+
+    @Override
+    protected NamespaceContext getNamespaceContext() {
+        return S3_BUCKET_LIST_NAMESPACE_CONTEXT;
     }
 
 }
