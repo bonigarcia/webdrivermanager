@@ -858,6 +858,7 @@ public abstract class WebDriverManager {
     protected Document loadXML(InputStream inputStream)
             throws SAXException, IOException, ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setNamespaceAware(true);
         DocumentBuilder builder = factory.newDocumentBuilder();
         return builder.parse(new InputSource(
                 new ByteArrayInputStream(IOUtils.toByteArray(inputStream))));
