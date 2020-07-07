@@ -52,7 +52,7 @@ public class BitBucketApi {
     public List<URL> getUrls() throws MalformedURLException {
         List<URL> urls = new ArrayList<>();
         for (BitBucketValue value : this.getValues()) {
-            urls.add(new URL(value.getLinks().getSelf().getHref().toString()));
+            urls.add(new URL(value.getLinks().getSelf().getHref()));
         }
         return urls;
     }
