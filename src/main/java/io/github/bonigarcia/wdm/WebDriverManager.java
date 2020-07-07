@@ -96,6 +96,7 @@ import io.github.bonigarcia.wdm.managers.OperaDriverManager;
 import io.github.bonigarcia.wdm.managers.PhantomJsDriverManager;
 import io.github.bonigarcia.wdm.managers.SeleniumServerStandaloneManager;
 import io.github.bonigarcia.wdm.managers.VoidDriverManager;
+import io.github.bonigarcia.wdm.online.BitBucketApi;
 import io.github.bonigarcia.wdm.online.Downloader;
 import io.github.bonigarcia.wdm.online.GitHubApi;
 import io.github.bonigarcia.wdm.online.HttpClient;
@@ -895,6 +896,31 @@ public abstract class WebDriverManager {
                         }
                     }
                 }
+            }
+        }
+        return urls;
+    }
+
+    protected List<URL> getDriversFromBitBucket() throws IOException {
+        List<URL> urls;
+        URL driverUrl = getDriverUrl();
+        log.info("Reading {} to seek {}", driverUrl, getDriverName());
+
+        Optional<URL> mirrorUrl = getMirrorUrl();
+        if (mirrorUrl.isPresent() && config.isUseMirror()) {
+            urls = getDriversFromMirror(mirrorUrl.get());
+
+        } else {
+            try (BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(httpClient
+                            .execute(httpClient.createHttpGet(driverUrl))
+                            .getEntity().getContent()))) {
+                GsonBuilder gsonBuilder = new GsonBuilder();
+                Gson gson = gsonBuilder.create();
+                BitBucketApi bitBucketInfo = gson.fromJson(reader,
+                        BitBucketApi.class);
+
+                urls = bitBucketInfo.getUrls();
             }
         }
         return urls;
