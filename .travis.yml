@@ -9,6 +9,9 @@ install: true
 services:
     - xvfb
 
+git:
+    depth: false
+
 addons:
     chrome: stable
     firefox: latest
