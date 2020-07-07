@@ -821,7 +821,7 @@ public abstract class WebDriverManager {
 
     protected List<URL> getDriversFromXml(URL driverUrl, String xpath)
             throws IOException {
-        log.info("Reading {} to seek {}", driverUrl, getDriverName());
+        logSeekRepo(driverUrl);
         List<URL> urls = new ArrayList<>();
         try {
             try (CloseableHttpResponse response = httpClient
@@ -840,6 +840,10 @@ public abstract class WebDriverManager {
             throw new WebDriverManagerException(e);
         }
         return urls;
+    }
+
+    private void logSeekRepo(URL driverUrl) {
+        log.info("Reading {} to seek {}", driverUrl, getDriverName());
     }
 
     protected Document loadXML(InputStream inputStream)
@@ -870,7 +874,7 @@ public abstract class WebDriverManager {
     protected List<URL> getDriversFromGitHub() throws IOException {
         List<URL> urls;
         URL driverUrl = getDriverUrl();
-        log.info("Reading {} to seek {}", driverUrl, getDriverName());
+        logSeekRepo(driverUrl);
 
         Optional<URL> mirrorUrl = getMirrorUrl();
         if (mirrorUrl.isPresent() && config.isUseMirror()) {
@@ -904,7 +908,7 @@ public abstract class WebDriverManager {
     protected List<URL> getDriversFromBitBucket() throws IOException {
         List<URL> urls;
         URL driverUrl = getDriverUrl();
-        log.info("Reading {} to seek {}", driverUrl, getDriverName());
+        logSeekRepo(driverUrl);
 
         Optional<URL> mirrorUrl = getMirrorUrl();
         if (mirrorUrl.isPresent() && config.isUseMirror()) {
