@@ -98,6 +98,7 @@ import io.github.bonigarcia.wdm.managers.OperaDriverManager;
 import io.github.bonigarcia.wdm.managers.PhantomJsDriverManager;
 import io.github.bonigarcia.wdm.managers.SeleniumServerStandaloneManager;
 import io.github.bonigarcia.wdm.managers.VoidDriverManager;
+import io.github.bonigarcia.wdm.online.BitBucketApi;
 import io.github.bonigarcia.wdm.online.Downloader;
 import io.github.bonigarcia.wdm.online.GitHubApi;
 import io.github.bonigarcia.wdm.online.HttpClient;
@@ -824,14 +825,9 @@ public abstract class WebDriverManager {
         return null;
     }
 
-    protected List<URL> getDriversFromXml(URL driverUrl, String xpath)
-            throws IOException {
-        return getDriversFromXml(driverUrl, xpath, getNamespaceContext());
-    }
-
     protected List<URL> getDriversFromXml(URL driverUrl, String xpath, NamespaceContext namespaceContext)
             throws IOException {
-        log.info("Reading {} to seek {}", driverUrl, getDriverName());
+        logSeekRepo(driverUrl);
         List<URL> urls = new ArrayList<>();
         try {
             try (CloseableHttpResponse response = httpClient
@@ -853,6 +849,10 @@ public abstract class WebDriverManager {
             throw new WebDriverManagerException(e);
         }
         return urls;
+    }
+
+    private void logSeekRepo(URL driverUrl) {
+        log.info("Reading {} to seek {}", driverUrl, getDriverName());
     }
 
     protected Document loadXML(InputStream inputStream)
@@ -884,7 +884,7 @@ public abstract class WebDriverManager {
     protected List<URL> getDriversFromGitHub() throws IOException {
         List<URL> urls;
         URL driverUrl = getDriverUrl();
-        log.info("Reading {} to seek {}", driverUrl, getDriverName());
+        logSeekRepo(driverUrl);
 
         Optional<URL> mirrorUrl = getMirrorUrl();
         if (mirrorUrl.isPresent() && config.isUseMirror()) {
@@ -910,6 +910,31 @@ public abstract class WebDriverManager {
                         }
                     }
                 }
+            }
+        }
+        return urls;
+    }
+
+    protected List<URL> getDriversFromBitBucket() throws IOException {
+        List<URL> urls;
+        URL driverUrl = getDriverUrl();
+        logSeekRepo(driverUrl);
+
+        Optional<URL> mirrorUrl = getMirrorUrl();
+        if (mirrorUrl.isPresent() && config.isUseMirror()) {
+            urls = getDriversFromMirror(mirrorUrl.get());
+
+        } else {
+            try (BufferedReader reader = new BufferedReader(
+                    new InputStreamReader(httpClient
+                            .execute(httpClient.createHttpGet(driverUrl))
+                            .getEntity().getContent()))) {
+                GsonBuilder gsonBuilder = new GsonBuilder();
+                Gson gson = gsonBuilder.create();
+                BitBucketApi bitBucketInfo = gson.fromJson(reader,
+                        BitBucketApi.class);
+
+                urls = bitBucketInfo.getUrls();
             }
         }
         return urls;
