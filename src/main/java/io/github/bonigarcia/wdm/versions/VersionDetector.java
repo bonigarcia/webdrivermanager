@@ -174,14 +174,15 @@ public class VersionDetector {
         String browserBinaryPath = config.getBinaryPath();
         if (IS_OS_WINDOWS) {
             String winName = "";
-            for (int i = 0; i < programFilesEnvs.length; i++) {
-                winName = winBrowserNames.length > 1 ? winBrowserNames[i]
-                        : winBrowserNames[0];
-                String browserVersionOutput = getBrowserVersionInWindows(
-                        programFilesEnvs[i], winName, browserBinaryPath);
-                if (!isNullOrEmpty(browserVersionOutput)) {
-                    return Optional
-                            .of(getVersionFromWmicOutput(browserVersionOutput));
+            for (int j = 0; j < winBrowserNames.length; j++) {
+                winName = winBrowserNames[j];
+                for (int i = 0; i < programFilesEnvs.length; i++) {
+                    String browserVersionOutput = getBrowserVersionInWindows(
+                            programFilesEnvs[i], winName, browserBinaryPath);
+                    if (!isNullOrEmpty(browserVersionOutput)) {
+                        return Optional.of(
+                                getVersionFromWmicOutput(browserVersionOutput));
+                    }
                 }
             }
         } else if (IS_OS_LINUX || IS_OS_MAC) {

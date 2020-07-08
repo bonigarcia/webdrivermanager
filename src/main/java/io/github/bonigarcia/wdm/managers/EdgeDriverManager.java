@@ -136,7 +136,8 @@ public class EdgeDriverManager extends WebDriverManager {
 
     @Override
     protected Optional<String> getBrowserVersionFromTheShell() {
-        String[] programFilesEnvs = { getProgramFilesEnv() };
+        String[] programFilesEnvs = { getOtherProgramFilesEnv(),
+                getProgramFilesEnv() };
         String[] winBrowserNames = {
                 "\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe",
                 "\\\\Microsoft\\\\Edge Beta\\\\Application\\\\msedge.exe",
