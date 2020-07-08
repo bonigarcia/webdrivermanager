@@ -24,11 +24,15 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
+import io.github.bonigarcia.wdm.online.S3BucketListNamespaceContext;
+
+import javax.xml.namespace.NamespaceContext;
 
 /**
  * Manager for Chrome.
@@ -37,6 +41,8 @@ import io.github.bonigarcia.wdm.config.DriverManagerType;
  * @since 1.0.0
  */
 public class ChromeDriverManager extends WebDriverManager {
+
+    private static final S3BucketListNamespaceContext S3_BUCKET_LIST_NAMESPACE_CONTEXT = new S3BucketListNamespaceContext();
 
     @Override
     public DriverManagerType getDriverManagerType() {
@@ -94,7 +100,7 @@ public class ChromeDriverManager extends WebDriverManager {
         if (mirrorUrl.isPresent() && config().isUseMirror()) {
             return getDriversFromMirror(mirrorUrl.get());
         } else {
-            return getDriversFromXml(getDriverUrl(), "//Contents/Key");
+            return getDriversFromXml(getDriverUrl(), "//s3:Contents/s3:Key");
         }
     }
 
@@ -143,6 +149,11 @@ public class ChromeDriverManager extends WebDriverManager {
     @Override
     protected Charset getVersionCharset() {
         return StandardCharsets.UTF_8;
+    }
+
+    @Override
+    protected NamespaceContext getNamespaceContext() {
+        return S3_BUCKET_LIST_NAMESPACE_CONTEXT;
     }
 
 }
