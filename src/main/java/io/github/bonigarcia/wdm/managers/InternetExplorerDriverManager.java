@@ -24,11 +24,10 @@ import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 
+import javax.xml.namespace.NamespaceContext;
+
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
-import io.github.bonigarcia.wdm.online.S3BucketListNamespaceContext;
-
-import javax.xml.namespace.NamespaceContext;
 
 /**
  * Manager for Internet Explorer.
@@ -37,8 +36,6 @@ import javax.xml.namespace.NamespaceContext;
  * @since 1.0.0
  */
 public class InternetExplorerDriverManager extends WebDriverManager {
-
-    private static final S3BucketListNamespaceContext S3_BUCKET_LIST_NAMESPACE_CONTEXT = new S3BucketListNamespaceContext();
 
     @Override
     public DriverManagerType getDriverManagerType() {
@@ -92,7 +89,8 @@ public class InternetExplorerDriverManager extends WebDriverManager {
 
     @Override
     protected List<URL> getDriverUrls() throws IOException {
-        return getDriversFromXml(getDriverUrl(), "//s3:Contents/s3:Key");
+        return getDriversFromXml(getDriverUrl(), "//s3:Contents/s3:Key",
+                getS3NamespaceContext());
     }
 
     @Override

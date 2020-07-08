@@ -102,6 +102,7 @@ import io.github.bonigarcia.wdm.online.BitBucketApi;
 import io.github.bonigarcia.wdm.online.Downloader;
 import io.github.bonigarcia.wdm.online.GitHubApi;
 import io.github.bonigarcia.wdm.online.HttpClient;
+import io.github.bonigarcia.wdm.online.S3BucketListNamespaceContext;
 import io.github.bonigarcia.wdm.online.UrlHandler;
 import io.github.bonigarcia.wdm.versions.VersionComparator;
 import io.github.bonigarcia.wdm.versions.VersionDetector;
@@ -118,6 +119,7 @@ public abstract class WebDriverManager {
 
     protected static final String SLASH = "/";
     protected static final String LATEST_RELEASE = "LATEST_RELEASE";
+    protected static final NamespaceContext S3_BUCKET_LIST_NAMESPACE_CONTEXT = new S3BucketListNamespaceContext();
 
     protected abstract List<URL> getDriverUrls() throws IOException;
 
@@ -825,8 +827,12 @@ public abstract class WebDriverManager {
         return null;
     }
 
-    protected List<URL> getDriversFromXml(URL driverUrl, String xpath, NamespaceContext namespaceContext)
-            throws IOException {
+    protected Optional<NamespaceContext> getS3NamespaceContext() {
+        return Optional.of(S3_BUCKET_LIST_NAMESPACE_CONTEXT);
+    }
+
+    protected List<URL> getDriversFromXml(URL driverUrl, String xpath,
+            Optional<NamespaceContext> namespaceContext) throws IOException {
         logSeekRepo(driverUrl);
         List<URL> urls = new ArrayList<>();
         try {
@@ -834,11 +840,11 @@ public abstract class WebDriverManager {
                     .execute(httpClient.createHttpGet(driverUrl))) {
                 Document xml = loadXML(response.getEntity().getContent());
                 XPath xPath = newInstance().newXPath();
-                if (namespaceContext != null){
-                    xPath.setNamespaceContext(namespaceContext);
+                if (namespaceContext.isPresent()) {
+                    xPath.setNamespaceContext(namespaceContext.get());
                 }
-                NodeList nodes = (NodeList) xPath
-                        .evaluate(xpath, xml.getDocumentElement(), NODESET);
+                NodeList nodes = (NodeList) xPath.evaluate(xpath,
+                        xml.getDocumentElement(), NODESET);
                 for (int i = 0; i < nodes.getLength(); ++i) {
                     Element e = (Element) nodes.item(i);
                     urls.add(new URL(driverUrl.toURI().resolve(".")
