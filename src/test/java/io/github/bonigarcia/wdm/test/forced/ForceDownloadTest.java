@@ -59,7 +59,7 @@ public class ForceDownloadTest {
     }
 
     @Test
-    public void testLatestChrome() {
+    public void testForceDownload() {
         WebDriverManager driverManager = WebDriverManager
                 .getInstance(driverClass);
         driverManager.forceDownload().avoidBrowserDetection().timeout(TIMEOUT)
