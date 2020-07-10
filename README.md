@@ -33,6 +33,9 @@ WebDriverManager is a library which allows to automate the management of the bin
 11. [Survey](#survey)
 12. [About](#about)
 
+**WebDriverManager** is being sponsored by the following tool; please help to support us by taking a look and signing up to a free trial:<br>
+<a href="https://tracking.gitads.io/?repo=webdrivermanager"><img src="https://images.gitads.io/webdrivermanager" alt="GitAds"/></a>
+
 ## Motivation
 
 If you use [Selenium WebDriver], you probably know that to use some browsers such as **Chrome**, **Firefox**, **Edge**, **Opera**, **PhantomJS**, or **Internet Explorer**, first you need to download the so-called *driver*, i.e. a binary file which allows WebDriver to handle browsers. In Java, the path to this driver must be set as JVM properties, as follows:
