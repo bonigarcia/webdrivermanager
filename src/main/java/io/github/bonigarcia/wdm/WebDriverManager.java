@@ -602,14 +602,21 @@ public abstract class WebDriverManager {
                 getDriverName());
     }
 
-    protected void noCandidateUrlFound(String driverVersion) {
-        Architecture arch = config().getArchitecture();
-        String os = config().getOs();
-        String errorMessage = String.format("%s %s for %s %s not found in %s",
-                getDriverName(), getDriverVersionLabel(driverVersion), os,
-                arch.toString(), getDriverUrl());
-        log.error(errorMessage);
-        throw new WebDriverManagerException(errorMessage);
+    protected void noCandidateUrlFound(UrlHandler urlHandler,
+            String driverVersion) {
+        Optional<URL> buildUrl = buildUrl(driverVersion);
+        if (buildUrl.isPresent()) {
+            urlHandler.getCandidateUrls().add(buildUrl.get());
+        } else {
+            Architecture arch = config().getArchitecture();
+            String os = config().getOs();
+            String errorMessage = String.format(
+                    "%s %s for %s %s not found in %s", getDriverName(),
+                    getDriverVersionLabel(driverVersion), os, arch.toString(),
+                    getDriverUrl());
+            log.error(errorMessage);
+            throw new WebDriverManagerException(errorMessage);
+        }
     }
 
     protected void exportDriver(String variableValue) {
@@ -757,14 +764,18 @@ public abstract class WebDriverManager {
                     urlHandler.getDriverVersion());
             log.trace("Driver URLs after filtering for version: {}",
                     urlHandler.getCandidateUrls());
+            String os = config().getOs();
+            Architecture architecture = config().getArchitecture();
+
             if (urlHandler.hasNoCandidateUrl()) {
-                noCandidateUrlFound(driverVersion);
+                noCandidateUrlFound(urlHandler, driverVersion);
             }
 
             // Rest of filters
-            urlHandler.filterByOs(getDriverName(), config().getOs());
-            urlHandler.filterByArch(config().getArchitecture(), forcedArch);
-            urlHandler.filterByDistro(config().getOs(), getDriverName());
+
+            urlHandler.filterByOs(getDriverName(), os);
+            urlHandler.filterByArch(architecture, forcedArch);
+            urlHandler.filterByDistro(os, getDriverName());
             urlHandler.filterByIgnoredVersions(config().getIgnoreVersions());
             urlHandler.filterByBeta(config().isUseBetaVersions());
 
@@ -1060,6 +1071,10 @@ public abstract class WebDriverManager {
 
     protected String getDriverVersionLabel(String driverVersion) {
         return isUnknown(driverVersion) ? "(latest version)" : driverVersion;
+    }
+
+    protected Optional<URL> buildUrl(String driverVersion) {
+        return empty();
     }
 
     public static void main(String[] args) {

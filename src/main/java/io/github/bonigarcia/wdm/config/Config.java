@@ -118,6 +118,8 @@ public class Config {
             String.class);
     ConfigKey<URL> edgeDriverUrl = new ConfigKey<>("wdm.edgeDriverUrl",
             URL.class);
+    ConfigKey<String> edgeDownloadUrlPattern = new ConfigKey<>(
+            "wdm.edgeDownloadUrlPattern", String.class);
 
     ConfigKey<String> geckoDriverVersion = new ConfigKey<>(
             "wdm.geckoDriverVersion", String.class);
@@ -656,6 +658,15 @@ public class Config {
 
     public Config setEdgeDriverUrl(URL value) {
         this.edgeDriverUrl.setValue(value);
+        return this;
+    }
+
+    public String getEdgeDownloadUrlPattern() {
+        return resolve(edgeDownloadUrlPattern);
+    }
+
+    public Config setEdgeDownloadUrlPattern(String value) {
+        this.edgeDownloadUrlPattern.setValue(value);
         return this;
     }
 

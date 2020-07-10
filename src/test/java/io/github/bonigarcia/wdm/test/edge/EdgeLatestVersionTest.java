@@ -16,14 +16,15 @@
  */
 package io.github.bonigarcia.wdm.test.edge;
 
-import static java.lang.String.format;
 import static java.lang.invoke.MethodHandles.lookup;
+import static java.nio.charset.StandardCharsets.UTF_16;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,7 +54,7 @@ public class EdgeLatestVersionTest {
                 httpClient);
         Optional<String> driverVersion = Optional.empty();
         URL driverUrl = new URL("https://msedgedriver.azureedge.net/");
-        Charset versionCharset = StandardCharsets.UTF_16;
+        Charset versionCharset = UTF_16;
         String driverName = "msedgedriver";
         String versionLabel = "LATEST_STABLE";
 
@@ -64,12 +65,16 @@ public class EdgeLatestVersionTest {
         String edgeVersion = driverVersionFromRepository.get();
         log.debug("driverVersionFromRepository {}", edgeVersion);
 
-        List<String> driverVersions = WebDriverManager.edgedriver()
-                .getDriverVersions();
+        WebDriverManager edgedriver = WebDriverManager.edgedriver();
+        List<String> driverVersions = edgedriver.getDriverVersions();
         log.debug("All driverUrls {}", driverVersions);
-        assertTrue(format("Stable version (%s) is not in the URL list",
-                edgeVersion), driverVersions.contains(edgeVersion));
 
+        if (!driverVersions.contains(edgeVersion)) {
+            log.warn("{}", String.format(
+                    "Stable version (%s) is not in the URL list", edgeVersion));
+            edgedriver.forceDownload().avoidBrowserDetection().setup();
+            assertThat(edgedriver.getDownloadedVersion(), notNullValue());
+        }
     }
 
 }

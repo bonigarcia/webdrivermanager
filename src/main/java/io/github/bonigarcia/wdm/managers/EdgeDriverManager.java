@@ -20,9 +20,11 @@ import static io.github.bonigarcia.wdm.config.DriverManagerType.EDGE;
 import static java.util.Optional.empty;
 import static org.apache.commons.io.FileUtils.listFiles;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC_OSX;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -167,6 +169,28 @@ public class EdgeDriverManager extends WebDriverManager {
     @Override
     protected String getLatestVersionLabel() {
         return LATEST_STABLE;
+    }
+
+    @Override
+    protected Optional<URL> buildUrl(String driverVersion) {
+        Optional<URL> optionalUrl = empty();
+        if (!config().isUseMirror()) {
+            String downloadUrlPattern = config().getEdgeDownloadUrlPattern();
+            String os = config().getOs().toLowerCase();
+            String arch = IS_OS_WINDOWS
+                    ? arch = config().getArchitecture().toString()
+                    : "64";
+            String builtUrl = String.format(downloadUrlPattern, driverVersion,
+                    os, arch);
+            log.debug("Using URL built from repository pattern: {}", builtUrl);
+            try {
+                optionalUrl = Optional.of(new URL(builtUrl));
+            } catch (MalformedURLException e) {
+                log.warn("Error building URL from pattern {} {}", builtUrl,
+                        e.getMessage());
+            }
+        }
+        return optionalUrl;
     }
 
 }
