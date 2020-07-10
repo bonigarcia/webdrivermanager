@@ -177,7 +177,7 @@ public class EdgeDriverManager extends WebDriverManager {
             String downloadUrlPattern = config().getEdgeDownloadUrlPattern();
             String os = config().getOs().toLowerCase();
             String arch = os.contains("win")
-                    ? arch = config().getArchitecture().toString()
+                    ? config().getArchitecture().toString()
                     : "64";
             String builtUrl = String.format(downloadUrlPattern, driverVersion,
                     os, arch);
