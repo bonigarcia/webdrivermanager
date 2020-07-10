@@ -21,6 +21,7 @@ import static java.util.Optional.empty;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -151,6 +152,26 @@ public class ChromeDriverManager extends WebDriverManager {
     @Override
     protected NamespaceContext getNamespaceContext() {
         return S3_NAMESPACE_CONTEXT;
+    }
+
+    @Override
+    protected Optional<URL> buildUrl(String driverVersion) {
+        Optional<URL> optionalUrl = empty();
+        if (!config().isUseMirror()) {
+            String downloadUrlPattern = config().getChromeDownloadUrlPattern();
+            String os = config().getOs().toLowerCase();
+            String arch = os.contains("win") ? "32" : "64";
+            String builtUrl = String.format(downloadUrlPattern, driverVersion,
+                    os, arch);
+            log.debug("Using URL built from repository pattern: {}", builtUrl);
+            try {
+                optionalUrl = Optional.of(new URL(builtUrl));
+            } catch (MalformedURLException e) {
+                log.warn("Error building URL from pattern {} {}", builtUrl,
+                        e.getMessage());
+            }
+        }
+        return optionalUrl;
     }
 
 }
