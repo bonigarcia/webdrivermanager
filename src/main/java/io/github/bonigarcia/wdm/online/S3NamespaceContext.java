@@ -16,7 +16,9 @@
  */
 package io.github.bonigarcia.wdm.online;
 
-import java.util.Collections;
+import static java.util.Collections.emptyIterator;
+import static java.util.Collections.singletonList;
+
 import java.util.Iterator;
 
 import javax.xml.namespace.NamespaceContext;
@@ -27,7 +29,7 @@ import javax.xml.namespace.NamespaceContext;
  * @author andruhon and Boni Garcia (boni.gg@gmail.com)
  * @since 4.1.0
  */
-public class S3BucketListNamespaceContext implements NamespaceContext {
+public class S3NamespaceContext implements NamespaceContext {
 
     private static final String S3_BUCKET_LIST_NS = "http://doc.s3.amazonaws.com/2006-03-01";
 
@@ -52,9 +54,9 @@ public class S3BucketListNamespaceContext implements NamespaceContext {
     @Override
     public Iterator<String> getPrefixes(String namespaceURI) {
         if (S3_BUCKET_LIST_NS.equals(namespaceURI)) {
-            return Collections.singletonList(S3_PREFIX).iterator();
+            return singletonList(S3_PREFIX).iterator();
         } else {
-            return Collections.emptyIterator();
+            return emptyIterator();
         }
     }
 

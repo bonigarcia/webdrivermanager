@@ -34,7 +34,7 @@ import org.junit.Test;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
 import io.github.bonigarcia.wdm.online.HttpClient;
-import io.github.bonigarcia.wdm.online.S3BucketListNamespaceContext;
+import io.github.bonigarcia.wdm.online.S3NamespaceContext;
 
 /**
  * Namespace tests.
@@ -45,7 +45,7 @@ import io.github.bonigarcia.wdm.online.S3BucketListNamespaceContext;
 
 public class NamespaceContextTest {
 
-    public static final S3BucketListNamespaceContext S_3_BUCKET_LIST_NAMESPACE_CONTEXT = new S3BucketListNamespaceContext();
+    public static final S3NamespaceContext S_3_BUCKET_LIST_NAMESPACE_CONTEXT = new S3NamespaceContext();
 
     public static final String S3_URI = "http://doc.s3.amazonaws.com/2006-03-01";
 

@@ -150,7 +150,7 @@ public class ChromeDriverManager extends WebDriverManager {
 
     @Override
     protected NamespaceContext getNamespaceContext() {
-        return S3_BUCKET_LIST_NAMESPACE_CONTEXT;
+        return S3_NAMESPACE_CONTEXT;
     }
 
 }
