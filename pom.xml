@@ -22,7 +22,7 @@
         <mockserver.version>5.11.0</mockserver.version>
         <selenium-java.version>3.141.59</selenium-java.version>
         <phantomjsdriver.version>1.4.4</phantomjsdriver.version>
-        <htmlunit-driver.version>2.41.0</htmlunit-driver.version>
+        <htmlunit-driver.version>2.42.0</htmlunit-driver.version>
         <guava.version>29.0-jre</guava.version>
         <mockito-core.version>3.4.0</mockito-core.version>
 
