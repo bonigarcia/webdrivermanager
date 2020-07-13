@@ -178,6 +178,8 @@ public class Config {
     ConfigKey<String> binaryPath = new ConfigKey<>("wdm.binaryPath",
             String.class);
     ConfigKey<Integer> ttl = new ConfigKey<>("wdm.ttl", Integer.class);
+    ConfigKey<Integer> ttlForBrowsers = new ConfigKey<>("wdm.ttlForBrowsers",
+            Integer.class);
     ConfigKey<String> resolutionCache = new ConfigKey<>("wdm.resolutionCache",
             String.class);
 
@@ -561,6 +563,15 @@ public class Config {
 
     public Config setTtl(int value) {
         this.ttl.setValue(value);
+        return this;
+    }
+
+    public int getTtlForBrowsers() {
+        return resolve(ttlForBrowsers);
+    }
+
+    public Config setTtlForBrowsers(int value) {
+        this.ttlForBrowsers.setValue(value);
         return this;
     }
 

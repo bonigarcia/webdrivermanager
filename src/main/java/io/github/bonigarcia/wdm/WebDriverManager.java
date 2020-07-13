@@ -545,7 +545,7 @@ public abstract class WebDriverManager {
 
         if (!optionalBrowserVersion.isPresent()) {
             optionalBrowserVersion = getValueFromResolutionCache(preferenceKey,
-                    optionalBrowserVersion);
+                    optionalBrowserVersion, config().getTtlForBrowsers());
         }
         if (!optionalBrowserVersion.isPresent()) {
             optionalBrowserVersion = detectBrowserVersion();
@@ -553,8 +553,12 @@ public abstract class WebDriverManager {
         if (optionalBrowserVersion.isPresent()) {
             preferenceKey = getKeyForResolutionCache()
                     + optionalBrowserVersion.get();
-            driverVersion = resolutionCache
-                    .getValueFromResolutionCache(preferenceKey);
+            if (useResolutionCache()
+                    && resolutionCache.checkKeyInResolutionCache(preferenceKey,
+                            config().getTtl())) {
+                driverVersion = resolutionCache
+                        .getValueFromResolutionCache(preferenceKey);
+            }
 
             Optional<String> optionalDriverVersion = empty();
             if (isUnknown(driverVersion)) {
@@ -635,16 +639,17 @@ public abstract class WebDriverManager {
             String resolvedDriverVersion, String resolvedBrowserVersion) {
         if (useResolutionCache()) {
             resolutionCache.putValueInResolutionCacheIfEmpty(
-                    getKeyForResolutionCache(), resolvedBrowserVersion);
+                    getKeyForResolutionCache(), resolvedBrowserVersion,
+                    config().getTtlForBrowsers());
             resolutionCache.putValueInResolutionCacheIfEmpty(preferenceKey,
-                    resolvedDriverVersion);
+                    resolvedDriverVersion, config().getTtl());
         }
     }
 
     protected Optional<String> getValueFromResolutionCache(String preferenceKey,
-            Optional<String> optionalBrowserVersion) {
-        if (useResolutionCache()
-                && resolutionCache.checkKeyInResolutionCache(preferenceKey)) {
+            Optional<String> optionalBrowserVersion, int ttl) {
+        if (useResolutionCache() && resolutionCache
+                .checkKeyInResolutionCache(preferenceKey, ttl)) {
             optionalBrowserVersion = Optional.of(
                     resolutionCache.getValueFromResolutionCache(preferenceKey));
         }
@@ -678,8 +683,9 @@ public abstract class WebDriverManager {
         String driverManagerTypeLowerCase = getDriverManagerType().name()
                 .toLowerCase();
         Optional<String> optionalBrowserVersion;
-        if (useResolutionCache() && resolutionCache
-                .checkKeyInResolutionCache(driverManagerTypeLowerCase)) {
+
+        if (useResolutionCache() && resolutionCache.checkKeyInResolutionCache(
+                driverManagerTypeLowerCase, config().getTtlForBrowsers())) {
             optionalBrowserVersion = Optional.of(resolutionCache
                     .getValueFromResolutionCache(driverManagerTypeLowerCase));
 
