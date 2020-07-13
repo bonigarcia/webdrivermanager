@@ -24,7 +24,7 @@ import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.asList;
 import static org.apache.commons.io.FileUtils.cleanDirectory;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.MockitoAnnotations.initMocks;
+import static org.mockito.MockitoAnnotations.openMocks;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
@@ -72,7 +72,7 @@ public class ForceOsTest {
 
     @Before
     public void setup() throws IOException {
-        initMocks(this);
+        openMocks(this);
         cleanDirectory(new File(downloader.getCachePath()));
     }
 
