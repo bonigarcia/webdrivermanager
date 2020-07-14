@@ -420,6 +420,11 @@ public abstract class WebDriverManager {
         return instanceMap.get(getDriverManagerType());
     }
 
+    public WebDriverManager avoidReadReleaseFromRepository() {
+        config().setAvoidReadReleaseFromRepository(true);
+        return instanceMap.get(getDriverManagerType());
+    }
+
     public WebDriverManager ttl(int seconds) {
         config().setTtl(seconds);
         return instanceMap.get(getDriverManagerType());
@@ -981,9 +986,10 @@ public abstract class WebDriverManager {
 
     protected Optional<String> getDriverVersionFromRepository(
             Optional<String> driverVersion) {
-        return versionDetector.getDriverVersionFromRepository(driverVersion,
-                getDriverUrl(), getVersionCharset(), getDriverName(),
-                getLatestVersionLabel(), LATEST_RELEASE);
+        return config().isAvoidReadReleaseFromRepository() ? empty()
+                : versionDetector.getDriverVersionFromRepository(driverVersion,
+                        getDriverUrl(), getVersionCharset(), getDriverName(),
+                        getLatestVersionLabel(), LATEST_RELEASE);
     }
 
     protected void reset() {

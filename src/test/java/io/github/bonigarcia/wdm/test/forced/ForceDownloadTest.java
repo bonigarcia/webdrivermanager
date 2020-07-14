@@ -62,7 +62,8 @@ public class ForceDownloadTest {
     public void testForceDownload() {
         WebDriverManager driverManager = WebDriverManager
                 .getInstance(driverClass);
-        driverManager.forceDownload().avoidBrowserDetection().timeout(TIMEOUT)
+        driverManager.forceDownload().avoidBrowserDetection()
+                .avoidReadReleaseFromRepository().timeout(TIMEOUT)
                 .operatingSystem(OS).setup();
         assertThat(driverManager.getBinaryPath(), notNullValue());
     }
