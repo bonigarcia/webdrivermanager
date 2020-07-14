@@ -571,14 +571,17 @@ public abstract class WebDriverManager {
                         optionalBrowserVersion.get());
                 storeInResolutionCache(preferenceKey, driverVersion,
                         optionalBrowserVersion.get());
-            } else {
-                log.debug(
-                        "The driver version for {} {} is unknown ... trying with latest",
-                        getDriverManagerType(), optionalBrowserVersion.get());
             }
         }
 
-        if (isUnknown(driverVersion)) { // if still unknown, try with latest
+        if (isUnknown(driverVersion)) {
+            String browserVersionStr = optionalBrowserVersion.isPresent()
+                    ? " " + optionalBrowserVersion.get()
+                    : "";
+            log.debug(
+                    "The driver version for {}{} is unknown ... trying with latest",
+                    getDriverManagerType(), browserVersionStr);
+
             Optional<String> latestDriverVersionFromRepository = getLatestDriverVersionFromRepository();
             if (latestDriverVersionFromRepository.isPresent()) {
                 driverVersion = latestDriverVersionFromRepository.get();
