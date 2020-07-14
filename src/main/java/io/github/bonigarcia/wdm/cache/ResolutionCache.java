@@ -48,7 +48,6 @@ public class ResolutionCache {
     final Logger log = getLogger(lookup().lookupClass());
 
     static final String TTL = "-ttl";
-    static final String CACHED_AT = "-cached-at";
     static final String RESOLUTION_CACHE_INFO = "WebDriverManager Resolution Cache (relationship between browsers and drivers versions previously resolved)";
 
     Properties props = new Properties() {
@@ -106,10 +105,10 @@ public class ResolutionCache {
         return props.getProperty(key, null);
     }
 
-    private Date getCachedDateFromResolutionCache(String key) {
+    private Date getExpirationDateFromResolutionCache(String key) {
         Date result = new Date(0);
         try {
-            result = dateFormat.parse(props.getProperty(getCachedAtKey(key)));
+            result = dateFormat.parse(props.getProperty(getExpirationKey(key)));
             return result;
         } catch (Exception e) {
             log.warn("Exception parsing date ({}) from resolution cache", key,
@@ -123,12 +122,10 @@ public class ResolutionCache {
         if (getValueFromResolutionCache(key) == null) {
             props.put(key, value);
 
-            Date now = new Date();
-            Date expirationDate = new Date(
-                    now.getTime() + SECONDS.toMillis(ttl));
-            String nowStr = formatDate(now);
+            long now = new Date().getTime();
+            Date expirationDate = new Date(now + SECONDS.toMillis(ttl));
             String expirationDateStr = formatDate(expirationDate);
-            props.put(getCachedAtKey(key), nowStr);
+            props.put(getExpirationKey(key), expirationDateStr);
             if (log.isDebugEnabled()) {
                 log.debug("Storing resolution {}={} in cache (valid until {})",
                         key, value, expirationDateStr);
@@ -149,7 +146,7 @@ public class ResolutionCache {
 
     private void clearFromResolutionCache(String key) {
         props.remove(key);
-        props.remove(getCachedAtKey(key));
+        props.remove(getExpirationKey(key));
     }
 
     public void clear() {
@@ -177,18 +174,16 @@ public class ResolutionCache {
         return date != null ? dateFormat.format(date) : "";
     }
 
-    private String getCachedAtKey(String key) {
-        return key + CACHED_AT;
+    private String getExpirationKey(String key) {
+        return key + TTL;
     }
 
-    public boolean checkKeyInResolutionCache(String key, int ttl) {
+    public boolean checkKeyInResolutionCache(String key) {
         String valueFromResolutionCache = getValueFromResolutionCache(key);
         boolean valueInResolutionCache = valueFromResolutionCache != null
                 && !valueFromResolutionCache.isEmpty();
         if (valueInResolutionCache) {
-            Date cachedDate = getCachedDateFromResolutionCache(key);
-            Date expirationDate = new Date(
-                    cachedDate.getTime() + SECONDS.toMillis(ttl));
+            Date expirationDate = getExpirationDateFromResolutionCache(key);
             valueInResolutionCache &= checkValidity(key,
                     valueFromResolutionCache, expirationDate);
             if (valueInResolutionCache) {

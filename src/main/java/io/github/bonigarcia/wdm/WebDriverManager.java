@@ -540,7 +540,7 @@ public abstract class WebDriverManager {
 
         if (!optionalBrowserVersion.isPresent()) {
             optionalBrowserVersion = getValueFromResolutionCache(preferenceKey,
-                    optionalBrowserVersion, config().getTtlForBrowsers());
+                    optionalBrowserVersion);
         }
         if (!optionalBrowserVersion.isPresent()) {
             optionalBrowserVersion = detectBrowserVersion();
@@ -548,9 +548,8 @@ public abstract class WebDriverManager {
         if (optionalBrowserVersion.isPresent()) {
             preferenceKey = getKeyForResolutionCache()
                     + optionalBrowserVersion.get();
-            if (useResolutionCache()
-                    && resolutionCache.checkKeyInResolutionCache(preferenceKey,
-                            config().getTtl())) {
+            if (useResolutionCache() && resolutionCache
+                    .checkKeyInResolutionCache(preferenceKey)) {
                 driverVersion = resolutionCache
                         .getValueFromResolutionCache(preferenceKey);
             }
@@ -642,9 +641,9 @@ public abstract class WebDriverManager {
     }
 
     protected Optional<String> getValueFromResolutionCache(String preferenceKey,
-            Optional<String> optionalBrowserVersion, int ttl) {
-        if (useResolutionCache() && resolutionCache
-                .checkKeyInResolutionCache(preferenceKey, ttl)) {
+            Optional<String> optionalBrowserVersion) {
+        if (useResolutionCache()
+                && resolutionCache.checkKeyInResolutionCache(preferenceKey)) {
             optionalBrowserVersion = Optional.of(
                     resolutionCache.getValueFromResolutionCache(preferenceKey));
         }
@@ -679,8 +678,8 @@ public abstract class WebDriverManager {
                 .toLowerCase();
         Optional<String> optionalBrowserVersion;
 
-        if (useResolutionCache() && resolutionCache.checkKeyInResolutionCache(
-                driverManagerTypeLowerCase, config().getTtlForBrowsers())) {
+        if (useResolutionCache() && resolutionCache
+                .checkKeyInResolutionCache(driverManagerTypeLowerCase)) {
             optionalBrowserVersion = Optional.of(resolutionCache
                     .getValueFromResolutionCache(driverManagerTypeLowerCase));
 
