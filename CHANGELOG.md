@@ -1,5 +1,23 @@
 # Changelog
 
+## [4.1.0] - 2020-07-14
+### Added
+- New method in WebDriverManager API: ttlBrowsers(int) -> TTL to store browser versions in resolution cache (issue #483)
+- New method in WebDriverManager API: avoidReadReleaseFromRepository() -> to avoid reading driver version from repository
+- Build download URL from pattern when it is no available in chromedriver and msedgedriver repository
+
+### Fixed
+- Add namespace context for Saxon compatibility (issue #503)
+- Change default headers in HTTP client (fix support for msedgedriver)
+
+### Changed
+- Store value in resolution cache only when TTL (for drivers and browsers) is upper 0
+- Parse BitBucket API to download PhantomJS drivers
+
+### Removed
+- Remove WebDriverManager survey link from log traces
+
+
 ## [4.0.0] - 2020-05-03
 ### Added
 - Full support for Edge (Chromium-based) using https://msedgedriver.azureedge.net/
