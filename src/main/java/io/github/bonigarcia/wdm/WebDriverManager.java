@@ -425,6 +425,11 @@ public abstract class WebDriverManager {
         return instanceMap.get(getDriverManagerType());
     }
 
+    public WebDriverManager ttlBrowser(int seconds) {
+        config().setTtlForBrowsers(seconds);
+        return instanceMap.get(getDriverManagerType());
+    }
+
     public WebDriverManager browserPath(String browserPath) {
         config().setBinaryPath(browserPath);
         return instanceMap.get(getDriverManagerType());
