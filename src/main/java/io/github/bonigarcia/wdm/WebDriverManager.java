@@ -878,7 +878,7 @@ public abstract class WebDriverManager {
         return urls;
     }
 
-    private void logSeekRepo(URL driverUrl) {
+    protected void logSeekRepo(URL driverUrl) {
         log.info("Reading {} to seek {}", driverUrl, getDriverName());
     }
 
