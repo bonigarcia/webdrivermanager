@@ -84,15 +84,6 @@ public class ResolutionCache {
             }
             try (InputStream fis = new FileInputStream(resolutionCacheFile)) {
                 props.load(fis);
-
-                // Clear legacy TTL keys (deprecated with version 4.1.0)
-                for (String key : props.stringPropertyNames()) {
-                    if (key.contains(TTL)) {
-                        log.trace("Removing legacy key in resolution cache {}",
-                                key);
-                        props.remove(key);
-                    }
-                }
             }
         } catch (Exception e) {
             throw new WebDriverManagerException(
@@ -111,8 +102,9 @@ public class ResolutionCache {
             result = dateFormat.parse(props.getProperty(getExpirationKey(key)));
             return result;
         } catch (Exception e) {
-            log.warn("Exception parsing date ({}) from resolution cache", key,
-                    e.getMessage());
+            log.warn("Exception parsing date ({}) from resolution cache {}",
+                    key, e.getMessage());
+            e.printStackTrace();
         }
         return result;
     }
