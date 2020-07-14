@@ -544,8 +544,7 @@ public abstract class WebDriverManager {
                 .filter(StringUtils::isNotEmpty);
 
         if (!optionalBrowserVersion.isPresent()) {
-            optionalBrowserVersion = getValueFromResolutionCache(preferenceKey,
-                    optionalBrowserVersion);
+            optionalBrowserVersion = getValueFromResolutionCache(preferenceKey);
         }
         if (!optionalBrowserVersion.isPresent()) {
             optionalBrowserVersion = detectBrowserVersion();
@@ -553,35 +552,29 @@ public abstract class WebDriverManager {
         if (optionalBrowserVersion.isPresent()) {
             preferenceKey = getKeyForResolutionCache()
                     + optionalBrowserVersion.get();
-            if (useResolutionCache() && resolutionCache
-                    .checkKeyInResolutionCache(preferenceKey)) {
-                driverVersion = resolutionCache
-                        .getValueFromResolutionCache(preferenceKey);
-            }
+            Optional<String> optionalDriverVersion = getValueFromResolutionCache(
+                    preferenceKey);
 
-            Optional<String> optionalDriverVersion = empty();
-            if (isUnknown(driverVersion)) {
+            if (!optionalDriverVersion.isPresent()) {
                 optionalDriverVersion = getDriverVersionFromRepository(
                         optionalBrowserVersion);
             }
-            if (isUnknown(driverVersion)) {
+            if (!optionalDriverVersion.isPresent()) {
                 optionalDriverVersion = versionDetector
                         .getDriverVersionFromProperties(preferenceKey);
             }
             if (optionalDriverVersion.isPresent()) {
                 driverVersion = optionalDriverVersion.get();
-            }
-            if (isUnknown(driverVersion)) {
-                log.debug(
-                        "The driver version for {} {} is unknown ... trying with latest",
-                        getDriverManagerType(), optionalBrowserVersion.get());
-            } else if (!isUnknown(driverVersion)) {
                 log.info(
                         "Using {} {} (since {} {} is installed in your machine)",
                         getDriverName(), driverVersion, getDriverManagerType(),
                         optionalBrowserVersion.get());
                 storeInResolutionCache(preferenceKey, driverVersion,
                         optionalBrowserVersion.get());
+            } else {
+                log.debug(
+                        "The driver version for {} {} is unknown ... trying with latest",
+                        getDriverManagerType(), optionalBrowserVersion.get());
             }
         }
 
@@ -645,10 +638,10 @@ public abstract class WebDriverManager {
         }
     }
 
-    protected Optional<String> getValueFromResolutionCache(String preferenceKey,
-            Optional<String> optionalBrowserVersion) {
-        if (useResolutionCache()
-                && resolutionCache.checkKeyInResolutionCache(preferenceKey)) {
+    protected Optional<String> getValueFromResolutionCache(
+            String preferenceKey) {
+        Optional<String> optionalBrowserVersion = empty();
+        if (useResolutionCacheWithKey(preferenceKey)) {
             optionalBrowserVersion = Optional.of(
                     resolutionCache.getValueFromResolutionCache(preferenceKey));
         }
@@ -683,8 +676,7 @@ public abstract class WebDriverManager {
                 .toLowerCase();
         Optional<String> optionalBrowserVersion;
 
-        if (useResolutionCache() && resolutionCache
-                .checkKeyInResolutionCache(driverManagerTypeLowerCase)) {
+        if (useResolutionCacheWithKey(driverManagerTypeLowerCase)) {
             optionalBrowserVersion = Optional.of(resolutionCache
                     .getValueFromResolutionCache(driverManagerTypeLowerCase));
 
@@ -694,6 +686,11 @@ public abstract class WebDriverManager {
             optionalBrowserVersion = getBrowserVersionFromTheShell();
         }
         return optionalBrowserVersion;
+    }
+
+    protected boolean useResolutionCacheWithKey(String key) {
+        return useResolutionCache()
+                && resolutionCache.checkKeyInResolutionCache(key);
     }
 
     protected boolean useResolutionCache() {
