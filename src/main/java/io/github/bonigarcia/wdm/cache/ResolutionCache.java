@@ -110,7 +110,7 @@ public class ResolutionCache {
 
     public void putValueInResolutionCacheIfEmpty(String key, String value,
             int ttl) {
-        if (getValueFromResolutionCache(key) == null) {
+        if (getValueFromResolutionCache(key) == null && ttl > 0) {
             props.put(key, value);
 
             long now = new Date().getTime();
