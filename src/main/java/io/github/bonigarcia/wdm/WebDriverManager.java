@@ -425,7 +425,7 @@ public abstract class WebDriverManager {
         return instanceMap.get(getDriverManagerType());
     }
 
-    public WebDriverManager ttlBrowser(int seconds) {
+    public WebDriverManager ttlBrowsers(int seconds) {
         config().setTtlForBrowsers(seconds);
         return instanceMap.get(getDriverManagerType());
     }

@@ -36,7 +36,7 @@ public class ResolutionCacheTest {
     @Test
     public void testEmptyTtl() {
         WebDriverManager.main(new String[] { "clear-resolution-cache" });
-        chromedriver().ttl(0).ttlBrowser(0).setup();
+        chromedriver().ttl(0).ttlBrowsers(0).setup();
         String binaryPath = chromedriver().getBinaryPath();
         File binary = new File(binaryPath);
         assertTrue(binary.exists());
