@@ -104,7 +104,6 @@ public class ResolutionCache {
         } catch (Exception e) {
             log.warn("Exception parsing date ({}) from resolution cache {}",
                     key, e.getMessage());
-            e.printStackTrace();
         }
         return result;
     }
