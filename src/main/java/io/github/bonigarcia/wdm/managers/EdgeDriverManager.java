@@ -108,19 +108,6 @@ public class EdgeDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected String preDownload(String target, String driverVersion) {
-        int iVersion = target.indexOf(driverVersion);
-        if (iVersion != -1) {
-            target = target.substring(0, iVersion)
-                    + config().getArchitecture().name().toLowerCase()
-                    + File.separator + target.substring(iVersion);
-        }
-        log.trace("Pre-download in EdgeDriver -- target={}, driverVersion={}",
-                target, driverVersion);
-        return target;
-    }
-
-    @Override
     protected File postDownload(File archive) {
         Collection<File> listFiles = listFiles(new File(archive.getParent()),
                 null, true);

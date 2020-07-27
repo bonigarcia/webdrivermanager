@@ -110,20 +110,6 @@ public class PhantomJsDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected String preDownload(String target, String driverVersion) {
-        int iSeparator = target.indexOf(driverVersion) - 1;
-        int iDash = target.lastIndexOf(driverVersion) + driverVersion.length();
-        int iPoint = target.lastIndexOf(".tar") != -1
-                ? target.lastIndexOf(".tar")
-                : target.lastIndexOf(".zip");
-        target = target.substring(0, iSeparator + 1)
-                + target.substring(iDash + 1, iPoint)
-                + target.substring(iSeparator);
-        target = target.replace("beta-", "");
-        return target;
-    }
-
-    @Override
     protected File postDownload(File archive) {
         log.trace("PhantomJS package name: {}", archive);
 

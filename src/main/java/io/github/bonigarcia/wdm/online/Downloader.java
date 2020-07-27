@@ -16,6 +16,8 @@
  */
 package io.github.bonigarcia.wdm.online;
 
+import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROME;
+import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROMIUM;
 import static java.io.File.separator;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.file.Files.createTempDirectory;
@@ -26,6 +28,7 @@ import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
 import static org.apache.commons.io.FileUtils.deleteDirectory;
 import static org.apache.commons.io.FileUtils.listFiles;
 import static org.apache.commons.io.FileUtils.moveFileToDirectory;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 import static org.rauschig.jarchivelib.ArchiveFormat.TAR;
 import static org.rauschig.jarchivelib.ArchiverFactory.createArchiver;
 import static org.rauschig.jarchivelib.CompressionType.BZIP2;
@@ -41,7 +44,6 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.Optional;
-import java.util.function.BinaryOperator;
 import java.util.function.UnaryOperator;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
@@ -51,6 +53,7 @@ import org.rauschig.jarchivelib.Archiver;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.config.Config;
+import io.github.bonigarcia.wdm.config.DriverManagerType;
 import io.github.bonigarcia.wdm.config.WebDriverManagerException;
 
 /**
@@ -65,22 +68,21 @@ public class Downloader {
 
     HttpClient httpClient;
     Config config;
-    BinaryOperator<String> preDownloadFunction;
     UnaryOperator<File> postDownloadFunction;
 
     public Downloader(HttpClient httpClient, Config config,
-            BinaryOperator<String> preDownloadFunction,
             UnaryOperator<File> postDownloadFunction) {
         this.httpClient = httpClient;
         this.config = config;
-        this.preDownloadFunction = preDownloadFunction;
         this.postDownloadFunction = postDownloadFunction;
 
     }
 
     public synchronized String download(URL url, String driverVersion,
-            String driverName) throws IOException {
-        File targetFile = getTarget(driverVersion, url);
+            String driverName, DriverManagerType driverManagerType)
+            throws IOException {
+        File targetFile = getTarget(driverVersion, driverName,
+                driverManagerType, url);
         Optional<File> binary = checkBinary(driverName, targetFile);
         if (!binary.isPresent()) {
             binary = downloadAndExtract(url, targetFile);
@@ -88,27 +90,25 @@ public class Downloader {
         return binary.get().toString();
     }
 
-    public File getTarget(String driverVersion, URL url) {
-        log.trace("getTarget {} {}", driverVersion, url);
+    public File getTarget(String driverVersion, String driverName,
+            DriverManagerType driverManagerType, URL url) {
         String zip = url.getFile().substring(url.getFile().lastIndexOf('/'));
+        String cachePath = config.getCachePath();
+        String os = config.getOs().toLowerCase();
+        String architecture = config.getArchitecture().toString();
 
-        int iFirst = zip.indexOf('_');
-        int iSecond = zip.indexOf('-');
-        int iLast = zip.length();
-        if (iFirst != zip.lastIndexOf('_')) {
-            iLast = zip.lastIndexOf('_');
-        } else if (iSecond != -1) {
-            iLast = iSecond;
+        if (IS_OS_WINDOWS && (driverManagerType == CHROME
+                || driverManagerType == CHROMIUM)) {
+            log.trace(
+                    "{} in Windows is only available for 32 bits architecture",
+                    driverName);
+            architecture = "32";
         }
 
-        String folder = zip.substring(0, iLast).replace(".zip", "")
-                .replace(".tar.bz2", "").replace(".tar.gz", "")
-                .replace(".exe", "").replace("_", separator);
-        String cachePath = config.getCachePath();
-        String path = config.isAvoidOutputTree() ? cachePath + zip
-                : cachePath + folder + separator + driverVersion + zip;
+        String target = config.isAvoidOutputTree() ? cachePath + zip
+                : cachePath + separator + driverName + separator + os
+                        + architecture + separator + driverVersion + zip;
 
-        String target = preDownloadFunction.apply(path, driverVersion);
         log.trace("Target file for URL {} driver version {} = {}", url,
                 driverVersion, target);
 

@@ -101,26 +101,6 @@ public class FirefoxDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected String preDownload(String target, String driverVersion) {
-        int iSeparator = target.indexOf(driverVersion) - 1;
-        int iDash = target.lastIndexOf(driverVersion) + driverVersion.length();
-        int iPoint = target.lastIndexOf(".zip");
-        int iPointTazGz = target.lastIndexOf(".tar.gz");
-        int iPointGz = target.lastIndexOf(".gz");
-
-        if (iPointTazGz != -1) {
-            iPoint = iPointTazGz;
-        } else if (iPointGz != -1) {
-            iPoint = iPointGz;
-        }
-
-        target = target.substring(0, iSeparator + 1)
-                + target.substring(iDash + 1, iPoint).toLowerCase()
-                + target.substring(iSeparator);
-        return target;
-    }
-
-    @Override
     protected Optional<String> getBrowserVersionFromTheShell() {
         String[] programFilesEnvs = { getProgramFilesEnv(),
                 getOtherProgramFilesEnv() };

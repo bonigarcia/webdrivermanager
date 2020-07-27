@@ -500,7 +500,7 @@ public abstract class WebDriverManager {
         httpClient = new HttpClient(config());
         try (HttpClient wdmHttpClient = httpClient) {
             versionDetector = new VersionDetector(config, httpClient);
-            downloader = new Downloader(httpClient, config(), this::preDownload,
+            downloader = new Downloader(httpClient, config(),
                     this::postDownload);
 
             if (isUnknown(driverVersion)) {
@@ -603,7 +603,7 @@ public abstract class WebDriverManager {
         URL url = urlHandler.getCandidateUrl();
         downloadedDriverVersion = urlHandler.getDriverVersion();
         return downloader.download(url, downloadedDriverVersion,
-                getDriverName());
+                getDriverName(), getDriverManagerType());
     }
 
     protected void noCandidateUrlFound(UrlHandler urlHandler,
@@ -654,12 +654,6 @@ public abstract class WebDriverManager {
                     resolutionCache.getValueFromResolutionCache(preferenceKey));
         }
         return optionalBrowserVersion;
-    }
-
-    protected String preDownload(String target, String driverVersion) {
-        log.trace("Pre-download. target={}, driverVersion={}", target,
-                driverVersion);
-        return target;
     }
 
     protected File postDownload(File archive) {
