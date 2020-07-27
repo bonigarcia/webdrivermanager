@@ -91,7 +91,7 @@ public class CacheTest {
     public void testCache() throws Exception {
         WebDriverManager browserManager = WebDriverManager
                 .getInstance(driverManagerType);
-        browserManager.forceDownload().operatingSystem(os)
+        browserManager.clearResolutionCache().forceDownload().operatingSystem(os)
                 .driverVersion(driverVersion).setup();
 
         CacheHandler cacheHandler = new CacheHandler(new Config());
