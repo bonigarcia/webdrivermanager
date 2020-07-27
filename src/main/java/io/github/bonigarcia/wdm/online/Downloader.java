@@ -28,7 +28,6 @@ import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
 import static org.apache.commons.io.FileUtils.deleteDirectory;
 import static org.apache.commons.io.FileUtils.listFiles;
 import static org.apache.commons.io.FileUtils.moveFileToDirectory;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 import static org.rauschig.jarchivelib.ArchiveFormat.TAR;
 import static org.rauschig.jarchivelib.ArchiverFactory.createArchiver;
 import static org.rauschig.jarchivelib.CompressionType.BZIP2;
@@ -97,7 +96,7 @@ public class Downloader {
         String os = config.getOs().toLowerCase();
         String architecture = config.getArchitecture().toString();
 
-        if (IS_OS_WINDOWS && (driverManagerType == CHROME
+        if (os.equals("win") && (driverManagerType == CHROME
                 || driverManagerType == CHROMIUM)) {
             log.trace(
                     "{} in Windows is only available for 32 bits architecture",

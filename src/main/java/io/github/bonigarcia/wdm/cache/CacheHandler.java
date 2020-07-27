@@ -23,7 +23,6 @@ import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Collections.sort;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.io.FileUtils.listFiles;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
@@ -95,7 +94,7 @@ public class CacheHandler {
             }
 
             // Filter by arch
-            if (IS_OS_WINDOWS && (driverManagerType == CHROME
+            if (os.equalsIgnoreCase("win") && (driverManagerType == CHROME
                     || driverManagerType == CHROMIUM)) {
                 log.trace(
                         "Avoid filtering for architecture {} with {} in Windows",
