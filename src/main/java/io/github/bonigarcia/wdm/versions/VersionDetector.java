@@ -154,7 +154,7 @@ public class VersionDetector {
                 .execute(httpClient.createHttpGet(new URL(url))).getEntity()
                 .getContent()) {
             result = Optional.of(IOUtils.toString(response, versionCharset)
-                    .replaceAll("\r\n", ""));
+                    .replace("\r\n", ""));
         } catch (Exception e) {
             log.warn("Exception reading {} to get latest version of {} ({})",
                     url, driverName, e.getMessage());
@@ -211,8 +211,8 @@ public class VersionDetector {
 
     public String getBrowserVersionInWindows(String programFilesEnv,
             String winBrowserName, String browserBinaryPath) {
-        String programFiles = System.getenv(programFilesEnv).replaceAll("\\\\",
-                "\\\\\\\\");
+        String programFiles = System.getenv(programFilesEnv).replace("\\",
+                "\\\\");
         String browserPath = isNullOrEmpty(browserBinaryPath)
                 ? programFiles + winBrowserName
                 : browserBinaryPath;
