@@ -80,6 +80,8 @@ public class Config {
             "wdm.versionsPropertiesUrl", URL.class);
     ConfigKey<Boolean> clearResolutionCache = new ConfigKey<>(
             "wdm.clearResolutionCache", Boolean.class);
+    ConfigKey<Boolean> clearDriverCache = new ConfigKey<>(
+            "wdm.clearDriverCache", Boolean.class);
 
     ConfigKey<String> architecture = new ConfigKey<>("wdm.architecture",
             String.class, defaultArchitecture());
@@ -454,6 +456,15 @@ public class Config {
 
     public Config setClearResolutionCache(Boolean value) {
         this.clearResolutionCache.setValue(value);
+        return this;
+    }
+
+    public boolean getClearingDriverCache() {
+        return resolve(clearDriverCache);
+    }
+
+    public Config setClearDriverCache(Boolean value) {
+        this.clearDriverCache.setValue(value);
         return this;
     }
 

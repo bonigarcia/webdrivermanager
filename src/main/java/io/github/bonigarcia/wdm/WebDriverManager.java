@@ -270,6 +270,9 @@ public abstract class WebDriverManager {
         DriverManagerType driverManagerType = getDriverManagerType();
         if (driverManagerType != null) {
             try {
+                if (config().getClearingDriverCache()) {
+                    clearDriverCache();
+                }
                 if (config().getClearingResolutionCache()) {
                     clearResolutionCache();
                 }
@@ -450,6 +453,17 @@ public abstract class WebDriverManager {
         return instanceMap.get(getDriverManagerType());
     }
 
+    public WebDriverManager clearDriverCache() {
+        String cachePath = config().getCachePath();
+        try {
+            log.debug("Clearing driver cache at {}", cachePath);
+            deleteDirectory(new File(cachePath));
+        } catch (Exception e) {
+            log.warn("Exception deleting driver cache at {}", cachePath, e);
+        }
+        return instanceMap.get(getDriverManagerType());
+    }
+
     // ------------
 
     public String getBinaryPath() {
@@ -481,16 +495,6 @@ public abstract class WebDriverManager {
             return driverVersionList;
         } catch (IOException e) {
             throw new WebDriverManagerException(e);
-        }
-    }
-
-    public void clearCache() {
-        String cachePath = config().getCachePath();
-        try {
-            log.debug("Clearing cache at {}", cachePath);
-            deleteDirectory(new File(cachePath));
-        } catch (Exception e) {
-            log.warn("Exception deleting cache at {}", cachePath, e);
         }
     }
 

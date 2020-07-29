@@ -60,7 +60,7 @@ public class CustomCacheTest {
         log.info("Binary path {}", binaryPath);
         assertThat(binaryPath, startsWith(tmpFolder.toString()));
         log.info("Deleting temporary folder {}", tmpFolder);
-        WebDriverManager.chromedriver().clearCache();
+        WebDriverManager.chromedriver().clearDriverCache();
     }
 
     @Test
