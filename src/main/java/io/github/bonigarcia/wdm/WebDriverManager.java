@@ -1087,7 +1087,7 @@ public abstract class WebDriverManager {
     }
 
     public static void main(String[] args) {
-        String validBrowsers = "chrome|firefox|opera|edge|phantomjs|iexplorer|selenium_server_standalone";
+        String validBrowsers = "chrome|chromium|firefox|opera|edge|phantomjs|iexplorer|selenium_server_standalone";
         if (args.length <= 0) {
             logCliError(validBrowsers);
         } else {
