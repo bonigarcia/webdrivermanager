@@ -247,7 +247,6 @@ Additional methods are exposed by WebDriverManager, namely:
 * ``getDriverVersions()``: This method allows to find out the list of available driver versions.
 * ``getBinaryPath()``: This method allows to find out the path of the latest resolved binary.
 * ``getDownloadedVersion()``: This method allows to find out the version of the latest resolved binary.
-* ``clearCache()``: This methods allows to remove all binaries previously downloaded by WebDriverManager.
 * ``getDriverManagerType()``: This methods allows to get the driver manager type (as ``enum``) of a given manager.
  
 
