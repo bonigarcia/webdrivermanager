@@ -44,9 +44,9 @@ public abstract class BrowserTestParent {
     @Test
     public void test() {
         driver.manage().timeouts().implicitlyWait(30, SECONDS);
-        driver.get("https://bonigarcia.github.io/selenium-jupiter/");
-        assertThat(driver.getTitle(),
-                containsString("JUnit 5 extension for Selenium"));
+        driver.get("https://github.com/bonigarcia/webdrivermanager");
+        assertThat(driver.getTitle(), containsString(
+                "Automatic management of Selenium WebDriver binaries"));
     }
 
 }
