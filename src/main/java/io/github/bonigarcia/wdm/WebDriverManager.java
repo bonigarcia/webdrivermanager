@@ -37,7 +37,7 @@ import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static java.util.regex.Pattern.compile;
 import static javax.xml.xpath.XPathConstants.NODESET;
 import static javax.xml.xpath.XPathFactory.newInstance;
-import static org.apache.commons.io.FileUtils.deleteDirectory;
+import static org.apache.commons.io.FileUtils.cleanDirectory;
 import static org.apache.commons.io.FilenameUtils.removeExtension;
 import static org.apache.commons.lang3.StringUtils.isNumeric;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -457,7 +457,7 @@ public abstract class WebDriverManager {
         String cachePath = config().getCachePath();
         try {
             log.debug("Clearing driver cache at {}", cachePath);
-            deleteDirectory(new File(cachePath));
+            cleanDirectory(new File(cachePath));
         } catch (Exception e) {
             log.warn("Exception deleting driver cache at {}", cachePath, e);
         }
@@ -780,7 +780,6 @@ public abstract class WebDriverManager {
             }
 
             // Rest of filters
-
             urlHandler.filterByOs(getDriverName(), os);
             urlHandler.filterByArch(architecture, forcedArch);
             urlHandler.filterByDistro(os, getDriverName());
