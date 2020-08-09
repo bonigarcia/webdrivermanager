@@ -15,7 +15,7 @@
         <jsoup.version>1.13.1</jsoup.version>
         <httpclient.version>5.0.1</httpclient.version>
         <javalin.version>3.9.1</javalin.version>
-        <okhttp.version>4.8.0</okhttp.version>
+        <okhttp.version>4.8.1</okhttp.version>
 
         <junit.version>4.13</junit.version>
         <hamcrest.version>1.3</hamcrest.version>
