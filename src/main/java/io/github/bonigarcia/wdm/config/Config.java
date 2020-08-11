@@ -53,6 +53,8 @@ public class Config {
 
     ConfigKey<String> cachePath = new ConfigKey<>("wdm.cachePath",
             String.class);
+    ConfigKey<String> resolutionCachePath = new ConfigKey<>(
+            "wdm.resolutionCachePath", String.class);
     ConfigKey<Boolean> forceDownload = new ConfigKey<>("wdm.forceDownload",
             Boolean.class);
     ConfigKey<Boolean> useMirror = new ConfigKey<>("wdm.useMirror",
@@ -310,11 +312,11 @@ public class Config {
     }
 
     public String getCachePath() {
-        String resolved = resolve(cachePath);
-        String path = null;
+        return resolvePath(resolve(cachePath));
+    }
 
-        if (resolved != null) {
-            path = resolved;
+    private String resolvePath(String path) {
+        if (path != null) {
             // Partial support for Bash tilde expansion:
             // http://www.gnu.org/software/bash/manual/html_node/Tilde-Expansion.html
             if (path.startsWith(HOME + '/')) {
@@ -330,6 +332,16 @@ public class Config {
 
     public Config setCachePath(String value) {
         this.cachePath.setValue(value);
+        return this;
+    }
+
+    public String getResolutionCachePath() {
+        String resolvePath = resolvePath(resolve(resolutionCachePath));
+        return isNullOrEmpty(resolvePath) ? getCachePath() : resolvePath;
+    }
+
+    public Config setResolutionCachePath(String value) {
+        this.resolutionCachePath.setValue(value);
         return this;
     }
 

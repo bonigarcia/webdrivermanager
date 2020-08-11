@@ -157,8 +157,8 @@ public abstract class WebDriverManager {
     protected boolean forcedOs;
     protected int retryCount = 0;
     protected Config config = new Config();
-    protected ResolutionCache resolutionCache = new ResolutionCache(config);
-    protected CacheHandler cacheHandler = new CacheHandler(config);
+    protected ResolutionCache resolutionCache;
+    protected CacheHandler cacheHandler;
     protected VersionDetector versionDetector;
 
     public static Config globalConfig() {
@@ -268,6 +268,9 @@ public abstract class WebDriverManager {
 
     public synchronized void setup() {
         DriverManagerType driverManagerType = getDriverManagerType();
+        resolutionCache = new ResolutionCache(config);
+        cacheHandler = new CacheHandler(config);
+
         if (driverManagerType != null) {
             try {
                 if (config().getClearingDriverCache()) {
@@ -395,6 +398,11 @@ public abstract class WebDriverManager {
 
     public WebDriverManager cachePath(String cachePath) {
         config().setCachePath(cachePath);
+        return instanceMap.get(getDriverManagerType());
+    }
+
+    public WebDriverManager resolutionCachePath(String resolutionCachePath) {
+        config().setResolutionCachePath(resolutionCachePath);
         return instanceMap.get(getDriverManagerType());
     }
 
