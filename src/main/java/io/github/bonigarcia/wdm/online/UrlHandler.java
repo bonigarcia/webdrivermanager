@@ -40,6 +40,7 @@ import java.util.function.Function;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.config.Architecture;
+import io.github.bonigarcia.wdm.config.Config;
 import io.github.bonigarcia.wdm.config.OperatingSystem;
 import io.github.bonigarcia.wdm.config.WebDriverManagerException;
 
@@ -56,19 +57,19 @@ public class UrlHandler {
 
     final Logger log = getLogger(lookup().lookupClass());
 
+    Config config;
     List<URL> candidateUrls;
     String driverVersion;
     String shortDriverName;
-    boolean isUseBeta;
     Function<String, Optional<URL>> buildUrlFunction;
 
-    public UrlHandler(List<URL> candidateUrls, String driverVersion,
-            String shortDriverName, boolean isUseBeta,
+    public UrlHandler(Config config, List<URL> candidateUrls,
+            String driverVersion, String shortDriverName,
             Function<String, Optional<URL>> buildUrlFunction) {
+        this.config = config;
         this.candidateUrls = candidateUrls;
         this.driverVersion = driverVersion;
         this.shortDriverName = shortDriverName;
-        this.isUseBeta = isUseBeta;
         this.buildUrlFunction = buildUrlFunction;
     }
 
@@ -236,8 +237,9 @@ public class UrlHandler {
     }
 
     public boolean isNotStable(URL url) {
-        return !isUseBeta && (url.getFile().toLowerCase().contains(BETA)
-                || url.getFile().toLowerCase().contains(ALPHA));
+        return !config.isUseMirror()
+                && (url.getFile().toLowerCase().contains(BETA)
+                        || url.getFile().toLowerCase().contains(ALPHA));
     }
 
     public Integer versionCompare(String str1, String str2) {
@@ -281,7 +283,7 @@ public class UrlHandler {
     public URL getCandidateUrl() {
         if (hasNoCandidateUrl()) {
             Optional<URL> buildUrl = buildUrlFunction.apply(driverVersion);
-            if (buildUrl.isPresent()) {
+            if (buildUrl.isPresent() && !config.isAvoidFallback()) {
                 return buildUrl.get();
             }
 

@@ -741,8 +741,8 @@ public abstract class WebDriverManager {
             throws IOException {
         List<URL> candidateUrls = getDriverUrls();
         String shortDriverName = getShortDriverName();
-        UrlHandler urlHandler = new UrlHandler(candidateUrls, driverVersion,
-                shortDriverName, config().isUseBetaVersions(), this::buildUrl);
+        UrlHandler urlHandler = new UrlHandler(config(), candidateUrls,
+                driverVersion, shortDriverName, this::buildUrl);
         log.trace("All driver URLs: {}", candidateUrls);
 
         boolean getLatest = isUnknown(driverVersion);
