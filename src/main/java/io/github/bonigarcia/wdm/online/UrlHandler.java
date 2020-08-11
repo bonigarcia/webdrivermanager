@@ -34,6 +34,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 
 import org.slf4j.Logger;
@@ -59,13 +60,16 @@ public class UrlHandler {
     String driverVersion;
     String shortDriverName;
     boolean isUseBeta;
+    Function<String, Optional<URL>> buildUrlFunction;
 
     public UrlHandler(List<URL> candidateUrls, String driverVersion,
-            String shortDriverName, boolean isUseBeta) {
+            String shortDriverName, boolean isUseBeta,
+            Function<String, Optional<URL>> buildUrlFunction) {
         this.candidateUrls = candidateUrls;
         this.driverVersion = driverVersion;
         this.shortDriverName = shortDriverName;
         this.isUseBeta = isUseBeta;
+        this.buildUrlFunction = buildUrlFunction;
     }
 
     public void filterByDriverName(String driverName) {
@@ -276,6 +280,11 @@ public class UrlHandler {
 
     public URL getCandidateUrl() {
         if (hasNoCandidateUrl()) {
+            Optional<URL> buildUrl = buildUrlFunction.apply(driverVersion);
+            if (buildUrl.isPresent()) {
+                return buildUrl.get();
+            }
+
             String driverVersionLabel = isNullOrEmpty(driverVersion) ? ""
                     : " " + driverVersion;
             String errorMessage = String.format(

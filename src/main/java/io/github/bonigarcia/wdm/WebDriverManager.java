@@ -618,23 +618,6 @@ public abstract class WebDriverManager {
                 getDriverName(), getDriverManagerType());
     }
 
-    protected void noCandidateUrlFound(UrlHandler urlHandler,
-            String driverVersion) {
-        Optional<URL> buildUrl = buildUrl(driverVersion);
-        if (buildUrl.isPresent()) {
-            urlHandler.getCandidateUrls().add(buildUrl.get());
-        } else {
-            Architecture arch = config().getArchitecture();
-            String os = config().getOs();
-            String errorMessage = String.format(
-                    "%s %s for %s %s not found in %s", getDriverName(),
-                    getDriverVersionLabel(driverVersion), os, arch.toString(),
-                    getDriverUrl());
-            log.error(errorMessage);
-            throw new WebDriverManagerException(errorMessage);
-        }
-    }
-
     protected void exportDriver(String variableValue) {
         binaryPath = variableValue;
         Optional<String> exportParameter = getExportParameter();
@@ -759,7 +742,7 @@ public abstract class WebDriverManager {
         List<URL> candidateUrls = getDriverUrls();
         String shortDriverName = getShortDriverName();
         UrlHandler urlHandler = new UrlHandler(candidateUrls, driverVersion,
-                shortDriverName, config().isUseBetaVersions());
+                shortDriverName, config().isUseBetaVersions(), this::buildUrl);
         log.trace("All driver URLs: {}", candidateUrls);
 
         boolean getLatest = isUnknown(driverVersion);
@@ -782,10 +765,6 @@ public abstract class WebDriverManager {
                     urlHandler.getCandidateUrls());
             String os = config().getOs();
             Architecture architecture = config().getArchitecture();
-
-            if (urlHandler.hasNoCandidateUrl()) {
-                noCandidateUrlFound(urlHandler, driverVersion);
-            }
 
             // Rest of filters
             urlHandler.filterByOs(getDriverName(), os);
