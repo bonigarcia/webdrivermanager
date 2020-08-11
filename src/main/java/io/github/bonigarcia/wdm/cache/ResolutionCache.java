@@ -66,29 +66,32 @@ public class ResolutionCache {
     public ResolutionCache(Config config) {
         this.config = config;
 
-        // Create cache folder if not exits
-        File cachePath = new File(config.getCachePath());
-        if (!cachePath.exists()) {
-            cachePath.mkdirs();
-        }
+        if (!config.isAvoidingResolutionCache()) {
+            // Create cache folder if not exits
+            File cachePath = new File(config.getCachePath());
+            if (!cachePath.exists()) {
+                cachePath.mkdirs();
+            }
 
-        this.resolutionCacheFile = new File(config.getCachePath(),
-                config.getResolutionCache());
-        try {
-            if (!resolutionCacheFile.exists()) {
-                boolean createNewFile = resolutionCacheFile.createNewFile();
-                if (createNewFile) {
-                    log.debug("Created new resolution cache file at {}",
-                            resolutionCacheFile);
+            this.resolutionCacheFile = new File(config.getCachePath(),
+                    config.getResolutionCache());
+            try {
+                if (!resolutionCacheFile.exists()) {
+                    boolean createNewFile = resolutionCacheFile.createNewFile();
+                    if (createNewFile) {
+                        log.debug("Created new resolution cache file at {}",
+                                resolutionCacheFile);
+                    }
                 }
+                try (InputStream fis = new FileInputStream(
+                        resolutionCacheFile)) {
+                    props.load(fis);
+                }
+            } catch (Exception e) {
+                throw new WebDriverManagerException(
+                        "Exception reading resolution cache as a properties file",
+                        e);
             }
-            try (InputStream fis = new FileInputStream(resolutionCacheFile)) {
-                props.load(fis);
-            }
-        } catch (Exception e) {
-            throw new WebDriverManagerException(
-                    "Exception reading resolution cache as a properties file",
-                    e);
         }
     }
 
