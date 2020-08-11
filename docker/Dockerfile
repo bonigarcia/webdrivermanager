@@ -1,10 +1,18 @@
-FROM maven:3.6.3-openjdk-8-slim
+FROM openjdk:8-jdk-slim
+
 ARG VERSION
+
 ENV WDM_JAR=webdrivermanager-${VERSION}-fat.jar
 ENV BROWSER=server
-ENV WDM_DIR=/wdm
-RUN mkdir ${WDM_DIR}
-COPY ${WDM_JAR} ${WDM_DIR}
+ENV HOME_DIR=/root
+ENV CACHE_DIR=/wdm
+
+RUN mkdir -p ${CACHE_DIR}
+
+COPY ${WDM_JAR} ${HOME_DIR}
+
 EXPOSE 4041
-WORKDIR ${WDM_DIR}
-CMD ["sh", "-c", "java -jar ${WDM_JAR} ${BROWSER}"]
+
+WORKDIR ${HOME_DIR}
+
+CMD ["sh", "-c", "java -Dwdm.cachePath=${CACHE_DIR} -Dwdm.resolutionCachePath=${HOME_DIR} -jar ${WDM_JAR} ${BROWSER}"]
