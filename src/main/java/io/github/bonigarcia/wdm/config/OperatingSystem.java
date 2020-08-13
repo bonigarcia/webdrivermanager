@@ -18,6 +18,7 @@ package io.github.bonigarcia.wdm.config;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static java.util.Locale.ROOT;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -43,6 +44,6 @@ public enum OperatingSystem {
 
     public boolean matchOs(String os) {
         return osLabelsStream().anyMatch(os::contains)
-                || os.contains(this.name().toLowerCase());
+                || os.contains(this.name().toLowerCase(ROOT));
     }
 }

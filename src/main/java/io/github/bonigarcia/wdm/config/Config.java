@@ -21,6 +21,7 @@ import static io.github.bonigarcia.wdm.config.OperatingSystem.MAC;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.WIN;
 import static java.lang.String.join;
 import static java.lang.invoke.MethodHandles.lookup;
+import static java.util.Locale.ROOT;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_LINUX;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
@@ -199,7 +200,7 @@ public class Config {
 
     private <T> T resolver(String name, T tValue, Class<T> type) {
         String strValue;
-        strValue = System.getenv(name.toUpperCase().replace(".", "_"));
+        strValue = System.getenv(name.toUpperCase(ROOT).replace(".", "_"));
         if (strValue == null) {
             strValue = System.getProperty(name);
         }
@@ -275,7 +276,7 @@ public class Config {
     }
 
     private String defaultOsName() {
-        String osName = System.getProperty("os.name").toLowerCase();
+        String osName = System.getProperty("os.name").toLowerCase(ROOT);
         if (IS_OS_WINDOWS) {
             osName = WIN.name();
         } else if (IS_OS_LINUX) {
@@ -296,7 +297,7 @@ public class Config {
 
     public boolean isExecutable(File file) {
         return resolve(os).equalsIgnoreCase("win")
-                ? file.getName().toLowerCase().endsWith(".exe")
+                ? file.getName().toLowerCase(ROOT).endsWith(".exe")
                 : file.canExecute();
     }
 

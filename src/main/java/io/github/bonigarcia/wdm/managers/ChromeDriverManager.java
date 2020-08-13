@@ -17,6 +17,7 @@
 package io.github.bonigarcia.wdm.managers;
 
 import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROME;
+import static java.util.Locale.ROOT;
 import static java.util.Optional.empty;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 
@@ -160,7 +161,7 @@ public class ChromeDriverManager extends WebDriverManager {
         Optional<URL> optionalUrl = empty();
         if (!config().isUseMirror()) {
             String downloadUrlPattern = config().getChromeDownloadUrlPattern();
-            String os = config().getOs().toLowerCase();
+            String os = config().getOs().toLowerCase(ROOT);
             String arch = os.contains("win") ? "32" : "64";
             String builtUrl = String.format(downloadUrlPattern, driverVersion,
                     os, arch);

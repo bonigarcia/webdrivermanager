@@ -17,6 +17,7 @@
 package io.github.bonigarcia.wdm.managers;
 
 import static io.github.bonigarcia.wdm.config.DriverManagerType.EDGE;
+import static java.util.Locale.ROOT;
 import static java.util.Optional.empty;
 import static org.apache.commons.io.FileUtils.listFiles;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC_OSX;
@@ -163,7 +164,7 @@ public class EdgeDriverManager extends WebDriverManager {
         Optional<URL> optionalUrl = empty();
         if (!config().isUseMirror()) {
             String downloadUrlPattern = config().getEdgeDownloadUrlPattern();
-            String os = config().getOs().toLowerCase();
+            String os = config().getOs().toLowerCase(ROOT);
             String arch = os.contains("win")
                     ? config().getArchitecture().toString()
                     : "64";

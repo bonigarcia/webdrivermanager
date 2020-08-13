@@ -32,6 +32,7 @@ import static java.lang.Integer.parseInt;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.charset.Charset.defaultCharset;
 import static java.util.Collections.sort;
+import static java.util.Locale.ROOT;
 import static java.util.Optional.empty;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static java.util.regex.Pattern.compile;
@@ -1009,7 +1010,7 @@ public abstract class WebDriverManager {
         log.info("Using WebDriverManager to resolve {}", arg);
         try {
             DriverManagerType driverManagerType = DriverManagerType
-                    .valueOf(arg.toUpperCase());
+                    .valueOf(arg.toUpperCase(ROOT));
             WebDriverManager wdm = WebDriverManager
                     .getInstance(driverManagerType).avoidExport().cachePath(".")
                     .forceDownload();

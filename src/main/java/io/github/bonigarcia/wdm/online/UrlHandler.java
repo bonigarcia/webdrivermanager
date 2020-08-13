@@ -23,6 +23,7 @@ import static java.lang.Integer.valueOf;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.copyOf;
 import static java.util.Collections.singletonList;
+import static java.util.Locale.ROOT;
 import static java.util.stream.Collectors.toList;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -124,10 +125,11 @@ public class UrlHandler {
         if (!useBeta) {
             log.trace("URLs before filtering by beta versions: {}",
                     candidateUrls);
-            candidateUrls = candidateUrls.stream()
-                    .filter(url -> !url.getFile().toLowerCase().contains(BETA)
-                            && !url.getFile().toLowerCase().contains(ALPHA))
-                    .collect(toList());
+            candidateUrls = candidateUrls.stream().filter(url -> {
+                String fileLowerCase = url.getFile().toLowerCase(ROOT);
+                return !fileLowerCase.contains(BETA)
+                        && !fileLowerCase.contains(ALPHA);
+            }).collect(toList());
             log.trace("URLs after filtering by beta versions: {}",
                     candidateUrls);
         }
@@ -237,9 +239,9 @@ public class UrlHandler {
     }
 
     public boolean isNotStable(URL url) {
-        return !config.isUseMirror()
-                && (url.getFile().toLowerCase().contains(BETA)
-                        || url.getFile().toLowerCase().contains(ALPHA));
+        String fileLowerCase = url.getFile().toLowerCase(ROOT);
+        return !config.isUseMirror() && (fileLowerCase.contains(BETA)
+                || fileLowerCase.contains(ALPHA));
     }
 
     public Integer versionCompare(String str1, String str2) {

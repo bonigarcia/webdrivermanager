@@ -22,6 +22,7 @@ import static java.io.File.separator;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.file.Files.createTempDirectory;
 import static java.nio.file.Files.delete;
+import static java.util.Locale.ROOT;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
@@ -93,7 +94,7 @@ public class Downloader {
             DriverManagerType driverManagerType, URL url) {
         String zip = url.getFile().substring(url.getFile().lastIndexOf('/'));
         String cachePath = config.getCachePath();
-        String os = config.getOs().toLowerCase();
+        String os = config.getOs().toLowerCase(ROOT);
         String architecture = config.getArchitecture().toString();
 
         if (os.equals("win") && (driverManagerType == CHROME
@@ -169,7 +170,7 @@ public class Downloader {
     }
 
     private File extract(File compressedFile) throws IOException {
-        String fileName = compressedFile.getName().toLowerCase();
+        String fileName = compressedFile.getName().toLowerCase(ROOT);
 
         boolean extractFile = !fileName.endsWith("exe")
                 && !fileName.endsWith("jar");
@@ -257,7 +258,7 @@ public class Downloader {
             }
         }
 
-        if (!target.getName().toLowerCase().contains(".exe")
+        if (!target.getName().toLowerCase(ROOT).contains(".exe")
                 && target.exists()) {
             setFileExecutable(target);
         }
