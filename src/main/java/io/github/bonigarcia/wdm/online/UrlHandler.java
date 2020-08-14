@@ -293,7 +293,7 @@ public class UrlHandler {
                 // Check ignored versions
                 Stream<String> ignoredVersionsStream = Arrays
                         .asList(config.getIgnoreVersions()).stream();
-                if (!ignoredVersionsStream.anyMatch(url.getFile()::contains)) {
+                if (ignoredVersionsStream.noneMatch(url.getFile()::contains)) {
                     return url;
                 }
             }
