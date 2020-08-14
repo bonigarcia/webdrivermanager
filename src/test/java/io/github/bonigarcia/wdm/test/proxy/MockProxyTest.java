@@ -18,7 +18,6 @@ package io.github.bonigarcia.wdm.test.proxy;
 
 import static io.github.bonigarcia.wdm.WebDriverManager.chromedriver;
 import static java.lang.invoke.MethodHandles.lookup;
-import static org.apache.commons.io.FileUtils.cleanDirectory;
 import static org.junit.Assert.assertTrue;
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -66,7 +65,7 @@ public class MockProxyTest {
     public void setup() throws IOException {
         File wdmCache = new File(downloader.getCachePath());
         log.debug("Cleaning local cache {}", wdmCache);
-        cleanDirectory(wdmCache);
+        chromedriver().clearDriverCache();
 
         try (ServerSocket serverSocket = new ServerSocket(0)) {
             proxyPort = serverSocket.getLocalPort();

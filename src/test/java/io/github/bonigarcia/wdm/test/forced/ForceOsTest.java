@@ -22,13 +22,11 @@ import static io.github.bonigarcia.wdm.config.OperatingSystem.MAC;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.WIN;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.asList;
-import static org.apache.commons.io.FileUtils.cleanDirectory;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.MockitoAnnotations.openMocks;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Collection;
 
 import org.junit.After;
@@ -42,6 +40,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.slf4j.Logger;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.Config;
 import io.github.bonigarcia.wdm.config.OperatingSystem;
 import io.github.bonigarcia.wdm.online.Downloader;
@@ -71,14 +70,14 @@ public class ForceOsTest {
     }
 
     @Before
-    public void setup() throws IOException {
+    public void setup() {
         openMocks(this);
-        cleanDirectory(new File(downloader.getCachePath()));
+        WebDriverManager.chromedriver().clearDriverCache();
     }
 
     @After
-    public void teardown() throws IOException {
-        cleanDirectory(new File(downloader.getCachePath()));
+    public void teardown() {
+        WebDriverManager.chromedriver().clearDriverCache();
     }
 
     @Test

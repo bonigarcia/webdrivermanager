@@ -22,13 +22,10 @@ import static io.github.bonigarcia.wdm.config.DriverManagerType.FIREFOX;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.LINUX;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.asList;
-import static org.apache.commons.io.FileUtils.cleanDirectory;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -83,16 +80,16 @@ public class CacheTest {
 
     @Before
     @After
-    public void cleanCache() throws IOException {
-        cleanDirectory(new File(new Config().getCachePath()));
+    public void cleanCache() {
+        WebDriverManager.chromedriver().clearDriverCache();
     }
 
     @Test
     public void testCache() throws Exception {
         WebDriverManager browserManager = WebDriverManager
                 .getInstance(driverManagerType);
-        browserManager.clearResolutionCache().forceDownload().operatingSystem(os)
-                .driverVersion(driverVersion).setup();
+        browserManager.clearResolutionCache().forceDownload()
+                .operatingSystem(os).driverVersion(driverVersion).setup();
 
         CacheHandler cacheHandler = new CacheHandler(new Config());
         Optional<String> driverFromCache = cacheHandler.getDriverFromCache(

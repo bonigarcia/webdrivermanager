@@ -18,14 +18,12 @@ package io.github.bonigarcia.wdm.test.versions;
 
 import static io.github.bonigarcia.wdm.WebDriverManager.chromedriver;
 import static java.lang.invoke.MethodHandles.lookup;
-import static org.apache.commons.io.FileUtils.cleanDirectory;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Arrays;
 
 import org.junit.After;
@@ -34,7 +32,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import io.github.bonigarcia.wdm.config.Config;
 import io.github.bonigarcia.wdm.config.WebDriverManagerException;
 
 /**
@@ -48,8 +45,8 @@ public class IgnoredVersionTest {
 
     @Before
     @After
-    public void cleanCache() throws IOException {
-        cleanDirectory(new File(new Config().getCachePath()));
+    public void cleanCache() {
+        WebDriverManager.chromedriver().clearDriverCache();
     }
 
     @Test(expected = WebDriverManagerException.class)
