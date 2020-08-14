@@ -37,6 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 
@@ -285,8 +286,16 @@ public class UrlHandler {
     public URL getCandidateUrl() {
         if (hasNoCandidateUrl()) {
             Optional<URL> buildUrl = buildUrlFunction.apply(driverVersion);
-            if (buildUrl.isPresent() && !config.isAvoidFallback()) {
-                return buildUrl.get();
+
+            if (buildUrl.isPresent()) {
+                URL url = buildUrl.get();
+
+                // Check ignored versions
+                Stream<String> ignoredVersionsStream = Arrays
+                        .asList(config.getIgnoreVersions()).stream();
+                if (!ignoredVersionsStream.anyMatch(url.getFile()::contains)) {
+                    return url;
+                }
             }
 
             String driverVersionLabel = isNullOrEmpty(driverVersion) ? ""
