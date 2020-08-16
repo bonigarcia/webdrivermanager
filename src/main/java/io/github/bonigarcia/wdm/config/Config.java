@@ -33,6 +33,8 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.net.URL;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Properties;
 
 import org.slf4j.Logger;
@@ -533,13 +535,13 @@ public class Config {
         return this;
     }
 
-    public String[] getIgnoreVersions() {
+    public List<String> getIgnoreVersions() {
         String ignored = resolve(ignoreVersions);
         String[] out = {};
         if (!isNullOrEmpty(ignored)) {
             out = ignored.split(",");
         }
-        return out;
+        return Arrays.asList(out);
     }
 
     public Config setIgnoreVersions(String... value) {

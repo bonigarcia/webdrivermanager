@@ -33,7 +33,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -184,20 +183,15 @@ public class UrlHandler {
         }
     }
 
-    public void filterByIgnoredVersions(String... ignoredVersions) {
-        if (ignoredVersions != null && ignoredVersions.length > 0
-                && !candidateUrls.isEmpty()) {
-            if (log.isTraceEnabled()) {
-                log.trace("URLs before filtering by ignored versions ({}): {}",
-                        Arrays.toString(ignoredVersions), candidateUrls);
-            }
-            candidateUrls = candidateUrls.stream().filter(url -> Arrays
-                    .asList(ignoredVersions).contains(url.getFile()))
+    public void filterByIgnoredVersions(List<String> ignoredVersions) {
+        if (!ignoredVersions.isEmpty() && !candidateUrls.isEmpty()) {
+            log.trace("URLs before filtering by ignored versions ({}): {}",
+                    ignoredVersions, candidateUrls);
+            candidateUrls = candidateUrls.stream()
+                    .filter(url -> ignoredVersions.contains(url.getFile()))
                     .collect(toList());
-            if (log.isTraceEnabled()) {
-                log.trace("URLs after filtering by ignored versions ({}): {}",
-                        Arrays.toString(ignoredVersions), candidateUrls);
-            }
+            log.trace("URLs after filtering by ignored versions ({}): {}",
+                    ignoredVersions, candidateUrls);
         }
     }
 
@@ -291,8 +285,8 @@ public class UrlHandler {
                 URL url = buildUrl.get();
 
                 // Check ignored versions
-                Stream<String> ignoredVersionsStream = Arrays
-                        .asList(config.getIgnoreVersions()).stream();
+                Stream<String> ignoredVersionsStream = config
+                        .getIgnoreVersions().stream();
                 if (ignoredVersionsStream.noneMatch(url.getFile()::contains)) {
                     return url;
                 }
