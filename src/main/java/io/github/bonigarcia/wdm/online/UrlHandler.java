@@ -188,8 +188,10 @@ public class UrlHandler {
             log.trace("URLs before filtering by ignored versions ({}): {}",
                     ignoredVersions, candidateUrls);
             candidateUrls = candidateUrls.stream()
-                    .filter(url -> ignoredVersions.contains(url.getFile()))
+                    .filter(url -> ignoredVersions.stream().noneMatch(
+                            version -> url.getFile().contains(version)))
                     .collect(toList());
+
             log.trace("URLs after filtering by ignored versions ({}): {}",
                     ignoredVersions, candidateUrls);
         }
