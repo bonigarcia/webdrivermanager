@@ -21,6 +21,7 @@ import static java.lang.invoke.MethodHandles.lookup;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
@@ -50,7 +51,7 @@ public class IgnoredVersionTest {
     }
 
     @Test(expected = WebDriverManagerException.class)
-    public void ignoredVersions() {
+    public void ignoredVersionsChrome() {
         String driverVersion = "81.0.4044.69";
         String[] ignoredVersions = { driverVersion };
         WebDriverManager.chromedriver().driverVersion(driverVersion)
@@ -62,6 +63,18 @@ public class IgnoredVersionTest {
         for (String v : ignoredVersions) {
             assertThat(binary.getName(), not(containsString(v)));
         }
+    }
+
+    @Test
+    public void ignoredVersionsFirefox() {
+        String[] ignoredVersions = { "0.27.0", "0.26.0" };
+        WebDriverManager.firefoxdriver().ignoreDriverVersions(ignoredVersions)
+                .setup();
+        String driverVersion = WebDriverManager.firefoxdriver()
+                .getDownloadedVersion();
+        log.debug("Resolved version {}", driverVersion);
+        assertThat(Arrays.asList(ignoredVersions),
+                not(contains(driverVersion)));
     }
 
 }

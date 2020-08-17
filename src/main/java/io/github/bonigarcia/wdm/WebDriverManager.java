@@ -29,6 +29,7 @@ import static io.github.bonigarcia.wdm.config.DriverManagerType.PHANTOMJS;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.SELENIUM_SERVER_STANDALONE;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.WIN;
 import static java.lang.Integer.parseInt;
+import static java.lang.String.valueOf;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.charset.Charset.defaultCharset;
 import static java.util.Collections.sort;
@@ -583,10 +584,21 @@ public abstract class WebDriverManager {
             }
             if (optionalDriverVersion.isPresent()) {
                 driverVersion = optionalDriverVersion.get();
-                log.info(
-                        "Using {} {} (since {} {} is installed in your machine)",
+                log.info("Using {} {} (resolved driver for {} {})",
                         getDriverName(), driverVersion, getDriverManagerType(),
                         optionalBrowserVersion.get());
+
+                if (config.getIgnoreVersions().contains(driverVersion)) {
+                    String formerBrowserVersion = valueOf(
+                            parseInt(optionalBrowserVersion.get()) - 1);
+                    log.info(
+                            "The driver {} {} is configured to be ignored ... trying again resolving driver for former version of {} (i.e. {})",
+                            getDriverName(), driverVersion,
+                            getDriverManagerType(), formerBrowserVersion);
+                    setBrowserVersion(formerBrowserVersion);
+                    return resolveDriverVersion("");
+                }
+
                 storeInResolutionCache(preferenceKey, driverVersion,
                         optionalBrowserVersion.get());
             }
