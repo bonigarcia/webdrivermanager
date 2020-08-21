@@ -46,7 +46,7 @@ public abstract class BrowserTestParent {
         driver.manage().timeouts().implicitlyWait(30, SECONDS);
         driver.get("https://github.com/bonigarcia/webdrivermanager");
         assertThat(driver.getTitle(), containsString(
-                "Automatic management of Selenium WebDriver binaries"));
+                "Automated driver management for Selenium WebDriver"));
     }
 
 }
