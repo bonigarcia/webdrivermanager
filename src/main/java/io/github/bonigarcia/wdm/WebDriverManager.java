@@ -449,7 +449,7 @@ public abstract class WebDriverManager {
     }
 
     public WebDriverManager browserPath(String browserPath) {
-        config().setBinaryPath(browserPath);
+        config().setBrowserPath(browserPath);
         return instanceMap.get(getDriverManagerType());
     }
 

@@ -184,7 +184,7 @@ public class Config {
 
     ConfigKey<Integer> serverPort = new ConfigKey<>("wdm.serverPort",
             Integer.class);
-    ConfigKey<String> binaryPath = new ConfigKey<>("wdm.binaryPath",
+    ConfigKey<String> browserPath = new ConfigKey<>("wdm.browserPath",
             String.class);
     ConfigKey<Integer> ttl = new ConfigKey<>("wdm.ttl", Integer.class);
     ConfigKey<Integer> ttlForBrowsers = new ConfigKey<>("wdm.ttlForBrowsers",
@@ -621,12 +621,12 @@ public class Config {
         return this;
     }
 
-    public String getBinaryPath() {
-        return resolve(binaryPath);
+    public String getBrowserPath() {
+        return resolve(browserPath);
     }
 
-    public Config setBinaryPath(String value) {
-        this.binaryPath.setValue(value);
+    public Config setBrowserPath(String value) {
+        this.browserPath.setValue(value);
         return this;
     }
 

@@ -171,14 +171,14 @@ public class VersionDetector {
             String macBrowserName, String versionFlag,
             String browserNameInOutput) {
 
-        String browserBinaryPath = config.getBinaryPath();
+        String browserPath = config.getBrowserPath();
         if (IS_OS_WINDOWS) {
             String winName = "";
             for (int j = 0; j < winBrowserNames.length; j++) {
                 winName = winBrowserNames[j];
                 for (int i = 0; i < programFilesEnvs.length; i++) {
                     String browserVersionOutput = getBrowserVersionInWindows(
-                            programFilesEnvs[i], winName, browserBinaryPath);
+                            programFilesEnvs[i], winName, browserPath);
                     if (!isNullOrEmpty(browserVersionOutput)) {
                         return Optional.of(
                                 getVersionFromWmicOutput(browserVersionOutput));
@@ -186,8 +186,8 @@ public class VersionDetector {
                 }
             }
         } else if (IS_OS_LINUX || IS_OS_MAC) {
-            String browserPath = getPosixBrowserPath(linuxBrowserName,
-                    macBrowserName, browserBinaryPath);
+            browserPath = getPosixBrowserPath(linuxBrowserName, macBrowserName,
+                    browserPath);
             String browserVersionOutput = runAndWait(browserPath, versionFlag);
             if (browserVersionOutput.toLowerCase().contains("snap")) {
                 isSnap = true;
