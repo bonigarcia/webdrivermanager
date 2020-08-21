@@ -551,20 +551,20 @@ docker run -p 4041:4041 bonigarcia/webdrivermanager:4.2.0
 To execute WebDriverManager CLI in Docker, you need to specify the type of browser to be resolved as environmental variable (`BROWSER`). The rest of WebDriverManager configuration parameters can be passed to the Docker container using env variables using the usual `-e` option in Docker. For example, in Linux:
 
 ```
-docker run --rm -e BROWSER=chrome -e WDM_CHROMEDRIVERVERSION=83.0.4103.39 -e WDM_OS=LINUX -v ${PWD}:/wdm bonigarcia/webdrivermanager:4.2.0
+docker run --rm -e BROWSER=chrome -e WDM_CHROMEVERSION=84 -e WDM_OS=LINUX -v ${PWD}:/wdm bonigarcia/webdrivermanager:4.2.0
 ```
 
 ... or Mac:
 
 ```
-docker run --rm -e BROWSER=chrome -e WDM_CHROMEDRIVERVERSION=83.0.4103.39 -e WDM_OS=MAC -v ${PWD}:/wdm bonigarcia/webdrivermanager:4.2.0
+docker run --rm -e BROWSER=chrome -e WDM_CHROMEVERSION=84 -e WDM_OS=MAC -v ${PWD}:/wdm bonigarcia/webdrivermanager:4.2.0
 ```
 
 ... or Windows:
 
 
 ```
-docker run --rm -e BROWSER=chrome -e WDM_CHROMEDRIVERVERSION=83.0.4103.39 -e WDM_OS=WIN -v %cd%:/wdm bonigarcia/webdrivermanager:4.2.0
+docker run --rm -e BROWSER=chrome -e WDM_CHROMEVERSION=84 -e WDM_OS=WIN -v %cd%:/wdm bonigarcia/webdrivermanager:4.2.0
 ```
 
 ## Known issues
