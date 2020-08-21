@@ -55,9 +55,9 @@ public class SeleniumServerStandaloneTest {
     }
 
     private void assertBinary() {
-        File binary = new File(seleniumServerStandalone().getBinaryPath());
-        log.debug("Binary path for selenium-server-standalone {}", binary);
-        assertTrue(binary.exists());
+        File driver = new File(seleniumServerStandalone().getDriverPath());
+        log.debug("Path for selenium-server-standalone {}", driver);
+        assertTrue(driver.exists());
     }
 
 }

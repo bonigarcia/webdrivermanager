@@ -83,11 +83,11 @@ public class Downloader {
             throws IOException {
         File targetFile = getTarget(driverVersion, driverName,
                 driverManagerType, url);
-        Optional<File> binary = checkBinary(driverName, targetFile);
-        if (!binary.isPresent()) {
-            binary = downloadAndExtract(url, targetFile);
+        Optional<File> driver = checkDriver(driverName, targetFile);
+        if (!driver.isPresent()) {
+            driver = downloadAndExtract(url, targetFile);
         }
-        return binary.get().toString();
+        return driver.get().toString();
     }
 
     public File getTarget(String driverVersion, String driverName,
@@ -132,29 +132,29 @@ public class Downloader {
                 .getEntity().getContent(), temporaryFile);
 
         File extractedFile = extract(temporaryFile);
-        File resultingBinary = new File(targetFolder, extractedFile.getName());
-        boolean binaryExists = resultingBinary.exists();
+        File resultingDriver = new File(targetFolder, extractedFile.getName());
+        boolean driverExists = resultingDriver.exists();
 
-        if (!binaryExists || config.isForceDownload()) {
-            if (binaryExists) {
-                log.debug("Overriding former binary {}", resultingBinary);
-                deleteFile(resultingBinary);
+        if (!driverExists || config.isForceDownload()) {
+            if (driverExists) {
+                log.debug("Overriding former driver {}", resultingDriver);
+                deleteFile(resultingDriver);
             }
             moveFileToDirectory(extractedFile, targetFolder, true);
         }
-        if (!config.isExecutable(resultingBinary)) {
-            setFileExecutable(resultingBinary);
+        if (!config.isExecutable(resultingDriver)) {
+            setFileExecutable(resultingDriver);
         }
         deleteFolder(tempDir);
-        log.trace("Binary driver after extraction {}", resultingBinary);
+        log.trace("Driver after extraction {}", resultingDriver);
 
-        return of(resultingBinary);
+        return of(resultingDriver);
     }
 
-    private Optional<File> checkBinary(String driverName, File targetFile) {
+    private Optional<File> checkDriver(String driverName, File targetFile) {
         File parentFolder = targetFile.getParentFile();
         if (parentFolder.exists() && !config.isForceDownload()) {
-            // Check if binary exits in parent folder and it is valid
+            // Check if driver exits in parent folder and it is valid
 
             Collection<File> listFiles = listFiles(parentFolder, null, true);
             for (File file : listFiles) {
@@ -175,7 +175,7 @@ public class Downloader {
         boolean extractFile = !fileName.endsWith("exe")
                 && !fileName.endsWith("jar");
         if (extractFile) {
-            log.info("Extracting binary from compressed file {}", fileName);
+            log.info("Extracting driver from compressed file {}", fileName);
         }
         if (fileName.endsWith("tar.bz2")) {
             unBZip2(compressedFile);
@@ -193,7 +193,7 @@ public class Downloader {
 
         File result = postDownloadFunction.apply(compressedFile)
                 .getAbsoluteFile();
-        log.trace("Resulting binary file {}", result);
+        log.trace("Resulting driver {}", result);
 
         return result;
     }

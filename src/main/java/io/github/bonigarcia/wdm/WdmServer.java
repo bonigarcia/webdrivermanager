@@ -138,17 +138,17 @@ public class WdmServer {
         driverManager.config().setAvoidExport(true);
         driverManager.config().setAvoidBrowserDetection(true);
         driverManager.setup();
-        File binary = new File(driverManager.getBinaryPath());
-        String binaryVersion = driverManager.getDownloadedVersion();
-        String binaryName = binary.getName();
-        String binaryLength = String.valueOf(binary.length());
+        File driver = new File(driverManager.getDriverPath());
+        String driverVersion = driverManager.getDownloadedVersion();
+        String driverName = driver.getName();
+        String driverLength = String.valueOf(driver.length());
 
         // Response
         ctx.res.setHeader("Content-Disposition",
-                "attachment; filename=\"" + binaryName + "\"");
-        ctx.result(openInputStream(binary));
-        log.info("Server response: {} {} ({} bytes)", binaryName, binaryVersion,
-                binaryLength);
+                "attachment; filename=\"" + driverName + "\"");
+        ctx.result(openInputStream(driver));
+        log.info("Server response: {} {} ({} bytes)", driverName, driverVersion,
+                driverLength);
 
         // Clear configuration
         for (String key : queryParamMap.keySet()) {

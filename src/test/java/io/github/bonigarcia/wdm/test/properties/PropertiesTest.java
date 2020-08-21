@@ -37,9 +37,9 @@ public class PropertiesTest {
         WebDriverManager chromedriver = WebDriverManager.chromedriver();
         chromedriver.config().setProperties("wdm-test.properties");
         chromedriver.setup();
-        String binaryPath = chromedriver.getBinaryPath();
-        File binary = new File(binaryPath);
-        assertTrue(binary.exists());
+        String driverPath = chromedriver.getDriverPath();
+        File driver = new File(driverPath);
+        assertTrue(driver.exists());
     }
 
     @Test

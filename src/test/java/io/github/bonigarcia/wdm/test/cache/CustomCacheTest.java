@@ -56,9 +56,9 @@ public class CustomCacheTest {
         globalConfig.setCachePath(tmpFolder.toString());
         log.info("Using temporary folder {} as cache", tmpFolder);
         WebDriverManager.chromedriver().forceDownload().setup();
-        String binaryPath = WebDriverManager.chromedriver().getBinaryPath();
-        log.info("Binary path {}", binaryPath);
-        assertThat(binaryPath, startsWith(tmpFolder.toString()));
+        String driverPath = WebDriverManager.chromedriver().getDriverPath();
+        log.info("Driver path {}", driverPath);
+        assertThat(driverPath, startsWith(tmpFolder.toString()));
         log.info("Deleting temporary folder {}", tmpFolder);
         WebDriverManager.chromedriver().clearDriverCache();
     }

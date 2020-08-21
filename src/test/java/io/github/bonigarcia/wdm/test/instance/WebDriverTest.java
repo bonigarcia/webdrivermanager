@@ -55,10 +55,10 @@ public class WebDriverTest {
     @Test
     public void testWebDriver() {
         WebDriverManager.getInstance(driverClass).setup();
-        String binaryPath = WebDriverManager.getInstance(driverClass)
-                .getBinaryPath();
-        File binary = new File(binaryPath);
-        assertTrue(binary.exists());
+        String driverPath = WebDriverManager.getInstance(driverClass)
+                .getDriverPath();
+        File driver = new File(driverPath);
+        assertTrue(driver.exists());
     }
 
 }

@@ -45,7 +45,7 @@ public class ForceError403Test {
             log.debug("Forcing 403 error {}/{}", i + 1, NUM);
             firefoxdriver().avoidBrowserDetection().avoidResolutionCache()
                     .setup();
-            assertThat(firefoxdriver().getBinaryPath(), notNullValue());
+            assertThat(firefoxdriver().getDriverPath(), notNullValue());
         }
     }
 

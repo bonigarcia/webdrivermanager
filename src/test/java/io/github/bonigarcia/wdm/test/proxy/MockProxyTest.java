@@ -87,8 +87,8 @@ public class MockProxyTest {
                 .driverRepositoryUrl(
                         new URL("https://chromedriver.storage.googleapis.com/"))
                 .setup();
-        File binary = new File(chromedriver().getBinaryPath());
-        assertTrue(binary.exists());
+        File driver = new File(chromedriver().getDriverPath());
+        assertTrue(driver.exists());
     }
 
 }

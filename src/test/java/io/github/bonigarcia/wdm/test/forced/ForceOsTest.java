@@ -83,9 +83,9 @@ public class ForceOsTest {
     @Test
     public void testForceOs() {
         chromedriver().operatingSystem(operatingSystem).setup();
-        File binary = new File(chromedriver().getBinaryPath());
-        log.debug("OS {} - binary path {}", operatingSystem, binary);
-        assertTrue(binary.exists());
+        File driver = new File(chromedriver().getDriverPath());
+        log.debug("OS {} - binary path {}", operatingSystem, driver);
+        assertTrue(driver.exists());
     }
 
 }

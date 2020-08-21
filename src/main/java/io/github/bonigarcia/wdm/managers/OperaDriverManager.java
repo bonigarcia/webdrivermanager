@@ -129,7 +129,7 @@ public class OperaDriverManager extends WebDriverManager {
                 do {
                     if (i >= listFiles.length) {
                         throw new WebDriverManagerException(
-                                "Driver binary for Opera not found in zip file");
+                                "Driver for Opera not found in zip file");
                     }
                     operadriver = listFiles[i];
                     isOperaDriver = operadriver.getName()
@@ -138,7 +138,7 @@ public class OperaDriverManager extends WebDriverManager {
                     i++;
                     log.trace("{} is valid: {}", operadriver, isOperaDriver);
                 } while (!isOperaDriver);
-                log.info("Operadriver binary: {}", operadriver);
+                log.info("Operadriver: {}", operadriver);
 
                 target = new File(archive.getParentFile().getAbsolutePath(),
                         operadriver.getName());

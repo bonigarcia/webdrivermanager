@@ -121,17 +121,17 @@ public class PhantomJsDriverManager extends WebDriverManager {
         File binFolder = new File(
                 extractFolder.getAbsoluteFile() + separator + "bin");
         // Exception for older versions of PhantomJS
-        int binaryIndex = 0;
+        int driverIndex = 0;
         if (!binFolder.exists()) {
             binFolder = extractFolder;
-            binaryIndex = 3;
+            driverIndex = 3;
         }
 
         log.trace("PhantomJS bin folder: {} (index {})", binFolder,
-                binaryIndex);
+                driverIndex);
 
-        File phantomjs = binFolder.listFiles()[binaryIndex];
-        log.trace("PhantomJS binary: {}", phantomjs);
+        File phantomjs = binFolder.listFiles()[driverIndex];
+        log.trace("PhantomJS driver: {}", phantomjs);
 
         File target = new File(archive.getParentFile().getAbsolutePath(),
                 phantomjs.getName());

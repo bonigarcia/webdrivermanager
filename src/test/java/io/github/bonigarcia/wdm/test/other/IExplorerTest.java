@@ -50,9 +50,9 @@ public class IExplorerTest {
     }
 
     private void assertIEDriverBinary() {
-        File binary = new File(iedriver().getBinaryPath());
-        log.debug("Binary path for IEDriverServer {}", binary);
-        assertTrue(binary.exists());
+        File driver = new File(iedriver().getDriverPath());
+        log.debug("Path for IEDriverServer {}", driver);
+        assertTrue(driver.exists());
     }
 
 }

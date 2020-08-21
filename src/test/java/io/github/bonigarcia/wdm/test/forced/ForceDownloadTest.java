@@ -65,7 +65,7 @@ public class ForceDownloadTest {
         driverManager.forceDownload().avoidBrowserDetection()
                 .avoidReadReleaseFromRepository().timeout(TIMEOUT)
                 .operatingSystem(OS).setup();
-        assertThat(driverManager.getBinaryPath(), notNullValue());
+        assertThat(driverManager.getDriverPath(), notNullValue());
     }
 
 }

@@ -201,24 +201,24 @@ public class VersionDetector {
     }
 
     public String getPosixBrowserPath(String linuxBrowserName,
-            String macBrowserName, String browserBinaryPath) {
-        if (!isNullOrEmpty(browserBinaryPath)) {
-            return browserBinaryPath;
+            String macBrowserName, String browserPath) {
+        if (!isNullOrEmpty(browserPath)) {
+            return browserPath;
         } else {
             return IS_OS_LINUX ? linuxBrowserName : macBrowserName;
         }
     }
 
     public String getBrowserVersionInWindows(String programFilesEnv,
-            String winBrowserName, String browserBinaryPath) {
+            String winBrowserName, String browserPath) {
         String programFiles = System.getenv(programFilesEnv).replace("\\",
                 "\\\\");
-        String browserPath = isNullOrEmpty(browserBinaryPath)
+        String fullBrowserPath = isNullOrEmpty(browserPath)
                 ? programFiles + winBrowserName
-                : browserBinaryPath;
+                : browserPath;
         String wmic = "wmic.exe";
         return runAndWait(findFileLocation(wmic), wmic, "datafile", "where",
-                "name='" + browserPath + "'", "get", "Version", "/value");
+                "name='" + fullBrowserPath + "'", "get", "Version", "/value");
     }
 
     public Optional<String> getBrowserVersionFromWinRegistry(String key,

@@ -153,7 +153,7 @@ public abstract class WebDriverManager {
     protected HttpClient httpClient;
     protected Downloader downloader;
     protected String downloadedDriverVersion;
-    protected String binaryPath;
+    protected String driverPath;
     protected boolean mirrorLog;
     protected boolean forcedArch;
     protected boolean forcedOs;
@@ -476,8 +476,8 @@ public abstract class WebDriverManager {
 
     // ------------
 
-    public String getBinaryPath() {
-        return instanceMap.get(getDriverManagerType()).binaryPath;
+    public String getDriverPath() {
+        return instanceMap.get(getDriverManagerType()).driverPath;
     }
 
     public String getDownloadedVersion() {
@@ -632,7 +632,7 @@ public abstract class WebDriverManager {
     }
 
     protected void exportDriver(String variableValue) {
-        binaryPath = variableValue;
+        driverPath = variableValue;
         Optional<String> exportParameter = getExportParameter();
         if (!config.isAvoidExport() && exportParameter.isPresent()) {
             String variableName = exportParameter.get();
@@ -669,7 +669,7 @@ public abstract class WebDriverManager {
         File[] ls = parentFolder.listFiles();
         for (File f : ls) {
             if (getDriverName().contains(removeExtension(f.getName()))) {
-                log.trace("Found binary in post-download: {}", f);
+                log.trace("Found driver in post-download: {}", f);
                 return f;
             }
         }
@@ -1047,8 +1047,7 @@ public abstract class WebDriverManager {
 
     protected static void logCliError(String validBrowsers) {
         log.error("There are 3 options to run WebDriverManager CLI");
-        log.error(
-                "1. WebDriverManager used to resolve binary drivers locally:");
+        log.error("1. WebDriverManager used to resolve drivers locally:");
         log.error("\tWebDriverManager browserName");
         log.error("\t(where browserName={})", validBrowsers);
 

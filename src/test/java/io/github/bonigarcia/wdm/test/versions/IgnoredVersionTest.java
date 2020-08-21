@@ -56,12 +56,12 @@ public class IgnoredVersionTest {
         String[] ignoredVersions = { driverVersion };
         WebDriverManager.chromedriver().driverVersion(driverVersion)
                 .ignoreDriverVersions(ignoredVersions).avoidFallback().setup();
-        File binary = new File(chromedriver().getBinaryPath());
-        log.debug("Using binary {} (ignoring {})", binary,
+        File driver = new File(chromedriver().getDriverPath());
+        log.debug("Using binary {} (ignoring {})", driver,
                 Arrays.toString(ignoredVersions));
 
         for (String v : ignoredVersions) {
-            assertThat(binary.getName(), not(containsString(v)));
+            assertThat(driver.getName(), not(containsString(v)));
         }
     }
 

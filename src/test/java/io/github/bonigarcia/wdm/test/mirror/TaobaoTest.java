@@ -43,8 +43,8 @@ public class TaobaoTest {
                         new URL("http://npm.taobao.org/mirrors/chromedriver/"));
         chromedriver().useMirror().forceDownload().setup();
 
-        File binary = new File(chromedriver().getBinaryPath());
-        assertTrue(binary.exists());
+        File driver = new File(chromedriver().getDriverPath());
+        assertTrue(driver.exists());
     }
 
     @Ignore("Flaky test due to cnpmjs.org")
@@ -55,15 +55,15 @@ public class TaobaoTest {
                         new URL("https://cnpmjs.org/mirrors/chromedriver/"));
         chromedriver().useMirror().forceDownload().setup();
 
-        File binary = new File(chromedriver().getBinaryPath());
-        assertTrue(binary.exists());
+        File driver = new File(chromedriver().getDriverPath());
+        assertTrue(driver.exists());
     }
 
     @Test(expected = WebDriverManagerException.class)
     public void testTaobaoException() {
         WebDriverManager.edgedriver().useMirror().setup();
-        File binary = new File(WebDriverManager.edgedriver().getBinaryPath());
-        assertTrue(binary.exists());
+        File driver = new File(WebDriverManager.edgedriver().getDriverPath());
+        assertTrue(driver.exists());
     }
 
 }
