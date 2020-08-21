@@ -37,7 +37,7 @@ public class ResolutionCacheTest {
     public void testEmptyTtl() {
         WebDriverManager.main(new String[] { "clear-resolution-cache" });
         chromedriver().ttl(0).ttlBrowsers(0).setup();
-        File driver = new File(chromedriver().getDriverPath());
+        File driver = new File(chromedriver().getDownloadedDriverPath());
         assertTrue(driver.exists());
     }
 

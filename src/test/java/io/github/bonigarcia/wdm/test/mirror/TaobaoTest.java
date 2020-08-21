@@ -43,7 +43,7 @@ public class TaobaoTest {
                         new URL("http://npm.taobao.org/mirrors/chromedriver/"));
         chromedriver().useMirror().forceDownload().setup();
 
-        File driver = new File(chromedriver().getDriverPath());
+        File driver = new File(chromedriver().getDownloadedDriverPath());
         assertTrue(driver.exists());
     }
 
@@ -55,14 +55,14 @@ public class TaobaoTest {
                         new URL("https://cnpmjs.org/mirrors/chromedriver/"));
         chromedriver().useMirror().forceDownload().setup();
 
-        File driver = new File(chromedriver().getDriverPath());
+        File driver = new File(chromedriver().getDownloadedDriverPath());
         assertTrue(driver.exists());
     }
 
     @Test(expected = WebDriverManagerException.class)
     public void testTaobaoException() {
         WebDriverManager.edgedriver().useMirror().setup();
-        File driver = new File(WebDriverManager.edgedriver().getDriverPath());
+        File driver = new File(WebDriverManager.edgedriver().getDownloadedDriverPath());
         assertTrue(driver.exists());
     }
 

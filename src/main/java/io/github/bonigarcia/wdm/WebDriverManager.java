@@ -153,7 +153,7 @@ public abstract class WebDriverManager {
     protected HttpClient httpClient;
     protected Downloader downloader;
     protected String downloadedDriverVersion;
-    protected String driverPath;
+    protected String downloadedDriverPath;
     protected boolean mirrorLog;
     protected boolean forcedArch;
     protected boolean forcedOs;
@@ -476,8 +476,8 @@ public abstract class WebDriverManager {
 
     // ------------
 
-    public String getDriverPath() {
-        return instanceMap.get(getDriverManagerType()).driverPath;
+    public String getDownloadedDriverPath() {
+        return instanceMap.get(getDriverManagerType()).downloadedDriverPath;
     }
 
     public String getDownloadedDriverVersion() {
@@ -632,7 +632,7 @@ public abstract class WebDriverManager {
     }
 
     protected void exportDriver(String variableValue) {
-        driverPath = variableValue;
+        downloadedDriverPath = variableValue;
         Optional<String> exportParameter = getExportParameter();
         if (!config.isAvoidExport() && exportParameter.isPresent()) {
             String variableName = exportParameter.get();

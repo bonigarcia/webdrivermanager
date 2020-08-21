@@ -37,7 +37,7 @@ public class PropertiesTest {
         WebDriverManager chromedriver = WebDriverManager.chromedriver();
         chromedriver.config().setProperties("wdm-test.properties");
         chromedriver.setup();
-        String driverPath = chromedriver.getDriverPath();
+        String driverPath = chromedriver.getDownloadedDriverPath();
         File driver = new File(driverPath);
         assertTrue(driver.exists());
     }

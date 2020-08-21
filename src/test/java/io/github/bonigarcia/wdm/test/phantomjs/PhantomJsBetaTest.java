@@ -39,7 +39,7 @@ public class PhantomJsBetaTest {
 
     @Test
     public void testPhantomBeta() {
-        String driverPath = WebDriverManager.phantomjs().getDriverPath();
+        String driverPath = WebDriverManager.phantomjs().getDownloadedDriverPath();
         assertThat(driverPath, notNullValue());
     }
 }

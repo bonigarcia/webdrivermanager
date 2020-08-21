@@ -50,7 +50,7 @@ public class IExplorerTest {
     }
 
     private void assertIEDriver() {
-        File driver = new File(iedriver().getDriverPath());
+        File driver = new File(iedriver().getDownloadedDriverPath());
         log.debug("Path for IEDriverServer {}", driver);
         assertTrue(driver.exists());
     }

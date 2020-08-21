@@ -52,7 +52,7 @@ public class BrowserVersionTest {
     }
 
     private void assertDriver(WebDriverManager driverManager) {
-        File driver = new File(driverManager.getDriverPath());
+        File driver = new File(driverManager.getDownloadedDriverPath());
         log.debug("Driver path {}", driver);
         assertTrue(driver.exists());
     }

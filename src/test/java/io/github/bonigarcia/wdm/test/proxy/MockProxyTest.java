@@ -87,7 +87,7 @@ public class MockProxyTest {
                 .driverRepositoryUrl(
                         new URL("https://chromedriver.storage.googleapis.com/"))
                 .setup();
-        File driver = new File(chromedriver().getDriverPath());
+        File driver = new File(chromedriver().getDownloadedDriverPath());
         assertTrue(driver.exists());
     }
 

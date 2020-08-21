@@ -56,7 +56,7 @@ public class IgnoredVersionTest {
         String[] ignoredVersions = { driverVersion };
         WebDriverManager.chromedriver().driverVersion(driverVersion)
                 .ignoreDriverVersions(ignoredVersions).avoidFallback().setup();
-        File driver = new File(chromedriver().getDriverPath());
+        File driver = new File(chromedriver().getDownloadedDriverPath());
         log.debug("Using driver {} (ignoring {})", driver,
                 Arrays.toString(ignoredVersions));
 
