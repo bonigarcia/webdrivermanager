@@ -40,16 +40,16 @@ public class IExplorerTest {
     @Test
     public void testIExplorerLatest() {
         iedriver().operatingSystem(WIN).setup();
-        assertIEDriverBinary();
+        assertIEDriver();
     }
 
     @Test
     public void testIExplorerVersion() {
         iedriver().operatingSystem(WIN).driverVersion("3.11").setup();
-        assertIEDriverBinary();
+        assertIEDriver();
     }
 
-    private void assertIEDriverBinary() {
+    private void assertIEDriver() {
         File driver = new File(iedriver().getDriverPath());
         log.debug("Path for IEDriverServer {}", driver);
         assertTrue(driver.exists());

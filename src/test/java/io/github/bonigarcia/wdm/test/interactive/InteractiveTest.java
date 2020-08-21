@@ -67,9 +67,9 @@ public class InteractiveTest {
     public void testInteractive() {
         log.debug("Running interactive wdm with arguments: {}", argument);
         WebDriverManager.main(new String[] { argument });
-        File binary = new File(driver);
-        boolean exists = binary.exists();
-        boolean delete = binary.delete();
+        File driverFile = new File(driver);
+        boolean exists = driverFile.exists();
+        boolean delete = driverFile.delete();
         assertTrue(exists && delete);
         log.debug("Interactive test with {} OK", argument);
     }

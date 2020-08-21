@@ -39,22 +39,22 @@ public class SeleniumServerStandaloneTest {
     @Test
     public void testSeleniumServerLatestStable() {
         seleniumServerStandalone().setup();
-        assertBinary();
+        assertDriver();
     }
 
     @Test
     public void testSeleniumServerLatestBeta() {
         seleniumServerStandalone().useBetaVersions().setup();
-        assertBinary();
+        assertDriver();
     }
 
     @Test
     public void testSeleniumServerVersion() {
         seleniumServerStandalone().driverVersion("3.13").setup();
-        assertBinary();
+        assertDriver();
     }
 
-    private void assertBinary() {
+    private void assertDriver() {
         File driver = new File(seleniumServerStandalone().getDriverPath());
         log.debug("Path for selenium-server-standalone {}", driver);
         assertTrue(driver.exists());

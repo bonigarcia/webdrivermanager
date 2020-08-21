@@ -45,15 +45,15 @@ public class ChromiumTest extends BrowserTestParent {
 
     @Before
     public void setupTest() {
-        File chromium = new File(getChromiumBinary());
-        assumeTrue(chromium.exists());
+        File chromiumPath = new File(getChromiumPath());
+        assumeTrue(chromiumPath.exists());
 
         ChromeOptions options = new ChromeOptions();
-        options.setBinary(chromium);
+        options.setBinary(chromiumPath);
         driver = new ChromeDriver(options);
     }
 
-    private String getChromiumBinary() {
+    private String getChromiumPath() {
         if (IS_OS_WINDOWS) {
             String localAppDat = System.getenv("LOCALAPPDATA")
                     .replaceAll("\\\\", "\\\\\\\\");

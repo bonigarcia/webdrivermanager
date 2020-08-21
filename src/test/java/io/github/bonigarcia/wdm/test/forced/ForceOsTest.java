@@ -84,7 +84,7 @@ public class ForceOsTest {
     public void testForceOs() {
         chromedriver().operatingSystem(operatingSystem).setup();
         File driver = new File(chromedriver().getDriverPath());
-        log.debug("OS {} - binary path {}", operatingSystem, driver);
+        log.debug("OS {} - driver path {}", operatingSystem, driver);
         assertTrue(driver.exists());
     }
 
