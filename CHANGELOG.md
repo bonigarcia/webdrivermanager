@@ -1,5 +1,25 @@
 # Changelog
 
+## [4.2.0] - 2020-08-21
+### Added
+- Check ignoredVersion when resolving driver version (issue #529)
+- Include configuration key (wdm.resolutionCachePath) to specify a path for resolution cache
+
+### Fixed
+- Fix filtering based on ignored versions
+- Use Locale.ROOT in String case conversion (fix issue #521, which happens in Turkey locale)
+- Fix support of WebDriverManager Docker container to resolve drivers
+
+### Changed
+- Change default cache path location to ~/.cache/selenium
+- Store drivers in cache using the same folder structure: {cachePath}/driverName/os+arch/driverVersion
+- Rename getBinaryPath() method to getDownloadedDriverPath() in WebDriverManager API
+- Rename getDownloadedVersion() method to getDownloadedDriverVersion() in WebDriverManager API
+- Rename clearCache() method to clearDriverCache() in WebDriverManager API
+- Rename configuration key wdm.binaryPath to wdm.browserPath
+- Build URL from pattern when no candidate is found after the filtering process
+
+
 ## [4.1.0] - 2020-07-14
 ### Added
 - New method in WebDriverManager API: ttlBrowsers(int) -> TTL to store browser versions in resolution cache (issue #483)
