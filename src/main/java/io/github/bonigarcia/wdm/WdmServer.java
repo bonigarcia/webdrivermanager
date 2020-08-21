@@ -139,7 +139,7 @@ public class WdmServer {
         driverManager.config().setAvoidBrowserDetection(true);
         driverManager.setup();
         File driver = new File(driverManager.getDriverPath());
-        String driverVersion = driverManager.getDownloadedVersion();
+        String driverVersion = driverManager.getDownloadedDriverVersion();
         String driverName = driver.getName();
         String driverLength = String.valueOf(driver.length());
 

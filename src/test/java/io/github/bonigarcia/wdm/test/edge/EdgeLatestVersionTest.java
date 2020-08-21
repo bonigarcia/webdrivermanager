@@ -75,7 +75,7 @@ public class EdgeLatestVersionTest {
                     "Stable version (%s) is not in the URL list", edgeVersion));
             edgedriver.operatingSystem(WIN).forceDownload()
                     .avoidBrowserDetection().setup();
-            assertThat(edgedriver.getDownloadedVersion(), notNullValue());
+            assertThat(edgedriver.getDownloadedDriverVersion(), notNullValue());
         }
     }
 

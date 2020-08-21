@@ -83,7 +83,7 @@ public abstract class VersionTestParent {
             browserManager.setup();
         }
 
-        assertThat(browserManager.getDownloadedVersion(), notNullValue());
+        assertThat(browserManager.getDownloadedDriverVersion(), notNullValue());
     }
 
     @Test
@@ -103,7 +103,7 @@ public abstract class VersionTestParent {
 
             browserManager.driverVersion(specificVersion).setup();
 
-            assertThat(browserManager.getDownloadedVersion(),
+            assertThat(browserManager.getDownloadedDriverVersion(),
                     equalTo(specificVersion));
         }
     }

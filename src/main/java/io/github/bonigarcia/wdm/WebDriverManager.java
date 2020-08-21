@@ -480,7 +480,7 @@ public abstract class WebDriverManager {
         return instanceMap.get(getDriverManagerType()).driverPath;
     }
 
-    public String getDownloadedVersion() {
+    public String getDownloadedDriverVersion() {
         return instanceMap.get(getDriverManagerType()).downloadedDriverVersion;
     }
 

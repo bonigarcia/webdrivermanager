@@ -71,7 +71,7 @@ public class IgnoredVersionTest {
         WebDriverManager.firefoxdriver().ignoreDriverVersions(ignoredVersions)
                 .setup();
         String driverVersion = WebDriverManager.firefoxdriver()
-                .getDownloadedVersion();
+                .getDownloadedDriverVersion();
         log.debug("Resolved version {}", driverVersion);
         assertThat(Arrays.asList(ignoredVersions),
                 not(contains(driverVersion)));

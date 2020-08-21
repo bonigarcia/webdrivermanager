@@ -65,14 +65,14 @@ public class LatestAndBetaTest {
         WebDriverManager.getInstance(driverClass).avoidResolutionCache()
                 .avoidBrowserDetection().operatingSystem(WIN).setup();
         String edgedriverStable = WebDriverManager.getInstance(driverClass)
-                .getDownloadedVersion();
+                .getDownloadedDriverVersion();
         log.debug("edgedriver LATEST version: {}", edgedriverStable);
 
         WebDriverManager.getInstance(driverClass).avoidResolutionCache()
                 .avoidBrowserDetection().useBetaVersions().operatingSystem(WIN)
                 .setup();
         String edgedriverBeta = WebDriverManager.getInstance(driverClass)
-                .getDownloadedVersion();
+                .getDownloadedDriverVersion();
         log.debug("edgedriver BETA version: {}", edgedriverBeta);
 
         assertThat(edgedriverStable, not(equalTo(edgedriverBeta)));
