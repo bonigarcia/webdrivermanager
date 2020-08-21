@@ -68,7 +68,7 @@ To use WebDriverManager from tests in a Maven project, you need to add the follo
 <dependency>
     <groupId>io.github.bonigarcia</groupId>
     <artifactId>webdrivermanager</artifactId>
-    <version>4.1.0</version>
+    <version>4.2.0</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -77,7 +77,7 @@ To use WebDriverManager from tests in a Maven project, you need to add the follo
 
 ```
 dependencies {
-    testCompile("io.github.bonigarcia:webdrivermanager:4.1.0")
+    testCompile("io.github.bonigarcia:webdrivermanager:4.2.0")
 }
 ```
 
@@ -117,7 +117,7 @@ Notice that simply adding ``WebDriverManager.chromedriver().setup();`` WebDriver
 
 1. It checks the version of the browser installed in your machine (e.g. Chrome, Firefox).
 2. It checks the version of the driver (e.g. *chromedriver*, *geckodriver*). If unknown, it uses the latest version of the driver.
-3. It downloads the driver if it is not present on the WebDriverManager cache (``~/.m2/repository/webdriver`` by default).
+3. It downloads the driver if it is not present on the WebDriverManager cache (``~/.cache/selenium`` by default).
 4. It exports the proper WebDriver Java environment variables required by Selenium (not done when using WebDriverManager from the CLI or as a Server).
 
 WebDriverManager resolves the drivers for the browsers **Chrome**, **Firefox**, **Edge**, **Opera**, **PhantomJS**, **Internet Explorer**, and **Chromium**. For that, it provides several *drivers managers* for these browsers. These *drivers managers* can be used as follows:
@@ -185,7 +185,7 @@ Check out the repository [WebDriverManager Examples] which contains different JU
 
 ### Resolution cache
 
-The relationship between browser version and driver version is managed in a internal database called **resolution cache**. As of WebDriverManager 4.x, this database is stored in a Java properties file called ``resolution.properties`` located by default in the cache folder (``~/.m2/repository/webdriver``).  The validity of this relationship (browser version and driver version) is limited by a *time-to-live* (ttl) value. There are two kinds of TTLs. First, a TTL for driver versions, with a default value of 86400 seconds (i.e. 1 day). Second, a TTL for browser versions, with a default value of 3600 seconds (i.e. 1 hour).
+The relationship between browser version and driver version is managed in a internal database called **resolution cache**. As of WebDriverManager 4.x, this database is stored in a Java properties file called ``resolution.properties`` located by default in the cache folder (``~/.cache/selenium``).  The validity of this relationship (browser version and driver version) is limited by a *time-to-live* (ttl) value. There are two kinds of TTLs. First, a TTL for driver versions, with a default value of 86400 seconds (i.e. 1 day). Second, a TTL for browser versions, with a default value of 3600 seconds (i.e. 1 hour).
 
 To resolve the driver version for a given browser, first WebDriverManager try to find out the version of that browser. This mechanism depends on the browser (Chrome, Firefox, etc) and the platform (Linux, Windows, Mac). For instance, for Chrome in Linux, the command ``google-chrome --version`` is executed in the shell.
 
@@ -201,6 +201,7 @@ WebDriverManager exposes its API by means of the **builder pattern**. This means
 | ``driverVersion(String)``             | By default, WebDriverManager tries to download the proper version of a given driver. A concrete version can be specified using this method.                                                                                                                                                                                                                  | ``wdm.chromeDriverVersion``, ``wdm.operaDriverVersion``, ``wdm.internetExplorerDriverVersion``, ``wdm.edgeDriverVersion``, ``wdm.phantomjsDriverVersion``, ``wdm.geckoDriverVersion``, ``wdm.chromiumDriverVersion`` |
 | ``browserVersion(String)``            | Alternatively to the driver version, the major version of the browser can be specified using this method.                                                                                                                                                                                                                                                    | ``wdm.chromeVersion``, ``wdm.operaVersion``,  ``wdm.edgeVersion``, ``wdm.firefoxVersion``, ``wdm.chromiumVersion``                                                                                                   |
 | ``cachePath(String)``                 | Folder in which drivers are stored (WedDriverManager *cache*).                                                                                                                                                                                                                                                                                               | ``wdm.cachePath``                                                                                                                                                                                                    |
+| ``resolutionCachePath(String)``       | Folder in which the resolution cache file is stored (by default, in the same folder than the driver cache).                                                                                                                                                                                                                                                  | ``wdm.resolutionCachePath``                                                                                                                                                                                          |
 | ``forceDownload()``                   | By default, WebDriverManager finds out the latest version of the driver, and then it uses the cached version if exists. This option forces to download again the driver even if it has been previously cached.                                                                                                                                               | ``wdm.forceDownload=true``                                                                                                                                                                                           |
 | ``useBetaVersions()``                 | By default, WebDriverManager skip beta versions. With this method, WebDriverManager will download also beta versions.                                                                                                                                                                                                                                        | ``wdm.useBetaVersions=true``                                                                                                                                                                                         |
 | ``architecture(Architecture)``        | By default, WebDriverManager would try to use the proper driver for the platform running the test case (i.e. 32-bit or 64-bit). This behavior can be changed by forcing a given architecture: 32-bits (``Architecture.x32``) or 64-bits (``Architecture.x64``);                                                                                              | ``wdm.architecture``                                                                                                                                                                                                 |
@@ -245,9 +246,9 @@ The following table contains some examples:
 Additional methods are exposed by WebDriverManager, namely:
 
 * ``getDriverVersions()``: This method allows to find out the list of available driver versions.
-* ``getDriverPath()``: This method allows to find out the path of the latest resolved driver.
-* ``getDownloadedVersion()``: This method allows to find out the version of the latest resolved driver.
 * ``getDriverManagerType()``: This methods allows to get the driver manager type (as ``enum``) of a given manager.
+* ``getDownloadedDriverPath()``: This method allows to find out the path of the latest resolved driver.
+* ``getDownloadedDriverVersion()``: This method allows to find out the version of the latest resolved driver.
  
 
 ### Configuration
@@ -255,7 +256,7 @@ Additional methods are exposed by WebDriverManager, namely:
 Configuration parameters for WebDriverManager are set in the ``webdrivermanager.properties`` file:
 
 ```properties
-wdm.cachePath=~/.m2/repository/webdriver
+wdm.cachePath=~/.cache/selenium
 wdm.forceDownload=false
 wdm.useMirror=false
 wdm.useBetaVersions=false
@@ -307,13 +308,13 @@ wdm.versionsPropertiesUrl=https://raw.githubusercontent.com/bonigarcia/webdriver
 For instance, the variable ``wdm.cachePath`` is the default folder in which the drivers are stored. By default the path of the Maven local repository is used. This property can be overwritten by Java system properties, for example:
 
 ```java
-System.setProperty("wdm.cachePath", "/my/custom/path/to/driver");
+System.setProperty("wdm.cachePath", "/my/custom/path/to/drivers");
 ```
 
 ... or by command line, for example:
 
 ```properties
--Dwdm.cachePath=/my/custom/path/to/driver
+-Dwdm.cachePath=/my/custom/path/to/drivers
 ```
 
 By default, WebDriverManager try to download the proper version of the driver for the installed browsers. Nevertheless, concrete driver versions can be forced by changing the value of the variables ``wdm.chromeDriverVersion``, ``wdm.operaDriverVersion``,  ``wdm.internetExplorerDriverVersion``, or  ``wdm.edgeDriverVersion`` to a concrete version. For instance:
@@ -353,14 +354,14 @@ As of version 2.2.0, WebDriverManager can used interactively from the Command Li
 [INFO] Scanning for projects...
 [INFO]
 [INFO] ------------------------------------------------------------------------
-[INFO] Building WebDriverManager 4.1.0
+[INFO] Building WebDriverManager 4.2.0
 [INFO] ------------------------------------------------------------------------
 [INFO]
 [INFO] --- exec-maven-plugin:1.6.0:java (default-cli) @ webdrivermanager ---
 [INFO] Using WebDriverManager to resolve chrome
 [DEBUG] Running command on the shell: [google-chrome, --version]
 [DEBUG] Result: Google Chrome 81.0.4044.138
-[INFO] Using chromedriver 81.0.4044.138 (since Chrome 81 is installed in your machine)
+[INFO] Using chromedriver 81.0.4044.138 (resolved driver for Chrome 81)
 [INFO] Reading https://chromedriver.storage.googleapis.com/ to seek chromedriver
 [DEBUG] Driver to be downloaded chromedriver 81.0.4044.138
 [INFO] Downloading https://chromedriver.storage.googleapis.com/81.0.4044.138/chromedriver_linux64.zip
@@ -374,14 +375,14 @@ As of version 2.2.0, WebDriverManager can used interactively from the Command Li
 [INFO] ------------------------------------------------------------------------
 ```
 
-* Using WebDriverManager as a *fat-jar* (i.e. WebDriverManager with all its dependencies in a single executable JAR file). This JAR file can downloaded from [here](https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-4.1.0/webdrivermanager-4.1.0-fat.jar) and also it can be created using the command ``mvn compile assembly:single`` from the source code. Once you get the *fat-jar*, you simply need to use the command ``java -jar webdrivermanager-4.1.0-fat.jar browserName``, for instance:
+* Using WebDriverManager as a *fat-jar* (i.e. WebDriverManager with all its dependencies in a single executable JAR file). This JAR file can downloaded from [here](https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-4.2.0/webdrivermanager-4.2.0-fat.jar) and also it can be created using the command ``mvn compile assembly:single`` from the source code. Once you get the *fat-jar*, you simply need to use the command ``java -jar webdrivermanager-4.2.0-fat.jar browserName``, for instance:
 
 ```
-> java -jar webdrivermanager-4.1.0-fat.jar chrome
+> java -jar webdrivermanager-4.2.0-fat.jar chrome
 [INFO] Using WebDriverManager to resolve chrome
 [DEBUG] Running command on the shell: [google-chrome, --version]
 [DEBUG] Result: Google Chrome 81.0.4044.138
-[INFO] Using chromedriver 81.0.4044.138 (since Chrome 81 is installed in your machine)
+[INFO] Using chromedriver 81.0.4044.138 (resolved driver for Chrome 81)
 [INFO] Reading https://chromedriver.storage.googleapis.com/ to seek chromedriver
 [DEBUG] Driver to be downloaded chromedriver 81.0.4044.138
 [INFO] Downloading https://chromedriver.storage.googleapis.com/81.0.4044.138/chromedriver_linux64.zip
@@ -401,7 +402,7 @@ $ mvn exec:java -Dexec.args="server"
 [INFO] Scanning for projects...
 [INFO]
 [INFO] ------------------------------------------------------------------------
-[INFO] Building WebDriverManager 4.1.0
+[INFO] Building WebDriverManager 4.2.0
 [INFO] ------------------------------------------------------------------------
 [INFO]
 [INFO] --- exec-maven-plugin:1.6.0:java (default-cli) @ webdrivermanager ---
@@ -411,7 +412,7 @@ $ mvn exec:java -Dexec.args="server"
 * Using WebDriverManager as a [fat-jar]. For instance:
 
 ```
-> java -jar webdrivermanager-4.1.0-fat.jar server
+> java -jar webdrivermanager-4.2.0-fat.jar server
 [INFO] WebDriverManager server listening on port 4041
 ```
 
@@ -514,7 +515,7 @@ $ mvn test
 2020-05-12 15:38:49 [main] DEBUG i.g.b.wdm.cache.ResolutionCache.checkKeyInResolutionCache(183) -- Resolution chrome=81 in cache (valid until 15:23:29 13/05/2020 CEST)
 2020-05-12 15:38:49 [main] INFO  i.g.bonigarcia.wdm.WebDriverManager.resolveDriverVersion(571) -- Using chromedriver 81.0.4044.138 (since Chrome 81 is installed in your machine)
 2020-05-12 15:38:49 [main] DEBUG i.g.bonigarcia.wdm.WebDriverManager.manage(520) -- Driver chromedriver 81.0.4044.138 found in cache
-2020-05-12 15:38:49 [main] INFO  i.g.bonigarcia.wdm.WebDriverManager.exportDriver(615) -- Exporting webdriver.chrome.driver as /home/boni/.m2/repository/webdriver/chromedriver/linux64/81.0.4044.138/chromedriver
+2020-05-12 15:38:49 [main] INFO  i.g.bonigarcia.wdm.WebDriverManager.exportDriver(615) -- Exporting webdriver.chrome.driver as /home/boni/.cache/selenium/webdriver/chromedriver/linux64/81.0.4044.138/chromedriver
 Starting ChromeDriver 81.0.4044.138 (8c6c7ba89cc9453625af54f11fd83179e23450fa-refs/branch-heads/4044@{#999}) on port 31286
 2020-05-12 15:38:50 [main] DEBUG i.g.b.wdm.agent.test.ChromeTest.test(54) -- The title of https://bonigarcia.github.io/selenium-jupiter/ is Selenium-Jupiter: JUnit 5 extension for Selenium
 [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.814 s - in io.github.bonigarcia.wdm.agent.test.ChromeTest
@@ -523,7 +524,7 @@ Starting ChromeDriver 81.0.4044.138 (8c6c7ba89cc9453625af54f11fd83179e23450fa-re
 2020-05-12 15:46:04 [main] DEBUG i.g.b.wdm.cache.ResolutionCache.checkKeyInResolutionCache(183) -- Resolution firefox=76 in cache (valid until 15:45:41 13/05/2020 CEST)
 2020-05-12 15:46:04 [main] INFO  i.g.bonigarcia.wdm.WebDriverManager.resolveDriverVersion(571) -- Using geckodriver 0.26.0 (since Firefox 76 is installed in your machine)
 2020-05-12 15:46:04 [main] DEBUG i.g.bonigarcia.wdm.WebDriverManager.manage(520) -- Driver geckodriver 0.26.0 found in cache
-2020-05-12 15:46:04 [main] INFO  i.g.bonigarcia.wdm.WebDriverManager.exportDriver(615) -- Exporting webdriver.gecko.driver as /home/boni/.m2/repository/webdriver/geckodriver/linux64/0.26.0/geckodriver
+2020-05-12 15:46:04 [main] INFO  i.g.bonigarcia.wdm.WebDriverManager.exportDriver(615) -- Exporting webdriver.gecko.driver as /home/boni/.cache/selenium/webdriver/geckodriver/linux64/0.26.0/geckodriver
 2020-05-12 15:46:07 [main] DEBUG i.g.b.wdm.agent.test.FirefoxTest.test(54) -- The title of https://bonigarcia.github.io/selenium-jupiter/ is Selenium-Jupiter: JUnit 5 extension for Selenium
 [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.163 s - in io.github.bonigarcia.wdm.agent.test.FirefoxTest
 [INFO]
@@ -544,26 +545,26 @@ Starting ChromeDriver 81.0.4044.138 (8c6c7ba89cc9453625af54f11fd83179e23450fa-re
 As of version 4.x, WebDriverManager can be used as a [Docker container] to execute the Server and CLI modes. To execute WebDriverManager Server in Docker, you simply need to run the following command:
 
 ```
-docker run -p 4041:4041 bonigarcia/webdrivermanager:4.1.0
+docker run -p 4041:4041 bonigarcia/webdrivermanager:4.2.0
 ```
 
 To execute WebDriverManager CLI in Docker, you need to specify the type of browser to be resolved as environmental variable (`BROWSER`). The rest of WebDriverManager configuration parameters can be passed to the Docker container using env variables using the usual `-e` option in Docker. For example, in Linux:
 
 ```
-docker run --rm -e BROWSER=chrome -e WDM_CHROMEDRIVERVERSION=83.0.4103.39 -e WDM_OS=LINUX -v ${PWD}:/wdm bonigarcia/webdrivermanager:4.1.0
+docker run --rm -e BROWSER=chrome -e WDM_CHROMEDRIVERVERSION=83.0.4103.39 -e WDM_OS=LINUX -v ${PWD}:/wdm bonigarcia/webdrivermanager:4.2.0
 ```
 
 ... or Mac:
 
 ```
-docker run --rm -e BROWSER=chrome -e WDM_CHROMEDRIVERVERSION=83.0.4103.39 -e WDM_OS=MAC -v ${PWD}:/wdm bonigarcia/webdrivermanager:4.1.0
+docker run --rm -e BROWSER=chrome -e WDM_CHROMEDRIVERVERSION=83.0.4103.39 -e WDM_OS=MAC -v ${PWD}:/wdm bonigarcia/webdrivermanager:4.2.0
 ```
 
 ... or Windows:
 
 
 ```
-docker run --rm -e BROWSER=chrome -e WDM_CHROMEDRIVERVERSION=83.0.4103.39 -e WDM_OS=WIN -v %cd%:/wdm bonigarcia/webdrivermanager:4.1.0
+docker run --rm -e BROWSER=chrome -e WDM_CHROMEDRIVERVERSION=83.0.4103.39 -e WDM_OS=WIN -v %cd%:/wdm bonigarcia/webdrivermanager:4.2.0
 ```
 
 ## Known issues
@@ -670,7 +671,7 @@ WebDriverManager (Copyright &copy; 2015-2020) is a project created and maintaine
 [versions.properties]: https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/versions.properties
 [WebDriverManager Examples]: https://github.com/bonigarcia/webdrivermanager-examples
 [WebDriverManager issues]: https://github.com/bonigarcia/webdrivermanager/issues
-[fat-jar]: https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-4.1.0/webdrivermanager-4.1.0-fat.jar
+[fat-jar]: https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-4.2.0/webdrivermanager-4.2.0-fat.jar
 [survey]: http://tiny.cc/wdm-survey
 [Docker container]: https://hub.docker.com/repository/docker/bonigarcia/webdrivermanager
 [chromedriver-latest]: https://chromedriver.storage.googleapis.com/LATEST_RELEASE
