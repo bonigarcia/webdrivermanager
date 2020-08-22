@@ -37,7 +37,7 @@ WebDriverManager is a library which allows to automate the management of the dri
 
 ## Motivation
 
-If you use [Selenium WebDriver], you probably know that to use some browsers such as **Chrome**, **Firefox**, **Edge**, **Opera**, **PhantomJS**, or **Internet Explorer**, first you need to download the so-called *driver*, i.e. a binary file which allows WebDriver to handle browsers. In Java, the path to this driver must be set as JVM properties, as follows:
+If you use [Selenium WebDriver], you probably know that to use some browsers such as **Chrome**, **Firefox**, **Edge**, **Opera**, **PhantomJS**, or **Internet Explorer**, first you need to download the so-called *driver*, i.e. a binary file which allows WebDriver to handle these browsers. In Java, the path to this driver should be set as JVM properties, as follows:
 
 ```java
 System.setProperty("webdriver.chrome.driver", "/path/to/chromedriver");
@@ -48,7 +48,7 @@ System.setProperty("phantomjs.binary.path", "/path/to/phantomjs");
 System.setProperty("webdriver.ie.driver", "C:/path/to/IEDriverServer.exe");
 ```
 
-This is quite annoying since it forces you to link directly this driver into your source code. In addition, you have to check manually when new versions of the drivers are released. WebDriverManager comes to the rescue, performing in an automated way all this dirty job for you. WebDriverManager can be used in different ways:
+This is quite annoying since it forces you to link directly this driver into your source code. In addition, you have to check manually when new versions of the drivers are released. WebDriverManager comes to the rescue, performing in an automated way this job for you. WebDriverManager can be used in different ways:
 
 1. [WebDriverManager as Java dependency](#webdrivermanager-as-java-dependency) (typically from test cases).
 2. [WebDriverManager as Command Line Interface (CLI) tool](#webdrivermanager-cli) (from the shell).
@@ -62,7 +62,7 @@ WebDriverManager is open-source, released under the terms of [Apache 2.0 License
 
 ### Basic usage
 
-To use WebDriverManager from tests in a Maven project, you need to add the following dependency in your `pom.xml` (Java 8 or upper required):
+To use WebDriverManager from tests in a Maven project, you need to add the following dependency in your `pom.xml` (Java 8 or upper required), typically using the `test` scope:
 
 ```xml
 <dependency>
@@ -116,7 +116,7 @@ public class ChromeTest {
 Notice that simply adding ``WebDriverManager.chromedriver().setup();`` WebDriverManager does magic for you:
 
 1. It checks the version of the browser installed in your machine (e.g. Chrome, Firefox).
-2. It checks the version of the driver (e.g. *chromedriver*, *geckodriver*). If unknown, it uses the latest version of the driver.
+2. It matches the version of the driver (e.g. *chromedriver*, *geckodriver*). If unknown, it uses the latest version of the driver.
 3. It downloads the driver if it is not present on the WebDriverManager cache (``~/.cache/selenium`` by default).
 4. It exports the proper WebDriver Java environment variables required by Selenium (not done when using WebDriverManager from the CLI or as a Server).
 
@@ -185,7 +185,7 @@ Check out the repository [WebDriverManager Examples] which contains different JU
 
 ### Resolution cache
 
-The relationship between browser version and driver version is managed in a internal database called **resolution cache**. As of WebDriverManager 4.x, this database is stored in a Java properties file called ``resolution.properties`` located by default in the cache folder (``~/.cache/selenium``).  The validity of this relationship (browser version and driver version) is limited by a *time-to-live* (ttl) value. There are two kinds of TTLs. First, a TTL for driver versions, with a default value of 86400 seconds (i.e. 1 day). Second, a TTL for browser versions, with a default value of 3600 seconds (i.e. 1 hour).
+The relationship between browser version and driver version is managed in a internal database called **resolution cache**. As of WebDriverManager 4.0.0, this database is stored in a Java properties file called ``resolution.properties`` located by default in the cache folder (``~/.cache/selenium``).  The validity of this relationship (browser version and driver version) is limited by a *time-to-live* (ttl) value. There are two kinds of TTLs. First, a TTL for driver versions, with a default value of 86400 seconds (i.e. 1 day). Second, a TTL for browser versions, with a default value of 3600 seconds (i.e. 1 hour).
 
 To resolve the driver version for a given browser, first WebDriverManager try to find out the version of that browser. This mechanism depends on the browser (Chrome, Firefox, etc) and the platform (Linux, Windows, Mac). For instance, for Chrome in Linux, the command ``google-chrome --version`` is executed in the shell.
 
@@ -317,7 +317,7 @@ System.setProperty("wdm.cachePath", "/my/custom/path/to/drivers");
 -Dwdm.cachePath=/my/custom/path/to/drivers
 ```
 
-By default, WebDriverManager try to download the proper version of the driver for the installed browsers. Nevertheless, concrete driver versions can be forced by changing the value of the variables ``wdm.chromeDriverVersion``, ``wdm.operaDriverVersion``,  ``wdm.internetExplorerDriverVersion``, or  ``wdm.edgeDriverVersion`` to a concrete version. For instance:
+By default, WebDriverManager tries to download the proper version of the driver for the installed browsers. Nevertheless, concrete driver versions can be forced by changing the value of the variables ``wdm.chromeDriverVersion``, ``wdm.operaDriverVersion``,  ``wdm.internetExplorerDriverVersion``, or  ``wdm.edgeDriverVersion`` to a concrete version. For instance:
 
 ```properties
 -Dwdm.chromeDriverVersion=81.0.4044.138
@@ -431,7 +431,7 @@ In addition, configuration parameters can be specified in the URL using query ar
 
 | Example                                                                   | Description                                                       |
 |---------------------------------------------------------------------------|-------------------------------------------------------------------|
-| http://localhost:4041/chromedriver?chromeDriverVersion=81.0.4044.138      | Downloads the version 81.0.4044.138 of *chromedriver*             |
+| http://localhost:4041/chromedriver?chromeVersion=83                       | Downloads the proper driver (*chromedriver*) for Chrome 83        |
 | http://localhost:4041/firefoxdriver?geckoDriverVersion=0.26.0             | Downloads the version 0.26.0 of *geckodriver*                     |
 | http://localhost:4041/operadriver?os=WIN&forceDownload=true               | Force not to use the cache version of *operadriver* for Windows   |
 
@@ -439,14 +439,13 @@ Finally, requests to WebDriverManager server can be done interactively using too
 
 ```
 curl -O -J http://localhost:4041/chromedriver
-curl -O -J "http://localhost:4041/chromedriver?chromeDriverVersion=81.0.4044.138"
-
+curl -O -J "http://localhost:4041/chromedriver?chromeVersion=83"
 ```
 
 
 ## WebDriverManager Agent
 
-As of version 4.x, WebDriverManager can be used as Java Agent. To configure that, we need to specify the the path of the WebDriverManager [fat-jar] using the JVM flag ``-javaagent:/path/to/webdrivermanager.jar``. Alternatively, it can be done using Maven (see a complete project example [here](https://github.com/bonigarcia/wdm-agent-example)).
+As of version 4.0.0, WebDriverManager can be used as Java Agent. To configure that, we need to specify the the path of the WebDriverManager [fat-jar] using the JVM flag ``-javaagent:/path/to/webdrivermanager.jar``. Alternatively, it can be done using Maven (see a complete project example [here](https://github.com/bonigarcia/wdm-agent-example)).
 
 Using this approach, Selenium WebDriver tests can drop the driver setup for *chromedriver*, *geckodriver*, etc. For example:
 
@@ -542,7 +541,7 @@ Starting ChromeDriver 81.0.4044.138 (8c6c7ba89cc9453625af54f11fd83179e23450fa-re
 
 ## WebDriverManager Docker container
 
-As of version 4.x, WebDriverManager can be used as a [Docker container] to execute the Server and CLI modes. To execute WebDriverManager Server in Docker, you simply need to run the following command:
+As of version 4.0.0, WebDriverManager can be used as a [Docker container] to execute the Server and CLI modes. To execute WebDriverManager Server in Docker, you simply need to run the following command:
 
 ```
 docker run -p 4041:4041 bonigarcia/webdrivermanager:4.2.0
@@ -571,7 +570,7 @@ docker run --rm -e BROWSER=chrome -e WDM_CHROMEVERSION=84 -e WDM_OS=WIN -v %cd%:
 
 ### HTTP response code 403
 
-Some of the drivers (e.g. geckodriver and operadriver) are hosted on GitHub. When several consecutive requests are made by WebDriverManager, GitHub servers return an **HTTP 403 error** response as follows:
+Some of the drivers (e.g. *geckodriver* or *operadriver*) are hosted on GitHub. When several consecutive requests are made by WebDriverManager, GitHub servers return an **HTTP 403 error** response as follows:
 
 ```
 Caused by: java.io.IOException: Server returned HTTP response code: 403 for URL: https://api.github.com/repos/operasoftware/operachromiumdriver/releases
@@ -623,7 +622,7 @@ WebDriverManager uses [Apache HTTP Client] to download drivers from online repos
 
 ```xml
 <configuration>
-    <logger name="org.apache.http" level="WARN" />
+    <logger name="org.apache.hc" level="WARN" />
 </configuration>
 ```
 
