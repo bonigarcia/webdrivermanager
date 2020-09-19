@@ -734,6 +734,7 @@ public abstract class WebDriverManager {
                 driverVersionStr, e.getMessage());
         if (retryCount == 0 && !config().isAvoidFallback()) {
             config().setAvoidBrowserDetection(true);
+            config().setAvoidReadReleaseFromRepository(true);
             driverVersion = "";
             setBrowserVersion("");
             retryCount++;
