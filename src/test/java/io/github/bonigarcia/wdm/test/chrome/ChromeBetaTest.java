@@ -42,7 +42,8 @@ public class ChromeBetaTest extends BrowserTestParent {
     @BeforeClass
     public static void setupClass() {
         assumeTrue(chromeBetaFile.exists());
-        WebDriverManager.chromedriver().browserPath(chromeBetaPath).setup();
+        WebDriverManager.chromedriver().clearResolutionCache()
+                .browserPath(chromeBetaPath).setup();
     }
 
     @Before

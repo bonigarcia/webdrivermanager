@@ -270,7 +270,7 @@ public abstract class WebDriverManager {
 
     public synchronized void setup() {
         DriverManagerType driverManagerType = getDriverManagerType();
-        resolutionCache = new ResolutionCache(config);
+        initResolutionCache();
         cacheHandler = new CacheHandler(config);
 
         if (driverManagerType != null) {
@@ -288,6 +288,12 @@ public abstract class WebDriverManager {
                     reset();
                 }
             }
+        }
+    }
+
+    private void initResolutionCache() {
+        if (resolutionCache == null) {
+            resolutionCache = new ResolutionCache(config);
         }
     }
 
@@ -459,6 +465,7 @@ public abstract class WebDriverManager {
     }
 
     public WebDriverManager clearResolutionCache() {
+        initResolutionCache();
         instanceMap.get(getDriverManagerType()).resolutionCache.clear();
         return instanceMap.get(getDriverManagerType());
     }
