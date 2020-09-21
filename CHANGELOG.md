@@ -1,5 +1,11 @@
 # Changelog
 
+## [4.2.2] - 2020-09-21
+### Fixed
+- Actual fixed for isue #554 (Windows Edge driver download fails with 404)
+
+
+
 ## [4.2.1] - 2020-09-21
 ### Added
 - Include syntactic sugar methods for operating systems in the API: win(), linux(), and mac()
