@@ -294,9 +294,7 @@ public abstract class WebDriverManager {
     }
 
     private void initResolutionCache() {
-        if (resolutionCache == null) {
-            resolutionCache = new ResolutionCache(config);
-        }
+        resolutionCache = new ResolutionCache(config);
     }
 
     public WebDriverManager driverVersion(String driverVersion) {
