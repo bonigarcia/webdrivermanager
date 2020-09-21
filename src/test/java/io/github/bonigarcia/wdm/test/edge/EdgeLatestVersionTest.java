@@ -16,7 +16,6 @@
  */
 package io.github.bonigarcia.wdm.test.edge;
 
-import static io.github.bonigarcia.wdm.config.OperatingSystem.WIN;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.charset.StandardCharsets.UTF_16;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -73,8 +72,7 @@ public class EdgeLatestVersionTest {
         if (!driverVersions.contains(edgeVersion)) {
             log.warn("{}", String.format(
                     "Stable version (%s) is not in the URL list", edgeVersion));
-            edgedriver.operatingSystem(WIN).forceDownload()
-                    .avoidBrowserDetection().setup();
+            edgedriver.win().forceDownload().avoidBrowserDetection().setup();
             assertThat(edgedriver.getDownloadedDriverVersion(), notNullValue());
         }
     }

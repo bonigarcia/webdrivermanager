@@ -16,7 +16,6 @@
  */
 package io.github.bonigarcia.wdm.test.versions;
 
-import static io.github.bonigarcia.wdm.config.OperatingSystem.WIN;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -63,14 +62,13 @@ public class LatestAndBetaTest {
     @Test
     public void testLatestAndBetaedgedriver() {
         WebDriverManager.getInstance(driverClass).avoidResolutionCache()
-                .avoidBrowserDetection().operatingSystem(WIN).setup();
+                .avoidBrowserDetection().win().setup();
         String edgedriverStable = WebDriverManager.getInstance(driverClass)
                 .getDownloadedDriverVersion();
         log.debug("edgedriver LATEST version: {}", edgedriverStable);
 
         WebDriverManager.getInstance(driverClass).avoidResolutionCache()
-                .avoidBrowserDetection().useBetaVersions().operatingSystem(WIN)
-                .setup();
+                .avoidBrowserDetection().useBetaVersions().win().setup();
         String edgedriverBeta = WebDriverManager.getInstance(driverClass)
                 .getDownloadedDriverVersion();
         log.debug("edgedriver BETA version: {}", edgedriverBeta);

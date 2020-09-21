@@ -17,7 +17,6 @@
 package io.github.bonigarcia.wdm.test.other;
 
 import static io.github.bonigarcia.wdm.WebDriverManager.iedriver;
-import static io.github.bonigarcia.wdm.config.OperatingSystem.WIN;
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.junit.Assert.assertTrue;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -39,13 +38,13 @@ public class IExplorerTest {
 
     @Test
     public void testIExplorerLatest() {
-        iedriver().operatingSystem(WIN).setup();
+        iedriver().win().setup();
         assertIEDriver();
     }
 
     @Test
     public void testIExplorerVersion() {
-        iedriver().operatingSystem(WIN).driverVersion("3.11").setup();
+        iedriver().win().driverVersion("3.11").setup();
         assertIEDriver();
     }
 
