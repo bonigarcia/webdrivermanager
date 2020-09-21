@@ -293,10 +293,6 @@ public abstract class WebDriverManager {
         }
     }
 
-    private void initResolutionCache() {
-        resolutionCache = new ResolutionCache(config);
-    }
-
     public WebDriverManager driverVersion(String driverVersion) {
         setDriverVersion(driverVersion);
         return instanceMap.get(getDriverManagerType());
@@ -642,6 +638,10 @@ public abstract class WebDriverManager {
         return driverVersion;
     }
 
+    protected void initResolutionCache() {
+        resolutionCache = new ResolutionCache(config);
+    }
+
     protected String download(String driverVersion) throws IOException {
         if (driverVersion.startsWith(".")) {
             driverVersion = driverVersion.substring(1);
@@ -755,22 +755,41 @@ public abstract class WebDriverManager {
                 "There was an error managing %s %s (%s)", getDriverName(),
                 driverVersionStr, e.getMessage());
         if (retryCount == 0 && !config().isAvoidFallback()) {
-            config().setAvoidBrowserDetection(true);
-            config().setAvoidReadReleaseFromRepository(true);
-            driverVersion = "";
-            setBrowserVersion("");
             retryCount++;
-            log.warn("{} ... trying again using latest driver stored in cache",
-                    errorMessage);
-            if (log.isTraceEnabled()) {
-                log.trace("Error trace: ", e);
+            if (getDriverManagerType() == EDGE
+                    || getDriverManagerType() == CHROME) {
+                config().setAvoidReadReleaseFromRepository(true);
+                clearResolutionCache();
+                log.warn(
+                        "{} ... trying again avoiding reading release from repository",
+                        errorMessage);
+                manage("");
+            } else {
+                retryCount++;
+                fallback(e, errorMessage);
             }
 
-            manage(driverVersion);
+        } else if (retryCount == 1 && !config().isAvoidFallback()) {
+            fallback(e, errorMessage);
         } else {
             log.error("{}", errorMessage, e);
             throw new WebDriverManagerException(e);
         }
+    }
+
+    protected void fallback(Exception e, String errorMessage) {
+        String driverVersion;
+        config().setAvoidBrowserDetection(true);
+        driverVersion = "";
+        setBrowserVersion("");
+        retryCount++;
+        log.warn("{} ... trying again using latest driver stored in cache",
+                errorMessage);
+        if (log.isTraceEnabled()) {
+            log.trace("Error trace: ", e);
+        }
+
+        manage(driverVersion);
     }
 
     protected UrlHandler createUrlHandler(String driverVersion)
