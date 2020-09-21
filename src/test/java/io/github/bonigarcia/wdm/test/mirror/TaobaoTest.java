@@ -34,8 +34,10 @@ import io.github.bonigarcia.wdm.config.WebDriverManagerException;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.6.1
  */
+
 public class TaobaoTest {
 
+    @Ignore("Flaky test due to slow response of npm.taobao.org")
     @Test
     public void testTaobao() throws Exception {
         chromedriver().config().setAvoidBrowserDetection(true)
@@ -62,7 +64,8 @@ public class TaobaoTest {
     @Test(expected = WebDriverManagerException.class)
     public void testTaobaoException() {
         WebDriverManager.edgedriver().useMirror().setup();
-        File driver = new File(WebDriverManager.edgedriver().getDownloadedDriverPath());
+        File driver = new File(
+                WebDriverManager.edgedriver().getDownloadedDriverPath());
         assertTrue(driver.exists());
     }
 
