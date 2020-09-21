@@ -23,6 +23,7 @@ import static org.junit.Assume.assumeTrue;
 import java.io.File;
 
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -66,7 +67,7 @@ public class ChromeBetaTest {
         }
     }
 
-    @After
+    @AfterClass
     public static void teardownClass() {
         WebDriverManager.chromedriver().clearResolutionCache();
     }
