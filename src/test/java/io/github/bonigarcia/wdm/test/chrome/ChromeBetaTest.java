@@ -16,28 +16,34 @@
  */
 package io.github.bonigarcia.wdm.test.chrome;
 
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assume.assumeTrue;
 
 import java.io.File;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Test;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
 
 /**
- * Test with Google Chrome beta version.
+ * Test with Google Chrome beta.
  *
  * @author Boni Garcia (boni.gg@gmail.com)
- * @since 4.2.0
+ * @since 4.2.1
  */
-public class ChromeBetaTest extends BrowserTestParent {
+public class ChromeBetaTest {
 
     static String chromeBetaPath = "/usr/bin/google-chrome-beta";
     static File chromeBetaFile = new File(chromeBetaPath);
+
+    WebDriver driver;
 
     @BeforeClass
     public static void setupClass() {
@@ -51,6 +57,25 @@ public class ChromeBetaTest extends BrowserTestParent {
         ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.setBinary(chromeBetaPath);
         driver = new ChromeDriver(chromeOptions);
+    }
+
+    @After
+    public void teardown() {
+        if (driver != null) {
+            driver.quit();
+        }
+    }
+
+    @After
+    public static void teardownClass() {
+        WebDriverManager.chromedriver().clearResolutionCache();
+    }
+
+    @Test
+    public void test() {
+        driver.get("https://bonigarcia.github.io/selenium-jupiter/");
+        assertThat(driver.getTitle(),
+                containsString("JUnit 5 extension for Selenium"));
     }
 
 }
