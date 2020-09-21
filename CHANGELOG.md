@@ -1,5 +1,16 @@
 # Changelog
 
+## [4.2.1] - 2020-09-21
+### Added
+- Include syntactic sugar methods for operating systems in the API: win(), linux(), and mac()
+
+### Fixed
+- Init resolution cache also when clearResolutionCache() method is invoked
+
+### Changed
+- Avoid read release from repository in the retry process to resolve driver (issue #554)
+
+
 ## [4.2.0] - 2020-08-21
 ### Added
 - Check ignoredVersion when resolving driver version (issue #529)
