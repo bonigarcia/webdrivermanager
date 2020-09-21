@@ -27,6 +27,8 @@ import static io.github.bonigarcia.wdm.config.DriverManagerType.IEXPLORER;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.OPERA;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.PHANTOMJS;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.SELENIUM_SERVER_STANDALONE;
+import static io.github.bonigarcia.wdm.config.OperatingSystem.LINUX;
+import static io.github.bonigarcia.wdm.config.OperatingSystem.MAC;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.WIN;
 import static java.lang.Integer.parseInt;
 import static java.lang.String.valueOf;
@@ -320,6 +322,21 @@ public abstract class WebDriverManager {
 
     public WebDriverManager arch64() {
         architecture(X64);
+        return instanceMap.get(getDriverManagerType());
+    }
+
+    public WebDriverManager win() {
+        operatingSystem(WIN);
+        return instanceMap.get(getDriverManagerType());
+    }
+
+    public WebDriverManager linux() {
+        operatingSystem(LINUX);
+        return instanceMap.get(getDriverManagerType());
+    }
+
+    public WebDriverManager mac() {
+        operatingSystem(MAC);
         return instanceMap.get(getDriverManagerType());
     }
 
