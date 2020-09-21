@@ -65,7 +65,7 @@ To use WebDriverManager from tests in a Maven project, you need to add the follo
 <dependency>
     <groupId>io.github.bonigarcia</groupId>
     <artifactId>webdrivermanager</artifactId>
-    <version>4.2.0</version>
+    <version>4.2.1</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -74,7 +74,7 @@ To use WebDriverManager from tests in a Maven project, you need to add the follo
 
 ```
 dependencies {
-    testCompile("io.github.bonigarcia:webdrivermanager:4.2.0")
+    testCompile("io.github.bonigarcia:webdrivermanager:4.2.1")
 }
 ```
 
@@ -205,6 +205,9 @@ WebDriverManager exposes its API by means of the **builder pattern**. This means
 | ``arch32()``                          | Force to use the 32-bit version of a given driver.                                                                                                                                                                                                                                                                                                           | ``wdm.architecture=32``                                                                                                                                                                                              |
 | ``arch64()``                          | Force to use the 64-bit version of a given driver.                                                                                                                                                                                                                                                                                                           | ``wdm.architecture=64``                                                                                                                                                                                              |
 | ``operatingSystem(OperatingSystem)``  | By default, WebDriverManager downloads the driver for the same operating systems than the machine running the test. This can be changed using this method (accepted values: ``WIN``, ``LINUX``, ``MAC``).                                                                                                                                                    | ``wdm.os=WIN``, ``wdm.os=LINUX``, ``wdm.os=MAC``                                                                                                                                                                     |
+| ``win()``                             | Force to use driver for Windows.                                                                                                                                                                                                                                                                                                                             | ``wdm.os=WIN``                                                                                                                                                                                                       |
+| ``linux()``                           | Force to use driver for Linux.                                                                                                                                                                                                                                                                                                                               | ``wdm.os=LINUX``                                                                                                                                                                                                     |
+| ``mac()``                             | Force to use driver for Mac OS.                                                                                                                                                                                                                                                                                                                              | ``wdm.os=MAC``                                                                                                                                                                                                       |
 | ``driverRepositoryUrl(URL)``          | This method allows to change the repository URL in which the drivers are hosted (see next section for default values).                                                                                                                                                                                                                                       | ``wdm.chromeDriverUrl``, ``wdm.operaDriverUrl``, ``wdm.internetExplorerDriverUrl``, ``wdm.edgeDriverUrl``, ``wdm.phantomjsDriverUrl``, ``wdm.geckoDriverUrl``                                                        |
 | ``useMirror()``                       | The [npm.taobao.org] site is a mirror which hosts different software assets. Among them, it hosts *chromedriver*, *geckodriver*,  *operadriver*, and *phantomjs* driver. Therefore, this method can be used for Chrome, Firefox, Opera, and PhantomJS to force to use the taobao.org mirror.                                                                 | ``wdm.useMirror=true``                                                                                                                                                                                               |
 | ``proxy(String)``                     | Use a HTTP proxy for the Internet connection using the following notation: ``my.http.proxy:1234`` or ``username:password@my.http.proxy:1234``. This can be also configured using the environment variable environment variable ``HTTPS_PROXY``.                                                                                                              | ``wdm.proxy``                                                                                                                                                                                                        |
@@ -351,7 +354,7 @@ As of version 2.2.0, WebDriverManager can used interactively from the Command Li
 [INFO] Scanning for projects...
 [INFO]
 [INFO] ------------------------------------------------------------------------
-[INFO] Building WebDriverManager 4.2.0
+[INFO] Building WebDriverManager 4.2.1
 [INFO] ------------------------------------------------------------------------
 [INFO]
 [INFO] --- exec-maven-plugin:1.6.0:java (default-cli) @ webdrivermanager ---
@@ -372,10 +375,10 @@ As of version 2.2.0, WebDriverManager can used interactively from the Command Li
 [INFO] ------------------------------------------------------------------------
 ```
 
-* Using WebDriverManager as a *fat-jar* (i.e. WebDriverManager with all its dependencies in a single executable JAR file). This JAR file can downloaded from [here](https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-4.2.0/webdrivermanager-4.2.0-fat.jar) and also it can be created using the command ``mvn compile assembly:single`` from the source code. Once you get the *fat-jar*, you simply need to use the command ``java -jar webdrivermanager-4.2.0-fat.jar browserName``, for instance:
+* Using WebDriverManager as a *fat-jar* (i.e. WebDriverManager with all its dependencies in a single executable JAR file). This JAR file can downloaded from [here](https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-4.2.1/webdrivermanager-4.2.1-fat.jar) and also it can be created using the command ``mvn compile assembly:single`` from the source code. Once you get the *fat-jar*, you simply need to use the command ``java -jar webdrivermanager-4.2.0-fat.jar browserName``, for instance:
 
 ```
-> java -jar webdrivermanager-4.2.0-fat.jar chrome
+> java -jar webdrivermanager-4.2.1-fat.jar chrome
 [INFO] Using WebDriverManager to resolve chrome
 [DEBUG] Running command on the shell: [google-chrome, --version]
 [DEBUG] Result: Google Chrome 81.0.4044.138
@@ -399,7 +402,7 @@ $ mvn exec:java -Dexec.args="server"
 [INFO] Scanning for projects...
 [INFO]
 [INFO] ------------------------------------------------------------------------
-[INFO] Building WebDriverManager 4.2.0
+[INFO] Building WebDriverManager 4.2.1
 [INFO] ------------------------------------------------------------------------
 [INFO]
 [INFO] --- exec-maven-plugin:1.6.0:java (default-cli) @ webdrivermanager ---
@@ -409,7 +412,7 @@ $ mvn exec:java -Dexec.args="server"
 * Using WebDriverManager as a [fat-jar]. For instance:
 
 ```
-> java -jar webdrivermanager-4.2.0-fat.jar server
+> java -jar webdrivermanager-4.2.1-fat.jar server
 [INFO] WebDriverManager server listening on port 4041
 ```
 
@@ -541,26 +544,26 @@ Starting ChromeDriver 81.0.4044.138 (8c6c7ba89cc9453625af54f11fd83179e23450fa-re
 As of version 4.0.0, WebDriverManager can be used as a [Docker container] to execute the Server and CLI modes. To execute WebDriverManager Server in Docker, you simply need to run the following command:
 
 ```
-docker run -p 4041:4041 bonigarcia/webdrivermanager:4.2.0
+docker run -p 4041:4041 bonigarcia/webdrivermanager:4.2.1
 ```
 
 To execute WebDriverManager CLI in Docker, you need to specify the type of browser to be resolved as environmental variable (`BROWSER`). The rest of WebDriverManager configuration parameters can be passed to the Docker container using env variables using the usual `-e` option in Docker. For example, in Linux:
 
 ```
-docker run --rm -e BROWSER=chrome -e WDM_CHROMEVERSION=84 -e WDM_OS=LINUX -v ${PWD}:/wdm bonigarcia/webdrivermanager:4.2.0
+docker run --rm -e BROWSER=chrome -e WDM_CHROMEVERSION=84 -e WDM_OS=LINUX -v ${PWD}:/wdm bonigarcia/webdrivermanager:4.2.1
 ```
 
 ... or Mac:
 
 ```
-docker run --rm -e BROWSER=chrome -e WDM_CHROMEVERSION=84 -e WDM_OS=MAC -v ${PWD}:/wdm bonigarcia/webdrivermanager:4.2.0
+docker run --rm -e BROWSER=chrome -e WDM_CHROMEVERSION=84 -e WDM_OS=MAC -v ${PWD}:/wdm bonigarcia/webdrivermanager:4.2.1
 ```
 
 ... or Windows:
 
 
 ```
-docker run --rm -e BROWSER=chrome -e WDM_CHROMEVERSION=84 -e WDM_OS=WIN -v %cd%:/wdm bonigarcia/webdrivermanager:4.2.0
+docker run --rm -e BROWSER=chrome -e WDM_CHROMEVERSION=84 -e WDM_OS=WIN -v %cd%:/wdm bonigarcia/webdrivermanager:4.2.1
 ```
 
 ## Known issues
@@ -667,7 +670,7 @@ WebDriverManager (Copyright &copy; 2015-2020) is a project created and maintaine
 [versions.properties]: https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/versions.properties
 [WebDriverManager Examples]: https://github.com/bonigarcia/webdrivermanager-examples
 [WebDriverManager issues]: https://github.com/bonigarcia/webdrivermanager/issues
-[fat-jar]: https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-4.2.0/webdrivermanager-4.2.0-fat.jar
+[fat-jar]: https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-4.2.1/webdrivermanager-4.2.1-fat.jar
 [survey]: http://tiny.cc/wdm-survey
 [Docker container]: https://hub.docker.com/repository/docker/bonigarcia/webdrivermanager
 [chromedriver-latest]: https://chromedriver.storage.googleapis.com/LATEST_RELEASE
