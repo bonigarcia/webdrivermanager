@@ -32,7 +32,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
  * @author Elias Nogueira (elias.nogueira@gmail.com)
  * @since 3.8.1
  */
-public class NewInstanceFromDriverType  {
+public class NewInstanceFromDriverTypeTest {
 
     private static DriverManagerType driverManagerType = DriverManagerType.CHROME;
     private static WebDriver driver;
@@ -43,8 +43,9 @@ public class NewInstanceFromDriverType  {
     }
 
     @Before
-    public void setupTest() throws ClassNotFoundException, IllegalAccessException, InstantiationException {
-        Class<?> driverClass =  Class.forName(driverManagerType.browserClass());
+    public void setupTest() throws ClassNotFoundException,
+            IllegalAccessException, InstantiationException {
+        Class<?> driverClass = Class.forName(driverManagerType.browserClass());
         driver = (WebDriver) driverClass.newInstance();
     }
 
