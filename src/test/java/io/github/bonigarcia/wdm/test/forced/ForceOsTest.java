@@ -82,7 +82,17 @@ public class ForceOsTest {
 
     @Test
     public void testForceOs() {
-        chromedriver().operatingSystem(operatingSystem).setup();
+        switch (operatingSystem) {
+        case WIN:
+            chromedriver().win().setup();
+            break;
+        case LINUX:
+            chromedriver().linux().setup();
+            break;
+        case MAC:
+            chromedriver().mac().setup();
+            break;
+        }
         File driver = new File(chromedriver().getDownloadedDriverPath());
         log.debug("OS {} - driver path {}", operatingSystem, driver);
         assertTrue(driver.exists());
