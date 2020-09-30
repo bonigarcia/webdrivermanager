@@ -84,13 +84,13 @@ public class ForceOsTest {
     public void testForceOs() {
         switch (operatingSystem) {
         case WIN:
-            chromedriver().win().setup();
+            chromedriver().win().avoidResolutionCache().setup();
             break;
         case LINUX:
-            chromedriver().linux().setup();
+            chromedriver().linux().avoidResolutionCache().setup();
             break;
         case MAC:
-            chromedriver().mac().setup();
+            chromedriver().mac().avoidResolutionCache().setup();
             break;
         }
         File driver = new File(chromedriver().getDownloadedDriverPath());
