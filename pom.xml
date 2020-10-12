@@ -17,7 +17,7 @@
         <javalin.version>3.11.0</javalin.version>
         <okhttp.version>4.9.0</okhttp.version>
 
-        <junit.version>4.13</junit.version>
+        <junit.version>4.13.1</junit.version>
         <hamcrest.version>1.3</hamcrest.version>
         <mockserver.version>5.11.1</mockserver.version>
         <selenium-java.version>3.141.59</selenium-java.version>
