@@ -559,7 +559,7 @@ docker run --rm -e BROWSER=chrome -e WDM_CHROMEVERSION=84 -e WDM_OS=LINUX -v ${P
 docker run --rm -e BROWSER=chrome -e WDM_CHROMEVERSION=84 -e WDM_OS=MAC -v ${PWD}:/wdm bonigarcia/webdrivermanager:4.2.2
 ```
 
-... or Windows:
+... or Windows (if WSL2 is installed in Windows, you can use `${PWD}` instead of `%cd%` for the volume setup):
 
 
 ```
