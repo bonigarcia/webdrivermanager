@@ -2,7 +2,7 @@
 
 ## [4.2.2] - 2020-09-21
 ### Fixed
-- Actual fixed for isue #554 (Windows Edge driver download fails with 404)
+- Actual fixed for issue #554 (Windows Edge driver download fails with 404)
 
 
 
