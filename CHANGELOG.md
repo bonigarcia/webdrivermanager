@@ -241,8 +241,8 @@
 - Update versions.properties: Chrome 72; Firefox 64; Opera 57
 - Use single configuration instance per driver manager singleton
 - Read beta versions for driver from versions.properties
-- Read also https_proxy (in lower case) from environemnt variables (issue #292)
-- Add method to clear preferences in WebDriverManagager API
+- Read also https_proxy (in lower case) from environment variables (issue #292)
+- Add method to clear preferences in WebDriverManager API
 
 ### Fixed
 - Fix issue #296 (Chrome version not being detected on Windows)
@@ -381,7 +381,7 @@
 
 ### Changed
 - Relicense to Apache 2.0
-- Stop using tyepsafe config library for handling properties
+- Stop using typesafe config library for handling properties
 - Override configuration values with environmental variables (e.g. WDM_TARGETPATH)
 - Improve management of proxy
 - Upgrade to Selenium 3.7 for end-to-end tests
