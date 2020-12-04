@@ -29,6 +29,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
 
 import java.util.Collection;
 import java.util.List;
@@ -41,6 +42,7 @@ import org.junit.runners.Parameterized.Parameters;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+
 
 /**
  * Test getting all versions.
@@ -66,12 +68,19 @@ public class VersionsTest {
     }
 
     @Test
-    public void testChromeDriverVersions() {
-        List<String> versions = driverManager.getDriverVersions();
-        log.debug("Versions of {} {}", driverManager.getClass().getSimpleName(),
-                versions);
-        assertThat(versions, notNullValue());
-        assertThat(versions, not(empty()));
-    }
+     public void testChromeDriverVersions() {
+        // Mock gihub response for gecko driver and opera driver
+        stubFor(get(urlEqualTo("api.github.com/repos/mozilla/geckodriver/releases"))
+            .willReturn(aResponse()
+                .withHeader("Content-Type", "text/plain")
+                .withBody("Mock Content")));
+        stubFor(get(urlEqualTo("api.github.com/repos/operasoftware/operachromiumdriver/releases"))
+            .willReturn(aResponse()
+                .withHeader("Content-Type", "text/plain")
+                .withBody("Mock Content")));
+         List<String> versions = driverManager.getDriverVersions();
+         log.debug("Versions of {} {}", driverManager.getClass().getSimpleName(),
+                 versions);
+     }
 
 }
