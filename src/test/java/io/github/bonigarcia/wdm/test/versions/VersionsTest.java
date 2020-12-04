@@ -68,7 +68,7 @@ public class VersionsTest {
 
     @Test
      public void testChromeDriverVersions() {
-        // Mock gihub response for gecko driver and opera driver 
+        // Mock github response for gecko driver and opera driver 
         WireMockServer wm = new WireMockServer(options().port(8888));
         wm.stubFor(get(urlEqualTo("api.github.com/repos/mozilla/geckodriver/releases"))
             .willReturn(aResponse()
