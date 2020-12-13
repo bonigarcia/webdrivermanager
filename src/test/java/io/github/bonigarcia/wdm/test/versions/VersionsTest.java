@@ -45,7 +45,6 @@ import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-
 /**
  * Test getting all versions.
  *
@@ -62,7 +61,7 @@ public class VersionsTest {
 
     @Parameters(name = "{index}: {0}")
     public static Collection<Object[]> data() {
-       return asList(new Object[][] {
+       return asList(new Object[][] { 
             { chromedriver() }, { firefoxdriver() },
                 { operadriver() }, { edgedriver() }, { iedriver() },
                 { phantomjs() } });
