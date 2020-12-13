@@ -62,7 +62,7 @@ public class VersionsTest {
 
     @Parameters(name = "{index}: {0}")
     public static Collection<Object[]> data() {
-        return asList(new Object[][] {
+       return asList(new Object[][] {
             { chromedriver() }, { firefoxdriver() },
                 { operadriver() }, { edgedriver() }, { iedriver() },
                 { phantomjs() } });
@@ -70,22 +70,22 @@ public class VersionsTest {
     }
 
     @Test
-     public void testChromeDriverVersions() {
-        // Mock gihub response for gecko driver and opera driver
-        WireMockServer wm = new WireMockServer(options().port(8888));
-        wm.stubFor(get(urlEqualTo("api.github.com/repos/mozilla/geckodriver/releases"))
-                .willReturn(aResponse()
-                        .withHeader("Content-Type", "text/plain")
-                        .withBody("Mock Content")));
-        wm.stubFor(get(urlEqualTo("api.github.com/repos/operasoftware/operachromiumdriver/releases"))
-                .willReturn(aResponse()
-                        .withHeader("Content-Type", "text/plain")
-                        .withBody("Mock Content")));
-        List<String> versions = driverManager.getDriverVersions();
-        log.debug("Versions of {} {}", driverManager.getClass().getSimpleName(),
-                versions);
-        assertThat(versions, notNullValue());
-        assertThat(versions, not(empty()));
+    public void testChromeDriverVersions() {
+       // Mock gihub response for gecko driver and opera driver
+       WireMockServer wm = new WireMockServer(options().port(8888));
+       wm.stubFor(get(urlEqualTo("api.github.com/repos/mozilla/geckodriver/releases"))
+               .willReturn(aResponse()
+                       .withHeader("Content-Type", "text/plain")
+                       .withBody("Mock Content")));
+       wm.stubFor(get(urlEqualTo("api.github.com/repos/operasoftware/operachromiumdriver/releases"))
+               .willReturn(aResponse()
+                       .withHeader("Content-Type", "text/plain")
+                       .withBody("Mock Content")));
+       List<String> versions = driverManager.getDriverVersions();
+       log.debug("Versions of {} {}", driverManager.getClass().getSimpleName(),
+               versions);
+       assertThat(versions, notNullValue());
+       assertThat(versions, not(empty()));
      }
 
 }
