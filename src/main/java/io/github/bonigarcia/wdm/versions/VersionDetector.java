@@ -193,8 +193,8 @@ public class VersionDetector {
                 isSnap = true;
             }
             if (!isNullOrEmpty(browserVersionOutput)) {
-                return Optional.of(getVersionFromPosixOutput(
-                        browserVersionOutput, browserNameInOutput));
+                return Optional
+                        .of(getVersionFromPosixOutput(browserVersionOutput));
             }
         }
         return empty();

@@ -80,17 +80,10 @@ public class Shell {
         return i != -1 && j != -1 ? output.substring(i + 1, j) : output;
     }
 
-    public static String getVersionFromPosixOutput(String output,
-            String driverType) {
-        // Special case: using Chromium as Chrome
-        if (output.contains("Chromium")) {
-            driverType = "Chromium";
-        }
-        int i = output.indexOf(driverType);
-        int j = output.indexOf('.');
-        return i != -1 && j != -1
-                ? output.substring(i + driverType.length(), j).trim()
-                : output;
+    public static String getVersionFromPosixOutput(String output) {
+        String filtered = output.replaceAll("[^\\d^\\.]", "");
+        int i = filtered.indexOf('.');
+        return i != -1 ? filtered.substring(0, i) : filtered;
     }
 
     public static String getVersionFromPowerShellOutput(String output) {

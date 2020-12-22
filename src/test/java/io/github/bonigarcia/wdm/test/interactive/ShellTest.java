@@ -16,7 +16,6 @@
  */
 package io.github.bonigarcia.wdm.test.interactive;
 
-import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROME;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
@@ -52,13 +51,13 @@ public class ShellTest {
                 "73" },
                 { "Chromium 74.0.3729.169 Built on Ubuntu , running on Ubuntu 18.04",
                         "74" },
-                { "Google Chrome 75.0.3770.80", "75" } });
+                { "Google Chrome 75.0.3770.80", "75" },
+                { "Google Chrome 88.0.4324.50 beta", "88" } });
     }
 
     @Test
     public void versionFromPosixOutputTest() {
-        String versionFromPosixOutput = Shell.getVersionFromPosixOutput(output,
-                CHROME.toString());
+        String versionFromPosixOutput = Shell.getVersionFromPosixOutput(output);
         assertEquals(version, versionFromPosixOutput);
     }
 
