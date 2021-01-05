@@ -26,7 +26,7 @@
         <phantomjsdriver.version>1.4.4</phantomjsdriver.version>
         <htmlunit-driver.version>2.45.0</htmlunit-driver.version>
         <guava.version>30.1-jre</guava.version>
-        <mockito-core.version>3.6.28</mockito-core.version>
+        <mockito-core.version>3.7.0</mockito-core.version>
 
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <jacoco-maven-plugin.version>0.8.6</jacoco-maven-plugin.version>
