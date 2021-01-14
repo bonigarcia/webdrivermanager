@@ -135,7 +135,7 @@ public class EdgeDriverManager extends WebDriverManager {
         String versionFlag = IS_OS_MAC_OSX ? "-version" : "--version";
 
         return versionDetector.getDefaultBrowserVersion(programFilesEnvs,
-                winBrowserNames, "", macBrowserName, versionFlag);
+                winBrowserNames, "microsoft-edge", macBrowserName, versionFlag);
     }
 
     @Override
