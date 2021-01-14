@@ -145,7 +145,8 @@ public class VersionDetector {
     public Optional<String> getDriverVersionFromRepository(
             Optional<String> driverVersion, URL driverUrl,
             Charset versionCharset, String driverName, String versionLabel,
-            String latestLabel, String osLabel) {
+            String latestLabel, Optional<String> optOsLabel) {
+        String osLabel = optOsLabel.isPresent() ? optOsLabel.get() : "";
         String url = driverVersion.isPresent()
                 ? driverUrl + latestLabel + "_" + driverVersion.get() + osLabel
                 : driverUrl + versionLabel;

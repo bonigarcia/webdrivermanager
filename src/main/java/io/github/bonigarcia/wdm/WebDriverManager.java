@@ -1023,8 +1023,8 @@ public abstract class WebDriverManager {
         return LATEST_RELEASE;
     }
 
-    protected String getOsLabel() {
-        return "";
+    protected Optional<String> getOsLabel() {
+        return empty();
     }
 
     protected Optional<String> getDriverVersionFromRepository(

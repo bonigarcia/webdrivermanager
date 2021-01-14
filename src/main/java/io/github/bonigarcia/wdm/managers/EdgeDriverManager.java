@@ -159,7 +159,7 @@ public class EdgeDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected String getOsLabel() {
+    protected Optional<String> getOsLabel() {
         String label = "_";
         String os = config().getOs();
         if (os.equals("WIN")) {
@@ -169,7 +169,7 @@ public class EdgeDriverManager extends WebDriverManager {
         } else { // LINUX
             label += os;
         }
-        return label;
+        return Optional.of(label);
     }
 
     @Override
