@@ -64,7 +64,7 @@ public class ChromiumDriverManager extends ChromeDriverManager {
         return versionDetector.getDefaultBrowserVersion(programFilesEnvs,
                 winBrowserNames, "chromium-browser",
                 "/Applications/Chromium.app/Contents/MacOS/Chromium",
-                "--version", getDriverManagerType().toString());
+                "--version");
     }
 
 }

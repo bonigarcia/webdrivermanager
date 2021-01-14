@@ -168,8 +168,7 @@ public class VersionDetector {
 
     public Optional<String> getDefaultBrowserVersion(String[] programFilesEnvs,
             String[] winBrowserNames, String linuxBrowserName,
-            String macBrowserName, String versionFlag,
-            String browserNameInOutput) {
+            String macBrowserName, String versionFlag) {
 
         String browserPath = config.getBrowserPath();
         if (IS_OS_WINDOWS) {

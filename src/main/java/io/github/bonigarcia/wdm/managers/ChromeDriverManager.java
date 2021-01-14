@@ -124,7 +124,7 @@ public class ChromeDriverManager extends WebDriverManager {
                 .getDefaultBrowserVersion(programFilesEnvs, winBrowserNames,
                         "google-chrome",
                         "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
-                        "--version", getDriverManagerType().toString());
+                        "--version");
 
         if (IS_OS_WINDOWS && !browserVersion.isPresent()) {
             log.debug(

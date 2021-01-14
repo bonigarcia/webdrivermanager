@@ -161,8 +161,7 @@ public class OperaDriverManager extends WebDriverManager {
                 "\\\\Opera\\\\launcher.exe" };
         return versionDetector.getDefaultBrowserVersion(programFilesEnvs,
                 winBrowserNames, "opera",
-                "/Applications/Opera.app/Contents/MacOS/Opera", "--version",
-                "");
+                "/Applications/Opera.app/Contents/MacOS/Opera", "--version");
     }
 
     @Override
