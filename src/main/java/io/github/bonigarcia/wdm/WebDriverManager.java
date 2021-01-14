@@ -1023,12 +1023,16 @@ public abstract class WebDriverManager {
         return LATEST_RELEASE;
     }
 
+    protected String getOsLabel() {
+        return "";
+    }
+
     protected Optional<String> getDriverVersionFromRepository(
             Optional<String> driverVersion) {
         return config().isAvoidReadReleaseFromRepository() ? empty()
                 : versionDetector.getDriverVersionFromRepository(driverVersion,
                         getDriverUrl(), getVersionCharset(), getDriverName(),
-                        getLatestVersionLabel(), LATEST_RELEASE);
+                        getLatestVersionLabel(), LATEST_RELEASE, getOsLabel());
     }
 
     protected void reset() {

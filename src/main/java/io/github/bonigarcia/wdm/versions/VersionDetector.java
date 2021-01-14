@@ -145,9 +145,9 @@ public class VersionDetector {
     public Optional<String> getDriverVersionFromRepository(
             Optional<String> driverVersion, URL driverUrl,
             Charset versionCharset, String driverName, String versionLabel,
-            String latestLabel) {
+            String latestLabel, String osLabel) {
         String url = driverVersion.isPresent()
-                ? driverUrl + latestLabel + "_" + driverVersion.get()
+                ? driverUrl + latestLabel + "_" + driverVersion.get() + osLabel
                 : driverUrl + versionLabel;
         Optional<String> result = Optional.empty();
         try (InputStream response = httpClient

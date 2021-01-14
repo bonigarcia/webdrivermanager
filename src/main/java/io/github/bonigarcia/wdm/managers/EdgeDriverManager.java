@@ -160,6 +160,20 @@ public class EdgeDriverManager extends WebDriverManager {
     }
 
     @Override
+    protected String getOsLabel() {
+        String label = "_";
+        String os = config().getOs();
+        if (os.equals("WIN")) {
+            label += "WINDOWS";
+        } else if (os.equals("MAC")) {
+            label += "MACOS";
+        } else { // LINUX
+            label += os;
+        }
+        return label;
+    }
+
+    @Override
     protected Optional<URL> buildUrl(String driverVersion) {
         Optional<URL> optionalUrl = empty();
         if (!config().isUseMirror()) {

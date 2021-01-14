@@ -57,10 +57,12 @@ public class EdgeLatestVersionTest {
         Charset versionCharset = UTF_16;
         String driverName = "msedgedriver";
         String versionLabel = "LATEST_STABLE";
+        String osLabel = "";
 
         Optional<String> driverVersionFromRepository = versionDetector
                 .getDriverVersionFromRepository(driverVersion, driverUrl,
-                        versionCharset, driverName, versionLabel, versionLabel);
+                        versionCharset, driverName, versionLabel, versionLabel,
+                        osLabel);
         assertTrue(driverVersionFromRepository.isPresent());
         String edgeVersion = driverVersionFromRepository.get();
         log.debug("driverVersionFromRepository {}", edgeVersion);
