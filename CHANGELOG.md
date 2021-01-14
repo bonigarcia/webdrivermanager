@@ -1,9 +1,20 @@
 # Changelog
 
+## [4.3.0] - 2021-01-14
+### Added
+- Detect Edge version also in Linux
+- Read LATEST_RELEASE_version_OS (where OS=WINDOWS|LINUX|MACOS) for msedgedriver
+
+### Fixed
+- Make more robust browser distro detection (issue #586)
+
+### Changed
+- Make more robust browser major version detection from POSIX output (issue #576)
+
+
 ## [4.2.2] - 2020-09-21
 ### Fixed
 - Actual fixed for issue #554 (Windows Edge driver download fails with 404)
-
 
 
 ## [4.2.1] - 2020-09-21
