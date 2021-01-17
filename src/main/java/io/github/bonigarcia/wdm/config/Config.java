@@ -278,7 +278,7 @@ public class Config {
     }
 
     private String defaultOsName() {
-        String osName = System.getProperty("os.name");
+        String osName = System.getProperty("os.name").toLowerCase(ROOT);
         if (IS_OS_WINDOWS) {
             osName = WIN.name();
         } else if (IS_OS_LINUX) {
@@ -286,7 +286,7 @@ public class Config {
         } else if (IS_OS_MAC) {
             osName = MAC.name();
         }
-        return osName.toLowerCase(ROOT);
+        return osName;
     }
 
     private String defaultArchitecture() {
