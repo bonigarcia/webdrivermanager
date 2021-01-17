@@ -17,6 +17,7 @@
 package io.github.bonigarcia.wdm.managers;
 
 import static io.github.bonigarcia.wdm.config.DriverManagerType.OPERA;
+import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 
 import java.io.File;
@@ -112,7 +113,7 @@ public class OperaDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected File postDownload(File archive) {
+    protected List<File> postDownload(File archive) {
         log.trace("Post processing for Opera: {}", archive);
 
         File extractFolder = archive.getParentFile()
@@ -148,7 +149,7 @@ public class OperaDriverManager extends WebDriverManager {
             } finally {
                 downloader.deleteFolder(extractFolder);
             }
-            return target;
+            return singletonList(target);
         } else {
             return super.postDownload(archive);
         }

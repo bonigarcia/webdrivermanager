@@ -43,8 +43,9 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Optional;
-import java.util.function.UnaryOperator;
+import java.util.function.Function;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
@@ -69,10 +70,10 @@ public class Downloader {
 
     HttpClient httpClient;
     Config config;
-    UnaryOperator<File> postDownloadFunction;
+    Function<File, List<File>> postDownloadFunction;
 
     public Downloader(HttpClient httpClient, Config config,
-            UnaryOperator<File> postDownloadFunction) {
+            Function<File, List<File>> postDownloadFunction) {
         this.httpClient = httpClient;
         this.config = config;
         this.postDownloadFunction = postDownloadFunction;
@@ -132,8 +133,9 @@ public class Downloader {
         copyInputStreamToFile(httpClient.execute(httpClient.createHttpGet(url))
                 .getEntity().getContent(), temporaryFile);
 
-        File extractedFile = extract(temporaryFile);
-        File resultingDriver = new File(targetFolder, extractedFile.getName());
+        List<File> extractedFiles = extract(temporaryFile);
+        File resultingDriver = new File(targetFolder,
+                extractedFiles.iterator().next().getName());
         boolean driverExists = resultingDriver.exists();
 
         if (!driverExists || config.isForceDownload()) {
@@ -141,7 +143,9 @@ public class Downloader {
                 log.debug("Overriding former driver {}", resultingDriver);
                 deleteFile(resultingDriver);
             }
-            moveFileToDirectory(extractedFile, targetFolder, true);
+            for (File f : extractedFiles) {
+                moveFileToDirectory(f, targetFolder, true);
+            }
         }
         if (!config.isExecutable(resultingDriver)) {
             setFileExecutable(resultingDriver);
@@ -170,7 +174,7 @@ public class Downloader {
         return empty();
     }
 
-    private File extract(File compressedFile) throws IOException {
+    private List<File> extract(File compressedFile) throws IOException {
         String fileName = compressedFile.getName().toLowerCase(ROOT);
 
         boolean extractFile = !fileName.endsWith("exe")
@@ -192,9 +196,7 @@ public class Downloader {
             deleteFile(compressedFile);
         }
 
-        File result = postDownloadFunction.apply(compressedFile)
-                .getAbsoluteFile();
-        log.trace("Resulting driver {}", result);
+        List<File> result = postDownloadFunction.apply(compressedFile);
 
         return result;
     }

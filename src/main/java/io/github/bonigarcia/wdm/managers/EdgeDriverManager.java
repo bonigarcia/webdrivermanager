@@ -17,6 +17,7 @@
 package io.github.bonigarcia.wdm.managers;
 
 import static io.github.bonigarcia.wdm.config.DriverManagerType.EDGE;
+import static java.util.Locale.ROOT;
 import static java.util.Optional.empty;
 import static org.apache.commons.io.FileUtils.listFiles;
 
@@ -26,6 +27,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -108,18 +110,28 @@ public class EdgeDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected File postDownload(File archive) {
+    protected List<File> postDownload(File archive) {
         Collection<File> listFiles = listFiles(new File(archive.getParent()),
                 null, true);
         Iterator<File> iterator = listFiles.iterator();
         File file = null;
+
+        List<File> files = new ArrayList<>();
         while (iterator.hasNext()) {
             file = iterator.next();
-            if (file.getName().contains(getDriverName())) {
-                return file;
+            String fileName = file.getName();
+            if (fileName.contains(getDriverName())) {
+                log.trace(
+                        "Adding {} at the begining of the resulting file list",
+                        fileName);
+                files.add(0, file);
+            } else if (fileName.toLowerCase(ROOT).endsWith(".dylib")) {
+                log.trace("Adding {} to the resulting file list", fileName);
+                files.add(file);
             }
         }
-        return file;
+
+        return files;
     }
 
     @Override

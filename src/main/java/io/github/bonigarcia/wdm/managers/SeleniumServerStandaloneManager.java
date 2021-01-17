@@ -17,6 +17,7 @@
 package io.github.bonigarcia.wdm.managers;
 
 import static io.github.bonigarcia.wdm.config.DriverManagerType.SELENIUM_SERVER_STANDALONE;
+import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 
 import java.io.File;
@@ -79,8 +80,8 @@ public class SeleniumServerStandaloneManager extends WebDriverManager {
     }
 
     @Override
-    protected File postDownload(File archive) {
-        return archive;
+    protected List<File> postDownload(File archive) {
+        return singletonList(archive);
     }
 
     @Override

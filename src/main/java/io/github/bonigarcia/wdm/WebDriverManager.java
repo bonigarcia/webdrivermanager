@@ -34,6 +34,7 @@ import static java.lang.Integer.parseInt;
 import static java.lang.String.valueOf;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.charset.Charset.defaultCharset;
+import static java.util.Collections.singletonList;
 import static java.util.Collections.sort;
 import static java.util.Locale.ROOT;
 import static java.util.Optional.empty;
@@ -686,13 +687,13 @@ public abstract class WebDriverManager {
         return optionalBrowserVersion;
     }
 
-    protected File postDownload(File archive) {
+    protected List<File> postDownload(File archive) {
         File parentFolder = archive.getParentFile();
         File[] ls = parentFolder.listFiles();
         for (File f : ls) {
             if (getDriverName().contains(removeExtension(f.getName()))) {
                 log.trace("Found driver in post-download: {}", f);
-                return f;
+                return singletonList(f);
             }
         }
         throw new WebDriverManagerException("Driver " + getDriverName()

@@ -19,6 +19,7 @@ package io.github.bonigarcia.wdm.managers;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.PHANTOMJS;
 import static io.github.bonigarcia.wdm.online.UrlHandler.BETA;
 import static java.io.File.separator;
+import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
 
 import java.io.File;
@@ -110,7 +111,7 @@ public class PhantomJsDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected File postDownload(File archive) {
+    protected List<File> postDownload(File archive) {
         log.trace("PhantomJS package name: {}", archive);
 
         File extractFolder = archive.getParentFile()
@@ -139,7 +140,8 @@ public class PhantomJsDriverManager extends WebDriverManager {
 
         downloader.renameFile(phantomjs, target);
         downloader.deleteFolder(extractFolder);
-        return target;
+
+        return singletonList(target);
     }
 
     @Override
