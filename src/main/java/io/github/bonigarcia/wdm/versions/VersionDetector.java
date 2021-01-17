@@ -172,7 +172,7 @@ public class VersionDetector {
 
         String browserPath = config.getBrowserPath();
         OperatingSystem operatingSystem = config.getOperatingSystem();
-        ;
+
         if (operatingSystem.isWin()) {
             String winName = "";
             for (int j = 0; j < winBrowserNames.length; j++) {
