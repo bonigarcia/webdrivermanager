@@ -21,10 +21,8 @@ import static io.github.bonigarcia.wdm.versions.Shell.getVersionFromPosixOutput;
 import static io.github.bonigarcia.wdm.versions.Shell.getVersionFromWmicOutput;
 import static io.github.bonigarcia.wdm.versions.Shell.runAndWait;
 import static java.lang.invoke.MethodHandles.lookup;
+import static java.util.Locale.ROOT;
 import static java.util.Optional.empty;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_LINUX;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
@@ -39,6 +37,7 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.config.Config;
+import io.github.bonigarcia.wdm.config.OperatingSystem;
 import io.github.bonigarcia.wdm.online.HttpClient;
 
 /**
@@ -172,7 +171,9 @@ public class VersionDetector {
             String macBrowserName, String versionFlag) {
 
         String browserPath = config.getBrowserPath();
-        if (IS_OS_WINDOWS) {
+        OperatingSystem operatingSystem = config.getOperatingSystem();
+        ;
+        if (operatingSystem.isWin()) {
             String winName = "";
             for (int j = 0; j < winBrowserNames.length; j++) {
                 winName = winBrowserNames[j];
@@ -185,11 +186,11 @@ public class VersionDetector {
                     }
                 }
             }
-        } else if (IS_OS_LINUX || IS_OS_MAC) {
+        } else if (operatingSystem.isLinux() || operatingSystem.isMac()) {
             browserPath = getPosixBrowserPath(linuxBrowserName, macBrowserName,
                     browserPath);
             String browserVersionOutput = runAndWait(browserPath, versionFlag);
-            if (browserVersionOutput.toLowerCase().contains("snap")) {
+            if (browserVersionOutput.toLowerCase(ROOT).contains("snap")) {
                 isSnap = true;
             }
             if (!isNullOrEmpty(browserVersionOutput)) {
@@ -205,7 +206,8 @@ public class VersionDetector {
         if (!isNullOrEmpty(browserPath)) {
             return browserPath;
         } else {
-            return IS_OS_LINUX ? linuxBrowserName : macBrowserName;
+            return config.getOperatingSystem().isLinux() ? linuxBrowserName
+                    : macBrowserName;
         }
     }
 

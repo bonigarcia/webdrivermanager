@@ -54,6 +54,7 @@ import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.config.Config;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
+import io.github.bonigarcia.wdm.config.OperatingSystem;
 import io.github.bonigarcia.wdm.config.WebDriverManagerException;
 
 /**
@@ -94,10 +95,10 @@ public class Downloader {
             DriverManagerType driverManagerType, URL url) {
         String zip = url.getFile().substring(url.getFile().lastIndexOf('/'));
         String cachePath = config.getCachePath();
-        String os = config.getOs().toLowerCase(ROOT);
+        OperatingSystem os = config.getOperatingSystem();
         String architecture = config.getArchitecture().toString();
 
-        if (os.equals("win") && (driverManagerType == CHROME
+        if (os.isWin() && (driverManagerType == CHROME
                 || driverManagerType == CHROMIUM)) {
             log.trace(
                     "{} in Windows is only available for 32 bits architecture",
@@ -106,7 +107,7 @@ public class Downloader {
         }
 
         String target = config.isAvoidOutputTree() ? cachePath + zip
-                : cachePath + separator + driverName + separator + os
+                : cachePath + separator + driverName + separator + os.getName()
                         + architecture + separator + driverVersion + zip;
 
         log.trace("Target file for URL {} driver version {} = {}", url,

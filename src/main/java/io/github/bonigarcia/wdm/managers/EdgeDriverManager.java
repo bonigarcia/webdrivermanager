@@ -17,10 +17,8 @@
 package io.github.bonigarcia.wdm.managers;
 
 import static io.github.bonigarcia.wdm.config.DriverManagerType.EDGE;
-import static java.util.Locale.ROOT;
 import static java.util.Optional.empty;
 import static org.apache.commons.io.FileUtils.listFiles;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC_OSX;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,6 +33,7 @@ import java.util.Optional;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
+import io.github.bonigarcia.wdm.config.OperatingSystem;
 
 /**
  * Manager for Microsoft Edge.
@@ -133,7 +132,8 @@ public class EdgeDriverManager extends WebDriverManager {
                 "\\\\Microsoft\\\\Edge Dev\\\\Application\\\\msedge.exe" };
         String macBrowserName = "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge";
         String linuxBrowserName = "microsoft-edge";
-        String versionFlag = IS_OS_MAC_OSX ? "-version" : "--version";
+        String versionFlag = config().getOperatingSystem().isMac() ? "-version"
+                : "--version";
 
         return versionDetector.getDefaultBrowserVersion(programFilesEnvs,
                 winBrowserNames, linuxBrowserName, macBrowserName, versionFlag);
@@ -162,13 +162,16 @@ public class EdgeDriverManager extends WebDriverManager {
     @Override
     protected Optional<String> getOsLabel() {
         String label = "_";
-        String os = config().getOs();
-        if (os.equals("WIN")) {
+        switch (config().getOperatingSystem()) {
+        case WIN:
             label += "WINDOWS";
-        } else if (os.equals("MAC")) {
+            break;
+        case MAC:
             label += "MACOS";
-        } else { // LINUX
-            label += os;
+            break;
+        default:
+            label += config().getOs();
+            break;
         }
         return Optional.of(label);
     }
@@ -178,12 +181,11 @@ public class EdgeDriverManager extends WebDriverManager {
         Optional<URL> optionalUrl = empty();
         if (!config().isUseMirror()) {
             String downloadUrlPattern = config().getEdgeDownloadUrlPattern();
-            String os = config().getOs().toLowerCase(ROOT);
-            String arch = os.contains("win")
-                    ? config().getArchitecture().toString()
+            OperatingSystem os = config().getOperatingSystem();
+            String arch = os.isWin() ? config().getArchitecture().toString()
                     : "64";
             String builtUrl = String.format(downloadUrlPattern, driverVersion,
-                    os, arch);
+                    os.getName(), arch);
             log.debug("Using URL built from repository pattern: {}", builtUrl);
             try {
                 optionalUrl = Optional.of(new URL(builtUrl));

@@ -44,6 +44,23 @@ public enum OperatingSystem {
 
     public boolean matchOs(String os) {
         return osLabelsStream().anyMatch(os::contains)
-                || os.contains(this.name().toLowerCase(ROOT));
+                || os.contains(getName());
     }
+
+    public String getName() {
+        return this.name().toLowerCase(ROOT);
+    }
+
+    public boolean isWin() {
+        return this == WIN;
+    }
+
+    public boolean isMac() {
+        return this == MAC;
+    }
+
+    public boolean isLinux() {
+        return this == LINUX;
+    }
+
 }

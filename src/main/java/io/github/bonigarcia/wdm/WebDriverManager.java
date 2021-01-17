@@ -705,7 +705,7 @@ public abstract class WebDriverManager {
         }
 
         String driverManagerTypeLowerCase = getDriverManagerType().name()
-                .toLowerCase();
+                .toLowerCase(ROOT);
         Optional<String> optionalBrowserVersion;
 
         if (useResolutionCacheWithKey(driverManagerTypeLowerCase)) {
@@ -873,9 +873,9 @@ public abstract class WebDriverManager {
                     urlList.addAll(getDriversFromMirror(new URL(link)));
                 } else if (link.startsWith(driverOrigin)
                         && !link.contains("icons")
-                        && (link.toLowerCase().endsWith(".bz2")
-                                || link.toLowerCase().endsWith(".zip")
-                                || link.toLowerCase().endsWith(".gz"))) {
+                        && (link.toLowerCase(ROOT).endsWith(".bz2")
+                                || link.toLowerCase(ROOT).endsWith(".zip")
+                                || link.toLowerCase(ROOT).endsWith(".gz"))) {
                     urlList.add(new URL(link));
                 }
             }
@@ -1012,7 +1012,7 @@ public abstract class WebDriverManager {
 
     protected FilenameFilter getFolderFilter() {
         return (dir, name) -> dir.isDirectory()
-                && name.toLowerCase().contains(getDriverName());
+                && name.toLowerCase(ROOT).contains(getDriverName());
     }
 
     protected Charset getVersionCharset() {
@@ -1119,7 +1119,7 @@ public abstract class WebDriverManager {
     }
 
     protected String getKeyForResolutionCache() {
-        return getDriverManagerType().name().toLowerCase();
+        return getDriverManagerType().name().toLowerCase(ROOT);
     }
 
     protected String getDriverVersionLabel(String driverVersion) {

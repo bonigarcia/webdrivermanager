@@ -17,9 +17,7 @@
 package io.github.bonigarcia.wdm.managers;
 
 import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROME;
-import static java.util.Locale.ROOT;
 import static java.util.Optional.empty;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -33,6 +31,7 @@ import javax.xml.namespace.NamespaceContext;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
+import io.github.bonigarcia.wdm.config.OperatingSystem;
 
 /**
  * Manager for Chrome.
@@ -126,7 +125,8 @@ public class ChromeDriverManager extends WebDriverManager {
                         "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
                         "--version");
 
-        if (IS_OS_WINDOWS && !browserVersion.isPresent()) {
+        if (config().getOperatingSystem().isWin()
+                && !browserVersion.isPresent()) {
             log.debug(
                     "Chrome version not discovered using wmic... trying reading the registry");
             browserVersion = versionDetector.getBrowserVersionFromWinRegistry(
@@ -161,10 +161,10 @@ public class ChromeDriverManager extends WebDriverManager {
         Optional<URL> optionalUrl = empty();
         if (!config().isUseMirror()) {
             String downloadUrlPattern = config().getChromeDownloadUrlPattern();
-            String os = config().getOs().toLowerCase(ROOT);
-            String arch = os.contains("win") ? "32" : "64";
+            OperatingSystem os = config().getOperatingSystem();
+            String arch = os.isWin() ? "32" : "64";
             String builtUrl = String.format(downloadUrlPattern, driverVersion,
-                    os, arch);
+                    os.getName(), arch);
             log.debug("Using URL built from repository pattern: {}", builtUrl);
             try {
                 optionalUrl = Optional.of(new URL(builtUrl));
