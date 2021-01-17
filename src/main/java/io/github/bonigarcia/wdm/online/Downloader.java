@@ -196,9 +196,7 @@ public class Downloader {
             deleteFile(compressedFile);
         }
 
-        List<File> result = postDownloadFunction.apply(compressedFile);
-
-        return result;
+        return postDownloadFunction.apply(compressedFile);
     }
 
     private void unZip(File compressedFile) throws IOException {
