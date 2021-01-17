@@ -1,5 +1,13 @@
 # Changelog
 
+## [4.3.1] - 2021-01-18
+### Fixed
+- Include dylib libraries together with msedgedriver (issue #593)
+
+### Changed
+- Clean logic for operating system handling
+
+
 ## [4.3.0] - 2021-01-14
 ### Added
 - Detect Edge version also in Linux
