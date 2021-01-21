@@ -16,19 +16,19 @@
  */
 package io.github.bonigarcia.wdm.test.chromium;
 
-import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
-import static org.junit.Assume.assumeTrue;
-
-import java.io.File;
-
+import io.github.bonigarcia.wdm.WebDriverManager;
+import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
-import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+
+import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
+import static org.junit.Assume.assumeTrue;
 
 /**
  * Test with Google Chromium browser.
@@ -45,8 +45,8 @@ public class ChromiumTest extends BrowserTestParent {
 
     @Before
     public void setupTest() {
-        File chromiumPath = new File(getChromiumPath());
-        assumeTrue(chromiumPath.exists());
+        String chromiumPath = getChromiumPath();
+        assumeTrue(Files.exists(Paths.get(chromiumPath)));
 
         ChromeOptions options = new ChromeOptions();
         options.setBinary(chromiumPath);
@@ -59,9 +59,10 @@ public class ChromiumTest extends BrowserTestParent {
                     .replaceAll("\\\\", "\\\\\\\\");
             return localAppDat + "\\Chromium\\Application\\chrome.exe";
         } else {
+            String linuxPath = "/usr/bin/chromium";
             return IS_OS_MAC
                     ? "/Applications/Chromium.app/Contents/MacOS/Chromium"
-                    : "/usr/bin/chromium-browser";
+                    : Files.exists(Paths.get(linuxPath)) ? linuxPath : linuxPath + "-browser";
         }
     }
 

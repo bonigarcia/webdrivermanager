@@ -61,10 +61,16 @@ public class ChromiumDriverManager extends ChromeDriverManager {
                 getProgramFilesEnv() };
         String[] winBrowserNames = {
                 "\\\\Chromium\\\\Application\\\\chrome.exe" };
-        return versionDetector.getDefaultBrowserVersion(programFilesEnvs,
+        Optional<String> browserVersion = versionDetector.getDefaultBrowserVersion(programFilesEnvs,
                 winBrowserNames, "chromium-browser",
                 "/Applications/Chromium.app/Contents/MacOS/Chromium",
                 "--version");
+
+        if (config.getOperatingSystem().isLinux() && !browserVersion.isPresent())
+            browserVersion = versionDetector.getDefaultBrowserVersion(null, null,
+                    "chromium", null, "--version");
+
+        return browserVersion;
     }
 
 }
