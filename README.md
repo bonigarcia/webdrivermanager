@@ -177,7 +177,13 @@ driver = (WebDriver) chromeClass.newInstance();
 
 ### Examples
 
-Check out the repository [WebDriverManager Examples] which contains different JUnit 4 test examples using WebDriverManager.
+The following repositories contains different examples using WebDriverManager:
+
+* [WebDriverManager Basic]: Basic project using JUnit 4, Selenium WebDriver, and WebDriverManager.
+* [WebDriverManager Examples]: Different examples with JUnit 4, Selenium WebDriver, and WebDriverManager.
+* [WebDriverManager Spring-Boot]: Basic project using Spring-Boot, JUnit 4, Selenium WebDriver, and WebDriverManager.
+* [WebDriverManager Agent Example]: Maven project using WebDriverManager as Agent.
+* [Selenium-Jupiter Examples]: Examples using JUnit 5 and [Selenium-Jupiter].
 
 
 ### Resolution cache
@@ -651,7 +657,7 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 
 ## About
 
-WebDriverManager (Copyright &copy; 2015-2020) is a project created and maintained by [Boni Garcia] and licensed under the terms of the [Apache 2.0 License]. Comments, questions and suggestions are always very [welcome][WebDriverManager issues]!
+WebDriverManager (Copyright &copy; 2015-2021) is a project created and maintained by [Boni Garcia] and licensed under the terms of the [Apache 2.0 License].
 
 [Apache HTTP Client]: https://hc.apache.org/httpcomponents-client-ga/
 [Apache HTTP Client logging practices]: https://hc.apache.org/httpcomponents-client-ga/logging.html
@@ -668,10 +674,12 @@ WebDriverManager (Copyright &copy; 2015-2020) is a project created and maintaine
 [Selenium-Jupiter]: https://github.com/bonigarcia/selenium-jupiter/
 [Stack Overflow]: https://stackoverflow.com/questions/tagged/webdrivermanager-java
 [versions.properties]: https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/versions.properties
+[WebDriverManager Basic]: https://github.com/bonigarcia/webdrivermanager-basic
 [WebDriverManager Examples]: https://github.com/bonigarcia/webdrivermanager-examples
-[WebDriverManager issues]: https://github.com/bonigarcia/webdrivermanager/issues
+[WebDriverManager Spring-Boot]: https://github.com/bonigarcia/webdrivermanager-spring-boot
+[WebDriverManager Agent Example]: https://github.com/bonigarcia/wdm-agent-example
+[Selenium-Jupiter Examples]: https://github.com/bonigarcia/selenium-jupiter-examples
 [fat-jar]: https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-4.3.1/webdrivermanager-4.3.1-fat.jar
-[survey]: http://tiny.cc/wdm-survey
 [Docker container]: https://hub.docker.com/repository/docker/bonigarcia/webdrivermanager
 [chromedriver-latest]: https://chromedriver.storage.googleapis.com/LATEST_RELEASE
 [msedgedriver-latest]: https://msedgedriver.azureedge.net/LATEST_STABLE
