@@ -57,7 +57,6 @@ public class OtherWebDriverTest {
     @Parameters(name = "{index}: {0} {1}")
     public static Collection<Object[]> data() {
         return asList(new Object[][] {
-                { SafariDriver.class, WebDriverException.class },
                 { EventFiringWebDriver.class, InstantiationException.class },
                 { HtmlUnitDriver.class, null },
                 { RemoteWebDriver.class, IllegalAccessException.class } });

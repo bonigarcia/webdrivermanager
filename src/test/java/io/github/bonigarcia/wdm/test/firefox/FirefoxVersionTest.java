@@ -17,6 +17,7 @@
 package io.github.bonigarcia.wdm.test.firefox;
 
 import org.junit.Before;
+import org.junit.Ignore;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.test.base.VersionTestParent;
@@ -27,6 +28,7 @@ import io.github.bonigarcia.wdm.test.base.VersionTestParent;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.5.0
  */
+@Ignore
 public class FirefoxVersionTest extends VersionTestParent {
 
     @Before
