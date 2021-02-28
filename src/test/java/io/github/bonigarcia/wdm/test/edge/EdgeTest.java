@@ -29,6 +29,7 @@ import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.3.0
  */
+@Ignore("Edge not available in CI for all operating systems")
 public class EdgeTest extends BrowserTestParent {
 
     @BeforeClass
