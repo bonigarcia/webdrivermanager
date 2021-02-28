@@ -45,8 +45,7 @@ public enum DriverManagerType {
         return browserClass;
     }
 
-    @Override
-    public String toString() {
+    public String getBrowserName() {
         switch (this) {
         case CHROME:
             return "Chrome";

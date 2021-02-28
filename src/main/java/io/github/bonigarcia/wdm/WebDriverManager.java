@@ -604,7 +604,8 @@ public abstract class WebDriverManager {
             if (optionalDriverVersion.isPresent()) {
                 driverVersion = optionalDriverVersion.get();
                 log.info("Using {} {} (resolved driver for {} {})",
-                        getDriverName(), driverVersion, getDriverManagerType(),
+                        getDriverName(), driverVersion,
+                        getDriverManagerType().getBrowserName(),
                         optionalBrowserVersion.get());
 
                 if (config.getIgnoreVersions().contains(driverVersion)) {
