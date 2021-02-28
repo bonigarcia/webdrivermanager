@@ -19,6 +19,7 @@ package io.github.bonigarcia.wdm.test.firefox;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
@@ -38,7 +39,9 @@ public class FirefoxTest extends BrowserTestParent {
 
     @Before
     public void setupTest() {
-        driver = new FirefoxDriver();
+        FirefoxOptions options = new FirefoxOptions();
+        options.setHeadless(true);
+        driver = new FirefoxDriver(options);
     }
 
 }

@@ -19,6 +19,7 @@ package io.github.bonigarcia.wdm.test.chrome;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
@@ -38,7 +39,9 @@ public class ChromeTest extends BrowserTestParent {
 
     @Before
     public void setupTest() {
-        driver = new ChromeDriver();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless");
+        driver = new ChromeDriver(options);
     }
 
 }

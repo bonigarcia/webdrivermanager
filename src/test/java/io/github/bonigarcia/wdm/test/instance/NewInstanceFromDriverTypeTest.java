@@ -16,15 +16,21 @@
  */
 package io.github.bonigarcia.wdm.test.instance;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
-import io.github.bonigarcia.wdm.config.DriverManagerType;
-
-import org.junit.*;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
+
+import java.lang.reflect.Constructor;
+
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+import io.github.bonigarcia.wdm.config.DriverManagerType;
 
 /**
  * Test browser new instance creation from DriverManagerTypeTest.
@@ -43,10 +49,13 @@ public class NewInstanceFromDriverTypeTest {
     }
 
     @Before
-    public void setupTest() throws ClassNotFoundException,
-            IllegalAccessException, InstantiationException {
-        Class<?> driverClass = Class.forName(driverManagerType.browserClass());
-        driver = (WebDriver) driverClass.newInstance();
+    public void setupTest() throws Exception {
+        Constructor<?> declaredConstructor = Class
+                .forName(driverManagerType.browserClass())
+                .getDeclaredConstructor(ChromeOptions.class);
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless");
+        driver = (WebDriver) declaredConstructor.newInstance(options);
     }
 
     @Test
