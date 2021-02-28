@@ -18,8 +18,6 @@ package io.github.bonigarcia.wdm.managers;
 
 import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROMIUM;
 
-import java.util.Optional;
-
 import io.github.bonigarcia.wdm.config.DriverManagerType;
 
 /**
@@ -53,18 +51,6 @@ public class ChromiumDriverManager extends ChromeDriverManager {
     @Override
     protected void setBrowserVersion(String browserVersion) {
         config().setChromiumVersion(browserVersion);
-    }
-
-    @Override
-    protected Optional<String> getBrowserVersionFromTheShell() {
-        String[] programFilesEnvs = { "LOCALAPPDATA", getOtherProgramFilesEnv(),
-                getProgramFilesEnv() };
-        String[] winBrowserNames = {
-                "\\\\Chromium\\\\Application\\\\chrome.exe" };
-        return versionDetector.getDefaultBrowserVersion(programFilesEnvs,
-                winBrowserNames, "chromium-browser",
-                "/Applications/Chromium.app/Contents/MacOS/Chromium",
-                "--version");
     }
 
 }

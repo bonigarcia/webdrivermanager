@@ -135,23 +135,6 @@ public class EdgeDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected Optional<String> getBrowserVersionFromTheShell() {
-        String[] programFilesEnvs = { getOtherProgramFilesEnv(),
-                getProgramFilesEnv() };
-        String[] winBrowserNames = {
-                "\\\\Microsoft\\\\Edge\\\\Application\\\\msedge.exe",
-                "\\\\Microsoft\\\\Edge Beta\\\\Application\\\\msedge.exe",
-                "\\\\Microsoft\\\\Edge Dev\\\\Application\\\\msedge.exe" };
-        String macBrowserName = "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge";
-        String linuxBrowserName = "microsoft-edge";
-        String versionFlag = config().getOperatingSystem().isMac() ? "-version"
-                : "--version";
-
-        return versionDetector.getDefaultBrowserVersion(programFilesEnvs,
-                winBrowserNames, linuxBrowserName, macBrowserName, versionFlag);
-    }
-
-    @Override
     protected Optional<String> getLatestDriverVersionFromRepository() {
         if (config().isUseBetaVersions()
                 || config().isAvoidReadReleaseFromRepository()) {

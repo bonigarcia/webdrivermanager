@@ -81,8 +81,12 @@ public class Config {
     ConfigKey<Integer> timeout = new ConfigKey<>("wdm.timeout", Integer.class);
     ConfigKey<Boolean> versionsPropertiesOnlineFirst = new ConfigKey<>(
             "wdm.versionsPropertiesOnlineFirst", Boolean.class);
+    ConfigKey<Boolean> commandsPropertiesOnlineFirst = new ConfigKey<>(
+            "wdm.commandsPropertiesOnlineFirst", Boolean.class);
     ConfigKey<URL> versionsPropertiesUrl = new ConfigKey<>(
             "wdm.versionsPropertiesUrl", URL.class);
+    ConfigKey<URL> commandsPropertiesUrl = new ConfigKey<>(
+            "wdm.commandsPropertiesUrl", URL.class);
     ConfigKey<Boolean> clearResolutionCache = new ConfigKey<>(
             "wdm.clearResolutionCache", Boolean.class);
     ConfigKey<Boolean> clearDriverCache = new ConfigKey<>(
@@ -184,13 +188,14 @@ public class Config {
 
     ConfigKey<Integer> serverPort = new ConfigKey<>("wdm.serverPort",
             Integer.class);
-    ConfigKey<String> browserPath = new ConfigKey<>("wdm.browserPath",
-            String.class);
     ConfigKey<Integer> ttl = new ConfigKey<>("wdm.ttl", Integer.class);
     ConfigKey<Integer> ttlForBrowsers = new ConfigKey<>("wdm.ttlForBrowsers",
             Integer.class);
     ConfigKey<String> resolutionCache = new ConfigKey<>("wdm.resolutionCache",
             String.class);
+
+    ConfigKey<String> browserVersionDetectionCommand = new ConfigKey<>(
+            "wdm.browserVersionDetectionCommand", String.class);
 
     private <T> T resolve(ConfigKey<T> configKey) {
         String name = configKey.getName();
@@ -456,12 +461,30 @@ public class Config {
         return this;
     }
 
+    public boolean getCommandsPropertiesOnlineFirst() {
+        return resolve(commandsPropertiesOnlineFirst);
+    }
+
+    public Config setCommandsPropertiesOnlineFirst(boolean value) {
+        this.commandsPropertiesOnlineFirst.setValue(value);
+        return this;
+    }
+
     public URL getVersionsPropertiesUrl() {
         return resolve(versionsPropertiesUrl);
     }
 
     public Config setVersionsPropertiesUrl(URL value) {
         this.versionsPropertiesUrl.setValue(value);
+        return this;
+    }
+
+    public URL getCommandsPropertiesUrl() {
+        return resolve(commandsPropertiesUrl);
+    }
+
+    public Config setCommandsPropertiesUrl(URL value) {
+        this.commandsPropertiesUrl.setValue(value);
         return this;
     }
 
@@ -622,15 +645,6 @@ public class Config {
 
     public Config setResolutionCache(String value) {
         this.resolutionCache.setValue(value);
-        return this;
-    }
-
-    public String getBrowserPath() {
-        return resolve(browserPath);
-    }
-
-    public Config setBrowserPath(String value) {
-        this.browserPath.setValue(value);
         return this;
     }
 
@@ -928,6 +942,15 @@ public class Config {
 
     public Config setSeleniumServerStandaloneUrl(URL value) {
         this.seleniumServerStandaloneUrl.setValue(value);
+        return this;
+    }
+
+    public String getBrowserVersionDetectionCommand() {
+        return resolve(browserVersionDetectionCommand);
+    }
+
+    public Config setBrowserVersionDetectionCommand(String value) {
+        this.browserVersionDetectionCommand.setValue(value);
         return this;
     }
 

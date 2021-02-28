@@ -50,7 +50,8 @@ public class ChromeBetaTest {
     public static void setupClass() {
         assumeTrue(chromeBetaFile.exists());
         WebDriverManager.chromedriver().clearResolutionCache()
-                .browserPath(chromeBetaPath).setup();
+                .browserVersionDetectionCommand(chromeBetaPath + " --version")
+                .setup();
     }
 
     @Before

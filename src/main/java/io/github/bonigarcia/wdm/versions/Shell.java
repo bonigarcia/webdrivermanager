@@ -74,24 +74,4 @@ public class Shell {
         return output.trim();
     }
 
-    public static String getVersionFromWmicOutput(String output) {
-        int i = output.indexOf('=');
-        int j = output.indexOf('.');
-        return i != -1 && j != -1 ? output.substring(i + 1, j) : output;
-    }
-
-    public static String getVersionFromPosixOutput(String output) {
-        String filtered = output.replaceAll("[^\\d^\\.]", "");
-        int i = filtered.indexOf('.');
-        return i != -1 ? filtered.substring(0, i) : filtered;
-    }
-
-    public static String getVersionFromPowerShellOutput(String output) {
-        int i = output.indexOf("Version");
-        int j = output.indexOf(':', i);
-        int k = output.indexOf('.', j);
-        return i != -1 && j != -1 && k != -1 ? output.substring(j + 1, k).trim()
-                : output;
-    }
-
 }

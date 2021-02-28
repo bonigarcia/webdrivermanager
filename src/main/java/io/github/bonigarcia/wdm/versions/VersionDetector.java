@@ -17,10 +17,9 @@
 package io.github.bonigarcia.wdm.versions;
 
 import static io.github.bonigarcia.wdm.config.Config.isNullOrEmpty;
-import static io.github.bonigarcia.wdm.versions.Shell.getVersionFromPosixOutput;
-import static io.github.bonigarcia.wdm.versions.Shell.getVersionFromWmicOutput;
 import static io.github.bonigarcia.wdm.versions.Shell.runAndWait;
 import static java.lang.invoke.MethodHandles.lookup;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Locale.ROOT;
 import static java.util.Optional.empty;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -28,10 +27,17 @@ import static org.slf4j.LoggerFactory.getLogger;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringReader;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -48,20 +54,22 @@ import io.github.bonigarcia.wdm.online.HttpClient;
  */
 public class VersionDetector {
 
-    static final String REG_SZ = "REG_SZ";
     static final String ONLINE = "online";
     static final String LOCAL = "local";
+    static final String VERSIONS_PROPERTIES = "versions.properties";
+    static final String COMMANDS_PROPERTIES = "commands.properties";
 
     final Logger log = getLogger(lookup().lookupClass());
 
     Config config;
     HttpClient httpClient;
-    Properties versionsProperties;
+    Map<String, Properties> propertiesMap;
     boolean isSnap;
 
     public VersionDetector(Config config, HttpClient httpClient) {
         this.config = config;
         this.httpClient = httpClient;
+        propertiesMap = new HashMap<>();
     }
 
     public Optional<String> getDriverVersionFromProperties(String key) {
@@ -71,74 +79,19 @@ public class VersionDetector {
         }
 
         boolean online = config.getVersionsPropertiesOnlineFirst();
+        String propertiesName = VERSIONS_PROPERTIES;
         String onlineMessage = online ? ONLINE : LOCAL;
-        log.debug("Getting driver version for {} from {} versions.properties",
-                key, onlineMessage);
-        String value = getVersionFromProperties(online).getProperty(key);
+        log.debug("Getting driver version for {} from {} {}", key,
+                onlineMessage, propertiesName);
+        String value = getProperties(propertiesName, online).getProperty(key);
         if (value == null) {
             String notOnlineMessage = online ? LOCAL : ONLINE;
-            log.debug(
-                    "Driver for {} not found in {} properties (using {} version.properties)",
-                    key, onlineMessage, notOnlineMessage);
-            versionsProperties = null;
-            value = getVersionFromProperties(!online).getProperty(key);
+            log.debug("Driver for {} not found in {} properties (using {} {})",
+                    key, onlineMessage, notOnlineMessage, propertiesName);
+            propertiesMap.remove(propertiesName);
+            value = getProperties(propertiesName, !online).getProperty(key);
         }
         return value == null ? empty() : Optional.of(value);
-    }
-
-    public Properties getVersionFromProperties(boolean online) {
-        if (versionsProperties != null) {
-            log.trace("Already created versions.properties");
-            return versionsProperties;
-        } else {
-            try (InputStream inputStream = getVersionsInputStream(online)) {
-                versionsProperties = new Properties();
-                versionsProperties.load(inputStream);
-            } catch (Exception e) {
-                versionsProperties = null;
-                throw new IllegalStateException(
-                        "Cannot read versions.properties", e);
-            }
-            return versionsProperties;
-        }
-    }
-
-    public InputStream getVersionsInputStream(boolean online)
-            throws IOException {
-        String onlineMessage = online ? ONLINE : LOCAL;
-        log.trace("Reading {} version.properties to find out driver version",
-                onlineMessage);
-        InputStream inputStream;
-        try {
-            if (online) {
-                inputStream = getOnlineVersionsInputStream();
-            } else {
-                inputStream = getLocalVersionsInputStream();
-            }
-        } catch (Exception e) {
-            String exceptionMessage = online ? LOCAL : ONLINE;
-            log.warn("Error reading version.properties, using {} instead",
-                    exceptionMessage);
-            if (online) {
-                inputStream = getLocalVersionsInputStream();
-            } else {
-                inputStream = getOnlineVersionsInputStream();
-            }
-        }
-        return inputStream;
-    }
-
-    public InputStream getLocalVersionsInputStream() {
-        InputStream inputStream;
-        inputStream = Config.class.getResourceAsStream("/versions.properties");
-        return inputStream;
-    }
-
-    public InputStream getOnlineVersionsInputStream() throws IOException {
-        return httpClient
-                .execute(httpClient
-                        .createHttpGet(config.getVersionsPropertiesUrl()))
-                .getEntity().getContent();
     }
 
     public Optional<String> getDriverVersionFromRepository(
@@ -166,78 +119,158 @@ public class VersionDetector {
         return result;
     }
 
-    public Optional<String> getDefaultBrowserVersion(String[] programFilesEnvs,
-            String[] winBrowserNames, String linuxBrowserName,
-            String macBrowserName, String versionFlag) {
+    public Optional<String> getBrowserVersionFromTheShell(String browserName) {
+        Optional<String> browserVersionUsingProperties = empty();
+        String browserVersionDetectionCommand = config
+                .getBrowserVersionDetectionCommand();
+        if (!isNullOrEmpty(browserVersionDetectionCommand)) {
+            browserVersionUsingProperties = getBrowserVersionUsingCommand(
+                    browserVersionDetectionCommand);
+        }
+        if (browserVersionUsingProperties.isPresent()) {
+            return browserVersionUsingProperties;
+        }
 
-        String browserPath = config.getBrowserPath();
+        boolean online = config.getCommandsPropertiesOnlineFirst();
+        String propertiesName = COMMANDS_PROPERTIES;
+        Properties commandsProperties = getProperties(propertiesName, online);
+
+        String onlineMessage = online ? ONLINE : LOCAL;
+        log.debug("Detecting {} version using {} {}", browserName,
+                onlineMessage, propertiesName);
+
+        browserVersionUsingProperties = getBrowserVersionUsingProperties(
+                browserName, commandsProperties);
+
+        if (!browserVersionUsingProperties.isPresent()) {
+            String notOnlineMessage = online ? LOCAL : ONLINE;
+            log.debug(
+                    "Browser version for {} not detected using {} properties (using {} {})",
+                    browserName, onlineMessage, notOnlineMessage,
+                    propertiesName);
+
+            commandsProperties = getProperties(propertiesName, !online);
+            browserVersionUsingProperties = getBrowserVersionUsingProperties(
+                    browserName, commandsProperties);
+        }
+
+        return browserVersionUsingProperties;
+    }
+
+    protected Optional<String> getBrowserVersionUsingProperties(
+            String browserName, Properties commandsProperties) {
         OperatingSystem operatingSystem = config.getOperatingSystem();
+        List<String> commandsPerOs = Collections.list(commandsProperties.keys())
+                .stream().map(Object::toString)
+                .filter(s -> s.contains(browserName))
+                .filter(operatingSystem::matchOs).sorted()
+                .collect(Collectors.toList());
 
-        if (operatingSystem.isWin()) {
-            String winName = "";
-            for (int j = 0; j < winBrowserNames.length; j++) {
-                winName = winBrowserNames[j];
-                for (int i = 0; i < programFilesEnvs.length; i++) {
-                    String browserVersionOutput = getBrowserVersionInWindows(
-                            programFilesEnvs[i], winName, browserPath);
-                    if (!isNullOrEmpty(browserVersionOutput)) {
-                        return Optional.of(
-                                getVersionFromWmicOutput(browserVersionOutput));
-                    }
-                }
-            }
-        } else if (operatingSystem.isLinux() || operatingSystem.isMac()) {
-            browserPath = getPosixBrowserPath(linuxBrowserName, macBrowserName,
-                    browserPath);
-            String browserVersionOutput = runAndWait(browserPath, versionFlag);
-            if (browserVersionOutput.toLowerCase(ROOT).contains("snap")) {
-                isSnap = true;
-            }
-            if (!isNullOrEmpty(browserVersionOutput)) {
-                return Optional
-                        .of(getVersionFromPosixOutput(browserVersionOutput));
+        for (String commandKey : commandsPerOs) {
+            String command = commandsProperties.get(commandKey).toString();
+
+            Optional<String> browserVersionUsingCommand = getBrowserVersionUsingCommand(
+                    command);
+            if (browserVersionUsingCommand.isPresent()) {
+                return browserVersionUsingCommand;
             }
         }
+
         return empty();
     }
 
-    public String getPosixBrowserPath(String linuxBrowserName,
-            String macBrowserName, String browserPath) {
-        if (!isNullOrEmpty(browserPath)) {
-            return browserPath;
+    private Optional<String> getBrowserVersionUsingCommand(String command) {
+        String[] commandArray = command.split(" ");
+
+        String browserVersionOutput;
+        if (Arrays.asList(commandArray).contains("wmic")) {
+            File wmicLocation = findFileLocation("wmic.exe");
+            browserVersionOutput = runAndWait(wmicLocation, commandArray);
         } else {
-            return config.getOperatingSystem().isLinux() ? linuxBrowserName
-                    : macBrowserName;
+            browserVersionOutput = runAndWait(commandArray);
+        }
+
+        if (!isNullOrEmpty(browserVersionOutput)) {
+            if (browserVersionOutput.toLowerCase(ROOT).contains("snap")) {
+                isSnap = true;
+            }
+
+            String parsedBrowserVersion = browserVersionOutput
+                    .replaceAll("[^\\d^\\.]", "");
+            log.trace("Detected browser version is {}", parsedBrowserVersion);
+            return Optional.of(getMajorVersion(parsedBrowserVersion));
+        } else {
+
+            return empty();
         }
     }
 
-    public String getBrowserVersionInWindows(String programFilesEnv,
-            String winBrowserName, String browserPath) {
-        String programFiles = System.getenv(programFilesEnv).replace("\\",
-                "\\\\");
-        String fullBrowserPath = isNullOrEmpty(browserPath)
-                ? programFiles + winBrowserName
-                : browserPath;
-        String wmic = "wmic.exe";
-        return runAndWait(findFileLocation(wmic), wmic, "datafile", "where",
-                "name='" + fullBrowserPath + "'", "get", "Version", "/value");
-    }
-
-    public Optional<String> getBrowserVersionFromWinRegistry(String key,
-            String value) {
-        Optional<String> browserVersionFromRegistry = empty();
-        String regQueryResult = Shell.runAndWait("REG", "QUERY", key, "/v",
-                value);
-        int i = regQueryResult.indexOf(REG_SZ);
-        int j = regQueryResult.indexOf('.', i);
-        if (i != -1 && j != -1) {
-            browserVersionFromRegistry = Optional.of(
-                    regQueryResult.substring(i + REG_SZ.length(), j).trim());
+    protected Properties getProperties(String propertiesName, boolean online) {
+        if (propertiesMap.containsKey(propertiesName)) {
+            log.trace("Already created {}", propertiesName);
+            return propertiesMap.get(propertiesName);
+        } else {
+            Properties properties = null;
+            try (InputStream inputStream = getVersionsInputStream(
+                    propertiesName, online)) {
+                properties = new Properties();
+                properties.load(new StringReader(IOUtils
+                        .toString(inputStream, UTF_8).replace("\\", "\\\\")));
+                propertiesMap.put(propertiesName, properties);
+            } catch (Exception e) {
+                throw new IllegalStateException("Cannot read " + propertiesName,
+                        e);
+            }
+            return properties;
         }
-        return browserVersionFromRegistry;
     }
 
-    public File findFileLocation(String filename) {
+    protected InputStream getVersionsInputStream(String propertiesName,
+            boolean online) throws IOException {
+        String onlineMessage = online ? ONLINE : LOCAL;
+        log.trace("Reading {} {} to find out driver version", onlineMessage,
+                propertiesName);
+        InputStream inputStream;
+        try {
+            if (online) {
+                inputStream = getOnlineInputStream(propertiesName);
+            } else {
+                inputStream = getLocalInputStream(propertiesName);
+            }
+        } catch (Exception e) {
+            String exceptionMessage = online ? LOCAL : ONLINE;
+            log.warn("Error reading {}, using {} instead", propertiesName,
+                    exceptionMessage);
+            if (online) {
+                inputStream = getLocalInputStream(propertiesName);
+            } else {
+                inputStream = getOnlineInputStream(propertiesName);
+            }
+        }
+        return inputStream;
+    }
+
+    protected InputStream getLocalInputStream(String propertiesName) {
+        InputStream inputStream;
+        inputStream = Config.class.getResourceAsStream("/" + propertiesName);
+        return inputStream;
+    }
+
+    protected InputStream getOnlineInputStream(String propertiesName)
+            throws IOException {
+        URL propertiesUrl = propertiesName.equals(VERSIONS_PROPERTIES)
+                ? config.getVersionsPropertiesUrl()
+                : config.getCommandsPropertiesUrl();
+        return httpClient.execute(httpClient.createHttpGet(propertiesUrl))
+                .getEntity().getContent();
+    }
+
+    protected String getMajorVersion(String version) {
+        int i = version.indexOf('.');
+        return i != -1 ? version.substring(0, i) : version;
+    }
+
+    protected File findFileLocation(String filename) {
         // Alternative #1: in System32 folder
         File system32Folder = new File(System.getenv("SystemRoot"), "System32");
         File system32File = new File(system32Folder, filename);
@@ -253,7 +286,7 @@ public class VersionDetector {
         return new File(".");
     }
 
-    public boolean checkFileAndFolder(File folder, File file) {
+    protected boolean checkFileAndFolder(File folder, File file) {
         return folder.exists() && folder.isDirectory() && file.exists()
                 && file.isFile();
     }

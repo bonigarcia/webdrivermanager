@@ -114,29 +114,6 @@ public class ChromeDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected Optional<String> getBrowserVersionFromTheShell() {
-        String[] programFilesEnvs = { getOtherProgramFilesEnv(), "LOCALAPPDATA",
-                getProgramFilesEnv() };
-        String[] winBrowserNames = {
-                "\\\\Google\\\\Chrome\\\\Application\\\\chrome.exe" };
-        Optional<String> browserVersion = versionDetector
-                .getDefaultBrowserVersion(programFilesEnvs, winBrowserNames,
-                        "google-chrome",
-                        "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
-                        "--version");
-
-        if (config().getOperatingSystem().isWin()
-                && !browserVersion.isPresent()) {
-            log.debug(
-                    "Chrome version not discovered using wmic... trying reading the registry");
-            browserVersion = versionDetector.getBrowserVersionFromWinRegistry(
-                    "HKCU\\Software\\Google\\Chrome\\BLBeacon", "version");
-        }
-
-        return browserVersion;
-    }
-
-    @Override
     protected Optional<String> getLatestDriverVersionFromRepository() {
         if (config().isUseBetaVersions()
                 || config().isAvoidReadReleaseFromRepository()) {

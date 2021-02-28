@@ -128,8 +128,6 @@ public abstract class WebDriverManager {
 
     protected abstract List<URL> getDriverUrls() throws IOException;
 
-    protected abstract Optional<String> getBrowserVersionFromTheShell();
-
     protected abstract String getDriverName();
 
     protected abstract String getDriverVersion();
@@ -466,8 +464,9 @@ public abstract class WebDriverManager {
         return instanceMap.get(getDriverManagerType());
     }
 
-    public WebDriverManager browserPath(String browserPath) {
-        config().setBrowserPath(browserPath);
+    public WebDriverManager browserVersionDetectionCommand(
+            String browserVersionCommand) {
+        config().setBrowserVersionDetectionCommand(browserVersionCommand);
         return instanceMap.get(getDriverManagerType());
     }
 
@@ -699,6 +698,11 @@ public abstract class WebDriverManager {
         }
         throw new WebDriverManagerException("Driver " + getDriverName()
                 + " not found (using temporal folder " + parentFolder + ")");
+    }
+
+    protected Optional<String> getBrowserVersionFromTheShell() {
+        return versionDetector.getBrowserVersionFromTheShell(
+                getDriverManagerType().getBrowserName().toLowerCase());
     }
 
     protected Optional<String> detectBrowserVersion() {
