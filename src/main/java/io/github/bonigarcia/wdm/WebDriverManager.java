@@ -820,6 +820,10 @@ public abstract class WebDriverManager {
                 urlHandler.filterByVersion(driverVersion);
             }
 
+            if (urlHandler.getDriverVersion() == null) {
+                break;
+            }
+
             log.debug("Driver to be downloaded {} {}", shortDriverName,
                     urlHandler.getDriverVersion());
             log.trace("Driver URLs after filtering for version: {}",
