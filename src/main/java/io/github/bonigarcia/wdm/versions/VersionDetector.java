@@ -25,6 +25,7 @@ import static java.util.Optional.empty;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
@@ -58,6 +59,7 @@ public class VersionDetector {
     static final String LOCAL = "local";
     static final String VERSIONS_PROPERTIES = "versions.properties";
     static final String COMMANDS_PROPERTIES = "commands.properties";
+    static final String FILE_PROTOCOL = "file";
 
     final Logger log = getLogger(lookup().lookupClass());
 
@@ -179,7 +181,7 @@ public class VersionDetector {
         return empty();
     }
 
-    private Optional<String> getBrowserVersionUsingCommand(String command) {
+    protected Optional<String> getBrowserVersionUsingCommand(String command) {
         String[] commandArray = command.split(" ");
 
         String browserVersionOutput;
@@ -261,8 +263,18 @@ public class VersionDetector {
         URL propertiesUrl = propertiesName.equals(VERSIONS_PROPERTIES)
                 ? config.getVersionsPropertiesUrl()
                 : config.getCommandsPropertiesUrl();
-        return httpClient.execute(httpClient.createHttpGet(propertiesUrl))
-                .getEntity().getContent();
+
+        InputStream inputStream;
+        if (propertiesUrl.getProtocol().equalsIgnoreCase(FILE_PROTOCOL)) {
+            inputStream = new FileInputStream(
+                    new File(propertiesUrl.getFile()));
+        } else {
+            inputStream = httpClient
+                    .execute(httpClient.createHttpGet(propertiesUrl))
+                    .getEntity().getContent();
+        }
+
+        return inputStream;
     }
 
     protected String getMajorVersion(String version) {
