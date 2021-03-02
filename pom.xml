@@ -42,8 +42,6 @@
         <project.build.sourceEncoding>${project.encondig}</project.build.sourceEncoding>
         <project.reporting.outputEncoding>${project.encondig}</project.reporting.outputEncoding>
 
-        <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
-
         <wdm.mainClass>io.github.bonigarcia.wdm.WebDriverManager</wdm.mainClass>
         <wdm.agentClass>io.github.bonigarcia.wdm.WdmAgent</wdm.agentClass>
         <wdm.manifest>src/main/resources/META-INF/MANIFEST.MF</wdm.manifest>
@@ -217,6 +215,7 @@
                 <version>${jacoco-maven-plugin.version}</version>
                 <executions>
                     <execution>
+                        <id>prepare-agent</id>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
