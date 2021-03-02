@@ -27,9 +27,10 @@ jobs:
         java-version: '11'
     - name: Start Xvfb
       run: Xvfb :99 &
-    - name: Test with Maven
+    - name: Run tests in Windows and Mac
+      if: matrix.os != 'ubuntu-latest'
       run: mvn -B test
-    - name: Analyze with SonarCloud
+    - name: Run tests in Linux and SonarCloud scan
       if: matrix.os == 'ubuntu-latest'
       run: >
         mvn -B test sonar:sonar
