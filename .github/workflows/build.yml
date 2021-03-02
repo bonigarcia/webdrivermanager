@@ -11,7 +11,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [windows-latest, ubuntu-latest, macos-latest]
+        os: [ubuntu-latest, windows-latest, macos-latest]
     steps:
     - uses: actions/checkout@v2
     - name: Set up Java
@@ -47,4 +47,5 @@ jobs:
         -Dsonar.projectName=WebDriverManager
         -Dsonar.scm.disabled=true
       env:
+        GITHUB_TOKEN: ${{ secrets.WDM_GITHUBTOKENSECRET }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
