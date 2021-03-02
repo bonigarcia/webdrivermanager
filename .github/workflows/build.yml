@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  test:
+  build:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -17,7 +17,7 @@ jobs:
     - name: Set up Java
       uses: actions/setup-java@v1
       with:
-        java-version: 1.8
+        java-version: '11'
     - name: Start Xvfb
       run: Xvfb :99 &
     - name: Test with Maven
@@ -26,26 +26,10 @@ jobs:
         DISPLAY: :99
         WDM_GITHUBTOKENNAME: ${{ secrets.WDM_GITHUBTOKENNAME }}
         WDM_GITHUBTOKENSECRET: ${{ secrets.WDM_GITHUBTOKENSECRET }}
-  scan:
-    needs: test
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-    - uses: actions/cache@v1
-      with:
-        path: ~/.m2/repository
-        key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-        restore-keys: |
-          ${{ runner.os }}-maven-
-    - name: Set up Java
-      uses: actions/setup-java@v1
-      with:
-        java-version: '11'
     - name: Analyze with SonarCloud
+      if: matrix.os == 'ubuntu-latest'
       run: >
-        mvn -B test sonar:sonar
+        mvn -B sonar:sonar
         -Dsonar.host.url=https://sonarcloud.io
         -Dsonar.organization=bonigarcia-github
         -Dsonar.projectKey=io.github.bonigarcia:webdrivermanager
