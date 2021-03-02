@@ -11,7 +11,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+        os: [ ubuntu-latest, windows-latest, macos-latest ]
     steps:
     - uses: actions/checkout@v2
     - name: Set up Java
@@ -27,7 +27,7 @@ jobs:
         WDM_GITHUBTOKENNAME: ${{ secrets.WDM_GITHUBTOKENNAME }}
         WDM_GITHUBTOKENSECRET: ${{ secrets.WDM_GITHUBTOKENSECRET }}
     - name: Analyze code
-      if: matrix.os == 'ubuntu-latest'
+      if: ${{ success() }} && matrix.os == 'ubuntu-latest'
       run: >
         mvn -B sonar:sonar
         -Dsonar.host.url=https://sonarcloud.io
