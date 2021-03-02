@@ -50,5 +50,4 @@ jobs:
         -Pcoverage
         -Dsonar.organization=BoniGarcia
         -Dsonar.projectKey=bonigarcia-github
-        -Dsonar.host.url=https://sonarcloud.io
         -Dsonar.scm.disabled=True
