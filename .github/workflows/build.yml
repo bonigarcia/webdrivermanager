@@ -26,14 +26,16 @@ jobs:
         DISPLAY: :99
         WDM_GITHUBTOKENNAME: ${{ secrets.WDM_GITHUBTOKENNAME }}
         WDM_GITHUBTOKENSECRET: ${{ secrets.WDM_GITHUBTOKENSECRET }}
-    - name: Analyze code
+    - name: Upload analysis to SonarCloud
       if: success() && matrix.os == 'ubuntu-latest'
       run: >
         mvn -B sonar:sonar
         -Dsonar.host.url=https://sonarcloud.io
         -Dsonar.organization=bonigarcia-github
         -Dsonar.projectKey=io.github.bonigarcia:webdrivermanager
-      uses: codecov/codecov-action@v1
       env:
         GITHUB_TOKEN: ${{ secrets.WDM_GITHUBTOKENSECRET }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    - name: Upload coverage to Codecov
+      if: success() && matrix.os == 'ubuntu-latest'
+      uses: codecov/codecov-action@v1
