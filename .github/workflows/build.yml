@@ -48,8 +48,9 @@ jobs:
       run: mvn -B test
     - name: Scan with SonarCloud
       uses: sonarsource/sonarcloud-github-action@master
-      args: >
-        -Pcoverage
-        -Dsonar.host.url=https://sonarcloud.io
-        -Dsonar.organization=bonigarcia-github
-        -Dsonar.scm.disabled=True
+      with:
+        args: >
+          -Pcoverage
+          -Dsonar.host.url=https://sonarcloud.io
+          -Dsonar.organization=bonigarcia-github
+          -Dsonar.scm.disabled=True
