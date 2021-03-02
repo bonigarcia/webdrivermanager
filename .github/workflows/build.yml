@@ -27,7 +27,7 @@ jobs:
         WDM_GITHUBTOKENNAME: ${{ secrets.WDM_GITHUBTOKENNAME }}
         WDM_GITHUBTOKENSECRET: ${{ secrets.WDM_GITHUBTOKENSECRET }}
     - name: Analyze code
-      if: ${{ success() }} && matrix.os == 'ubuntu-latest'
+      if: success() && matrix.os == 'ubuntu-latest'
       run: >
         mvn -B sonar:sonar
         -Dsonar.host.url=https://sonarcloud.io
