@@ -45,9 +45,4 @@ jobs:
     - name: Start Xvfb
       run: Xvfb :99 &
     - name: Run tests with Maven and scan with SonarCloud
-      run: >
-        mvn -B test org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
-        -Pcoverage
-        -Dsonar.organization=BoniGarcia
-        -Dsonar.projectKey=bonigarcia-github
-        -Dsonar.scm.disabled=True
+      run: mvn -B test org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Pcoverage
