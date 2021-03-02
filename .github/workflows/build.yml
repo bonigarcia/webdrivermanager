@@ -6,22 +6,12 @@ on:
   pull_request:
     branches: [ master ]
 
-env:
-  DISPLAY: :99
-  WDM_GITHUBTOKENNAME: ${{ secrets.WDM_GITHUBTOKENNAME }}
-  WDM_GITHUBTOKENSECRET: ${{ secrets.WDM_GITHUBTOKENSECRET }}
-  GITHUB_TOKEN: ${{ secrets.WDM_GITHUBTOKENSECRET }}
-  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
 jobs:
-  build:
-
+  test:
     runs-on: ${{ matrix.os }}
-
     strategy:
       matrix:
         os: [windows-latest, ubuntu-latest, macos-latest]
-
     steps:
     - uses: actions/checkout@v2
       with:
@@ -30,19 +20,25 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: '11'
-    - name: Cache Maven packages
-      uses: actions/cache@v1
-      with:
-        path: ~/.m2
-        key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-        restore-keys: ${{ runner.os }}-m2
-    - name: Cache SonarCloud packages
-      uses: actions/cache@v1
-      with:
-        path: ~/.sonar/cache
-        key: ${{ runner.os }}-sonar
-        restore-keys: ${{ runner.os }}-sonar
     - name: Start Xvfb
       run: Xvfb :99 &
-    - name: Run tests with Maven and scan with SonarCloud
-      run: mvn -B test org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Pcoverage
+    - name: Run tests with Maven
+      run: mvn -B test
+      env:
+        DISPLAY: :99
+        WDM_GITHUBTOKENNAME: ${{ secrets.WDM_GITHUBTOKENNAME }}
+        WDM_GITHUBTOKENSECRET: ${{ secrets.WDM_GITHUBTOKENSECRET }}
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Scan code with SonarCloud
+      run: >
+        mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+        -Pcoverage
+        -Dsonar.host.url=https://sonarcloud.io
+        -Dsonar.organization=BoniGarcia
+        -Dsonar.projectKey=bonigarcia-github
+        -Dsonar.projectName=WebDriverManager
+        -Dsonar.scm.disabled=true
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
