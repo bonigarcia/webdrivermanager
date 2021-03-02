@@ -223,7 +223,7 @@
                     </execution>
                     <execution>
                         <id>report</id>
-                        <phase>compile</phase>
+                        <phase>prepare-package</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>

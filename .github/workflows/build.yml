@@ -40,7 +40,7 @@ jobs:
     - name: Scan code with SonarCloud
       run: >
         mvn -B compile org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
-        -DskipTests
+        -Dsonar.coverage.jacoco.xmlReportPaths=${project.build.directory}/site/jacoco/jacoco.xml
         -Dsonar.host.url=https://sonarcloud.io
         -Dsonar.organization=bonigarcia-github
         -Dsonar.projectKey=io.github.bonigarcia:webdrivermanager
