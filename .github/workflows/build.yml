@@ -44,7 +44,6 @@ jobs:
         -Dsonar.host.url=https://sonarcloud.io
         -Dsonar.organization=BoniGarcia
         -Dsonar.projectKey=bonigarcia-github
-        -Dsonar.projectName=WebDriverManager
         -Dsonar.scm.disabled=true
       env:
         GITHUB_TOKEN: ${{ secrets.WDM_GITHUBTOKENSECRET }}
