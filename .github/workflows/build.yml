@@ -39,7 +39,7 @@ jobs:
         java-version: '11'
     - name: Scan code with SonarCloud
       run: >
-        mvn -B compile org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+        mvn -B compile sonar:sonar
         -Dsonar.host.url=https://sonarcloud.io
         -Dsonar.organization=bonigarcia-github
         -Dsonar.projectKey=io.github.bonigarcia:webdrivermanager
