@@ -46,7 +46,7 @@ jobs:
       run: Xvfb :99 &
     - name: Run tests with Maven and scan with SonarCloud
       run: >
-        mvn -B test org.sonarsource.scanner.maven:sonar
+        mvn -B test org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
         -Pcoverage
         -Dsonar.host.url=https://sonarcloud.io
         -Dsonar.organization=bonigarcia-github
