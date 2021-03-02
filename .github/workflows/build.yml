@@ -39,12 +39,13 @@ jobs:
         java-version: '11'
     - name: Scan code with SonarCloud
       run: >
-        mvn -B org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+        mvn -B compile org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
         -Pcoverage
         -Dsonar.host.url=https://sonarcloud.io
         -Dsonar.organization=bonigarcia-github
         -Dsonar.projectKey=io.github.bonigarcia:webdrivermanager
         -Dsonar.scm.disabled=true
+        -DskipTests
       env:
         GITHUB_TOKEN: ${{ secrets.WDM_GITHUBTOKENSECRET }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
