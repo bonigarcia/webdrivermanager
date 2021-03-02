@@ -45,4 +45,10 @@ jobs:
     - name: Start Xvfb
       run: Xvfb :99 &
     - name: Test and analyze
-      run: mvn test org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -B -Pcoverage -Dsonar.host.url=https://sonarcloud.io        -Dsonar.organization=bonigarcia-github -Dsonar.scm.disabled=True
+      run: >
+        mvn -B test
+        org.sonarsource.scanner.maven:sonar-maven-plugin:sonar
+        -Pcoverage
+        -Dsonar.host.url=https://sonarcloud.io
+        -Dsonar.organization=bonigarcia-github
+        -Dsonar.scm.disabled=True
