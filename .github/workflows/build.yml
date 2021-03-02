@@ -6,6 +6,13 @@ on:
   pull_request:
     branches: [ master ]
 
+env:
+  DISPLAY: :99
+  WDM_GITHUBTOKENNAME: ${{ secrets.WDM_GITHUBTOKENNAME }}
+  WDM_GITHUBTOKENSECRET: ${{ secrets.WDM_GITHUBTOKENSECRET }}
+  GITHUB_TOKEN: ${{ secrets.WDM_GITHUBTOKENSECRET }}
+  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -22,17 +29,10 @@ jobs:
       run: Xvfb :99 &
     - name: Test with Maven
       run: mvn -B test
-      env:
-        DISPLAY: :99
-        WDM_GITHUBTOKENNAME: ${{ secrets.WDM_GITHUBTOKENNAME }}
-        WDM_GITHUBTOKENSECRET: ${{ secrets.WDM_GITHUBTOKENSECRET }}
     - name: Analyze with SonarCloud
       if: matrix.os == 'ubuntu-latest'
       run: >
-        mvn -B sonar:sonar
+        mvn -B test sonar:sonar
         -Dsonar.host.url=https://sonarcloud.io
         -Dsonar.organization=bonigarcia-github
         -Dsonar.projectKey=io.github.bonigarcia:webdrivermanager
-      env:
-        GITHUB_TOKEN: ${{ secrets.WDM_GITHUBTOKENSECRET }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
