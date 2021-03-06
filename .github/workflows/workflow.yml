@@ -13,7 +13,8 @@ jobs:
       matrix:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout GitHub repo
+      uses: actions/checkout@v2
     - name: Set up Java
       uses: actions/setup-java@v1
       with:
