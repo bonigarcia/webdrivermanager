@@ -81,7 +81,7 @@ public class CacheTest {
     @Before
     @After
     public void cleanCache() {
-        WebDriverManager.chromedriver().clearDriverCache();
+        WebDriverManager.chromedriver().clearResolutionCache();
     }
 
     @Test
