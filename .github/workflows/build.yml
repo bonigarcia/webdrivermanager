@@ -1,4 +1,4 @@
-name: workflow
+name: build
 
 on:
   push:
