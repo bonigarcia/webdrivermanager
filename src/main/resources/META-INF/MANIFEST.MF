@@ -2,3 +2,4 @@ Manifest-Version: 1.0
 Can-Redefine-Classes: true
 Can-Retransform-Classes: true
 Premain-Class: io.github.bonigarcia.wdm.WdmAgent
+Automatic-Module-Name: io.github.bonigarcia.webdrivermanager
