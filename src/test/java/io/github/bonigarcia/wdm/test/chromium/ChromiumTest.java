@@ -24,6 +24,7 @@ import java.io.File;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
@@ -36,6 +37,7 @@ import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 3.8.0
  */
+@Ignore
 public class ChromiumTest extends BrowserTestParent {
 
     @BeforeClass
