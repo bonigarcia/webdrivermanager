@@ -37,6 +37,12 @@ public class BrowserVersionTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
+    @BeforeClass
+    @AfterClass
+    public static void cleanCache() {
+        WebDriverManager.chromedriver().clearResolutionCache();
+    }
+
     @Test
     public void testChromeVersion() {
         WebDriverManager driverManager = WebDriverManager.chromedriver();
