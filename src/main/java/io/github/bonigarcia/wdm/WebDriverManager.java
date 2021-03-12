@@ -538,7 +538,7 @@ public abstract class WebDriverManager {
             if (isUnknown(driverVersion)) {
                 driverVersion = resolveDriverVersion(driverVersion);
             }
-            if (versionDetector.isSnap()) {
+            if (versionDetector.isSnap() && config.isUseChromiumDriverSnap()) {
                 String chromiumDriverSnapPath = config()
                         .getChromiumDriverSnapPath();
                 File snapChromiumDriverPath = new File(chromiumDriverSnapPath);

@@ -180,6 +180,8 @@ public class Config {
             String.class);
     ConfigKey<String> chromiumDriverSnapPath = new ConfigKey<>(
             "wdm.chromiumDriverSnapPath", String.class);
+    ConfigKey<Boolean> useChromiumDriverSnap = new ConfigKey<>(
+            "wdm.useChromiumDriverSnap", Boolean.class);
 
     ConfigKey<String> seleniumServerStandaloneVersion = new ConfigKey<>(
             "wdm.seleniumServerStandaloneVersion", String.class);
@@ -924,6 +926,15 @@ public class Config {
 
     public Config setChromiumDriverSnapPath(String value) {
         this.chromiumDriverSnapPath.setValue(value);
+        return this;
+    }
+
+    public boolean isUseChromiumDriverSnap() {
+        return resolve(useChromiumDriverSnap);
+    }
+
+    public Config setUseChromiumDriverSnap(boolean value) {
+        this.useChromiumDriverSnap.setValue(value);
         return this;
     }
 
