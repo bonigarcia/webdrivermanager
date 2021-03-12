@@ -71,4 +71,9 @@ public enum DriverManagerType {
         }
     }
 
+    public static DriverManagerType valueOfDisplayName(String displayName) {
+        return DriverManagerType.valueOf(displayName
+                .substring(displayName.indexOf("=") + 1).toUpperCase());
+    }
+
 }
