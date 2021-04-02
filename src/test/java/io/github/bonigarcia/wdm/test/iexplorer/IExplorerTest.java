@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package io.github.bonigarcia.wdm.test.other;
+package io.github.bonigarcia.wdm.test.iexplorer;
 
 import static io.github.bonigarcia.wdm.WebDriverManager.iedriver;
 import static java.lang.invoke.MethodHandles.lookup;
