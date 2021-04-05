@@ -195,6 +195,8 @@ public class Config {
             Integer.class);
     ConfigKey<String> resolutionCache = new ConfigKey<>("wdm.resolutionCache",
             String.class);
+    ConfigKey<String> versionDetectionRegex = new ConfigKey<>(
+            "wdm.versionDetectionRegex", String.class);
 
     ConfigKey<String> browserVersionDetectionCommand = new ConfigKey<>(
             "wdm.browserVersionDetectionCommand", String.class);
@@ -647,6 +649,15 @@ public class Config {
 
     public Config setResolutionCache(String value) {
         this.resolutionCache.setValue(value);
+        return this;
+    }
+
+    public String getVersionDetectionRegex() {
+        return resolve(versionDetectionRegex);
+    }
+
+    public Config setVersionDetectionRegex(String value) {
+        this.versionDetectionRegex.setValue(value);
         return this;
     }
 

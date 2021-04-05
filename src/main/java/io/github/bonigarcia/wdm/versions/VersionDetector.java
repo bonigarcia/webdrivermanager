@@ -198,7 +198,7 @@ public class VersionDetector {
             }
 
             String parsedBrowserVersion = browserVersionOutput
-                    .replaceAll("[^\\d^\\.]", "");
+                    .replaceAll(config.getVersionDetectionRegex(), "");
             log.trace("Detected browser version is {}", parsedBrowserVersion);
             return Optional.of(getMajorVersion(parsedBrowserVersion));
         } else {
