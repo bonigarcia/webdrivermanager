@@ -165,4 +165,9 @@ public class PhantomJsDriverManager extends WebDriverManager {
         // Nothing required
     }
 
+    public WebDriverManager exportParameter(String exportParameter) {
+        config().setPhantomjsDriverExport(exportParameter);
+        return instanceMap.get(getDriverManagerType());
+    }
+
 }

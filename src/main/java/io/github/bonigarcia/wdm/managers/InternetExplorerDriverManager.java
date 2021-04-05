@@ -109,4 +109,9 @@ public class InternetExplorerDriverManager extends WebDriverManager {
         return S3_NAMESPACE_CONTEXT;
     }
 
+    public WebDriverManager exportParameter(String exportParameter) {
+        config().setInternetExplorerDriverExport(exportParameter);
+        return instanceMap.get(getDriverManagerType());
+    }
+
 }

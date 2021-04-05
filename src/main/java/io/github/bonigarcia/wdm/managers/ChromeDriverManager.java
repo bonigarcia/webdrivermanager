@@ -153,4 +153,9 @@ public class ChromeDriverManager extends WebDriverManager {
         return optionalUrl;
     }
 
+    public WebDriverManager exportParameter(String exportParameter) {
+        config().setChromeDriverExport(exportParameter);
+        return instanceMap.get(getDriverManagerType());
+    }
+
 }
