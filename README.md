@@ -19,7 +19,7 @@ WebDriverManager is a library which allows to automate the management of the dri
 2. [WebDriverManager as Java dependency](#webdrivermanager-as-java-dependency)
    1. [Basic usage](#basic-usage)
    2. [Examples](#examples)
-   3. [Resolution cache](#resolution-cache)
+   3. [Resolution algorithm](#resolution-algorithm)
    4. [WebDriverManager API](#webdrivermanager-api)
    5. [Configuration](#configuration)
 3. [WebDriverManager CLI](#webdrivermanager-cli)
@@ -186,13 +186,13 @@ The following repositories contains different examples using WebDriverManager:
 * [Selenium-Jupiter Examples]: Examples using JUnit 5 and [Selenium-Jupiter].
 
 
-### Resolution cache
-
-The relationship between browser version and driver version is managed in a internal database called **resolution cache**. As of WebDriverManager 4.0.0, this database is stored in a Java properties file called ``resolution.properties`` located by default in the cache folder (``~/.cache/selenium``).  The validity of this relationship (browser version and driver version) is limited by a *time-to-live* (TTL) value. There are two kinds of TTLs. First, a TTL for driver versions, with a default value of 86400 seconds (i.e. 1 day). Second, a TTL for browser versions, with a default value of 3600 seconds (i.e. 1 hour).
+### Resolution algorithm
 
 To resolve the driver version for a given browser, first WebDriverManager try to find out the version of that browser. This mechanism depends on the browser (Chrome, Firefox, etc) and the platform (Linux, Windows, Mac). For instance, for Chrome in Linux, the command ``google-chrome --version`` is executed in the shell. The commands used by WebDriverManager are stored in a properties file called [commands.properties].
 
-Then, WebDriverManager tries to determine which is the proper driver version for the detected browser version. To that aim, first the values of ``LATEST_RELEASE`` labels within the driver repositories are read. Besides, WebDriverManager maintains another properties file called [versions.properties] which maps the proper driver and browsers versions. To use always the latest relationships between browser and driver, the online version of [versions.properties] (master branch) is used. As alternative, the local version of this file (distributed within WebDriverManager) is used.
+Then, WebDriverManager tries to determine which is the proper driver version for the detected browser version. To that aim, first the values of ``LATEST_RELEASE`` labels within the driver repositories are read. Besides, WebDriverManager maintains a properties file called [versions.properties] which maps the proper driver and browsers versions. To use always the latest relationships between browser and driver, the online version of [versions.properties] (master branch) is used. As alternative, the local version of this file (distributed within WebDriverManager) is used.
+
+The relationship between the resolved browser and driver version is stored in a internal file called **resolution cache**. As of WebDriverManager 4.0.0, this database is stored in a properties file called ``resolution.properties`` located by default in the cache folder (``~/.cache/selenium``).  The validity of this relationship (browser version and driver version) is limited by a *time-to-live* (TTL) value. There are two kinds of TTLs. First, a TTL for driver versions, with a default value of 86400 seconds (i.e. 1 day). Second, a TTL for browser versions, with a default value of 3600 seconds (i.e. 1 hour).
 
 
 ### WebDriverManager API
