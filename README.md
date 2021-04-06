@@ -393,17 +393,17 @@ As of version 2.2.0, WebDriverManager can used interactively from the Command Li
 * Using WebDriverManager as a *fat-jar* (i.e. WebDriverManager with all its dependencies in a single executable JAR file). This JAR file can downloaded from [here](https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-4.4.0/webdrivermanager-4.4.0-fat.jar) and also it can be created using the command ``mvn compile assembly:single`` from the source code. Once you get the *fat-jar*, you simply need to use the command ``java -jar webdrivermanager-4.4.0-fat.jar browserName``, for instance:
 
 ```
-> java -jar webdrivermanager-4.4.0-fat.jar chrome
-[INFO] Using WebDriverManager to resolve chrome
+> [INFO] Using WebDriverManager to resolve chrome
+[DEBUG] Detecting chrome version using online commands.properties
 [DEBUG] Running command on the shell: [google-chrome, --version]
-[DEBUG] Result: Google Chrome 81.0.4044.138
-[INFO] Using chromedriver 81.0.4044.138 (resolved driver for Chrome 81)
+[DEBUG] Result: Google Chrome 89.0.4389.114
+[DEBUG] Latest version of chromedriver according to https://chromedriver.storage.googleapis.com/LATEST_RELEASE_89 is 89.0.4389.23
+[INFO] Using chromedriver 89.0.4389.23 (resolved driver for Chrome 89)
 [INFO] Reading https://chromedriver.storage.googleapis.com/ to seek chromedriver
-[DEBUG] Driver to be downloaded chromedriver 81.0.4044.138
-[INFO] Downloading https://chromedriver.storage.googleapis.com/81.0.4044.138/chromedriver_linux64.zip
+[DEBUG] Driver to be downloaded chromedriver 89.0.4389.23
+[INFO] Downloading https://chromedriver.storage.googleapis.com/89.0.4389.23/chromedriver_linux64.zip
 [INFO] Extracting driver from compressed file chromedriver_linux64.zip
 [INFO] Driver location: /home/boni/Downloads/chromedriver
-
 ```
 
 ## WebDriverManager Server
