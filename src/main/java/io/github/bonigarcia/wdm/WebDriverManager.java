@@ -492,8 +492,8 @@ public abstract class WebDriverManager {
         return instanceMap.get(getDriverManagerType());
     }
 
-    public WebDriverManager versionDetectionRegex(String regex) {
-        config().setVersionDetectionRegex(regex);
+    public WebDriverManager browserVersionDetectionRegex(String regex) {
+        config().setBrowserVersionDetectionRegex(regex);
         return instanceMap.get(getDriverManagerType());
     }
 
