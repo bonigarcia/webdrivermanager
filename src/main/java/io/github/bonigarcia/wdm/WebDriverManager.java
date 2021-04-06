@@ -475,6 +475,21 @@ public abstract class WebDriverManager {
         return instanceMap.get(getDriverManagerType());
     }
 
+    public WebDriverManager useLocalCommandsPropertiesFirst() {
+        config().setCommandsPropertiesOnlineFirst(false);
+        return instanceMap.get(getDriverManagerType());
+    }
+
+    public WebDriverManager versionsPropertiesUrl(URL url) {
+        config().setVersionsPropertiesUrl(url);
+        return instanceMap.get(getDriverManagerType());
+    }
+
+    public WebDriverManager commandsPropertiesUrl(URL url) {
+        config().setCommandsPropertiesUrl(url);
+        return instanceMap.get(getDriverManagerType());
+    }
+
     public WebDriverManager clearResolutionCache() {
         initResolutionCache();
         instanceMap.get(getDriverManagerType()).resolutionCache.clear();
