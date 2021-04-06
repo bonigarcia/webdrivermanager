@@ -1,5 +1,21 @@
 # Changelog
 
+## [4.4.0] - 2021-03-06
+### Added
+- Automatic module name in MANIFEST.MF for JDK 9+ support (PR #615)
+- Include config key wdm.browserVersionDetectionRegex, equivalent to API method browserVersionDetectionRegex()
+- Expose method .exportParameter() in WebDriverManager API
+- Include config key wdm.useChromiumDriverSnap to use Chromium snap package (false by default)
+- Support local URLs (file://) for versions and commands properties
+- Include new API methods: useLocalCommandsPropertiesFirst(), versionsPropertiesUrl(URL), and commandsPropertiesUrl(URL)
+
+### Changed
+- Extract commands database as a properties file (commands.properties)
+
+### Removed
+- Remove method browserPath() in WebDriverManager API (changed by browserVersionDetectionCommand())
+
+
 ## [4.3.1] - 2021-01-18
 ### Fixed
 - Include dylib libraries together with msedgedriver (issue #593)
