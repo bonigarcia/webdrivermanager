@@ -1,12 +1,12 @@
-[![Maven Central](https://img.shields.io/maven-central/v/io.github.bonigarcia/webdrivermanager.svg)](http://search.maven.org/#search%7Cga%7C1%7Cg%3Aio.github.bonigarcia%20a%3Awebdrivermanager)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.bonigarcia/webdrivermanager.svg)](https://search.maven.org/search?q=g:io.github.bonigarcia%20a:webdrivermanager)
 [![Build Status](https://github.com/bonigarcia/webdrivermanager/workflows/build/badge.svg)](https://github.com/bonigarcia/webdrivermanager/actions)
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=io.github.bonigarcia:webdrivermanager&metric=alert_status)](https://sonarcloud.io/dashboard/index/io.github.bonigarcia:webdrivermanager)
 [![codecov](https://codecov.io/gh/bonigarcia/webdrivermanager/branch/master/graph/badge.svg)](https://codecov.io/gh/bonigarcia/webdrivermanager)
 [![badge-jdk](https://img.shields.io/badge/jdk-8-green.svg)](https://www.oracle.com/java/technologies/javase-downloads.html)
-[![License badge](https://img.shields.io/badge/license-Apache2-green.svg)](http://www.apache.org/licenses/LICENSE-2.0)
+[![License badge](https://img.shields.io/badge/license-Apache2-green.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 [![Backers on Open Collective](https://opencollective.com/webdrivermanager/backers/badge.svg)](#backers)
 [![Sponsors on Open Collective](https://opencollective.com/webdrivermanager/sponsors/badge.svg)](#sponsors)
-[![Support badge](https://img.shields.io/badge/stackoverflow-webdrivermanager_java-green.svg)](http://stackoverflow.com/questions/tagged/webdrivermanager-java)
+[![Support badge](https://img.shields.io/badge/stackoverflow-webdrivermanager_java-green.svg)](https://stackoverflow.com/questions/tagged/webdrivermanager-java)
 [![Twitter Follow](https://img.shields.io/twitter/follow/boni_gg.svg?style=social)](https://twitter.com/boni_gg)
 
 # [![][Logo]][GitHub Repository]
@@ -285,16 +285,16 @@ wdm.ttlForBrowsers=3600
 wdm.browserVersionDetectionRegex=[^\\d^\\.]
 
 wdm.chromeDriverUrl=https://chromedriver.storage.googleapis.com/
-wdm.chromeDriverMirrorUrl=http://npm.taobao.org/mirrors/chromedriver/
+wdm.chromeDriverMirrorUrl=https://npm.taobao.org/mirrors/chromedriver/
 wdm.chromeDriverExport=webdriver.chrome.driver
 wdm.chromeDownloadUrlPattern=https://chromedriver.storage.googleapis.com/%s/chromedriver_%s%s.zip
 
 wdm.geckoDriverUrl=https://api.github.com/repos/mozilla/geckodriver/releases
-wdm.geckoDriverMirrorUrl=http://npm.taobao.org/mirrors/geckodriver
+wdm.geckoDriverMirrorUrl=https://npm.taobao.org/mirrors/geckodriver
 wdm.geckoDriverExport=webdriver.gecko.driver
 
 wdm.operaDriverUrl=https://api.github.com/repos/operasoftware/operachromiumdriver/releases
-wdm.operaDriverMirrorUrl=http://npm.taobao.org/mirrors/operadriver
+wdm.operaDriverMirrorUrl=https://npm.taobao.org/mirrors/operadriver
 wdm.operaDriverExport=webdriver.opera.driver
 
 wdm.edgeDriverUrl=https://msedgedriver.azureedge.net/
@@ -305,7 +305,7 @@ wdm.internetExplorerDriverUrl=https://selenium-release.storage.googleapis.com/
 wdm.internetExplorerDriverExport=webdriver.ie.driver
 
 wdm.phantomjsDriverUrl=https://bitbucket.org/api/2.0/repositories/ariya/phantomjs/downloads
-wdm.phantomjsDriverMirrorUrl=http://npm.taobao.org/mirrors/phantomjs
+wdm.phantomjsDriverMirrorUrl=https://npm.taobao.org/mirrors/phantomjs
 wdm.phantomjsDriverExport=phantomjs.binary.path
 
 wdm.seleniumServerStandaloneUrl=https://selenium-release.storage.googleapis.com/
@@ -456,7 +456,6 @@ Finally, requests to WebDriverManager server can be done interactively using too
 curl -O -J http://localhost:4041/chromedriver
 curl -O -J "http://localhost:4041/chromedriver?chromeVersion=83"
 ```
-
 
 ## WebDriverManager Agent
 
@@ -661,16 +660,16 @@ WebDriverManager (Copyright &copy; 2015-2021) is a project created and maintaine
 
 [Apache HTTP Client]: https://hc.apache.org/httpcomponents-client-ga/
 [Apache HTTP Client logging practices]: https://hc.apache.org/httpcomponents-client-ga/logging.html
-[Apache 2.0 License]: http://www.apache.org/licenses/LICENSE-2.0
+[Apache 2.0 License]: https://www.apache.org/licenses/LICENSE-2.0
 [authenticated requests]: https://developer.github.com/v3/#rate-limiting
-[Boni Garcia]: http://bonigarcia.github.io/
+[Boni Garcia]: https://bonigarcia.github.io/
 [curl]: https://curl.haxx.se/
 [GitHub account]: https://github.com/settings/tokens
 [GitHub Repository]: https://github.com/bonigarcia/webdrivermanager
 [Logback]: https://logback.qos.ch/
-[Logo]: http://bonigarcia.github.io/img/wdm.png
-[npm.taobao.org]: http://npm.taobao.org/mirrors/https://docs.travis-ci.com/user/sonarcloud/
-[Selenium WebDriver]: http://docs.seleniumhq.org/projects/webdriver/
+[Logo]: https://bonigarcia.github.io/img/wdm.png
+[npm.taobao.org]: https://npm.taobao.org/mirrors/
+[Selenium WebDriver]: https://www.selenium.dev/projects/
 [Selenium-Jupiter]: https://github.com/bonigarcia/selenium-jupiter/
 [Stack Overflow]: https://stackoverflow.com/questions/tagged/webdrivermanager-java
 [versions.properties]: https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/versions.properties
