@@ -16,6 +16,9 @@
  */
 package io.github.bonigarcia.wdm.test.firefox;
 
+import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
+import static org.junit.Assume.assumeTrue;
+
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -33,6 +36,7 @@ public class FirefoxTest extends BrowserTestParent {
 
     @BeforeClass
     public static void setupClass() {
+        assumeTrue(!IS_OS_WINDOWS);
         WebDriverManager.firefoxdriver().setup();
     }
 
