@@ -182,7 +182,14 @@ public class VersionDetector {
     }
 
     protected Optional<String> getBrowserVersionUsingCommand(String command) {
-        String[] commandArray = command.split(" ");
+        String[] commandArray;
+        if (config.getOperatingSystem().isMac()) {
+            int lastSpaceIndex = command.lastIndexOf(" ");
+            commandArray = new String[] { command.substring(0, lastSpaceIndex),
+                    command.substring(lastSpaceIndex + 1) };
+        } else {
+            commandArray = command.split(" ");
+        }
 
         String browserVersionOutput;
         if (Arrays.asList(commandArray).contains("wmic")) {
