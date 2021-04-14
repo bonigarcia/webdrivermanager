@@ -67,7 +67,7 @@ public class MockProxyTest {
         log.debug("Cleaning local cache {}", wdmCache);
         chromedriver().clearDriverCache();
 
-        try (ServerSocket serverSocket = new ServerSocket(0)) {
+        try (ServerSocket serverSocket = new ServerSocket(1080)) {
             proxyPort = serverSocket.getLocalPort();
         }
         log.debug("Starting mock proxy on port {}", proxyPort);
