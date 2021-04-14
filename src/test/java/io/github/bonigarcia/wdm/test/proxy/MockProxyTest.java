@@ -30,6 +30,7 @@ import java.net.URL;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -48,6 +49,7 @@ import io.github.bonigarcia.wdm.online.Downloader;
  * @since 1.7.2
  */
 @RunWith(MockitoJUnitRunner.class)
+@Ignore
 public class MockProxyTest {
 
     final Logger log = getLogger(lookup().lookupClass());
@@ -67,7 +69,7 @@ public class MockProxyTest {
         log.debug("Cleaning local cache {}", wdmCache);
         chromedriver().clearDriverCache();
 
-        try (ServerSocket serverSocket = new ServerSocket(1080)) {
+        try (ServerSocket serverSocket = new ServerSocket(0)) {
             proxyPort = serverSocket.getLocalPort();
         }
         log.debug("Starting mock proxy on port {}", proxyPort);
