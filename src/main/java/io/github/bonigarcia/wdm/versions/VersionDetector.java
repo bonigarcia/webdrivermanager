@@ -31,7 +31,6 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.net.URL;
 import java.nio.charset.Charset;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -182,9 +181,15 @@ public class VersionDetector {
     }
 
     protected Optional<String> getBrowserVersionUsingCommand(String command) {
+        String commandLowerCase = command.toLowerCase(ROOT);
+        boolean isWmic = commandLowerCase.contains("wmic");
+        boolean isRegQuery = commandLowerCase.contains("req query");
+        int lastSpaceIndex = command.lastIndexOf(" ");
+
         String[] commandArray;
-        if (config.getOperatingSystem().isMac()) {
-            int lastSpaceIndex = command.lastIndexOf(" ");
+        if (!isWmic && !isRegQuery && lastSpaceIndex != -1) {
+            // For non-windows (wmic or reg query), the command is splitted into
+            // two parts: {"browserPath", "--version"}
             commandArray = new String[] { command.substring(0, lastSpaceIndex),
                     command.substring(lastSpaceIndex + 1) };
         } else {
@@ -192,7 +197,7 @@ public class VersionDetector {
         }
 
         String browserVersionOutput;
-        if (Arrays.asList(commandArray).contains("wmic")) {
+        if (isWmic) {
             File wmicLocation = findFileLocation("wmic.exe");
             browserVersionOutput = runAndWait(wmicLocation, commandArray);
         } else {
