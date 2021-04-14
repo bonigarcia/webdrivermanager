@@ -37,7 +37,7 @@ public abstract class BrowserTestParent {
     @After
     public void teardown() {
         if (driver != null) {
-            driver.quit();
+            driver.close();
         }
     }
 
