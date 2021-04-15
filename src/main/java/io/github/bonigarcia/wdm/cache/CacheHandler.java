@@ -51,6 +51,11 @@ public class CacheHandler {
 
     public CacheHandler(Config config) {
         this.config = config;
+
+        File cacheFolder = new File(config.getCachePath());
+        if (!cacheFolder.exists()) {
+            cacheFolder.mkdirs();
+        }
     }
 
     public List<File> filterCacheBy(List<File> input, String key,
