@@ -25,11 +25,10 @@ import static org.slf4j.LoggerFactory.getLogger;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.ServerSocket;
 import java.net.URL;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -45,23 +44,21 @@ import org.slf4j.Logger;
 @RunWith(MockitoJUnitRunner.class)
 public class MockProxyTest {
 
-    static final Logger log = getLogger(lookup().lookupClass());
+    final Logger log = getLogger(lookup().lookupClass());
 
-    private static ClientAndServer proxy;
-    private static int proxyPort;
+    private ClientAndServer proxy;
+    private int proxyPort;
 
-    @BeforeClass
-    public static void setup() throws IOException {
+    @Before
+    public void setup() throws IOException {
         chromedriver().clearDriverCache();
-        try (ServerSocket serverSocket = new ServerSocket(0)) {
-            proxyPort = serverSocket.getLocalPort();
-        }
-        log.debug("Starting mock proxy on port {}", proxyPort);
-        proxy = startClientAndServer(proxyPort);
+        proxy = startClientAndServer();
+        proxyPort = proxy.getLocalPort();
+        log.debug("Started mock proxy on port {}", proxyPort);
     }
 
-    @AfterClass
-    public static void teardown() {
+    @After
+    public void teardown() {
         log.debug("Stopping mock proxy on port {}", proxyPort);
         proxy.stop();
     }
