@@ -29,10 +29,7 @@ import java.net.URL;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.mockserver.integration.ClientAndServer;
-//import org.mockserver.integration.ClientAndProxy;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -42,7 +39,6 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * 
  * @since 1.7.2
  */
-@RunWith(MockitoJUnitRunner.class)
 public class MockProxyTest {
 
     final Logger log = getLogger(lookup().lookupClass());
