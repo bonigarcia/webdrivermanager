@@ -16,7 +16,6 @@
  */
 package io.github.bonigarcia.wdm.test.proxy;
 
-import static io.github.bonigarcia.wdm.WebDriverManager.chromedriver;
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.junit.Assert.assertTrue;
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
@@ -36,6 +35,8 @@ import org.mockserver.integration.ClientAndServer;
 //import org.mockserver.integration.ClientAndProxy;
 import org.slf4j.Logger;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
+
 /**
  * Test for proxy with mock server.
  * 
@@ -51,7 +52,6 @@ public class MockProxyTest {
 
     @Before
     public void setup() throws IOException {
-        chromedriver().clearDriverCache();
         proxy = startClientAndServer();
         proxyPort = proxy.getLocalPort();
         log.debug("Started mock proxy on port {}", proxyPort);
@@ -65,12 +65,13 @@ public class MockProxyTest {
 
     @Test
     public void testMockProx() throws MalformedURLException {
-        chromedriver().proxy("localhost:" + proxyPort).proxyUser("")
-                .proxyPass("")
+        WebDriverManager.chromedriver().proxy("localhost:" + proxyPort)
+                .proxyUser("").proxyPass("")
                 .driverRepositoryUrl(
                         new URL("https://chromedriver.storage.googleapis.com/"))
                 .setup();
-        File driver = new File(chromedriver().getDownloadedDriverPath());
+        File driver = new File(
+                WebDriverManager.chromedriver().getDownloadedDriverPath());
         assertTrue(driver.exists());
     }
 
