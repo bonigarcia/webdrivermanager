@@ -25,23 +25,16 @@ import static org.slf4j.LoggerFactory.getLogger;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.ServerSocket;
 import java.net.URL;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.mockserver.integration.ClientAndServer;
 //import org.mockserver.integration.ClientAndProxy;
 import org.slf4j.Logger;
-
-import io.github.bonigarcia.wdm.config.Config;
-import io.github.bonigarcia.wdm.online.Downloader;
 
 /**
  * Test for proxy with mock server.
@@ -49,29 +42,16 @@ import io.github.bonigarcia.wdm.online.Downloader;
  * @since 1.7.2
  */
 @RunWith(MockitoJUnitRunner.class)
-@Ignore
 public class MockProxyTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
-    @InjectMocks
-    public Downloader downloader;
-
-    @Spy
-    public Config config = new Config();
-
     private ClientAndServer proxy;
-    private int proxyPort;
+    private int proxyPort = 1080;
 
     @Before
     public void setup() throws IOException {
-        File wdmCache = new File(downloader.getCachePath());
-        log.debug("Cleaning local cache {}", wdmCache);
         chromedriver().clearDriverCache();
-
-        try (ServerSocket serverSocket = new ServerSocket(0)) {
-            proxyPort = serverSocket.getLocalPort();
-        }
         log.debug("Starting mock proxy on port {}", proxyPort);
         proxy = startClientAndServer(proxyPort);
     }

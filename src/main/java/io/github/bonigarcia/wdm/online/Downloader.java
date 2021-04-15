@@ -117,10 +117,6 @@ public class Downloader {
         return new File(target);
     }
 
-    public String getCachePath() {
-        return config.getCachePath();
-    }
-
     private Optional<File> downloadAndExtract(URL url, File targetFile)
             throws IOException {
         log.info("Downloading {}", url);
