@@ -22,12 +22,12 @@ import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockserver.integration.ClientAndServer;
 import org.slf4j.Logger;
@@ -39,6 +39,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * 
  * @since 1.7.2
  */
+@Ignore
 public class MockProxyTest {
 
     final Logger log = getLogger(lookup().lookupClass());
@@ -47,7 +48,7 @@ public class MockProxyTest {
     private int proxyPort;
 
     @Before
-    public void setup() throws IOException {
+    public void setup() {
         proxy = startClientAndServer();
         proxyPort = proxy.getLocalPort();
         log.debug("Started mock proxy on port {}", proxyPort);
