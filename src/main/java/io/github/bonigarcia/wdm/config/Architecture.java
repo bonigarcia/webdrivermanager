@@ -18,6 +18,8 @@ package io.github.bonigarcia.wdm.config;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static java.util.Locale.ROOT;
+import static java.util.stream.Collectors.toList;
 
 import java.net.URL;
 import java.util.List;
@@ -30,7 +32,8 @@ import java.util.stream.Stream;
  * @since 1.0.0
  */
 public enum Architecture {
-    DEFAULT(emptyList()), X32(asList("i686", "x86")), X64(emptyList());
+    DEFAULT(emptyList()), X32(asList("i686", "x86")), X64(emptyList()),
+    AARCH64(emptyList());
 
     List<String> archLabels;
 
@@ -44,7 +47,17 @@ public enum Architecture {
 
     public boolean matchUrl(URL url) {
         return archLabelsStream().anyMatch(x -> url.getFile().contains(x))
-                || url.getFile().contains(this.toString());
+                || url.getFile().contains(this.toString().toLowerCase(ROOT));
+    }
+
+    public <T> List<T> filterAarch(List<T> input) {
+        if (this != AARCH64) {
+            return input.stream()
+                    .filter(x -> !x.toString().toLowerCase(ROOT)
+                            .contains(AARCH64.toString().toLowerCase(ROOT)))
+                    .collect(toList());
+        }
+        return input;
     }
 
     @Override

@@ -150,6 +150,9 @@ public class UrlHandler {
     public void filterByArch(Architecture arch, boolean forcedArch) {
         log.trace("URLs before filtering by architecture ({}): {}", arch,
                 candidateUrls);
+
+        candidateUrls = config.getArchitecture().filterAarch(candidateUrls);
+
         if ((forcedArch || candidateUrls.size() > 1) && arch != null) {
             candidateUrls = candidateUrls.stream().filter(arch::matchUrl)
                     .collect(toList());
