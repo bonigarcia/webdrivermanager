@@ -1,5 +1,10 @@
 # Changelog
 
+## [4.4.1] - 2021-04-22
+### Fixed
+- Fix browser version detection in mac (issue #632)
+
+
 ## [4.4.0] - 2021-03-06
 ### Added
 - Automatic module name in MANIFEST.MF for JDK 9+ support (PR #615)
