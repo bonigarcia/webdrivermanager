@@ -604,6 +604,7 @@ public abstract class WebDriverManager {
         if (!optionalBrowserVersion.isPresent()) {
             optionalBrowserVersion = getValueFromResolutionCache(preferenceKey);
         }
+
         if (!optionalBrowserVersion.isPresent()) {
             optionalBrowserVersion = detectBrowserVersion();
         }
@@ -754,7 +755,7 @@ public abstract class WebDriverManager {
 
     protected boolean useResolutionCache() {
         return !config().isAvoidingResolutionCache()
-                && !config().isForceDownload() && !forcedArch && !forcedOs;
+                && !config().isForceDownload();
     }
 
     protected boolean isUnknown(String driverVersion) {
