@@ -16,6 +16,8 @@
  */
 package io.github.bonigarcia.wdm.test.firefox;
 
+import static io.github.bonigarcia.wdm.config.Architecture.ARM64;
+import static io.github.bonigarcia.wdm.config.OperatingSystem.MAC;
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
@@ -26,8 +28,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import io.github.bonigarcia.wdm.config.Architecture;
-import io.github.bonigarcia.wdm.config.OperatingSystem;
 
 /**
  * Test with ARM64 and Firefox.
@@ -52,14 +52,12 @@ public class FirefoxArmTest {
     }
 
     private void checkArm(WebDriverManager driverManager) {
-        driverManager.driverVersion("0.29.1")
-                .operatingSystem(OperatingSystem.MAC).setup();
+        driverManager.driverVersion("0.29.1").operatingSystem(MAC).setup();
         String driverPath = driverManager.getDownloadedDriverPath();
         log.debug("Driver path (default arch) {}", driverPath);
 
-        driverManager.driverVersion("0.29.1")
-                .operatingSystem(OperatingSystem.MAC)
-                .architecture(Architecture.ARM64).setup();
+        driverManager.driverVersion("0.29.1").operatingSystem(MAC)
+                .architecture(ARM64).setup();
         String driverPathArm64 = driverManager.getDownloadedDriverPath();
         log.debug("Driver path (ARM64) {}", driverPathArm64);
 
