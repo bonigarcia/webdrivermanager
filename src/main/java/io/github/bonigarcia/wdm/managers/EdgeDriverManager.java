@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm.managers;
 
+import static io.github.bonigarcia.wdm.config.Architecture.ARM64;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.EDGE;
 import static java.util.Locale.ROOT;
 import static java.util.Optional.empty;
@@ -34,6 +35,7 @@ import java.util.List;
 import java.util.Optional;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import io.github.bonigarcia.wdm.config.Architecture;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
 import io.github.bonigarcia.wdm.config.OperatingSystem;
 
@@ -177,10 +179,11 @@ public class EdgeDriverManager extends WebDriverManager {
         if (!config().isUseMirror()) {
             String downloadUrlPattern = config().getEdgeDownloadUrlPattern();
             OperatingSystem os = config().getOperatingSystem();
-            String arch = os.isWin() ? config().getArchitecture().toString()
-                    : "64";
+            Architecture arch = config().getArchitecture();
+            String archLabel = os.isWin() ? arch.toString() : "64";
+            String osName = arch != ARM64 ? os.getName() : "arm";
             String builtUrl = String.format(downloadUrlPattern, driverVersion,
-                    os.getName(), arch);
+                    osName, archLabel);
             log.debug("Using URL built from repository pattern: {}", builtUrl);
             try {
                 optionalUrl = Optional.of(new URL(builtUrl));

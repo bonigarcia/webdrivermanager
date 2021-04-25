@@ -51,11 +51,11 @@ public class EdgeArmTest {
 
     private void checkArm(WebDriverManager driverManager) {
         driverManager.setup();
-        String driverPath = driverManager.getDownloadedDriverPath();
+        String driverPath = driverManager.win().getDownloadedDriverPath();
         log.debug("Driver path (default arch) {}", driverPath);
 
         driverManager.arm64().setup();
-        String driverPathArm64 = driverManager.getDownloadedDriverPath();
+        String driverPathArm64 = driverManager.win().getDownloadedDriverPath();
         log.debug("Driver path (ARM64) {}", driverPathArm64);
 
         assertThat(driverPath, not(equalTo(driverPathArm64)));
