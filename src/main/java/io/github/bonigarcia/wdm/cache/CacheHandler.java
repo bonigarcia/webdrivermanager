@@ -95,9 +95,7 @@ public class CacheHandler {
             filesInCache = filterCacheBy(filesInCache, driverVersion, true);
 
             // Filter by OS
-            if (config.getArchitecture() != ARM64) {
-                filesInCache = filterCacheBy(filesInCache, os, false);
-            }
+            filesInCache = filterCacheBy(filesInCache, os, false);
 
             // Filter by ARM64 architecture
             filesInCache = config.getArchitecture().filterArm64(filesInCache);
