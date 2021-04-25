@@ -12,13 +12,15 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
+        java: [ '8', '11', '15' ]
     steps:
     - name: Checkout GitHub repo
       uses: actions/checkout@v2
     - name: Set up Java
-      uses: actions/setup-java@v1
+      uses: actions/setup-java@v2
       with:
-        java-version: '11'
+        distribution: 'adopt'
+        java-version: ${{ matrix.java }}
     - name: Start Xvfb
       run: Xvfb :99 &
     - name: Run tests
