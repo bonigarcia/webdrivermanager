@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm;
 
+import static io.github.bonigarcia.wdm.config.Architecture.ARM64;
 import static io.github.bonigarcia.wdm.config.Architecture.X32;
 import static io.github.bonigarcia.wdm.config.Architecture.X64;
 import static io.github.bonigarcia.wdm.config.Config.isNullOrEmpty;
@@ -851,8 +852,12 @@ public abstract class WebDriverManager {
             String os = config().getOs();
             Architecture architecture = config().getArchitecture();
 
+            // Filter by OS
+            if (architecture != ARM64) {
+                urlHandler.filterByOs(getDriverName(), os);
+            }
+
             // Rest of filters
-            urlHandler.filterByOs(getDriverName(), os);
             urlHandler.filterByArch(architecture, forcedArch);
             urlHandler.filterByDistro(os, getDriverName());
             urlHandler.filterByIgnoredVersions(config().getIgnoreVersions());

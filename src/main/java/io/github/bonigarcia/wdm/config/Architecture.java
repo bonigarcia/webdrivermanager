@@ -33,7 +33,7 @@ import java.util.stream.Stream;
  */
 public enum Architecture {
     DEFAULT(emptyList()), X32(asList("i686", "x86")), X64(emptyList()),
-    AARCH64(emptyList());
+    ARM64(asList("aarch64"));
 
     List<String> archLabels;
 
@@ -50,11 +50,11 @@ public enum Architecture {
                 || url.getFile().contains(this.toString().toLowerCase(ROOT));
     }
 
-    public <T> List<T> filterAarch(List<T> input) {
-        if (this != AARCH64) {
+    public <T> List<T> filterArm64(List<T> input) {
+        if (this != ARM64) {
             return input.stream()
                     .filter(x -> !x.toString().toLowerCase(ROOT)
-                            .contains(AARCH64.toString().toLowerCase(ROOT)))
+                            .contains(ARM64.toString().toLowerCase(ROOT)))
                     .collect(toList());
         }
         return input;

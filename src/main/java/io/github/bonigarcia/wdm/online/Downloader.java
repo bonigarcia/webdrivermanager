@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm.online;
 
+import static io.github.bonigarcia.wdm.config.Architecture.ARM64;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROME;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROMIUM;
 import static java.io.File.separator;
@@ -97,7 +98,8 @@ public class Downloader {
         String zip = url.getFile().substring(url.getFile().lastIndexOf('/'));
         String cachePath = config.getCachePath();
         OperatingSystem os = config.getOperatingSystem();
-        String architecture = config.getArchitecture().toString();
+        String architecture = config.getArchitecture().toString()
+                .toLowerCase(ROOT);
 
         if (os.isWin() && (driverManagerType == CHROME
                 || driverManagerType == CHROMIUM)) {
@@ -107,8 +109,9 @@ public class Downloader {
             architecture = "32";
         }
 
+        String osName = config.getArchitecture() == ARM64 ? "" : os.getName();
         String target = config.isAvoidOutputTree() ? cachePath + zip
-                : cachePath + separator + driverName + separator + os.getName()
+                : cachePath + separator + driverName + separator + osName
                         + architecture + separator + driverVersion + zip;
 
         log.trace("Target file for URL {} driver version {} = {}", url,

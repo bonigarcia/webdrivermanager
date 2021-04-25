@@ -16,7 +16,7 @@
  */
 package io.github.bonigarcia.wdm.cache;
 
-import static io.github.bonigarcia.wdm.config.Architecture.AARCH64;
+import static io.github.bonigarcia.wdm.config.Architecture.ARM64;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROME;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROMIUM;
 import static java.io.File.separator;
@@ -95,13 +95,14 @@ public class CacheHandler {
             filesInCache = filterCacheBy(filesInCache, driverVersion, true);
 
             // Filter by OS
-            filesInCache = filterCacheBy(filesInCache, os, false);
+            if (config.getArchitecture() != ARM64) {
+                filesInCache = filterCacheBy(filesInCache, os, false);
+            }
 
-            // Filter by AARCH
-            filesInCache = config.getArchitecture().filterAarch(filesInCache);
+            // Filter by ARM64 architecture
+            filesInCache = config.getArchitecture().filterArm64(filesInCache);
 
-            if (filesInCache.size() == 1
-                    && config.getArchitecture() != AARCH64) {
+            if (filesInCache.size() == 1 && config.getArchitecture() != ARM64) {
                 return Optional.of(filesInCache.get(0).toString());
             }
 
