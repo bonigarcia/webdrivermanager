@@ -854,7 +854,7 @@ public abstract class WebDriverManager {
             Architecture architecture = config().getArchitecture();
 
             // Filter by OS
-            if (architecture != ARM64 && getDriverManagerType() != EDGE) {
+            if (architecture != ARM64 || getDriverManagerType() != EDGE) {
                 urlHandler.filterByOs(getDriverName(), os);
             }
 
