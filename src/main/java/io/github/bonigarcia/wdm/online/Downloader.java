@@ -109,7 +109,10 @@ public class Downloader {
             architecture = "32";
         }
 
-        String osName = config.getArchitecture() == ARM64 ? "" : os.getName();
+        String osName = os.getName();
+        if (config.getArchitecture() == ARM64) {
+            osName += "-";
+        }
         String target = config.isAvoidOutputTree() ? cachePath + zip
                 : cachePath + separator + driverName + separator + osName
                         + architecture + separator + driverVersion + zip;
