@@ -319,6 +319,11 @@ public abstract class WebDriverManager {
         return instanceMap.get(getDriverManagerType());
     }
 
+    public WebDriverManager arm64() {
+        architecture(ARM64);
+        return instanceMap.get(getDriverManagerType());
+    }
+
     public WebDriverManager win() {
         operatingSystem(WIN);
         return instanceMap.get(getDriverManagerType());

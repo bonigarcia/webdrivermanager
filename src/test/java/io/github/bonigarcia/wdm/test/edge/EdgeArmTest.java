@@ -16,7 +16,6 @@
  */
 package io.github.bonigarcia.wdm.test.edge;
 
-import static io.github.bonigarcia.wdm.config.Architecture.ARM64;
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
@@ -55,7 +54,7 @@ public class EdgeArmTest {
         String driverPath = driverManager.getDownloadedDriverPath();
         log.debug("Driver path (default arch) {}", driverPath);
 
-        driverManager.architecture(ARM64).setup();
+        driverManager.arm64().setup();
         String driverPathArm64 = driverManager.getDownloadedDriverPath();
         log.debug("Driver path (ARM64) {}", driverPathArm64);
 
