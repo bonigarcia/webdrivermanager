@@ -30,7 +30,7 @@ jobs:
         WDM_GITHUBTOKENNAME: ${{ secrets.WDM_GITHUBTOKENNAME }}
         WDM_GITHUBTOKENSECRET: ${{ secrets.WDM_GITHUBTOKENSECRET }}
     - name: Upload analysis to SonarCloud
-      if: success() && matrix.os == 'ubuntu-latest' && matrix.java == '11' && ${{!contains(github.ref, 'pull')}}
+      if: success() && matrix.os == 'ubuntu-latest' && matrix.java == '11'
       run: >
         mvn -B sonar:sonar
         -Dsonar.host.url=https://sonarcloud.io
