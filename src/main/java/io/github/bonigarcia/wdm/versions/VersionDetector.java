@@ -183,7 +183,7 @@ public class VersionDetector {
     protected Optional<String> getBrowserVersionUsingCommand(String command) {
         String commandLowerCase = command.toLowerCase(ROOT);
         boolean isWmic = commandLowerCase.contains("wmic");
-        boolean isRegQuery = commandLowerCase.contains("req query");
+        boolean isRegQuery = commandLowerCase.contains("reg query");
         int lastSpaceIndex = command.lastIndexOf(" ");
 
         String[] commandArray;
