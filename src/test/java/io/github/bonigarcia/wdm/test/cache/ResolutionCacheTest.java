@@ -26,7 +26,7 @@ import org.junit.Test;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 /**
- * Test for preferences.
+ * Test for resolution cache.
  *
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 3.0.0
