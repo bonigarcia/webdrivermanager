@@ -680,6 +680,6 @@ WebDriverManager (Copyright &copy; 2015-2021) is a project created and maintaine
 [WebDriverManager Agent Example]: https://github.com/bonigarcia/wdm-agent-example
 [Selenium-Jupiter Examples]: https://github.com/bonigarcia/selenium-jupiter-examples
 [fat-jar]: https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-4.4.3/webdrivermanager-4.4.3-fat.jar
-[Docker container]: https://hub.docker.com/repository/docker/bonigarcia/webdrivermanager
+[Docker container]: https://hub.docker.com/r/bonigarcia/webdrivermanager
 [chromedriver-latest]: https://chromedriver.storage.googleapis.com/LATEST_RELEASE
 [msedgedriver-latest]: https://msedgedriver.azureedge.net/LATEST_STABLE
