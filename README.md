@@ -65,7 +65,7 @@ To use WebDriverManager from tests in a Maven project, you need to add the follo
 <dependency>
     <groupId>io.github.bonigarcia</groupId>
     <artifactId>webdrivermanager</artifactId>
-    <version>4.4.2</version>
+    <version>4.4.3</version>
     <scope>test</scope>
 </dependency>
 ```
@@ -74,7 +74,7 @@ To use WebDriverManager from tests in a Maven project, you need to add the follo
 
 ```
 dependencies {
-    testImplementation("io.github.bonigarcia:webdrivermanager:4.4.2")
+    testImplementation("io.github.bonigarcia:webdrivermanager:4.4.3")
 }
 ```
 
@@ -370,7 +370,7 @@ As of version 2.2.0, WebDriverManager can used interactively from the Command Li
 [INFO] Scanning for projects...
 [INFO]
 [INFO] ------------------------------------------------------------------------
-[INFO] Building WebDriverManager 4.4.2
+[INFO] Building WebDriverManager 4.4.3
 [INFO] ------------------------------------------------------------------------
 [INFO]
 [INFO] --- exec-maven-plugin:1.6.0:java (default-cli) @ webdrivermanager ---
@@ -391,7 +391,7 @@ As of version 2.2.0, WebDriverManager can used interactively from the Command Li
 [INFO] ------------------------------------------------------------------------
 ```
 
-* Using WebDriverManager as a *fat-jar* (i.e. WebDriverManager with all its dependencies in a single executable JAR file). This JAR file can downloaded from [here](https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-4.4.2/webdrivermanager-4.4.2-fat.jar) and also it can be created using the command ``mvn compile assembly:single`` from the source code. Once you get the *fat-jar*, you simply need to use the command ``java -jar webdrivermanager-4.4.2-fat.jar browserName``, for instance:
+* Using WebDriverManager as a *fat-jar* (i.e. WebDriverManager with all its dependencies in a single executable JAR file). This JAR file can downloaded from [here](https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-4.4.3/webdrivermanager-4.4.3-fat.jar) and also it can be created using the command ``mvn compile assembly:single`` from the source code. Once you get the *fat-jar*, you simply need to use the command ``java -jar webdrivermanager-4.4.3-fat.jar browserName``, for instance:
 
 ```
 > [INFO] Using WebDriverManager to resolve chrome
@@ -418,7 +418,7 @@ $ mvn exec:java -Dexec.args="server"
 [INFO] Scanning for projects...
 [INFO]
 [INFO] ------------------------------------------------------------------------
-[INFO] Building WebDriverManager 4.4.2
+[INFO] Building WebDriverManager 4.4.3
 [INFO] ------------------------------------------------------------------------
 [INFO]
 [INFO] --- exec-maven-plugin:1.6.0:java (default-cli) @ webdrivermanager ---
@@ -428,7 +428,7 @@ $ mvn exec:java -Dexec.args="server"
 * Using WebDriverManager as a [fat-jar]. For instance:
 
 ```
-> java -jar webdrivermanager-4.4.2-fat.jar server
+> java -jar webdrivermanager-4.4.3-fat.jar server
 [INFO] WebDriverManager server listening on port 4041
 ```
 
@@ -558,26 +558,26 @@ Starting ChromeDriver 81.0.4044.138 (8c6c7ba89cc9453625af54f11fd83179e23450fa-re
 As of version 4.0.0, WebDriverManager can be used as a [Docker container] to execute the Server and CLI modes. To execute WebDriverManager Server in Docker, you simply need to run the following command:
 
 ```
-docker run -p 4041:4041 bonigarcia/webdrivermanager:4.4.2
+docker run -p 4041:4041 bonigarcia/webdrivermanager:4.4.3
 ```
 
 To execute WebDriverManager CLI in Docker, you need to specify the type of browser to be resolved as environmental variable (`BROWSER`). The rest of WebDriverManager configuration parameters can be passed to the Docker container using env variables using the usual `-e` option in Docker. For example, in Linux:
 
 ```
-docker run --rm -e BROWSER=chrome -e WDM_CHROMEVERSION=84 -e WDM_OS=LINUX -v ${PWD}:/wdm bonigarcia/webdrivermanager:4.4.2
+docker run --rm -e BROWSER=chrome -e WDM_CHROMEVERSION=84 -e WDM_OS=LINUX -v ${PWD}:/wdm bonigarcia/webdrivermanager:4.4.3
 ```
 
 ... or Mac:
 
 ```
-docker run --rm -e BROWSER=chrome -e WDM_CHROMEVERSION=84 -e WDM_OS=MAC -v ${PWD}:/wdm bonigarcia/webdrivermanager:4.4.2
+docker run --rm -e BROWSER=chrome -e WDM_CHROMEVERSION=84 -e WDM_OS=MAC -v ${PWD}:/wdm bonigarcia/webdrivermanager:4.4.3
 ```
 
 ... or Windows (if WSL2 is installed in Windows, you can use `${PWD}` instead of `%cd%` for the volume setup):
 
 
 ```
-docker run --rm -e BROWSER=chrome -e WDM_CHROMEVERSION=84 -e WDM_OS=WIN -v %cd%:/wdm bonigarcia/webdrivermanager:4.4.2
+docker run --rm -e BROWSER=chrome -e WDM_CHROMEVERSION=84 -e WDM_OS=WIN -v %cd%:/wdm bonigarcia/webdrivermanager:4.4.3
 ```
 
 ## Known issues
@@ -679,7 +679,7 @@ WebDriverManager (Copyright &copy; 2015-2021) is a project created and maintaine
 [WebDriverManager Spring-Boot]: https://github.com/bonigarcia/webdrivermanager-spring-boot
 [WebDriverManager Agent Example]: https://github.com/bonigarcia/wdm-agent-example
 [Selenium-Jupiter Examples]: https://github.com/bonigarcia/selenium-jupiter-examples
-[fat-jar]: https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-4.4.2/webdrivermanager-4.4.2-fat.jar
+[fat-jar]: https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-4.4.3/webdrivermanager-4.4.3-fat.jar
 [Docker container]: https://hub.docker.com/repository/docker/bonigarcia/webdrivermanager
 [chromedriver-latest]: https://chromedriver.storage.googleapis.com/LATEST_RELEASE
 [msedgedriver-latest]: https://msedgedriver.azureedge.net/LATEST_STABLE

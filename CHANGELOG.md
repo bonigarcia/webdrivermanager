@@ -1,12 +1,16 @@
 # Changelog
 
-## [4.4.2] - 2021-05-09
+## [4.4.3] - 2021-05-09
 ### Added
 - Support for ARM64 (Aarch64) architecture (issue #634)
 - Include method arm64() in WDM API to specify ARM64 architecture
 
 ### Fixed
 - Fix execution of registry query commands to detect browser version (for Windows)
+
+
+## [4.4.2] - 2021-05-09
+- Due to a problem in the release procedure, version 4.4.2 is identical to 4.4.1
 
 
 ## [4.4.1] - 2021-04-22
