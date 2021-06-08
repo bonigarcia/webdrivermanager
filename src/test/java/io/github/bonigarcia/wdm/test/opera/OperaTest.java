@@ -16,11 +16,13 @@
  */
 package io.github.bonigarcia.wdm.test.opera;
 
+import static java.nio.file.Files.exists;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 import static org.junit.Assume.assumeTrue;
 
-import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -44,13 +46,23 @@ public class OperaTest extends BrowserTestParent {
 
     @Before
     public void setupTest() {
-        String opera = IS_OS_WINDOWS
-                ? "C:\\Users\\boni\\AppData\\Local\\Programs\\Opera\\launcher.exe"
-                : IS_OS_MAC ? "/Applications/Opera.app/Contents/MacOS/Opera"
-                        : "/usr/bin/opera";
-        assumeTrue(new File(opera).exists());
+        Path browserPath = getBrowserPath();
+        assumeTrue(exists(browserPath));
 
         driver = new OperaDriver();
+    }
+
+    private Path getBrowserPath() {
+        Path path;
+        if (IS_OS_WINDOWS) {
+            path = Paths.get(System.getenv("LOCALAPPDATA"),
+                    "/Programs/Opera/launcher.exe");
+        } else if (IS_OS_MAC) {
+            path = Paths.get("/Applications/Opera.app/Contents/MacOS/Opera");
+        } else {
+            path = Paths.get("/usr/bin/opera");
+        }
+        return path;
     }
 
 }
