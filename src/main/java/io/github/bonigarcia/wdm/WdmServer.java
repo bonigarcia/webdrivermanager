@@ -24,7 +24,6 @@ import static io.github.bonigarcia.wdm.WebDriverManager.operadriver;
 import static io.github.bonigarcia.wdm.WebDriverManager.phantomjs;
 import static io.github.bonigarcia.wdm.WebDriverManager.seleniumServerStandalone;
 import static java.lang.invoke.MethodHandles.lookup;
-import static java.util.Collections.singletonList;
 import static org.apache.commons.io.FileUtils.openInputStream;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -116,13 +115,6 @@ public class WdmServer {
         // Query string (for configuration parameters)
         Map<String, List<String>> queryParamMap = new TreeMap<>(
                 ctx.queryParamMap());
-
-        // Exception for Edge (for Windows by default)
-        if (driverManager.getDriverName().equals("msedgedriver")
-                && !queryParamMap.containsKey("os")) {
-            System.setProperty("wdm.os", "WIN");
-            queryParamMap.put("os", singletonList("WIN"));
-        }
 
         if (!queryParamMap.isEmpty()) {
             log.info("Server query string for configuration {}", queryParamMap);
