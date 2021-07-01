@@ -58,7 +58,7 @@ public class InteractiveTest {
         return asList(new Object[][] { { "chrome", "chromedriver" + EXT },
                 { "firefox", "geckodriver" + EXT },
                 { "opera", "operadriver" + EXT },
-                { "edge", "msedgedriver.exe" },
+                { "edge", "msedgedriver" },
                 { "iexplorer", "IEDriverServer.exe" } });
     }
 
