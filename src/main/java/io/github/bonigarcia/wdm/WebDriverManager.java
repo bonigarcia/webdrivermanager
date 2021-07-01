@@ -753,8 +753,7 @@ public abstract class WebDriverManager {
     }
 
     protected boolean useResolutionCache() {
-        return !config().isAvoidingResolutionCache()
-                && !config().isForceDownload();
+        return !config().isAvoidingResolutionCache();
     }
 
     protected boolean isUnknown(String driverVersion) {
