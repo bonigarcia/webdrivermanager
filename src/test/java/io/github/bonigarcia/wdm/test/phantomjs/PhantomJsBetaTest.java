@@ -18,7 +18,7 @@ package io.github.bonigarcia.wdm.test.phantomjs;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -31,7 +31,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  */
 public class PhantomJsBetaTest {
 
-    @BeforeEach
+    @BeforeAll
     public static void setupClass() {
         WebDriverManager.phantomjs().useBetaVersions().setup();
     }
