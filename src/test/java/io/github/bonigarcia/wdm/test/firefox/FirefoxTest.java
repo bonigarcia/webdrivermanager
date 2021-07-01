@@ -16,11 +16,11 @@
  */
 package io.github.bonigarcia.wdm.test.firefox;
 
-import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
-import static org.junit.Assume.assumeTrue;
+import static org.junit.jupiter.api.condition.OS.WINDOWS;
 
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -32,15 +32,15 @@ import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.5.0
  */
+@DisabledOnOs(WINDOWS)
 public class FirefoxTest extends BrowserTestParent {
 
-    @BeforeClass
+    @BeforeAll
     public static void setupClass() {
-        assumeTrue(!IS_OS_WINDOWS);
         WebDriverManager.firefoxdriver().setup();
     }
 
-    @Before
+    @BeforeEach
     public void setupTest() {
         driver = new FirefoxDriver();
     }

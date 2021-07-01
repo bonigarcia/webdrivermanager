@@ -16,18 +16,13 @@
  */
 package io.github.bonigarcia.wdm.test.other;
 
-import static java.util.Arrays.asList;
-import static org.junit.Assert.assertThrows;
+import java.util.stream.Stream;
 
-import java.util.Collection;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -41,48 +36,36 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.3.1
  */
-@RunWith(Parameterized.class)
 public class OtherWebDriverTest {
-
-    @Parameter(0)
-    public Class<? extends WebDriver> driverClass;
-
-    @Parameter(1)
-    public Class<? extends Throwable> exception;
 
     protected WebDriver driver;
 
-    @Parameters(name = "{index}: {0} {1}")
-    public static Collection<Object[]> data() {
-        return asList(new Object[][] {
-                { EventFiringWebDriver.class, InstantiationException.class },
-                { HtmlUnitDriver.class, null },
-                { RemoteWebDriver.class, IllegalAccessException.class } });
-    }
-
-    @Before
-    public void setupTest() {
-        WebDriverManager.getInstance(driverClass).setup();
-    }
-
-    @After
+    @AfterEach
     public void teardown() {
         if (driver != null) {
             driver.quit();
         }
     }
 
-    @Test
-    public void test() {
-        if (exception != null) {
-            assertThrows(exception, this::createInstace);
-        }
+    @ParameterizedTest
+    @MethodSource("data")
+    public void test(Class<? extends WebDriver> driverClass,
+            Class<? extends Throwable> exception) {
+        WebDriverManager.getInstance(driverClass).setup();
 
+        if (exception != null) {
+            Assertions.assertThrows(exception, () -> {
+                driver = driverClass.newInstance();
+            });
+        }
     }
 
-    private void createInstace()
-            throws InstantiationException, IllegalAccessException {
-        driver = driverClass.newInstance();
+    public static Stream<Arguments> data() {
+        return Stream.of(
+                Arguments.of(EventFiringWebDriver.class,
+                        InstantiationException.class),
+                Arguments.of(HtmlUnitDriver.class, null), Arguments.of(
+                        RemoteWebDriver.class, IllegalAccessException.class));
     }
 
 }

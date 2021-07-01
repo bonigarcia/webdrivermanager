@@ -16,17 +16,12 @@
  */
 package io.github.bonigarcia.wdm.test.forced;
 
-import static java.util.Arrays.asList;
+import static io.github.bonigarcia.wdm.config.OperatingSystem.WIN;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import java.util.Collection;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
@@ -34,7 +29,6 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.opera.OperaDriver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import io.github.bonigarcia.wdm.config.OperatingSystem;
 
 /**
  * Force download test.
@@ -42,29 +36,17 @@ import io.github.bonigarcia.wdm.config.OperatingSystem;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 2.1.1
  */
-@RunWith(Parameterized.class)
 public class ForceDownloadTest {
 
-    static final int TIMEOUT = 20;
-    static final OperatingSystem OS = OperatingSystem.WIN;
-
-    @Parameter
-    public Class<? extends WebDriver> driverClass;
-
-    @Parameters(name = "{index}: {0}")
-    public static Collection<Object[]> data() {
-        return asList(new Object[][] { { ChromeDriver.class },
-                { FirefoxDriver.class }, { OperaDriver.class },
-                { EdgeDriver.class } });
-    }
-
-    @Test
-    public void testForceDownload() {
+    @ParameterizedTest
+    @ValueSource(classes = { ChromeDriver.class, FirefoxDriver.class,
+            OperaDriver.class, EdgeDriver.class })
+    public void testForceDownload(Class<? extends WebDriver> driverClass) {
         WebDriverManager driverManager = WebDriverManager
                 .getInstance(driverClass);
         driverManager.forceDownload().avoidBrowserDetection()
-                .avoidReadReleaseFromRepository().timeout(TIMEOUT)
-                .operatingSystem(OS).setup();
+                .avoidReadReleaseFromRepository().timeout(20)
+                .operatingSystem(WIN).setup();
         assertThat(driverManager.getDownloadedDriverPath(), notNullValue());
     }
 

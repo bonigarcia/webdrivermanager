@@ -17,19 +17,16 @@
 package io.github.bonigarcia.wdm.test.interactive;
 
 import static java.lang.invoke.MethodHandles.lookup;
-import static java.util.Arrays.asList;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
-import java.util.Collection;
+import java.util.stream.Stream;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -40,37 +37,30 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 2.1.2
  */
-@RunWith(Parameterized.class)
 public class InteractiveTest {
 
     public static final Logger log = getLogger(lookup().lookupClass());
 
     public static final String EXT = IS_OS_WINDOWS ? ".exe" : "";
 
-    @Parameter(0)
-    public String argument;
-
-    @Parameter(1)
-    public String driver;
-
-    @Parameters(name = "{index}: {0}")
-    public static Collection<Object[]> data() {
-        return asList(new Object[][] { { "chrome", "chromedriver" + EXT },
-                { "firefox", "geckodriver" + EXT },
-                { "opera", "operadriver" + EXT },
-                { "edge", "msedgedriver" + EXT },
-                { "iexplorer", "IEDriverServer.exe" } });
-    }
-
-    @Test
-    public void testInteractive() {
+    @ParameterizedTest
+    @MethodSource("data")
+    public void testInteractive(String argument, String driver) {
         log.debug("Running interactive wdm with arguments: {}", argument);
         WebDriverManager.main(new String[] { argument });
         File driverFile = new File(driver);
         boolean exists = driverFile.exists();
         boolean delete = driverFile.delete();
-        assertTrue(exists && delete);
+        assertThat(exists && delete);
         log.debug("Interactive test with {} OK", argument);
+    }
+
+    public static Stream<Arguments> data() {
+        return Stream.of(Arguments.of("chrome", "chromedriver" + EXT),
+                Arguments.of("firefox", "geckodriver" + EXT),
+                Arguments.of("opera", "operadriver" + EXT),
+                Arguments.of("edge", "msedgedriver" + EXT),
+                Arguments.of("iexplorer", "IEDriverServer.exe"));
     }
 
 }

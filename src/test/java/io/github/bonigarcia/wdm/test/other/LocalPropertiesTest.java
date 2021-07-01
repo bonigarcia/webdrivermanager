@@ -16,13 +16,13 @@
  */
 package io.github.bonigarcia.wdm.test.other;
 
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
@@ -63,7 +63,7 @@ public class LocalPropertiesTest {
         String driverPath = WebDriverManager.chromedriver()
                 .getDownloadedDriverPath();
         File driver = new File(driverPath);
-        assertTrue(driver.exists());
+        assertThat(driver.exists());
     }
 
 }

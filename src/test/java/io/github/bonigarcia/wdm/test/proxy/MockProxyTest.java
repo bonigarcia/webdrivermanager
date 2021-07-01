@@ -17,7 +17,7 @@
 package io.github.bonigarcia.wdm.test.proxy;
 
 import static java.lang.invoke.MethodHandles.lookup;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockserver.integration.ClientAndServer.startClientAndServer;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -25,10 +25,10 @@ import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.mockserver.integration.ClientAndServer;
 import org.slf4j.Logger;
 
@@ -39,7 +39,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * 
  * @since 1.7.2
  */
-@Ignore
+@Disabled
 public class MockProxyTest {
 
     final Logger log = getLogger(lookup().lookupClass());
@@ -47,14 +47,14 @@ public class MockProxyTest {
     private ClientAndServer proxy;
     private int proxyPort;
 
-    @Before
+    @BeforeEach
     public void setup() {
         proxy = startClientAndServer();
         proxyPort = proxy.getLocalPort();
         log.debug("Started mock proxy on port {}", proxyPort);
     }
 
-    @After
+    @AfterEach
     public void teardown() {
         log.debug("Stopping mock proxy on port {}", proxyPort);
         proxy.stop();
@@ -69,7 +69,7 @@ public class MockProxyTest {
                 .setup();
         File driver = new File(
                 WebDriverManager.chromedriver().getDownloadedDriverPath());
-        assertTrue(driver.exists());
+        assertThat(driver.exists());
     }
 
 }

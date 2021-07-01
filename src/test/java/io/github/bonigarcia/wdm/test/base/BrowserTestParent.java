@@ -20,8 +20,8 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
 
 /**
@@ -34,7 +34,7 @@ public abstract class BrowserTestParent {
 
     protected WebDriver driver;
 
-    @After
+    @AfterEach
     public void teardown() {
         if (driver != null) {
             driver.quit();

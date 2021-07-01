@@ -17,13 +17,12 @@
 package io.github.bonigarcia.wdm.test.versions;
 
 import static java.lang.invoke.MethodHandles.lookup;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThan;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.util.Optional;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.config.Config;
@@ -55,7 +54,7 @@ public class BrowserVersionDetectionTest {
                 log.debug("The detected version of {} is {}", browser,
                         detectedVersion.get());
                 int numericVersion = Integer.parseInt(detectedVersion.get());
-                assertThat(numericVersion, greaterThan(0));
+                assertThat(numericVersion).isGreaterThan(0);
             }
         }
 

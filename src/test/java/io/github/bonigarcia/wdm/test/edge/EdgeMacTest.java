@@ -17,12 +17,12 @@
 package io.github.bonigarcia.wdm.test.edge;
 
 import static java.lang.invoke.MethodHandles.lookup;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -49,12 +49,12 @@ public class EdgeMacTest {
 
         log.debug("The downloaded driver path is: {}", downloadedDriverPath);
         File driver = new File(downloadedDriverPath);
-        assertTrue(driver.exists());
+        assertThat(driver.exists());
 
         File lib = new File(driver.getParent(), libName);
-        assertTrue("The file " + libName
+        assertThat(lib.exists()).withFailMessage("The file " + libName
                 + " should be placed together with msedgedriver in version "
-                + driverVersion, lib.exists());
+                + driverVersion);
     }
 
 }

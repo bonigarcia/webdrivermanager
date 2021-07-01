@@ -18,12 +18,12 @@ package io.github.bonigarcia.wdm.test.other;
 
 import static io.github.bonigarcia.wdm.WebDriverManager.seleniumServerStandalone;
 import static java.lang.invoke.MethodHandles.lookup;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
 /**
@@ -55,9 +55,10 @@ public class SeleniumServerStandaloneTest {
     }
 
     private void assertDriver() {
-        File driver = new File(seleniumServerStandalone().getDownloadedDriverPath());
+        File driver = new File(
+                seleniumServerStandalone().getDownloadedDriverPath());
         log.debug("Path for selenium-server-standalone {}", driver);
-        assertTrue(driver.exists());
+        assertThat(driver.exists());
     }
 
 }

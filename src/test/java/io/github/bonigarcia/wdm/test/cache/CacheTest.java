@@ -21,21 +21,18 @@ import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROME;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.FIREFOX;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.LINUX;
 import static java.lang.invoke.MethodHandles.lookup;
-import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
-import java.util.Collection;
 import java.util.Optional;
+import java.util.stream.Stream;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -51,41 +48,22 @@ import io.github.bonigarcia.wdm.config.OperatingSystem;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.4.5
  */
-@RunWith(Parameterized.class)
 public class CacheTest {
 
     static final Logger log = getLogger(lookup().lookupClass());
 
-    @Parameter(0)
-    public DriverManagerType driverManagerType;
-
-    @Parameter(1)
-    public String driverName;
-
-    @Parameter(2)
-    public String driverVersion;
-
-    @Parameter(3)
-    public Architecture arch;
-
-    @Parameter(4)
-    public OperatingSystem os;
-
-    @Parameters(name = "{index}: {0} {1}")
-    public static Collection<Object[]> data() {
-        return asList(new Object[][] {
-                { CHROME, "chromedriver", "81.0.4044.69", DEFAULT, LINUX },
-                { FIREFOX, "geckodriver", "0.26.0", DEFAULT, LINUX } });
-    }
-
-    @Before
-    @After
+    @BeforeEach
+    @AfterEach
     public void cleanCache() {
         WebDriverManager.chromedriver().clearResolutionCache();
     }
 
-    @Test
-    public void testCache() throws Exception {
+    @ParameterizedTest
+    @MethodSource("cacheProvider")
+    public void testCache(DriverManagerType driverManagerType,
+            String driverName, String driverVersion, Architecture arch,
+            OperatingSystem os) throws Exception {
+
         WebDriverManager browserManager = WebDriverManager
                 .getInstance(driverManagerType);
         browserManager.clearResolutionCache().forceDownload()
@@ -97,6 +75,13 @@ public class CacheTest {
 
         log.debug("Driver from cache: {}", driverFromCache);
         assertThat(driverFromCache.get(), notNullValue());
+    }
+
+    static Stream<Arguments> cacheProvider() {
+        return Stream.of(
+                Arguments.of(CHROME, "chromedriver", "81.0.4044.69", DEFAULT,
+                        LINUX),
+                Arguments.of(FIREFOX, "geckodriver", "0.26.0", DEFAULT, LINUX));
     }
 
 }

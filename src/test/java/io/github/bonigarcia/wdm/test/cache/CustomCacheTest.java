@@ -25,9 +25,9 @@ import static org.slf4j.LoggerFactory.getLogger;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -45,7 +45,7 @@ public class CustomCacheTest {
 
     Config globalConfig;
 
-    @Before
+    @BeforeEach
     public void setup() {
         globalConfig = WebDriverManager.globalConfig();
     }
@@ -56,7 +56,8 @@ public class CustomCacheTest {
         globalConfig.setCachePath(tmpFolder.toString());
         log.info("Using temporary folder {} as cache", tmpFolder);
         WebDriverManager.chromedriver().forceDownload().setup();
-        String driverPath = WebDriverManager.chromedriver().getDownloadedDriverPath();
+        String driverPath = WebDriverManager.chromedriver()
+                .getDownloadedDriverPath();
         log.info("Driver path {}", driverPath);
         assertThat(driverPath, startsWith(tmpFolder.toString()));
         log.info("Deleting temporary folder {}", tmpFolder);
@@ -90,7 +91,7 @@ public class CustomCacheTest {
         assertThat(cachePath, startsWith(customPath));
     }
 
-    @After
+    @AfterEach
     public void teardown() throws IOException {
         globalConfig.reset();
     }

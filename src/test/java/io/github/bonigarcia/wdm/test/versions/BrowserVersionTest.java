@@ -17,14 +17,14 @@
 package io.github.bonigarcia.wdm.test.versions;
 
 import static java.lang.invoke.MethodHandles.lookup;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -39,8 +39,8 @@ public class BrowserVersionTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
-    @BeforeClass
-    @AfterClass
+    @BeforeAll
+    @AfterAll
     public static void cleanCache() {
         WebDriverManager.chromedriver().clearResolutionCache();
     }
@@ -62,7 +62,7 @@ public class BrowserVersionTest {
     private void assertDriver(WebDriverManager driverManager) {
         File driver = new File(driverManager.getDownloadedDriverPath());
         log.debug("Driver path {}", driver);
-        assertTrue(driver.exists());
+        assertThat(driver.exists());
     }
 
 }

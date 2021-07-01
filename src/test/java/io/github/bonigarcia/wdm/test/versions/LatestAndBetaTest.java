@@ -17,20 +17,14 @@
 package io.github.bonigarcia.wdm.test.versions;
 
 import static java.lang.invoke.MethodHandles.lookup;
-import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNot.not;
 import static org.slf4j.LoggerFactory.getLogger;
 
-import java.util.Collection;
-
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
@@ -44,23 +38,15 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 3.6.0
  */
-@RunWith(Parameterized.class)
-@Ignore
+@Disabled
 public class LatestAndBetaTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
-    @Parameter
-    public Class<? extends WebDriver> driverClass;
-
-    @Parameters(name = "{index}: {0}")
-    public static Collection<Object[]> data() {
-        return asList(new Object[][] { { ChromeDriver.class },
-                { EdgeDriver.class } });
-    }
-
-    @Test
-    public void testLatestAndBetaedgedriver() {
+    @ParameterizedTest
+    @ValueSource(classes = { ChromeDriver.class, EdgeDriver.class })
+    public void testLatestAndBetaedgedriver(
+            Class<? extends WebDriver> driverClass) {
         WebDriverManager.getInstance(driverClass).avoidResolutionCache()
                 .avoidBrowserDetection().win().setup();
         String edgedriverStable = WebDriverManager.getInstance(driverClass)

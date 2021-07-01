@@ -16,8 +16,8 @@
  */
 package io.github.bonigarcia.wdm.test.phantomjs;
 
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -32,12 +32,12 @@ import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
 
 public class PhantomJsTest extends BrowserTestParent {
 
-    @BeforeClass
+    @BeforeAll
     public static void setupClass() {
         WebDriverManager.phantomjs().setup();
     }
 
-    @Before
+    @BeforeEach
     public void setupTest() {
         driver = new PhantomJSDriver();
     }

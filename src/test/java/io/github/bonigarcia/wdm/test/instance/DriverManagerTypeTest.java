@@ -16,16 +16,24 @@
  */
 package io.github.bonigarcia.wdm.test.instance;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
+import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROME;
+import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROMIUM;
+import static io.github.bonigarcia.wdm.config.DriverManagerType.EDGE;
+import static io.github.bonigarcia.wdm.config.DriverManagerType.FIREFOX;
+import static io.github.bonigarcia.wdm.config.DriverManagerType.IEXPLORER;
+import static io.github.bonigarcia.wdm.config.DriverManagerType.OPERA;
+import static io.github.bonigarcia.wdm.config.DriverManagerType.PHANTOMJS;
+import static io.github.bonigarcia.wdm.config.DriverManagerType.SAFARI;
+import static io.github.bonigarcia.wdm.config.DriverManagerType.SELENIUM_SERVER_STANDALONE;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.stream.Stream;
+
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import io.github.bonigarcia.wdm.config.DriverManagerType;
-
-import java.util.Collection;
-
-import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
 
 /**
  * Test the class name values from DriverManagerTypeTest
@@ -33,31 +41,30 @@ import static org.junit.Assert.assertEquals;
  * @author Elias Nogueira (elias.nogueira@gmail.com)
  * @since 3.8.1
  */
-@RunWith(Parameterized.class)
 public class DriverManagerTypeTest {
 
-    @Parameterized.Parameter
-    public String browserClass;
-
-    @Parameterized.Parameter(1)
-    public DriverManagerType driverManagerType;
-
-    @Test
-    public void shouldReturnTheCorrectDriverClass() {
-        assertEquals(browserClass, driverManagerType.browserClass());
+    @ParameterizedTest
+    @MethodSource("data")
+    public void shouldReturnTheCorrectDriverClass(String browserClass,
+            DriverManagerType driverManagerType) {
+        assertThat(browserClass).isEqualTo(driverManagerType.browserClass());
     }
 
-    @Parameterized.Parameters(name = "{index}: {1}")
-    public static Collection<Object[]> data() {
-        return asList(new Object[][] {
-                { "org.openqa.selenium.chrome.ChromeDriver", DriverManagerType.CHROME },
-                { "org.openqa.selenium.chrome.ChromeDriver", DriverManagerType.CHROMIUM },
-                { "org.openqa.selenium.firefox.FirefoxDriver", DriverManagerType.FIREFOX },
-                { "org.openqa.selenium.opera.OperaDriver", DriverManagerType.OPERA },
-                { "org.openqa.selenium.edge.EdgeDriver", DriverManagerType.EDGE },
-                { "org.openqa.selenium.phantomjs.PhantomJSDriver", DriverManagerType.PHANTOMJS },
-                { "org.openqa.selenium.ie.InternetExplorerDriver", DriverManagerType.IEXPLORER },
-                { "org.openqa.selenium.safari.SafariDriver", DriverManagerType.SAFARI },
-                { "org.openqa.selenium.remote.server.SeleniumServer", DriverManagerType.SELENIUM_SERVER_STANDALONE } });
+    public static Stream<Arguments> data() {
+        return Stream.of(
+                Arguments.of("org.openqa.selenium.chrome.ChromeDriver", CHROME),
+                Arguments.of("org.openqa.selenium.chrome.ChromeDriver",
+                        CHROMIUM),
+                Arguments.of("org.openqa.selenium.firefox.FirefoxDriver",
+                        FIREFOX),
+                Arguments.of("org.openqa.selenium.opera.OperaDriver", OPERA),
+                Arguments.of("org.openqa.selenium.edge.EdgeDriver", EDGE),
+                Arguments.of("org.openqa.selenium.phantomjs.PhantomJSDriver",
+                        PHANTOMJS),
+                Arguments.of("org.openqa.selenium.ie.InternetExplorerDriver",
+                        IEXPLORER),
+                Arguments.of("org.openqa.selenium.safari.SafariDriver", SAFARI),
+                Arguments.of("org.openqa.selenium.remote.server.SeleniumServer",
+                        SELENIUM_SERVER_STANDALONE));
     }
 }

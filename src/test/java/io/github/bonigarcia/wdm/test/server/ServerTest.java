@@ -17,23 +17,20 @@
 package io.github.bonigarcia.wdm.test.server;
 
 import static java.lang.invoke.MethodHandles.lookup;
-import static java.util.Arrays.asList;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -47,35 +44,15 @@ import okhttp3.Response;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 3.0.0
  */
-@RunWith(Parameterized.class)
 public class ServerTest {
 
     static final Logger log = getLogger(lookup().lookupClass());
 
     public static final String EXT = IS_OS_WINDOWS ? ".exe" : "";
 
-    @Parameter(0)
-    public String path;
-
-    @Parameter(1)
-    public String driver;
-
     public static String serverPort;
 
-    @Parameters(name = "{index}: {0}")
-    public static Collection<Object[]> data() {
-        return asList(new Object[][] { { "chromedriver", "chromedriver" + EXT },
-                { "firefoxdriver", "geckodriver" + EXT },
-                { "operadriver", "operadriver" + EXT },
-                { "phantomjs", "phantomjs" + EXT },
-                { "edgedriver", "msedgedriver" + EXT },
-                { "iedriver", "IEDriverServer.exe" },
-                { "chromedriver?os=WIN", "chromedriver.exe" },
-                { "chromedriver?os=LINUX&chromeDriverVersion=2.41&forceCache=true",
-                        "chromedriver" } });
-    }
-
-    @BeforeClass
+    @BeforeAll
     public static void startServer() throws IOException {
         serverPort = getFreePort();
         log.debug("Test is starting WebDriverManager server at port {}",
@@ -84,8 +61,9 @@ public class ServerTest {
         WebDriverManager.main(new String[] { "server", serverPort });
     }
 
-    @Test
-    public void testServer() throws IOException {
+    @ParameterizedTest
+    @MethodSource("data")
+    public void testServer(String path, String driver) throws IOException {
         String serverUrl = String.format("http://localhost:%s/%s", serverPort,
                 path);
 
@@ -99,7 +77,7 @@ public class ServerTest {
 
         // Assert response
         Response response = client.newCall(request).execute();
-        assertTrue(response.isSuccessful());
+        assertThat(response.isSuccessful());
 
         // Assert attachment
         String attachment = String.format("attachment; filename=\"%s\"",
@@ -108,13 +86,25 @@ public class ServerTest {
         List<String> headers = response.headers().values("Content-Disposition");
         log.debug("Assessing {} ... {} should contain {}", driver, headers,
                 attachment);
-        assertTrue(headers.contains(attachment));
+        assertThat(headers.contains(attachment));
     }
 
     public static String getFreePort() throws IOException {
         try (ServerSocket socket = new ServerSocket(0)) {
             return String.valueOf(socket.getLocalPort());
         }
+    }
+
+    public static Stream<Arguments> data() {
+        return Stream.of(Arguments.of("chrome", "chromedriver" + EXT),
+                Arguments.of("firefox", "geckodriver" + EXT),
+                Arguments.of("opera", "operadriver" + EXT),
+                Arguments.of("edge", "msedgedriver" + EXT),
+                Arguments.of("iexplorer", "IEDriverServer.exe"),
+                Arguments.of("chromedriver?os=WIN", "chromedriver.exe"),
+                Arguments.of(
+                        "chromedriver?os=LINUX&chromeDriverVersion=2.41&forceCache=true",
+                        "chromedriver"));
     }
 
 }

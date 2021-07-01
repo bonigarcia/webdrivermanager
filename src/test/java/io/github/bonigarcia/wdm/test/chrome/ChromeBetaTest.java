@@ -16,17 +16,17 @@
  */
 package io.github.bonigarcia.wdm.test.chrome;
 
+import static org.assertj.core.api.Assumptions.assumeThat;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assume.assumeTrue;
 
 import java.io.File;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -46,29 +46,29 @@ public class ChromeBetaTest {
 
     WebDriver driver;
 
-    @BeforeClass
+    @BeforeAll
     public static void setupClass() {
-        assumeTrue(chromeBetaFile.exists());
+        assumeThat(chromeBetaFile.exists());
         WebDriverManager.chromedriver().clearResolutionCache()
                 .browserVersionDetectionCommand(chromeBetaPath + " --version")
                 .setup();
     }
 
-    @Before
+    @BeforeEach
     public void setupTest() {
         ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.setBinary(chromeBetaPath);
         driver = new ChromeDriver(chromeOptions);
     }
 
-    @After
+    @AfterEach
     public void teardown() {
         if (driver != null) {
             driver.quit();
         }
     }
 
-    @AfterClass
+    @AfterAll
     public static void teardownClass() {
         WebDriverManager.chromedriver().clearResolutionCache();
     }

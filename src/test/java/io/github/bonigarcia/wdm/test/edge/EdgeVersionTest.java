@@ -18,7 +18,7 @@ package io.github.bonigarcia.wdm.test.edge;
 
 import static io.github.bonigarcia.wdm.config.OperatingSystem.WIN;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.edge.EdgeDriver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -32,7 +32,7 @@ import io.github.bonigarcia.wdm.test.base.VersionTestParent;
  */
 public class EdgeVersionTest extends VersionTestParent {
 
-    @Before
+    @BeforeEach
     public void setup() {
         browserManager = WebDriverManager.getInstance(EdgeDriver.class);
         os = WIN;

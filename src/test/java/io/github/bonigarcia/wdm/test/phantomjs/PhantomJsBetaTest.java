@@ -16,11 +16,10 @@
  */
 package io.github.bonigarcia.wdm.test.phantomjs;
 
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
@@ -32,14 +31,15 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  */
 public class PhantomJsBetaTest {
 
-    @BeforeClass
+    @BeforeEach
     public static void setupClass() {
         WebDriverManager.phantomjs().useBetaVersions().setup();
     }
 
     @Test
     public void testPhantomBeta() {
-        String driverPath = WebDriverManager.phantomjs().getDownloadedDriverPath();
-        assertThat(driverPath, notNullValue());
+        String driverPath = WebDriverManager.phantomjs()
+                .getDownloadedDriverPath();
+        assertThat(driverPath).isNotNull();
     }
 }

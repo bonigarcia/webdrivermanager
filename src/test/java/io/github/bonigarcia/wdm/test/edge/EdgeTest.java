@@ -16,9 +16,8 @@
  */
 package io.github.bonigarcia.wdm.test.edge;
 
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.edge.EdgeDriver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -30,15 +29,14 @@ import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.3.0
  */
-@Ignore("Edge not available in CI for all operating systems")
 public class EdgeTest extends BrowserTestParent {
 
-    @BeforeClass
+    @BeforeAll
     public static void setupClass() {
         WebDriverManager.edgedriver().setup();
     }
 
-    @Before
+    @BeforeEach
     public void setupTest() {
         driver = new EdgeDriver();
     }

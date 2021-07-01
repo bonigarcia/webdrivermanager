@@ -19,13 +19,13 @@ package io.github.bonigarcia.wdm.test.opera;
 import static java.nio.file.Files.exists;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
-import static org.junit.Assume.assumeTrue;
+import static org.assertj.core.api.Assumptions.assumeThat;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.opera.OperaDriver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -39,15 +39,15 @@ import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
  */
 public class OperaTest extends BrowserTestParent {
 
-    @BeforeClass
+    @BeforeAll
     public static void setupClass() {
         WebDriverManager.operadriver().clearResolutionCache().setup();
     }
 
-    @Before
+    @BeforeEach
     public void setupTest() {
         Path browserPath = getBrowserPath();
-        assumeTrue(exists(browserPath));
+        assumeThat(exists(browserPath));
 
         driver = new OperaDriver();
     }

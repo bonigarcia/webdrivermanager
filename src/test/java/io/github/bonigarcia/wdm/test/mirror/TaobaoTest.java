@@ -17,13 +17,14 @@
 package io.github.bonigarcia.wdm.test.mirror;
 
 import static io.github.bonigarcia.wdm.WebDriverManager.chromedriver;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.File;
 import java.net.URL;
 
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.WebDriverManagerException;
@@ -37,7 +38,7 @@ import io.github.bonigarcia.wdm.config.WebDriverManagerException;
 
 public class TaobaoTest {
 
-    @Ignore("Flaky test due to slow response of npm.taobao.org")
+    @Disabled("Flaky test due to slow response of npm.taobao.org")
     @Test
     public void testTaobao() throws Exception {
         chromedriver().config().setAvoidBrowserDetection(true)
@@ -46,10 +47,10 @@ public class TaobaoTest {
         chromedriver().useMirror().forceDownload().setup();
 
         File driver = new File(chromedriver().getDownloadedDriverPath());
-        assertTrue(driver.exists());
+        assertThat(driver.exists());
     }
 
-    @Ignore("Flaky test due to cnpmjs.org")
+    @Disabled("Flaky test due to cnpmjs.org")
     @Test
     public void testOtherMirrorUrl() throws Exception {
         chromedriver().config().setAvoidBrowserDetection(true)
@@ -58,15 +59,14 @@ public class TaobaoTest {
         chromedriver().useMirror().forceDownload().setup();
 
         File driver = new File(chromedriver().getDownloadedDriverPath());
-        assertTrue(driver.exists());
+        assertThat(driver.exists());
     }
 
-    @Test(expected = WebDriverManagerException.class)
+    @Test
     public void testTaobaoException() {
-        WebDriverManager.edgedriver().useMirror().setup();
-        File driver = new File(
-                WebDriverManager.edgedriver().getDownloadedDriverPath());
-        assertTrue(driver.exists());
+        assertThrows(WebDriverManagerException.class, () -> {
+            WebDriverManager.edgedriver().useMirror().setup();
+        });
     }
 
 }

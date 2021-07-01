@@ -18,20 +18,17 @@ package io.github.bonigarcia.wdm.test.versions;
 
 import static java.io.File.separator;
 import static java.lang.invoke.MethodHandles.lookup;
-import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+import java.util.stream.Stream;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.cache.CacheHandler;
@@ -43,30 +40,24 @@ import io.github.bonigarcia.wdm.config.Config;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 3.8.0
  */
-@RunWith(Parameterized.class)
 public class VersionFilterTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
-    @Parameter(0)
-    public String version;
-
-    @Parameter(1)
-    public int expectedVersions;
-
-    @Parameters(name = "{index}: {0}")
-    public static Collection<Object[]> data() {
-        return asList(new Object[][] { { "74", 1 }, { "77", 1 }, { "79", 2 } });
-    }
-
-    @Test
-    public void testFilterCacheBy() {
+    @ParameterizedTest
+    @MethodSource("data")
+    public void testFilterCacheBy(String version, int expectedVersions) {
         CacheHandler cacheHandler = new CacheHandler(new Config());
         List<File> filteredList = cacheHandler.filterCacheBy(getInputFileList(),
                 version, true);
 
         log.debug("Version {} -- Output {}", version, filteredList);
-        assertEquals(filteredList.size(), expectedVersions);
+        assertThat(filteredList.size()).isEqualTo(expectedVersions);
+    }
+
+    public static Stream<Arguments> data() {
+        return Stream.of(Arguments.of("74", 1), Arguments.of("77", 1),
+                Arguments.of("79", 2));
     }
 
     private List<File> getInputFileList() {

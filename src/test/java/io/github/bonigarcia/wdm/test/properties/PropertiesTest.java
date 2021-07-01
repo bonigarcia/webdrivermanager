@@ -16,11 +16,11 @@
  */
 package io.github.bonigarcia.wdm.test.properties;
 
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
@@ -39,13 +39,7 @@ public class PropertiesTest {
         chromedriver.setup();
         String driverPath = chromedriver.getDownloadedDriverPath();
         File driver = new File(driverPath);
-        assertTrue(driver.exists());
-    }
-
-    @Test
-    public void testEmptyProperties() {
-        WebDriverManager.chromedriver().properties("").setup();
-        assertTrue(true);
+        assertThat(driver.exists());
     }
 
 }

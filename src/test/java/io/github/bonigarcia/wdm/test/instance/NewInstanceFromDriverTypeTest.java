@@ -16,15 +16,14 @@
  */
 package io.github.bonigarcia.wdm.test.instance;
 
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.lang.reflect.Constructor;
 
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -43,12 +42,12 @@ public class NewInstanceFromDriverTypeTest {
     private static DriverManagerType driverManagerType = DriverManagerType.CHROME;
     private static WebDriver driver;
 
-    @BeforeClass
+    @BeforeAll
     public static void setupClass() {
         WebDriverManager.getInstance(driverManagerType).setup();
     }
 
-    @Before
+    @BeforeEach
     public void setupTest() throws Exception {
         Constructor<?> declaredConstructor = Class
                 .forName(driverManagerType.browserClass())
@@ -60,10 +59,10 @@ public class NewInstanceFromDriverTypeTest {
 
     @Test
     public void createNewChromeInstanceFromDriverManagerType() {
-        assertThat(driver, instanceOf(ChromeDriver.class));
+        assertThat(driver).isInstanceOf(ChromeDriver.class);
     }
 
-    @AfterClass
+    @AfterAll
     public static void tearDown() {
         driver.quit();
     }

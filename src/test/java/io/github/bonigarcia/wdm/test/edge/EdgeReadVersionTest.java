@@ -17,14 +17,13 @@
 package io.github.bonigarcia.wdm.test.edge;
 
 import static java.lang.invoke.MethodHandles.lookup;
-import static org.hamcrest.Matchers.hasItems;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.util.Arrays;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -51,7 +50,7 @@ public class EdgeReadVersionTest {
                 Arrays.asList(expectedVersions));
         log.debug("Edge versions read from the repository: {}", driverVersions);
 
-        assertThat(driverVersions, hasItems(expectedVersions));
+        assertThat(driverVersions).contains(expectedVersions);
     }
 
 }

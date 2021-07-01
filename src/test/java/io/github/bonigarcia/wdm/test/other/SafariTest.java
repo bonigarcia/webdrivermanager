@@ -16,11 +16,10 @@
  */
 package io.github.bonigarcia.wdm.test.other;
 
-import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
-import static org.junit.Assume.assumeTrue;
+import static org.junit.jupiter.api.condition.OS.MAC;
 
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.openqa.selenium.safari.SafariDriver;
 
 import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
@@ -31,14 +30,10 @@ import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
  * @author Elias Nogueira (elias.nogueira@gmail.com)
  * @since 3.8.2
  */
+@EnabledOnOs(MAC)
 public class SafariTest extends BrowserTestParent {
 
-    @BeforeClass
-    public static void setupClass() {
-        assumeTrue(IS_OS_MAC);
-    }
-
-    @Before
+    @BeforeEach
     public void setupTest() {
         driver = new SafariDriver();
     }

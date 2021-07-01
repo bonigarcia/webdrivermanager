@@ -18,9 +18,9 @@ package io.github.bonigarcia.wdm.test.edge;
 
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.charset.StandardCharsets.UTF_16;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.net.URL;
@@ -28,7 +28,7 @@ import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -63,7 +63,7 @@ public class EdgeLatestVersionTest {
                 .getDriverVersionFromRepository(driverVersion, driverUrl,
                         versionCharset, driverName, versionLabel, versionLabel,
                         osLabel);
-        assertTrue(driverVersionFromRepository.isPresent());
+        assertThat(driverVersionFromRepository.isPresent());
         String edgeVersion = driverVersionFromRepository.get();
         log.debug("driverVersionFromRepository {}", edgeVersion);
 

@@ -16,8 +16,8 @@
  */
 package io.github.bonigarcia.wdm.test.chrome;
 
-import org.junit.Before;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -31,12 +31,12 @@ import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
  */
 public class ChromeTest extends BrowserTestParent {
 
-    @BeforeClass
+    @BeforeAll
     public static void setupClass() {
         WebDriverManager.chromedriver().setup();
     }
 
-    @Before
+    @BeforeEach
     public void setupTest() {
         driver = new ChromeDriver();
     }

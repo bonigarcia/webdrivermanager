@@ -16,17 +16,12 @@
  */
 package io.github.bonigarcia.wdm.test.instance;
 
-import static java.util.Arrays.asList;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
-import java.util.Collection;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -40,25 +35,17 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.3.1
  */
-@RunWith(Parameterized.class)
 public class WebDriverTest {
 
-    @Parameter
-    public Class<? extends WebDriver> driverClass;
-
-    @Parameters(name = "{index}: {0}")
-    public static Collection<Object[]> data() {
-        return asList(new Object[][] { { ChromeDriver.class },
-                { FirefoxDriver.class }, { PhantomJSDriver.class } });
-    }
-
-    @Test
-    public void testWebDriver() {
+    @ParameterizedTest
+    @ValueSource(classes = { ChromeDriver.class, FirefoxDriver.class,
+            PhantomJSDriver.class })
+    public void testWebDriver(Class<? extends WebDriver> driverClass) {
         WebDriverManager.getInstance(driverClass).setup();
         String driverPath = WebDriverManager.getInstance(driverClass)
                 .getDownloadedDriverPath();
         File driver = new File(driverPath);
-        assertTrue(driver.exists());
+        assertThat(driver.exists());
     }
 
 }

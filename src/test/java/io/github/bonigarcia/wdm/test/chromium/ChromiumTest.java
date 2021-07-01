@@ -18,13 +18,12 @@ package io.github.bonigarcia.wdm.test.chromium;
 
 import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
-import static org.junit.Assume.assumeTrue;
+import static org.assertj.core.api.Assumptions.assumeThat;
 
 import java.io.File;
 
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
@@ -37,18 +36,17 @@ import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 3.8.0
  */
-@Ignore
 public class ChromiumTest extends BrowserTestParent {
 
-    @BeforeClass
+    @BeforeAll
     public static void setupClass() {
         WebDriverManager.chromiumdriver().setup();
     }
 
-    @Before
+    @BeforeEach
     public void setupTest() {
         File chromiumPath = new File(getChromiumPath());
-        assumeTrue(chromiumPath.exists());
+        assumeThat(chromiumPath.exists());
 
         ChromeOptions options = new ChromeOptions();
         options.setBinary(chromiumPath);

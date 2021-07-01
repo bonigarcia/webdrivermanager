@@ -16,12 +16,11 @@
  */
 package io.github.bonigarcia.wdm.test.other;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNot.not;
-import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.net.URL;
@@ -29,7 +28,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
@@ -53,7 +52,7 @@ public class NamespaceContextTest {
     public void testS3BucketListNamespaceContextUrls() throws IOException {
         TestWebDriverManager testManager = new TestWebDriverManager();
         List<URL> urls = testManager.getDriverUrls();
-        assertThat(urls, is(not(empty())));
+        assertThat(urls).isNotEmpty();
     }
 
     @Test

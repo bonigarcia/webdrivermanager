@@ -17,22 +17,14 @@
 package io.github.bonigarcia.wdm.test.base;
 
 import static io.github.bonigarcia.wdm.config.Architecture.DEFAULT;
-import static io.github.bonigarcia.wdm.config.Architecture.X32;
-import static io.github.bonigarcia.wdm.config.Architecture.X64;
 import static java.lang.invoke.MethodHandles.lookup;
-import static java.util.Arrays.asList;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
-import java.util.Collection;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
-import org.junit.runners.Parameterized.Parameter;
-import org.junit.runners.Parameterized.Parameters;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -45,11 +37,7 @@ import io.github.bonigarcia.wdm.config.OperatingSystem;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.4.1
  */
-@RunWith(Parameterized.class)
 public abstract class VersionTestParent {
-
-    @Parameter
-    public Architecture architecture;
 
     protected WebDriverManager browserManager;
     protected String[] specificVersions;
@@ -57,13 +45,9 @@ public abstract class VersionTestParent {
 
     final Logger log = getLogger(lookup().lookupClass());
 
-    @Parameters(name = "{index}: {0}")
-    public static Collection<Object[]> data() {
-        return asList(new Object[][] { { DEFAULT }, { X32 }, { X64 } });
-    }
-
-    @Test
-    public void testLatestVersion() throws Exception {
+    @ParameterizedTest
+    @EnumSource(names = { "DEFAULT", "X32", "X64" })
+    public void testLatestVersion(Architecture architecture) throws Exception {
         String osLabel = "";
         if (os != null) {
             browserManager.operatingSystem(os);
@@ -86,8 +70,10 @@ public abstract class VersionTestParent {
         assertThat(browserManager.getDownloadedDriverVersion(), notNullValue());
     }
 
-    @Test
-    public void testSpecificVersions() throws Exception {
+    @ParameterizedTest
+    @EnumSource(names = { "DEFAULT", "X32", "X64" })
+    public void testSpecificVersions(Architecture architecture)
+            throws Exception {
         for (String specificVersion : specificVersions) {
             if (architecture != DEFAULT) {
                 browserManager.architecture(architecture);
