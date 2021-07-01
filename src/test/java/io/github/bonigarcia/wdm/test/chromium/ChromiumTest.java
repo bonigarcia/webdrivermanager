@@ -46,7 +46,7 @@ public class ChromiumTest extends BrowserTestParent {
     @BeforeEach
     public void setupTest() {
         File chromiumPath = new File(getChromiumPath());
-        assumeThat(chromiumPath.exists());
+        assumeThat(chromiumPath).exists();
 
         ChromeOptions options = new ChromeOptions();
         options.setBinary(chromiumPath);

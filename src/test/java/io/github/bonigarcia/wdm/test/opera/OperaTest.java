@@ -16,7 +16,6 @@
  */
 package io.github.bonigarcia.wdm.test.opera;
 
-import static java.nio.file.Files.exists;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 import static org.assertj.core.api.Assumptions.assumeThat;
@@ -47,7 +46,7 @@ public class OperaTest extends BrowserTestParent {
     @BeforeEach
     public void setupTest() {
         Path browserPath = getBrowserPath();
-        assumeThat(exists(browserPath));
+        assumeThat(browserPath).exists();
 
         driver = new OperaDriver();
     }
