@@ -68,7 +68,7 @@ public class ServerTest {
                 { "firefoxdriver", "geckodriver" + EXT },
                 { "operadriver", "operadriver" + EXT },
                 { "phantomjs", "phantomjs" + EXT },
-                { "edgedriver", "msedgedriver.exe" },
+                { "edgedriver", "msedgedriver" },
                 { "iedriver", "IEDriverServer.exe" },
                 { "chromedriver?os=WIN", "chromedriver.exe" },
                 { "chromedriver?os=LINUX&chromeDriverVersion=2.41&forceCache=true",
