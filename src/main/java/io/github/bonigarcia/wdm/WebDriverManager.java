@@ -1090,8 +1090,7 @@ public abstract class WebDriverManager {
             WebDriverManager wdm = WebDriverManager
                     .getInstance(driverManagerType).avoidExport().cachePath(".")
                     .forceDownload();
-            if (arg.equalsIgnoreCase("edge")
-                    || arg.equalsIgnoreCase("iexplorer")) {
+            if (arg.equalsIgnoreCase("iexplorer")) {
                 wdm.operatingSystem(WIN);
             }
             wdm.avoidOutputTree().setup();
