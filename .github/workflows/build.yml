@@ -27,6 +27,7 @@ jobs:
       run: mvn -B test
       env:
         DISPLAY: :99
+        WDM_GITHUBTOKEN: ${{ secrets.WDM_GITHUBTOKEN }}
     - name: Upload analysis to SonarCloud
       if: success() && matrix.os == 'ubuntu-latest' && matrix.java == '11' && !contains(github.ref, 'pull')
       run: >
@@ -35,7 +36,7 @@ jobs:
         -Dsonar.organization=bonigarcia-github
         -Dsonar.projectKey=io.github.bonigarcia:webdrivermanager
       env:
-        GITHUB_TOKEN: ${{ secrets.WDM_GITHUBTOKENSECRET }}
+        GITHUB_TOKEN: ${{ secrets.WDM_GITHUBTOKEN }}
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     - name: Upload coverage to Codecov
       if: success() && matrix.os == 'ubuntu-latest' && matrix.java == '11' && !contains(github.ref, 'pull')

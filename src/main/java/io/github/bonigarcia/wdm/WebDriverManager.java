@@ -71,7 +71,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
@@ -389,13 +388,8 @@ public abstract class WebDriverManager {
         return instanceMap.get(getDriverManagerType());
     }
 
-    public WebDriverManager gitHubTokenSecret(String gitHubTokenSecret) {
-        config().setGitHubTokenSecret(gitHubTokenSecret);
-        return instanceMap.get(getDriverManagerType());
-    }
-
-    public WebDriverManager gitHubTokenName(String gitHubTokenName) {
-        config().setGitHubTokenName(gitHubTokenName);
+    public WebDriverManager gitHubToken(String gitHubToken) {
+        config().setGitHubToken(gitHubToken);
         return instanceMap.get(getDriverManagerType());
     }
 
@@ -975,14 +969,9 @@ public abstract class WebDriverManager {
             throws IOException {
         HttpGet get = httpClient.createHttpGet(driverUrl);
 
-        String gitHubTokenName = config().getGitHubTokenName();
-        String gitHubTokenSecret = config().getGitHubTokenSecret();
-        if (!isNullOrEmpty(gitHubTokenName)
-                && !isNullOrEmpty(gitHubTokenSecret)) {
-            String userpass = gitHubTokenName + ":" + gitHubTokenSecret;
-            String basicAuth = "Basic "
-                    + new String(new Base64().encode(userpass.getBytes()));
-            get.addHeader("Authorization", basicAuth);
+        String gitHubToken = config().getGitHubToken();
+        if (!isNullOrEmpty(gitHubToken)) {
+            get.addHeader("Authorization", "token " + gitHubToken);
         }
 
         return httpClient.execute(get).getEntity().getContent();

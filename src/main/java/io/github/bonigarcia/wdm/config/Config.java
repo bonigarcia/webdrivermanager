@@ -103,10 +103,8 @@ public class Config {
             String.class);
     ConfigKey<String> ignoreVersions = new ConfigKey<>("wdm.ignoreVersions",
             String.class);
-    ConfigKey<String> gitHubTokenName = new ConfigKey<>("wdm.gitHubTokenName",
+    ConfigKey<String> gitHubToken = new ConfigKey<>("wdm.gitHubToken",
             String.class);
-    ConfigKey<String> gitHubTokenSecret = new ConfigKey<>(
-            "wdm.gitHubTokenSecret", String.class);
     ConfigKey<String> localRepositoryUser = new ConfigKey<>(
             "wdm.localRepositoryUser", String.class);
     ConfigKey<String> localRepositoryPassword = new ConfigKey<>(
@@ -580,21 +578,12 @@ public class Config {
         return this;
     }
 
-    public String getGitHubTokenName() {
-        return resolve(gitHubTokenName);
+    public String getGitHubToken() {
+        return resolve(gitHubToken);
     }
 
-    public Config setGitHubTokenName(String value) {
-        this.gitHubTokenName.setValue(value);
-        return this;
-    }
-
-    public String getGitHubTokenSecret() {
-        return resolve(gitHubTokenSecret);
-    }
-
-    public Config setGitHubTokenSecret(String value) {
-        this.gitHubTokenSecret.setValue(value);
+    public Config setGitHubToken(String value) {
+        this.gitHubToken.setValue(value);
         return this;
     }
 
