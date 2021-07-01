@@ -1073,17 +1073,6 @@ public abstract class WebDriverManager {
         retryCount = 0;
     }
 
-    protected String getProgramFilesEnv() {
-        return System.getProperty("os.arch").contains("64") ? "PROGRAMFILES"
-                : "PROGRAMFILES(X86)";
-    }
-
-    protected String getOtherProgramFilesEnv() {
-        return System.getProperty("os.arch").contains("64")
-                ? "PROGRAMFILES(X86)"
-                : "PROGRAMFILES";
-    }
-
     protected URL getDriverUrlCkeckingMirror(URL url) {
         if (config().isUseMirror()) {
             Optional<URL> mirrorUrl = getMirrorUrl();
