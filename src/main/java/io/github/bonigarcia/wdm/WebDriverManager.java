@@ -1089,7 +1089,7 @@ public abstract class WebDriverManager {
                     .valueOf(arg.toUpperCase(ROOT));
             WebDriverManager wdm = WebDriverManager
                     .getInstance(driverManagerType).avoidExport().cachePath(".")
-                    .forceDownload();
+                    .forceDownload().avoidResolutionCache();
             if (arg.equalsIgnoreCase("iexplorer")) {
                 wdm.operatingSystem(WIN);
             }
