@@ -54,7 +54,7 @@ class BrowserVersionDetectionTest {
                 log.debug("The detected version of {} is {}", browser,
                         detectedVersion.get());
                 int numericVersion = Integer.parseInt(detectedVersion.get());
-                assertThat(numericVersion).isGreaterThan(0);
+                assertThat(numericVersion).isPositive();
             }
         }
 

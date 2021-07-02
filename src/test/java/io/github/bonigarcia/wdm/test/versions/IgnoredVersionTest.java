@@ -46,13 +46,12 @@ class IgnoredVersionTest {
 
     @Test
     void ignoredVersionsChrome() {
-        assertThrows(WebDriverManagerException.class, () -> {
-            String driverVersion = "81.0.4044.69";
-            String[] ignoredVersions = { driverVersion };
-            WebDriverManager.chromedriver().driverVersion(driverVersion)
-                    .ignoreDriverVersions(ignoredVersions).avoidFallback()
-                    .setup();
-        });
+        String driverVersion = "81.0.4044.69";
+        String[] ignoredVersions = { driverVersion };
+
+        assertThrows(WebDriverManagerException.class, () -> WebDriverManager
+                .chromedriver().driverVersion(driverVersion)
+                .ignoreDriverVersions(ignoredVersions).avoidFallback().setup());
     }
 
     @Test
