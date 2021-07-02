@@ -52,9 +52,7 @@ public class EdgeMacTest {
         assertThat(driver.exists());
 
         File lib = new File(driver.getParent(), libName);
-        assertThat(lib.exists()).withFailMessage("The file " + libName
-                + " should be placed together with msedgedriver in version "
-                + driverVersion);
+        assertThat(lib.exists());
     }
 
 }
