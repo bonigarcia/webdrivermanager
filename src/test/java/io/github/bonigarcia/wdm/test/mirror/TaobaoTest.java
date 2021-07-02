@@ -64,8 +64,8 @@ class TaobaoTest {
 
     @Test
     void testTaobaoException() {
-        WebDriverManager manager = WebDriverManager.edgedriver().useMirror();
-        assertThatThrownBy(manager::setup)
+        WebDriverManager manager = WebDriverManager.edgedriver();
+        assertThatThrownBy(manager::useMirror)
                 .isInstanceOf(WebDriverManagerException.class);
     }
 
