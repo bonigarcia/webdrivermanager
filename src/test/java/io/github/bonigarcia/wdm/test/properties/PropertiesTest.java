@@ -39,7 +39,7 @@ class PropertiesTest {
         chromedriver.setup();
         String driverPath = chromedriver.getDownloadedDriverPath();
         File driver = new File(driverPath);
-        assertThat(driver.exists());
+        assertThat(driver).exists();
     }
 
 }

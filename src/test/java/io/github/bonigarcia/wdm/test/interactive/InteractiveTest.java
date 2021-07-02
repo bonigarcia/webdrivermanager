@@ -51,7 +51,7 @@ class InteractiveTest {
         File driverFile = new File(driver);
         boolean exists = driverFile.exists();
         boolean delete = driverFile.delete();
-        assertThat(exists && delete);
+        assertThat(exists && delete).isTrue();
         log.debug("Interactive test with {} OK", argument);
     }
 

@@ -39,7 +39,7 @@ class ResolutionCacheTest {
         chromedriver().ttl(0).ttlBrowsers(0).setup();
         File driver = new File(chromedriver().getDownloadedDriverPath());
 
-        assertThat(driver.exists());
+        assertThat(driver).exists();
     }
 
 }

@@ -19,8 +19,6 @@ package io.github.bonigarcia.wdm.test.edge;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.charset.StandardCharsets.UTF_16;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.net.URL;
@@ -63,7 +61,7 @@ class EdgeLatestVersionTest {
                 .getDriverVersionFromRepository(driverVersion, driverUrl,
                         versionCharset, driverName, versionLabel, versionLabel,
                         osLabel);
-        assertThat(driverVersionFromRepository.isPresent());
+        assertThat(driverVersionFromRepository).isPresent();
         String edgeVersion = driverVersionFromRepository.get();
         log.debug("driverVersionFromRepository {}", edgeVersion);
 
@@ -75,7 +73,7 @@ class EdgeLatestVersionTest {
             log.warn("{}", String.format(
                     "Stable version (%s) is not in the URL list", edgeVersion));
             edgedriver.win().forceDownload().avoidBrowserDetection().setup();
-            assertThat(edgedriver.getDownloadedDriverVersion(), notNullValue());
+            assertThat(edgedriver.getDownloadedDriverVersion()).isNotNull();
         }
     }
 

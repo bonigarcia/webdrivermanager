@@ -18,9 +18,7 @@ package io.github.bonigarcia.wdm.test.base;
 
 import static io.github.bonigarcia.wdm.config.Architecture.DEFAULT;
 import static java.lang.invoke.MethodHandles.lookup;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import org.junit.jupiter.params.ParameterizedTest;
@@ -67,13 +65,12 @@ abstract public class VersionTestParent {
             browserManager.setup();
         }
 
-        assertThat(browserManager.getDownloadedDriverVersion(), notNullValue());
+        assertThat(browserManager.getDownloadedDriverVersion()).isNotNull();
     }
 
     @ParameterizedTest
     @EnumSource(names = { "DEFAULT", "X32", "X64" })
-    void testSpecificVersions(Architecture architecture)
-            throws Exception {
+    void testSpecificVersions(Architecture architecture) throws Exception {
         for (String specificVersion : specificVersions) {
             if (architecture != DEFAULT) {
                 browserManager.architecture(architecture);
@@ -89,8 +86,8 @@ abstract public class VersionTestParent {
 
             browserManager.driverVersion(specificVersion).setup();
 
-            assertThat(browserManager.getDownloadedDriverVersion(),
-                    equalTo(specificVersion));
+            assertThat(browserManager.getDownloadedDriverVersion())
+                    .isEqualTo(specificVersion);
         }
     }
 

@@ -17,8 +17,7 @@
 package io.github.bonigarcia.wdm.test.forced;
 
 import static io.github.bonigarcia.wdm.config.OperatingSystem.WIN;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -47,7 +46,7 @@ class ForceDownloadTest {
         driverManager.forceDownload().avoidBrowserDetection()
                 .avoidReadReleaseFromRepository().timeout(20)
                 .operatingSystem(WIN).setup();
-        assertThat(driverManager.getDownloadedDriverPath(), notNullValue());
+        assertThat(driverManager.getDownloadedDriverPath()).isNotNull();
     }
 
 }

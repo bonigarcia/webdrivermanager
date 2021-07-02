@@ -77,7 +77,7 @@ class ServerTest {
 
         // Assert response
         Response response = client.newCall(request).execute();
-        assertThat(response.isSuccessful());
+        assertThat(response.isSuccessful()).isTrue();
 
         // Assert attachment
         String attachment = String.format("attachment; filename=\"%s\"",
@@ -86,7 +86,7 @@ class ServerTest {
         List<String> headers = response.headers().values("Content-Disposition");
         log.debug("Assessing {} ... {} should contain {}", driver, headers,
                 attachment);
-        assertThat(headers.contains(attachment));
+        assertThat(headers).contains(attachment);
     }
 
     static String getFreePort() throws IOException {

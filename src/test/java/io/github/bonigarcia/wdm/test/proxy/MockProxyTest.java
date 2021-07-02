@@ -69,7 +69,7 @@ class MockProxyTest {
                 .setup();
         File driver = new File(
                 WebDriverManager.chromedriver().getDownloadedDriverPath());
-        assertThat(driver.exists());
+        assertThat(driver).exists();
     }
 
 }

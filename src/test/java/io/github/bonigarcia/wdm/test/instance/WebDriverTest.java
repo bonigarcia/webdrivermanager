@@ -45,7 +45,7 @@ class WebDriverTest {
         String driverPath = WebDriverManager.getInstance(driverClass)
                 .getDownloadedDriverPath();
         File driver = new File(driverPath);
-        assertThat(driver.exists());
+        assertThat(driver).exists();
     }
 
 }

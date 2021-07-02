@@ -63,7 +63,7 @@ class LocalPropertiesTest {
         String driverPath = WebDriverManager.chromedriver()
                 .getDownloadedDriverPath();
         File driver = new File(driverPath);
-        assertThat(driver.exists());
+        assertThat(driver).exists();
     }
 
 }

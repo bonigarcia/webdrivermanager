@@ -17,9 +17,7 @@
 package io.github.bonigarcia.wdm.test.versions;
 
 import static java.lang.invoke.MethodHandles.lookup;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.IsEqual.equalTo;
-import static org.hamcrest.core.IsNot.not;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import org.junit.jupiter.api.Disabled;
@@ -45,8 +43,7 @@ class LatestAndBetaTest {
 
     @ParameterizedTest
     @ValueSource(classes = { ChromeDriver.class, EdgeDriver.class })
-    void testLatestAndBetaedgedriver(
-            Class<? extends WebDriver> driverClass) {
+    void testLatestAndBetaedgedriver(Class<? extends WebDriver> driverClass) {
         WebDriverManager.getInstance(driverClass).avoidResolutionCache()
                 .avoidBrowserDetection().win().setup();
         String edgedriverStable = WebDriverManager.getInstance(driverClass)
@@ -59,7 +56,7 @@ class LatestAndBetaTest {
                 .getDownloadedDriverVersion();
         log.debug("edgedriver BETA version: {}", edgedriverBeta);
 
-        assertThat(edgedriverStable, not(equalTo(edgedriverBeta)));
+        assertThat(edgedriverStable).isNotEqualTo(edgedriverBeta);
     }
 
 }

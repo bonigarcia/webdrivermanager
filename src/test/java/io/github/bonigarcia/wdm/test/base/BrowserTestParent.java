@@ -17,8 +17,7 @@
 package io.github.bonigarcia.wdm.test.base;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -45,8 +44,8 @@ abstract public class BrowserTestParent {
     void test() {
         driver.manage().timeouts().implicitlyWait(30, SECONDS);
         driver.get("https://github.com/bonigarcia/webdrivermanager");
-        assertThat(driver.getTitle(), containsString(
-                "Automated driver management for Selenium WebDriver"));
+        assertThat(driver.getTitle())
+                .contains("Automated driver management for Selenium WebDriver");
     }
 
 }

@@ -49,10 +49,10 @@ class EdgeMacTest {
 
         log.debug("The downloaded driver path is: {}", downloadedDriverPath);
         File driver = new File(downloadedDriverPath);
-        assertThat(driver.exists());
+        assertThat(driver).exists();
 
         File lib = new File(driver.getParent(), libName);
-        assertThat(lib.exists());
+        assertThat(lib).exists();
     }
 
 }

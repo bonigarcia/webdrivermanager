@@ -58,7 +58,7 @@ class SeleniumServerStandaloneTest {
         File driver = new File(
                 seleniumServerStandalone().getDownloadedDriverPath());
         log.debug("Path for selenium-server-standalone {}", driver);
-        assertThat(driver.exists());
+        assertThat(driver).exists();
     }
 
 }

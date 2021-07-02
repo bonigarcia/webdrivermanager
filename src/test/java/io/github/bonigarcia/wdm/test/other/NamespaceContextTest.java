@@ -18,9 +18,6 @@ package io.github.bonigarcia.wdm.test.other;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.core.Is.is;
 
 import java.io.IOException;
 import java.net.URL;
@@ -57,14 +54,14 @@ class NamespaceContextTest {
 
     @Test
     void testS3BucketListNamespaceContextPrefixes() {
-        assertThat(S_3_BUCKET_LIST_NAMESPACE_CONTEXT.getNamespaceURI("s3"),
-                equalTo(S3_URI));
-        assertThat(S_3_BUCKET_LIST_NAMESPACE_CONTEXT.getPrefix(S3_URI),
-                equalTo("s3"));
+        assertThat(S_3_BUCKET_LIST_NAMESPACE_CONTEXT.getNamespaceURI("s3"))
+                .isEqualTo((S3_URI));
+        assertThat(S_3_BUCKET_LIST_NAMESPACE_CONTEXT.getPrefix(S3_URI))
+                .isEqualTo("s3");
         Iterator<String> prefixes = S_3_BUCKET_LIST_NAMESPACE_CONTEXT
                 .getPrefixes(S3_URI);
-        assertThat(prefixes.next(), equalTo("s3"));
-        assertThat(prefixes.hasNext(), equalTo(false));
+        assertThat(prefixes.next()).isEqualTo("s3");
+        assertThat(prefixes.hasNext()).isFalse();
     }
 
     @Test
@@ -73,19 +70,18 @@ class NamespaceContextTest {
             S_3_BUCKET_LIST_NAMESPACE_CONTEXT.getNamespaceURI("xmlns");
             fail("IllegalArgumentException should be thrown");
         } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage(), equalTo("Unsupported prefix"));
+            assertThat(e.getMessage()).isEqualTo("Unsupported prefix");
         }
         try {
             S_3_BUCKET_LIST_NAMESPACE_CONTEXT
                     .getPrefix("http://www.w3.org/2000/xmlns/");
             fail("IllegalArgumentException should be thrown");
         } catch (IllegalArgumentException e) {
-            assertThat(e.getMessage(), equalTo("Unsupported namespace URI"));
+            assertThat(e.getMessage()).isEqualTo("Unsupported namespace URI");
         }
-        assertThat(
-                S_3_BUCKET_LIST_NAMESPACE_CONTEXT
-                        .getPrefixes("http://www.w3.org/2000/xmlns/").hasNext(),
-                is(false));
+        assertThat(S_3_BUCKET_LIST_NAMESPACE_CONTEXT
+                .getPrefixes("http://www.w3.org/2000/xmlns/").hasNext())
+                        .isFalse();
     }
 
     private static final class TestWebDriverManager extends WebDriverManager {

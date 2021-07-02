@@ -18,8 +18,7 @@ package io.github.bonigarcia.wdm.test.cache;
 
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.file.Files.createTempDirectory;
-import static org.hamcrest.CoreMatchers.startsWith;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.IOException;
@@ -59,7 +58,7 @@ class CustomCacheTest {
         String driverPath = WebDriverManager.chromedriver()
                 .getDownloadedDriverPath();
         log.info("Driver path {}", driverPath);
-        assertThat(driverPath, startsWith(tmpFolder.toString()));
+        assertThat(driverPath).startsWith(tmpFolder.toString());
         log.info("Deleting temporary folder {}", tmpFolder);
         WebDriverManager.chromedriver().clearDriverCache();
     }
@@ -70,7 +69,7 @@ class CustomCacheTest {
         globalConfig.setCachePath(customPath);
         String cachePath = globalConfig.getCachePath();
         log.info("Using {} got {}", customPath, cachePath);
-        assertThat(cachePath, startsWith(customPath));
+        assertThat(cachePath).startsWith(customPath);
     }
 
     @Test
@@ -79,7 +78,7 @@ class CustomCacheTest {
         globalConfig.setCachePath(customPath);
         String cachePath = globalConfig.getCachePath();
         log.info("Using {} got {}", customPath, cachePath);
-        assertThat(cachePath, startsWith(System.getProperty("user.home")));
+        assertThat(cachePath).startsWith(System.getProperty("user.home"));
     }
 
     @Test
@@ -88,7 +87,7 @@ class CustomCacheTest {
         globalConfig.setCachePath(customPath);
         String cachePath = globalConfig.getCachePath();
         log.info("Using {} got {}", customPath, cachePath);
-        assertThat(cachePath, startsWith(customPath));
+        assertThat(cachePath).startsWith(customPath);
     }
 
     @AfterEach

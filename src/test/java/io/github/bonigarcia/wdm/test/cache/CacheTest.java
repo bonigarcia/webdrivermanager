@@ -21,8 +21,7 @@ import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROME;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.FIREFOX;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.LINUX;
 import static java.lang.invoke.MethodHandles.lookup;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.util.Optional;
@@ -60,9 +59,9 @@ class CacheTest {
 
     @ParameterizedTest
     @MethodSource("cacheProvider")
-    void testCache(DriverManagerType driverManagerType,
-            String driverName, String driverVersion, Architecture arch,
-            OperatingSystem os) throws Exception {
+    void testCache(DriverManagerType driverManagerType, String driverName,
+            String driverVersion, Architecture arch, OperatingSystem os)
+            throws Exception {
 
         WebDriverManager browserManager = WebDriverManager
                 .getInstance(driverManagerType);
@@ -74,7 +73,7 @@ class CacheTest {
                 driverVersion, driverName, driverManagerType, arch, os.name());
 
         log.debug("Driver from cache: {}", driverFromCache);
-        assertThat(driverFromCache.get(), notNullValue());
+        assertThat(driverFromCache.get()).isNotNull();
     }
 
     static Stream<Arguments> cacheProvider() {

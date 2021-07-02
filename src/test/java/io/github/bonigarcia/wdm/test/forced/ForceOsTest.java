@@ -79,7 +79,7 @@ class ForceOsTest {
         }
         File driver = new File(chromedriver().getDownloadedDriverPath());
         log.debug("OS {} - driver path {}", operatingSystem, driver);
-        assertThat(driver.exists());
+        assertThat(driver).exists();
     }
 
 }

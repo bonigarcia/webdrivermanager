@@ -47,7 +47,7 @@ class TaobaoTest {
         chromedriver().useMirror().forceDownload().setup();
 
         File driver = new File(chromedriver().getDownloadedDriverPath());
-        assertThat(driver.exists());
+        assertThat(driver).exists();
     }
 
     @Disabled("Flaky test due to cnpmjs.org")
@@ -59,7 +59,7 @@ class TaobaoTest {
         chromedriver().useMirror().forceDownload().setup();
 
         File driver = new File(chromedriver().getDownloadedDriverPath());
-        assertThat(driver.exists());
+        assertThat(driver).exists();
     }
 
     @Test
