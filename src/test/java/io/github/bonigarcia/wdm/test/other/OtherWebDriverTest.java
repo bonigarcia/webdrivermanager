@@ -16,10 +16,11 @@
  */
 package io.github.bonigarcia.wdm.test.other;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -54,9 +55,8 @@ class OtherWebDriverTest {
         WebDriverManager.getInstance(driverClass).setup();
 
         if (exception != null) {
-            Assertions.assertThrows(exception, () -> {
-                driver = driverClass.newInstance();
-            });
+            assertThatThrownBy(driverClass::newInstance)
+                    .isInstanceOf(exception);
         }
     }
 

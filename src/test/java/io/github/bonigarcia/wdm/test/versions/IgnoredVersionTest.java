@@ -18,7 +18,7 @@ package io.github.bonigarcia.wdm.test.versions;
 
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import org.junit.jupiter.api.AfterEach;
@@ -49,9 +49,11 @@ class IgnoredVersionTest {
         String driverVersion = "81.0.4044.69";
         String[] ignoredVersions = { driverVersion };
 
-        assertThrows(WebDriverManagerException.class, () -> WebDriverManager
-                .chromedriver().driverVersion(driverVersion)
-                .ignoreDriverVersions(ignoredVersions).avoidFallback().setup());
+        WebDriverManager manager = WebDriverManager.chromedriver()
+                .driverVersion(driverVersion)
+                .ignoreDriverVersions(ignoredVersions).avoidFallback();
+        assertThatThrownBy(manager::setup)
+                .isInstanceOf(WebDriverManagerException.class);
     }
 
     @Test

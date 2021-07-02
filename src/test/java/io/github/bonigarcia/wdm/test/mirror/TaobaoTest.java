@@ -18,7 +18,7 @@ package io.github.bonigarcia.wdm.test.mirror;
 
 import static io.github.bonigarcia.wdm.WebDriverManager.chromedriver;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.File;
 import java.net.URL;
@@ -64,8 +64,9 @@ class TaobaoTest {
 
     @Test
     void testTaobaoException() {
-        assertThrows(WebDriverManagerException.class,
-                () -> WebDriverManager.edgedriver().useMirror().setup());
+        WebDriverManager manager = WebDriverManager.edgedriver().useMirror();
+        assertThatThrownBy(manager::setup)
+                .isInstanceOf(WebDriverManagerException.class);
     }
 
 }
