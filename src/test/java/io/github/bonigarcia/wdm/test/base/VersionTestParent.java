@@ -37,7 +37,7 @@ import io.github.bonigarcia.wdm.config.OperatingSystem;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.4.1
  */
-public abstract class VersionTestParent {
+abstract public class VersionTestParent {
 
     protected WebDriverManager browserManager;
     protected String[] specificVersions;
@@ -47,7 +47,7 @@ public abstract class VersionTestParent {
 
     @ParameterizedTest
     @EnumSource(names = { "DEFAULT", "X32", "X64" })
-    public void testLatestVersion(Architecture architecture) throws Exception {
+    void testLatestVersion(Architecture architecture) throws Exception {
         String osLabel = "";
         if (os != null) {
             browserManager.operatingSystem(os);
@@ -72,7 +72,7 @@ public abstract class VersionTestParent {
 
     @ParameterizedTest
     @EnumSource(names = { "DEFAULT", "X32", "X64" })
-    public void testSpecificVersions(Architecture architecture)
+    void testSpecificVersions(Architecture architecture)
             throws Exception {
         for (String specificVersion : specificVersions) {
             if (architecture != DEFAULT) {

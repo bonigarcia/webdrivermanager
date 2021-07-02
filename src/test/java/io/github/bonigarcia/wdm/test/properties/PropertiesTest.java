@@ -30,10 +30,10 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 2.1.1
  */
-public class PropertiesTest {
+class PropertiesTest {
 
     @Test
-    public void testCustomProperties() {
+    void testCustomProperties() {
         WebDriverManager chromedriver = WebDriverManager.chromedriver();
         chromedriver.config().setProperties("wdm-test.properties");
         chromedriver.setup();

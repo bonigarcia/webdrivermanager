@@ -30,15 +30,15 @@ import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
  * @since 1.4.0
  */
 
-public class PhantomJsTest extends BrowserTestParent {
+class PhantomJsTest extends BrowserTestParent {
 
     @BeforeAll
-    public static void setupClass() {
+    static void setupClass() {
         WebDriverManager.phantomjs().setup();
     }
 
     @BeforeEach
-    public void setupTest() {
+    void setupTest() {
         driver = new PhantomJSDriver();
     }
 

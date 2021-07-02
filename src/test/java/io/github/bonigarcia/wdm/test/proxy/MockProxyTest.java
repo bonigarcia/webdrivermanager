@@ -40,7 +40,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @since 1.7.2
  */
 @Disabled
-public class MockProxyTest {
+class MockProxyTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
@@ -48,20 +48,20 @@ public class MockProxyTest {
     private int proxyPort;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         proxy = startClientAndServer();
         proxyPort = proxy.getLocalPort();
         log.debug("Started mock proxy on port {}", proxyPort);
     }
 
     @AfterEach
-    public void teardown() {
+    void teardown() {
         log.debug("Stopping mock proxy on port {}", proxyPort);
         proxy.stop();
     }
 
     @Test
-    public void testMockProx() throws MalformedURLException {
+    void testMockProx() throws MalformedURLException {
         WebDriverManager.chromedriver().proxy("localhost:" + proxyPort)
                 .proxyUser("").proxyPass("")
                 .driverRepositoryUrl(

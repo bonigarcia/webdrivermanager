@@ -33,12 +33,12 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 4.4.2
  */
-public class EdgeArmTest {
+class EdgeArmTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
     @Test
-    public void testEdgeArm() {
+    void testEdgeArm() {
         WebDriverManager driverManager = WebDriverManager.edgedriver();
 
         // 1. Force downloading (empty cache)

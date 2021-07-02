@@ -36,15 +36,15 @@ import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.0.0
  */
-public class OperaTest extends BrowserTestParent {
+class OperaTest extends BrowserTestParent {
 
     @BeforeAll
-    public static void setupClass() {
+    static void setupClass() {
         WebDriverManager.operadriver().clearResolutionCache().setup();
     }
 
     @BeforeEach
-    public void setupTest() {
+    void setupTest() {
         Path browserPath = getBrowserPath();
         assumeThat(browserPath).exists();
 

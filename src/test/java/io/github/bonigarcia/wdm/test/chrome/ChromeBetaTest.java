@@ -39,7 +39,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 4.2.1
  */
-public class ChromeBetaTest {
+class ChromeBetaTest {
 
     static String chromeBetaPath = "/usr/bin/google-chrome-beta";
     static File chromeBetaFile = new File(chromeBetaPath);
@@ -47,7 +47,7 @@ public class ChromeBetaTest {
     WebDriver driver;
 
     @BeforeAll
-    public static void setupClass() {
+    static void setupClass() {
         assumeThat(chromeBetaFile).exists();
         WebDriverManager.chromedriver().clearResolutionCache()
                 .browserVersionDetectionCommand(chromeBetaPath + " --version")
@@ -55,26 +55,26 @@ public class ChromeBetaTest {
     }
 
     @BeforeEach
-    public void setupTest() {
+    void setupTest() {
         ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.setBinary(chromeBetaPath);
         driver = new ChromeDriver(chromeOptions);
     }
 
     @AfterEach
-    public void teardown() {
+    void teardown() {
         if (driver != null) {
             driver.quit();
         }
     }
 
     @AfterAll
-    public static void teardownClass() {
+    static void teardownClass() {
         WebDriverManager.chromedriver().clearResolutionCache();
     }
 
     @Test
-    public void test() {
+    void test() {
         driver.get("https://bonigarcia.github.io/selenium-jupiter/");
         assertThat(driver.getTitle(),
                 containsString("JUnit 5 extension for Selenium"));

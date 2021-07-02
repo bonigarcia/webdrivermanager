@@ -34,12 +34,12 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 3.5.0
  */
-public class EdgeReadVersionTest {
+class EdgeReadVersionTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
     @Test
-    public void edgeVersionsTest() {
+    void edgeVersionsTest() {
         String[] expectedVersions = { "75.0.139.20", "76.0.183.0", "77.0.237.0",
                 "78.0.277.0", "79.0.313.0", "80.0.361.111", "81.0.409.0",
                 "82.0.459.1" };

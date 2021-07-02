@@ -34,18 +34,18 @@ import io.github.bonigarcia.wdm.config.WebDriverManagerException;
  * 
  * @since 1.7.2
  */
-public class IgnoredVersionTest {
+class IgnoredVersionTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
     @BeforeEach
     @AfterEach
-    public void cleanCache() {
+    void cleanCache() {
         WebDriverManager.chromedriver().clearDriverCache();
     }
 
     @Test
-    public void ignoredVersionsChrome() {
+    void ignoredVersionsChrome() {
         assertThrows(WebDriverManagerException.class, () -> {
             String driverVersion = "81.0.4044.69";
             String[] ignoredVersions = { driverVersion };
@@ -56,7 +56,7 @@ public class IgnoredVersionTest {
     }
 
     @Test
-    public void ignoredVersionsFirefox() {
+    void ignoredVersionsFirefox() {
         String[] ignoredVersions = { "0.27.0", "0.26.0" };
         WebDriverManager.firefoxdriver().ignoreDriverVersions(ignoredVersions)
                 .setup();

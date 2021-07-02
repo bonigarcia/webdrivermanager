@@ -34,18 +34,18 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 4.4.0
  */
-public class IExplorerArchTest {
+class IExplorerArchTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
     @Test
-    public void testIExplorer32() {
+    void testIExplorer32() {
         WebDriverManager.iedriver().clearDriverCache().win().arch32().setup();
         assertIEDriver();
     }
 
     @Test
-    public void testIExplorer64() {
+    void testIExplorer64() {
         WebDriverManager.iedriver().clearDriverCache().win().arch64().setup();
         assertIEDriver();
     }

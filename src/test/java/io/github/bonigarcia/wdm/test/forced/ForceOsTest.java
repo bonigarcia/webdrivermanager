@@ -42,30 +42,30 @@ import io.github.bonigarcia.wdm.online.Downloader;
  * 
  * @since 1.7.2
  */
-public class ForceOsTest {
+class ForceOsTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
     @InjectMocks
-    public Downloader downloader;
+    Downloader downloader;
 
     @Spy
-    public Config config = new Config();
+    Config config = new Config();
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         openMocks(this);
         WebDriverManager.chromedriver().clearDriverCache();
     }
 
     @AfterEach
-    public void teardown() {
+    void teardown() {
         WebDriverManager.chromedriver().clearDriverCache();
     }
 
     @ParameterizedTest
     @EnumSource(names = { "WIN", "LINUX", "MAC" })
-    public void testForceOs(OperatingSystem operatingSystem) {
+    void testForceOs(OperatingSystem operatingSystem) {
         switch (operatingSystem) {
         case WIN:
             chromedriver().win().avoidResolutionCache().setup();

@@ -48,19 +48,19 @@ import io.github.bonigarcia.wdm.config.OperatingSystem;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.4.5
  */
-public class CacheTest {
+class CacheTest {
 
     static final Logger log = getLogger(lookup().lookupClass());
 
     @BeforeEach
     @AfterEach
-    public void cleanCache() {
+    void cleanCache() {
         WebDriverManager.chromedriver().clearResolutionCache();
     }
 
     @ParameterizedTest
     @MethodSource("cacheProvider")
-    public void testCache(DriverManagerType driverManagerType,
+    void testCache(DriverManagerType driverManagerType,
             String driverName, String driverVersion, Architecture arch,
             OperatingSystem os) throws Exception {
 

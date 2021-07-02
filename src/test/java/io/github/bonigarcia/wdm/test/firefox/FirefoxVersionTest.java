@@ -31,10 +31,10 @@ import io.github.bonigarcia.wdm.test.base.VersionTestParent;
  * @since 1.5.0
  */
 @EnabledOnOs(LINUX)
-public class FirefoxVersionTest extends VersionTestParent {
+class FirefoxVersionTest extends VersionTestParent {
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         browserManager = WebDriverManager.firefoxdriver();
         specificVersions = new String[] { "0.8.0", "0.19.1" };
     }

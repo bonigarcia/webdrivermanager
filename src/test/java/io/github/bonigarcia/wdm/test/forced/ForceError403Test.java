@@ -32,7 +32,7 @@ import org.slf4j.Logger;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 3.3.0
  */
-public class ForceError403Test {
+class ForceError403Test {
 
     final Logger log = getLogger(lookup().lookupClass());
 
@@ -40,7 +40,7 @@ public class ForceError403Test {
 
     @Disabled
     @Test
-    public void test403() {
+    void test403() {
         for (int i = 0; i < NUM; i++) {
             log.debug("Forcing 403 error {}/{}", i + 1, NUM);
             firefoxdriver().avoidBrowserDetection().avoidResolutionCache()

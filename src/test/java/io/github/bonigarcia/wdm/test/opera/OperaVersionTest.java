@@ -27,10 +27,10 @@ import io.github.bonigarcia.wdm.test.base.VersionTestParent;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.2.2
  */
-public class OperaVersionTest extends VersionTestParent {
+class OperaVersionTest extends VersionTestParent {
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         browserManager = WebDriverManager.operadriver();
         specificVersions = new String[] { "0.2.2", "2.32" };
     }

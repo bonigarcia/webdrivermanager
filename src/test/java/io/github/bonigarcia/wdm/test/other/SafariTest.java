@@ -31,10 +31,10 @@ import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
  * @since 3.8.2
  */
 @EnabledOnOs(MAC)
-public class SafariTest extends BrowserTestParent {
+class SafariTest extends BrowserTestParent {
 
     @BeforeEach
-    public void setupTest() {
+    void setupTest() {
         driver = new SafariDriver();
     }
 }

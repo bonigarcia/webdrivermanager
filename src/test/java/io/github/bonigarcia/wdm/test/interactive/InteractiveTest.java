@@ -37,15 +37,15 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 2.1.2
  */
-public class InteractiveTest {
+class InteractiveTest {
 
-    public static final Logger log = getLogger(lookup().lookupClass());
+    static final Logger log = getLogger(lookup().lookupClass());
 
-    public static final String EXT = IS_OS_WINDOWS ? ".exe" : "";
+    static final String EXT = IS_OS_WINDOWS ? ".exe" : "";
 
     @ParameterizedTest
     @MethodSource("data")
-    public void testInteractive(String argument, String driver) {
+    void testInteractive(String argument, String driver) {
         log.debug("Running interactive wdm with arguments: {}", argument);
         WebDriverManager.main(new String[] { argument });
         File driverFile = new File(driver);
@@ -55,7 +55,7 @@ public class InteractiveTest {
         log.debug("Interactive test with {} OK", argument);
     }
 
-    public static Stream<Arguments> data() {
+    static Stream<Arguments> data() {
         return Stream.of(Arguments.of("chrome", "chromedriver" + EXT),
                 Arguments.of("firefox", "geckodriver" + EXT),
                 Arguments.of("opera", "operadriver" + EXT),

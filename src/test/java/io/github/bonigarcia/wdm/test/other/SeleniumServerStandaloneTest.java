@@ -32,24 +32,24 @@ import org.slf4j.Logger;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 3.0.1
  */
-public class SeleniumServerStandaloneTest {
+class SeleniumServerStandaloneTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
     @Test
-    public void testSeleniumServerLatestStable() {
+    void testSeleniumServerLatestStable() {
         seleniumServerStandalone().setup();
         assertDriver();
     }
 
     @Test
-    public void testSeleniumServerLatestBeta() {
+    void testSeleniumServerLatestBeta() {
         seleniumServerStandalone().useBetaVersions().setup();
         assertDriver();
     }
 
     @Test
-    public void testSeleniumServerVersion() {
+    void testSeleniumServerVersion() {
         seleniumServerStandalone().driverVersion("3.13").setup();
         assertDriver();
     }

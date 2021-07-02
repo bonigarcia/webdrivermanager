@@ -32,18 +32,18 @@ import org.slf4j.Logger;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.0.0
  */
-public class IExplorerTest {
+class IExplorerTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
     @Test
-    public void testIExplorerLatest() {
+    void testIExplorerLatest() {
         iedriver().win().setup();
         assertIEDriver();
     }
 
     @Test
-    public void testIExplorerVersion() {
+    void testIExplorerVersion() {
         iedriver().win().driverVersion("3.11").setup();
         assertIEDriver();
     }

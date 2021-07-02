@@ -30,10 +30,10 @@ import io.github.bonigarcia.wdm.test.base.VersionTestParent;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.2.2
  */
-public class IExplorerVersionTest extends VersionTestParent {
+class IExplorerVersionTest extends VersionTestParent {
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         os = WIN;
         browserManager = WebDriverManager
                 .getInstance(InternetExplorerDriver.class);

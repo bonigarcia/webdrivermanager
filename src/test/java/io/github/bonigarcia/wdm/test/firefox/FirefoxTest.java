@@ -33,15 +33,15 @@ import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
  * @since 1.5.0
  */
 @DisabledOnOs(WINDOWS)
-public class FirefoxTest extends BrowserTestParent {
+class FirefoxTest extends BrowserTestParent {
 
     @BeforeAll
-    public static void setupClass() {
+    static void setupClass() {
         WebDriverManager.firefoxdriver().setup();
     }
 
     @BeforeEach
-    public void setupTest() {
+    void setupTest() {
         driver = new FirefoxDriver();
     }
 

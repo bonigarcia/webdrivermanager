@@ -42,21 +42,21 @@ import io.github.bonigarcia.wdm.online.S3NamespaceContext;
  * @since 4.1.0
  */
 
-public class NamespaceContextTest {
+class NamespaceContextTest {
 
-    public static final S3NamespaceContext S_3_BUCKET_LIST_NAMESPACE_CONTEXT = new S3NamespaceContext();
+    static final S3NamespaceContext S_3_BUCKET_LIST_NAMESPACE_CONTEXT = new S3NamespaceContext();
 
-    public static final String S3_URI = "http://doc.s3.amazonaws.com/2006-03-01";
+    static final String S3_URI = "http://doc.s3.amazonaws.com/2006-03-01";
 
     @Test
-    public void testS3BucketListNamespaceContextUrls() throws IOException {
+    void testS3BucketListNamespaceContextUrls() throws IOException {
         TestWebDriverManager testManager = new TestWebDriverManager();
         List<URL> urls = testManager.getDriverUrls();
         assertThat(urls).isNotEmpty();
     }
 
     @Test
-    public void testS3BucketListNamespaceContextPrefixes() {
+    void testS3BucketListNamespaceContextPrefixes() {
         assertThat(S_3_BUCKET_LIST_NAMESPACE_CONTEXT.getNamespaceURI("s3"),
                 equalTo(S3_URI));
         assertThat(S_3_BUCKET_LIST_NAMESPACE_CONTEXT.getPrefix(S3_URI),
@@ -68,7 +68,7 @@ public class NamespaceContextTest {
     }
 
     @Test
-    public void testS3BucketListNamespaceContextInvalidPrefixes() {
+    void testS3BucketListNamespaceContextInvalidPrefixes() {
         try {
             S_3_BUCKET_LIST_NAMESPACE_CONTEXT.getNamespaceURI("xmlns");
             fail("IllegalArgumentException should be thrown");

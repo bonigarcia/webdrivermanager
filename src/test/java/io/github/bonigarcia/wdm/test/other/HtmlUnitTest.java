@@ -30,18 +30,18 @@ import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.0.0
  */
-public class HtmlUnitTest extends BrowserTestParent {
+class HtmlUnitTest extends BrowserTestParent {
 
     private static Class<? extends WebDriver> webDriverClass;
 
     @BeforeAll
-    public static void setupClass() {
+    static void setupClass() {
         webDriverClass = HtmlUnitDriver.class;
         WebDriverManager.getInstance(webDriverClass).setup();
     }
 
     @BeforeEach
-    public void htmlUnitTest()
+    void htmlUnitTest()
             throws InstantiationException, IllegalAccessException {
         driver = webDriverClass.newInstance();
     }

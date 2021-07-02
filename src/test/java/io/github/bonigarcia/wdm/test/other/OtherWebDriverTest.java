@@ -36,12 +36,12 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.3.1
  */
-public class OtherWebDriverTest {
+class OtherWebDriverTest {
 
     protected WebDriver driver;
 
     @AfterEach
-    public void teardown() {
+    void teardown() {
         if (driver != null) {
             driver.quit();
         }
@@ -49,7 +49,7 @@ public class OtherWebDriverTest {
 
     @ParameterizedTest
     @MethodSource("data")
-    public void test(Class<? extends WebDriver> driverClass,
+    void test(Class<? extends WebDriver> driverClass,
             Class<? extends Throwable> exception) {
         WebDriverManager.getInstance(driverClass).setup();
 
@@ -60,7 +60,7 @@ public class OtherWebDriverTest {
         }
     }
 
-    public static Stream<Arguments> data() {
+    static Stream<Arguments> data() {
         return Stream.of(
                 Arguments.of(EventFiringWebDriver.class,
                         InstantiationException.class),

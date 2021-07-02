@@ -30,10 +30,10 @@ import io.github.bonigarcia.wdm.test.base.VersionTestParent;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.3.0
  */
-public class EdgeVersionTest extends VersionTestParent {
+class EdgeVersionTest extends VersionTestParent {
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         browserManager = WebDriverManager.getInstance(EdgeDriver.class);
         os = WIN;
         specificVersions = new String[] { "75.0.139.20", "76.0.183.0",

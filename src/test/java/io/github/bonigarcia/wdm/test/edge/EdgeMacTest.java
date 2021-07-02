@@ -33,12 +33,12 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 4.3.1
  */
-public class EdgeMacTest {
+class EdgeMacTest {
 
     static final Logger log = getLogger(lookup().lookupClass());
 
     @Test
-    public void testEdgeMac() {
+    void testEdgeMac() {
         String libName = "libc++.dylib";
         String driverVersion = "87.0.664.75";
 

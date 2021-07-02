@@ -36,11 +36,11 @@ import io.github.bonigarcia.wdm.config.WebDriverManagerException;
  * @since 1.6.1
  */
 
-public class TaobaoTest {
+class TaobaoTest {
 
     @Disabled("Flaky test due to slow response of npm.taobao.org")
     @Test
-    public void testTaobao() throws Exception {
+    void testTaobao() throws Exception {
         chromedriver().config().setAvoidBrowserDetection(true)
                 .setChromeDriverMirrorUrl(
                         new URL("http://npm.taobao.org/mirrors/chromedriver/"));
@@ -52,7 +52,7 @@ public class TaobaoTest {
 
     @Disabled("Flaky test due to cnpmjs.org")
     @Test
-    public void testOtherMirrorUrl() throws Exception {
+    void testOtherMirrorUrl() throws Exception {
         chromedriver().config().setAvoidBrowserDetection(true)
                 .setChromeDriverMirrorUrl(
                         new URL("https://cnpmjs.org/mirrors/chromedriver/"));
@@ -63,7 +63,7 @@ public class TaobaoTest {
     }
 
     @Test
-    public void testTaobaoException() {
+    void testTaobaoException() {
         assertThrows(WebDriverManagerException.class, () -> {
             WebDriverManager.edgedriver().useMirror().setup();
         });

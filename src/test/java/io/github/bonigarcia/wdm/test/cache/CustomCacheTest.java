@@ -39,19 +39,19 @@ import io.github.bonigarcia.wdm.config.Config;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.7.2
  */
-public class CustomCacheTest {
+class CustomCacheTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
     Config globalConfig;
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         globalConfig = WebDriverManager.globalConfig();
     }
 
     @Test
-    public void testCachePath() throws IOException {
+    void testCachePath() throws IOException {
         Path tmpFolder = createTempDirectory("").toRealPath();
         globalConfig.setCachePath(tmpFolder.toString());
         log.info("Using temporary folder {} as cache", tmpFolder);
@@ -65,7 +65,7 @@ public class CustomCacheTest {
     }
 
     @Test
-    public void testCachePathContainsTilde() {
+    void testCachePathContainsTilde() {
         String customPath = "C:\\user\\abcdef~1\\path";
         globalConfig.setCachePath(customPath);
         String cachePath = globalConfig.getCachePath();
@@ -74,7 +74,7 @@ public class CustomCacheTest {
     }
 
     @Test
-    public void testCachePathStartsWithTildeSlash() {
+    void testCachePathStartsWithTildeSlash() {
         String customPath = "~/webdrivers";
         globalConfig.setCachePath(customPath);
         String cachePath = globalConfig.getCachePath();
@@ -83,7 +83,7 @@ public class CustomCacheTest {
     }
 
     @Test
-    public void testCachePathStartsWithTilde() {
+    void testCachePathStartsWithTilde() {
         String customPath = "~webdrivers";
         globalConfig.setCachePath(customPath);
         String cachePath = globalConfig.getCachePath();
@@ -92,7 +92,7 @@ public class CustomCacheTest {
     }
 
     @AfterEach
-    public void teardown() throws IOException {
+    void teardown() throws IOException {
         globalConfig.reset();
     }
 }

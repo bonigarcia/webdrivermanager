@@ -40,11 +40,11 @@ import io.github.bonigarcia.wdm.config.DriverManagerType;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 4.0.0
  */
-public class CurrentVersionTest {
+class CurrentVersionTest {
 
     @ParameterizedTest
     @MethodSource("data")
-    public void testCurrentVersion(DriverManagerType driverManagerType,
+    void testCurrentVersion(DriverManagerType driverManagerType,
             String url, String expectedVersion) throws Exception {
         WebDriverManager browserManager = WebDriverManager
                 .getInstance(driverManagerType);
@@ -59,7 +59,7 @@ public class CurrentVersionTest {
         assertThat(currentVersion).isEqualTo(expectedVersion);
     }
 
-    public static Stream<Arguments> data() {
+    static Stream<Arguments> data() {
         return Stream.of(Arguments.of(CHROME,
                 "https://chromedriver.storage.googleapis.com/81.0.4044.69/chromedriver_linux64.zip",
                 "81.0.4044.69"),

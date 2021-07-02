@@ -35,25 +35,25 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 4.0.0
  */
-public class BrowserVersionTest {
+class BrowserVersionTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
     @BeforeAll
     @AfterAll
-    public static void cleanCache() {
+    static void cleanCache() {
         WebDriverManager.chromedriver().clearResolutionCache();
     }
 
     @Test
-    public void testChromeVersion() {
+    void testChromeVersion() {
         WebDriverManager driverManager = WebDriverManager.chromedriver();
         driverManager.browserVersion("81").setup();
         assertDriver(driverManager);
     }
 
     @Test
-    public void testFirefoxVersion() {
+    void testFirefoxVersion() {
         WebDriverManager driverManager = WebDriverManager.firefoxdriver();
         driverManager.browserVersion("75").setup();
         assertDriver(driverManager);

@@ -29,15 +29,15 @@ import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.0.0
  */
-public class ChromeTest extends BrowserTestParent {
+class ChromeTest extends BrowserTestParent {
 
     @BeforeAll
-    public static void setupClass() {
+    static void setupClass() {
         WebDriverManager.chromedriver().setup();
     }
 
     @BeforeEach
-    public void setupTest() {
+    void setupTest() {
         driver = new ChromeDriver();
     }
 

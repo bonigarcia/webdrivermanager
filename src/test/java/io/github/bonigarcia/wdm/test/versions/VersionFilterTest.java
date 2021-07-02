@@ -40,13 +40,13 @@ import io.github.bonigarcia.wdm.config.Config;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 3.8.0
  */
-public class VersionFilterTest {
+class VersionFilterTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
     @ParameterizedTest
     @MethodSource("data")
-    public void testFilterCacheBy(String version, int expectedVersions) {
+    void testFilterCacheBy(String version, int expectedVersions) {
         CacheHandler cacheHandler = new CacheHandler(new Config());
         List<File> filteredList = cacheHandler.filterCacheBy(getInputFileList(),
                 version, true);
@@ -55,7 +55,7 @@ public class VersionFilterTest {
         assertThat(filteredList.size()).isEqualTo(expectedVersions);
     }
 
-    public static Stream<Arguments> data() {
+    static Stream<Arguments> data() {
         return Stream.of(Arguments.of("74", 1), Arguments.of("77", 1),
                 Arguments.of("79", 2));
     }

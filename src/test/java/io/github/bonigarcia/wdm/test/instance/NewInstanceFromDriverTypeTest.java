@@ -37,18 +37,18 @@ import io.github.bonigarcia.wdm.config.DriverManagerType;
  * @author Elias Nogueira (elias.nogueira@gmail.com)
  * @since 3.8.1
  */
-public class NewInstanceFromDriverTypeTest {
+class NewInstanceFromDriverTypeTest {
 
     private static DriverManagerType driverManagerType = DriverManagerType.CHROME;
     private static WebDriver driver;
 
     @BeforeAll
-    public static void setupClass() {
+    static void setupClass() {
         WebDriverManager.getInstance(driverManagerType).setup();
     }
 
     @BeforeEach
-    public void setupTest() throws Exception {
+    void setupTest() throws Exception {
         Constructor<?> declaredConstructor = Class
                 .forName(driverManagerType.browserClass())
                 .getDeclaredConstructor(ChromeOptions.class);
@@ -58,12 +58,12 @@ public class NewInstanceFromDriverTypeTest {
     }
 
     @Test
-    public void createNewChromeInstanceFromDriverManagerType() {
+    void createNewChromeInstanceFromDriverManagerType() {
         assertThat(driver).isInstanceOf(ChromeDriver.class);
     }
 
     @AfterAll
-    public static void tearDown() {
+    static void tearDown() {
         driver.quit();
     }
 }

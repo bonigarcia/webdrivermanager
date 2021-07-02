@@ -36,12 +36,12 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 2.1.1
  */
-public class ForceDownloadTest {
+class ForceDownloadTest {
 
     @ParameterizedTest
     @ValueSource(classes = { ChromeDriver.class, FirefoxDriver.class,
             OperaDriver.class, EdgeDriver.class })
-    public void testForceDownload(Class<? extends WebDriver> driverClass) {
+    void testForceDownload(Class<? extends WebDriver> driverClass) {
         WebDriverManager driverManager = WebDriverManager
                 .getInstance(driverClass);
         driverManager.forceDownload().avoidBrowserDetection()

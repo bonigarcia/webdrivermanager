@@ -29,15 +29,15 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.4.0
  */
-public class PhantomJsBetaTest {
+class PhantomJsBetaTest {
 
     @BeforeAll
-    public static void setupClass() {
+    static void setupClass() {
         WebDriverManager.phantomjs().useBetaVersions().setup();
     }
 
     @Test
-    public void testPhantomBeta() {
+    void testPhantomBeta() {
         String driverPath = WebDriverManager.phantomjs()
                 .getDownloadedDriverPath();
         assertThat(driverPath).isNotNull();

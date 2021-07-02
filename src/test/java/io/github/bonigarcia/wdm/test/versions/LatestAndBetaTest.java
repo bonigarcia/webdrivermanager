@@ -39,13 +39,13 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @since 3.6.0
  */
 @Disabled
-public class LatestAndBetaTest {
+class LatestAndBetaTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
     @ParameterizedTest
     @ValueSource(classes = { ChromeDriver.class, EdgeDriver.class })
-    public void testLatestAndBetaedgedriver(
+    void testLatestAndBetaedgedriver(
             Class<? extends WebDriver> driverClass) {
         WebDriverManager.getInstance(driverClass).avoidResolutionCache()
                 .avoidBrowserDetection().win().setup();

@@ -31,10 +31,10 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 3.0.0
  */
-public class ResolutionCacheTest {
+class ResolutionCacheTest {
 
     @Test
-    public void testEmptyTtl() {
+    void testEmptyTtl() {
         WebDriverManager.main(new String[] { "clear-resolution-cache" });
         chromedriver().ttl(0).ttlBrowsers(0).setup();
         File driver = new File(chromedriver().getDownloadedDriverPath());

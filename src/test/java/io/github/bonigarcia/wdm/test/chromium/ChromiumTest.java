@@ -36,15 +36,15 @@ import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 3.8.0
  */
-public class ChromiumTest extends BrowserTestParent {
+class ChromiumTest extends BrowserTestParent {
 
     @BeforeAll
-    public static void setupClass() {
+    static void setupClass() {
         WebDriverManager.chromiumdriver().setup();
     }
 
     @BeforeEach
-    public void setupTest() {
+    void setupTest() {
         File chromiumPath = new File(getChromiumPath());
         assumeThat(chromiumPath).exists();
 

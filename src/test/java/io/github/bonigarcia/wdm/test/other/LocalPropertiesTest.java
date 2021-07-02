@@ -32,10 +32,10 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 4.4.1
  */
-public class LocalPropertiesTest {
+class LocalPropertiesTest {
 
     @Test
-    public void testCustomUrl() throws MalformedURLException {
+    void testCustomUrl() throws MalformedURLException {
         File dot = new File(".");
         URL versionsPropertiesUrl = new URL("file://" + dot.getAbsolutePath()
                 + "/src/main/resources/versions.properties");
@@ -50,7 +50,7 @@ public class LocalPropertiesTest {
     }
 
     @Test
-    public void testLocalFirst() {
+    void testLocalFirst() {
         WebDriverManager.chromedriver().clearResolutionCache()
                 .avoidReadReleaseFromRepository()
                 .useLocalCommandsPropertiesFirst()

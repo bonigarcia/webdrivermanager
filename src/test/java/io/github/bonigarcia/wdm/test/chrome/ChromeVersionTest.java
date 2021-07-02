@@ -27,10 +27,10 @@ import io.github.bonigarcia.wdm.test.base.VersionTestParent;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.2.1
  */
-public class ChromeVersionTest extends VersionTestParent {
+class ChromeVersionTest extends VersionTestParent {
 
     @BeforeEach
-    public void setup() {
+    void setup() {
         browserManager = WebDriverManager.chromedriver();
         specificVersions = new String[] { "2.10", "2.33" };
     }

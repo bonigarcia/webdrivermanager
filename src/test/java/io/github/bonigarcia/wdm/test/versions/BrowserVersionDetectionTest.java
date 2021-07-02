@@ -35,12 +35,12 @@ import io.github.bonigarcia.wdm.versions.VersionDetector;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 4.4.0
  */
-public class BrowserVersionDetectionTest {
+class BrowserVersionDetectionTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
     @Test
-    public void commandsTest() throws Exception {
+    void commandsTest() throws Exception {
         Config config = new Config();
         HttpClient httpClient = new HttpClient(config);
         VersionDetector versionDetector = new VersionDetector(config,

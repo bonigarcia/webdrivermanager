@@ -44,16 +44,16 @@ import okhttp3.Response;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 3.0.0
  */
-public class ServerTest {
+class ServerTest {
 
     static final Logger log = getLogger(lookup().lookupClass());
 
-    public static final String EXT = IS_OS_WINDOWS ? ".exe" : "";
+    static final String EXT = IS_OS_WINDOWS ? ".exe" : "";
 
-    public static String serverPort;
+    static String serverPort;
 
     @BeforeAll
-    public static void startServer() throws IOException {
+    static void startServer() throws IOException {
         serverPort = getFreePort();
         log.debug("Test is starting WebDriverManager server at port {}",
                 serverPort);
@@ -63,7 +63,7 @@ public class ServerTest {
 
     @ParameterizedTest
     @MethodSource("data")
-    public void testServer(String path, String driver) throws IOException {
+    void testServer(String path, String driver) throws IOException {
         String serverUrl = String.format("http://localhost:%s/%s", serverPort,
                 path);
 
@@ -89,13 +89,13 @@ public class ServerTest {
         assertThat(headers.contains(attachment));
     }
 
-    public static String getFreePort() throws IOException {
+    static String getFreePort() throws IOException {
         try (ServerSocket socket = new ServerSocket(0)) {
             return String.valueOf(socket.getLocalPort());
         }
     }
 
-    public static Stream<Arguments> data() {
+    static Stream<Arguments> data() {
         return Stream.of(Arguments.of("chrome", "chromedriver" + EXT),
                 Arguments.of("firefox", "geckodriver" + EXT),
                 Arguments.of("opera", "operadriver" + EXT),

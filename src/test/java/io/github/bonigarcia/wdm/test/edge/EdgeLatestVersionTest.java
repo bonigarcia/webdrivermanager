@@ -42,12 +42,12 @@ import io.github.bonigarcia.wdm.versions.VersionDetector;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 4.0.1
  */
-public class EdgeLatestVersionTest {
+class EdgeLatestVersionTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
     @Test
-    public void edgeVersionTest() throws Exception {
+    void edgeVersionTest() throws Exception {
         Config config = new Config();
         HttpClient httpClient = new HttpClient(config);
         VersionDetector versionDetector = new VersionDetector(config,

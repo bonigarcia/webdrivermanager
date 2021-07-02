@@ -41,16 +41,16 @@ import io.github.bonigarcia.wdm.config.DriverManagerType;
  * @author Elias Nogueira (elias.nogueira@gmail.com)
  * @since 3.8.1
  */
-public class DriverManagerTypeTest {
+class DriverManagerTypeTest {
 
     @ParameterizedTest
     @MethodSource("data")
-    public void shouldReturnTheCorrectDriverClass(String browserClass,
+    void shouldReturnTheCorrectDriverClass(String browserClass,
             DriverManagerType driverManagerType) {
         assertThat(browserClass).isEqualTo(driverManagerType.browserClass());
     }
 
-    public static Stream<Arguments> data() {
+    static Stream<Arguments> data() {
         return Stream.of(
                 Arguments.of("org.openqa.selenium.chrome.ChromeDriver", CHROME),
                 Arguments.of("org.openqa.selenium.chrome.ChromeDriver",

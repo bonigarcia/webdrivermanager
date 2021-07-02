@@ -30,19 +30,19 @@ import org.openqa.selenium.WebDriver;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.4.1
  */
-public abstract class BrowserTestParent {
+abstract public class BrowserTestParent {
 
     protected WebDriver driver;
 
     @AfterEach
-    public void teardown() {
+    void teardown() {
         if (driver != null) {
             driver.quit();
         }
     }
 
     @Test
-    public void test() {
+    void test() {
         driver.manage().timeouts().implicitlyWait(30, SECONDS);
         driver.get("https://github.com/bonigarcia/webdrivermanager");
         assertThat(driver.getTitle(), containsString(

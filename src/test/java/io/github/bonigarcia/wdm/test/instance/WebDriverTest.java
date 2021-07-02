@@ -35,12 +35,12 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 1.3.1
  */
-public class WebDriverTest {
+class WebDriverTest {
 
     @ParameterizedTest
     @ValueSource(classes = { ChromeDriver.class, FirefoxDriver.class,
             PhantomJSDriver.class })
-    public void testWebDriver(Class<? extends WebDriver> driverClass) {
+    void testWebDriver(Class<? extends WebDriver> driverClass) {
         WebDriverManager.getInstance(driverClass).setup();
         String driverPath = WebDriverManager.getInstance(driverClass)
                 .getDownloadedDriverPath();

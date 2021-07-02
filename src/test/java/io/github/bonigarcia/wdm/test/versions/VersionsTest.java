@@ -41,20 +41,20 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 2.1.0
  */
-public class VersionsTest {
+class VersionsTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
     @ParameterizedTest
     @MethodSource("data")
-    public void testChromeDriverVersions(WebDriverManager driverManager) {
+    void testChromeDriverVersions(WebDriverManager driverManager) {
         List<String> versions = driverManager.getDriverVersions();
         log.debug("Versions of {} {}", driverManager.getClass().getSimpleName(),
                 versions);
         assertThat(versions).isNotNull().isNotEmpty();
     }
 
-    public static Stream<WebDriverManager> data() {
+    static Stream<WebDriverManager> data() {
         return Stream.of(chromedriver(), firefoxdriver(), operadriver(),
                 edgedriver(), iedriver(), phantomjs());
     }
