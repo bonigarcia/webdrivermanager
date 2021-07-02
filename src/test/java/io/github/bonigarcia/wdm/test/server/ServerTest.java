@@ -76,7 +76,10 @@ class ServerTest {
         Request request = new Request.Builder().url(serverUrl).build();
 
         // Assert response
+        log.debug("Request: GET {}", serverUrl);
         Response response = client.newCall(request).execute();
+        log.debug("Response: {}", response.code());
+
         assertThat(response.isSuccessful()).isTrue();
 
         // Assert attachment
@@ -96,11 +99,11 @@ class ServerTest {
     }
 
     static Stream<Arguments> data() {
-        return Stream.of(Arguments.of("chrome", "chromedriver" + EXT),
-                Arguments.of("firefox", "geckodriver" + EXT),
-                Arguments.of("opera", "operadriver" + EXT),
-                Arguments.of("edge", "msedgedriver" + EXT),
-                Arguments.of("iexplorer", "IEDriverServer.exe"),
+        return Stream.of(Arguments.of("chromedriver", "chromedriver" + EXT),
+                Arguments.of("firefoxdriver", "geckodriver" + EXT),
+                Arguments.of("operadriver", "operadriver" + EXT),
+                Arguments.of("edgedriver", "msedgedriver" + EXT),
+                Arguments.of("iedriver", "IEDriverServer.exe"),
                 Arguments.of("chromedriver?os=WIN", "chromedriver.exe"),
                 Arguments.of(
                         "chromedriver?os=LINUX&chromeDriverVersion=2.41&forceCache=true",
