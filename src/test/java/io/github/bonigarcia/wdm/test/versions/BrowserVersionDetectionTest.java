@@ -55,7 +55,7 @@ class BrowserVersionDetectionTest {
 
     @ParameterizedTest
     @ValueSource(strings = { "chrome", "firefox", "edge", "opera", "chromium" })
-    void commandsTest(String browser) throws Exception {
+    void commandsTest(String browser) {
         Optional<String> detectedVersion = versionDetector
                 .getBrowserVersionFromTheShell(browser);
         if (detectedVersion.isPresent()) {
