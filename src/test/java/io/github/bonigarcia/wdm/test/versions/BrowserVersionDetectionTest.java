@@ -18,11 +18,15 @@ package io.github.bonigarcia.wdm.test.versions;
 
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.util.Optional;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.config.Config;
@@ -35,29 +39,31 @@ import io.github.bonigarcia.wdm.versions.VersionDetector;
  * @author Boni Garcia (boni.gg@gmail.com)
  * @since 4.4.0
  */
+@TestInstance(PER_CLASS)
 class BrowserVersionDetectionTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
-    @Test
-    void commandsTest() throws Exception {
+    VersionDetector versionDetector;
+
+    @BeforeAll
+    void setupClass() {
         Config config = new Config();
         HttpClient httpClient = new HttpClient(config);
-        VersionDetector versionDetector = new VersionDetector(config,
-                httpClient);
-        String[] browsers = { "chrome", "firefox", "edge", "opera",
-                "chromium" };
-        for (String browser : browsers) {
-            Optional<String> detectedVersion = versionDetector
-                    .getBrowserVersionFromTheShell(browser);
-            if (detectedVersion.isPresent()) {
-                log.debug("The detected version of {} is {}", browser,
-                        detectedVersion.get());
-                int numericVersion = Integer.parseInt(detectedVersion.get());
-                assertThat(numericVersion).isPositive();
-            }
-        }
+        versionDetector = new VersionDetector(config, httpClient);
+    }
 
+    @ParameterizedTest
+    @ValueSource(strings = { "chrome", "firefox", "edge", "opera", "chromium" })
+    void commandsTest(String browser) throws Exception {
+        Optional<String> detectedVersion = versionDetector
+                .getBrowserVersionFromTheShell(browser);
+        if (detectedVersion.isPresent()) {
+            log.debug("The detected version of {} is {}", browser,
+                    detectedVersion.get());
+            int numericVersion = Integer.parseInt(detectedVersion.get());
+            assertThat(numericVersion).isPositive();
+        }
     }
 
 }
