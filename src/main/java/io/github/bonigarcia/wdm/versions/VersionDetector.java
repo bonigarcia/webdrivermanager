@@ -148,7 +148,22 @@ public class VersionDetector {
             OperatingSystem operatingSystem = config.getOperatingSystem();
             switch (operatingSystem) {
             case WIN:
-                // TODO
+                if (command.toLowerCase(ROOT).contains("wmic")) {
+                    File wmicLocation = findFileLocation("wmic.exe");
+                    String newCommand = command.replace("Version", "Caption");
+                    String captionOutput = runAndWait(wmicLocation,
+                            newCommand.split(" "));
+                    int iCaption = captionOutput.indexOf("=");
+                    if (iCaption != -1) {
+                        String pathStr = captionOutput.substring(iCaption + 1);
+                        Path path = Paths.get(pathStr);
+                        if (Files.exists(path)) {
+                            log.debug("The path of {} is {}", browserName,
+                                    pathStr);
+                            return Optional.of(path);
+                        }
+                    }
+                }
                 break;
 
             case MAC:
@@ -165,7 +180,7 @@ public class VersionDetector {
 
                 Path path = Paths.get(pathStr);
                 if (Files.exists(path)) {
-                    log.debug("The path of {} is {}", firstCommand, pathStr);
+                    log.debug("The path of {} is {}", browserName, pathStr);
                     return Optional.of(path);
                 }
                 break;
