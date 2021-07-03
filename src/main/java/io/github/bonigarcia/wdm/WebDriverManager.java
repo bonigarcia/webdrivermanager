@@ -57,6 +57,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.Iterator;
@@ -290,6 +291,11 @@ public abstract class WebDriverManager {
                 }
             }
         }
+    }
+
+    public Optional<Path> getBrowserPath() {
+        return versionDetector.getBrowserPath(
+                getDriverManagerType().getBrowserName().toLowerCase());
     }
 
     public WebDriverManager driverVersion(String driverVersion) {

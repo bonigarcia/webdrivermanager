@@ -31,6 +31,9 @@ import java.io.InputStream;
 import java.io.StringReader;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -120,6 +123,58 @@ public class VersionDetector {
         return result;
     }
 
+    public Optional<Path> getBrowserPath(String browserName) {
+        Optional<Path> browserPath = empty();
+
+        boolean online = config.getCommandsPropertiesOnlineFirst();
+        String propertiesName = COMMANDS_PROPERTIES;
+        Properties commandsProperties = getProperties(propertiesName, online);
+
+        String onlineMessage = online ? ONLINE : LOCAL;
+        log.debug("Detecting {} path using {} {}", browserName, onlineMessage,
+                propertiesName);
+
+        List<String> commandsPerOs = getCommandsList(browserName,
+                commandsProperties);
+
+        for (String commandKey : commandsPerOs) {
+            String command = commandsProperties.get(commandKey).toString();
+            int lastSpaceIndex = command.lastIndexOf(" ");
+            String firstCommand = command;
+            if (lastSpaceIndex != -1) {
+                firstCommand = command.substring(0, lastSpaceIndex);
+            }
+
+            OperatingSystem operatingSystem = config.getOperatingSystem();
+            switch (operatingSystem) {
+            case WIN:
+                // TODO
+                break;
+
+            case MAC:
+            case LINUX:
+            default:
+                String pathStr = null;
+                if (firstCommand.contains("/")) {
+                    pathStr = firstCommand;
+                } else {
+                    String[] commandArray = new String[] { "bash", "-c",
+                            "type -p " + firstCommand };
+                    pathStr = runAndWait(commandArray);
+                }
+
+                Path path = Paths.get(pathStr);
+                if (Files.exists(path)) {
+                    log.debug("The path of {} is {}", firstCommand, pathStr);
+                    return Optional.of(path);
+                }
+                break;
+            }
+        }
+
+        return browserPath;
+    }
+
     public Optional<String> getBrowserVersionFromTheShell(String browserName) {
         Optional<String> browserVersionUsingProperties = empty();
         String browserVersionDetectionCommand = config
@@ -160,12 +215,8 @@ public class VersionDetector {
 
     protected Optional<String> getBrowserVersionUsingProperties(
             String browserName, Properties commandsProperties) {
-        OperatingSystem operatingSystem = config.getOperatingSystem();
-        List<String> commandsPerOs = Collections.list(commandsProperties.keys())
-                .stream().map(Object::toString)
-                .filter(s -> s.contains(browserName))
-                .filter(operatingSystem::matchOs).sorted()
-                .collect(Collectors.toList());
+        List<String> commandsPerOs = getCommandsList(browserName,
+                commandsProperties);
 
         for (String commandKey : commandsPerOs) {
             String command = commandsProperties.get(commandKey).toString();
@@ -178,6 +229,15 @@ public class VersionDetector {
         }
 
         return empty();
+    }
+
+    protected List<String> getCommandsList(String browserName,
+            Properties commandsProperties) {
+        OperatingSystem operatingSystem = config.getOperatingSystem();
+        return Collections.list(commandsProperties.keys()).stream()
+                .map(Object::toString).filter(s -> s.contains(browserName))
+                .filter(operatingSystem::matchOs).sorted()
+                .collect(Collectors.toList());
     }
 
     protected Optional<String> getBrowserVersionUsingCommand(String command) {
