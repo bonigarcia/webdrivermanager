@@ -18,7 +18,6 @@ package io.github.bonigarcia.wdm.test.other;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-import java.lang.reflect.Constructor;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.AfterEach;
@@ -57,17 +56,16 @@ class OtherWebDriverTest {
         WebDriverManager.getInstance(driverClass).setup();
 
         if (exception != null) {
-            Constructor<? extends WebDriver> declaredConstructor = driverClass
-                    .getDeclaredConstructor();
-            assertThatThrownBy(declaredConstructor::newInstance)
-                    .isInstanceOf(exception);
+            assertThatThrownBy(
+                    () -> driverClass.getDeclaredConstructor().newInstance())
+                            .isInstanceOf(exception);
         }
     }
 
     static Stream<Arguments> data() {
         return Stream.of(
                 Arguments.of(EventFiringWebDriver.class,
-                        InstantiationException.class),
+                        NoSuchMethodException.class),
                 Arguments.of(HtmlUnitDriver.class, null), Arguments.of(
                         RemoteWebDriver.class, IllegalAccessException.class));
     }
