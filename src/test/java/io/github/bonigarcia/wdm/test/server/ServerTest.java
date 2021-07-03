@@ -41,7 +41,7 @@ import okhttp3.Response;
 /**
  * Test using wdm server.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 3.0.0
  */
 class ServerTest {

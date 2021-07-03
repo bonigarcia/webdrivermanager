@@ -34,7 +34,7 @@ import io.github.bonigarcia.wdm.config.DriverManagerType;
 /**
  * Test browser new instance creation from DriverManagerTypeTest.
  *
- * @author Elias Nogueira (elias.nogueira@gmail.com)
+ * @author Elias Nogueira and Boni Garcia
  * @since 3.8.1
  */
 class NewInstanceFromDriverTypeTest {

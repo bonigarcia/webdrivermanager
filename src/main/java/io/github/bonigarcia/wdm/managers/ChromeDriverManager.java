@@ -36,7 +36,7 @@ import io.github.bonigarcia.wdm.config.OperatingSystem;
 /**
  * Manager for Chrome.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 1.0.0
  */
 public class ChromeDriverManager extends WebDriverManager {

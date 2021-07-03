@@ -27,7 +27,7 @@ import io.github.bonigarcia.wdm.test.base.VersionTestParent;
 /**
  * Test asserting IEDriverServer versions.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 1.2.2
  */
 class IExplorerVersionTest extends VersionTestParent {

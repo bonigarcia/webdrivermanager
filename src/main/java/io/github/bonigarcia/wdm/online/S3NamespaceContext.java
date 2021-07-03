@@ -26,7 +26,7 @@ import javax.xml.namespace.NamespaceContext;
 /**
  * Namespace context for S3 buckets.
  *
- * @author andruhon and Boni Garcia (boni.gg@gmail.com)
+ * @author andruhon and Boni Garcia
  * @since 4.1.0
  */
 public class S3NamespaceContext implements NamespaceContext {

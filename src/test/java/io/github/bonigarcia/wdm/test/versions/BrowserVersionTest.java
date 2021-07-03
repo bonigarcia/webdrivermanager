@@ -32,7 +32,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 /**
  * Test using major versions of browsers.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 4.0.0
  */
 class BrowserVersionTest {

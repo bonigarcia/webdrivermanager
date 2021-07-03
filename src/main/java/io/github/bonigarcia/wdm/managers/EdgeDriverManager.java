@@ -42,7 +42,7 @@ import io.github.bonigarcia.wdm.config.OperatingSystem;
 /**
  * Manager for Microsoft Edge.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 1.3.0
  */
 public class EdgeDriverManager extends WebDriverManager {

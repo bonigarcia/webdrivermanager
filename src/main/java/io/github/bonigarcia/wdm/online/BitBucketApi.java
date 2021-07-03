@@ -28,7 +28,7 @@ import com.google.gson.annotations.SerializedName;
  * https://bitbucket.org/api/2.0/repositories/ariya/phantomjs/downloads) by
  * means of GSON.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 4.1.0
  */
 public class BitBucketApi {

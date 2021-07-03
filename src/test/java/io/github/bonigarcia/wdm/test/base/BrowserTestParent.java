@@ -26,7 +26,7 @@ import org.openqa.selenium.WebDriver;
 /**
  * Parent class for browser based tests.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 1.4.1
  */
 abstract public class BrowserTestParent {

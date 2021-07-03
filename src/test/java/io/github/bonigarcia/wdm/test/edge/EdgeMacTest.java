@@ -30,7 +30,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 /**
  * Test msedgedriver in Mac OS.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 4.3.1
  */
 class EdgeMacTest {

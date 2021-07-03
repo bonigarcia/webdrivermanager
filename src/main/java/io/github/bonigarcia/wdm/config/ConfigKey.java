@@ -19,7 +19,7 @@ package io.github.bonigarcia.wdm.config;
 /**
  * Configuration key class.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 2.2.0
  */
 public class ConfigKey<T> {

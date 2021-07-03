@@ -27,7 +27,7 @@ import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
 /**
  * Test with Safari
  *
- * @author Elias Nogueira (elias.nogueira@gmail.com)
+ * @author Elias Nogueira and Boni Garcia
  * @since 3.8.2
  */
 @EnabledOnOs(MAC)

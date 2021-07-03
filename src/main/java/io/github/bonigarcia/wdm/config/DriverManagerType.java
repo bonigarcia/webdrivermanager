@@ -19,7 +19,7 @@ package io.github.bonigarcia.wdm.config;
 /**
  * Types for driver managers.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 2.1.0
  */
 public enum DriverManagerType {

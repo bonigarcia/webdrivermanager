@@ -28,7 +28,7 @@ import org.slf4j.Logger;
 /**
  * Force download test.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 3.3.0
  */
 class ForceError403Test {

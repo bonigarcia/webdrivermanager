@@ -27,7 +27,7 @@ import io.github.bonigarcia.wdm.test.base.VersionTestParent;
 /**
  * Test asserting Firefox versions.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 1.5.0
  */
 @EnabledOnOs(LINUX)

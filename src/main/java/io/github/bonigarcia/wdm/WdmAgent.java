@@ -37,7 +37,7 @@ import io.github.bonigarcia.wdm.config.DriverManagerType;
 /**
  * WebDriverManager agent.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 4.0.0
  */
 public class WdmAgent {

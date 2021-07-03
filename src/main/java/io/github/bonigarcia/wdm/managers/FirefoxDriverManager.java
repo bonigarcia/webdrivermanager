@@ -30,7 +30,7 @@ import io.github.bonigarcia.wdm.config.DriverManagerType;
 /**
  * Manager for Firefox.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 1.5.0
  */
 public class FirefoxDriverManager extends WebDriverManager {

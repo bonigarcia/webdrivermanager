@@ -115,7 +115,7 @@ import io.github.bonigarcia.wdm.versions.VersionDetector;
 /**
  * Parent driver manager.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 2.1.0
  */
 public abstract class WebDriverManager {

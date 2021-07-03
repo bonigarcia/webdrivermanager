@@ -35,7 +35,7 @@ import io.github.bonigarcia.wdm.config.Config;
 /**
  * Test for custom target.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 1.7.2
  */
 class CustomCacheTest {

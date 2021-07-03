@@ -32,7 +32,7 @@ import io.github.bonigarcia.wdm.config.OperatingSystem;
 /**
  * Parent class for version based tests.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 1.4.1
  */
 abstract public class VersionTestParent {

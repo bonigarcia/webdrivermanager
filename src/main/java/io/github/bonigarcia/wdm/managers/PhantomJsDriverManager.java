@@ -34,7 +34,7 @@ import io.github.bonigarcia.wdm.config.DriverManagerType;
 /**
  * Manager for PhantomJs.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 1.4.0
  */
 public class PhantomJsDriverManager extends WebDriverManager {

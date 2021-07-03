@@ -49,7 +49,7 @@ import io.github.bonigarcia.wdm.online.HttpClient;
 /**
  * Driver and browser version detector.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 4.0.0
  */
 public class VersionDetector {

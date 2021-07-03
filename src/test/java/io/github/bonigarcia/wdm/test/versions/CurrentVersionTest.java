@@ -37,7 +37,7 @@ import io.github.bonigarcia.wdm.config.DriverManagerType;
 /**
  * Current version test.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 4.0.0
  */
 class CurrentVersionTest {

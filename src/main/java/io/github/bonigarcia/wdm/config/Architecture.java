@@ -28,7 +28,7 @@ import java.util.stream.Stream;
 /**
  * Supported architecture enumeration (32/64 bits).
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 1.0.0
  */
 public enum Architecture {

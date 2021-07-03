@@ -44,7 +44,7 @@ import io.github.bonigarcia.wdm.config.OperatingSystem;
 /**
  * Test for driver cache.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 1.4.5
  */
 class CacheTest {

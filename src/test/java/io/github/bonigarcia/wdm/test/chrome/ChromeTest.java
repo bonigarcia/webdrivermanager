@@ -26,7 +26,7 @@ import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
 /**
  * Test with Google Chrome browser.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 1.0.0
  */
 class ChromeTest extends BrowserTestParent {

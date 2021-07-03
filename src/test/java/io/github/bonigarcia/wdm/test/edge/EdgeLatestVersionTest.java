@@ -37,7 +37,7 @@ import io.github.bonigarcia.wdm.versions.VersionDetector;
 /**
  * Test asserting latest version of Edge in repository.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 4.0.1
  */
 class EdgeLatestVersionTest {

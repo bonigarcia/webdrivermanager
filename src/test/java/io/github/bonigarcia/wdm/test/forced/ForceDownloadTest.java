@@ -32,7 +32,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 /**
  * Force download test.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 2.1.1
  */
 class ForceDownloadTest {

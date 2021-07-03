@@ -29,7 +29,7 @@ import org.slf4j.Logger;
 /**
  * Test with Selenium Server.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 3.0.1
  */
 class SeleniumServerStandaloneTest {

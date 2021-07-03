@@ -29,7 +29,7 @@ import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
 /**
  * Test with Firefox browser.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 1.5.0
  */
 @DisabledOnOs(WINDOWS)

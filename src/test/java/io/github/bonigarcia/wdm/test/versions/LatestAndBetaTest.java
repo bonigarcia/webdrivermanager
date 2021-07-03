@@ -33,7 +33,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 /**
  * Test latest version of edgedriver.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 3.6.0
  */
 @Disabled

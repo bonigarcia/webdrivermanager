@@ -27,7 +27,7 @@ import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
 /**
  * Test with HtmlUnit browser (which uses void driver manager).
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 1.0.0
  */
 class HtmlUnitTest extends BrowserTestParent {

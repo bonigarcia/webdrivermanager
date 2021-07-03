@@ -42,7 +42,7 @@ import org.slf4j.Logger;
 /**
  * Configuration class.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 2.2.0
  */
 public class Config {

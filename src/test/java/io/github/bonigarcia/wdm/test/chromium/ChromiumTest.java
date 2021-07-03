@@ -33,7 +33,7 @@ import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
 /**
  * Test with Google Chromium browser.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 3.8.0
  */
 class ChromiumTest extends BrowserTestParent {

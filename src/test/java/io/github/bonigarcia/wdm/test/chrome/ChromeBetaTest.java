@@ -35,7 +35,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 /**
  * Test with Google Chrome beta.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 4.2.1
  */
 class ChromeBetaTest {

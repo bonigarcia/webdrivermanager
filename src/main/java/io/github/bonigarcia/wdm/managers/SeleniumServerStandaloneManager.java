@@ -34,7 +34,7 @@ import io.github.bonigarcia.wdm.config.DriverManagerType;
 /**
  * Manager for selenium-server-standalone.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 3.0.1
  */
 public class SeleniumServerStandaloneManager extends WebDriverManager {

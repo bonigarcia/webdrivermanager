@@ -26,7 +26,7 @@ import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
 /**
  * Test with Microsoft Edge.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 1.3.0
  */
 class EdgeTest extends BrowserTestParent {

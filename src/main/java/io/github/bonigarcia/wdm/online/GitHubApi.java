@@ -26,7 +26,7 @@ import com.google.gson.internal.LinkedTreeMap;
  * https://api.github.com/repos/operasoftware/operachromiumdriver/releases) by
  * means of GSON.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 1.0.0
  */
 public class GitHubApi {

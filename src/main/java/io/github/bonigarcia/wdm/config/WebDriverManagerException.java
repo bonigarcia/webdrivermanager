@@ -19,7 +19,7 @@ package io.github.bonigarcia.wdm.config;
 /**
  * Custom exception for WebDriverManager.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 1.7.2
  */
 public class WebDriverManagerException extends RuntimeException {

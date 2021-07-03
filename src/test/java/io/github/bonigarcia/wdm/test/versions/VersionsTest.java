@@ -38,7 +38,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 /**
  * Test getting all versions.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 2.1.0
  */
 class VersionsTest {

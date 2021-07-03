@@ -37,7 +37,7 @@ import io.github.bonigarcia.wdm.config.Config;
 /**
  * FilterCacheBy test.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 3.8.0
  */
 class VersionFilterTest {

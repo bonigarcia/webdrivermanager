@@ -24,7 +24,7 @@ import io.github.bonigarcia.wdm.test.base.VersionTestParent;
 /**
  * Test asserting chromedriver versions.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 1.2.1
  */
 class ChromeVersionTest extends VersionTestParent {

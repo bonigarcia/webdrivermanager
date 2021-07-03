@@ -34,7 +34,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 /**
  * Parameterized test with several browsers.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 1.3.1
  */
 class OtherWebDriverTest {

@@ -31,7 +31,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 /**
  * Test asserting Edge driver versions.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 3.5.0
  */
 class EdgeReadVersionTest {

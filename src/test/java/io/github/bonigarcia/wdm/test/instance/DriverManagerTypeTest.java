@@ -38,7 +38,7 @@ import io.github.bonigarcia.wdm.config.DriverManagerType;
 /**
  * Test the class name values from DriverManagerTypeTest
  *
- * @author Elias Nogueira (elias.nogueira@gmail.com)
+ * @author Elias Nogueira and Boni Garcia
  * @since 3.8.1
  */
 class DriverManagerTypeTest {

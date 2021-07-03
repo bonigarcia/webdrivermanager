@@ -41,7 +41,7 @@ import io.github.bonigarcia.wdm.config.DriverManagerType;
 /**
  * Logic for filtering driver cache.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 4.0.0
  */
 public class CacheHandler {

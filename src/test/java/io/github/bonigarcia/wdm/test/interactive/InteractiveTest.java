@@ -34,7 +34,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 /**
  * Test using wdm in interactive mode (from the shell).
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 2.1.2
  */
 class InteractiveTest {

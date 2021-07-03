@@ -32,7 +32,7 @@ import io.github.bonigarcia.wdm.config.WebDriverManagerException;
 /**
  * Test for taobao.org mirror.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 1.6.1
  */
 

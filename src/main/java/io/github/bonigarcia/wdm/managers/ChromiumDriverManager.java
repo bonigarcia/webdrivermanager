@@ -23,7 +23,7 @@ import io.github.bonigarcia.wdm.config.DriverManagerType;
 /**
  * Manager for Chrome.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 3.8.0
  */
 public class ChromiumDriverManager extends ChromeDriverManager {

@@ -28,7 +28,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 /**
  * Test for resolution cache.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 3.0.0
  */
 class ResolutionCacheTest {

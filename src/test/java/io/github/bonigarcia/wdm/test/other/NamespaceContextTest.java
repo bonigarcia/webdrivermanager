@@ -35,7 +35,7 @@ import io.github.bonigarcia.wdm.online.S3NamespaceContext;
 /**
  * Namespace tests.
  *
- * @author andruhon and Boni Garcia (boni.gg@gmail.com)
+ * @author andruhon and Boni Garcia
  * @since 4.1.0
  */
 

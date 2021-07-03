@@ -31,7 +31,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 /**
  * Test with Internet Explorer browser with different architectures.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 4.4.0
  */
 class IExplorerArchTest {

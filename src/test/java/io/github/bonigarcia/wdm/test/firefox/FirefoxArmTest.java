@@ -28,7 +28,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 /**
  * Test with ARM64 and Firefox.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 4.4.2
  */
 class FirefoxArmTest {

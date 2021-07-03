@@ -29,7 +29,7 @@ import org.slf4j.Logger;
 /**
  * Test with Internet Explorer browser.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 1.0.0
  */
 class IExplorerTest {

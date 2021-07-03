@@ -32,7 +32,7 @@ import io.github.bonigarcia.wdm.config.DriverManagerType;
 /**
  * Manager for Internet Explorer.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 1.0.0
  */
 public class InternetExplorerDriverManager extends WebDriverManager {

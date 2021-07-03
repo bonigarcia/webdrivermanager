@@ -29,7 +29,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 /**
  * Tests with custom configuration for versions and commands properties.
  *
- * @author Boni Garcia (boni.gg@gmail.com)
+ * @author Boni Garcia
  * @since 4.4.1
  */
 class LocalPropertiesTest {
