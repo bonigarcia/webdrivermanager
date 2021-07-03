@@ -43,7 +43,7 @@ class ForceDownloadTest {
     void testForceDownload(Class<? extends WebDriver> driverClass) {
         WebDriverManager driverManager = WebDriverManager
                 .getInstance(driverClass);
-        driverManager.forceDownload().avoidBrowserDetection()
+        driverManager.forceDownload().avoidTmpFolder().avoidBrowserDetection()
                 .avoidReadReleaseFromRepository().timeout(20)
                 .operatingSystem(WIN).setup();
         assertThat(driverManager.getDownloadedDriverPath()).isNotNull();

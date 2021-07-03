@@ -454,6 +454,11 @@ public abstract class WebDriverManager {
         return instanceMap.get(getDriverManagerType());
     }
 
+    public WebDriverManager avoidTmpFolder() {
+        config().setAvoidTmpFolder(true);
+        return instanceMap.get(getDriverManagerType());
+    }
+
     public WebDriverManager ttl(int seconds) {
         config().setTtl(seconds);
         return instanceMap.get(getDriverManagerType());

@@ -127,7 +127,8 @@ public class Downloader {
             throws IOException {
         log.info("Downloading {}", url);
         File targetFolder = targetFile.getParentFile();
-        File tempDir = createTempDirectory("").toFile();
+        File tempDir = config.isAvoidTmpFolder() ? targetFolder
+                : createTempDirectory("").toFile();
         File temporaryFile = new File(tempDir, targetFile.getName());
 
         log.trace("Target folder {} ... using temporal file {}", targetFolder,
@@ -140,7 +141,8 @@ public class Downloader {
                 extractedFiles.iterator().next().getName());
         boolean driverExists = resultingDriver.exists();
 
-        if (!driverExists || config.isForceDownload()) {
+        if ((!driverExists || config.isForceDownload())
+                && !config.isAvoidTmpFolder()) {
             if (driverExists) {
                 log.debug("Overriding former driver {}", resultingDriver);
                 deleteFile(resultingDriver);
@@ -152,7 +154,9 @@ public class Downloader {
         if (!config.isExecutable(resultingDriver)) {
             setFileExecutable(resultingDriver);
         }
-        deleteFolder(tempDir);
+        if (!config.isAvoidTmpFolder()) {
+            deleteFolder(tempDir);
+        }
         log.trace("Driver after extraction {}", resultingDriver);
 
         return of(resultingDriver);
