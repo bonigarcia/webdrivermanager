@@ -41,9 +41,8 @@ class HtmlUnitTest extends BrowserTestParent {
     }
 
     @BeforeEach
-    void htmlUnitTest()
-            throws InstantiationException, IllegalAccessException {
-        driver = webDriverClass.newInstance();
+    void htmlUnitTest() throws Exception {
+        driver = webDriverClass.getDeclaredConstructor().newInstance();
     }
 
 }

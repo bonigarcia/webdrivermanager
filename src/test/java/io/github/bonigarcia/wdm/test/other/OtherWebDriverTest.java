@@ -18,6 +18,7 @@ package io.github.bonigarcia.wdm.test.other;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import java.lang.reflect.Constructor;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.AfterEach;
@@ -51,11 +52,14 @@ class OtherWebDriverTest {
     @ParameterizedTest
     @MethodSource("data")
     void test(Class<? extends WebDriver> driverClass,
-            Class<? extends Throwable> exception) {
+            Class<? extends Throwable> exception)
+            throws NoSuchMethodException, SecurityException {
         WebDriverManager.getInstance(driverClass).setup();
 
         if (exception != null) {
-            assertThatThrownBy(driverClass::newInstance)
+            Constructor<? extends WebDriver> declaredConstructor = driverClass
+                    .getDeclaredConstructor();
+            assertThatThrownBy(declaredConstructor::newInstance)
                     .isInstanceOf(exception);
         }
     }
