@@ -124,16 +124,12 @@ public class VersionDetector {
     }
 
     public Optional<Path> getBrowserPath(String browserName) {
+        log.debug("Detecting {} path using the commands database", browserName);
+
         Optional<Path> browserPath = empty();
-
-        boolean online = config.getCommandsPropertiesOnlineFirst();
-        String propertiesName = COMMANDS_PROPERTIES;
-        Properties commandsProperties = getProperties(propertiesName, online);
-
-        String onlineMessage = online ? ONLINE : LOCAL;
-        log.debug("Detecting {} path using {} {}", browserName, onlineMessage,
-                propertiesName);
-
+        String pathStr = "";
+        Properties commandsProperties = getProperties(COMMANDS_PROPERTIES,
+                config.getCommandsPropertiesOnlineFirst());
         List<String> commandsPerOs = getCommandsList(browserName,
                 commandsProperties);
 
@@ -155,13 +151,7 @@ public class VersionDetector {
                             newCommand.split(" "));
                     int iCaption = captionOutput.indexOf("=");
                     if (iCaption != -1) {
-                        String pathStr = captionOutput.substring(iCaption + 1);
-                        Path path = Paths.get(pathStr);
-                        if (Files.exists(path)) {
-                            log.debug("The path of {} is {}", browserName,
-                                    pathStr);
-                            return Optional.of(path);
-                        }
+                        pathStr = captionOutput.substring(iCaption + 1);
                     }
                 }
                 break;
@@ -169,7 +159,6 @@ public class VersionDetector {
             case MAC:
             case LINUX:
             default:
-                String pathStr = null;
                 if (firstCommand.contains("/")) {
                     pathStr = firstCommand;
                 } else {
@@ -177,13 +166,12 @@ public class VersionDetector {
                             "type -p " + firstCommand };
                     pathStr = runAndWait(commandArray);
                 }
-
-                Path path = Paths.get(pathStr);
-                if (Files.exists(path)) {
-                    log.debug("The path of {} is {}", browserName, pathStr);
-                    return Optional.of(path);
-                }
                 break;
+            }
+            Path path = Paths.get(pathStr);
+            if (!isNullOrEmpty(pathStr) && Files.exists(path)) {
+                log.debug("The path of {} is {}", browserName, pathStr);
+                return Optional.of(path);
             }
         }
 
