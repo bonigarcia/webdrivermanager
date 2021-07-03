@@ -294,6 +294,10 @@ public abstract class WebDriverManager {
     }
 
     public Optional<Path> getBrowserPath() {
+        if (versionDetector == null) {
+            httpClient = new HttpClient(config());
+            versionDetector = new VersionDetector(config, httpClient);
+        }
         return versionDetector.getBrowserPath(
                 getDriverManagerType().getBrowserName().toLowerCase());
     }
