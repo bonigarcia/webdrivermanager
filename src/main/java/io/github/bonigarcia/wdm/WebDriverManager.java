@@ -27,7 +27,6 @@ import static io.github.bonigarcia.wdm.config.DriverManagerType.FIREFOX;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.IEXPLORER;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.OPERA;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.PHANTOMJS;
-import static io.github.bonigarcia.wdm.config.DriverManagerType.SELENIUM_SERVER_STANDALONE;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.LINUX;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.MAC;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.WIN;
@@ -102,7 +101,6 @@ import io.github.bonigarcia.wdm.managers.FirefoxDriverManager;
 import io.github.bonigarcia.wdm.managers.InternetExplorerDriverManager;
 import io.github.bonigarcia.wdm.managers.OperaDriverManager;
 import io.github.bonigarcia.wdm.managers.PhantomJsDriverManager;
-import io.github.bonigarcia.wdm.managers.SeleniumServerStandaloneManager;
 import io.github.bonigarcia.wdm.managers.VoidDriverManager;
 import io.github.bonigarcia.wdm.online.BitBucketApi;
 import io.github.bonigarcia.wdm.online.Downloader;
@@ -213,12 +211,6 @@ public abstract class WebDriverManager {
         return instanceMap.get(PHANTOMJS);
     }
 
-    public static synchronized WebDriverManager seleniumServerStandalone() {
-        instanceMap.putIfAbsent(SELENIUM_SERVER_STANDALONE,
-                new SeleniumServerStandaloneManager());
-        return instanceMap.get(SELENIUM_SERVER_STANDALONE);
-    }
-
     protected static synchronized WebDriverManager voiddriver() {
         return new VoidDriverManager();
     }
@@ -243,8 +235,6 @@ public abstract class WebDriverManager {
             return edgedriver();
         case PHANTOMJS:
             return phantomjs();
-        case SELENIUM_SERVER_STANDALONE:
-            return seleniumServerStandalone();
         default:
             return voiddriver();
         }

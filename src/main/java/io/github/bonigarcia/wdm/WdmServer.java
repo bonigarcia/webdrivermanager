@@ -22,7 +22,6 @@ import static io.github.bonigarcia.wdm.WebDriverManager.firefoxdriver;
 import static io.github.bonigarcia.wdm.WebDriverManager.iedriver;
 import static io.github.bonigarcia.wdm.WebDriverManager.operadriver;
 import static io.github.bonigarcia.wdm.WebDriverManager.phantomjs;
-import static io.github.bonigarcia.wdm.WebDriverManager.seleniumServerStandalone;
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.apache.commons.io.FileUtils.openInputStream;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -61,7 +60,6 @@ public class WdmServer {
         app.get("/iedriver", handler);
         app.get("/operadriver", handler);
         app.get("/phantomjs", handler);
-        app.get("/selenium-server-standalone", handler);
 
         log.info("WebDriverManager server listening on port {}", port);
     }
@@ -98,9 +96,6 @@ public class WdmServer {
             break;
         case "phantomjs":
             out = Optional.of(phantomjs());
-            break;
-        case "selenium-server-standalone":
-            out = Optional.of(seleniumServerStandalone());
             break;
         default:
             log.warn("Unknown option {}", requestPath);

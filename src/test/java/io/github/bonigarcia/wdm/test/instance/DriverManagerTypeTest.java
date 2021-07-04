@@ -24,7 +24,6 @@ import static io.github.bonigarcia.wdm.config.DriverManagerType.IEXPLORER;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.OPERA;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.PHANTOMJS;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.SAFARI;
-import static io.github.bonigarcia.wdm.config.DriverManagerType.SELENIUM_SERVER_STANDALONE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.stream.Stream;
@@ -63,8 +62,7 @@ class DriverManagerTypeTest {
                         PHANTOMJS),
                 Arguments.of("org.openqa.selenium.ie.InternetExplorerDriver",
                         IEXPLORER),
-                Arguments.of("org.openqa.selenium.safari.SafariDriver", SAFARI),
-                Arguments.of("org.openqa.selenium.remote.server.SeleniumServer",
-                        SELENIUM_SERVER_STANDALONE));
+                Arguments.of("org.openqa.selenium.safari.SafariDriver",
+                        SAFARI));
     }
 }

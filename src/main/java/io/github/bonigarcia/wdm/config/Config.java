@@ -183,11 +183,6 @@ public class Config {
     ConfigKey<Boolean> useChromiumDriverSnap = new ConfigKey<>(
             "wdm.useChromiumDriverSnap", Boolean.class);
 
-    ConfigKey<String> seleniumServerStandaloneVersion = new ConfigKey<>(
-            "wdm.seleniumServerStandaloneVersion", String.class);
-    ConfigKey<URL> seleniumServerStandaloneUrl = new ConfigKey<>(
-            "wdm.seleniumServerStandaloneUrl", URL.class);
-
     ConfigKey<Integer> serverPort = new ConfigKey<>("wdm.serverPort",
             Integer.class);
     ConfigKey<Integer> ttl = new ConfigKey<>("wdm.ttl", Integer.class);
@@ -946,24 +941,6 @@ public class Config {
 
     public Config setUseChromiumDriverSnap(boolean value) {
         this.useChromiumDriverSnap.setValue(value);
-        return this;
-    }
-
-    public String getSeleniumServerStandaloneVersion() {
-        return resolve(seleniumServerStandaloneVersion);
-    }
-
-    public Config setSeleniumServerStandaloneVersion(String value) {
-        this.seleniumServerStandaloneVersion.setValue(value);
-        return this;
-    }
-
-    public URL getSeleniumServerStandaloneUrl() {
-        return resolve(seleniumServerStandaloneUrl);
-    }
-
-    public Config setSeleniumServerStandaloneUrl(URL value) {
-        this.seleniumServerStandaloneUrl.setValue(value);
         return this;
     }
 
