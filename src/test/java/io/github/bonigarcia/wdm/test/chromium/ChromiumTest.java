@@ -16,19 +16,24 @@
  */
 package io.github.bonigarcia.wdm.test.chromium;
 
-import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
+import static java.lang.invoke.MethodHandles.lookup;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assumptions.assumeThat;
+import static org.slf4j.LoggerFactory.getLogger;
 
-import java.io.File;
+import java.nio.file.Path;
+import java.util.Optional;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
 
 /**
  * Test with Google Chromium browser.
@@ -36,33 +41,45 @@ import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
  * @author Boni Garcia
  * @since 3.8.0
  */
-class ChromiumTest extends BrowserTestParent {
+class ChromiumTest {
+
+    final Logger log = getLogger(lookup().lookupClass());
+
+    WebDriver driver;
+
+    static Optional<Path> browserPath;
 
     @BeforeAll
     static void setupClass() {
+        browserPath = WebDriverManager.chromiumdriver().getBrowserPath();
+        assumeThat(browserPath).isPresent();
+
         WebDriverManager.chromiumdriver().setup();
     }
 
     @BeforeEach
     void setupTest() {
-        File chromiumPath = new File(getChromiumPath());
-        assumeThat(chromiumPath).exists();
-
         ChromeOptions options = new ChromeOptions();
-        options.setBinary(chromiumPath);
+        options.setBinary(browserPath.get().toFile());
         driver = new ChromeDriver(options);
     }
 
-    private String getChromiumPath() {
-        if (IS_OS_WINDOWS) {
-            String localAppDat = System.getenv("LOCALAPPDATA")
-                    .replaceAll("\\\\", "\\\\\\\\");
-            return localAppDat + "\\Chromium\\Application\\chrome.exe";
-        } else {
-            return IS_OS_MAC
-                    ? "/Applications/Chromium.app/Contents/MacOS/Chromium"
-                    : "/usr/bin/chromium-browser";
+    @AfterEach
+    void teardown() {
+        if (driver != null) {
+            driver.quit();
         }
+    }
+
+    @Test
+    void test() {
+        String sutUrl = "https://github.com/bonigarcia/webdrivermanager";
+        driver.get(sutUrl);
+        String title = driver.getTitle();
+        log.debug("The title of {} is {}", sutUrl, title);
+
+        assertThat(title)
+                .contains("Automated driver management for Selenium WebDriver");
     }
 
 }
