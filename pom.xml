@@ -47,7 +47,7 @@
 
     <name>WebDriverManager</name>
     <description>
-		Automatic Selenium WebDriver binaries management in runtime for Java
+		Automated driver management for Selenium WebDriver
 	</description>
     <url>https://github.com/bonigarcia/webdrivermanager</url>
 
@@ -55,7 +55,6 @@
         <developer>
             <id>bonigarcia</id>
             <name>Boni Garcia</name>
-            <email>boni.gg@gmail.com</email>
         </developer>
     </developers>
 
@@ -72,11 +71,6 @@
         <url>https://github.com/bonigarcia/webdrivermanager</url>
         <tag>webdrivermanager-4.4.2</tag>
     </scm>
-
-    <issueManagement>
-        <system>GitHub Issues</system>
-        <url>https://github.com/bonigarcia/webdrivermanager/issues</url>
-    </issueManagement>
 
     <dependencies>
         <dependency>
