@@ -27,6 +27,7 @@ import static io.github.bonigarcia.wdm.config.DriverManagerType.FIREFOX;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.IEXPLORER;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.OPERA;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.PHANTOMJS;
+import static io.github.bonigarcia.wdm.config.DriverManagerType.SAFARI;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.LINUX;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.MAC;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.WIN;
@@ -101,6 +102,7 @@ import io.github.bonigarcia.wdm.managers.FirefoxDriverManager;
 import io.github.bonigarcia.wdm.managers.InternetExplorerDriverManager;
 import io.github.bonigarcia.wdm.managers.OperaDriverManager;
 import io.github.bonigarcia.wdm.managers.PhantomJsDriverManager;
+import io.github.bonigarcia.wdm.managers.SafariDriverManager;
 import io.github.bonigarcia.wdm.managers.VoidDriverManager;
 import io.github.bonigarcia.wdm.online.BitBucketApi;
 import io.github.bonigarcia.wdm.online.Downloader;
@@ -209,6 +211,11 @@ public abstract class WebDriverManager {
     public static synchronized WebDriverManager phantomjs() {
         instanceMap.putIfAbsent(PHANTOMJS, new PhantomJsDriverManager());
         return instanceMap.get(PHANTOMJS);
+    }
+
+    public static synchronized WebDriverManager safaridriver() {
+        instanceMap.putIfAbsent(SAFARI, new SafariDriverManager());
+        return instanceMap.get(SAFARI);
     }
 
     protected static synchronized WebDriverManager voiddriver() {

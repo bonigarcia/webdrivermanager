@@ -16,12 +16,16 @@
  */
 package io.github.bonigarcia.wdm.test.other;
 
-import static org.junit.jupiter.api.condition.OS.MAC;
+import static org.assertj.core.api.Assumptions.assumeThat;
 
+import java.nio.file.Path;
+import java.util.Optional;
+
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.openqa.selenium.safari.SafariDriver;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
 
 /**
@@ -30,8 +34,17 @@ import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
  * @author Elias Nogueira and Boni Garcia
  * @since 3.8.2
  */
-@EnabledOnOs(MAC)
 class SafariTest extends BrowserTestParent {
+
+    @BeforeAll
+    static void setupClass() {
+        Optional<Path> browserPath = WebDriverManager.safaridriver()
+                .getBrowserPath();
+        assumeThat(browserPath).isPresent();
+
+        // The following command is not required (it will show a WARN trace)
+        WebDriverManager.safaridriver().setup();
+    }
 
     @BeforeEach
     void setupTest() {
