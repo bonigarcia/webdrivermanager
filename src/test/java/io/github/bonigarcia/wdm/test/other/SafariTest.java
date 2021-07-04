@@ -16,17 +16,23 @@
  */
 package io.github.bonigarcia.wdm.test.other;
 
+import static java.lang.invoke.MethodHandles.lookup;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assumptions.assumeThat;
+import static org.slf4j.LoggerFactory.getLogger;
 
 import java.nio.file.Path;
 import java.util.Optional;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.safari.SafariDriver;
+import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
 
 /**
  * Test with Safari
@@ -34,7 +40,11 @@ import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
  * @author Elias Nogueira and Boni Garcia
  * @since 3.8.2
  */
-class SafariTest extends BrowserTestParent {
+class SafariTest {
+
+    final Logger log = getLogger(lookup().lookupClass());
+
+    WebDriver driver;
 
     @BeforeAll
     static void setupClass() {
@@ -49,5 +59,23 @@ class SafariTest extends BrowserTestParent {
     @BeforeEach
     void setupTest() {
         driver = new SafariDriver();
+    }
+
+    @AfterEach
+    void teardown() {
+        if (driver != null) {
+            driver.quit();
+        }
+    }
+
+    @Test
+    void test() {
+        String sutUrl = "https://github.com/bonigarcia/webdrivermanager";
+        driver.get(sutUrl);
+        String title = driver.getTitle();
+        log.debug("The title of {} is {}", sutUrl, title);
+
+        assertThat(title)
+                .contains("Automated driver management for Selenium WebDriver");
     }
 }

@@ -16,15 +16,19 @@
  */
 package io.github.bonigarcia.wdm.test.firefox;
 
-import static org.junit.jupiter.api.condition.OS.WINDOWS;
+import static java.lang.invoke.MethodHandles.lookup;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.slf4j.LoggerFactory.getLogger;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.Test;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
 
 /**
  * Test with Firefox browser.
@@ -32,8 +36,11 @@ import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
  * @author Boni Garcia
  * @since 1.5.0
  */
-@DisabledOnOs(WINDOWS)
-class FirefoxTest extends BrowserTestParent {
+class FirefoxTest {
+
+    final Logger log = getLogger(lookup().lookupClass());
+
+    WebDriver driver;
 
     @BeforeAll
     static void setupClass() {
@@ -43,6 +50,24 @@ class FirefoxTest extends BrowserTestParent {
     @BeforeEach
     void setupTest() {
         driver = new FirefoxDriver();
+    }
+
+    @AfterEach
+    void teardown() {
+        if (driver != null) {
+            driver.quit();
+        }
+    }
+
+    @Test
+    void test() {
+        String sutUrl = "https://github.com/bonigarcia/webdrivermanager";
+        driver.get(sutUrl);
+        String title = driver.getTitle();
+        log.debug("The title of {} is {}", sutUrl, title);
+
+        assertThat(title)
+                .contains("Automated driver management for Selenium WebDriver");
     }
 
 }

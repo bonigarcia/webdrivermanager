@@ -16,12 +16,19 @@
  */
 package io.github.bonigarcia.wdm.test.edge;
 
+import static java.lang.invoke.MethodHandles.lookup;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.slf4j.LoggerFactory.getLogger;
+
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.edge.EdgeDriver;
+import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
 
 /**
  * Test with Microsoft Edge.
@@ -29,7 +36,11 @@ import io.github.bonigarcia.wdm.test.base.BrowserTestParent;
  * @author Boni Garcia
  * @since 1.3.0
  */
-class EdgeTest extends BrowserTestParent {
+class EdgeTest {
+
+    final Logger log = getLogger(lookup().lookupClass());
+
+    WebDriver driver;
 
     @BeforeAll
     static void setupClass() {
@@ -39,6 +50,24 @@ class EdgeTest extends BrowserTestParent {
     @BeforeEach
     void setupTest() {
         driver = new EdgeDriver();
+    }
+
+    @AfterEach
+    void teardown() {
+        if (driver != null) {
+            driver.quit();
+        }
+    }
+
+    @Test
+    void test() {
+        String sutUrl = "https://github.com/bonigarcia/webdrivermanager";
+        driver.get(sutUrl);
+        String title = driver.getTitle();
+        log.debug("The title of {} is {}", sutUrl, title);
+
+        assertThat(title)
+                .contains("Automated driver management for Selenium WebDriver");
     }
 
 }
