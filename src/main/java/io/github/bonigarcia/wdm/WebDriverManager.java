@@ -254,6 +254,8 @@ public abstract class WebDriverManager {
         switch (webDriverClass.getName()) {
         case "org.openqa.selenium.chrome.ChromeDriver":
             return chromedriver();
+        case "org.openqa.selenium.chromium.ChromiumDriver":
+            return chromiumdriver();
         case "org.openqa.selenium.firefox.FirefoxDriver":
             return firefoxdriver();
         case "org.openqa.selenium.opera.OperaDriver":
