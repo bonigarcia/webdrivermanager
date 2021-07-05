@@ -242,6 +242,8 @@ public abstract class WebDriverManager {
             return edgedriver();
         case PHANTOMJS:
             return phantomjs();
+        case SAFARI:
+            return safaridriver();
         default:
             return voiddriver();
         }

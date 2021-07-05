@@ -126,7 +126,6 @@ public class VersionDetector {
     public Optional<Path> getBrowserPath(String browserName) {
         log.debug("Detecting {} path using the commands database", browserName);
 
-        Optional<Path> browserPath = empty();
         String pathStr = "";
         Properties commandsProperties = getProperties(COMMANDS_PROPERTIES,
                 config.getCommandsPropertiesOnlineFirst());
@@ -175,7 +174,8 @@ public class VersionDetector {
             }
         }
 
-        return browserPath;
+        log.info("Browser {} is not available in the system", browserName);
+        return empty();
     }
 
     public Optional<String> getBrowserVersionFromTheShell(String browserName) {
