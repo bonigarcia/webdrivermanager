@@ -25,11 +25,13 @@ import static java.util.Optional.empty;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
+import io.github.bonigarcia.wdm.config.WebDriverManagerException;
 
 /**
  * Manager for PhantomJs.
@@ -163,6 +165,14 @@ public class PhantomJsDriverManager extends WebDriverManager {
     @Override
     protected void setBrowserVersion(String browserVersion) {
         // Nothing required
+    }
+
+    @Override
+    public Optional<Path> getBrowserPath() {
+        throw new WebDriverManagerException("The browser path of "
+                + getDriverManagerType().getBrowserName()
+                + " cannot be found since it is a headless (and legacy) browser");
+
     }
 
     public WebDriverManager exportParameter(String exportParameter) {
