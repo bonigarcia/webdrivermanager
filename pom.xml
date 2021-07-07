@@ -8,6 +8,7 @@
     <version>5.0.0-SNAPSHOT</version>
 
     <properties>
+        <!-- compile -->
         <slf4j.version>1.7.31</slf4j.version>
         <logback.version>1.2.3</logback.version>
         <commons-io.version>2.10.0</commons-io.version>
@@ -16,31 +17,38 @@
         <jarchivelib.version>1.1.0</jarchivelib.version>
         <jsoup.version>1.13.1</jsoup.version>
         <httpclient.version>5.1</httpclient.version>
-        <javalin.version>3.13.9</javalin.version>
 
+        <!-- provided -->
+        <javalin.version>3.13.9</javalin.version>
+        <selenium.version>3.141.59</selenium.version>
+
+        <!-- test -->
         <junit.version>5.7.2</junit.version>
         <assertj.version>3.20.2</assertj.version>
         <mockserver.version>5.11.2</mockserver.version>
-        <selenium-java.version>3.141.59</selenium-java.version>
         <phantomjsdriver.version>1.4.4</phantomjsdriver.version>
         <htmlunit-driver.version>2.51.0</htmlunit-driver.version>
         <guava.version>30.1.1-jre</guava.version>
         <mockito-core.version>3.11.2</mockito-core.version>
 
+        <!-- plugins -->
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
         <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
         <exec-maven-plugin.version>3.0.0</exec-maven-plugin.version>
         <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
 
+        <!-- Java version -->
         <java.version>11</java.version>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.source>${java.version}</maven.compiler.source>
 
+        <!-- encoding -->
         <project.encondig>UTF-8</project.encondig>
         <project.build.sourceEncoding>${project.encondig}</project.build.sourceEncoding>
         <project.reporting.outputEncoding>${project.encondig}</project.reporting.outputEncoding>
 
+        <!-- custom -->
         <wdm.mainClass>io.github.bonigarcia.wdm.WebDriverManager</wdm.mainClass>
         <wdm.agentClass>io.github.bonigarcia.wdm.WdmAgent</wdm.agentClass>
         <wdm.manifest>src/main/resources/META-INF/MANIFEST.MF</wdm.manifest>
@@ -112,6 +120,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-java</artifactId>
+            <version>${selenium.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>io.javalin</groupId>
             <artifactId>javalin</artifactId>
             <version>${javalin.version}</version>
@@ -153,18 +167,6 @@
             <artifactId>guava</artifactId>
             <version>${guava.version}</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-java</artifactId>
-            <version>${selenium-java.version}</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <artifactId>byte-buddy</artifactId>
-                    <groupId>net.bytebuddy</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.codeborne</groupId>

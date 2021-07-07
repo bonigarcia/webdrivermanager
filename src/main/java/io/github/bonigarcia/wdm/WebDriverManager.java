@@ -77,6 +77,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.jsoup.Jsoup;
+import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -271,7 +272,7 @@ public abstract class WebDriverManager {
         }
     }
 
-    public synchronized void setup() {
+    public void setup() {
         DriverManagerType driverManagerType = getDriverManagerType();
         initResolutionCache();
         cacheHandler = new CacheHandler(config);
@@ -292,6 +293,25 @@ public abstract class WebDriverManager {
                 }
             }
         }
+    }
+
+    public synchronized WebDriver create() {
+        WebDriver driver = null;
+        try {
+            // 1. Manage driver
+            setup();
+
+            // 2. Create WebDriver instance
+            Class<?> browserClass = Class
+                    .forName(getDriverManagerType().browserClass());
+            driver = (WebDriver) browserClass.getDeclaredConstructor()
+                    .newInstance();
+
+        } catch (Exception e) {
+            log.error("There was an error creating WebDriver object for {}",
+                    getDriverManagerType().getBrowserName(), e);
+        }
+        return driver;
     }
 
     public Optional<Path> getBrowserPath() {
