@@ -470,6 +470,11 @@ public abstract class WebDriverManager {
         return instanceMap.get(getDriverManagerType());
     }
 
+    public WebDriverManager avoidUseChromiumDriverSnap() {
+        config().setUseChromiumDriverSnap(false);
+        return instanceMap.get(getDriverManagerType());
+    }
+
     public WebDriverManager ttl(int seconds) {
         config().setTtl(seconds);
         return instanceMap.get(getDriverManagerType());
