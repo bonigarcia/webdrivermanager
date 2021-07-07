@@ -20,9 +20,10 @@ import static java.lang.invoke.MethodHandles.lookup;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
+import java.util.List;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
@@ -35,34 +36,37 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @author Boni Garcia
  * @since 4.0.0
  */
-@Disabled("Redundant test in CI")
 class FirefoxCreateTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
-    WebDriver driver;
+    List<WebDriver> drivers;
 
     @BeforeEach
     void setupTest() {
-        driver = WebDriverManager.firefoxdriver().create();
+        drivers = WebDriverManager.firefoxdriver().create(2);
     }
 
     @AfterEach
     void teardown() {
-        if (driver != null) {
-            driver.quit();
-        }
+        drivers.forEach((driver) -> {
+            if (driver != null) {
+                driver.quit();
+            }
+        });
     }
 
     @Test
     void test() {
-        String sutUrl = "https://github.com/bonigarcia/webdrivermanager";
-        driver.get(sutUrl);
-        String title = driver.getTitle();
-        log.debug("The title of {} is {}", sutUrl, title);
+        drivers.forEach((driver) -> {
+            String sutUrl = "https://github.com/bonigarcia/webdrivermanager";
+            driver.get(sutUrl);
+            String title = driver.getTitle();
+            log.debug("The title of {} is {}", sutUrl, title);
 
-        assertThat(title)
-                .contains("Automated driver management for Selenium WebDriver");
+            assertThat(title).contains(
+                    "Automated driver management for Selenium WebDriver");
+        });
     }
 
 }

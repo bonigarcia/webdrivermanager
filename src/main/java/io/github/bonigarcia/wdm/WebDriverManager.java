@@ -314,6 +314,14 @@ public abstract class WebDriverManager {
         return driver;
     }
 
+    public List<WebDriver> create(int numberOfBrowser) {
+        List<WebDriver> browserList = new ArrayList<>();
+        for (int i = 0; i < numberOfBrowser; i++) {
+            browserList.add(create());
+        }
+        return browserList;
+    }
+
     public Optional<Path> getBrowserPath() {
         if (versionDetector == null) {
             httpClient = new HttpClient(config());
