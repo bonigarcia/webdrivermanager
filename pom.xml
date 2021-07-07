@@ -124,6 +124,12 @@
             <artifactId>selenium-java</artifactId>
             <version>${selenium.version}</version>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <artifactId>byte-buddy</artifactId>
+                    <groupId>net.bytebuddy</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>io.javalin</groupId>
