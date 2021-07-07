@@ -296,12 +296,16 @@ public abstract class WebDriverManager {
     }
 
     public WebDriver create() {
+        // 1. Manage driver
+        setup();
+
+        // 2. Create WebDriver instance
+        return instantiateDriver();
+    }
+
+    private WebDriver instantiateDriver() {
         WebDriver driver = null;
         try {
-            // 1. Manage driver
-            setup();
-
-            // 2. Create WebDriver instance
             Class<?> browserClass = Class
                     .forName(getDriverManagerType().browserClass());
             driver = (WebDriver) browserClass.getDeclaredConstructor()
@@ -317,7 +321,11 @@ public abstract class WebDriverManager {
     public List<WebDriver> create(int numberOfBrowser) {
         List<WebDriver> browserList = new ArrayList<>();
         for (int i = 0; i < numberOfBrowser; i++) {
-            browserList.add(create());
+            if (i == 0) {
+                // 1. Manage driver
+                setup();
+            }
+            browserList.add(instantiateDriver());
         }
         return browserList;
     }

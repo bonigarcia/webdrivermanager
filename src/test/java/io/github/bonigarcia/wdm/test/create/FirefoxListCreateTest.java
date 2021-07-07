@@ -36,7 +36,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @author Boni Garcia
  * @since 4.0.0
  */
-class FirefoxCreateTest {
+class FirefoxListCreateTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
