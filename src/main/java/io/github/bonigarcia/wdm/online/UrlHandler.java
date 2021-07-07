@@ -136,8 +136,7 @@ public class UrlHandler {
     }
 
     public void filterByOs(String driverName, String osName) {
-        if (!driverName.equalsIgnoreCase("IEDriverServer")
-                && !driverName.equalsIgnoreCase("selenium-server-standalone")) {
+        if (!driverName.equalsIgnoreCase("IEDriverServer")) {
             log.trace("URLs before filtering by OS ({}): {}", osName,
                     candidateUrls);
             candidateUrls = candidateUrls.stream().filter(url -> OperatingSystem
