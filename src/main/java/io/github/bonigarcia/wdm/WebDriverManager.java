@@ -77,6 +77,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.jsoup.Jsoup;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.w3c.dom.Document;
@@ -165,6 +166,7 @@ public abstract class WebDriverManager {
     protected ResolutionCache resolutionCache;
     protected CacheHandler cacheHandler;
     protected VersionDetector versionDetector;
+    protected Capabilities options;
 
     public static Config globalConfig() {
         Config global = new Config();
@@ -308,8 +310,14 @@ public abstract class WebDriverManager {
         try {
             Class<?> browserClass = Class
                     .forName(getDriverManagerType().browserClass());
-            driver = (WebDriver) browserClass.getDeclaredConstructor()
-                    .newInstance();
+            if (options != null) {
+                driver = (WebDriver) browserClass
+                        .getDeclaredConstructor(Capabilities.class)
+                        .newInstance(options);
+            } else {
+                driver = (WebDriver) browserClass.getDeclaredConstructor()
+                        .newInstance();
+            }
 
         } catch (Exception e) {
             log.error("There was an error creating WebDriver object for {}",
@@ -337,6 +345,11 @@ public abstract class WebDriverManager {
         }
         return versionDetector.getBrowserPath(
                 getDriverManagerType().getBrowserName().toLowerCase());
+    }
+
+    public WebDriverManager withOptions(Capabilities options) {
+        this.options = options;
+        return instanceMap.get(getDriverManagerType());
     }
 
     public WebDriverManager driverVersion(String driverVersion) {

@@ -20,60 +20,50 @@ import static java.lang.invoke.MethodHandles.lookup;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
-import java.util.List;
-
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxBinary;
-import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 /**
- * Test with Firefox and WebDriverManager's creator.
+ * Test with Chrome and WebDriverManager's creator.
  *
  * @author Boni Garcia
  * @since 4.0.0
  */
-class FirefoxListCreateTest {
+class ChromeOptionsCreateTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
-    List<WebDriver> drivers;
+    WebDriver driver;
 
     @BeforeEach
     void setupTest() {
-        FirefoxBinary firefoxBinary = new FirefoxBinary();
-        firefoxBinary.addCommandLineOptions("--headless");
-        FirefoxOptions options = new FirefoxOptions();
-        options.setBinary(firefoxBinary);
-        drivers = WebDriverManager.firefoxdriver().withOptions(options)
-                .create(2);
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--headless");
+        driver = WebDriverManager.chromedriver().withOptions(options).create();
     }
 
     @AfterEach
     void teardown() {
-        drivers.forEach((driver) -> {
-            if (driver != null) {
-                driver.quit();
-            }
-        });
+        if (driver != null) {
+            driver.quit();
+        }
     }
 
     @Test
     void test() {
-        drivers.forEach((driver) -> {
-            String sutUrl = "https://github.com/bonigarcia/webdrivermanager";
-            driver.get(sutUrl);
-            String title = driver.getTitle();
-            log.debug("The title of {} is {}", sutUrl, title);
+        String sutUrl = "https://github.com/bonigarcia/webdrivermanager";
+        driver.get(sutUrl);
+        String title = driver.getTitle();
+        log.debug("The title of {} is {}", sutUrl, title);
 
-            assertThat(title).contains(
-                    "Automated driver management for Selenium WebDriver");
-        });
+        assertThat(title)
+                .contains("Automated driver management for Selenium WebDriver");
     }
 
 }
