@@ -272,7 +272,7 @@ public abstract class WebDriverManager {
         }
     }
 
-    public void setup() {
+    public synchronized void setup() {
         DriverManagerType driverManagerType = getDriverManagerType();
         initResolutionCache();
         cacheHandler = new CacheHandler(config);
@@ -295,7 +295,7 @@ public abstract class WebDriverManager {
         }
     }
 
-    public synchronized WebDriver create() {
+    public WebDriver create() {
         WebDriver driver = null;
         try {
             // 1. Manage driver
