@@ -25,7 +25,6 @@
             <unpack>true</unpack>
             <includes>
                 <include>io.javalin:javalin:jar</include>
-                <include>com.squareup.okhttp3:okhttp:jar</include>
             </includes>
             <useTransitiveFiltering>true</useTransitiveFiltering>
         </dependencySet>

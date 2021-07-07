@@ -71,7 +71,7 @@ class ServerTest {
         OkHttpClient client = new OkHttpClient.Builder()
                 .connectTimeout(timeoutSeconds, SECONDS)
                 .readTimeout(timeoutSeconds, SECONDS)
-                .callTimeout(timeoutSeconds, SECONDS).build();
+                .writeTimeout(timeoutSeconds, SECONDS).build();
 
         Request request = new Request.Builder().url(serverUrl).build();
 
