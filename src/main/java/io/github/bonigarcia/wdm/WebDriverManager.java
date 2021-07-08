@@ -33,6 +33,7 @@ import static io.github.bonigarcia.wdm.config.OperatingSystem.MAC;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.WIN;
 import static java.lang.Integer.parseInt;
 import static java.lang.String.valueOf;
+import static java.lang.System.getenv;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.charset.Charset.defaultCharset;
 import static java.util.Collections.singletonList;
@@ -303,27 +304,6 @@ public abstract class WebDriverManager {
 
         // 2. Create WebDriver instance
         return instantiateDriver();
-    }
-
-    private WebDriver instantiateDriver() {
-        WebDriver driver = null;
-        try {
-            Class<?> browserClass = Class
-                    .forName(getDriverManagerType().browserClass());
-            if (options != null) {
-                driver = (WebDriver) browserClass
-                        .getDeclaredConstructor(Capabilities.class)
-                        .newInstance(options);
-            } else {
-                driver = (WebDriver) browserClass.getDeclaredConstructor()
-                        .newInstance();
-            }
-
-        } catch (Exception e) {
-            log.error("There was an error creating WebDriver object for {}",
-                    getDriverManagerType().getBrowserName(), e);
-        }
-        return driver;
     }
 
     public List<WebDriver> create(int numberOfBrowser) {
@@ -1027,6 +1007,9 @@ public abstract class WebDriverManager {
         HttpGet get = httpClient.createHttpGet(driverUrl);
 
         String gitHubToken = config().getGitHubToken();
+        if (isNullOrEmpty(gitHubToken)) {
+            gitHubToken = getenv("GITHUB_TOKEN");
+        }
         if (!isNullOrEmpty(gitHubToken)) {
             get.addHeader("Authorization", "token " + gitHubToken);
         }
@@ -1203,6 +1186,27 @@ public abstract class WebDriverManager {
 
     protected Optional<URL> buildUrl(String driverVersion) {
         return empty();
+    }
+
+    protected WebDriver instantiateDriver() {
+        WebDriver driver = null;
+        try {
+            Class<?> browserClass = Class
+                    .forName(getDriverManagerType().browserClass());
+            if (options != null) {
+                driver = (WebDriver) browserClass
+                        .getDeclaredConstructor(Capabilities.class)
+                        .newInstance(options);
+            } else {
+                driver = (WebDriver) browserClass.getDeclaredConstructor()
+                        .newInstance();
+            }
+
+        } catch (Exception e) {
+            log.error("There was an error creating WebDriver object for {}",
+                    getDriverManagerType().getBrowserName(), e);
+        }
+        return driver;
     }
 
     public static void main(String[] args) {
