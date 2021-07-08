@@ -330,7 +330,6 @@ public abstract class WebDriverManager {
         List<WebDriver> browserList = new ArrayList<>();
         for (int i = 0; i < numberOfBrowser; i++) {
             if (i == 0) {
-                // 1. Manage driver
                 setup();
             }
             browserList.add(instantiateDriver());
@@ -450,17 +449,6 @@ public abstract class WebDriverManager {
 
     public WebDriverManager gitHubToken(String gitHubToken) {
         config().setGitHubToken(gitHubToken);
-        return instanceMap.get(getDriverManagerType());
-    }
-
-    public WebDriverManager localRepositoryUser(String localRepositoryUser) {
-        config().setLocalRepositoryUser(localRepositoryUser);
-        return instanceMap.get(getDriverManagerType());
-    }
-
-    public WebDriverManager localRepositoryPassword(
-            String localRepositoryPassword) {
-        config().setLocalRepositoryPassword(localRepositoryPassword);
         return instanceMap.get(getDriverManagerType());
     }
 

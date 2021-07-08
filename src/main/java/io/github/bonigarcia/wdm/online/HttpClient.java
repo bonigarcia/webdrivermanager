@@ -169,23 +169,6 @@ public class HttpClient implements Closeable {
                 builder.setDefaultCredentialsProvider(
                         credentialsProvider.get());
             }
-
-            String localRepositoryUser = config.getLocalRepositoryUser().trim();
-            String localRepositoryPassword = config.getLocalRepositoryPassword()
-                    .trim();
-
-            if (!isNullOrEmpty(localRepositoryUser)
-                    && !isNullOrEmpty(localRepositoryPassword)) {
-                BasicCredentialsProvider provider = new BasicCredentialsProvider();
-                UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(
-                        localRepositoryUser,
-                        localRepositoryPassword.toCharArray());
-
-                AuthScope authScope = new AuthScope(proxyHost.get());
-
-                provider.setCredentials(authScope, credentials);
-                builder.setDefaultCredentialsProvider(provider);
-            }
         }
     }
 
