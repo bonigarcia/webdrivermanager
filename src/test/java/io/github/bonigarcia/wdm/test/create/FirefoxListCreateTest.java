@@ -56,11 +56,7 @@ class FirefoxListCreateTest {
 
     @AfterEach
     void teardown() {
-        drivers.forEach((driver) -> {
-            if (driver != null) {
-                driver.quit();
-            }
-        });
+        WebDriverManager.firefoxdriver().quit();
     }
 
     @Test

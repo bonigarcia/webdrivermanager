@@ -34,6 +34,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.edge.EdgeOptions;
+
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.Architecture;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
@@ -193,6 +196,11 @@ public class EdgeDriverManager extends WebDriverManager {
             }
         }
         return optionalUrl;
+    }
+
+    @Override
+    protected Capabilities getCapabilities() {
+        return new EdgeOptions();
     }
 
     public WebDriverManager exportParameter(String exportParameter) {

@@ -56,6 +56,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
@@ -98,6 +99,8 @@ import io.github.bonigarcia.wdm.config.Config;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
 import io.github.bonigarcia.wdm.config.OperatingSystem;
 import io.github.bonigarcia.wdm.config.WebDriverManagerException;
+import io.github.bonigarcia.wdm.docker.DockerContainer;
+import io.github.bonigarcia.wdm.docker.DockerService;
 import io.github.bonigarcia.wdm.managers.ChromeDriverManager;
 import io.github.bonigarcia.wdm.managers.ChromiumDriverManager;
 import io.github.bonigarcia.wdm.managers.EdgeDriverManager;
@@ -115,6 +118,8 @@ import io.github.bonigarcia.wdm.online.S3NamespaceContext;
 import io.github.bonigarcia.wdm.online.UrlHandler;
 import io.github.bonigarcia.wdm.versions.VersionComparator;
 import io.github.bonigarcia.wdm.versions.VersionDetector;
+import io.github.bonigarcia.wdm.webdriver.WebDriverBrowser;
+import io.github.bonigarcia.wdm.webdriver.WebDriverCreator;
 
 /**
  * Parent driver manager.
@@ -150,6 +155,8 @@ public abstract class WebDriverManager {
 
     protected abstract Optional<String> getExportParameter();
 
+    protected abstract Capabilities getCapabilities();
+
     protected static Map<DriverManagerType, WebDriverManager> instanceMap = new EnumMap<>(
             DriverManagerType.class);
 
@@ -168,6 +175,12 @@ public abstract class WebDriverManager {
     protected CacheHandler cacheHandler;
     protected VersionDetector versionDetector;
     protected Capabilities options;
+
+    protected boolean shutdownHook = false;
+    protected boolean dockerEnabled;
+    protected WebDriverCreator webDriverCreator;
+    protected DockerService dockerService;
+    protected List<WebDriverBrowser> webDriverList = new ArrayList<>();
 
     public static Config globalConfig() {
         Config global = new Config();
@@ -280,6 +293,10 @@ public abstract class WebDriverManager {
         initResolutionCache();
         cacheHandler = new CacheHandler(config);
 
+        if (dockerEnabled) {
+            return;
+        }
+
         if (driverManagerType != null) {
             try {
                 if (config().getClearingDriverCache()) {
@@ -317,13 +334,35 @@ public abstract class WebDriverManager {
         return browserList;
     }
 
+    public void quit() {
+        for (WebDriverBrowser driverBrowser : webDriverList) {
+            WebDriver driver = driverBrowser.getDriver();
+            if (driver != null) {
+                driver.quit();
+            }
+
+            if (dockerService != null) {
+                List<DockerContainer> dockerContainerList = driverBrowser
+                        .getDockerContainerList();
+                dockerContainerList.stream()
+                        .forEach(dockerService::stopAndRemoveContainer);
+            }
+        }
+        webDriverList.clear();
+    }
+
     public Optional<Path> getBrowserPath() {
         if (versionDetector == null) {
             httpClient = new HttpClient(config());
             versionDetector = new VersionDetector(config, httpClient);
         }
         return versionDetector.getBrowserPath(
-                getDriverManagerType().getBrowserName().toLowerCase());
+                getDriverManagerType().getBrowserName().toLowerCase(ROOT));
+    }
+
+    public WebDriverManager browserInDocker() {
+        this.dockerEnabled = true;
+        return instanceMap.get(getDriverManagerType());
     }
 
     public WebDriverManager withOptions(Capabilities options) {
@@ -761,7 +800,7 @@ public abstract class WebDriverManager {
 
     protected Optional<String> getBrowserVersionFromTheShell() {
         return versionDetector.getBrowserVersionFromTheShell(
-                getDriverManagerType().getBrowserName().toLowerCase());
+                getDriverManagerType().getBrowserName().toLowerCase(ROOT));
     }
 
     protected Optional<String> detectBrowserVersion() {
@@ -1190,23 +1229,77 @@ public abstract class WebDriverManager {
 
     protected WebDriver instantiateDriver() {
         WebDriver driver = null;
+        if (webDriverCreator == null) {
+            webDriverCreator = new WebDriverCreator(config);
+        }
         try {
-            Class<?> browserClass = Class
-                    .forName(getDriverManagerType().browserClass());
-            if (options != null) {
-                driver = (WebDriver) browserClass
-                        .getDeclaredConstructor(Capabilities.class)
-                        .newInstance(options);
-            } else {
-                driver = (WebDriver) browserClass.getDeclaredConstructor()
-                        .newInstance();
-            }
+            driver = dockerEnabled ? createDockerWebDriver()
+                    : createLocalWebDriver();
 
         } catch (Exception e) {
             log.error("There was an error creating WebDriver object for {}",
                     getDriverManagerType().getBrowserName(), e);
         }
+
+        addShutdownHook();
+
         return driver;
+    }
+
+    protected void addShutdownHook() {
+        if (!shutdownHook) {
+            Runtime.getRuntime()
+                    .addShutdownHook(new Thread("wdm-shutdown-hook") {
+                        @Override
+                        public void run() {
+                            quit();
+                        }
+                    });
+            shutdownHook = true;
+        }
+    }
+
+    protected WebDriver createDockerWebDriver() {
+        if (dockerService == null) {
+            dockerService = new DockerService(config, resolutionCache);
+        }
+
+        String browserName = getKeyForResolutionCache();
+        String browserVersion = getBrowserVersion();
+        String cacheKey = browserName + "-container-";
+
+        if (isNullOrEmpty(browserVersion)) {
+            cacheKey += "latest";
+            browserVersion = dockerService.getLatestVersionFromDockerHub(
+                    getDriverManagerType(), cacheKey);
+        } else {
+            cacheKey += browserVersion;
+        }
+
+        String dockerImage = dockerService.getDockerImage(browserName,
+                browserVersion);
+        DockerContainer browserContainer = dockerService
+                .startBrowserContainer(dockerImage, cacheKey, browserVersion);
+        String containerUrl = browserContainer.getContainerUrl();
+
+        WebDriverBrowser driverBrowser = webDriverCreator
+                .createRemoteWebDriver(containerUrl, getCapabilities());
+        driverBrowser.addDockerContainer(browserContainer);
+        webDriverList.add(driverBrowser);
+
+        return driverBrowser.getDriver();
+    }
+
+    protected WebDriver createLocalWebDriver() throws ClassNotFoundException,
+            InstantiationException, IllegalAccessException,
+            InvocationTargetException, NoSuchMethodException {
+        Class<?> browserClass = Class
+                .forName(getDriverManagerType().browserClass());
+        WebDriverBrowser driverBrowser = webDriverCreator
+                .createLocalWebDriver(browserClass, options);
+        webDriverList.add(driverBrowser);
+
+        return driverBrowser.getDriver();
     }
 
     public static void main(String[] args) {

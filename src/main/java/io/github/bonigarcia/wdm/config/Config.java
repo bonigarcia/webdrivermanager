@@ -188,9 +188,53 @@ public class Config {
             String.class);
     ConfigKey<String> browserVersionDetectionRegex = new ConfigKey<>(
             "wdm.browserVersionDetectionRegex", String.class);
-
     ConfigKey<String> browserVersionDetectionCommand = new ConfigKey<>(
             "wdm.browserVersionDetectionCommand", String.class);
+
+    ConfigKey<String> dockerDefaultSocket = new ConfigKey<>(
+            "wdm.dockerDefaultSocket", String.class);
+    ConfigKey<String> dockerHubUrl = new ConfigKey<>("wdm.dockerHubUrl",
+            String.class);
+    ConfigKey<String> dockerNetwork = new ConfigKey<>("wdm.dockerNetwork",
+            String.class);
+    ConfigKey<String> dockerTimezone = new ConfigKey<>("wdm.dockerTimezone",
+            String.class);
+    ConfigKey<String> dockerLang = new ConfigKey<>("wdm.dockerLang",
+            String.class);
+    ConfigKey<String> dockerTmpfsSize = new ConfigKey<>("wdm.dockerTmpfsSize",
+            String.class);
+    ConfigKey<Integer> dockerStopTimeoutSec = new ConfigKey<>(
+            "wdm.dockerStopTimeoutSec", Integer.class);
+    ConfigKey<Boolean> dockerEnableVnc = new ConfigKey<>("wdm.dockerEnableVnc",
+            Boolean.class);
+    ConfigKey<Boolean> dockerEnableRecording = new ConfigKey<>(
+            "wdm.dockerEnableRecording", Boolean.class);
+    ConfigKey<String> dockerScreenResolution = new ConfigKey<>(
+            "wdm.dockerScreenResolution", String.class);
+    ConfigKey<String> dockerVncPassword = new ConfigKey<>(
+            "wdm.dockerVncPassword", String.class);
+    ConfigKey<Integer> dockerBrowserPort = new ConfigKey<>(
+            "wdm.dockerBrowserPort", Integer.class);
+    ConfigKey<Integer> dockerVncPort = new ConfigKey<>("wdm.dockerVncPort",
+            Integer.class);
+    ConfigKey<Integer> dockerNoVncPort = new ConfigKey<>("wdm.dockerNoVncPort",
+            Integer.class);
+    ConfigKey<Integer> dockerRecordingTimeoutSec = new ConfigKey<>(
+            "wdm.dockerRecordingTimeoutSec", Integer.class);
+    ConfigKey<Integer> dockerRecordingFrameRate = new ConfigKey<>(
+            "wdm.dockerRecordingFrameRate", Integer.class);
+    ConfigKey<String> dockerRecordingScreenSize = new ConfigKey<>(
+            "wdm.dockerRecordingScreenSize", String.class);
+    ConfigKey<String> dockerRecordingFolder = new ConfigKey<>(
+            "wdm.dockerRecordingFolder", String.class);
+    ConfigKey<String> dockerBrowserStableImageFormat = new ConfigKey<>(
+            "wdm.dockerBrowserStableImageFormat", String.class);
+    ConfigKey<String> dockerBrowserUnstableImageFormat = new ConfigKey<>(
+            "wdm.dockerBrowserUnstableImageFormat", String.class);
+    ConfigKey<String> dockerRecordingImage = new ConfigKey<>(
+            "wdm.dockerRecordingImage", String.class);
+    ConfigKey<String> dockerNoVncImage = new ConfigKey<>("wdm.dockerNoVncImage",
+            String.class);
 
     private <T> T resolve(ConfigKey<T> configKey) {
         String name = configKey.getName();
@@ -928,6 +972,204 @@ public class Config {
 
     public Config setBrowserVersionDetectionCommand(String value) {
         this.browserVersionDetectionCommand.setValue(value);
+        return this;
+    }
+
+    public String getDockerDefaultSocket() {
+        return resolve(dockerDefaultSocket);
+    }
+
+    public Config setDockerDefaultSocket(String value) {
+        this.dockerDefaultSocket.setValue(value);
+        return this;
+    }
+
+    public String getDockerHubUrl() {
+        return resolve(dockerHubUrl);
+    }
+
+    public Config setDockerHubUrl(String value) {
+        this.dockerHubUrl.setValue(value);
+        return this;
+    }
+
+    public String getDockerNetwork() {
+        return resolve(dockerNetwork);
+    }
+
+    public Config setDockerNetwork(String value) {
+        this.dockerNetwork.setValue(value);
+        return this;
+    }
+
+    public String getDockerTimezone() {
+        return resolve(dockerTimezone);
+    }
+
+    public Config setDockerTimezone(String value) {
+        this.dockerTimezone.setValue(value);
+        return this;
+    }
+
+    public String getDockerLang() {
+        return resolve(dockerLang);
+    }
+
+    public Config setDockerLang(String value) {
+        this.dockerLang.setValue(value);
+        return this;
+    }
+
+    public String getDockerTmpfsSize() {
+        return resolve(dockerTmpfsSize);
+    }
+
+    public Config setDockerTmpfsSize(String value) {
+        this.dockerTmpfsSize.setValue(value);
+        return this;
+    }
+
+    public int getDockerStopTimeoutSec() {
+        return resolve(dockerStopTimeoutSec);
+    }
+
+    public Config setDockerStopTimeoutSec(int value) {
+        this.dockerStopTimeoutSec.setValue(value);
+        return this;
+    }
+
+    public boolean isEnabledDockerVnc() {
+        return resolve(dockerEnableVnc);
+    }
+
+    public Config setDockerEnableVnc(boolean value) {
+        this.dockerEnableVnc.setValue(value);
+        return this;
+    }
+
+    public boolean isEnabledDockerRecording() {
+        return resolve(dockerEnableRecording);
+    }
+
+    public Config setDockerEnableRecording(boolean value) {
+        this.dockerEnableRecording.setValue(value);
+        return this;
+    }
+
+    public String getDockerScreenResolution() {
+        return resolve(dockerScreenResolution);
+    }
+
+    public Config setDockerScreenResolution(String value) {
+        this.dockerScreenResolution.setValue(value);
+        return this;
+    }
+
+    public String getDockerVncPassword() {
+        return resolve(dockerVncPassword);
+    }
+
+    public Config setDockerVncPassword(String value) {
+        this.dockerVncPassword.setValue(value);
+        return this;
+    }
+
+    public int getDockerBrowserPort() {
+        return resolve(dockerBrowserPort);
+    }
+
+    public Config setDockerBrowserPort(int value) {
+        this.dockerBrowserPort.setValue(value);
+        return this;
+    }
+
+    public int getDockerVncPort() {
+        return resolve(dockerVncPort);
+    }
+
+    public Config setDockerVncPort(int value) {
+        this.dockerVncPort.setValue(value);
+        return this;
+    }
+
+    public int getDockerNoVncPort() {
+        return resolve(dockerNoVncPort);
+    }
+
+    public Config setDockerNoVncPort(int value) {
+        this.dockerNoVncPort.setValue(value);
+        return this;
+    }
+
+    public int getDockerRecordingTimeoutSec() {
+        return resolve(dockerRecordingTimeoutSec);
+    }
+
+    public Config setDockerRecordingTimeoutSec(int value) {
+        this.dockerRecordingTimeoutSec.setValue(value);
+        return this;
+    }
+
+    public int getDockerRecordingFrameRate() {
+        return resolve(dockerRecordingFrameRate);
+    }
+
+    public Config setDockerRecordingFrameRate(int value) {
+        this.dockerRecordingFrameRate.setValue(value);
+        return this;
+    }
+
+    public String getDockerRecordingScreenSize() {
+        return resolve(dockerRecordingScreenSize);
+    }
+
+    public Config setDockerRecordingScreenSize(String value) {
+        this.dockerRecordingScreenSize.setValue(value);
+        return this;
+    }
+
+    public String getDockerRecordingFolder() {
+        return resolve(dockerRecordingFolder);
+    }
+
+    public Config setDockerRecordingFolder(String value) {
+        this.dockerRecordingFolder.setValue(value);
+        return this;
+    }
+
+    public String getDockerBrowserStableImageFormat() {
+        return resolve(dockerBrowserStableImageFormat);
+    }
+
+    public Config setDockerBrowserStableImageFormat(String value) {
+        this.dockerBrowserStableImageFormat.setValue(value);
+        return this;
+    }
+
+    public String getDockerBrowserUnstableImageFormat() {
+        return resolve(dockerBrowserUnstableImageFormat);
+    }
+
+    public Config setDockerBrowserUnstableImageFormat(String value) {
+        this.dockerBrowserUnstableImageFormat.setValue(value);
+        return this;
+    }
+
+    public String getDockerRecordingImage() {
+        return resolve(dockerRecordingImage);
+    }
+
+    public Config setDockerRecordingImage(String value) {
+        this.dockerRecordingImage.setValue(value);
+        return this;
+    }
+
+    public String getDockerNoVncImage() {
+        return resolve(dockerNoVncImage);
+    }
+
+    public Config setDockerNoVncImage(String value) {
+        this.dockerNoVncImage.setValue(value);
         return this;
     }
 

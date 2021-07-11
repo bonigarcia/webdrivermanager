@@ -29,6 +29,9 @@ import java.util.Optional;
 
 import javax.xml.namespace.NamespaceContext;
 
+import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.chrome.ChromeOptions;
+
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
 import io.github.bonigarcia.wdm.config.OperatingSystem;
@@ -151,6 +154,11 @@ public class ChromeDriverManager extends WebDriverManager {
             }
         }
         return optionalUrl;
+    }
+
+    @Override
+    protected Capabilities getCapabilities() {
+        return new ChromeOptions();
     }
 
     public WebDriverManager exportParameter(String exportParameter) {

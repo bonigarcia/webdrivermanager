@@ -14,51 +14,47 @@
  * limitations under the License.
  *
  */
-package io.github.bonigarcia.wdm.test.create;
+package io.github.bonigarcia.wdm.webdriver;
 
 import static java.lang.invoke.MethodHandles.lookup;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
+import io.github.bonigarcia.wdm.docker.DockerContainer;
 
 /**
- * Test with Chrome and WebDriverManager's creator.
+ * WebDriver instance and associated Docker containers (if any(.
  *
  * @author Boni Garcia
- * @since 4.0.0
+ * @since 5.0.0
  */
-class ChromeCreateTest {
+public class WebDriverBrowser {
 
     final Logger log = getLogger(lookup().lookupClass());
 
     WebDriver driver;
+    List<DockerContainer> dockerContainerList;
 
-    @BeforeEach
-    void setupTest() {
-        driver = WebDriverManager.chromedriver().create();
+    public WebDriverBrowser(WebDriver driver) {
+        this.driver = driver;
+        this.dockerContainerList = new ArrayList<>();
     }
 
-    @AfterEach
-    void teardown() {
-        WebDriverManager.chromedriver().quit();
+    public WebDriver getDriver() {
+        return driver;
     }
 
-    @Test
-    void test() {
-        String sutUrl = "https://github.com/bonigarcia/webdrivermanager";
-        driver.get(sutUrl);
-        String title = driver.getTitle();
-        log.debug("The title of {} is {}", sutUrl, title);
+    public List<DockerContainer> getDockerContainerList() {
+        return dockerContainerList;
+    }
 
-        assertThat(title)
-                .contains("Automated driver management for Selenium WebDriver");
+    public void addDockerContainer(DockerContainer dockerContainer) {
+        dockerContainerList.add(dockerContainer);
     }
 
 }

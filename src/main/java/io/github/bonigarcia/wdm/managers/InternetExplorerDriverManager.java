@@ -27,6 +27,9 @@ import java.util.Optional;
 
 import javax.xml.namespace.NamespaceContext;
 
+import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.ie.InternetExplorerOptions;
+
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
 import io.github.bonigarcia.wdm.config.WebDriverManagerException;
@@ -116,6 +119,11 @@ public class InternetExplorerDriverManager extends WebDriverManager {
         throw new WebDriverManagerException("The browser path of "
                 + getDriverManagerType().getBrowserName()
                 + " cannot be found since it is a legacy browser and not maintained in the commands database");
+    }
+
+    @Override
+    protected Capabilities getCapabilities() {
+        return new InternetExplorerOptions();
     }
 
     public WebDriverManager exportParameter(String exportParameter) {

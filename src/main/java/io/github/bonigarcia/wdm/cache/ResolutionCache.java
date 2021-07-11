@@ -175,6 +175,10 @@ public class ResolutionCache {
     }
 
     public boolean checkKeyInResolutionCache(String key) {
+        return checkKeyInResolutionCache(key, true);
+    }
+
+    public boolean checkKeyInResolutionCache(String key, boolean showLog) {
         String valueFromResolutionCache = getValueFromResolutionCache(key);
         boolean valueInResolutionCache = valueFromResolutionCache != null
                 && !valueFromResolutionCache.isEmpty();
@@ -184,8 +188,10 @@ public class ResolutionCache {
                     valueFromResolutionCache, expirationDate);
             if (valueInResolutionCache) {
                 String strDate = formatDate(expirationDate);
-                log.debug("Resolution {}={} in cache (valid until {})", key,
-                        valueFromResolutionCache, strDate);
+                if (showLog) {
+                    log.debug("Resolution {}={} in cache (valid until {})", key,
+                            valueFromResolutionCache, strDate);
+                }
             }
         }
         return valueInResolutionCache;

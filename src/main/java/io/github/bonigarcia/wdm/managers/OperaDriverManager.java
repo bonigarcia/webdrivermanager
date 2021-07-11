@@ -26,6 +26,9 @@ import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 
+import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.opera.OperaOptions;
+
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
 import io.github.bonigarcia.wdm.config.WebDriverManagerException;
@@ -159,6 +162,11 @@ public class OperaDriverManager extends WebDriverManager {
     protected Optional<String> getDriverVersionFromRepository(
             Optional<String> driverVersion) {
         return empty();
+    }
+
+    @Override
+    protected Capabilities getCapabilities() {
+        return new OperaOptions();
     }
 
     public WebDriverManager exportParameter(String exportParameter) {

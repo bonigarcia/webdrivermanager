@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package io.github.bonigarcia.wdm.test.create;
+package io.github.bonigarcia.wdm.test.docker;
 
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,18 +24,17 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 /**
- * Test with Chrome and WebDriverManager's creator.
+ * Test with Chrome in Docker.
  *
  * @author Boni Garcia
  * @since 4.0.0
  */
-class ChromeOptionsCreateTest {
+class DockerChromeTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
@@ -43,14 +42,14 @@ class ChromeOptionsCreateTest {
 
     @BeforeEach
     void setupTest() {
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--headless");
-        driver = WebDriverManager.chromedriver().withOptions(options).create();
+        driver = WebDriverManager.chromedriver().browserInDocker().create();
     }
 
     @AfterEach
     void teardown() {
-        WebDriverManager.chromedriver().quit();
+        if (driver != null) {
+            driver.quit();
+        }
     }
 
     @Test
