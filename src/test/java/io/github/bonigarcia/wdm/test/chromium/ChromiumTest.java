@@ -19,6 +19,7 @@ package io.github.bonigarcia.wdm.test.chromium;
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assumptions.assumeThat;
+import static org.openqa.selenium.net.PortProber.findFreePort;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.nio.file.Path;
@@ -61,6 +62,7 @@ class ChromiumTest {
     void setupTest() {
         ChromeOptions options = new ChromeOptions();
         options.setBinary(browserPath.get().toFile());
+        options.addArguments("--remote-debugging-port=" + findFreePort());
         driver = new ChromeDriver(options);
     }
 
