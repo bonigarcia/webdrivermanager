@@ -129,10 +129,8 @@ public class DockerService {
         try (CreateContainerCmd containerConfigBuilder = dockerClient
                 .createContainerCmd(imageId)) {
 
-            boolean privileged = dockerContainer.isPrivileged();
-            if (privileged) {
-                log.trace("Using privileged mode");
-                hostConfigBuilder.withPrivileged(true);
+            if (dockerContainer.isSysadmin()) {
+                log.trace("Adding sysadmin capabilty");
                 hostConfigBuilder.withCapAdd(Capability.SYS_ADMIN);
             }
             Optional<String> network = dockerContainer.getNetwork();
@@ -389,7 +387,7 @@ public class DockerService {
         // builder
         DockerContainer browserContainer = DockerContainer
                 .dockerBuilder(dockerImage).exposedPorts(exposedPorts)
-                .network(network).envs(envs).privileged().build();
+                .network(network).envs(envs).sysadmin().build();
 
         String containerId = startContainer(browserContainer);
         browserContainer.setContainerId(containerId);
