@@ -103,7 +103,6 @@ class ServerTest {
                 Arguments.of("firefoxdriver", "geckodriver" + EXT),
                 Arguments.of("operadriver", "operadriver" + EXT),
                 Arguments.of("edgedriver", "msedgedriver" + EXT),
-                Arguments.of("iedriver", "IEDriverServer.exe"),
                 Arguments.of("chromedriver?os=WIN", "chromedriver.exe"),
                 Arguments.of(
                         "chromedriver?os=LINUX&chromeDriverVersion=2.41&forceCache=true",

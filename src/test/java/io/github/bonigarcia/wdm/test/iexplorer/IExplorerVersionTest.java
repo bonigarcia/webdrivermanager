@@ -19,6 +19,7 @@ package io.github.bonigarcia.wdm.test.iexplorer;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.WIN;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -30,6 +31,7 @@ import io.github.bonigarcia.wdm.test.base.VersionTestParent;
  * @author Boni Garcia
  * @since 1.2.2
  */
+@Disabled
 class IExplorerVersionTest extends VersionTestParent {
 
     @BeforeEach

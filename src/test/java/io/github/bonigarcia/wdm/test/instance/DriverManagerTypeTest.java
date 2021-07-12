@@ -22,7 +22,6 @@ import static io.github.bonigarcia.wdm.config.DriverManagerType.EDGE;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.FIREFOX;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.IEXPLORER;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.OPERA;
-import static io.github.bonigarcia.wdm.config.DriverManagerType.PHANTOMJS;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.SAFARI;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -58,8 +57,6 @@ class DriverManagerTypeTest {
                         FIREFOX),
                 Arguments.of("org.openqa.selenium.opera.OperaDriver", OPERA),
                 Arguments.of("org.openqa.selenium.edge.EdgeDriver", EDGE),
-                Arguments.of("org.openqa.selenium.phantomjs.PhantomJSDriver",
-                        PHANTOMJS),
                 Arguments.of("org.openqa.selenium.ie.InternetExplorerDriver",
                         IEXPLORER),
                 Arguments.of("org.openqa.selenium.safari.SafariDriver",

@@ -59,8 +59,7 @@ class InteractiveTest {
         return Stream.of(Arguments.of("chrome", "chromedriver" + EXT),
                 Arguments.of("firefox", "geckodriver" + EXT),
                 Arguments.of("opera", "operadriver" + EXT),
-                Arguments.of("edge", "msedgedriver" + EXT),
-                Arguments.of("iexplorer", "IEDriverServer.exe"));
+                Arguments.of("edge", "msedgedriver" + EXT));
     }
 
 }

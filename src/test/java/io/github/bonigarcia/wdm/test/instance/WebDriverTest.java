@@ -25,7 +25,6 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.phantomjs.PhantomJSDriver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
@@ -38,8 +37,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 class WebDriverTest {
 
     @ParameterizedTest
-    @ValueSource(classes = { ChromeDriver.class, FirefoxDriver.class,
-            PhantomJSDriver.class })
+    @ValueSource(classes = { ChromeDriver.class, FirefoxDriver.class })
     void testWebDriver(Class<? extends WebDriver> driverClass) {
         WebDriverManager.getInstance(driverClass).setup();
         String driverPath = WebDriverManager.getInstance(driverClass)

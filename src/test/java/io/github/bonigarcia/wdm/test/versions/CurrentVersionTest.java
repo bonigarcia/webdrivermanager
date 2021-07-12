@@ -20,7 +20,6 @@ import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROME;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.EDGE;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.FIREFOX;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.OPERA;
-import static io.github.bonigarcia.wdm.config.DriverManagerType.PHANTOMJS;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.lang.reflect.Method;
@@ -44,8 +43,8 @@ class CurrentVersionTest {
 
     @ParameterizedTest
     @MethodSource("data")
-    void testCurrentVersion(DriverManagerType driverManagerType,
-            String url, String expectedVersion) throws Exception {
+    void testCurrentVersion(DriverManagerType driverManagerType, String url,
+            String expectedVersion) throws Exception {
         WebDriverManager browserManager = WebDriverManager
                 .getInstance(driverManagerType);
 
@@ -71,10 +70,7 @@ class CurrentVersionTest {
                         "81.0.4044.113"),
                 Arguments.of(FIREFOX,
                         "https://github.com/mozilla/geckodriver/releases/download/v0.26.0/geckodriver-v0.26.0-win64.zip",
-                        "0.26.0"),
-                Arguments.of(PHANTOMJS,
-                        "https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-2.5.0-beta-linux-ubuntu-trusty-x86_64.tar.gz",
-                        "2.5.0-beta"));
+                        "0.26.0"));
     }
 
 }

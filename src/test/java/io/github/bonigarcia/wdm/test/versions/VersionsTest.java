@@ -19,9 +19,7 @@ package io.github.bonigarcia.wdm.test.versions;
 import static io.github.bonigarcia.wdm.WebDriverManager.chromedriver;
 import static io.github.bonigarcia.wdm.WebDriverManager.edgedriver;
 import static io.github.bonigarcia.wdm.WebDriverManager.firefoxdriver;
-import static io.github.bonigarcia.wdm.WebDriverManager.iedriver;
 import static io.github.bonigarcia.wdm.WebDriverManager.operadriver;
-import static io.github.bonigarcia.wdm.WebDriverManager.phantomjs;
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -56,7 +54,7 @@ class VersionsTest {
 
     static Stream<WebDriverManager> data() {
         return Stream.of(chromedriver(), firefoxdriver(), operadriver(),
-                edgedriver(), iedriver(), phantomjs());
+                edgedriver());
     }
 
 }
