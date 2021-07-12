@@ -31,9 +31,9 @@ jobs:
         sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/edge stable main" > /etc/apt/sources.list.d/microsoft-edge-dev.list'
         sudo rm microsoft.gpg
         sudo apt update && sudo apt install microsoft-edge-beta
-    - name: Stops and remove containers, networks, volumes, and images
+    - name: Stops and remove containers
       if: matrix.os == 'windows-latest'
-      run: docker-compose rm --all
+      run: FOR /f "tokens=*" %%i IN ('docker ps -a -q') DO docker stop %%i -t=0 && docker rm %%i --force
     - name: Run tests
       run: mvn -B test
       env:
