@@ -32,7 +32,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * Test with Chrome and WebDriverManager's creator.
  *
  * @author Boni Garcia
- * @since 4.0.0
+ * @since 5.0.0
  */
 class ChromeCreateTest {
 
