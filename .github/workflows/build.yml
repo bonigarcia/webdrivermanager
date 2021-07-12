@@ -33,7 +33,7 @@ jobs:
         sudo apt update && sudo apt install microsoft-edge-beta
     - name: Stops and remove containers
       if: matrix.os == 'windows-latest'
-      run: cmd.exe /C FOR /f "tokens=*" %%i IN ('docker ps -a -q') DO docker stop %%i -t=0 && docker rm %%i --force
+      run: docker ps -q | % { docker stop $_ }
     - name: Run tests
       run: mvn -B test
       env:
