@@ -308,35 +308,44 @@ public class DockerService {
             List<String> browserList = null;
             DockerHubService dockerHubService = new DockerHubService(config,
                     httpClient);
-            List<DockerHubTag> dockerHubTags = dockerHubService.listTags();
+            List<DockerHubTag> dockerHubTags;
+            String tagPreffix = driverManagerType.getNameLowerCase() + "_";
 
             switch (driverManagerType) {
             case FIREFOX:
-                final String firefoxPreffix = "firefox_";
+                dockerHubTags = dockerHubService
+                        .listTags(config.getDockerBrowserStableImageFormat());
+
                 browserList = dockerHubTags.stream()
-                        .filter(p -> p.getName().startsWith(firefoxPreffix))
-                        .map(p -> p.getName().replace(firefoxPreffix, ""))
+                        .filter(p -> p.getName().startsWith(tagPreffix))
+                        .map(p -> p.getName().replace(tagPreffix, ""))
                         .sorted(versionComparator::compare).collect(toList());
                 latestVersion = browserList.get(browserList.size() - 1);
                 break;
             case OPERA:
-                final String operaPreffix = "opera_";
+                dockerHubTags = dockerHubService
+                        .listTags(config.getDockerBrowserStableImageFormat());
                 browserList = dockerHubTags.stream()
-                        .filter(p -> p.getName().startsWith(operaPreffix))
-                        .map(p -> p.getName().replace(operaPreffix, ""))
+                        .filter(p -> p.getName().startsWith(tagPreffix))
+                        .map(p -> p.getName().replace(tagPreffix, ""))
                         .sorted(versionComparator::compare).skip(1)
                         .collect(toList());
                 latestVersion = browserList.get(browserList.size() - 1);
                 break;
             case EDGE:
-                log.debug("******* TODO EDGE");
+                dockerHubTags = dockerHubService
+                        .listTags(config.getDockerBrowserEdgeImageFormat());
+                browserList = dockerHubTags.stream().map(p -> p.getName())
+                        .sorted(versionComparator::compare).collect(toList());
+                latestVersion = browserList.get(browserList.size() - 1);
                 break;
             case CHROME:
             default:
-                final String chromePreffix = "chrome_";
+                dockerHubTags = dockerHubService
+                        .listTags(config.getDockerBrowserStableImageFormat());
                 browserList = dockerHubTags.stream()
-                        .filter(p -> p.getName().startsWith(chromePreffix))
-                        .map(p -> p.getName().replace(chromePreffix, ""))
+                        .filter(p -> p.getName().startsWith(tagPreffix))
+                        .map(p -> p.getName().replace(tagPreffix, ""))
                         .sorted(versionComparator::compare).collect(toList());
                 latestVersion = browserList.get(browserList.size() - 1);
                 break;
@@ -353,9 +362,18 @@ public class DockerService {
     }
 
     public String getDockerImage(String browserName, String browserVersion) {
-        String dockerImageFormat = config.getDockerBrowserStableImageFormat();
-        String dockerImage = String.format(dockerImageFormat, browserName,
-                browserVersion);
+        String dockerImageFormat;
+        String dockerImage;
+        if (browserName.contains("edge")) {
+            dockerImageFormat = config.getDockerBrowserEdgeImageFormat();
+            dockerImage = String.format(dockerImageFormat, browserVersion);
+
+        } else {
+            dockerImageFormat = config.getDockerBrowserStableImageFormat();
+            dockerImage = String.format(dockerImageFormat, browserName,
+                    browserVersion);
+        }
+
         log.trace("Docker image: {}", dockerImage);
         return dockerImage;
     }
@@ -398,6 +416,10 @@ public class DockerService {
         if (dockerImage.contains("firefox")) {
             browserUrlFormat += "wd/hub";
         }
+
+        // FIXME required for Edge
+        browserHost = "127.0.0.1";
+
         String browserUrl = format(browserUrlFormat, browserHost, browserPort);
         browserContainer.setContainerUrl(browserUrl);
         log.trace("Browser remote URL {}", browserUrl);

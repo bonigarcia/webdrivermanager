@@ -16,6 +16,8 @@
  */
 package io.github.bonigarcia.wdm.config;
 
+import static java.util.Locale.ROOT;
+
 /**
  * Types for driver managers.
  *
@@ -43,6 +45,10 @@ public enum DriverManagerType {
         return browserClass;
     }
 
+    public String getNameLowerCase() {
+        return name().toLowerCase(ROOT);
+    }
+
     public String getBrowserName() {
         switch (this) {
         case CHROME:
@@ -65,6 +71,10 @@ public enum DriverManagerType {
             throw new WebDriverManagerException(
                     "Invalid driver manager type: " + this.name());
         }
+    }
+
+    public String getBrowserNameLowerCase() {
+        return getBrowserName().toLowerCase(ROOT);
     }
 
     public static DriverManagerType valueOfDisplayName(String displayName) {

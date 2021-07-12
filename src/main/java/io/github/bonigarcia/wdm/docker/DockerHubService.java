@@ -55,12 +55,11 @@ public class DockerHubService {
         this.client = client;
     }
 
-    public List<DockerHubTag> listTags() {
+    public List<DockerHubTag> listTags(String dockerImageFormat) {
         log.debug("Getting browser image list from Docker Hub");
         List<DockerHubTag> results = new ArrayList<>();
 
         String dockerHubUrl = config.getDockerHubUrl();
-        String dockerImageFormat = config.getDockerBrowserStableImageFormat();
         String repo = dockerImageFormat.substring(0,
                 dockerImageFormat.indexOf(":"));
         Object path = String.format(dockerHubUrl + GET_IMAGE_TAGS_PATH_FORMAT,
@@ -69,6 +68,7 @@ public class DockerHubService {
 
         try {
             do {
+                log.debug("Sending request to {}", path);
                 HttpGet createHttpGet = client
                         .createHttpGet(new URL(path.toString()));
                 BufferedReader reader = new BufferedReader(

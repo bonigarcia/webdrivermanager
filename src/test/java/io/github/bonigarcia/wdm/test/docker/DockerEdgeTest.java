@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2018 Boni Garcia (http://bonigarcia.github.io/)
+ * (C) Copyright 2021 Boni Garcia (http://bonigarcia.github.io/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,34 +14,38 @@
  * limitations under the License.
  *
  */
-package io.github.bonigarcia.wdm.test.htmlunit;
+package io.github.bonigarcia.wdm.test.docker;
 
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.condition.OS.LINUX;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.slf4j.Logger;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
+
 /**
- * Test with HtmlUnit browser (which uses void driver manager).
+ * Test with Opera in Docker.
  *
  * @author Boni Garcia
- * @since 1.0.0
+ * @since 5.0.0
  */
-class HtmlUnitTest {
+@EnabledOnOs(LINUX)
+class DockerEdgeTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
     WebDriver driver;
 
     @BeforeEach
-    void htmlUnitTest() {
-        driver = new HtmlUnitDriver();
+    void setupTest() {
+        driver = WebDriverManager.edgedriver().browserInDocker().create();
     }
 
     @AfterEach

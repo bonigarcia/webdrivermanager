@@ -231,6 +231,8 @@ public class Config {
             "wdm.dockerBrowserStableImageFormat", String.class);
     ConfigKey<String> dockerBrowserUnstableImageFormat = new ConfigKey<>(
             "wdm.dockerBrowserUnstableImageFormat", String.class);
+    ConfigKey<String> dockerBrowserEdgeImageFormat = new ConfigKey<>(
+            "wdm.dockerBrowserEdgeImageFormat", String.class);
     ConfigKey<String> dockerRecordingImage = new ConfigKey<>(
             "wdm.dockerRecordingImage", String.class);
     ConfigKey<String> dockerNoVncImage = new ConfigKey<>("wdm.dockerNoVncImage",
@@ -1152,6 +1154,15 @@ public class Config {
 
     public Config setDockerBrowserUnstableImageFormat(String value) {
         this.dockerBrowserUnstableImageFormat.setValue(value);
+        return this;
+    }
+
+    public String getDockerBrowserEdgeImageFormat() {
+        return resolve(dockerBrowserEdgeImageFormat);
+    }
+
+    public Config setDockerBrowserEdgeImageFormat(String value) {
+        this.dockerBrowserEdgeImageFormat.setValue(value);
         return this;
     }
 

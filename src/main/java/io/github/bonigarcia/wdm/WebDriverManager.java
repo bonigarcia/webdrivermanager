@@ -360,7 +360,7 @@ public abstract class WebDriverManager {
             versionDetector = new VersionDetector(config, httpClient);
         }
         return versionDetector.getBrowserPath(
-                getDriverManagerType().getBrowserName().toLowerCase(ROOT));
+                getDriverManagerType().getBrowserNameLowerCase());
     }
 
     public WebDriverManager browserInDocker() {
@@ -802,7 +802,7 @@ public abstract class WebDriverManager {
 
     protected Optional<String> getBrowserVersionFromTheShell() {
         return versionDetector.getBrowserVersionFromTheShell(
-                getDriverManagerType().getBrowserName().toLowerCase(ROOT));
+                getDriverManagerType().getBrowserNameLowerCase());
     }
 
     protected Optional<String> detectBrowserVersion() {
@@ -810,8 +810,8 @@ public abstract class WebDriverManager {
             return empty();
         }
 
-        String driverManagerTypeLowerCase = getDriverManagerType().name()
-                .toLowerCase(ROOT);
+        String driverManagerTypeLowerCase = getDriverManagerType()
+                .getNameLowerCase();
         Optional<String> optionalBrowserVersion;
 
         if (useResolutionCacheWithKey(driverManagerTypeLowerCase)) {
@@ -1222,7 +1222,7 @@ public abstract class WebDriverManager {
     }
 
     protected String getKeyForResolutionCache() {
-        return getDriverManagerType().name().toLowerCase(ROOT);
+        return getDriverManagerType().getNameLowerCase();
     }
 
     protected String getDriverVersionLabel(String driverVersion) {

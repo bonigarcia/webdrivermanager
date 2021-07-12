@@ -27,7 +27,6 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.support.events.EventFiringWebDriver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
@@ -63,11 +62,8 @@ class OtherWebDriverTest {
     }
 
     static Stream<Arguments> data() {
-        return Stream.of(
-                Arguments.of(EventFiringWebDriver.class,
-                        NoSuchMethodException.class),
-                Arguments.of(HtmlUnitDriver.class, null), Arguments.of(
-                        RemoteWebDriver.class, IllegalAccessException.class));
+        return Stream.of(Arguments.of(HtmlUnitDriver.class, null), Arguments
+                .of(RemoteWebDriver.class, IllegalAccessException.class));
     }
 
 }
