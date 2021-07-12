@@ -33,7 +33,7 @@ jobs:
         sudo apt update && sudo apt install microsoft-edge-beta
     - name: Stops and remove containers, networks, volumes, and images
       if: matrix.os == 'windows-latest'
-      run: docker-compose down
+      run: docker-compose rm --all
     - name: Run tests
       run: mvn -B test
       env:
