@@ -176,8 +176,8 @@ public abstract class WebDriverManager {
     protected VersionDetector versionDetector;
     protected Capabilities options;
 
-    protected boolean shutdownHook;
-    protected boolean dockerEnabled;
+    protected boolean shutdownHook = false;
+    protected boolean dockerEnabled = false;
     protected WebDriverCreator webDriverCreator;
     protected DockerService dockerService;
     protected List<WebDriverBrowser> webDriverList = new ArrayList<>();
@@ -293,19 +293,18 @@ public abstract class WebDriverManager {
         initResolutionCache();
         cacheHandler = new CacheHandler(config);
 
+        if (config().getClearingDriverCache()) {
+            clearDriverCache();
+        }
+        if (config().getClearingResolutionCache()) {
+            clearResolutionCache();
+        }
+        if (dockerEnabled) {
+            return;
+        }
         if (driverManagerType != null) {
             try {
-                if (config().getClearingDriverCache()) {
-                    clearDriverCache();
-                }
-                if (config().getClearingResolutionCache()) {
-                    clearResolutionCache();
-                }
-                String driverVersion = getDriverVersion();
-                if (dockerEnabled) {
-                    return;
-                }
-                manage(driverVersion);
+                manage(getDriverVersion());
             } finally {
                 reset();
             }
@@ -313,21 +312,28 @@ public abstract class WebDriverManager {
     }
 
     public WebDriver create() {
-        setup();
-        WebDriver driver = instantiateDriver();
-        reset();
+        WebDriver driver = null;
+        try {
+            setup();
+            driver = instantiateDriver();
+        } finally {
+            reset();
+        }
         return driver;
     }
 
     public List<WebDriver> create(int numberOfBrowser) {
         List<WebDriver> browserList = new ArrayList<>();
-        for (int i = 0; i < numberOfBrowser; i++) {
-            if (i == 0) {
-                setup();
+        try {
+            for (int i = 0; i < numberOfBrowser; i++) {
+                if (i == 0) {
+                    setup();
+                }
+                browserList.add(instantiateDriver());
             }
-            browserList.add(instantiateDriver());
+        } finally {
+            reset();
         }
-        reset();
         return browserList;
     }
 
@@ -1234,6 +1240,7 @@ public abstract class WebDriverManager {
             webDriverCreator = new WebDriverCreator(config);
         }
         try {
+            System.out.println("----> dockerEnabled " + dockerEnabled);
             driver = dockerEnabled ? createDockerWebDriver()
                     : createLocalWebDriver();
 
