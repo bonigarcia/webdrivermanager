@@ -17,16 +17,21 @@
 package io.github.bonigarcia.wdm.test.server;
 
 import static java.lang.invoke.MethodHandles.lookup;
-import static java.util.concurrent.TimeUnit.SECONDS;
+import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.URL;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.core5.http.Header;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -34,9 +39,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import io.github.bonigarcia.wdm.config.Config;
+import io.github.bonigarcia.wdm.online.HttpClient;
 
 /**
  * Test using wdm server.
@@ -66,30 +70,28 @@ class ServerTest {
     void testServer(String path, String driver) throws IOException {
         String serverUrl = String.format("http://localhost:%s/%s", serverPort,
                 path);
-
-        int timeoutSeconds = 60;
-        OkHttpClient client = new OkHttpClient.Builder()
-                .connectTimeout(timeoutSeconds, SECONDS)
-                .readTimeout(timeoutSeconds, SECONDS)
-                .writeTimeout(timeoutSeconds, SECONDS).build();
-
-        Request request = new Request.Builder().url(serverUrl).build();
+        HttpClient client = new HttpClient(new Config());
+        HttpGet createHttpGet = client.createHttpGet(new URL(serverUrl));
 
         // Assert response
         log.debug("Request: GET {}", serverUrl);
-        Response response = client.newCall(request).execute();
-        log.debug("Response: {}", response.code());
+        CloseableHttpResponse response = client.execute(createHttpGet);
+        int responseCode = response.getCode();
+        log.debug("Response: {}", responseCode);
 
-        assertThat(response.isSuccessful()).isTrue();
+        assertThat(responseCode).isEqualTo(200);
 
         // Assert attachment
         String attachment = String.format("attachment; filename=\"%s\"",
                 driver);
+        List<Header> headerList = Arrays.asList(response.getHeaders());
+        List<Header> collect = headerList.stream()
+                .filter(x -> x.toString().contains("Content-Disposition"))
+                .collect(toList());
 
-        List<String> headers = response.headers().values("Content-Disposition");
-        log.debug("Assessing {} ... {} should contain {}", driver, headers,
+        log.debug("Assessing {} ... headers should contain {}", driver,
                 attachment);
-        assertThat(headers).contains(attachment);
+        assertThat(collect.get(0)).toString().contains(attachment);
     }
 
     static String getFreePort() throws IOException {
