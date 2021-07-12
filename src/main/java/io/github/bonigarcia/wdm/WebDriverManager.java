@@ -337,7 +337,7 @@ public abstract class WebDriverManager {
         return browserList;
     }
 
-    public void quit() {
+    public synchronized void quit() {
         for (WebDriverBrowser driverBrowser : webDriverList) {
             WebDriver driver = driverBrowser.getDriver();
             if (driver != null) {
@@ -1279,6 +1279,9 @@ public abstract class WebDriverManager {
             browserVersion = dockerService.getLatestVersionFromDockerHub(
                     getDriverManagerType(), cacheKey);
         } else {
+            if (!browserVersion.contains(".")) {
+                browserVersion += ".0";
+            }
             cacheKey += browserVersion;
         }
 
