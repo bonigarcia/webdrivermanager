@@ -176,7 +176,7 @@ public abstract class WebDriverManager {
     protected VersionDetector versionDetector;
     protected Capabilities options;
 
-    protected boolean shutdownHook = false;
+    protected boolean shutdownHook;
     protected boolean dockerEnabled;
     protected WebDriverCreator webDriverCreator;
     protected DockerService dockerService;
@@ -302,23 +302,21 @@ public abstract class WebDriverManager {
                     clearResolutionCache();
                 }
                 String driverVersion = getDriverVersion();
-                if (!dockerEnabled) {
-                    manage(driverVersion);
+                if (dockerEnabled) {
+                    return;
                 }
+                manage(driverVersion);
             } finally {
-                if (!config().isAvoidAutoReset()) {
-                    reset();
-                }
+                reset();
             }
         }
     }
 
     public WebDriver create() {
-        // 1. Manage driver
         setup();
-
-        // 2. Create WebDriver instance
-        return instantiateDriver();
+        WebDriver driver = instantiateDriver();
+        reset();
+        return driver;
     }
 
     public List<WebDriver> create(int numberOfBrowser) {
@@ -329,6 +327,7 @@ public abstract class WebDriverManager {
             }
             browserList.add(instantiateDriver());
         }
+        reset();
         return browserList;
     }
 
@@ -1143,11 +1142,15 @@ public abstract class WebDriverManager {
     }
 
     protected void reset() {
-        config().reset();
-        mirrorLog = false;
-        forcedArch = false;
-        forcedOs = false;
-        retryCount = 0;
+        if (!config().isAvoidAutoReset()) {
+            config().reset();
+            mirrorLog = false;
+            forcedArch = false;
+            forcedOs = false;
+            retryCount = 0;
+            shutdownHook = false;
+            dockerEnabled = false;
+        }
     }
 
     protected URL getDriverUrlCkeckingMirror(URL url) {
