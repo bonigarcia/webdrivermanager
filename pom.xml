@@ -17,7 +17,7 @@
         <jarchivelib.version>1.1.0</jarchivelib.version>
         <jsoup.version>1.13.1</jsoup.version>
         <docker-java.version>3.2.11</docker-java.version>
-        <retrofit.version>2.7.2</retrofit.version>
+        <retrofit.version>2.9.0</retrofit.version>
 
         <!-- provided -->
         <javalin.version>3.13.9</javalin.version>
