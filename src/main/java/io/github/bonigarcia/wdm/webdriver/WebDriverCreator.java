@@ -44,7 +44,7 @@ public class WebDriverCreator {
 
     final Logger log = getLogger(lookup().lookupClass());
 
-    final static int POLL_TIME_SEC = 1;
+    static final int POLL_TIME_SEC = 1;
 
     Config config;
 

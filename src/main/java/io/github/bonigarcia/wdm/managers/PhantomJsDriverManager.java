@@ -29,9 +29,6 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
-import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.MutableCapabilities;
-
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
 import io.github.bonigarcia.wdm.config.WebDriverManagerException;
@@ -176,11 +173,6 @@ public class PhantomJsDriverManager extends WebDriverManager {
                 + getDriverManagerType().getBrowserName()
                 + " cannot be found since it is a headless (and legacy) browser");
 
-    }
-
-    @Override
-    protected Capabilities getCapabilities() {
-        return new MutableCapabilities();
     }
 
     public WebDriverManager exportParameter(String exportParameter) {

@@ -80,6 +80,7 @@ import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.jsoup.Jsoup;
 import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.w3c.dom.Document;
@@ -154,8 +155,6 @@ public abstract class WebDriverManager {
     protected abstract Optional<URL> getMirrorUrl();
 
     protected abstract Optional<String> getExportParameter();
-
-    protected abstract Capabilities getCapabilities();
 
     protected static Map<DriverManagerType, WebDriverManager> instanceMap = new EnumMap<>(
             DriverManagerType.class);
@@ -1240,7 +1239,6 @@ public abstract class WebDriverManager {
             webDriverCreator = new WebDriverCreator(config);
         }
         try {
-            System.out.println("----> dockerEnabled " + dockerEnabled);
             driver = dockerEnabled ? createDockerWebDriver()
                     : createLocalWebDriver();
 
@@ -1248,7 +1246,6 @@ public abstract class WebDriverManager {
             log.error("There was an error creating WebDriver object for {}",
                     getDriverManagerType().getBrowserName(), e);
         }
-
         addShutdownHook();
 
         return driver;
@@ -1308,6 +1305,10 @@ public abstract class WebDriverManager {
         webDriverList.add(driverBrowser);
 
         return driverBrowser.getDriver();
+    }
+
+    protected Capabilities getCapabilities() {
+        return new MutableCapabilities();
     }
 
     public static void main(String[] args) {

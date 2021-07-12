@@ -24,9 +24,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.Optional;
 
-import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.MutableCapabilities;
-
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
 
@@ -102,11 +99,6 @@ public class VoidDriverManager extends WebDriverManager {
     @Override
     protected void setBrowserVersion(String browserVersion) {
         // Nothing required
-    }
-
-    @Override
-    protected Capabilities getCapabilities() {
-        return new MutableCapabilities();
     }
 
 }
