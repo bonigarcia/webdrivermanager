@@ -217,7 +217,7 @@ public class DockerService {
                 && !resolutionCache.checkKeyInResolutionCache(cacheKey)) {
             try {
                 log.info(
-                        "Pulling Docker image {} (this might take some time, but it will only the first time)",
+                        "Pulling Docker image {} (this might take some time, but only the first time)",
                         imageId);
                 dockerClient.pullImageCmd(imageId)
                         .exec(new Adapter<PullResponseItem>() {
