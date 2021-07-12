@@ -17,7 +17,6 @@
         <jarchivelib.version>1.1.0</jarchivelib.version>
         <jsoup.version>1.14.1</jsoup.version>
         <docker-java.version>3.2.11</docker-java.version>
-        <retrofit.version>2.7.2</retrofit.version>
 
         <!-- provided -->
         <javalin.version>3.13.9</javalin.version>
@@ -133,21 +132,6 @@
             <groupId>com.github.docker-java</groupId>
             <artifactId>docker-java-transport-httpclient5</artifactId>
             <version>${docker-java.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.squareup.retrofit2</groupId>
-            <artifactId>retrofit</artifactId>
-            <version>${retrofit.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.squareup.retrofit2</groupId>
-            <artifactId>adapter-rxjava</artifactId>
-            <version>${retrofit.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.squareup.retrofit2</groupId>
-            <artifactId>converter-gson</artifactId>
-            <version>${retrofit.version}</version>
         </dependency>
 
         <dependency>

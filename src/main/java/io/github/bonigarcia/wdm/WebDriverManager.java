@@ -291,6 +291,7 @@ public abstract class WebDriverManager {
         DriverManagerType driverManagerType = getDriverManagerType();
         initResolutionCache();
         cacheHandler = new CacheHandler(config);
+        httpClient = new HttpClient(config());
 
         if (config().getClearingDriverCache()) {
             clearDriverCache();
@@ -628,7 +629,6 @@ public abstract class WebDriverManager {
     // ------------
 
     protected void manage(String driverVersion) {
-        httpClient = new HttpClient(config());
         try (HttpClient wdmHttpClient = httpClient) {
             versionDetector = new VersionDetector(config, httpClient);
             downloader = new Downloader(httpClient, config(),
@@ -1266,7 +1266,8 @@ public abstract class WebDriverManager {
 
     protected WebDriver createDockerWebDriver() {
         if (dockerService == null) {
-            dockerService = new DockerService(config, resolutionCache);
+            dockerService = new DockerService(config, httpClient,
+                    resolutionCache);
         }
 
         String browserName = getKeyForResolutionCache();

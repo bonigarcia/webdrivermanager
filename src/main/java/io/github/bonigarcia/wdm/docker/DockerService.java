@@ -57,6 +57,7 @@ import io.github.bonigarcia.wdm.config.Config;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
 import io.github.bonigarcia.wdm.config.WebDriverManagerException;
 import io.github.bonigarcia.wdm.docker.DockerHubTags.DockerHubTag;
+import io.github.bonigarcia.wdm.online.HttpClient;
 import io.github.bonigarcia.wdm.versions.VersionComparator;
 
 /**
@@ -70,6 +71,7 @@ public class DockerService {
     final Logger log = getLogger(lookup().lookupClass());
 
     private Config config;
+    private HttpClient httpClient;
     private String dockerDefaultSocket;
     private int dockerRecordingTimeoutSec;
     private DockerClient dockerClient;
@@ -77,12 +79,14 @@ public class DockerService {
     private boolean localDaemon = true;
     private URI dockerHostUri;
 
-    public DockerService(Config config, ResolutionCache resolutionCache) {
+    public DockerService(Config config, HttpClient httpClient,
+            ResolutionCache resolutionCache) {
         this.config = config;
+        this.httpClient = httpClient;
         this.resolutionCache = resolutionCache;
 
-        dockerDefaultSocket = getConfig().getDockerDefaultSocket();
-        dockerRecordingTimeoutSec = getConfig().getDockerRecordingTimeoutSec();
+        dockerDefaultSocket = config.getDockerDefaultSocket();
+        dockerRecordingTimeoutSec = config.getDockerRecordingTimeoutSec();
 
         DockerHost dockerHostFromEnv = DockerHost.fromEnv();
         dockerClient = getDockerClient(dockerHostFromEnv.endpoint());
@@ -213,7 +217,7 @@ public class DockerService {
 
     public void pullImageIfNecessary(String cacheKey, String imageId,
             String browserVersion) throws DockerException {
-        if (!getConfig().isAvoidingResolutionCache() && localDaemon
+        if (!config.isAvoidingResolutionCache() && localDaemon
                 && !resolutionCache.checkKeyInResolutionCache(cacheKey)) {
             try {
                 log.info(
@@ -224,9 +228,9 @@ public class DockerService {
                         }).awaitCompletion();
                 log.trace("Docker image {} pulled", imageId);
 
-                if (!getConfig().isAvoidingResolutionCache() && localDaemon) {
+                if (!config.isAvoidingResolutionCache() && localDaemon) {
                     resolutionCache.putValueInResolutionCacheIfEmpty(cacheKey,
-                            browserVersion, getConfig().getTtlForBrowsers());
+                            browserVersion, config.getTtlForBrowsers());
                 }
             } catch (Exception e) {
                 log.warn("Exception pulling image {}: {}", imageId,
@@ -251,7 +255,7 @@ public class DockerService {
 
     public synchronized void stopContainer(String containerId)
             throws DockerException {
-        int stopTimeoutSec = getConfig().getDockerStopTimeoutSec();
+        int stopTimeoutSec = config.getDockerStopTimeoutSec();
         if (stopTimeoutSec == 0) {
             log.trace("Killing container {}", containerId);
             dockerClient.killContainerCmd(containerId).exec();
@@ -266,7 +270,7 @@ public class DockerService {
     public synchronized void removeContainer(String containerId)
             throws DockerException {
         log.trace("Removing container {}", containerId);
-        int stopTimeoutSec = getConfig().getDockerStopTimeoutSec();
+        int stopTimeoutSec = config.getDockerStopTimeoutSec();
         if (stopTimeoutSec == 0) {
             dockerClient.removeContainerCmd(containerId).withForce(true).exec();
         } else {
@@ -294,21 +298,17 @@ public class DockerService {
         }
     }
 
-    public Config getConfig() {
-        return config;
-    }
-
     public String getLatestVersionFromDockerHub(
             DriverManagerType driverManagerType, String cacheKey) {
         String latestVersion = null;
 
-        if (!getConfig().isAvoidingResolutionCache() && !resolutionCache
+        if (!config.isAvoidingResolutionCache() && !resolutionCache
                 .checkKeyInResolutionCache(cacheKey, false)) {
 
             VersionComparator versionComparator = new VersionComparator();
             List<String> browserList = null;
-            DockerHubService dockerHubService = new DockerHubService(
-                    getConfig());
+            DockerHubService dockerHubService = new DockerHubService(config,
+                    httpClient);
             List<DockerHubTag> dockerHubTags = dockerHubService.listTags();
 
             switch (driverManagerType) {
@@ -369,22 +369,21 @@ public class DockerService {
         // exposed ports
         List<String> exposedPorts = new ArrayList<>();
         String dockerBrowserPort = String
-                .valueOf(getConfig().getDockerBrowserPort());
+                .valueOf(config.getDockerBrowserPort());
         exposedPorts.add(dockerBrowserPort);
 
         // envs
         List<String> envs = new ArrayList<>();
-        envs.add("TZ=" + getConfig().getDockerTimezone());
-        envs.add("LANG=" + getConfig().getDockerLang());
-        if (getConfig().isEnabledDockerVnc()) {
+        envs.add("TZ=" + config.getDockerTimezone());
+        envs.add("LANG=" + config.getDockerLang());
+        if (config.isEnabledDockerVnc()) {
             envs.add("ENABLE_VNC=true");
-            String dockerVncPort = String
-                    .valueOf(getConfig().getDockerVncPort());
+            String dockerVncPort = String.valueOf(config.getDockerVncPort());
             exposedPorts.add(dockerVncPort);
         }
 
         // network
-        String network = getConfig().getDockerNetwork();
+        String network = config.getDockerNetwork();
 
         // builder
         DockerContainer browserContainer = DockerContainer
