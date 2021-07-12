@@ -293,10 +293,6 @@ public abstract class WebDriverManager {
         initResolutionCache();
         cacheHandler = new CacheHandler(config);
 
-        if (dockerEnabled) {
-            return;
-        }
-
         if (driverManagerType != null) {
             try {
                 if (config().getClearingDriverCache()) {
@@ -306,7 +302,9 @@ public abstract class WebDriverManager {
                     clearResolutionCache();
                 }
                 String driverVersion = getDriverVersion();
-                manage(driverVersion);
+                if (!dockerEnabled) {
+                    manage(driverVersion);
+                }
             } finally {
                 if (!config().isAvoidAutoReset()) {
                     reset();
