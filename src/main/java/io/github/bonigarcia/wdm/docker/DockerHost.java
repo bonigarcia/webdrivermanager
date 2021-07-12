@@ -17,10 +17,10 @@
 package io.github.bonigarcia.wdm.docker;
 
 import static io.github.bonigarcia.wdm.config.Config.isNullOrEmpty;
+import static java.util.Locale.ROOT;
 
 import java.net.URI;
 import java.nio.file.Paths;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -113,14 +113,13 @@ public class DockerHost {
 
     public static String defaultDockerEndpoint() {
         String osName = System.getProperty("os.name");
-        String os = osName.toLowerCase(Locale.ENGLISH);
+        String os = osName.toLowerCase(ROOT);
         if (os.equalsIgnoreCase("linux") || os.contains("mac")) {
             return defaultUnixEndpoint();
-        } else if (System.getProperty("os.name")
-                .equalsIgnoreCase("Windows 10")) {
+        } else if (os.contains("windows")) {
             return defaultWindowsEndpoint();
         } else {
-            return defaultAddress() + ":" + defaultPort();
+            return "http://" + defaultAddress() + ":" + defaultPort();
         }
     }
 

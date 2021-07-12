@@ -17,6 +17,7 @@
 package io.github.bonigarcia.wdm.docker;
 
 import static io.github.bonigarcia.wdm.config.Config.isNullOrEmpty;
+import static io.github.bonigarcia.wdm.docker.DockerHost.defaultAddress;
 import static java.lang.String.format;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -115,7 +116,7 @@ public class DockerService {
                         .getNetworkSettings().getNetworks().get(network)
                         .getGateway()
                 : Optional.ofNullable(dockerHostUri.getHost())
-                        .orElse("localhost");
+                        .orElse(defaultAddress());
     }
 
     public synchronized String startContainer(DockerContainer dockerContainer)
