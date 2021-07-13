@@ -232,32 +232,17 @@ public abstract class WebDriverManager {
 
     public static synchronized WebDriverManager getInstance(
             DriverManagerType driverManagerType) {
-        if (driverManagerType == null) {
-            return voiddriver();
-        }
-        switch (driverManagerType) {
-        case CHROME:
-            return chromedriver();
-        case CHROMIUM:
-            return chromiumdriver();
-        case FIREFOX:
-            return firefoxdriver();
-        case OPERA:
-            return operadriver();
-        case IEXPLORER:
-            return iedriver();
-        case EDGE:
-            return edgedriver();
-        case SAFARI:
-            return safaridriver();
-        default:
-            return voiddriver();
-        }
+        return getInstance(driverManagerType.browserClass());
     }
 
     public static synchronized WebDriverManager getInstance(
             Class<?> webDriverClass) {
-        switch (webDriverClass.getName()) {
+        return getInstance(webDriverClass.getName());
+    }
+
+    protected static synchronized WebDriverManager getInstance(
+            String webDriverClass) {
+        switch (webDriverClass) {
         case "org.openqa.selenium.chrome.ChromeDriver":
             return chromedriver();
         case "org.openqa.selenium.chromium.ChromiumDriver":
