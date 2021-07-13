@@ -45,7 +45,8 @@ class DockerEdgeTest {
 
     @BeforeEach
     void setupTest() {
-        driver = WebDriverManager.edgedriver().browserInDocker().create();
+        driver = WebDriverManager.edgedriver().browserInDocker()
+                .browserVersion("91").create();
     }
 
     @AfterEach

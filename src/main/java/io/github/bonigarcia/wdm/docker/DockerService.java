@@ -417,9 +417,6 @@ public class DockerService {
             browserUrlFormat += "wd/hub";
         }
 
-        // FIXME required for Edge
-        browserHost = "127.0.0.1";
-
         String browserUrl = format(browserUrlFormat, browserHost, browserPort);
         browserContainer.setContainerUrl(browserUrl);
         log.trace("Browser remote URL {}", browserUrl);
