@@ -77,7 +77,6 @@ public class DockerService {
     private int dockerRecordingTimeoutSec;
     private DockerClient dockerClient;
     private ResolutionCache resolutionCache;
-    private boolean localDaemon = true;
     private URI dockerHostUri;
 
     public DockerService(Config config, HttpClient httpClient,
@@ -216,7 +215,7 @@ public class DockerService {
 
     public void pullImageIfNecessary(String cacheKey, String imageId,
             String browserVersion) throws DockerException {
-        if (!config.isAvoidingResolutionCache() && localDaemon
+        if (!config.isAvoidingResolutionCache()
                 && !resolutionCache.checkKeyInResolutionCache(cacheKey)) {
             try {
                 log.info(
@@ -227,7 +226,7 @@ public class DockerService {
                         }).awaitCompletion();
                 log.trace("Docker image {} pulled", imageId);
 
-                if (!config.isAvoidingResolutionCache() && localDaemon) {
+                if (!config.isAvoidingResolutionCache()) {
                     resolutionCache.putValueInResolutionCacheIfEmpty(cacheKey,
                             browserVersion, config.getTtlForBrowsers());
                 }
@@ -290,11 +289,8 @@ public class DockerService {
     }
 
     public void updateDockerClient(String url) {
-        if (localDaemon) {
-            log.debug("Updating Docker client using URL {}", url);
-            dockerClient = getDockerClient(url);
-            localDaemon = false;
-        }
+        log.debug("Updating Docker client using URL {}", url);
+        dockerClient = getDockerClient(url);
     }
 
     public String getLatestVersionFromDockerHub(
@@ -312,6 +308,7 @@ public class DockerService {
             String tagPreffix = driverManagerType.getNameLowerCase() + "_";
 
             switch (driverManagerType) {
+            case CHROME:
             case FIREFOX:
                 dockerHubTags = dockerHubService
                         .listTags(config.getDockerBrowserStableImageFormat());
@@ -322,6 +319,7 @@ public class DockerService {
                         .sorted(versionComparator::compare).collect(toList());
                 latestVersion = browserList.get(browserList.size() - 1);
                 break;
+
             case OPERA:
                 dockerHubTags = dockerHubService
                         .listTags(config.getDockerBrowserStableImageFormat());
@@ -332,23 +330,19 @@ public class DockerService {
                         .collect(toList());
                 latestVersion = browserList.get(browserList.size() - 1);
                 break;
+
             case EDGE:
                 dockerHubTags = dockerHubService
                         .listTags(config.getDockerBrowserEdgeImageFormat());
-                browserList = dockerHubTags.stream().map(p -> p.getName())
+                browserList = dockerHubTags.stream().map(DockerHubTag::getName)
                         .sorted(versionComparator::compare).collect(toList());
                 latestVersion = browserList.get(browserList.size() - 1);
                 break;
-            case CHROME:
+
             default:
-                dockerHubTags = dockerHubService
-                        .listTags(config.getDockerBrowserStableImageFormat());
-                browserList = dockerHubTags.stream()
-                        .filter(p -> p.getName().startsWith(tagPreffix))
-                        .map(p -> p.getName().replace(tagPreffix, ""))
-                        .sorted(versionComparator::compare).collect(toList());
-                latestVersion = browserList.get(browserList.size() - 1);
-                break;
+                throw new WebDriverManagerException(
+                        driverManagerType.getBrowserName()
+                                + " is not available as Docker container");
             }
             log.debug("The latest version of {} in Docker Hub is {}",
                     driverManagerType.getBrowserName(), latestVersion);

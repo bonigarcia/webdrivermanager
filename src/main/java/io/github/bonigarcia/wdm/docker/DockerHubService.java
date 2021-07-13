@@ -45,7 +45,7 @@ public class DockerHubService {
 
     final Logger log = getLogger(lookup().lookupClass());
 
-    static final String GET_IMAGE_TAGS_PATH_FORMAT = "v2/repositories/%s/tags?page=%s&page_size=1024";
+    static final String GET_IMAGE_TAGS_PATH_FORMAT = "%sv2/repositories/%s/tags?page=%s&page_size=1024";
 
     private Config config;
     private HttpClient client;
@@ -62,7 +62,7 @@ public class DockerHubService {
         String dockerHubUrl = config.getDockerHubUrl();
         String repo = dockerImageFormat.substring(0,
                 dockerImageFormat.indexOf(":"));
-        Object path = String.format(dockerHubUrl + GET_IMAGE_TAGS_PATH_FORMAT,
+        Object path = String.format(GET_IMAGE_TAGS_PATH_FORMAT, dockerHubUrl,
                 repo, 1);
         Gson gson = new GsonBuilder().create();
 

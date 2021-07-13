@@ -29,7 +29,6 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -211,15 +210,6 @@ public class EdgeDriverManager extends WebDriverManager {
     public WebDriverManager exportParameter(String exportParameter) {
         config().setEdgeDriverExport(exportParameter);
         return instanceMap.get(getDriverManagerType());
-    }
-
-    class Args {
-        List<String> args;
-
-        public Args(String[] args) {
-            this.args = new ArrayList<String>();
-            this.args.addAll(Arrays.asList(args));
-        }
     }
 
 }
