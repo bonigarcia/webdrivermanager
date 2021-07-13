@@ -60,17 +60,18 @@ public class DockerHubService {
         List<DockerHubTag> results = new ArrayList<>();
 
         String dockerHubUrl = config.getDockerHubUrl();
+
         String repo = dockerImageFormat.substring(0,
                 dockerImageFormat.indexOf(":"));
-        Object path = String.format(GET_IMAGE_TAGS_PATH_FORMAT, dockerHubUrl,
+        Object url = String.format(GET_IMAGE_TAGS_PATH_FORMAT, dockerHubUrl,
                 repo, 1);
         Gson gson = new GsonBuilder().create();
 
         try {
             do {
-                log.debug("Sending request to {}", path);
+                log.trace("Sending request to {}", url);
                 HttpGet createHttpGet = client
-                        .createHttpGet(new URL(path.toString()));
+                        .createHttpGet(new URL(url.toString()));
                 BufferedReader reader = new BufferedReader(
                         new InputStreamReader(client.execute(createHttpGet)
                                 .getEntity().getContent()));
@@ -78,9 +79,9 @@ public class DockerHubService {
                         DockerHubTags.class);
 
                 results.addAll(dockerHubTags.getResults());
-                path = dockerHubTags.next;
+                url = dockerHubTags.next;
 
-            } while (path != null);
+            } while (url != null);
 
         } catch (Exception e) {
             log.warn("Exception getting browser image list from Docker Hub", e);

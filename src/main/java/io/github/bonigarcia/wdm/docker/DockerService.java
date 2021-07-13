@@ -305,7 +305,8 @@ public class DockerService {
             DockerHubService dockerHubService = new DockerHubService(config,
                     httpClient);
             List<DockerHubTag> dockerHubTags;
-            String tagPreffix = driverManagerType.getNameLowerCase() + "_";
+            String browserName = driverManagerType.getNameLowerCase();
+            String tagPreffix = browserName + "_";
 
             switch (driverManagerType) {
             case CHROME:
@@ -332,8 +333,12 @@ public class DockerService {
                 break;
 
             case EDGE:
+            case SAFARI:
+                String dockerBrowserAerokubeImageFormat = String.format(
+                        config.getDockerBrowserAerokubeImageFormat(),
+                        browserName, "");
                 dockerHubTags = dockerHubService
-                        .listTags(config.getDockerBrowserAerokubeImageFormat());
+                        .listTags(dockerBrowserAerokubeImageFormat);
                 browserList = dockerHubTags.stream().map(DockerHubTag::getName)
                         .sorted(versionComparator::compare).collect(toList());
                 latestVersion = browserList.get(browserList.size() - 1);
@@ -358,15 +363,19 @@ public class DockerService {
     public String getDockerImage(String browserName, String browserVersion) {
         String dockerImageFormat;
         String dockerImage;
-        if (browserName.equalsIgnoreCase("edge")) {
+        switch (browserName) {
+        case "edge":
+        case "safari":
             dockerImageFormat = config.getDockerBrowserAerokubeImageFormat();
             dockerImage = String.format(dockerImageFormat, browserName,
                     browserVersion);
+            break;
 
-        } else {
+        default:
             dockerImageFormat = config.getDockerBrowserSelenoidImageFormat();
             dockerImage = String.format(dockerImageFormat, browserName,
                     browserVersion);
+            break;
         }
 
         log.trace("Docker image: {}", dockerImage);

@@ -20,6 +20,8 @@ import static io.github.bonigarcia.wdm.config.DriverManagerType.SAFARI;
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.slf4j.LoggerFactory.getLogger;
 
+import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.safari.SafariOptions;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.config.DriverManagerType;
@@ -45,9 +47,14 @@ public class SafariDriverManager extends VoidDriverManager {
     }
 
     @Override
-    public synchronized void setup() {
+    protected void manage(String driverVersion) {
         log.warn(
                 "There is no need to manage the driver for the Safari browser (i.e., safaridriver) since it is built-in in Mac OS");
+    }
+
+    @Override
+    protected Capabilities getCapabilities() {
+        return new SafariOptions();
     }
 
 }
