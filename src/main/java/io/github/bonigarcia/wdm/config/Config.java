@@ -218,12 +218,12 @@ public class Config {
             "wdm.dockerRecordingScreenSize", String.class);
     ConfigKey<String> dockerRecordingFolder = new ConfigKey<>(
             "wdm.dockerRecordingFolder", String.class);
-    ConfigKey<String> dockerBrowserStableImageFormat = new ConfigKey<>(
-            "wdm.dockerBrowserStableImageFormat", String.class);
-    ConfigKey<String> dockerBrowserUnstableImageFormat = new ConfigKey<>(
+    ConfigKey<String> dockerBrowserSelenoidImageFormat = new ConfigKey<>(
+            "wdm.dockerBrowserSelenoidImageFormat", String.class);
+    ConfigKey<String> dockerBrowserTwilioImageFormat = new ConfigKey<>(
             "wdm.dockerBrowserUnstableImageFormat", String.class);
-    ConfigKey<String> dockerBrowserEdgeImageFormat = new ConfigKey<>(
-            "wdm.dockerBrowserEdgeImageFormat", String.class);
+    ConfigKey<String> dockerBrowserAerokubeImageFormat = new ConfigKey<>(
+            "wdm.dockerBrowserAerokubeImageFormat", String.class);
     ConfigKey<String> dockerRecordingImage = new ConfigKey<>(
             "wdm.dockerRecordingImage", String.class);
     ConfigKey<String> dockerNoVncImage = new ConfigKey<>("wdm.dockerNoVncImage",
@@ -1094,30 +1094,30 @@ public class Config {
         return this;
     }
 
-    public String getDockerBrowserStableImageFormat() {
-        return resolve(dockerBrowserStableImageFormat);
+    public String getDockerBrowserSelenoidImageFormat() {
+        return resolve(dockerBrowserSelenoidImageFormat);
     }
 
-    public Config setDockerBrowserStableImageFormat(String value) {
-        this.dockerBrowserStableImageFormat.setValue(value);
+    public Config setDockerBrowserSelenoidImageFormat(String value) {
+        this.dockerBrowserSelenoidImageFormat.setValue(value);
         return this;
     }
 
-    public String getDockerBrowserUnstableImageFormat() {
-        return resolve(dockerBrowserUnstableImageFormat);
+    public String getDockerBrowserTwilioImageFormat() {
+        return resolve(dockerBrowserTwilioImageFormat);
     }
 
-    public Config setDockerBrowserUnstableImageFormat(String value) {
-        this.dockerBrowserUnstableImageFormat.setValue(value);
+    public Config setDockerBrowserTwilioImageFormat(String value) {
+        this.dockerBrowserTwilioImageFormat.setValue(value);
         return this;
     }
 
-    public String getDockerBrowserEdgeImageFormat() {
-        return resolve(dockerBrowserEdgeImageFormat);
+    public String getDockerBrowserAerokubeImageFormat() {
+        return resolve(dockerBrowserAerokubeImageFormat);
     }
 
-    public Config setDockerBrowserEdgeImageFormat(String value) {
-        this.dockerBrowserEdgeImageFormat.setValue(value);
+    public Config setDockerBrowserAerokubeImageFormat(String value) {
+        this.dockerBrowserAerokubeImageFormat.setValue(value);
         return this;
     }
 

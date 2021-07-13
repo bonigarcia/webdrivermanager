@@ -311,7 +311,7 @@ public class DockerService {
             case CHROME:
             case FIREFOX:
                 dockerHubTags = dockerHubService
-                        .listTags(config.getDockerBrowserStableImageFormat());
+                        .listTags(config.getDockerBrowserSelenoidImageFormat());
 
                 browserList = dockerHubTags.stream()
                         .filter(p -> p.getName().startsWith(tagPreffix))
@@ -322,7 +322,7 @@ public class DockerService {
 
             case OPERA:
                 dockerHubTags = dockerHubService
-                        .listTags(config.getDockerBrowserStableImageFormat());
+                        .listTags(config.getDockerBrowserSelenoidImageFormat());
                 browserList = dockerHubTags.stream()
                         .filter(p -> p.getName().startsWith(tagPreffix))
                         .map(p -> p.getName().replace(tagPreffix, ""))
@@ -333,7 +333,7 @@ public class DockerService {
 
             case EDGE:
                 dockerHubTags = dockerHubService
-                        .listTags(config.getDockerBrowserEdgeImageFormat());
+                        .listTags(config.getDockerBrowserAerokubeImageFormat());
                 browserList = dockerHubTags.stream().map(DockerHubTag::getName)
                         .sorted(versionComparator::compare).collect(toList());
                 latestVersion = browserList.get(browserList.size() - 1);
@@ -358,12 +358,13 @@ public class DockerService {
     public String getDockerImage(String browserName, String browserVersion) {
         String dockerImageFormat;
         String dockerImage;
-        if (browserName.contains("edge")) {
-            dockerImageFormat = config.getDockerBrowserEdgeImageFormat();
-            dockerImage = String.format(dockerImageFormat, browserVersion);
+        if (browserName.equalsIgnoreCase("edge")) {
+            dockerImageFormat = config.getDockerBrowserAerokubeImageFormat();
+            dockerImage = String.format(dockerImageFormat, browserName,
+                    browserVersion);
 
         } else {
-            dockerImageFormat = config.getDockerBrowserStableImageFormat();
+            dockerImageFormat = config.getDockerBrowserSelenoidImageFormat();
             dockerImage = String.format(dockerImageFormat, browserName,
                     browserVersion);
         }
