@@ -26,7 +26,6 @@ import static io.github.bonigarcia.wdm.config.DriverManagerType.EDGE;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.FIREFOX;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.IEXPLORER;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.OPERA;
-import static io.github.bonigarcia.wdm.config.DriverManagerType.PHANTOMJS;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.SAFARI;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.LINUX;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.MAC;
@@ -108,10 +107,8 @@ import io.github.bonigarcia.wdm.managers.EdgeDriverManager;
 import io.github.bonigarcia.wdm.managers.FirefoxDriverManager;
 import io.github.bonigarcia.wdm.managers.InternetExplorerDriverManager;
 import io.github.bonigarcia.wdm.managers.OperaDriverManager;
-import io.github.bonigarcia.wdm.managers.PhantomJsDriverManager;
 import io.github.bonigarcia.wdm.managers.SafariDriverManager;
 import io.github.bonigarcia.wdm.managers.VoidDriverManager;
-import io.github.bonigarcia.wdm.online.BitBucketApi;
 import io.github.bonigarcia.wdm.online.Downloader;
 import io.github.bonigarcia.wdm.online.GitHubApi;
 import io.github.bonigarcia.wdm.online.HttpClient;
@@ -224,11 +221,6 @@ public abstract class WebDriverManager {
         return instanceMap.get(IEXPLORER);
     }
 
-    public static synchronized WebDriverManager phantomjs() {
-        instanceMap.putIfAbsent(PHANTOMJS, new PhantomJsDriverManager());
-        return instanceMap.get(PHANTOMJS);
-    }
-
     public static synchronized WebDriverManager safaridriver() {
         instanceMap.putIfAbsent(SAFARI, new SafariDriverManager());
         return instanceMap.get(SAFARI);
@@ -256,8 +248,6 @@ public abstract class WebDriverManager {
             return iedriver();
         case EDGE:
             return edgedriver();
-        case PHANTOMJS:
-            return phantomjs();
         case SAFARI:
             return safaridriver();
         default:
@@ -280,8 +270,6 @@ public abstract class WebDriverManager {
             return iedriver();
         case "org.openqa.selenium.edge.EdgeDriver":
             return edgedriver();
-        case "org.openqa.selenium.phantomjs.PhantomJSDriver":
-            return phantomjs();
         default:
             return voiddriver();
         }
@@ -937,7 +925,6 @@ public abstract class WebDriverManager {
 
             // Rest of filters
             urlHandler.filterByArch(architecture, forcedArch);
-            urlHandler.filterByDistro(os, getDriverName());
             urlHandler.filterByIgnoredVersions(config().getIgnoreVersions());
             urlHandler.filterByBeta(config().isUseBetaVersions());
 
@@ -1087,31 +1074,6 @@ public abstract class WebDriverManager {
                         }
                     }
                 }
-            }
-        }
-        return urls;
-    }
-
-    protected List<URL> getDriversFromBitBucket() throws IOException {
-        List<URL> urls;
-        URL driverUrl = getDriverUrl();
-        logSeekRepo(driverUrl);
-
-        Optional<URL> mirrorUrl = getMirrorUrl();
-        if (mirrorUrl.isPresent() && config.isUseMirror()) {
-            urls = getDriversFromMirror(mirrorUrl.get());
-
-        } else {
-            try (BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(httpClient
-                            .execute(httpClient.createHttpGet(driverUrl))
-                            .getEntity().getContent()))) {
-                GsonBuilder gsonBuilder = new GsonBuilder();
-                Gson gson = gsonBuilder.create();
-                BitBucketApi bitBucketInfo = gson.fromJson(reader,
-                        BitBucketApi.class);
-
-                urls = bitBucketInfo.getUrls();
             }
         }
         return urls;
@@ -1316,7 +1278,7 @@ public abstract class WebDriverManager {
     }
 
     public static void main(String[] args) {
-        String validBrowsers = "chrome|chromium|firefox|opera|edge|phantomjs|iexplorer";
+        String validBrowsers = "chrome|chromium|firefox|opera|edge|iexplorer";
         if (args.length <= 0) {
             logCliError(validBrowsers);
         } else {

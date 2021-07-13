@@ -21,7 +21,6 @@ import static io.github.bonigarcia.wdm.config.DriverManagerType.EDGE;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.FIREFOX;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.IEXPLORER;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.OPERA;
-import static io.github.bonigarcia.wdm.config.DriverManagerType.PHANTOMJS;
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -72,9 +71,6 @@ public class WdmAgent {
                 break;
             case "org/openqa/selenium/edge/EdgeDriver":
                 driverManagerType = EDGE;
-                break;
-            case "org/openqa/selenium/phantomjs/PhantomJSDriver":
-                driverManagerType = PHANTOMJS;
                 break;
             case "org/openqa/selenium/ie/InternetExplorerDriver":
                 driverManagerType = IEXPLORER;

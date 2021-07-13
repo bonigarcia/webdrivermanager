@@ -161,15 +161,6 @@ public class Config {
     ConfigKey<URL> operaDriverMirrorUrl = new ConfigKey<>(
             "wdm.operaDriverMirrorUrl", URL.class);
 
-    ConfigKey<String> phantomjsDriverVersion = new ConfigKey<>(
-            "wdm.phantomjsDriverVersion", String.class);
-    ConfigKey<String> phantomjsDriverExport = new ConfigKey<>(
-            "wdm.phantomjsDriverExport", String.class);
-    ConfigKey<URL> phantomjsDriverUrl = new ConfigKey<>(
-            "wdm.phantomjsDriverUrl", URL.class);
-    ConfigKey<URL> phantomjsDriverMirrorUrl = new ConfigKey<>(
-            "wdm.phantomjsDriverMirrorUrl", URL.class);
-
     ConfigKey<String> chromiumDriverVersion = new ConfigKey<>(
             "wdm.chromiumDriverVersion", String.class);
     ConfigKey<String> chromiumVersion = new ConfigKey<>("wdm.chromiumVersion",
@@ -893,42 +884,6 @@ public class Config {
 
     public Config setOperaDriverMirrorUrl(URL value) {
         this.operaDriverMirrorUrl.setValue(value);
-        return this;
-    }
-
-    public String getPhantomjsDriverVersion() {
-        return resolve(phantomjsDriverVersion);
-    }
-
-    public Config setPhantomjsDriverVersion(String value) {
-        this.phantomjsDriverVersion.setValue(value);
-        return this;
-    }
-
-    public String getPhantomjsDriverExport() {
-        return resolve(phantomjsDriverExport);
-    }
-
-    public Config setPhantomjsDriverExport(String value) {
-        this.phantomjsDriverExport.setValue(value);
-        return this;
-    }
-
-    public URL getPhantomjsDriverUrl() {
-        return resolve(phantomjsDriverUrl);
-    }
-
-    public Config setPhantomjsDriverUrl(URL value) {
-        this.phantomjsDriverUrl.setValue(value);
-        return this;
-    }
-
-    public URL getPhantomjsDriverMirrorUrl() {
-        return resolve(phantomjsDriverMirrorUrl);
-    }
-
-    public Config setPhantomjsDriverMirrorUrl(URL value) {
-        this.phantomjsDriverMirrorUrl.setValue(value);
         return this;
     }
 

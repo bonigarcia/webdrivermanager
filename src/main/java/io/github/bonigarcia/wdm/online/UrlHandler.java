@@ -169,29 +169,6 @@ public class UrlHandler {
         }
     }
 
-    public void filterByDistro(String os, String driverName) {
-        try {
-            if (os.equalsIgnoreCase("linux")
-                    && driverName.contains("phantomjs")) {
-                String distro = getDistroName();
-                String versionToFilter = "2.5.0";
-                log.trace(
-                        "URLs before filtering by Linux distribution ({}): {}",
-                        distro, candidateUrls);
-                candidateUrls = candidateUrls.stream()
-                        .filter(url -> !url.getFile().contains(versionToFilter)
-                                || url.getFile().contains(distro))
-                        .collect(toList());
-                log.trace("URLs after filtering by Linux distribution ({}): {}",
-                        distro, candidateUrls);
-            }
-        } catch (Exception e) {
-            log.warn(
-                    "An exception happens when filtering by distro to resolve {}: {}",
-                    driverName, e.getMessage());
-        }
-    }
-
     public void filterByIgnoredVersions(List<String> ignoredVersions) {
         if (!ignoredVersions.isEmpty() && !candidateUrls.isEmpty()) {
             log.trace("URLs before filtering by ignored versions ({}): {}",
