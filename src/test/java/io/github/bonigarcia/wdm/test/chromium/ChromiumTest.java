@@ -62,6 +62,9 @@ class ChromiumTest {
     void setupTest() {
         ChromeOptions options = new ChromeOptions();
         options.setBinary(browserPath.get().toFile());
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-gpu");
+        options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--remote-debugging-port=" + findFreePort());
         driver = new ChromeDriver(options);
     }
