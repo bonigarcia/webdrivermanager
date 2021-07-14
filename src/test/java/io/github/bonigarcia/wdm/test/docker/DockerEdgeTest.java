@@ -50,9 +50,7 @@ class DockerEdgeTest {
 
     @AfterEach
     void teardown() {
-        if (driver != null) {
-            driver.quit();
-        }
+        WebDriverManager.edgedriver().quit();
     }
 
     @Test

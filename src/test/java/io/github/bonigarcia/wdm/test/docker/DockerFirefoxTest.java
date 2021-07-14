@@ -50,9 +50,7 @@ class DockerFirefoxTest {
 
     @AfterEach
     void teardown() {
-        if (driver != null) {
-            driver.quit();
-        }
+        WebDriverManager.firefoxdriver().quit();
     }
 
     @Test

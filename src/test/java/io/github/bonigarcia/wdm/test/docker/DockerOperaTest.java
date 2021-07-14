@@ -50,9 +50,7 @@ class DockerOperaTest {
 
     @AfterEach
     void teardown() {
-        if (driver != null) {
-            driver.quit();
-        }
+        WebDriverManager.operadriver().quit();
     }
 
     @Test

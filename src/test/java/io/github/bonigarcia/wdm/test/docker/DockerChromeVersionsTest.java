@@ -45,9 +45,7 @@ class DockerChromeVersionsTest {
 
     @AfterEach
     void teardown() {
-        if (driver != null) {
-            driver.quit();
-        }
+        WebDriverManager.chromedriver().quit();
     }
 
     @ParameterizedTest

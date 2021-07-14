@@ -50,9 +50,7 @@ class DockerSafariTest {
 
     @AfterEach
     void teardown() {
-        if (driver != null) {
-            driver.quit();
-        }
+        WebDriverManager.safaridriver().quit();
     }
 
     @Test
