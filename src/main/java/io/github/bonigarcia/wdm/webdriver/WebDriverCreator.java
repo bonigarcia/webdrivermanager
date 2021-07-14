@@ -24,6 +24,7 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.lang.reflect.InvocationTargetException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 
 import org.openqa.selenium.Capabilities;
@@ -79,8 +80,15 @@ public class WebDriverCreator {
                 remoteUrl, capabilities);
         do {
             try {
-                webdriver = new RemoteWebDriver(new URL(remoteUrl),
-                        capabilities);
+                URL url = new URL(remoteUrl);
+                HttpURLConnection huc = (HttpURLConnection) url
+                        .openConnection();
+                huc.connect();
+                int responseCode = huc.getResponseCode();
+                log.trace("Requesting {} (the response code is {})", remoteUrl,
+                        responseCode);
+
+                webdriver = new RemoteWebDriver(url, capabilities);
             } catch (Exception e1) {
                 try {
                     log.trace("{} creating WebDriver object ({})",
@@ -100,7 +108,7 @@ public class WebDriverCreator {
 
         } while (webdriver == null);
 
-        log.trace("Created WebDriver object (session id {})",
+        log.debug("Created WebDriver object (session id {})",
                 ((RemoteWebDriver) webdriver).getSessionId());
 
         return createWebDriverBrowser(webdriver);
