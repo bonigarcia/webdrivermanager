@@ -1261,8 +1261,11 @@ public abstract class WebDriverManager {
 
         if (config.isEnabledDockerVnc()) {
             String noVncImage = config.getDockerNoVncImage();
+            String noVncVersion = noVncImage
+                    .substring(noVncImage.indexOf(":") + 1);
             DockerContainer noVncContainer = dockerService.startNoVncContainer(
-                    noVncImage, "novnc", "pulled", browserContainer);
+                    noVncImage, "novnc-container", noVncVersion,
+                    browserContainer);
             driverBrowser.addDockerContainer(noVncContainer);
             noVncUrl = noVncContainer.getContainerUrl();
 
