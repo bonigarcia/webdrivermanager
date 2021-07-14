@@ -48,7 +48,7 @@ public class ResolutionCache {
     final Logger log = getLogger(lookup().lookupClass());
 
     static final String TTL = "-ttl";
-    static final String RESOLUTION_CACHE_INFO = "WebDriverManager Resolution Cache (relationship between browsers and drivers versions previously resolved)";
+    static final String RESOLUTION_CACHE_INFO = "WebDriverManager Resolution Cache";
 
     Properties props = new Properties() {
         private static final long serialVersionUID = 3734950329657085291L;
