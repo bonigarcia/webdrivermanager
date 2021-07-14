@@ -107,8 +107,7 @@ public class DockerService {
                 .withDockerHttpClient(dockerHttpClient).build();
     }
 
-    public String getHost(String containerId, String network)
-            throws DockerException {
+    public String getHost() {
         return Optional.ofNullable(dockerHostUri.getHost())
                 .orElse(defaultAddress());
     }
@@ -411,7 +410,7 @@ public class DockerService {
         String containerId = startContainer(noVncContainer);
 
         noVncContainer.setContainerId(containerId);
-        String noVncHost = getHost(containerId, network);
+        String noVncHost = getHost();
         String noVncPort = getBindPort(containerId, dockerNoVncPort + "/tcp");
         String noVncUrlFormat = "http://%s:%s/";
         String noVncUrl = format(noVncUrlFormat, noVncHost, noVncPort);
@@ -451,7 +450,7 @@ public class DockerService {
 
         String containerId = startContainer(browserContainer);
         browserContainer.setContainerId(containerId);
-        String browserHost = getHost(containerId, network);
+        String browserHost = getHost();
         String browserPort = getBindPort(containerId,
                 dockerBrowserPort + "/tcp");
         String browserUrlFormat = "http://%s:%s/";
