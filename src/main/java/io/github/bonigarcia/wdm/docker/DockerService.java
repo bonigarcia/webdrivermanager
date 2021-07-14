@@ -22,7 +22,6 @@ import static java.lang.String.format;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.stream.Collectors.toList;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_LINUX;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.IOException;
@@ -110,12 +109,13 @@ public class DockerService {
 
     public String getHost(String containerId, String network)
             throws DockerException {
-        return IS_OS_LINUX
-                ? dockerClient.inspectContainerCmd(containerId).exec()
-                        .getNetworkSettings().getNetworks().get(network)
-                        .getGateway()
-                : Optional.ofNullable(dockerHostUri.getHost())
-                        .orElse(defaultAddress());
+        return Optional.ofNullable(dockerHostUri.getHost())
+                .orElse(defaultAddress());
+    }
+
+    public String getGateway(String containerId, String network) {
+        return dockerClient.inspectContainerCmd(containerId).exec()
+                .getNetworkSettings().getNetworks().get(network).getGateway();
     }
 
     public synchronized String startContainer(DockerContainer dockerContainer)
@@ -397,7 +397,7 @@ public class DockerService {
         List<String> envs = new ArrayList<>();
         envs.add("AUTOCONNECT=true");
         envs.add("VNC_PASSWORD=" + config.getDockerVncPassword());
-        envs.add("VNC_SERVER=" + browserContainer.getBrowserHost() + ":"
+        envs.add("VNC_SERVER=" + browserContainer.getGateway() + ":"
                 + browserContainer.getVncPort());
 
         // network
@@ -461,7 +461,8 @@ public class DockerService {
 
         String browserUrl = format(browserUrlFormat, browserHost, browserPort);
         browserContainer.setContainerUrl(browserUrl);
-        browserContainer.setBrowserHost(browserHost);
+        String gateway = getGateway(containerId, network);
+        browserContainer.setGateway(gateway);
         log.trace("Browser remote URL {}", browserUrl);
 
         if (config.isEnabledDockerVnc()) {

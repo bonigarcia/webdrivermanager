@@ -44,7 +44,7 @@ public class DockerContainer {
     private boolean sysadmin;
     private String containerId;
     private String containerUrl;
-    private String browserHost;
+    private String gateway;
     private String vncPort;
 
     private DockerContainer(DockerBuilder builder) {
@@ -116,12 +116,12 @@ public class DockerContainer {
         this.sysadmin = privileged;
     }
 
-    public String getBrowserHost() {
-        return browserHost;
+    public String getGateway() {
+        return gateway;
     }
 
-    public void setBrowserHost(String browserHost) {
-        this.browserHost = browserHost;
+    public void setGateway(String gateway) {
+        this.gateway = gateway;
     }
 
     public String getVncPort() {
