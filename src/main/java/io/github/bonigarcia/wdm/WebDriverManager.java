@@ -56,6 +56,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
@@ -177,6 +178,7 @@ public abstract class WebDriverManager {
     protected WebDriverCreator webDriverCreator;
     protected DockerService dockerService;
     protected List<WebDriverBrowser> webDriverList = new ArrayList<>();
+    protected String noVncUrl;
 
     public static Config globalConfig() {
         Config global = new Config();
@@ -325,6 +327,7 @@ public abstract class WebDriverManager {
             }
         }
         webDriverList.clear();
+        noVncUrl = "";
     }
 
     public Optional<Path> getBrowserPath() {
@@ -338,6 +341,11 @@ public abstract class WebDriverManager {
 
     public WebDriverManager browserInDocker() {
         this.dockerEnabled = true;
+        return instanceMap.get(getDriverManagerType());
+    }
+
+    public WebDriverManager enableVnc() {
+        config().setDockerEnableVnc(true);
         return instanceMap.get(getDriverManagerType());
     }
 
@@ -596,6 +604,15 @@ public abstract class WebDriverManager {
             return driverVersionList;
         } catch (IOException e) {
             throw new WebDriverManagerException(e);
+        }
+    }
+
+    public URL getDockerNoVncUrl() {
+        try {
+            return new URL(noVncUrl);
+        } catch (MalformedURLException e) {
+            log.error("URL for Docker session not available", e);
+            return null;
         }
     }
 
@@ -1219,28 +1236,39 @@ public abstract class WebDriverManager {
 
         String browserName = getKeyForResolutionCache();
         String browserVersion = getBrowserVersion();
-        String cacheKey = browserName + "-container-";
+        String browserCacheKey = browserName + "-container-";
 
         if (isNullOrEmpty(browserVersion)) {
-            cacheKey += "latest";
+            browserCacheKey += "latest";
             browserVersion = dockerService.getLatestVersionFromDockerHub(
-                    getDriverManagerType(), cacheKey);
+                    getDriverManagerType(), browserCacheKey);
         } else {
             if (!browserVersion.contains(".")) {
                 browserVersion += ".0";
             }
-            cacheKey += browserVersion;
+            browserCacheKey += browserVersion;
         }
 
-        String dockerImage = dockerService.getDockerImage(browserName,
+        String browserImage = dockerService.getDockerImage(browserName,
                 browserVersion);
-        DockerContainer browserContainer = dockerService
-                .startBrowserContainer(dockerImage, cacheKey, browserVersion);
+        DockerContainer browserContainer = dockerService.startBrowserContainer(
+                browserImage, browserCacheKey, browserVersion);
         String containerUrl = browserContainer.getContainerUrl();
 
         WebDriverBrowser driverBrowser = webDriverCreator
                 .createRemoteWebDriver(containerUrl, getCapabilities());
         driverBrowser.addDockerContainer(browserContainer);
+
+        if (config.isEnabledDockerVnc()) {
+            String noVncImage = config.getDockerNoVncImage();
+            DockerContainer noVncContainer = dockerService.startNoVncContainer(
+                    noVncImage, "novnc", "pulled", browserContainer);
+            driverBrowser.addDockerContainer(noVncContainer);
+            noVncUrl = noVncContainer.getContainerUrl();
+
+            log.info("Docker session noVNC URL: {}", noVncUrl);
+        }
+
         webDriverList.add(driverBrowser);
 
         return driverBrowser.getDriver();

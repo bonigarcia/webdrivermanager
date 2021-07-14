@@ -382,6 +382,44 @@ public class DockerService {
         return dockerImage;
     }
 
+    public DockerContainer startNoVncContainer(String dockerImage,
+            String cacheKey, String browserVersion,
+            DockerContainer browserContainer) {
+        // pull image
+        pullImageIfNecessary(cacheKey, dockerImage, browserVersion);
+
+        // exposed ports
+        List<String> exposedPorts = new ArrayList<>();
+        String dockerNoVncPort = String.valueOf(config.getDockerNoVncPort());
+        exposedPorts.add(dockerNoVncPort);
+
+        // envs
+        List<String> envs = new ArrayList<>();
+        envs.add("AUTOCONNECT=true");
+        envs.add("VNC_PASSWORD=" + config.getDockerVncPassword());
+        envs.add("VNC_SERVER=" + browserContainer.getBrowserHost() + ":"
+                + browserContainer.getVncPort());
+
+        // network
+        String network = config.getDockerNetwork();
+
+        // builder
+        DockerContainer noVncContainer = DockerContainer
+                .dockerBuilder(dockerImage).exposedPorts(exposedPorts)
+                .network(network).envs(envs).build();
+
+        String containerId = startContainer(noVncContainer);
+
+        noVncContainer.setContainerId(containerId);
+        String noVncHost = getHost(containerId, network);
+        String noVncPort = getBindPort(containerId, dockerNoVncPort + "/tcp");
+        String noVncUrlFormat = "http://%s:%s/";
+        String noVncUrl = format(noVncUrlFormat, noVncHost, noVncPort);
+        noVncContainer.setContainerUrl(noVncUrl);
+
+        return noVncContainer;
+    }
+
     public DockerContainer startBrowserContainer(String dockerImage,
             String cacheKey, String browserVersion) {
         // pull image
@@ -397,9 +435,9 @@ public class DockerService {
         List<String> envs = new ArrayList<>();
         envs.add("TZ=" + config.getDockerTimezone());
         envs.add("LANG=" + config.getDockerLang());
+        String dockerVncPort = String.valueOf(config.getDockerVncPort());
         if (config.isEnabledDockerVnc()) {
             envs.add("ENABLE_VNC=true");
-            String dockerVncPort = String.valueOf(config.getDockerVncPort());
             exposedPorts.add(dockerVncPort);
         }
 
@@ -423,7 +461,13 @@ public class DockerService {
 
         String browserUrl = format(browserUrlFormat, browserHost, browserPort);
         browserContainer.setContainerUrl(browserUrl);
+        browserContainer.setBrowserHost(browserHost);
         log.trace("Browser remote URL {}", browserUrl);
+
+        if (config.isEnabledDockerVnc()) {
+            String vncPort = getBindPort(containerId, dockerVncPort + "/tcp");
+            browserContainer.setVncPort(vncPort);
+        }
 
         return browserContainer;
     }

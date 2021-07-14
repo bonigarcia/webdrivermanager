@@ -44,6 +44,8 @@ public class DockerContainer {
     private boolean sysadmin;
     private String containerId;
     private String containerUrl;
+    private String browserHost;
+    private String vncPort;
 
     private DockerContainer(DockerBuilder builder) {
         this.imageId = builder.imageId;
@@ -112,6 +114,22 @@ public class DockerContainer {
 
     public void setPrivileged(boolean privileged) {
         this.sysadmin = privileged;
+    }
+
+    public String getBrowserHost() {
+        return browserHost;
+    }
+
+    public void setBrowserHost(String browserHost) {
+        this.browserHost = browserHost;
+    }
+
+    public String getVncPort() {
+        return vncPort;
+    }
+
+    public void setVncPort(String vncPort) {
+        this.vncPort = vncPort;
     }
 
     public static class DockerBuilder {
