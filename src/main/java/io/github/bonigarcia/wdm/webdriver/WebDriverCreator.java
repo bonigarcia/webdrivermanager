@@ -78,11 +78,6 @@ public class WebDriverCreator {
         log.debug("Creating WebDriver object for {} at {} with {}", browserName,
                 remoteUrl, capabilities);
         do {
-            if (currentTimeMillis() > timeoutMs) {
-                throw new WebDriverManagerException(
-                        "Timeout of " + waitTimeoutSec
-                                + "  seconds creating WebDriver object");
-            }
             try {
                 webdriver = new RemoteWebDriver(new URL(remoteUrl),
                         capabilities);
@@ -90,6 +85,11 @@ public class WebDriverCreator {
                 try {
                     log.trace("{} creating WebDriver object ({})",
                             e1.getClass().getSimpleName(), e1.getMessage());
+                    if (currentTimeMillis() > timeoutMs) {
+                        throw new WebDriverManagerException(
+                                "Timeout of " + waitTimeoutSec
+                                        + " seconds creating WebDriver object");
+                    }
                     sleep(SECONDS.toMillis(POLL_TIME_SEC));
                 } catch (InterruptedException e2) {
                     log.warn("Interrupted exception creating WebDriver object",
