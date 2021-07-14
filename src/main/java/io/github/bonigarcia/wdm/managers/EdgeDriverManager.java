@@ -200,7 +200,11 @@ public class EdgeDriverManager extends WebDriverManager {
 
     @Override
     protected Capabilities getCapabilities() {
-        return new EdgeOptions();
+        EdgeOptions options = new EdgeOptions();
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-gpu");
+        options.addArguments("--disable-dev-shm-usage");
+        return options;
     }
 
     public WebDriverManager exportParameter(String exportParameter) {
