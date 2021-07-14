@@ -221,7 +221,7 @@ public class Config {
     ConfigKey<String> dockerBrowserSelenoidImageFormat = new ConfigKey<>(
             "wdm.dockerBrowserSelenoidImageFormat", String.class);
     ConfigKey<String> dockerBrowserTwilioImageFormat = new ConfigKey<>(
-            "wdm.dockerBrowserUnstableImageFormat", String.class);
+            "wdm.dockerBrowserTwilioImageFormat", String.class);
     ConfigKey<String> dockerBrowserAerokubeImageFormat = new ConfigKey<>(
             "wdm.dockerBrowserAerokubeImageFormat", String.class);
     ConfigKey<String> dockerRecordingImage = new ConfigKey<>(

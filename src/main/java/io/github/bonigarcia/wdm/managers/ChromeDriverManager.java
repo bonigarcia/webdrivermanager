@@ -158,7 +158,11 @@ public class ChromeDriverManager extends WebDriverManager {
 
     @Override
     protected Capabilities getCapabilities() {
-        return new ChromeOptions();
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-gpu");
+        options.addArguments("--disable-dev-shm-usage");
+        return options;
     }
 
     public WebDriverManager exportParameter(String exportParameter) {

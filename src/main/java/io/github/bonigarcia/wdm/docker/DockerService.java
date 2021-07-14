@@ -371,7 +371,7 @@ public class DockerService {
             break;
 
         default:
-            dockerImageFormat = config.getDockerBrowserSelenoidImageFormat();
+            dockerImageFormat = getDockerImageFormat(browserVersion);
             dockerImage = String.format(dockerImageFormat, browserName,
                     browserVersion);
             break;
@@ -379,6 +379,17 @@ public class DockerService {
 
         log.trace("Docker image: {}", dockerImage);
         return dockerImage;
+    }
+
+    public String getDockerImageFormat(String browserVersion) {
+        String dockerImageFormat;
+        if (browserVersion.equalsIgnoreCase("beta")
+                || browserVersion.equalsIgnoreCase("dev")) {
+            dockerImageFormat = config.getDockerBrowserTwilioImageFormat();
+        } else {
+            dockerImageFormat = config.getDockerBrowserSelenoidImageFormat();
+        }
+        return dockerImageFormat;
     }
 
     public DockerContainer startNoVncContainer(String dockerImage,

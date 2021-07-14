@@ -1249,7 +1249,9 @@ public abstract class WebDriverManager {
             browserVersion = dockerService.getLatestVersionFromDockerHub(
                     getDriverManagerType(), browserCacheKey);
         } else {
-            if (!browserVersion.contains(".")) {
+            if (!browserVersion.equalsIgnoreCase("beta")
+                    && !browserVersion.equalsIgnoreCase("dev")
+                    && !browserVersion.contains(".")) {
                 browserVersion += ".0";
             }
             browserCacheKey += browserVersion;
