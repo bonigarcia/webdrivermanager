@@ -66,6 +66,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.regex.Matcher;
 
 import javax.xml.namespace.NamespaceContext;
@@ -177,7 +178,7 @@ public abstract class WebDriverManager {
     protected boolean dockerEnabled = false;
     protected WebDriverCreator webDriverCreator;
     protected DockerService dockerService;
-    protected List<WebDriverBrowser> webDriverList = new ArrayList<>();
+    protected List<WebDriverBrowser> webDriverList = new CopyOnWriteArrayList<>();
     protected String noVncUrl;
 
     public static Config globalConfig() {
@@ -1221,7 +1222,12 @@ public abstract class WebDriverManager {
                     .addShutdownHook(new Thread("wdm-shutdown-hook") {
                         @Override
                         public void run() {
-                            quit();
+                            try {
+                                quit();
+                            } catch (Exception e) {
+                                log.warn("Exception in wdm-shutdown-hook: {}",
+                                        e.getMessage());
+                            }
                         }
                     });
             shutdownHook = true;
