@@ -159,14 +159,22 @@ public class ChromeDriverManager extends WebDriverManager {
     @Override
     protected Capabilities getCapabilities() {
         ChromeOptions options = new ChromeOptions();
-        options.addArguments("--no-sandbox");
-        options.addArguments("--disable-gpu");
-        options.addArguments("--disable-dev-shm-usage");
+        if (!androidEnabled) {
+            options.addArguments("--no-sandbox");
+            options.addArguments("--disable-gpu");
+            options.addArguments("--disable-dev-shm-usage");
+        }
         return options;
     }
 
     public WebDriverManager exportParameter(String exportParameter) {
         config().setChromeDriverExport(exportParameter);
+        return instanceMap.get(getDriverManagerType());
+    }
+
+    public WebDriverManager browserInDockerAndroid() {
+        this.dockerEnabled = true;
+        this.androidEnabled = true;
         return instanceMap.get(getDriverManagerType());
     }
 

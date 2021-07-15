@@ -59,6 +59,7 @@ import io.github.bonigarcia.wdm.cache.ResolutionCache;
 import io.github.bonigarcia.wdm.config.Config;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
 import io.github.bonigarcia.wdm.config.WebDriverManagerException;
+import io.github.bonigarcia.wdm.docker.DockerContainer.DockerBuilder;
 import io.github.bonigarcia.wdm.docker.DockerHubTags.DockerHubTag;
 import io.github.bonigarcia.wdm.online.HttpClient;
 import io.github.bonigarcia.wdm.versions.VersionComparator;
@@ -140,6 +141,11 @@ public class DockerService {
         try (CreateContainerCmd containerConfigBuilder = dockerClient
                 .createContainerCmd(imageId)) {
 
+            boolean privileged = dockerContainer.isPrivileged();
+            if (privileged) {
+                log.trace("Using privileged mode");
+                hostConfigBuilder.withPrivileged(true);
+            }
             if (dockerContainer.isSysadmin()) {
                 log.trace("Adding sysadmin capabilty");
                 hostConfigBuilder.withCapAdd(Capability.SYS_ADMIN);
@@ -307,7 +313,7 @@ public class DockerService {
 
     public String getImageVersionFromDockerHub(
             DriverManagerType driverManagerType, String cacheKey,
-            String browserVersion) {
+            String browserName, String browserVersion, boolean androidEnabled) {
         String latestVersion = null;
 
         if (!config.isAvoidingResolutionCache() && !resolutionCache
@@ -318,27 +324,41 @@ public class DockerService {
             DockerHubService dockerHubService = new DockerHubService(config,
                     httpClient);
             List<DockerHubTag> dockerHubTags;
-            String browserName = driverManagerType.getNameLowerCase();
             String tagPreffix = browserName + "_";
             int minusIndex = getMinusIndex(browserVersion);
 
+            String dockerBrowserImageFormat = config
+                    .getDockerBrowserSelenoidImageFormat();
             switch (driverManagerType) {
             case CHROME:
             case FIREFOX:
+                if (androidEnabled) {
+                    dockerBrowserImageFormat = String.format(
+                            config.getDockerBrowserMobileImageFormat(),
+                            browserName, "");
+                }
                 dockerHubTags = dockerHubService
-                        .listTags(config.getDockerBrowserSelenoidImageFormat());
+                        .listTags(dockerBrowserImageFormat);
 
-                browserList = dockerHubTags.stream()
-                        .filter(p -> p.getName().startsWith(tagPreffix))
-                        .map(p -> p.getName().replace(tagPreffix, ""))
-                        .sorted(versionComparator::compare).collect(toList());
+                if (androidEnabled) {
+                    browserList = dockerHubTags.stream()
+                            .map(DockerHubTag::getName)
+                            .sorted(versionComparator::compare)
+                            .collect(toList());
+                } else {
+                    browserList = dockerHubTags.stream()
+                            .filter(p -> p.getName().startsWith(tagPreffix))
+                            .map(p -> p.getName().replace(tagPreffix, ""))
+                            .sorted(versionComparator::compare)
+                            .collect(toList());
+                }
                 latestVersion = browserList
                         .get(browserList.size() - 1 - minusIndex);
                 break;
 
             case OPERA:
                 dockerHubTags = dockerHubService
-                        .listTags(config.getDockerBrowserSelenoidImageFormat());
+                        .listTags(dockerBrowserImageFormat);
                 browserList = dockerHubTags.stream()
                         .filter(p -> p.getName().startsWith(tagPreffix))
                         .map(p -> p.getName().replace(tagPreffix, ""))
@@ -393,7 +413,8 @@ public class DockerService {
         return minusIndex;
     }
 
-    public String getDockerImage(String browserName, String browserVersion) {
+    public String getDockerImage(String browserName, String browserVersion,
+            boolean androidEnabled) {
         String dockerImageFormat;
         String dockerImage;
         switch (browserName) {
@@ -405,7 +426,8 @@ public class DockerService {
             break;
 
         default:
-            dockerImageFormat = getDockerImageFormat(browserVersion);
+            dockerImageFormat = getDockerImageFormat(browserVersion,
+                    androidEnabled);
             dockerImage = String.format(dockerImageFormat, browserName,
                     browserVersion);
             break;
@@ -415,10 +437,13 @@ public class DockerService {
         return dockerImage;
     }
 
-    public String getDockerImageFormat(String browserVersion) {
+    public String getDockerImageFormat(String browserVersion,
+            boolean androidEnabled) {
         String dockerImageFormat;
         if (isBrowserVersionBetaOrDev(browserVersion)) {
             dockerImageFormat = config.getDockerBrowserTwilioImageFormat();
+        } else if (androidEnabled) {
+            dockerImageFormat = config.getDockerBrowserMobileImageFormat();
         } else {
             dockerImageFormat = config.getDockerBrowserSelenoidImageFormat();
         }
@@ -478,7 +503,7 @@ public class DockerService {
     }
 
     public DockerContainer startBrowserContainer(String dockerImage,
-            String cacheKey, String browserVersion) {
+            String cacheKey, String browserVersion, boolean androidEnabled) {
         // pull image
         pullImageIfNecessary(cacheKey, dockerImage, browserVersion);
 
@@ -497,14 +522,21 @@ public class DockerService {
             envs.add("ENABLE_VNC=true");
             exposedPorts.add(dockerVncPort);
         }
+        if (androidEnabled) {
+            envs.add("QTWEBENGINE_DISABLE_SANDBOX=1");
+        }
 
         // network
         String network = config.getDockerNetwork();
 
         // builder
-        DockerContainer browserContainer = DockerContainer
-                .dockerBuilder(dockerImage).exposedPorts(exposedPorts)
-                .network(network).envs(envs).sysadmin().build();
+        DockerBuilder dockerBuilder = DockerContainer.dockerBuilder(dockerImage)
+                .exposedPorts(exposedPorts).network(network).envs(envs)
+                .sysadmin();
+        if (androidEnabled) {
+            dockerBuilder = dockerBuilder.privileged();
+        }
+        DockerContainer browserContainer = dockerBuilder.build();
 
         String containerId = startContainer(browserContainer);
         browserContainer.setContainerId(containerId);
@@ -512,7 +544,7 @@ public class DockerService {
         String browserPort = getBindPort(containerId,
                 dockerBrowserPort + "/tcp");
         String browserUrlFormat = "http://%s:%s/";
-        if (dockerImage.contains("firefox")) {
+        if (dockerImage.contains("firefox") || androidEnabled) {
             browserUrlFormat += "wd/hub";
         }
 

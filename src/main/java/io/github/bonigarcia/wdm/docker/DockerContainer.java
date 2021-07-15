@@ -42,6 +42,7 @@ public class DockerContainer {
     private Optional<String> network;
     private Optional<List<String>> cmd;
     private Optional<List<String>> entryPoint;
+    private boolean privileged;
     private boolean sysadmin;
     private String containerId;
     private String containerUrl;
@@ -62,6 +63,7 @@ public class DockerContainer {
         this.cmd = builder.cmd != null ? of(builder.cmd) : empty();
         this.entryPoint = builder.entryPoint != null ? of(builder.entryPoint)
                 : empty();
+        this.privileged = builder.privileged;
         this.sysadmin = builder.sysadmin;
     }
 
@@ -113,12 +115,12 @@ public class DockerContainer {
         this.containerUrl = containerUrl;
     }
 
-    public boolean isSysadmin() {
-        return sysadmin;
+    public boolean isPrivileged() {
+        return privileged;
     }
 
-    public void setPrivileged(boolean privileged) {
-        this.sysadmin = privileged;
+    public boolean isSysadmin() {
+        return sysadmin;
     }
 
     public String getGateway() {
@@ -176,6 +178,7 @@ public class DockerContainer {
         private List<String> cmd;
         private String network;
         private List<String> entryPoint;
+        private boolean privileged = false;
         private boolean sysadmin = false;
         private List<String> exposedPorts;
 
@@ -216,6 +219,11 @@ public class DockerContainer {
 
         public DockerBuilder sysadmin() {
             this.sysadmin = true;
+            return this;
+        }
+
+        public DockerBuilder privileged() {
+            this.privileged = true;
             return this;
         }
 

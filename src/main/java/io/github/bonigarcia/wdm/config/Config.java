@@ -225,6 +225,8 @@ public class Config {
             "wdm.dockerBrowserTwilioImageFormat", String.class);
     ConfigKey<String> dockerBrowserAerokubeImageFormat = new ConfigKey<>(
             "wdm.dockerBrowserAerokubeImageFormat", String.class);
+    ConfigKey<String> dockerBrowserMobileImageFormat = new ConfigKey<>(
+            "wdm.dockerBrowserMobileImageFormat", String.class);
     ConfigKey<String> dockerRecordingImage = new ConfigKey<>(
             "wdm.dockerRecordingImage", String.class);
     ConfigKey<String> dockerNoVncImage = new ConfigKey<>("wdm.dockerNoVncImage",
@@ -1121,6 +1123,15 @@ public class Config {
 
     public Config setDockerBrowserAerokubeImageFormat(String value) {
         this.dockerBrowserAerokubeImageFormat.setValue(value);
+        return this;
+    }
+
+    public String getDockerBrowserMobileImageFormat() {
+        return resolve(dockerBrowserMobileImageFormat);
+    }
+
+    public Config setDockerBrowserMobileImageFormat(String value) {
+        this.dockerBrowserMobileImageFormat.setValue(value);
         return this;
     }
 

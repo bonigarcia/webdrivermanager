@@ -177,6 +177,7 @@ public abstract class WebDriverManager {
 
     protected boolean shutdownHook = false;
     protected boolean dockerEnabled = false;
+    protected boolean androidEnabled = false;
     protected WebDriverCreator webDriverCreator;
     protected DockerService dockerService;
     protected List<WebDriverBrowser> webDriverList = new CopyOnWriteArrayList<>();
@@ -346,6 +347,12 @@ public abstract class WebDriverManager {
     public WebDriverManager browserInDocker() {
         this.dockerEnabled = true;
         return instanceMap.get(getDriverManagerType());
+    }
+
+    public WebDriverManager browserInDockerAndroid() {
+        throw new WebDriverManagerException(
+                getDriverManagerType().getBrowserName()
+                        + " is not available in Docker Android");
     }
 
     public WebDriverManager enableVnc() {
@@ -1141,6 +1148,7 @@ public abstract class WebDriverManager {
             retryCount = 0;
             shutdownHook = false;
             dockerEnabled = false;
+            androidEnabled = false;
         }
     }
 
@@ -1262,6 +1270,9 @@ public abstract class WebDriverManager {
         }
 
         String browserName = getKeyForResolutionCache();
+        if (androidEnabled) {
+            browserName += "-mobile";
+        }
         String browserVersion = getBrowserVersion();
         String browserCacheKey = browserName + "-container-";
 
@@ -1270,7 +1281,8 @@ public abstract class WebDriverManager {
             browserCacheKey += isNullOrEmpty(browserVersion) ? "latest"
                     : browserVersion;
             browserVersion = dockerService.getImageVersionFromDockerHub(
-                    getDriverManagerType(), browserCacheKey, browserVersion);
+                    getDriverManagerType(), browserCacheKey, browserName,
+                    browserVersion, androidEnabled);
         } else {
             if (!dockerService.isBrowserVersionWildCard(browserVersion)
                     && !browserVersion.contains(".")) {
@@ -1280,9 +1292,9 @@ public abstract class WebDriverManager {
         }
 
         String browserImage = dockerService.getDockerImage(browserName,
-                browserVersion);
+                browserVersion, androidEnabled);
         DockerContainer browserContainer = dockerService.startBrowserContainer(
-                browserImage, browserCacheKey, browserVersion);
+                browserImage, browserCacheKey, browserVersion, androidEnabled);
         browserContainer.setBrowserName(browserName);
         String containerUrl = browserContainer.getContainerUrl();
 
