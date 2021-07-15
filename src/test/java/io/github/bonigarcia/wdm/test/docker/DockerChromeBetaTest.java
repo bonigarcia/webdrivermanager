@@ -46,19 +46,21 @@ class DockerChromeBetaTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
-    static final int MANUAL_INSPECTION_WAIT_TIME_SEC = 10;
+    static final int WAIT_TIME_SEC = 10;
 
     WebDriver driver;
 
+    WebDriverManager wdm = WebDriverManager.chromedriver().browserInDocker()
+            .browserVersion("beta").enableVnc();
+
     @BeforeEach
     void setupTest() {
-        driver = WebDriverManager.chromedriver().browserInDocker()
-                .browserVersion("beta").enableVnc().create();
+        driver = wdm.create();
     }
 
     @AfterEach
     void teardown() {
-        WebDriverManager.chromedriver().quit();
+        wdm.quit();
     }
 
     @Test
@@ -70,14 +72,13 @@ class DockerChromeBetaTest {
         assertThat(title)
                 .contains("Automated driver management for Selenium WebDriver");
 
-        URL dockerSessionUrl = WebDriverManager.chromedriver()
-                .getDockerNoVncUrl();
+        URL dockerSessionUrl = wdm.getDockerNoVncUrl();
         HttpURLConnection huc = (HttpURLConnection) dockerSessionUrl
                 .openConnection();
         assertThat(huc.getResponseCode()).isEqualTo(HTTP_OK);
 
         // Active wait to manually inspect
-        Thread.sleep(SECONDS.toMillis(MANUAL_INSPECTION_WAIT_TIME_SEC));
+        Thread.sleep(SECONDS.toMillis(WAIT_TIME_SEC));
     }
 
 }
