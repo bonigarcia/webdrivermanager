@@ -108,14 +108,18 @@ public class WebDriverCreator {
 
         } while (webdriver == null);
 
-        log.debug("Created WebDriver object (session id {})",
-                ((RemoteWebDriver) webdriver).getSessionId());
-
         return createWebDriverBrowser(webdriver);
     }
 
     public WebDriverBrowser createWebDriverBrowser(WebDriver driver) {
         return new WebDriverBrowser(driver);
+    }
+
+    public String getSessionId(WebDriver webDriver) {
+        String sessionId = ((RemoteWebDriver) webDriver).getSessionId()
+                .toString();
+        log.debug("The sessionId is {}", sessionId);
+        return sessionId;
     }
 
 }

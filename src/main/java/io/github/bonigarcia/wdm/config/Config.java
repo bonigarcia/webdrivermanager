@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.net.URL;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
@@ -216,8 +217,8 @@ public class Config {
             "wdm.dockerRecordingFrameRate", Integer.class);
     ConfigKey<String> dockerRecordingScreenSize = new ConfigKey<>(
             "wdm.dockerRecordingScreenSize", String.class);
-    ConfigKey<String> dockerRecordingFolder = new ConfigKey<>(
-            "wdm.dockerRecordingFolder", String.class);
+    ConfigKey<Path> dockerRecordingOutput = new ConfigKey<>(
+            "wdm.dockerRecordingOutput", Path.class);
     ConfigKey<String> dockerBrowserSelenoidImageFormat = new ConfigKey<>(
             "wdm.dockerBrowserSelenoidImageFormat", String.class);
     ConfigKey<String> dockerBrowserTwilioImageFormat = new ConfigKey<>(
@@ -261,6 +262,8 @@ public class Config {
             output = (T) Integer.valueOf(strValue);
         } else if (type.equals(Boolean.class)) {
             output = (T) Boolean.valueOf(strValue);
+        } else if (type.equals(Path.class)) {
+            output = (T) Paths.get(strValue);
         } else if (type.equals(URL.class)) {
             try {
                 output = (T) new URL(strValue);
@@ -1085,12 +1088,12 @@ public class Config {
         return this;
     }
 
-    public String getDockerRecordingFolder() {
-        return resolve(dockerRecordingFolder);
+    public Path getDockerRecordingOutput() {
+        return resolve(dockerRecordingOutput);
     }
 
-    public Config setDockerRecordingFolder(String value) {
-        this.dockerRecordingFolder.setValue(value);
+    public Config setDockerRecordingOutput(Path value) {
+        this.dockerRecordingOutput.setValue(value);
         return this;
     }
 

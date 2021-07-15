@@ -19,6 +19,7 @@ package io.github.bonigarcia.wdm.docker;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -45,7 +46,11 @@ public class DockerContainer {
     private String containerId;
     private String containerUrl;
     private String gateway;
+    private String address;
     private String vncPort;
+    private String sessionId;
+    private String browserName;
+    private Path recordingPath;
 
     private DockerContainer(DockerBuilder builder) {
         this.imageId = builder.imageId;
@@ -124,12 +129,44 @@ public class DockerContainer {
         this.gateway = gateway;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     public String getVncPort() {
         return vncPort;
     }
 
     public void setVncPort(String vncPort) {
         this.vncPort = vncPort;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
+    }
+
+    public String getBrowserName() {
+        return browserName;
+    }
+
+    public void setBrowserName(String browserName) {
+        this.browserName = browserName;
+    }
+
+    public Path getRecordingPath() {
+        return recordingPath;
+    }
+
+    public void setRecordingPath(Path recordingPath) {
+        this.recordingPath = recordingPath;
     }
 
     public static class DockerBuilder {

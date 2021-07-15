@@ -60,6 +60,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.Iterator;
@@ -180,6 +181,7 @@ public abstract class WebDriverManager {
     protected DockerService dockerService;
     protected List<WebDriverBrowser> webDriverList = new CopyOnWriteArrayList<>();
     protected String noVncUrl;
+    protected Path recordingPath;
 
     public static Config globalConfig() {
         Config global = new Config();
@@ -329,6 +331,7 @@ public abstract class WebDriverManager {
         }
         webDriverList.clear();
         noVncUrl = "";
+        recordingPath = null;
     }
 
     public Optional<Path> getBrowserPath() {
@@ -347,6 +350,20 @@ public abstract class WebDriverManager {
 
     public WebDriverManager enableVnc() {
         config().setDockerEnableVnc(true);
+        return instanceMap.get(getDriverManagerType());
+    }
+
+    public WebDriverManager enableRecording() {
+        config().setDockerEnableRecording(true);
+        return instanceMap.get(getDriverManagerType());
+    }
+
+    public WebDriverManager recordingOutput(String path) {
+        return recordingOutput(Paths.get(path));
+    }
+
+    public WebDriverManager recordingOutput(Path path) {
+        config().setDockerRecordingOutput(path);
         return instanceMap.get(getDriverManagerType());
     }
 
@@ -615,6 +632,10 @@ public abstract class WebDriverManager {
             log.error("URL for Docker session not available", e);
             return null;
         }
+    }
+
+    public Path getDockerRecordingPath() {
+        return recordingPath;
     }
 
     // ------------
@@ -1262,10 +1283,15 @@ public abstract class WebDriverManager {
                 browserVersion);
         DockerContainer browserContainer = dockerService.startBrowserContainer(
                 browserImage, browserCacheKey, browserVersion);
+        browserContainer.setBrowserName(browserName);
         String containerUrl = browserContainer.getContainerUrl();
 
         WebDriverBrowser driverBrowser = webDriverCreator
                 .createRemoteWebDriver(containerUrl, getCapabilities());
+        String sessionId = webDriverCreator
+                .getSessionId(driverBrowser.getDriver());
+        browserContainer.setSessionId(sessionId);
+
         driverBrowser.addDockerContainer(browserContainer);
 
         if (config.isEnabledDockerVnc()) {
@@ -1279,6 +1305,19 @@ public abstract class WebDriverManager {
             noVncUrl = noVncContainer.getContainerUrl();
 
             log.info("Docker session noVNC URL: {}", noVncUrl);
+        }
+
+        if (config.isEnabledDockerRecording()) {
+            String recorderImage = config.getDockerRecordingImage();
+            String recorderVersion = recorderImage
+                    .substring(recorderImage.indexOf(":") + 1);
+            DockerContainer recorderContainer = dockerService
+                    .startRecorderContainer(recorderImage, "recorder-container",
+                            recorderVersion, browserContainer);
+            driverBrowser.addDockerContainer(recorderContainer, 0);
+            recordingPath = recorderContainer.getRecordingPath();
+
+            log.info("Starting recording {}", recordingPath);
         }
 
         webDriverList.add(driverBrowser);

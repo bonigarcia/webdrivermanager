@@ -57,4 +57,9 @@ public class WebDriverBrowser {
         dockerContainerList.add(dockerContainer);
     }
 
+    public void addDockerContainer(DockerContainer dockerContainer,
+            int position) {
+        dockerContainerList.add(position, dockerContainer);
+    }
+
 }

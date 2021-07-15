@@ -25,6 +25,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.Path;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,13 +37,13 @@ import org.slf4j.Logger;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 /**
- * Test with Chrome in Docker using remote session (VNC).
+ * Test with Chrome in Docker using remote session (VNC) and recording.
  *
  * @author Boni Garcia
  * @since 5.0.0
  */
 @EnabledOnOs(LINUX)
-class DockerChromeVncTest {
+class DockerChromeVncRecordingTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
@@ -51,7 +52,7 @@ class DockerChromeVncTest {
     WebDriver driver;
 
     WebDriverManager wdm = WebDriverManager.chromedriver().browserInDocker()
-            .enableVnc();
+            .enableVnc().enableRecording();
 
     @BeforeEach
     void setupTest() {
@@ -79,6 +80,9 @@ class DockerChromeVncTest {
 
         // Active wait to manually inspect
         Thread.sleep(SECONDS.toMillis(WAIT_TIME_SEC));
+
+        Path recordingPath = wdm.getDockerRecordingPath();
+        assertThat(recordingPath).exists();
     }
 
 }

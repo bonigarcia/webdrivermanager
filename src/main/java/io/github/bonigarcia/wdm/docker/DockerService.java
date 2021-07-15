@@ -27,6 +27,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -74,6 +76,7 @@ public class DockerService {
     private static final String BETA = "beta";
     private static final String DEV = "dev";
     private static final String LATEST_MINUS = "latest-";
+    private static final String RECORDING_EXT = ".mp4";
 
     private Config config;
     private HttpClient httpClient;
@@ -120,6 +123,11 @@ public class DockerService {
     public String getGateway(String containerId, String network) {
         return dockerClient.inspectContainerCmd(containerId).exec()
                 .getNetworkSettings().getNetworks().get(network).getGateway();
+    }
+
+    public String getAddress(String containerId, String network) {
+        return dockerClient.inspectContainerCmd(containerId).exec()
+                .getNetworkSettings().getNetworks().get(network).getIpAddress();
     }
 
     public synchronized String startContainer(DockerContainer dockerContainer)
@@ -218,7 +226,7 @@ public class DockerService {
     }
 
     public void pullImageIfNecessary(String cacheKey, String imageId,
-            String browserVersion) throws DockerException {
+            String imageVersion) throws DockerException {
         if (!config.isAvoidingResolutionCache()
                 && !resolutionCache.checkKeyInResolutionCache(cacheKey)) {
             try {
@@ -232,7 +240,7 @@ public class DockerService {
 
                 if (!config.isAvoidingResolutionCache()) {
                     resolutionCache.putValueInResolutionCacheIfEmpty(cacheKey,
-                            browserVersion, config.getTtlForBrowsers());
+                            imageVersion, config.getTtlForBrowsers());
                 }
             } catch (Exception e) {
                 log.warn("Exception pulling image {}: {}", imageId,
@@ -512,6 +520,8 @@ public class DockerService {
         browserContainer.setContainerUrl(browserUrl);
         String gateway = getGateway(containerId, network);
         browserContainer.setGateway(gateway);
+        String address = getAddress(containerId, network);
+        browserContainer.setAddress(address);
         log.trace("Browser remote URL {}", browserUrl);
 
         if (config.isEnabledDockerVnc()) {
@@ -520,6 +530,56 @@ public class DockerService {
         }
 
         return browserContainer;
+    }
+
+    public DockerContainer startRecorderContainer(String dockerImage,
+            String cacheKey, String recorderVersion,
+            DockerContainer browserContainer) {
+        // pull image
+        pullImageIfNecessary(cacheKey, dockerImage, recorderVersion);
+
+        // envs
+        List<String> envs = new ArrayList<>();
+        envs.add("BROWSER_CONTAINER_NAME=" + browserContainer.getAddress());
+        Path recordingPath = getRecordingPath(browserContainer);
+        envs.add("FILE_NAME=" + recordingPath.getFileName().toString());
+
+        // network
+        String network = config.getDockerNetwork();
+
+        // binds
+        List<String> binds = new ArrayList<>();
+        binds.add(recordingPath.toAbsolutePath().getParent().toString()
+                + ":/data");
+
+        // builder
+        DockerContainer recorderContainer = DockerContainer
+                .dockerBuilder(dockerImage).network(network).envs(envs)
+                .binds(binds).sysadmin().build();
+
+        String containerId = startContainer(recorderContainer);
+        recorderContainer.setContainerId(containerId);
+        recorderContainer.setRecordingPath(recordingPath);
+
+        return recorderContainer;
+    }
+
+    public Path getRecordingPath(DockerContainer browserContainer) {
+        Path recordingPath;
+        Path dockerRecordingPath = config.getDockerRecordingOutput();
+
+        if (dockerRecordingPath.toString().toLowerCase(ROOT)
+                .endsWith(RECORDING_EXT)) {
+            recordingPath = dockerRecordingPath;
+        } else {
+            String sessionId = browserContainer.getSessionId();
+            String recordingFileName = browserContainer.getBrowserName() + "_"
+                    + sessionId + RECORDING_EXT;
+            recordingPath = Paths.get(dockerRecordingPath.toString(),
+                    recordingFileName);
+        }
+
+        return recordingPath;
     }
 
 }
