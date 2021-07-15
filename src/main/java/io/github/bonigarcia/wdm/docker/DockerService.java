@@ -320,7 +320,7 @@ public class DockerService {
             List<DockerHubTag> dockerHubTags;
             String browserName = driverManagerType.getNameLowerCase();
             String tagPreffix = browserName + "_";
-            int minus_index = getMinusIndex(browserVersion);
+            int minusIndex = getMinusIndex(browserVersion);
 
             switch (driverManagerType) {
             case CHROME:
@@ -333,7 +333,7 @@ public class DockerService {
                         .map(p -> p.getName().replace(tagPreffix, ""))
                         .sorted(versionComparator::compare).collect(toList());
                 latestVersion = browserList
-                        .get(browserList.size() - 1 - minus_index);
+                        .get(browserList.size() - 1 - minusIndex);
                 break;
 
             case OPERA:
@@ -345,7 +345,7 @@ public class DockerService {
                         .sorted(versionComparator::compare).skip(1)
                         .collect(toList());
                 latestVersion = browserList
-                        .get(browserList.size() - 1 - minus_index);
+                        .get(browserList.size() - 1 - minusIndex);
                 break;
 
             case EDGE:
@@ -358,7 +358,7 @@ public class DockerService {
                 browserList = dockerHubTags.stream().map(DockerHubTag::getName)
                         .sorted(versionComparator::compare).collect(toList());
                 latestVersion = browserList
-                        .get(browserList.size() - 1 - minus_index);
+                        .get(browserList.size() - 1 - minusIndex);
                 break;
 
             default:
@@ -366,12 +366,12 @@ public class DockerService {
                         driverManagerType.getBrowserName()
                                 + " is not available as Docker container");
             }
-            if (minus_index == 0) {
+            if (minusIndex == 0) {
                 log.debug("The latest version of {} in Docker Hub is {}",
                         driverManagerType.getBrowserName(), latestVersion);
             } else {
                 log.debug("The version-{} of {} in Docker Hub is {}",
-                        minus_index, driverManagerType.getBrowserName(),
+                        minusIndex, driverManagerType.getBrowserName(),
                         latestVersion);
             }
 
@@ -384,13 +384,13 @@ public class DockerService {
     }
 
     public int getMinusIndex(String browserVersion) {
-        int minus_index = 0;
+        int minusIndex = 0;
         if (isBrowserVersionLatesMinus(browserVersion)) {
-            minus_index = Integer.parseInt(browserVersion
+            minusIndex = Integer.parseInt(browserVersion
                     .substring(browserVersion.indexOf(LATEST_MINUS)
                             + LATEST_MINUS.length()));
         }
-        return minus_index;
+        return minusIndex;
     }
 
     public String getDockerImage(String browserName, String browserVersion) {
