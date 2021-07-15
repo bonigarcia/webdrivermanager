@@ -49,10 +49,11 @@ class DockerChromeVersionsTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "", "91", "91.0" })
+    @ValueSource(strings = { "", "91", "91.0", "latest", "latest-1",
+            "latest-2" })
     void test(String browserVersion) {
-        driver = WebDriverManager.chromedriver().browserInDocker()
-                .browserVersion(browserVersion).create();
+        driver = WebDriverManager.chromedriver().clearResolutionCache()
+                .browserInDocker().browserVersion(browserVersion).create();
 
         String sutUrl = "https://github.com/bonigarcia/webdrivermanager";
         driver.get(sutUrl);

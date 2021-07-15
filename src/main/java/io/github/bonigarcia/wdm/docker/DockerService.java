@@ -21,6 +21,7 @@ import static io.github.bonigarcia.wdm.docker.DockerHost.defaultAddress;
 import static java.lang.String.format;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.charset.StandardCharsets.UTF_8;
+import static java.util.Locale.ROOT;
 import static java.util.stream.Collectors.toList;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -69,6 +70,10 @@ import io.github.bonigarcia.wdm.versions.VersionComparator;
 public class DockerService {
 
     final Logger log = getLogger(lookup().lookupClass());
+
+    private static final String BETA = "beta";
+    private static final String DEV = "dev";
+    private static final String LATEST_MINUS = "latest-";
 
     private Config config;
     private HttpClient httpClient;
@@ -292,8 +297,9 @@ public class DockerService {
         dockerClient = getDockerClient(url);
     }
 
-    public String getLatestVersionFromDockerHub(
-            DriverManagerType driverManagerType, String cacheKey) {
+    public String getImageVersionFromDockerHub(
+            DriverManagerType driverManagerType, String cacheKey,
+            String browserVersion) {
         String latestVersion = null;
 
         if (!config.isAvoidingResolutionCache() && !resolutionCache
@@ -306,6 +312,7 @@ public class DockerService {
             List<DockerHubTag> dockerHubTags;
             String browserName = driverManagerType.getNameLowerCase();
             String tagPreffix = browserName + "_";
+            int minus_index = getMinusIndex(browserVersion);
 
             switch (driverManagerType) {
             case CHROME:
@@ -317,7 +324,8 @@ public class DockerService {
                         .filter(p -> p.getName().startsWith(tagPreffix))
                         .map(p -> p.getName().replace(tagPreffix, ""))
                         .sorted(versionComparator::compare).collect(toList());
-                latestVersion = browserList.get(browserList.size() - 1);
+                latestVersion = browserList
+                        .get(browserList.size() - 1 - minus_index);
                 break;
 
             case OPERA:
@@ -328,7 +336,8 @@ public class DockerService {
                         .map(p -> p.getName().replace(tagPreffix, ""))
                         .sorted(versionComparator::compare).skip(1)
                         .collect(toList());
-                latestVersion = browserList.get(browserList.size() - 1);
+                latestVersion = browserList
+                        .get(browserList.size() - 1 - minus_index);
                 break;
 
             case EDGE:
@@ -340,7 +349,8 @@ public class DockerService {
                         .listTags(dockerBrowserAerokubeImageFormat);
                 browserList = dockerHubTags.stream().map(DockerHubTag::getName)
                         .sorted(versionComparator::compare).collect(toList());
-                latestVersion = browserList.get(browserList.size() - 1);
+                latestVersion = browserList
+                        .get(browserList.size() - 1 - minus_index);
                 break;
 
             default:
@@ -348,8 +358,14 @@ public class DockerService {
                         driverManagerType.getBrowserName()
                                 + " is not available as Docker container");
             }
-            log.debug("The latest version of {} in Docker Hub is {}",
-                    driverManagerType.getBrowserName(), latestVersion);
+            if (minus_index == 0) {
+                log.debug("The latest version of {} in Docker Hub is {}",
+                        driverManagerType.getBrowserName(), latestVersion);
+            } else {
+                log.debug("The version-{} of {} in Docker Hub is {}",
+                        minus_index, driverManagerType.getBrowserName(),
+                        latestVersion);
+            }
 
         } else {
             latestVersion = resolutionCache
@@ -357,6 +373,16 @@ public class DockerService {
         }
 
         return latestVersion;
+    }
+
+    public int getMinusIndex(String browserVersion) {
+        int minus_index = 0;
+        if (isBrowserVersionLatesMinus(browserVersion)) {
+            minus_index = Integer.parseInt(browserVersion
+                    .substring(browserVersion.indexOf(LATEST_MINUS)
+                            + LATEST_MINUS.length()));
+        }
+        return minus_index;
     }
 
     public String getDockerImage(String browserName, String browserVersion) {
@@ -383,13 +409,26 @@ public class DockerService {
 
     public String getDockerImageFormat(String browserVersion) {
         String dockerImageFormat;
-        if (browserVersion.equalsIgnoreCase("beta")
-                || browserVersion.equalsIgnoreCase("dev")) {
+        if (isBrowserVersionBetaOrDev(browserVersion)) {
             dockerImageFormat = config.getDockerBrowserTwilioImageFormat();
         } else {
             dockerImageFormat = config.getDockerBrowserSelenoidImageFormat();
         }
         return dockerImageFormat;
+    }
+
+    public boolean isBrowserVersionWildCard(String browserVersion) {
+        return isBrowserVersionBetaOrDev(browserVersion)
+                || isBrowserVersionLatesMinus(browserVersion);
+    }
+
+    public boolean isBrowserVersionBetaOrDev(String browserVersion) {
+        return browserVersion.equalsIgnoreCase(BETA)
+                || browserVersion.equalsIgnoreCase(DEV);
+    }
+
+    public boolean isBrowserVersionLatesMinus(String browserVersion) {
+        return browserVersion.toLowerCase(ROOT).contains(LATEST_MINUS);
     }
 
     public DockerContainer startNoVncContainer(String dockerImage,

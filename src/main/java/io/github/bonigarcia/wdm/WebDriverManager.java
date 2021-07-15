@@ -1244,13 +1244,14 @@ public abstract class WebDriverManager {
         String browserVersion = getBrowserVersion();
         String browserCacheKey = browserName + "-container-";
 
-        if (isNullOrEmpty(browserVersion)) {
-            browserCacheKey += "latest";
-            browserVersion = dockerService.getLatestVersionFromDockerHub(
-                    getDriverManagerType(), browserCacheKey);
+        if (isUnknown(browserVersion)
+                || dockerService.isBrowserVersionLatesMinus(browserVersion)) {
+            browserCacheKey += isNullOrEmpty(browserVersion) ? "latest"
+                    : browserVersion;
+            browserVersion = dockerService.getImageVersionFromDockerHub(
+                    getDriverManagerType(), browserCacheKey, browserVersion);
         } else {
-            if (!browserVersion.equalsIgnoreCase("beta")
-                    && !browserVersion.equalsIgnoreCase("dev")
+            if (!dockerService.isBrowserVersionWildCard(browserVersion)
                     && !browserVersion.contains(".")) {
                 browserVersion += ".0";
             }
