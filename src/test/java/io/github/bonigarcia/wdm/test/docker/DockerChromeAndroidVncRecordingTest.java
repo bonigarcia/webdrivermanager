@@ -20,7 +20,6 @@ import static java.lang.invoke.MethodHandles.lookup;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.condition.OS.LINUX;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.net.HttpURLConnection;
@@ -29,8 +28,8 @@ import java.nio.file.Path;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 
@@ -42,7 +41,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @author Boni Garcia
  * @since 5.0.0
  */
-@EnabledOnOs(LINUX)
+@Disabled("Hardware server or virtual machine with nested virtualization support is required to run Chrome Mobile images")
 class DockerChromeAndroidVncRecordingTest {
 
     final Logger log = getLogger(lookup().lookupClass());
