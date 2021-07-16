@@ -332,7 +332,7 @@ public abstract class WebDriverManager {
                 }
             } catch (Exception e) {
                 log.warn("Exception closing {} ({})", driverBrowser.getDriver(),
-                        e.getCause());
+                        e.getMessage());
             }
         }
         webDriverList.clear();
@@ -1260,7 +1260,7 @@ public abstract class WebDriverManager {
                                 quit();
                             } catch (Exception e) {
                                 log.warn("Exception in wdm-shutdown-hook ({})",
-                                        e.getCause());
+                                        e.getMessage());
                             }
                         }
                     });
