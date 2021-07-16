@@ -318,16 +318,21 @@ public abstract class WebDriverManager {
 
     public synchronized void quit() {
         for (WebDriverBrowser driverBrowser : webDriverList) {
-            WebDriver driver = driverBrowser.getDriver();
-            if (driver != null) {
-                driver.quit();
-            }
+            try {
+                WebDriver driver = driverBrowser.getDriver();
+                if (driver != null) {
+                    driver.quit();
+                }
 
-            if (dockerService != null) {
-                List<DockerContainer> dockerContainerList = driverBrowser
-                        .getDockerContainerList();
-                dockerContainerList.stream()
-                        .forEach(dockerService::stopAndRemoveContainer);
+                if (dockerService != null) {
+                    List<DockerContainer> dockerContainerList = driverBrowser
+                            .getDockerContainerList();
+                    dockerContainerList.stream()
+                            .forEach(dockerService::stopAndRemoveContainer);
+                }
+            } catch (Exception e) {
+                log.warn("Exception closing {} ({})", driverBrowser.getDriver(),
+                        e.getCause());
             }
         }
         webDriverList.clear();
@@ -1239,9 +1244,8 @@ public abstract class WebDriverManager {
         } catch (Exception e) {
             log.error("There was an error creating WebDriver object for {}",
                     getDriverManagerType().getBrowserName(), e);
-        } finally {
-            addShutdownHook();
         }
+        addShutdownHook();
 
         return driver;
     }
@@ -1255,8 +1259,8 @@ public abstract class WebDriverManager {
                             try {
                                 quit();
                             } catch (Exception e) {
-                                log.warn("Exception in wdm-shutdown-hook: {}",
-                                        e.getMessage());
+                                log.warn("Exception in wdm-shutdown-hook ({})",
+                                        e.getCause());
                             }
                         }
                     });
