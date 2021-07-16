@@ -53,7 +53,7 @@ public class WebDriverCreator {
         this.config = config;
     }
 
-    public WebDriverBrowser createLocalWebDriver(Class<?> browserClass,
+    public WebDriver createLocalWebDriver(Class<?> browserClass,
             Capabilities capabilities)
             throws InstantiationException, IllegalAccessException,
             InvocationTargetException, NoSuchMethodException {
@@ -66,10 +66,10 @@ public class WebDriverCreator {
             driver = (WebDriver) browserClass.getDeclaredConstructor()
                     .newInstance();
         }
-        return createWebDriverBrowser(driver);
+        return driver;
     }
 
-    public WebDriverBrowser createRemoteWebDriver(String remoteUrl,
+    public WebDriver createRemoteWebDriver(String remoteUrl,
             Capabilities capabilities) {
         WebDriver webdriver = null;
         int waitTimeoutSec = config.getTimeout();
@@ -108,11 +108,7 @@ public class WebDriverCreator {
 
         } while (webdriver == null);
 
-        return createWebDriverBrowser(webdriver);
-    }
-
-    public WebDriverBrowser createWebDriverBrowser(WebDriver driver) {
-        return new WebDriverBrowser(driver);
+        return webdriver;
     }
 
     public String getSessionId(WebDriver webDriver) {

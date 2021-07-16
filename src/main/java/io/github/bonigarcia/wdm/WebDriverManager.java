@@ -1239,8 +1239,9 @@ public abstract class WebDriverManager {
         } catch (Exception e) {
             log.error("There was an error creating WebDriver object for {}",
                     getDriverManagerType().getBrowserName(), e);
+        } finally {
+            addShutdownHook();
         }
-        addShutdownHook();
 
         return driver;
     }
@@ -1298,12 +1299,16 @@ public abstract class WebDriverManager {
         browserContainer.setBrowserName(browserName);
         String containerUrl = browserContainer.getContainerUrl();
 
-        WebDriverBrowser driverBrowser = webDriverCreator
-                .createRemoteWebDriver(containerUrl, getCapabilities());
+        WebDriverBrowser driverBrowser = new WebDriverBrowser();
+        driverBrowser.addDockerContainer(browserContainer);
+        webDriverList.add(driverBrowser);
+
+        WebDriver driver = webDriverCreator.createRemoteWebDriver(containerUrl,
+                getCapabilities());
+        driverBrowser.setDriver(driver);
         String sessionId = webDriverCreator
                 .getSessionId(driverBrowser.getDriver());
         browserContainer.setSessionId(sessionId);
-
         driverBrowser.addDockerContainer(browserContainer);
 
         if (config.isEnabledDockerVnc()) {
@@ -1332,8 +1337,6 @@ public abstract class WebDriverManager {
             log.info("Starting recording {}", recordingPath);
         }
 
-        webDriverList.add(driverBrowser);
-
         return driverBrowser.getDriver();
     }
 
@@ -1342,11 +1345,11 @@ public abstract class WebDriverManager {
             InvocationTargetException, NoSuchMethodException {
         Class<?> browserClass = Class
                 .forName(getDriverManagerType().browserClass());
-        WebDriverBrowser driverBrowser = webDriverCreator
-                .createLocalWebDriver(browserClass, options);
-        webDriverList.add(driverBrowser);
+        WebDriver driver = webDriverCreator.createLocalWebDriver(browserClass,
+                options);
+        webDriverList.add(new WebDriverBrowser(driver));
 
-        return driverBrowser.getDriver();
+        return driver;
     }
 
     protected Capabilities getCapabilities() {

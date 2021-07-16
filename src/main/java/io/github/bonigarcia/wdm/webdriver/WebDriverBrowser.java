@@ -40,13 +40,21 @@ public class WebDriverBrowser {
     WebDriver driver;
     List<DockerContainer> dockerContainerList;
 
-    public WebDriverBrowser(WebDriver driver) {
-        this.driver = driver;
+    public WebDriverBrowser() {
         this.dockerContainerList = new ArrayList<>();
+    }
+
+    public WebDriverBrowser(WebDriver driver) {
+        super();
+        this.driver = driver;
     }
 
     public WebDriver getDriver() {
         return driver;
+    }
+
+    public void setDriver(WebDriver driver) {
+        this.driver = driver;
     }
 
     public List<DockerContainer> getDockerContainerList() {
