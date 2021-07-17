@@ -135,6 +135,7 @@ public abstract class WebDriverManager {
     protected static final String SLASH = "/";
     protected static final String LATEST_RELEASE = "LATEST_RELEASE";
     protected static final NamespaceContext S3_NAMESPACE_CONTEXT = new S3NamespaceContext();
+    protected static final String IN_DOCKER = "-in-docker";
 
     protected abstract List<URL> getDriverUrls() throws IOException;
 
@@ -246,7 +247,7 @@ public abstract class WebDriverManager {
         return getInstance(webDriverClass.getName());
     }
 
-    protected static synchronized WebDriverManager getInstance(
+    public static synchronized WebDriverManager getInstance(
             String webDriverClass) {
         switch (webDriverClass) {
         case "org.openqa.selenium.chrome.ChromeDriver":
@@ -264,6 +265,32 @@ public abstract class WebDriverManager {
         default:
             return voiddriver();
         }
+    }
+
+    public static synchronized WebDriverManager getInstance() {
+        WebDriverManager manager = voiddriver();
+        String defaultBrowser = manager.config().getDefaultBrowser();
+        try {
+            if (defaultBrowser.contains(IN_DOCKER)) {
+                defaultBrowser = defaultBrowser.substring(0,
+                        defaultBrowser.indexOf(IN_DOCKER));
+                manager = getInstance(DriverManagerType
+                        .valueOf(defaultBrowser.toUpperCase(ROOT)));
+                manager.dockerEnabled = true;
+
+            } else {
+                manager = getInstance(DriverManagerType
+                        .valueOf(defaultBrowser.toUpperCase(ROOT)));
+            }
+            DriverManagerType managerType = DriverManagerType
+                    .valueOf(defaultBrowser.toUpperCase(ROOT));
+            return getInstance(managerType);
+
+        } catch (Exception e) {
+            log.error("Error trying to get manager for browser {}",
+                    defaultBrowser, e);
+        }
+        return manager;
     }
 
     public synchronized void setup() {

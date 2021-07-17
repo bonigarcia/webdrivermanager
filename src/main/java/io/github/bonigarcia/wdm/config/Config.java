@@ -108,6 +108,8 @@ public class Config {
             String.class);
     ConfigKey<String> gitHubToken = new ConfigKey<>("wdm.gitHubToken",
             String.class);
+    ConfigKey<String> defaultBrowser = new ConfigKey<>("wdm.defaultBrowser",
+            String.class);
 
     ConfigKey<String> chromeDriverVersion = new ConfigKey<>(
             "wdm.chromeDriverVersion", String.class);
@@ -628,6 +630,15 @@ public class Config {
 
     public Config setGitHubToken(String value) {
         this.gitHubToken.setValue(value);
+        return this;
+    }
+
+    public String getDefaultBrowser() {
+        return resolve(defaultBrowser);
+    }
+
+    public Config setDefaultBrowser(String value) {
+        this.defaultBrowser.setValue(value);
         return this;
     }
 
