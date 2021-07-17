@@ -22,6 +22,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
@@ -34,6 +35,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @author Boni Garcia
  * @since 5.0.0
  */
+@Disabled
 class ChromeRemoteTest {
 
     final Logger log = getLogger(lookup().lookupClass());
