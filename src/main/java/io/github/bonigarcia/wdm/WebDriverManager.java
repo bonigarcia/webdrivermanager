@@ -306,7 +306,7 @@ public abstract class WebDriverManager {
         if (config().getClearingResolutionCache()) {
             clearResolutionCache();
         }
-        if (dockerEnabled || config().getRemoteAddress() != null) {
+        if (dockerEnabled || !isNullOrEmpty(config().getRemoteAddress())) {
             return;
         }
         if (driverManagerType != null) {
@@ -413,17 +413,6 @@ public abstract class WebDriverManager {
     }
 
     public WebDriverManager withRemoteAddress(String remoteAddress) {
-        try {
-            return withRemoteAddress(new URL(remoteAddress));
-        } catch (Exception e) {
-            log.error(
-                    "Exception trying to create manager using remote address {}",
-                    remoteAddress, e);
-        }
-        return instanceMap.get(getDriverManagerType());
-    }
-
-    public WebDriverManager withRemoteAddress(URL remoteAddress) {
         config().setRemoteAddress(remoteAddress);
         return instanceMap.get(getDriverManagerType());
     }
@@ -1283,15 +1272,15 @@ public abstract class WebDriverManager {
             webDriverCreator = new WebDriverCreator(config);
         }
         try {
-            String remoteAddress = config().getRemoteAddress().toString();
-            if (remoteAddress != null) {
+            String remoteAddress = config().getRemoteAddress();
+            if (dockerEnabled) {
+                driver = createDockerWebDriver();
+            } else if (!isNullOrEmpty(remoteAddress)) {
                 Capabilities caps = Optional.ofNullable(capabilities)
                         .orElse(getCapabilities());
                 driver = webDriverCreator.createRemoteWebDriver(remoteAddress,
                         caps);
 
-            } else if (dockerEnabled) {
-                driver = createDockerWebDriver();
             } else {
                 driver = createLocalWebDriver();
             }
