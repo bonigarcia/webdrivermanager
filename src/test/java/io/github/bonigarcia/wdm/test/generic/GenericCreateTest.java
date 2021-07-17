@@ -18,9 +18,11 @@ package io.github.bonigarcia.wdm.test.generic;
 
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.condition.OS.LINUX;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.WebDriver;
@@ -34,6 +36,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @author Boni Garcia
  * @since 5.0.0
  */
+@EnabledOnOs(LINUX)
 class GenericCreateTest {
 
     final Logger log = getLogger(lookup().lookupClass());
