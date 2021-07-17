@@ -35,12 +35,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.edge.EdgeOptions;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.Architecture;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
 import io.github.bonigarcia.wdm.config.OperatingSystem;
+import io.github.bonigarcia.wdm.webdriver.EdgeOptionsWithArguments;
 
 /**
  * Manager for Microsoft Edge.
@@ -200,7 +200,7 @@ public class EdgeDriverManager extends WebDriverManager {
 
     @Override
     protected Capabilities getCapabilities() {
-        EdgeOptions options = new EdgeOptions();
+        EdgeOptionsWithArguments options = new EdgeOptionsWithArguments();
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-gpu");
         options.addArguments("--disable-dev-shm-usage");
