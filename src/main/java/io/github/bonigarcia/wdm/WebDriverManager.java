@@ -299,6 +299,7 @@ public abstract class WebDriverManager {
         initResolutionCache();
         cacheHandler = new CacheHandler(config);
         httpClient = new HttpClient(config());
+        dockerService = new DockerService(config, httpClient, resolutionCache);
 
         if (config().getClearingDriverCache()) {
             clearDriverCache();
@@ -1318,11 +1319,6 @@ public abstract class WebDriverManager {
     }
 
     protected WebDriver createDockerWebDriver() {
-        if (dockerService == null) {
-            dockerService = new DockerService(config, httpClient,
-                    resolutionCache);
-        }
-
         String browserName = getKeyForResolutionCache();
         if (androidEnabled) {
             browserName += "-mobile";
