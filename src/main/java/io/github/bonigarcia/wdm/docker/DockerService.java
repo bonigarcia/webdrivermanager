@@ -614,4 +614,8 @@ public class DockerService {
         return recordingPath;
     }
 
+    public String getVersionFromImage(String dockerImage) {
+        return dockerImage.substring(dockerImage.indexOf(":") + 1);
+    }
+
 }

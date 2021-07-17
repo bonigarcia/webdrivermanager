@@ -1360,8 +1360,7 @@ public abstract class WebDriverManager {
 
         if (config.isEnabledDockerVnc()) {
             String noVncImage = config.getDockerNoVncImage();
-            String noVncVersion = noVncImage
-                    .substring(noVncImage.indexOf(":") + 1);
+            String noVncVersion = dockerService.getVersionFromImage(noVncImage);
             DockerContainer noVncContainer = dockerService.startNoVncContainer(
                     noVncImage, "novnc-container", noVncVersion,
                     browserContainer);
@@ -1373,8 +1372,8 @@ public abstract class WebDriverManager {
 
         if (config.isEnabledDockerRecording()) {
             String recorderImage = config.getDockerRecordingImage();
-            String recorderVersion = recorderImage
-                    .substring(recorderImage.indexOf(":") + 1);
+            String recorderVersion = dockerService
+                    .getVersionFromImage(recorderImage);
             DockerContainer recorderContainer = dockerService
                     .startRecorderContainer(recorderImage, "recorder-container",
                             recorderVersion, browserContainer);
