@@ -81,7 +81,6 @@ public class DockerService {
 
     private Config config;
     private HttpClient httpClient;
-    private String dockerDefaultSocket;
     private DockerClient dockerClient;
     private ResolutionCache resolutionCache;
     private URI dockerHostUri;
@@ -91,8 +90,6 @@ public class DockerService {
         this.config = config;
         this.httpClient = httpClient;
         this.resolutionCache = resolutionCache;
-
-        dockerDefaultSocket = config.getDockerDefaultSocket();
 
         DockerHost dockerHostFromEnv = DockerHost.fromEnv();
         dockerClient = getDockerClient(dockerHostFromEnv.endpoint());
@@ -290,10 +287,6 @@ public class DockerService {
         } else {
             dockerClient.removeContainerCmd(containerId).exec();
         }
-    }
-
-    public String getDockerDefaultSocket() {
-        return dockerDefaultSocket;
     }
 
     public void close() throws IOException {

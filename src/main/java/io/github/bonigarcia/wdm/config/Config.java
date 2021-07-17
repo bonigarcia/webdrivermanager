@@ -185,8 +185,6 @@ public class Config {
     ConfigKey<String> browserVersionDetectionCommand = new ConfigKey<>(
             "wdm.browserVersionDetectionCommand", String.class);
 
-    ConfigKey<String> dockerDefaultSocket = new ConfigKey<>(
-            "wdm.dockerDefaultSocket", String.class);
     ConfigKey<String> dockerHubUrl = new ConfigKey<>("wdm.dockerHubUrl",
             String.class);
     ConfigKey<String> dockerNetwork = new ConfigKey<>("wdm.dockerNetwork",
@@ -948,15 +946,6 @@ public class Config {
 
     public Config setBrowserVersionDetectionCommand(String value) {
         this.browserVersionDetectionCommand.setValue(value);
-        return this;
-    }
-
-    public String getDockerDefaultSocket() {
-        return resolve(dockerDefaultSocket);
-    }
-
-    public Config setDockerDefaultSocket(String value) {
-        this.dockerDefaultSocket.setValue(value);
         return this;
     }
 
