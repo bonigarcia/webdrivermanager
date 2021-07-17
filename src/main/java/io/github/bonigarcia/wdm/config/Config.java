@@ -233,6 +233,8 @@ public class Config {
             "wdm.dockerRecordingImage", String.class);
     ConfigKey<String> dockerNoVncImage = new ConfigKey<>("wdm.dockerNoVncImage",
             String.class);
+    ConfigKey<String> dockerCustomImage = new ConfigKey<>(
+            "wdm.dockerCustomImage", String.class);
 
     ConfigKey<String> remoteAddress = new ConfigKey<>("wdm.remoteAddress",
             String.class);
@@ -1164,6 +1166,15 @@ public class Config {
 
     public Config setDockerNoVncImage(String value) {
         this.dockerNoVncImage.setValue(value);
+        return this;
+    }
+
+    public String getDockerCustomImage() {
+        return resolve(dockerCustomImage);
+    }
+
+    public Config setDockerCustomImage(String value) {
+        this.dockerCustomImage.setValue(value);
         return this;
     }
 

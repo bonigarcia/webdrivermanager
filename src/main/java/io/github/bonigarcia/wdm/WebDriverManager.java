@@ -417,6 +417,11 @@ public abstract class WebDriverManager {
         return instanceMap.get(getDriverManagerType());
     }
 
+    public WebDriverManager withDockerImage(String dockerImage) {
+        config().setDockerCustomImage(dockerImage);
+        return instanceMap.get(getDriverManagerType());
+    }
+
     public WebDriverManager driverVersion(String driverVersion) {
         setDriverVersion(driverVersion);
         return instanceMap.get(getDriverManagerType());
@@ -1325,23 +1330,32 @@ public abstract class WebDriverManager {
         String browserVersion = getBrowserVersion();
         String browserCacheKey = browserName + "-container-";
 
-        if (isUnknown(browserVersion)
-                || dockerService.isBrowserVersionLatesMinus(browserVersion)) {
-            browserCacheKey += isNullOrEmpty(browserVersion) ? "latest"
-                    : browserVersion;
-            browserVersion = dockerService.getImageVersionFromDockerHub(
-                    getDriverManagerType(), browserCacheKey, browserName,
-                    browserVersion, androidEnabled);
+        String dockerCustomImage = config().getDockerCustomImage();
+        String browserImage;
+        if (!isNullOrEmpty(dockerCustomImage)) {
+            browserImage = dockerCustomImage;
+            browserVersion = dockerService.getVersionFromImage(browserImage);
+            browserCacheKey += "custom";
+
         } else {
-            if (!dockerService.isBrowserVersionWildCard(browserVersion)
-                    && !browserVersion.contains(".")) {
-                browserVersion += ".0";
+            if (isUnknown(browserVersion) || dockerService
+                    .isBrowserVersionLatesMinus(browserVersion)) {
+                browserCacheKey += isNullOrEmpty(browserVersion) ? "latest"
+                        : browserVersion;
+                browserVersion = dockerService.getImageVersionFromDockerHub(
+                        getDriverManagerType(), browserCacheKey, browserName,
+                        browserVersion, androidEnabled);
+            } else {
+                if (!dockerService.isBrowserVersionWildCard(browserVersion)
+                        && !browserVersion.contains(".")) {
+                    browserVersion += ".0";
+                }
+                browserCacheKey += browserVersion;
             }
-            browserCacheKey += browserVersion;
+            browserImage = dockerService.getDockerImage(browserName,
+                    browserVersion, androidEnabled);
         }
 
-        String browserImage = dockerService.getDockerImage(browserName,
-                browserVersion, androidEnabled);
         DockerContainer browserContainer = dockerService.startBrowserContainer(
                 browserImage, browserCacheKey, browserVersion, androidEnabled);
         browserContainer.setBrowserName(browserName);
