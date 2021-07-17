@@ -213,8 +213,6 @@ public class Config {
             Integer.class);
     ConfigKey<Integer> dockerNoVncPort = new ConfigKey<>("wdm.dockerNoVncPort",
             Integer.class);
-    ConfigKey<Integer> dockerRecordingTimeoutSec = new ConfigKey<>(
-            "wdm.dockerRecordingTimeoutSec", Integer.class);
     ConfigKey<Integer> dockerRecordingFrameRate = new ConfigKey<>(
             "wdm.dockerRecordingFrameRate", Integer.class);
     ConfigKey<String> dockerRecordingScreenSize = new ConfigKey<>(
@@ -1076,15 +1074,6 @@ public class Config {
 
     public Config setDockerNoVncPort(int value) {
         this.dockerNoVncPort.setValue(value);
-        return this;
-    }
-
-    public int getDockerRecordingTimeoutSec() {
-        return resolve(dockerRecordingTimeoutSec);
-    }
-
-    public Config setDockerRecordingTimeoutSec(int value) {
-        this.dockerRecordingTimeoutSec.setValue(value);
         return this;
     }
 

@@ -82,7 +82,6 @@ public class DockerService {
     private Config config;
     private HttpClient httpClient;
     private String dockerDefaultSocket;
-    private int dockerRecordingTimeoutSec;
     private DockerClient dockerClient;
     private ResolutionCache resolutionCache;
     private URI dockerHostUri;
@@ -94,7 +93,6 @@ public class DockerService {
         this.resolutionCache = resolutionCache;
 
         dockerDefaultSocket = config.getDockerDefaultSocket();
-        dockerRecordingTimeoutSec = config.getDockerRecordingTimeoutSec();
 
         DockerHost dockerHostFromEnv = DockerHost.fromEnv();
         dockerClient = getDockerClient(dockerHostFromEnv.endpoint());
@@ -296,10 +294,6 @@ public class DockerService {
 
     public String getDockerDefaultSocket() {
         return dockerDefaultSocket;
-    }
-
-    public int getDockerWaitTimeoutSec() {
-        return dockerRecordingTimeoutSec;
     }
 
     public void close() throws IOException {
