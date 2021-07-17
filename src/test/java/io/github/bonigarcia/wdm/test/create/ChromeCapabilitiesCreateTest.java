@@ -30,12 +30,12 @@ import org.slf4j.Logger;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 /**
- * Test with Chrome and WebDriverManager's creator.
+ * Test with Chrome with Capabilities and WebDriverManager's creator.
  *
  * @author Boni Garcia
  * @since 5.0.0
  */
-class ChromeOptionsCreateTest {
+class ChromeCapabilitiesCreateTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
@@ -45,7 +45,7 @@ class ChromeOptionsCreateTest {
     void setupTest() {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless");
-        driver = WebDriverManager.chromedriver().withOptions(options).create();
+        driver = WebDriverManager.chromedriver().withCapabilities(options).create();
     }
 
     @AfterEach

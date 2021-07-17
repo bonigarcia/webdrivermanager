@@ -234,6 +234,9 @@ public class Config {
     ConfigKey<String> dockerNoVncImage = new ConfigKey<>("wdm.dockerNoVncImage",
             String.class);
 
+    ConfigKey<URL> remoteAddress = new ConfigKey<>("wdm.remoteAddress",
+            URL.class);
+
     private <T> T resolve(ConfigKey<T> configKey) {
         String name = configKey.getName();
         T tValue = configKey.getValue();
@@ -1161,6 +1164,15 @@ public class Config {
 
     public Config setDockerNoVncImage(String value) {
         this.dockerNoVncImage.setValue(value);
+        return this;
+    }
+
+    public URL getRemoteAddress() {
+        return resolve(remoteAddress);
+    }
+
+    public Config setRemoteAddress(URL value) {
+        this.remoteAddress.setValue(value);
         return this;
     }
 

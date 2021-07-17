@@ -162,26 +162,27 @@ public abstract class WebDriverManager {
 
     public abstract DriverManagerType getDriverManagerType();
 
+    protected Config config = new Config();
     protected HttpClient httpClient;
     protected Downloader downloader;
-    protected String downloadedDriverVersion;
-    protected String downloadedDriverPath;
+    protected ResolutionCache resolutionCache;
+    protected CacheHandler cacheHandler;
+    protected VersionDetector versionDetector;
+    protected WebDriverCreator webDriverCreator;
+    protected DockerService dockerService;
+
     protected boolean mirrorLog;
     protected boolean forcedArch;
     protected boolean forcedOs;
     protected int retryCount = 0;
-    protected Config config = new Config();
-    protected ResolutionCache resolutionCache;
-    protected CacheHandler cacheHandler;
-    protected VersionDetector versionDetector;
-    protected Capabilities options;
-
+    protected Capabilities capabilities;
     protected boolean shutdownHook = false;
     protected boolean dockerEnabled = false;
     protected boolean androidEnabled = false;
-    protected WebDriverCreator webDriverCreator;
-    protected DockerService dockerService;
     protected List<WebDriverBrowser> webDriverList = new CopyOnWriteArrayList<>();
+
+    protected String downloadedDriverVersion;
+    protected String downloadedDriverPath;
     protected String noVncUrl;
     protected Path recordingPath;
 
@@ -305,7 +306,7 @@ public abstract class WebDriverManager {
         if (config().getClearingResolutionCache()) {
             clearResolutionCache();
         }
-        if (dockerEnabled) {
+        if (dockerEnabled || config().getRemoteAddress() != null) {
             return;
         }
         if (driverManagerType != null) {
@@ -406,8 +407,24 @@ public abstract class WebDriverManager {
         return instanceMap.get(getDriverManagerType());
     }
 
-    public WebDriverManager withOptions(Capabilities options) {
-        this.options = options;
+    public WebDriverManager withCapabilities(Capabilities options) {
+        this.capabilities = options;
+        return instanceMap.get(getDriverManagerType());
+    }
+
+    public WebDriverManager withRemoteAddress(String remoteAddress) {
+        try {
+            return withRemoteAddress(new URL(remoteAddress));
+        } catch (Exception e) {
+            log.error(
+                    "Exception trying to create manager using remote address {}",
+                    remoteAddress, e);
+        }
+        return instanceMap.get(getDriverManagerType());
+    }
+
+    public WebDriverManager withRemoteAddress(URL remoteAddress) {
+        config().setRemoteAddress(remoteAddress);
         return instanceMap.get(getDriverManagerType());
     }
 
@@ -1181,6 +1198,7 @@ public abstract class WebDriverManager {
             shutdownHook = false;
             dockerEnabled = false;
             androidEnabled = false;
+            capabilities = null;
         }
     }
 
@@ -1265,8 +1283,18 @@ public abstract class WebDriverManager {
             webDriverCreator = new WebDriverCreator(config);
         }
         try {
-            driver = dockerEnabled ? createDockerWebDriver()
-                    : createLocalWebDriver();
+            String remoteAddress = config().getRemoteAddress().toString();
+            if (remoteAddress != null) {
+                Capabilities caps = Optional.ofNullable(capabilities)
+                        .orElse(getCapabilities());
+                driver = webDriverCreator.createRemoteWebDriver(remoteAddress,
+                        caps);
+
+            } else if (dockerEnabled) {
+                driver = createDockerWebDriver();
+            } else {
+                driver = createLocalWebDriver();
+            }
 
         } catch (Exception e) {
             log.error("There was an error creating WebDriver object for {}",
@@ -1376,7 +1404,7 @@ public abstract class WebDriverManager {
         Class<?> browserClass = Class
                 .forName(getDriverManagerType().browserClass());
         WebDriver driver = webDriverCreator.createLocalWebDriver(browserClass,
-                options);
+                capabilities);
         webDriverList.add(new WebDriverBrowser(driver));
 
         return driver;
