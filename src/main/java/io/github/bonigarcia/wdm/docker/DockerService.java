@@ -581,6 +581,7 @@ public class DockerService {
         Path recordingPath = getRecordingPath(browserContainer);
         envs.add("FILE_NAME=" + recordingPath.getFileName().toString());
         envs.add("VIDEO_SIZE=" + config.getDockerVideoSize());
+        envs.add("FRAME_RATE=" + config.getDockerRecordingFrameRate());
 
         // network
         String network = config.getDockerNetwork();

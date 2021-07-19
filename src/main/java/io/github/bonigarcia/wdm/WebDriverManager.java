@@ -414,6 +414,11 @@ public abstract class WebDriverManager {
         return instanceMap.get(getDriverManagerType());
     }
 
+    public WebDriverManager dockerRecordingFrameRate(int frameRate) {
+        config().setDockerRecordingFrameRate(frameRate);
+        return instanceMap.get(getDriverManagerType());
+    }
+
     public WebDriverManager enableVnc() {
         config().setDockerEnableVnc(true);
         return instanceMap.get(getDriverManagerType());
