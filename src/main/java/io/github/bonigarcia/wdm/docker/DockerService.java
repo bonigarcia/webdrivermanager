@@ -119,7 +119,7 @@ public class DockerService {
         String host = getDefaultHost();
         if (IS_OS_LINUX) {
             String[] commandArray = new String[] { "bash", "-c",
-                    "cat /proc/self/cgroup | grep \"docker\" | sed s/\\\\//\\\\n/g | tail -1" };
+                    "cat /proc/self/cgroup | grep docker" };
             String container = runAndWait(false, commandArray);
             if (!isNullOrEmpty(container)) {
                 host = getGateway(containerId, network);
