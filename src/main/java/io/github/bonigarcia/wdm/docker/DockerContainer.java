@@ -44,6 +44,7 @@ public class DockerContainer {
     private Optional<List<String>> cmd;
     private Optional<List<String>> entryPoint;
     private Optional<List<Mount>> mounts;
+    private Optional<Long> shmSize;
     private boolean privileged;
     private boolean sysadmin;
     private String containerId;
@@ -68,6 +69,7 @@ public class DockerContainer {
         this.mounts = builder.mounts != null ? of(builder.mounts) : empty();
         this.privileged = builder.privileged;
         this.sysadmin = builder.sysadmin;
+        this.shmSize = builder.shmSize != 0 ? of(builder.shmSize) : empty();
     }
 
     public static DockerBuilder dockerBuilder(String imageId) {
@@ -130,6 +132,10 @@ public class DockerContainer {
         return sysadmin;
     }
 
+    public Optional<Long> getShmSize() {
+        return shmSize;
+    }
+
     public String getGateway() {
         return gateway;
     }
@@ -186,6 +192,7 @@ public class DockerContainer {
         private String network;
         private List<String> entryPoint;
         private List<Mount> mounts;
+        private Long shmSize = 0L;
         private boolean privileged = false;
         private boolean sysadmin = false;
         private List<String> exposedPorts;
@@ -227,6 +234,11 @@ public class DockerContainer {
 
         public DockerBuilder mounts(List<Mount> mounts) {
             this.mounts = mounts;
+            return this;
+        }
+
+        public DockerBuilder shmSize(Long shmSize) {
+            this.shmSize = shmSize;
             return this;
         }
 

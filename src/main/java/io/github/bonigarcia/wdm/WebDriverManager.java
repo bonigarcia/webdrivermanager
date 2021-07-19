@@ -399,6 +399,11 @@ public abstract class WebDriverManager {
         return instanceMap.get(getDriverManagerType());
     }
 
+    public WebDriverManager dockerShmSize(String size) {
+        config().setDockerShmSize(size);
+        return instanceMap.get(getDriverManagerType());
+    }
+
     public WebDriverManager dockerTmpfsSize(String size) {
         config().setDockerTmpfsSize(size);
         return instanceMap.get(getDriverManagerType());

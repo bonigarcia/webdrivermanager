@@ -195,6 +195,8 @@ public class Config {
             String.class);
     ConfigKey<String> dockerLang = new ConfigKey<>("wdm.dockerLang",
             String.class);
+    ConfigKey<String> dockerShmSize = new ConfigKey<>("wdm.dockerShmSize",
+            String.class);
     ConfigKey<String> dockerTmpfsSize = new ConfigKey<>("wdm.dockerTmpfsSize",
             String.class);
     ConfigKey<String> dockerTmpfsMount = new ConfigKey<>("wdm.dockerTmpfsMount",
@@ -987,21 +989,33 @@ public class Config {
         return this;
     }
 
-    public long getDockerTmpfsSizeBytes() {
-        String size = getDockerTmpfsSize().toLowerCase(ROOT);
+    public long getDockerMemSizeBytes(String memSize) {
+        String size = memSize.toLowerCase(ROOT);
         long bytes = 0;
         try {
             bytes = Integer.parseInt(size.substring(0, size.length() - 1));
         } catch (Exception e) {
             log.warn("Exception parsing size to bytes", e);
         }
-        if (size.endsWith("m")) {
+        if (size.endsWith("g")) {
+            bytes *= 1024 * 1024 * 1024;
+        } else if (size.endsWith("m")) {
             bytes *= 1024 * 1024;
         } else if (size.endsWith("k")) {
             bytes *= 1024;
         }
-        log.trace("Tmpfs size {} ({} bytes)", getDockerTmpfsSize(), bytes);
+        log.trace("The memory size {} is equivalent to {} bytes)", memSize,
+                bytes);
         return bytes;
+    }
+
+    public String getDockerShmSize() {
+        return resolve(dockerShmSize);
+    }
+
+    public Config setDockerShmSize(String value) {
+        this.dockerShmSize.setValue(value);
+        return this;
     }
 
     public String getDockerTmpfsSize() {

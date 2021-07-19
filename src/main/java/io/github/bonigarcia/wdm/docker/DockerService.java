@@ -147,6 +147,13 @@ public class DockerService {
                 log.trace("Adding sysadmin capabilty");
                 hostConfigBuilder.withCapAdd(Capability.SYS_ADMIN);
             }
+
+            Optional<Long> shmSize = dockerContainer.getShmSize();
+            if (shmSize.isPresent()) {
+                log.trace("Using shm size: {}", shmSize.get());
+                hostConfigBuilder.withShmSize(shmSize.get());
+            }
+
             Optional<String> network = dockerContainer.getNetwork();
             if (network.isPresent()) {
                 log.trace("Using network: {}", network.get());
@@ -509,11 +516,14 @@ public class DockerService {
                 .valueOf(config.getDockerBrowserPort());
         exposedPorts.add(dockerBrowserPort);
 
+        // shmSize
+        long shmSize = config.getDockerMemSizeBytes(config.getDockerShmSize());
+
         // mounts
         List<Mount> mounts = new ArrayList<>();
         Mount tmpfsMount = new Mount()
-                .withTmpfsOptions(new TmpfsOptions()
-                        .withSizeBytes(config.getDockerTmpfsSizeBytes()))
+                .withTmpfsOptions(new TmpfsOptions().withSizeBytes(config
+                        .getDockerMemSizeBytes(config.getDockerTmpfsSize())))
                 .withTarget(config.getDockerTmpfsMount());
         mounts.add(tmpfsMount);
 
@@ -537,7 +547,7 @@ public class DockerService {
         // builder
         DockerBuilder dockerBuilder = DockerContainer.dockerBuilder(dockerImage)
                 .exposedPorts(exposedPorts).network(network).mounts(mounts)
-                .envs(envs).sysadmin();
+                .shmSize(shmSize).envs(envs).sysadmin();
         if (androidEnabled) {
             dockerBuilder = dockerBuilder.privileged();
         }
