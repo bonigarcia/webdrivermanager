@@ -217,8 +217,6 @@ public class Config {
             Integer.class);
     ConfigKey<Integer> dockerRecordingFrameRate = new ConfigKey<>(
             "wdm.dockerRecordingFrameRate", Integer.class);
-    ConfigKey<String> dockerRecordingScreenSize = new ConfigKey<>(
-            "wdm.dockerRecordingScreenSize", String.class);
     ConfigKey<Path> dockerRecordingOutput = new ConfigKey<>(
             "wdm.dockerRecordingOutput", Path.class);
     ConfigKey<String> dockerBrowserSelenoidImageFormat = new ConfigKey<>(
@@ -1115,15 +1113,6 @@ public class Config {
 
     public Config setDockerRecordingFrameRate(int value) {
         this.dockerRecordingFrameRate.setValue(value);
-        return this;
-    }
-
-    public String getDockerRecordingScreenSize() {
-        return resolve(dockerRecordingScreenSize);
-    }
-
-    public Config setDockerRecordingScreenSize(String value) {
-        this.dockerRecordingScreenSize.setValue(value);
         return this;
     }
 
