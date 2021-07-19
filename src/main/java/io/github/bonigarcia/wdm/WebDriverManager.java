@@ -414,6 +414,11 @@ public abstract class WebDriverManager {
         return instanceMap.get(getDriverManagerType());
     }
 
+    public WebDriverManager dockerVolumes(String volumes) {
+        config().setDockerVolumes(volumes);
+        return instanceMap.get(getDriverManagerType());
+    }
+
     public WebDriverManager dockerScreenResolution(String screenResolution) {
         config().setDockerScreenResolution(screenResolution);
         return instanceMap.get(getDriverManagerType());

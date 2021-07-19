@@ -600,6 +600,12 @@ public class DockerService {
         List<String> binds = new ArrayList<>();
         binds.add(recordingPath.toAbsolutePath().getParent().toString()
                 + ":/data");
+        String dockerVolumes = config.getDockerVolumes();
+        if (!isNullOrEmpty(dockerVolumes)) {
+            List<String> volumeList = Arrays.asList(dockerVolumes.split(","));
+            log.trace("Using custom volumes: {}", volumeList);
+            binds.addAll(volumeList);
+        }
 
         // builder
         DockerContainer recorderContainer = DockerContainer

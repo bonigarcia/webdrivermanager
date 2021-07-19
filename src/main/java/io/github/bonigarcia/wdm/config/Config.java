@@ -22,6 +22,7 @@ import static io.github.bonigarcia.wdm.config.OperatingSystem.WIN;
 import static java.lang.String.join;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Locale.ROOT;
+import static org.apache.commons.io.FilenameUtils.getFullPathNoEndSeparator;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_LINUX;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_MAC;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
@@ -52,6 +53,7 @@ public class Config {
     final Logger log = getLogger(lookup().lookupClass());
 
     static final String HOME = "~";
+    static final String PWD = ".";
     static final String SCREEN_RESOLUTION_SEPARATOR = "x";
 
     ConfigKey<String> properties = new ConfigKey<>("wdm.properties",
@@ -235,6 +237,8 @@ public class Config {
             String.class);
     ConfigKey<String> dockerCustomImage = new ConfigKey<>(
             "wdm.dockerCustomImage", String.class);
+    ConfigKey<String> dockerVolumes = new ConfigKey<>("wdm.dockerVolumes",
+            String.class);
 
     ConfigKey<String> remoteAddress = new ConfigKey<>("wdm.remoteAddress",
             String.class);
@@ -1199,6 +1203,25 @@ public class Config {
 
     public Config setDockerCustomImage(String value) {
         this.dockerCustomImage.setValue(value);
+        return this;
+    }
+
+    public String getDockerVolumes() {
+        String volumes = resolve(dockerVolumes);
+        if (volumes.contains(PWD + ":")) {
+            String currentFolder = getFullPathNoEndSeparator(
+                    new File("·").getAbsolutePath());
+            volumes = volumes.replaceAll(PWD + ":", currentFolder + ":");
+        }
+        if (volumes.contains(HOME)) {
+            String homeFolder = System.getProperty("user.home");
+            volumes = volumes.replaceAll(HOME, homeFolder);
+        }
+        return volumes;
+    }
+
+    public Config setDockerVolumes(String value) {
+        this.dockerVolumes.setValue(value);
         return this;
     }
 
