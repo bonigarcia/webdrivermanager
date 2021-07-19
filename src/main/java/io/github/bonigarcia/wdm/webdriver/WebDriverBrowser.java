@@ -43,6 +43,7 @@ public class WebDriverBrowser {
     WebDriver driver;
     List<DockerContainer> dockerContainerList;
     String noVncUrl;
+    String seleniumServerUrl;
     Path recordingPath;
     int identityHash;
 
@@ -78,17 +79,29 @@ public class WebDriverBrowser {
     }
 
     public URL getNoVncUrl() {
-        URL url = null;
-        try {
-            url = new URL(noVncUrl);
-        } catch (MalformedURLException e) {
-            log.error("URL for Docker session not available", e);
-        }
-        return url;
+        return getUrl(noVncUrl);
     }
 
     public void setNoVncUrl(String noVncUrl) {
         this.noVncUrl = noVncUrl;
+    }
+
+    public URL getSeleniumServerUrl() {
+        return getUrl(seleniumServerUrl);
+    }
+
+    public void setSeleniumServerUrl(String seleniumServerUrl) {
+        this.seleniumServerUrl = seleniumServerUrl;
+    }
+
+    protected URL getUrl(String urlStr) {
+        URL url = null;
+        try {
+            url = new URL(urlStr);
+        } catch (MalformedURLException e) {
+            log.error("Exception creating URL", e);
+        }
+        return url;
     }
 
     public Path getRecordingPath() {

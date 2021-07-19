@@ -48,7 +48,7 @@ public class DockerContainer {
     private boolean privileged;
     private boolean sysadmin;
     private String containerId;
-    private String containerUrl;
+    private String seleniumServerUrl;
     private String gateway;
     private String address;
     private String vncPort;
@@ -112,8 +112,8 @@ public class DockerContainer {
         return containerId;
     }
 
-    public String getContainerUrl() {
-        return containerUrl;
+    public String getSeleniumServerUrl() {
+        return seleniumServerUrl;
     }
 
     public void setContainerId(String containerId) {
@@ -121,7 +121,7 @@ public class DockerContainer {
     }
 
     public void setContainerUrl(String containerUrl) {
-        this.containerUrl = containerUrl;
+        this.seleniumServerUrl = containerUrl;
     }
 
     public boolean isPrivileged() {

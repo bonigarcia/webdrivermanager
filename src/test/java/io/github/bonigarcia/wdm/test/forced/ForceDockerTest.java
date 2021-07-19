@@ -38,6 +38,13 @@ class ForceDockerTest {
     final Logger log = getLogger(lookup().lookupClass());
 
     @Test
+    void testSeleniumServerUrl() {
+        URL seleniumServerUrl = WebDriverManager.getInstance()
+                .getDockerSeleniumServerUrl();
+        assertThat(seleniumServerUrl).isNull();
+    }
+
+    @Test
     void testNoVncUrl() {
         URL noVncUrl = WebDriverManager.getInstance().getDockerNoVncUrl();
         assertThat(noVncUrl).isNull();

@@ -241,15 +241,21 @@ public abstract class WebDriverManager {
 
     public static synchronized WebDriverManager getInstance(
             DriverManagerType driverManagerType) {
-        return getInstance(driverManagerType.browserClass());
+        return getDriver(driverManagerType.browserClass());
+    }
+
+    public static synchronized WebDriverManager getInstance(
+            String browserName) {
+        return getInstance(
+                DriverManagerType.valueOf(browserName.toUpperCase(ROOT)));
     }
 
     public static synchronized WebDriverManager getInstance(
             Class<?> webDriverClass) {
-        return getInstance(webDriverClass.getName());
+        return getDriver(webDriverClass.getName());
     }
 
-    public static synchronized WebDriverManager getInstance(
+    protected static synchronized WebDriverManager getDriver(
             String webDriverClass) {
         switch (webDriverClass) {
         case "org.openqa.selenium.chrome.ChromeDriver":
@@ -725,6 +731,21 @@ public abstract class WebDriverManager {
         }
     }
 
+    public URL getDockerSeleniumServerUrl(WebDriver driver) {
+        URL url = null;
+        Optional<WebDriverBrowser> webDriverBrowser = findWebDriverBrowser(
+                driver);
+        if (webDriverBrowser.isPresent()) {
+            url = webDriverBrowser.get().getSeleniumServerUrl();
+        }
+        return url;
+    }
+
+    public URL getDockerSeleniumServerUrl() {
+        return webDriverList.isEmpty() ? null
+                : getSeleniumServerUrl(webDriverList.get(0));
+    }
+
     public URL getDockerNoVncUrl(WebDriver driver) {
         URL url = null;
         Optional<WebDriverBrowser> webDriverBrowser = findWebDriverBrowser(
@@ -766,11 +787,22 @@ public abstract class WebDriverManager {
         return empty();
     }
 
+    protected URL getSeleniumServerUrl(WebDriverBrowser driverBrowser) {
+        URL url = null;
+        if (webDriverList.isEmpty()) {
+            log.error(
+                    "Selenium Server URL is not available since there is no browsers in Docker");
+        } else {
+            url = driverBrowser.getSeleniumServerUrl();
+        }
+        return url;
+    }
+
     protected URL getDockerNoVncUrl(WebDriverBrowser driverBrowser) {
         URL url = null;
         if (webDriverList.isEmpty()) {
             log.error(
-                    "NoVNC URL is not availalbe since there is no browsers in Docker");
+                    "NoVNC URL is not available since there is no browsers in Docker");
         } else {
             url = driverBrowser.getNoVncUrl();
         }
@@ -1485,14 +1517,15 @@ public abstract class WebDriverManager {
         DockerContainer browserContainer = dockerService.startBrowserContainer(
                 browserImage, browserCacheKey, browserVersion, androidEnabled);
         browserContainer.setBrowserName(browserName);
-        String containerUrl = browserContainer.getContainerUrl();
+        String seleniumServerUrl = browserContainer.getSeleniumServerUrl();
 
         WebDriverBrowser driverBrowser = new WebDriverBrowser();
         driverBrowser.addDockerContainer(browserContainer);
+        driverBrowser.setSeleniumServerUrl(seleniumServerUrl);
         webDriverList.add(driverBrowser);
 
-        WebDriver driver = webDriverCreator.createRemoteWebDriver(containerUrl,
-                getCapabilities());
+        WebDriver driver = webDriverCreator
+                .createRemoteWebDriver(seleniumServerUrl, getCapabilities());
         driverBrowser.setDriver(driver);
         String sessionId = webDriverCreator
                 .getSessionId(driverBrowser.getDriver());
@@ -1505,7 +1538,7 @@ public abstract class WebDriverManager {
                     noVncImage, "novnc-container", noVncVersion,
                     browserContainer);
             driverBrowser.addDockerContainer(noVncContainer);
-            String noVncUrl = noVncContainer.getContainerUrl();
+            String noVncUrl = noVncContainer.getSeleniumServerUrl();
             driverBrowser.setNoVncUrl(noVncUrl);
 
             log.info("Docker session noVNC URL: {}", noVncUrl);

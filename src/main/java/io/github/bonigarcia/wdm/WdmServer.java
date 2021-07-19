@@ -22,19 +22,38 @@ import static io.github.bonigarcia.wdm.WebDriverManager.firefoxdriver;
 import static io.github.bonigarcia.wdm.WebDriverManager.iedriver;
 import static io.github.bonigarcia.wdm.WebDriverManager.operadriver;
 import static java.lang.invoke.MethodHandles.lookup;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.commons.io.FileUtils.openInputStream;
+import static org.apache.hc.client5.http.config.RequestConfig.custom;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.io.IOUtils;
+import org.apache.hc.client5.http.classic.methods.HttpDelete;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
+import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.slf4j.Logger;
 
+import com.google.gson.Gson;
+
+import io.github.bonigarcia.wdm.config.Config;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
@@ -47,17 +66,36 @@ import io.javalin.http.Handler;
  */
 public class WdmServer {
 
-    final Logger log = getLogger(lookup().lookupClass());
+    private static final String SESSION = "/session";
+    private static final String GET = "GET";
+    private static final String DELETE = "DELETE";
+    private static final String POST = "POST";
+    private static final String SESSIONID = "\"sessionId\":";
+
+    static final Logger log = getLogger(lookup().lookupClass());
+
+    private Map<String, URL> sessionMap;
+    private Config config;
 
     public WdmServer(int port) {
+        sessionMap = new ConcurrentHashMap<>();
+        config = new Config();
+
         Javalin app = Javalin.create().start(port);
         Handler handler = this::handleRequest;
 
+        // Resolve drivers
         app.get("/chromedriver", handler);
         app.get("/firefoxdriver", handler);
         app.get("/edgedriver", handler);
         app.get("/iedriver", handler);
         app.get("/operadriver", handler);
+
+        // Selenium Server
+        app.post(SESSION, handler);
+        app.post(SESSION + "/*", handler);
+        app.get(SESSION + "/*", handler);
+        app.delete(SESSION + "/*", handler);
 
         log.info("WebDriverManager server listening on port {}", port);
     }
@@ -65,13 +103,76 @@ public class WdmServer {
     private void handleRequest(Context ctx) throws IOException {
         String requestMethod = ctx.method();
         String requestPath = ctx.path();
-        log.info("Server request: {} {}", requestMethod, requestPath);
+        log.info("Request: {} {}", requestMethod, requestPath);
 
         Optional<WebDriverManager> driverManager = createDriverManager(
                 requestPath);
         if (driverManager.isPresent()) {
+            // Resolve drivers
             resolveDriver(ctx, driverManager.get());
+        } else {
+            // Selenium Server
+            seleniumServer(ctx);
         }
+    }
+
+    private void seleniumServer(Context ctx) throws IOException {
+        String requestMethod = ctx.method();
+        String requestPath = ctx.path();
+        String requestBody = ctx.body();
+        log.trace("Body: {} ", requestBody);
+        Session session = new Gson().fromJson(requestBody, Session.class);
+        URL seleniumServerUrl;
+
+        // POST /session
+        boolean isSessionCreate = session != null
+                && session.getDesiredCapabilities() != null;
+        if (isSessionCreate) {
+            String browserName = session.getDesiredCapabilities()
+                    .getBrowserName();
+            String version = session.getDesiredCapabilities().getVersion();
+            WebDriverManager wdm = WebDriverManager.getInstance(browserName)
+                    .browserInDocker().browserVersion(version);
+            wdm.create();
+            seleniumServerUrl = wdm.getDockerSeleniumServerUrl();
+        } else {
+            String sessionIdFromPath = getSessionIdFromPath(requestPath);
+            seleniumServerUrl = sessionMap.get(sessionIdFromPath);
+        }
+
+        // exchange request-response
+        String response = exchange(
+                seleniumServerUrl.toString().replaceAll("/\\z", "")
+                        + requestPath,
+                requestMethod, requestBody, config.getTimeout());
+        log.info("Response: {}", response);
+        ctx.contentType("application/json");
+        ctx.result(response);
+
+        if (isSessionCreate) {
+            String sessionId = getSessionIdFromResponse(response);
+            sessionMap.put(sessionId, seleniumServerUrl);
+        }
+
+        // DELETE /session/sessionId
+        if (requestMethod.equalsIgnoreCase(DELETE)
+                && requestPath.startsWith(SESSION + "/")) {
+            WebDriverManager.chromedriver().quit();
+        }
+    }
+
+    private String getSessionIdFromResponse(String response) {
+        response = response.substring(
+                response.indexOf(SESSIONID) + SESSIONID.length() + 1);
+        response = response.substring(0, response.indexOf("\""));
+        return response;
+    }
+
+    private String getSessionIdFromPath(String path) {
+        path = path.substring(path.indexOf("/") + 1);
+        path = path.substring(path.indexOf("/") + 1);
+        path = path.substring(0, path.indexOf("/"));
+        return path;
     }
 
     private Optional<WebDriverManager> createDriverManager(String requestPath) {
@@ -93,7 +194,6 @@ public class WdmServer {
             out = Optional.of(operadriver());
             break;
         default:
-            log.warn("Unknown option {}", requestPath);
             out = Optional.empty();
         }
         return out;
@@ -135,6 +235,69 @@ public class WdmServer {
         // Clear configuration
         for (String key : queryParamMap.keySet()) {
             System.clearProperty("wdm." + key);
+        }
+    }
+
+    public static String exchange(String url, String method, String json,
+            int timeoutSec) throws IOException {
+        String responseContent = null;
+        try (CloseableHttpClient closeableHttpClient = HttpClientBuilder
+                .create().build()) {
+
+            HttpUriRequestBase request = null;
+            switch (method) {
+            case GET:
+                request = new HttpGet(url.toString());
+                break;
+            case DELETE:
+                request = new HttpDelete(url.toString());
+                break;
+            default:
+            case POST:
+                request = new HttpPost(url.toString());
+                HttpEntity body = new StringEntity(json);
+                request.setEntity(body);
+                request.setHeader("Content-Type", "application/json");
+                break;
+            }
+
+            RequestConfig requestConfig = custom()
+                    .setConnectTimeout(timeoutSec, TimeUnit.SECONDS).build();
+            request.setConfig(requestConfig);
+
+            try (CloseableHttpResponse response = closeableHttpClient
+                    .execute(request)) {
+                responseContent = IOUtils
+                        .toString(response.getEntity().getContent(), UTF_8);
+            }
+        }
+
+        return responseContent;
+    }
+
+    static class Session {
+        DesiredCapabilities desiredCapabilities;
+
+        public DesiredCapabilities getDesiredCapabilities() {
+            return desiredCapabilities;
+        }
+    }
+
+    static class DesiredCapabilities {
+        String browserName;
+        String version;
+        String platform;
+
+        public String getBrowserName() {
+            return browserName;
+        }
+
+        public String getVersion() {
+            return version;
+        }
+
+        public String getPlatform() {
+            return platform;
         }
     }
 
