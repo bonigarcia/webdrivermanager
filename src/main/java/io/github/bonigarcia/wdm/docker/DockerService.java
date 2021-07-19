@@ -244,8 +244,7 @@ public class DockerService {
 
     public void pullImageIfNecessary(String cacheKey, String imageId,
             String imageVersion) throws DockerException {
-        if (!config.isAvoidingResolutionCache()
-                && !resolutionCache.checkKeyInResolutionCache(cacheKey)) {
+        if (!resolutionCache.checkKeyInResolutionCache(cacheKey)) {
             try {
                 log.info(
                         "Pulling Docker image {} (this might take some time, but only the first time)",
@@ -319,9 +318,7 @@ public class DockerService {
             String browserName, String browserVersion, boolean androidEnabled) {
         String latestVersion = null;
 
-        if (!config.isAvoidingResolutionCache() && !resolutionCache
-                .checkKeyInResolutionCache(cacheKey, false)) {
-
+        if (!resolutionCache.checkKeyInResolutionCache(cacheKey, false)) {
             VersionComparator versionComparator = new VersionComparator();
             List<String> browserList = null;
             DockerHubService dockerHubService = new DockerHubService(config,

@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  */
-package io.github.bonigarcia.wdm.test.interactive;
+package io.github.bonigarcia.wdm.test.cli;
 
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
@@ -32,12 +32,12 @@ import org.slf4j.Logger;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 /**
- * Test using wdm in interactive mode (from the shell).
+ * Test using WebDriverManager CLI to resolve drivers.
  *
  * @author Boni Garcia
  * @since 2.1.2
  */
-class InteractiveTest {
+class CliResolveDriverTest {
 
     static final Logger log = getLogger(lookup().lookupClass());
 
@@ -45,14 +45,14 @@ class InteractiveTest {
 
     @ParameterizedTest
     @MethodSource("data")
-    void testInteractive(String argument, String driver) {
-        log.debug("Running interactive wdm with arguments: {}", argument);
-        WebDriverManager.main(new String[] { argument });
+    void testInteractive(String browser, String driver) {
+        log.debug("Running WebDriverManager CLI with arguments: {}", browser);
+        WebDriverManager.main(new String[] { "resolveDriverFor=" + browser });
         File driverFile = new File(driver);
         boolean exists = driverFile.exists();
         boolean delete = driverFile.delete();
         assertThat(exists && delete).isTrue();
-        log.debug("Interactive test with {} OK", argument);
+        log.debug("CLI test resolving driver for {} OK", browser);
     }
 
     static Stream<Arguments> data() {
