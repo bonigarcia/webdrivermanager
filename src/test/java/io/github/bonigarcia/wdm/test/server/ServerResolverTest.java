@@ -24,7 +24,6 @@ import static org.openqa.selenium.net.PortProber.findFreePort;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
@@ -39,12 +38,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
-import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -113,26 +106,6 @@ class ServerResolverTest {
                 Arguments.of(
                         "chromedriver?os=LINUX&chromeDriverVersion=2.41&forceCache=true",
                         "chromedriver"));
-    }
-
-    @ParameterizedTest
-    @ValueSource(classes = { ChromeOptions.class, FirefoxOptions.class })
-    void testServerSeleniumServer(Class<? extends Capabilities> capabilities)
-            throws Exception {
-        String serverUrl = String.format("http://localhost:%s/", serverPort);
-
-        Capabilities caps = capabilities.getDeclaredConstructor().newInstance();
-        WebDriver driver = new RemoteWebDriver(new URL(serverUrl), caps);
-
-        String sutUrl = "https://github.com/bonigarcia/webdrivermanager";
-        driver.get(sutUrl);
-        String title = driver.getTitle();
-        log.debug("The title of {} is {}", sutUrl, title);
-
-        assertThat(title)
-                .contains("Automated driver management for Selenium WebDriver");
-
-        driver.close();
     }
 
 }
