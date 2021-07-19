@@ -317,14 +317,8 @@ public abstract class WebDriverManager {
     }
 
     public WebDriver create() {
-        WebDriver driver = null;
-        try {
-            setup();
-            driver = instantiateDriver();
-        } finally {
-            reset();
-        }
-        return driver;
+        setup();
+        return instantiateDriver();
     }
 
     public List<WebDriver> create(int numberOfBrowser) {
@@ -343,25 +337,41 @@ public abstract class WebDriverManager {
     }
 
     public synchronized void quit() {
-        for (WebDriverBrowser driverBrowser : webDriverList) {
-            try {
-                WebDriver driver = driverBrowser.getDriver();
-                if (driver != null) {
-                    driver.quit();
-                }
+        webDriverList.stream().forEach(this::quit);
+        webDriverList.clear();
+        reset();
+    }
 
-                if (dockerService != null) {
-                    List<DockerContainer> dockerContainerList = driverBrowser
-                            .getDockerContainerList();
-                    dockerContainerList.stream()
-                            .forEach(dockerService::stopAndRemoveContainer);
-                }
-            } catch (Exception e) {
-                log.warn("Exception closing {} ({})", driverBrowser.getDriver(),
-                        e.getMessage());
+    public synchronized void quit(WebDriver driver) {
+        Optional<WebDriverBrowser> webDriverBrowser = findWebDriverBrowser(
+                driver);
+        if (webDriverBrowser.isPresent()) {
+            WebDriverBrowser driverBrowser = webDriverBrowser.get();
+            quit(driverBrowser);
+            webDriverList.remove(driverBrowser);
+            if (webDriverList.isEmpty()) {
+                reset();
             }
         }
-        webDriverList.clear();
+    }
+
+    protected void quit(WebDriverBrowser driverBrowser) {
+        try {
+            WebDriver driver = driverBrowser.getDriver();
+            if (driver != null) {
+                driver.quit();
+            }
+
+            if (dockerService != null) {
+                List<DockerContainer> dockerContainerList = driverBrowser
+                        .getDockerContainerList();
+                dockerContainerList.stream()
+                        .forEach(dockerService::stopAndRemoveContainer);
+            }
+        } catch (Exception e) {
+            log.warn("Exception closing {} ({})", driverBrowser.getDriver(),
+                    e.getMessage());
+        }
     }
 
     public Optional<Path> getBrowserPath() {
@@ -711,24 +721,63 @@ public abstract class WebDriverManager {
         }
     }
 
+    public URL getDockerNoVncUrl(WebDriver driver) {
+        URL url = null;
+        Optional<WebDriverBrowser> webDriverBrowser = findWebDriverBrowser(
+                driver);
+        if (webDriverBrowser.isPresent()) {
+            url = webDriverBrowser.get().getNoVncUrl();
+        }
+        return url;
+    }
+
     public URL getDockerNoVncUrl() {
+        return getDockerNoVncUrl(webDriverList.get(0));
+    }
+
+    public Path getDockerRecordingPath(WebDriver driver) {
+        Path path = null;
+        Optional<WebDriverBrowser> webDriverBrowser = findWebDriverBrowser(
+                driver);
+        if (webDriverBrowser.isPresent()) {
+            path = webDriverBrowser.get().getRecordingPath();
+        }
+        return path;
+    }
+
+    public Path getDockerRecordingPath() {
+        return getDockerRecordingPath(webDriverList.get(0));
+    }
+
+    protected Optional<WebDriverBrowser> findWebDriverBrowser(
+            WebDriver driver) {
+        for (WebDriverBrowser webDriver : webDriverList) {
+            if (webDriver.getIdentityHash() == webDriver
+                    .calculateIdentityHash(driver)) {
+                return Optional.of(webDriver);
+            }
+        }
+        return empty();
+    }
+
+    protected URL getDockerNoVncUrl(WebDriverBrowser driverBrowser) {
         URL url = null;
         if (webDriverList.isEmpty()) {
             log.error(
                     "NoVNC URL is not availalbe since there is no browsers in Docker");
         } else {
-            url = webDriverList.get(0).getNoVncUrl();
+            url = driverBrowser.getNoVncUrl();
         }
         return url;
     }
 
-    public Path getDockerRecordingPath() {
+    protected Path getDockerRecordingPath(WebDriverBrowser driverBrowser) {
         Path path = null;
         if (webDriverList.isEmpty()) {
             log.error(
                     "Path of recording is not availalbe since there is no browsers in Docker");
         } else {
-            path = webDriverList.get(0).getRecordingPath();
+            path = driverBrowser.getRecordingPath();
         }
         return path;
     }

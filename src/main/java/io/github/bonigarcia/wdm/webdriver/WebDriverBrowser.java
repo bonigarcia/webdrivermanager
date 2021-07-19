@@ -52,8 +52,7 @@ public class WebDriverBrowser {
 
     public WebDriverBrowser(WebDriver driver) {
         super();
-        this.driver = driver;
-        setIdentityHash(driver);
+        setDriver(driver);
     }
 
     public WebDriver getDriver() {
@@ -62,6 +61,7 @@ public class WebDriverBrowser {
 
     public void setDriver(WebDriver driver) {
         this.driver = driver;
+        this.identityHash = calculateIdentityHash(driver);
     }
 
     public List<DockerContainer> getDockerContainerList() {
@@ -103,8 +103,8 @@ public class WebDriverBrowser {
         return identityHash;
     }
 
-    public void setIdentityHash(Object object) {
-        this.identityHash = System.identityHashCode(object);
+    public int calculateIdentityHash(Object object) {
+        return System.identityHashCode(object);
     }
 
 }

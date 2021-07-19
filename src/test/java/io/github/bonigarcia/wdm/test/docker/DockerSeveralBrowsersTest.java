@@ -37,51 +37,60 @@ import org.slf4j.Logger;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 /**
- * Test with Chrome in Docker using remote session (VNC) and recording.
+ * Test using several browsers in Docker containers.
  *
  * @author Boni Garcia
  * @since 5.0.0
  */
 @EnabledOnOs(LINUX)
-class DockerChromeVncRecordingTest {
+class DockerSeveralBrowsersTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
-    static final int WAIT_TIME_SEC = 10;
+    static final int WAIT_TIME_SEC = 30;
 
-    WebDriver driver;
+    WebDriver driver1, driver2;
 
     WebDriverManager wdm = WebDriverManager.chromedriver().browserInDocker()
-            .enableVnc().enableRecording();
+            .dockerLang("ES").dockerTimezone("Europe/Madrid").enableVnc()
+            .enableRecording();
 
     @BeforeEach
     void setupTest() {
-        driver = wdm.create();
+        driver1 = wdm.create();
+        driver2 = wdm.create();
     }
 
     @AfterEach
     void teardown() {
-        wdm.quit();
+        wdm.quit(driver1);
+        wdm.quit(driver2);
     }
 
     @Test
     void test() throws Exception {
-        String sutUrl = "https://github.com/bonigarcia/webdrivermanager";
+        exercise(driver1, "https://github.com/bonigarcia/webdrivermanager",
+                "Automated driver management for Selenium WebDriver");
+        exercise(driver2, "https://github.com/bonigarcia/selenium-jupiter",
+                "JUnit 5 extension for Selenium WebDriver");
+
+        // Active wait to manually inspect
+        Thread.sleep(SECONDS.toMillis(WAIT_TIME_SEC));
+    }
+
+    void exercise(WebDriver driver, String sutUrl, String expectedTitleContains)
+            throws Exception {
         driver.get(sutUrl);
         String title = driver.getTitle();
-        log.debug("The title of {} is {}", sutUrl, title);
-        assertThat(title)
-                .contains("Automated driver management for Selenium WebDriver");
+        assertThat(title).contains(expectedTitleContains);
 
-        URL dockerSessionUrl = wdm.getDockerNoVncUrl();
+        URL dockerSessionUrl = wdm.getDockerNoVncUrl(driver);
+        log.debug("The noNVC URL is {}", dockerSessionUrl);
         HttpURLConnection huc = (HttpURLConnection) dockerSessionUrl
                 .openConnection();
         assertThat(huc.getResponseCode()).isEqualTo(HTTP_OK);
 
-        // Active wait to manually inspect
-        Thread.sleep(SECONDS.toMillis(WAIT_TIME_SEC));
-
-        Path recordingPath = wdm.getDockerRecordingPath();
+        Path recordingPath = wdm.getDockerRecordingPath(driver);
         assertThat(recordingPath).exists();
     }
 
