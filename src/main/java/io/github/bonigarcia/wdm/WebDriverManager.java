@@ -732,7 +732,8 @@ public abstract class WebDriverManager {
     }
 
     public URL getDockerNoVncUrl() {
-        return getDockerNoVncUrl(webDriverList.get(0));
+        return webDriverList.isEmpty() ? null
+                : getDockerNoVncUrl(webDriverList.get(0));
     }
 
     public Path getDockerRecordingPath(WebDriver driver) {
@@ -746,7 +747,8 @@ public abstract class WebDriverManager {
     }
 
     public Path getDockerRecordingPath() {
-        return getDockerRecordingPath(webDriverList.get(0));
+        return webDriverList.isEmpty() ? null
+                : getDockerRecordingPath(webDriverList.get(0));
     }
 
     protected Optional<WebDriverBrowser> findWebDriverBrowser(
