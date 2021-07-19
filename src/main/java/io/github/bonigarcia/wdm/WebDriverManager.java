@@ -246,8 +246,23 @@ public abstract class WebDriverManager {
 
     public static synchronized WebDriverManager getInstance(
             String browserName) {
-        return getInstance(
-                DriverManagerType.valueOf(browserName.toUpperCase(ROOT)));
+        DriverManagerType managerType;
+        switch (browserName) {
+        case "operablink":
+            managerType = OPERA;
+            break;
+        case "MicrosoftEdge":
+            managerType = EDGE;
+            break;
+        case "internet explorer":
+            managerType = IEXPLORER;
+            break;
+        default:
+            managerType = DriverManagerType
+                    .valueOf(browserName.toUpperCase(ROOT));
+            break;
+        }
+        return getInstance(managerType);
     }
 
     public static synchronized WebDriverManager getInstance(
