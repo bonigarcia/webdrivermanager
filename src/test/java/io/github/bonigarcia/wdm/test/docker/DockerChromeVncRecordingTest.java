@@ -52,7 +52,8 @@ class DockerChromeVncRecordingTest {
     WebDriver driver;
 
     WebDriverManager wdm = WebDriverManager.chromedriver().browserInDocker()
-            .enableVnc().enableRecording();
+            .dockerLang("ES").dockerTimezone("Europe/Madrid").enableVnc()
+            .enableRecording();
 
     @BeforeEach
     void setupTest() {

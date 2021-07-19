@@ -389,6 +389,16 @@ public abstract class WebDriverManager {
                         + " is not available in Docker Android");
     }
 
+    public WebDriverManager dockerTimezone(String timezone) {
+        config().setDockerTimezone(timezone);
+        return instanceMap.get(getDriverManagerType());
+    }
+
+    public WebDriverManager dockerLang(String lang) {
+        config().setDockerLang(lang);
+        return instanceMap.get(getDriverManagerType());
+    }
+
     public WebDriverManager enableVnc() {
         config().setDockerEnableVnc(true);
         return instanceMap.get(getDriverManagerType());
