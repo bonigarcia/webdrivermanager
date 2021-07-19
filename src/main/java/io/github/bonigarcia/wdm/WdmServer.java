@@ -238,7 +238,7 @@ public class WdmServer {
         }
     }
 
-    public static String exchange(String url, String method, String json,
+    public String exchange(String url, String method, String json,
             int timeoutSec) throws IOException {
         String responseContent = null;
         try (CloseableHttpClient closeableHttpClient = HttpClientBuilder
@@ -247,14 +247,14 @@ public class WdmServer {
             HttpUriRequestBase request = null;
             switch (method) {
             case GET:
-                request = new HttpGet(url.toString());
+                request = new HttpGet(url);
                 break;
             case DELETE:
-                request = new HttpDelete(url.toString());
+                request = new HttpDelete(url);
                 break;
             default:
             case POST:
-                request = new HttpPost(url.toString());
+                request = new HttpPost(url);
                 HttpEntity body = new StringEntity(json);
                 request.setEntity(body);
                 request.setHeader("Content-Type", "application/json");
