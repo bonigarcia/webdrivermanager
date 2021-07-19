@@ -45,7 +45,7 @@ class ChromeRemoteTest {
     @BeforeEach
     void setupTest() {
         driver = WebDriverManager.chromedriver()
-                .withRemoteAddress("http://localhost:4444/").create();
+                .remoteAddress("http://localhost:4444/").create();
     }
 
     @AfterEach

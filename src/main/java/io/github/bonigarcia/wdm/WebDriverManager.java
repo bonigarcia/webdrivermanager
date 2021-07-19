@@ -448,17 +448,17 @@ public abstract class WebDriverManager {
         return instanceMap.get(getDriverManagerType());
     }
 
-    public WebDriverManager withCapabilities(Capabilities options) {
+    public WebDriverManager capabilities(Capabilities options) {
         this.capabilities = options;
         return instanceMap.get(getDriverManagerType());
     }
 
-    public WebDriverManager withRemoteAddress(String remoteAddress) {
+    public WebDriverManager remoteAddress(String remoteAddress) {
         config().setRemoteAddress(remoteAddress);
         return instanceMap.get(getDriverManagerType());
     }
 
-    public WebDriverManager withDockerImage(String dockerImage) {
+    public WebDriverManager dockerImage(String dockerImage) {
         config().setDockerCustomImage(dockerImage);
         return instanceMap.get(getDriverManagerType());
     }

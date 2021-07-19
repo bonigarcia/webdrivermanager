@@ -45,7 +45,7 @@ class ChromeCapabilitiesCreateTest {
     void setupTest() {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless");
-        driver = WebDriverManager.chromedriver().withCapabilities(options).create();
+        driver = WebDriverManager.chromedriver().capabilities(options).create();
     }
 
     @AfterEach

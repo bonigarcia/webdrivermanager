@@ -52,7 +52,7 @@ class DockerCustomVncRecordingTest {
     WebDriver driver;
 
     WebDriverManager wdm = WebDriverManager.chromedriver().browserInDocker()
-            .withDockerImage("selenoid/vnc:chrome_90.0").enableVnc()
+            .dockerImage("selenoid/vnc:chrome_90.0").enableVnc()
             .enableRecording();
 
     @BeforeEach

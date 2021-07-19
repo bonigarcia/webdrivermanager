@@ -50,7 +50,7 @@ class FirefoxListCreateTest {
         firefoxBinary.addCommandLineOptions("--headless");
         FirefoxOptions options = new FirefoxOptions();
         options.setBinary(firefoxBinary);
-        drivers = WebDriverManager.firefoxdriver().withCapabilities(options)
+        drivers = WebDriverManager.firefoxdriver().capabilities(options)
                 .create(2);
     }
 
