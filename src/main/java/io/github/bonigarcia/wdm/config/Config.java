@@ -1211,11 +1211,11 @@ public class Config {
         if (volumes.contains(PWD + ":")) {
             String currentFolder = getFullPathNoEndSeparator(
                     new File("·").getAbsolutePath());
-            volumes = volumes.replaceAll(PWD + ":", currentFolder + ":");
+            volumes = volumes.replace(PWD + ":", currentFolder + ":");
         }
         if (volumes.contains(HOME)) {
             String homeFolder = System.getProperty("user.home");
-            volumes = volumes.replaceAll(HOME, homeFolder);
+            volumes = volumes.replace(HOME, homeFolder);
         }
         return volumes;
     }
