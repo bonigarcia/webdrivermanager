@@ -46,9 +46,11 @@ import com.github.dockerjava.api.model.Capability;
 import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.Frame;
 import com.github.dockerjava.api.model.HostConfig;
+import com.github.dockerjava.api.model.Mount;
 import com.github.dockerjava.api.model.Ports;
 import com.github.dockerjava.api.model.Ports.Binding;
 import com.github.dockerjava.api.model.PullResponseItem;
+import com.github.dockerjava.api.model.TmpfsOptions;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientBuilder;
 import com.github.dockerjava.core.DockerClientConfig;
@@ -162,6 +164,13 @@ public class DockerService {
                 log.trace("Using binds: {}", binds.get());
                 hostConfigBuilder.withBinds(binds.get());
             }
+
+            Optional<List<Mount>> mounts = dockerContainer.getMounts();
+            if (mounts.isPresent()) {
+                log.trace("Using mounts: {}", mounts.get());
+                hostConfigBuilder.withMounts(mounts.get());
+            }
+
             Optional<List<String>> envs = dockerContainer.getEnvs();
             if (envs.isPresent()) {
                 log.trace("Using envs: {}", envs.get());
@@ -500,6 +509,14 @@ public class DockerService {
                 .valueOf(config.getDockerBrowserPort());
         exposedPorts.add(dockerBrowserPort);
 
+        // mounts
+        List<Mount> mounts = new ArrayList<>();
+        Mount tmpfsMount = new Mount()
+                .withTmpfsOptions(new TmpfsOptions()
+                        .withSizeBytes(config.getDockerTmpfsSizeBytes()))
+                .withTarget(config.getDockerTmpfsMount());
+        mounts.add(tmpfsMount);
+
         // envs
         List<String> envs = new ArrayList<>();
         envs.add("TZ=" + config.getDockerTimezone());
@@ -518,8 +535,8 @@ public class DockerService {
 
         // builder
         DockerBuilder dockerBuilder = DockerContainer.dockerBuilder(dockerImage)
-                .exposedPorts(exposedPorts).network(network).envs(envs)
-                .sysadmin();
+                .exposedPorts(exposedPorts).network(network).mounts(mounts)
+                .envs(envs).sysadmin();
         if (androidEnabled) {
             dockerBuilder = dockerBuilder.privileged();
         }

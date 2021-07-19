@@ -26,6 +26,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.github.dockerjava.api.model.Bind;
+import com.github.dockerjava.api.model.Mount;
 
 /**
  * Docker Container.
@@ -42,6 +43,7 @@ public class DockerContainer {
     private Optional<String> network;
     private Optional<List<String>> cmd;
     private Optional<List<String>> entryPoint;
+    private Optional<List<Mount>> mounts;
     private boolean privileged;
     private boolean sysadmin;
     private String containerId;
@@ -63,6 +65,7 @@ public class DockerContainer {
         this.cmd = builder.cmd != null ? of(builder.cmd) : empty();
         this.entryPoint = builder.entryPoint != null ? of(builder.entryPoint)
                 : empty();
+        this.mounts = builder.mounts != null ? of(builder.mounts) : empty();
         this.privileged = builder.privileged;
         this.sysadmin = builder.sysadmin;
     }
@@ -97,6 +100,10 @@ public class DockerContainer {
 
     public Optional<List<String>> getEntryPoint() {
         return entryPoint;
+    }
+
+    public Optional<List<Mount>> getMounts() {
+        return mounts;
     }
 
     public String getContainerId() {
@@ -178,6 +185,7 @@ public class DockerContainer {
         private List<String> cmd;
         private String network;
         private List<String> entryPoint;
+        private List<Mount> mounts;
         private boolean privileged = false;
         private boolean sysadmin = false;
         private List<String> exposedPorts;
@@ -214,6 +222,11 @@ public class DockerContainer {
 
         public DockerBuilder entryPoint(List<String> entryPoint) {
             this.entryPoint = entryPoint;
+            return this;
+        }
+
+        public DockerBuilder mounts(List<Mount> mounts) {
+            this.mounts = mounts;
             return this;
         }
 

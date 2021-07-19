@@ -195,6 +195,8 @@ public class Config {
             String.class);
     ConfigKey<String> dockerTmpfsSize = new ConfigKey<>("wdm.dockerTmpfsSize",
             String.class);
+    ConfigKey<String> dockerTmpfsMount = new ConfigKey<>("wdm.dockerTmpfsMount",
+            String.class);
     ConfigKey<Integer> dockerStopTimeoutSec = new ConfigKey<>(
             "wdm.dockerStopTimeoutSec", Integer.class);
     ConfigKey<Boolean> dockerEnableVnc = new ConfigKey<>("wdm.dockerEnableVnc",
@@ -985,12 +987,38 @@ public class Config {
         return this;
     }
 
+    public long getDockerTmpfsSizeBytes() {
+        String size = getDockerTmpfsSize().toLowerCase(ROOT);
+        long bytes = 0;
+        try {
+            bytes = Integer.parseInt(size.substring(0, size.length() - 1));
+        } catch (Exception e) {
+            log.warn("Exception parsing size to bytes", e);
+        }
+        if (size.endsWith("m")) {
+            bytes *= 1024 * 1024;
+        } else if (size.endsWith("k")) {
+            bytes *= 1024;
+        }
+        log.trace("Tmpfs size {} ({} bytes)", getDockerTmpfsSize(), bytes);
+        return bytes;
+    }
+
     public String getDockerTmpfsSize() {
         return resolve(dockerTmpfsSize);
     }
 
     public Config setDockerTmpfsSize(String value) {
         this.dockerTmpfsSize.setValue(value);
+        return this;
+    }
+
+    public String getDockerTmpfsMount() {
+        return resolve(dockerTmpfsMount);
+    }
+
+    public Config setDockerTmpfsMount(String value) {
+        this.dockerTmpfsMount.setValue(value);
         return this;
     }
 
