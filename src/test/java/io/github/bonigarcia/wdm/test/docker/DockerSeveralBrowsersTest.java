@@ -47,7 +47,7 @@ class DockerSeveralBrowsersTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
-    static final int WAIT_TIME_SEC = 10;
+    static final int WAIT_TIME_SEC = 15;
 
     WebDriver driver1, driver2;
 
