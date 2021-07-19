@@ -38,6 +38,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
 /**
@@ -51,6 +52,7 @@ public class Config {
     final Logger log = getLogger(lookup().lookupClass());
 
     static final String HOME = "~";
+    static final String SCREEN_RESOLUTION_SEPARATOR = "x";
 
     ConfigKey<String> properties = new ConfigKey<>("wdm.properties",
             String.class, "webdrivermanager.properties");
@@ -1051,6 +1053,19 @@ public class Config {
 
     public String getDockerScreenResolution() {
         return resolve(dockerScreenResolution);
+    }
+
+    public String getDockerVideoSize() {
+        String screenResolution = getDockerScreenResolution().toLowerCase(ROOT);
+        int count = StringUtils.countMatches(screenResolution,
+                SCREEN_RESOLUTION_SEPARATOR);
+        if (count == 2) {
+            screenResolution = screenResolution.substring(0,
+                    screenResolution.lastIndexOf(SCREEN_RESOLUTION_SEPARATOR));
+        }
+        log.trace("The screen resolution {} corresponds to a video size of {}",
+                getDockerScreenResolution(), screenResolution);
+        return screenResolution;
     }
 
     public Config setDockerScreenResolution(String value) {

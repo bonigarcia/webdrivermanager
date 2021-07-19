@@ -521,6 +521,7 @@ public class DockerService {
         List<String> envs = new ArrayList<>();
         envs.add("TZ=" + config.getDockerTimezone());
         envs.add("LANG=" + config.getDockerLang());
+        envs.add("SCREEN_RESOLUTION=" + config.getDockerScreenResolution());
         String dockerVncPort = String.valueOf(config.getDockerVncPort());
         if (config.isEnabledDockerVnc()) {
             envs.add("ENABLE_VNC=true");
@@ -579,6 +580,7 @@ public class DockerService {
         envs.add("BROWSER_CONTAINER_NAME=" + browserContainer.getAddress());
         Path recordingPath = getRecordingPath(browserContainer);
         envs.add("FILE_NAME=" + recordingPath.getFileName().toString());
+        envs.add("VIDEO_SIZE=" + config.getDockerVideoSize());
 
         // network
         String network = config.getDockerNetwork();

@@ -409,6 +409,11 @@ public abstract class WebDriverManager {
         return instanceMap.get(getDriverManagerType());
     }
 
+    public WebDriverManager dockerScreenResolution(String screenResolution) {
+        config().setDockerScreenResolution(screenResolution);
+        return instanceMap.get(getDriverManagerType());
+    }
+
     public WebDriverManager enableVnc() {
         config().setDockerEnableVnc(true);
         return instanceMap.get(getDriverManagerType());
