@@ -399,6 +399,16 @@ public abstract class WebDriverManager {
         return instanceMap.get(getDriverManagerType());
     }
 
+    public WebDriverManager dockerTmpfsSize(String size) {
+        config().setDockerTmpfsSize(size);
+        return instanceMap.get(getDriverManagerType());
+    }
+
+    public WebDriverManager dockerTmpfsMount(String mount) {
+        config().setDockerTmpfsMount(mount);
+        return instanceMap.get(getDriverManagerType());
+    }
+
     public WebDriverManager enableVnc() {
         config().setDockerEnableVnc(true);
         return instanceMap.get(getDriverManagerType());
