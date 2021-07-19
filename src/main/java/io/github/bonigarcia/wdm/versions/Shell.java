@@ -42,18 +42,32 @@ public class Shell {
     }
 
     public static String runAndWait(String... command) {
-        return runAndWaitArray(new File("."), command);
+        return runAndWait(true, command);
     }
 
     public static String runAndWait(File folder, String... command) {
-        return runAndWaitArray(folder, command);
+        return runAndWaitArray(true, folder, command);
     }
 
-    public static String runAndWaitArray(File folder, String[] command) {
+    public static String runAndWait(boolean logCommand, String... command) {
+        return runAndWaitArray(logCommand, new File("."), command);
+    }
+
+    public static String runAndWait(boolean logCommand, File folder,
+            String... command) {
+        return runAndWaitArray(logCommand, folder, command);
+    }
+
+    public static String runAndWaitArray(boolean logCommand, File folder,
+            String[] command) {
         String commandStr = Arrays.toString(command);
-        log.debug("Running command on the shell: {}", commandStr);
+        if (logCommand) {
+            log.debug("Running command on the shell: {}", commandStr);
+        }
         String result = runAndWaitNoLog(folder, command);
-        log.debug("Result: {}", result);
+        if (logCommand) {
+            log.debug("Result: {}", result);
+        }
         return result;
     }
 

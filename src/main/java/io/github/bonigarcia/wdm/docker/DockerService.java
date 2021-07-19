@@ -18,11 +18,13 @@ package io.github.bonigarcia.wdm.docker;
 
 import static io.github.bonigarcia.wdm.config.Config.isNullOrEmpty;
 import static io.github.bonigarcia.wdm.docker.DockerHost.defaultAddress;
+import static io.github.bonigarcia.wdm.versions.Shell.runAndWait;
 import static java.lang.String.format;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Locale.ROOT;
 import static java.util.stream.Collectors.toList;
+import static org.apache.commons.lang.SystemUtils.IS_OS_LINUX;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.IOException;
@@ -113,7 +115,23 @@ public class DockerService {
                 .withDockerHttpClient(dockerHttpClient).build();
     }
 
-    public String getHost() {
+    public String getHost(String containerId, String network) {
+        String host = getDefaultHost();
+        if (IS_OS_LINUX) {
+            String[] commandArray = new String[] { "bash", "-c",
+                    "cat /proc/self/cgroup | grep \"docker\" | sed s/\\\\//\\\\n/g | tail -1" };
+            String container = runAndWait(false, commandArray);
+            if (!isNullOrEmpty(container)) {
+                host = getGateway(containerId, network);
+                log.debug(
+                        "WebDriverManager running inside a Docker container. Using gateway address: {}",
+                        host);
+            }
+        }
+        return host;
+    }
+
+    public String getDefaultHost() {
         return Optional.ofNullable(dockerHostUri.getHost())
                 .orElse(defaultAddress());
     }
@@ -493,7 +511,7 @@ public class DockerService {
         String containerId = startContainer(noVncContainer);
 
         noVncContainer.setContainerId(containerId);
-        String noVncHost = getHost();
+        String noVncHost = getHost(containerId, network);
         String noVncPort = getBindPort(containerId, dockerNoVncPort + "/tcp");
         String noVncUrlFormat = "http://%s:%s/";
         String noVncUrl = format(noVncUrlFormat, noVncHost, noVncPort);
@@ -552,7 +570,7 @@ public class DockerService {
 
         String containerId = startContainer(browserContainer);
         browserContainer.setContainerId(containerId);
-        String browserHost = getHost();
+        String browserHost = getHost(containerId, network);
         String browserPort = getBindPort(containerId,
                 dockerBrowserPort + "/tcp");
         String browserUrlFormat = "http://%s:%s/";
