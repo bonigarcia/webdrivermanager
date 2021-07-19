@@ -56,7 +56,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
@@ -183,8 +182,6 @@ public abstract class WebDriverManager {
 
     protected String downloadedDriverVersion;
     protected String downloadedDriverPath;
-    protected String noVncUrl;
-    protected Path recordingPath;
 
     public static Config globalConfig() {
         Config global = new Config();
@@ -365,8 +362,6 @@ public abstract class WebDriverManager {
             }
         }
         webDriverList.clear();
-        noVncUrl = "";
-        recordingPath = null;
     }
 
     public Optional<Path> getBrowserPath() {
@@ -717,16 +712,25 @@ public abstract class WebDriverManager {
     }
 
     public URL getDockerNoVncUrl() {
-        try {
-            return new URL(noVncUrl);
-        } catch (MalformedURLException e) {
-            log.error("URL for Docker session not available", e);
-            return null;
+        URL url = null;
+        if (webDriverList.isEmpty()) {
+            log.error(
+                    "NoVNC URL is not availalbe since there is no browsers in Docker");
+        } else {
+            url = webDriverList.get(0).getNoVncUrl();
         }
+        return url;
     }
 
     public Path getDockerRecordingPath() {
-        return recordingPath;
+        Path path = null;
+        if (webDriverList.isEmpty()) {
+            log.error(
+                    "Path of recording is not availalbe since there is no browsers in Docker");
+        } else {
+            path = webDriverList.get(0).getRecordingPath();
+        }
+        return path;
     }
 
     // ------------
@@ -1335,12 +1339,12 @@ public abstract class WebDriverManager {
             log.error("There was an error creating WebDriver object for {}",
                     getDriverManagerType().getBrowserName(), e);
         }
-        addShutdownHook();
+        addShutdownHookIfRequired();
 
         return driver;
     }
 
-    protected void addShutdownHook() {
+    protected void addShutdownHookIfRequired() {
         if (!shutdownHook) {
             Runtime.getRuntime()
                     .addShutdownHook(new Thread("wdm-shutdown-hook") {
@@ -1415,7 +1419,8 @@ public abstract class WebDriverManager {
                     noVncImage, "novnc-container", noVncVersion,
                     browserContainer);
             driverBrowser.addDockerContainer(noVncContainer);
-            noVncUrl = noVncContainer.getContainerUrl();
+            String noVncUrl = noVncContainer.getContainerUrl();
+            driverBrowser.setNoVncUrl(noVncUrl);
 
             log.info("Docker session noVNC URL: {}", noVncUrl);
         }
@@ -1428,7 +1433,8 @@ public abstract class WebDriverManager {
                     .startRecorderContainer(recorderImage, "recorder-container",
                             recorderVersion, browserContainer);
             driverBrowser.addDockerContainer(recorderContainer, 0);
-            recordingPath = recorderContainer.getRecordingPath();
+            Path recordingPath = recorderContainer.getRecordingPath();
+            driverBrowser.setRecordingPath(recordingPath);
 
             log.info("Starting recording {}", recordingPath);
         }

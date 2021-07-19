@@ -19,6 +19,9 @@ package io.github.bonigarcia.wdm.webdriver;
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.slf4j.LoggerFactory.getLogger;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +42,9 @@ public class WebDriverBrowser {
 
     WebDriver driver;
     List<DockerContainer> dockerContainerList;
+    String noVncUrl;
+    Path recordingPath;
+    int identityHash;
 
     public WebDriverBrowser() {
         this.dockerContainerList = new ArrayList<>();
@@ -47,6 +53,7 @@ public class WebDriverBrowser {
     public WebDriverBrowser(WebDriver driver) {
         super();
         this.driver = driver;
+        setIdentityHash(driver);
     }
 
     public WebDriver getDriver() {
@@ -68,6 +75,36 @@ public class WebDriverBrowser {
     public void addDockerContainer(DockerContainer dockerContainer,
             int position) {
         dockerContainerList.add(position, dockerContainer);
+    }
+
+    public URL getNoVncUrl() {
+        URL url = null;
+        try {
+            url = new URL(noVncUrl);
+        } catch (MalformedURLException e) {
+            log.error("URL for Docker session not available", e);
+        }
+        return url;
+    }
+
+    public void setNoVncUrl(String noVncUrl) {
+        this.noVncUrl = noVncUrl;
+    }
+
+    public Path getRecordingPath() {
+        return recordingPath;
+    }
+
+    public void setRecordingPath(Path recordingPath) {
+        this.recordingPath = recordingPath;
+    }
+
+    public int getIdentityHash() {
+        return identityHash;
+    }
+
+    public void setIdentityHash(Object object) {
+        this.identityHash = System.identityHashCode(object);
     }
 
 }
