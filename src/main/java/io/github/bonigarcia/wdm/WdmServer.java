@@ -171,7 +171,10 @@ public class WdmServer {
     private String getSessionIdFromPath(String path) {
         path = path.substring(path.indexOf("/") + 1);
         path = path.substring(path.indexOf("/") + 1);
-        path = path.substring(0, path.indexOf("/"));
+        int i = path.indexOf("/");
+        if (i != -1) {
+            path = path.substring(0, i);
+        }
         return path;
     }
 
