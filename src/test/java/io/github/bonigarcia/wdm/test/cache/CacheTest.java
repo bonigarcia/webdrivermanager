@@ -56,7 +56,7 @@ class CacheTest {
             throws Exception {
 
         WebDriverManager wdm = WebDriverManager.getInstance(driverManagerType)
-                .clearResolutionCache().forceDownload().operatingSystem(os)
+                .avoidResolutionCache().forceDownload().operatingSystem(os)
                 .driverVersion(driverVersion);
         wdm.setup();
 
