@@ -19,7 +19,7 @@
         <docker-java.version>3.2.11</docker-java.version>
 
         <!-- provided -->
-        <javalin.version>3.13.9</javalin.version>
+        <javalin.version>3.13.10</javalin.version>
         <selenium.version>3.141.59</selenium.version>
 
         <!-- test -->
