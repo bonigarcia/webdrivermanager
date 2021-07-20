@@ -24,13 +24,10 @@ import static org.slf4j.LoggerFactory.getLogger;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import io.github.bonigarcia.wdm.config.Config;
 
 /**
  * Test for custom target.
@@ -42,32 +39,26 @@ class CustomCacheTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
-    Config globalConfig;
-
-    @BeforeEach
-    void setup() {
-        globalConfig = WebDriverManager.globalConfig();
-    }
+    WebDriverManager wdm = WebDriverManager.chromedriver();
 
     @Test
     void testCachePath() throws IOException {
         Path tmpFolder = createTempDirectory("").toRealPath();
-        globalConfig.setCachePath(tmpFolder.toString());
+        wdm.config().setCachePath(tmpFolder.toString());
         log.info("Using temporary folder {} as cache", tmpFolder);
-        WebDriverManager.chromedriver().forceDownload().setup();
-        String driverPath = WebDriverManager.chromedriver()
-                .getDownloadedDriverPath();
+        wdm.forceDownload().setup();
+        String driverPath = wdm.getDownloadedDriverPath();
         log.info("Driver path {}", driverPath);
         assertThat(driverPath).startsWith(tmpFolder.toString());
         log.info("Deleting temporary folder {}", tmpFolder);
-        WebDriverManager.chromedriver().clearDriverCache();
+        wdm.clearDriverCache();
     }
 
     @Test
     void testCachePathContainsTilde() {
         String customPath = "C:\\user\\abcdef~1\\path";
-        globalConfig.setCachePath(customPath);
-        String cachePath = globalConfig.getCachePath();
+        wdm.config().setCachePath(customPath);
+        String cachePath = wdm.config().getCachePath();
         log.info("Using {} got {}", customPath, cachePath);
         assertThat(cachePath).startsWith(customPath);
     }
@@ -75,8 +66,8 @@ class CustomCacheTest {
     @Test
     void testCachePathStartsWithTildeSlash() {
         String customPath = "~/webdrivers";
-        globalConfig.setCachePath(customPath);
-        String cachePath = globalConfig.getCachePath();
+        wdm.config().setCachePath(customPath);
+        String cachePath = wdm.config().getCachePath();
         log.info("Using {} got {}", customPath, cachePath);
         assertThat(cachePath).startsWith(System.getProperty("user.home"));
     }
@@ -84,14 +75,10 @@ class CustomCacheTest {
     @Test
     void testCachePathStartsWithTilde() {
         String customPath = "~webdrivers";
-        globalConfig.setCachePath(customPath);
-        String cachePath = globalConfig.getCachePath();
+        wdm.config().setCachePath(customPath);
+        String cachePath = wdm.config().getCachePath();
         log.info("Using {} got {}", customPath, cachePath);
         assertThat(cachePath).startsWith(customPath);
     }
 
-    @AfterEach
-    void teardown() throws IOException {
-        globalConfig.reset();
-    }
 }

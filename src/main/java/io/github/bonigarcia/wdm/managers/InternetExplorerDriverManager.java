@@ -47,7 +47,6 @@ public class InternetExplorerDriverManager extends WebDriverManager {
         return IEXPLORER;
     }
 
-    @Override
     protected String getDriverName() {
         return "IEDriverServer";
     }
@@ -128,7 +127,7 @@ public class InternetExplorerDriverManager extends WebDriverManager {
 
     public WebDriverManager exportParameter(String exportParameter) {
         config().setInternetExplorerDriverExport(exportParameter);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
 }

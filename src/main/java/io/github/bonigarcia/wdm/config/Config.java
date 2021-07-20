@@ -75,8 +75,6 @@ public class Config {
             Boolean.class);
     ConfigKey<Boolean> avoidBrowserDetection = new ConfigKey<>(
             "wdm.avoidBrowserDetection", Boolean.class);
-    ConfigKey<Boolean> avoidAutoReset = new ConfigKey<>("wdm.avoidAutoReset",
-            Boolean.class);
     ConfigKey<Boolean> avoidFallback = new ConfigKey<>("wdm.avoidFallback",
             Boolean.class);
     ConfigKey<Boolean> avoidResolutionCache = new ConfigKey<>(
@@ -454,15 +452,6 @@ public class Config {
 
     public Config setAvoidBrowserDetection(boolean value) {
         this.avoidBrowserDetection.setValue(value);
-        return this;
-    }
-
-    public boolean isAvoidAutoReset() {
-        return resolve(avoidAutoReset);
-    }
-
-    public Config setAvoidAutoReset(boolean value) {
-        this.avoidAutoReset.setValue(value);
         return this;
     }
 

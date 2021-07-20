@@ -41,12 +41,11 @@ class ForceDownloadTest {
     @ValueSource(classes = { ChromeDriver.class, FirefoxDriver.class,
             OperaDriver.class, EdgeDriver.class })
     void testForceDownload(Class<? extends WebDriver> driverClass) {
-        WebDriverManager driverManager = WebDriverManager
-                .getInstance(driverClass);
-        driverManager.forceDownload().avoidTmpFolder().avoidBrowserDetection()
+        WebDriverManager wdm = WebDriverManager.getInstance(driverClass);
+        wdm.forceDownload().avoidTmpFolder().avoidBrowserDetection()
                 .avoidReadReleaseFromRepository().timeout(20)
                 .operatingSystem(WIN).setup();
-        assertThat(driverManager.getDownloadedDriverPath()).isNotNull();
+        assertThat(wdm.getDownloadedDriverPath()).isNotNull();
     }
 
 }

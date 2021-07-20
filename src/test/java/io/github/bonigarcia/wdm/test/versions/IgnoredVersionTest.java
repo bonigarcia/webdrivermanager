@@ -21,8 +21,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.slf4j.LoggerFactory.getLogger;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
@@ -38,31 +36,24 @@ class IgnoredVersionTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
-    @BeforeEach
-    @AfterEach
-    void cleanCache() {
-        WebDriverManager.chromedriver().clearDriverCache();
-    }
-
     @Test
     void ignoredVersionsChrome() {
         String driverVersion = "81.0.4044.69";
         String[] ignoredVersions = { driverVersion };
 
-        WebDriverManager manager = WebDriverManager.chromedriver()
+        WebDriverManager wdm = WebDriverManager.chromedriver()
                 .driverVersion(driverVersion)
                 .ignoreDriverVersions(ignoredVersions).avoidFallback();
-        assertThatThrownBy(manager::setup)
+        assertThatThrownBy(wdm::setup)
                 .isInstanceOf(WebDriverManagerException.class);
     }
 
     @Test
     void ignoredVersionsFirefox() {
         String[] ignoredVersions = { "0.27.0", "0.26.0" };
-        WebDriverManager.firefoxdriver().ignoreDriverVersions(ignoredVersions)
-                .setup();
-        String driverVersion = WebDriverManager.firefoxdriver()
-                .getDownloadedDriverVersion();
+        WebDriverManager wdm = WebDriverManager.firefoxdriver();
+        wdm.ignoreDriverVersions(ignoredVersions).setup();
+        String driverVersion = wdm.getDownloadedDriverVersion();
         log.debug("Resolved version {}", driverVersion);
         assertThat(ignoredVersions).doesNotContain(driverVersion);
     }

@@ -116,7 +116,7 @@ public class FirefoxDriverManager extends WebDriverManager {
 
     public WebDriverManager exportParameter(String exportParameter) {
         config().setFirefoxDriverExport(exportParameter);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
 }

@@ -22,8 +22,6 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
@@ -39,28 +37,22 @@ class BrowserVersionTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
-    @BeforeAll
-    @AfterAll
-    static void cleanCache() {
-        WebDriverManager.chromedriver().clearResolutionCache();
-    }
-
     @Test
     void testChromeVersion() {
-        WebDriverManager driverManager = WebDriverManager.chromedriver();
-        driverManager.browserVersion("81").setup();
-        assertDriver(driverManager);
+        WebDriverManager wdm = WebDriverManager.chromedriver();
+        wdm.browserVersion("81").setup();
+        assertDriver(wdm);
     }
 
     @Test
     void testFirefoxVersion() {
-        WebDriverManager driverManager = WebDriverManager.firefoxdriver();
-        driverManager.browserVersion("75").setup();
-        assertDriver(driverManager);
+        WebDriverManager wdm = WebDriverManager.firefoxdriver();
+        wdm.browserVersion("75").setup();
+        assertDriver(wdm);
     }
 
-    private void assertDriver(WebDriverManager driverManager) {
-        File driver = new File(driverManager.getDownloadedDriverPath());
+    private void assertDriver(WebDriverManager wdm) {
+        File driver = new File(wdm.getDownloadedDriverPath());
         log.debug("Driver path {}", driver);
         assertThat(driver).exists();
     }

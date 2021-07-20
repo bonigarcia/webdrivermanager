@@ -37,23 +37,23 @@ class FirefoxArmTest {
 
     @Test
     void testFirefoxArm() {
-        WebDriverManager driverManager = WebDriverManager.firefoxdriver();
+        WebDriverManager wdm = WebDriverManager.firefoxdriver();
 
         // 1. Force downloading (empty cache)
-        driverManager.clearDriverCache();
-        checkArm(driverManager);
+        wdm.clearDriverCache();
+        checkArm(wdm);
 
         // 2. Using cache
-        checkArm(driverManager);
+        checkArm(wdm);
     }
 
-    private void checkArm(WebDriverManager driverManager) {
-        driverManager.driverVersion("0.29.1").mac().setup();
-        String driverPath = driverManager.getDownloadedDriverPath();
-        log.debug("Driver path (default arch) {}", driverPath);
+    private void checkArm(WebDriverManager wdm) {
+        wdm.driverVersion("0.29.1").mac().arch64().setup();
+        String driverPath = wdm.getDownloadedDriverPath();
+        log.debug("Driver path (X64) {}", driverPath);
 
-        driverManager.driverVersion("0.29.1").mac().arm64().setup();
-        String driverPathArm64 = driverManager.getDownloadedDriverPath();
+        wdm.driverVersion("0.29.1").mac().arm64().setup();
+        String driverPathArm64 = wdm.getDownloadedDriverPath();
         log.debug("Driver path (ARM64) {}", driverPathArm64);
 
         assertThat(driverPath).isNotEqualTo(driverPathArm64);

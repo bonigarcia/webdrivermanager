@@ -21,12 +21,9 @@ import static io.github.bonigarcia.wdm.config.Architecture.X32;
 import static io.github.bonigarcia.wdm.config.Architecture.X64;
 import static io.github.bonigarcia.wdm.config.Config.isNullOrEmpty;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROME;
-import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROMIUM;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.EDGE;
-import static io.github.bonigarcia.wdm.config.DriverManagerType.FIREFOX;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.IEXPLORER;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.OPERA;
-import static io.github.bonigarcia.wdm.config.DriverManagerType.SAFARI;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.LINUX;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.MAC;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.WIN;
@@ -61,10 +58,8 @@ import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -161,9 +156,6 @@ public abstract class WebDriverManager {
 
     protected abstract Optional<String> getExportParameter();
 
-    protected static Map<DriverManagerType, WebDriverManager> instanceMap = new EnumMap<>(
-            DriverManagerType.class);
-
     public abstract DriverManagerType getDriverManagerType();
 
     protected Config config = new Config();
@@ -188,65 +180,48 @@ public abstract class WebDriverManager {
     protected String downloadedDriverVersion;
     protected String downloadedDriverPath;
 
-    public static Config globalConfig() {
-        Config global = new Config();
-        global.setAvoidAutoReset(true);
-        for (DriverManagerType type : DriverManagerType.values()) {
-            WebDriverManager.getInstance(type).setConfig(global);
-        }
-        return global;
-    }
-
     public Config config() {
         return config;
     }
 
-    public static synchronized WebDriverManager chromedriver() {
-        instanceMap.putIfAbsent(CHROME, new ChromeDriverManager());
-        return instanceMap.get(CHROME);
+    public static WebDriverManager chromedriver() {
+        return new ChromeDriverManager();
     }
 
-    public static synchronized WebDriverManager chromiumdriver() {
-        instanceMap.putIfAbsent(CHROMIUM, new ChromiumDriverManager());
-        return instanceMap.get(CHROMIUM);
+    public static WebDriverManager chromiumdriver() {
+        return new ChromiumDriverManager();
     }
 
-    public static synchronized WebDriverManager firefoxdriver() {
-        instanceMap.putIfAbsent(FIREFOX, new FirefoxDriverManager());
-        return instanceMap.get(FIREFOX);
+    public static WebDriverManager firefoxdriver() {
+        return new FirefoxDriverManager();
     }
 
-    public static synchronized WebDriverManager operadriver() {
-        instanceMap.putIfAbsent(OPERA, new OperaDriverManager());
-        return instanceMap.get(OPERA);
+    public static WebDriverManager operadriver() {
+        return new OperaDriverManager();
     }
 
-    public static synchronized WebDriverManager edgedriver() {
-        instanceMap.putIfAbsent(EDGE, new EdgeDriverManager());
-        return instanceMap.get(EDGE);
+    public static WebDriverManager edgedriver() {
+        return new EdgeDriverManager();
     }
 
-    public static synchronized WebDriverManager iedriver() {
-        instanceMap.putIfAbsent(IEXPLORER, new InternetExplorerDriverManager());
-        return instanceMap.get(IEXPLORER);
+    public static WebDriverManager iedriver() {
+        return new InternetExplorerDriverManager();
     }
 
-    public static synchronized WebDriverManager safaridriver() {
-        instanceMap.putIfAbsent(SAFARI, new SafariDriverManager());
-        return instanceMap.get(SAFARI);
+    public static WebDriverManager safaridriver() {
+        return new SafariDriverManager();
     }
 
-    protected static synchronized WebDriverManager voiddriver() {
+    protected static WebDriverManager voiddriver() {
         return new VoidDriverManager();
     }
 
-    public static synchronized WebDriverManager getInstance(
+    public static WebDriverManager getInstance(
             DriverManagerType driverManagerType) {
         return getDriver(driverManagerType.browserClass());
     }
 
-    public static synchronized WebDriverManager getInstance(
-            String browserName) {
+    public static WebDriverManager getInstance(String browserName) {
         DriverManagerType managerType;
         switch (browserName) {
         case "operablink":
@@ -266,13 +241,11 @@ public abstract class WebDriverManager {
         return getInstance(managerType);
     }
 
-    public static synchronized WebDriverManager getInstance(
-            Class<?> webDriverClass) {
+    public static WebDriverManager getInstance(Class<?> webDriverClass) {
         return getDriver(webDriverClass.getName());
     }
 
-    protected static synchronized WebDriverManager getDriver(
-            String webDriverClass) {
+    protected static WebDriverManager getDriver(String webDriverClass) {
         switch (webDriverClass) {
         case "org.openqa.selenium.chrome.ChromeDriver":
             return chromedriver();
@@ -291,7 +264,7 @@ public abstract class WebDriverManager {
         }
     }
 
-    public static synchronized WebDriverManager getInstance() {
+    public static WebDriverManager getInstance() {
         WebDriverManager manager = voiddriver();
         String defaultBrowser = manager.config().getDefaultBrowser();
         try {
@@ -317,7 +290,7 @@ public abstract class WebDriverManager {
         return manager;
     }
 
-    public synchronized void setup() {
+    public void setup() {
         DriverManagerType driverManagerType = getDriverManagerType();
         initResolutionCache();
         cacheHandler = new CacheHandler(config);
@@ -334,11 +307,7 @@ public abstract class WebDriverManager {
             return;
         }
         if (driverManagerType != null) {
-            try {
-                manage(getDriverVersion());
-            } finally {
-                reset();
-            }
+            manage(getDriverVersion());
         }
     }
 
@@ -349,35 +318,27 @@ public abstract class WebDriverManager {
 
     public List<WebDriver> create(int numberOfBrowser) {
         List<WebDriver> browserList = new ArrayList<>();
-        try {
-            for (int i = 0; i < numberOfBrowser; i++) {
-                if (i == 0) {
-                    setup();
-                }
-                browserList.add(instantiateDriver());
+        for (int i = 0; i < numberOfBrowser; i++) {
+            if (i == 0) {
+                setup();
             }
-        } finally {
-            reset();
+            browserList.add(instantiateDriver());
         }
         return browserList;
     }
 
-    public synchronized void quit() {
+    public void quit() {
         webDriverList.stream().forEach(this::quit);
         webDriverList.clear();
-        reset();
     }
 
-    public synchronized void quit(WebDriver driver) {
+    public void quit(WebDriver driver) {
         Optional<WebDriverBrowser> webDriverBrowser = findWebDriverBrowser(
                 driver);
         if (webDriverBrowser.isPresent()) {
             WebDriverBrowser driverBrowser = webDriverBrowser.get();
             quit(driverBrowser);
             webDriverList.remove(driverBrowser);
-            if (webDriverList.isEmpty()) {
-                reset();
-            }
         }
     }
 
@@ -414,8 +375,8 @@ public abstract class WebDriverManager {
     }
 
     public WebDriverManager browserInDocker() {
-        this.dockerEnabled = true;
-        return instanceMap.get(getDriverManagerType());
+        dockerEnabled = true;
+        return this;
     }
 
     public WebDriverManager browserInDockerAndroid() {
@@ -426,57 +387,57 @@ public abstract class WebDriverManager {
 
     public WebDriverManager dockerDaemonUrl(String daemonUrl) {
         config().setDockerDaemonUrl(daemonUrl);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager dockerTimezone(String timezone) {
         config().setDockerTimezone(timezone);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager dockerLang(String lang) {
         config().setDockerLang(lang);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager dockerShmSize(String size) {
         config().setDockerShmSize(size);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager dockerTmpfsSize(String size) {
         config().setDockerTmpfsSize(size);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager dockerTmpfsMount(String mount) {
         config().setDockerTmpfsMount(mount);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager dockerVolumes(String volumes) {
         config().setDockerVolumes(volumes);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager dockerScreenResolution(String screenResolution) {
         config().setDockerScreenResolution(screenResolution);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager dockerRecordingFrameRate(int frameRate) {
         config().setDockerRecordingFrameRate(frameRate);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager enableVnc() {
         config().setDockerEnableVnc(true);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager enableRecording() {
         config().setDockerEnableRecording(true);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager recordingOutput(String path) {
@@ -485,84 +446,84 @@ public abstract class WebDriverManager {
 
     public WebDriverManager recordingOutput(Path path) {
         config().setDockerRecordingOutput(path);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager capabilities(Capabilities options) {
-        this.capabilities = options;
-        return instanceMap.get(getDriverManagerType());
+        capabilities = options;
+        return this;
     }
 
     public WebDriverManager remoteAddress(String remoteAddress) {
         config().setRemoteAddress(remoteAddress);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager dockerImage(String dockerImage) {
         config().setDockerCustomImage(dockerImage);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager driverVersion(String driverVersion) {
         setDriverVersion(driverVersion);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager browserVersion(String browserVersion) {
         setBrowserVersion(browserVersion);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager architecture(Architecture architecture) {
         config().setArchitecture(architecture);
         forcedArch = true;
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager arch32() {
         architecture(X32);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager arch64() {
         architecture(X64);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager arm64() {
         architecture(ARM64);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager win() {
         operatingSystem(WIN);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager linux() {
         operatingSystem(LINUX);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager mac() {
         operatingSystem(MAC);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager operatingSystem(OperatingSystem os) {
         config().setOs(os.name());
         forcedOs = true;
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager forceDownload() {
         config().setForceDownload(true);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager driverRepositoryUrl(URL url) {
         setDriverUrl(url);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager useMirror() {
@@ -571,139 +532,139 @@ public abstract class WebDriverManager {
             throw new WebDriverManagerException("Mirror URL not available");
         }
         config().setUseMirror(true);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager proxy(String proxy) {
         config().setProxy(proxy);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager proxyUser(String proxyUser) {
         config().setProxyUser(proxyUser);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager proxyPass(String proxyPass) {
         config().setProxyPass(proxyPass);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager useBetaVersions() {
         config().setUseBetaVersions(true);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager ignoreDriverVersions(String... driverVersions) {
         config().setIgnoreVersions(driverVersions);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager gitHubToken(String gitHubToken) {
         config().setGitHubToken(gitHubToken);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager timeout(int timeout) {
         config().setTimeout(timeout);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager properties(String properties) {
         config().setProperties(properties);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager cachePath(String cachePath) {
         config().setCachePath(cachePath);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager resolutionCachePath(String resolutionCachePath) {
         config().setResolutionCachePath(resolutionCachePath);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager avoidExport() {
         config().setAvoidExport(true);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager avoidOutputTree() {
         config().setAvoidOutputTree(true);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager avoidBrowserDetection() {
         config().setAvoidBrowserDetection(true);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager avoidResolutionCache() {
         config().setAvoidResolutionCache(true);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager avoidFallback() {
         config().setAvoidFallback(true);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager avoidReadReleaseFromRepository() {
         config().setAvoidReadReleaseFromRepository(true);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager avoidTmpFolder() {
         config().setAvoidTmpFolder(true);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager avoidUseChromiumDriverSnap() {
         config().setUseChromiumDriverSnap(false);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager ttl(int seconds) {
         config().setTtl(seconds);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager ttlBrowsers(int seconds) {
         config().setTtlForBrowsers(seconds);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager browserVersionDetectionCommand(
             String browserVersionCommand) {
         config().setBrowserVersionDetectionCommand(browserVersionCommand);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager useLocalVersionsPropertiesFirst() {
         config().setVersionsPropertiesOnlineFirst(false);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager useLocalCommandsPropertiesFirst() {
         config().setCommandsPropertiesOnlineFirst(false);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager versionsPropertiesUrl(URL url) {
         config().setVersionsPropertiesUrl(url);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager commandsPropertiesUrl(URL url) {
         config().setCommandsPropertiesUrl(url);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager clearResolutionCache() {
         initResolutionCache();
-        instanceMap.get(getDriverManagerType()).resolutionCache.clear();
-        return instanceMap.get(getDriverManagerType());
+        resolutionCache.clear();
+        return this;
     }
 
     public WebDriverManager clearDriverCache() {
@@ -714,22 +675,34 @@ public abstract class WebDriverManager {
         } catch (Exception e) {
             log.warn("Exception deleting driver cache at {}", cachePath, e);
         }
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager browserVersionDetectionRegex(String regex) {
         config().setBrowserVersionDetectionRegex(regex);
-        return instanceMap.get(getDriverManagerType());
+        return this;
+    }
+
+    public void reset() {
+        config().reset();
+        mirrorLog = false;
+        forcedArch = false;
+        forcedOs = false;
+        retryCount = 0;
+        shutdownHook = false;
+        dockerEnabled = false;
+        androidEnabled = false;
+        capabilities = null;
     }
 
     // ------------
 
     public String getDownloadedDriverPath() {
-        return instanceMap.get(getDriverManagerType()).downloadedDriverPath;
+        return downloadedDriverPath;
     }
 
     public String getDownloadedDriverVersion() {
-        return instanceMap.get(getDriverManagerType()).downloadedDriverVersion;
+        return downloadedDriverVersion;
     }
 
     public List<String> getDriverVersions() {
@@ -1324,20 +1297,6 @@ public abstract class WebDriverManager {
                         getLatestVersionLabel(), LATEST_RELEASE, getOsLabel());
     }
 
-    protected void reset() {
-        if (!config().isAvoidAutoReset()) {
-            config().reset();
-            mirrorLog = false;
-            forcedArch = false;
-            forcedOs = false;
-            retryCount = 0;
-            shutdownHook = false;
-            dockerEnabled = false;
-            androidEnabled = false;
-            capabilities = null;
-        }
-    }
-
     protected URL getDriverUrlCkeckingMirror(URL url) {
         if (config().isUseMirror()) {
             Optional<URL> mirrorUrl = getMirrorUrl();
@@ -1418,10 +1377,6 @@ public abstract class WebDriverManager {
         log.error("3. As a server:");
         log.error("\tWebDriverManager {} <port>", CLI_SERVER);
         log.error("\t(where default port is 4041)");
-    }
-
-    protected void setConfig(Config config) {
-        this.config = config;
     }
 
     protected Optional<String> getLatestDriverVersionFromRepository() {

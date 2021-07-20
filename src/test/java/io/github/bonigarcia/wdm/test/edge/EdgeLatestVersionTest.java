@@ -65,15 +65,15 @@ class EdgeLatestVersionTest {
         String edgeVersion = driverVersionFromRepository.get();
         log.debug("driverVersionFromRepository {}", edgeVersion);
 
-        WebDriverManager edgedriver = WebDriverManager.edgedriver();
-        List<String> driverVersions = edgedriver.getDriverVersions();
+        WebDriverManager wdm = WebDriverManager.edgedriver();
+        List<String> driverVersions = wdm.getDriverVersions();
         log.debug("All driverUrls {}", driverVersions);
 
         if (!driverVersions.contains(edgeVersion)) {
             log.warn("{}", String.format(
                     "Stable version (%s) is not in the URL list", edgeVersion));
-            edgedriver.win().forceDownload().avoidBrowserDetection().setup();
-            assertThat(edgedriver.getDownloadedDriverVersion()).isNotNull();
+            wdm.win().forceDownload().avoidBrowserDetection().setup();
+            assertThat(wdm.getDownloadedDriverVersion()).isNotNull();
         }
     }
 

@@ -16,7 +16,6 @@
  */
 package io.github.bonigarcia.wdm.test.forced;
 
-import static io.github.bonigarcia.wdm.WebDriverManager.firefoxdriver;
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -24,6 +23,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 /**
  * Force download test.
@@ -40,11 +41,12 @@ class ForceError403Test {
     @Disabled
     @Test
     void test403() {
+        WebDriverManager wdm = WebDriverManager.firefoxdriver()
+                .avoidBrowserDetection().avoidResolutionCache();
         for (int i = 0; i < NUM; i++) {
             log.debug("Forcing 403 error {}/{}", i + 1, NUM);
-            firefoxdriver().avoidBrowserDetection().avoidResolutionCache()
-                    .setup();
-            assertThat(firefoxdriver().getDownloadedDriverPath()).isNotNull();
+            wdm.setup();
+            assertThat(wdm.getDownloadedDriverPath()).isNotNull();
         }
     }
 

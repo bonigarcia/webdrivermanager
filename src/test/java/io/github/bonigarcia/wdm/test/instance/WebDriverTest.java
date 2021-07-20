@@ -39,9 +39,9 @@ class WebDriverTest {
     @ParameterizedTest
     @ValueSource(classes = { ChromeDriver.class, FirefoxDriver.class })
     void testWebDriver(Class<? extends WebDriver> driverClass) {
-        WebDriverManager.getInstance(driverClass).setup();
-        String driverPath = WebDriverManager.getInstance(driverClass)
-                .getDownloadedDriverPath();
+        WebDriverManager wdm = WebDriverManager.getInstance(driverClass);
+        wdm.setup();
+        String driverPath = wdm.getDownloadedDriverPath();
         File driver = new File(driverPath);
         assertThat(driver).exists();
     }

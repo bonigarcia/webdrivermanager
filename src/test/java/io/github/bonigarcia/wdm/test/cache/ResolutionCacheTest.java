@@ -16,7 +16,6 @@
  */
 package io.github.bonigarcia.wdm.test.cache;
 
-import static io.github.bonigarcia.wdm.WebDriverManager.chromedriver;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
@@ -35,9 +34,10 @@ class ResolutionCacheTest {
 
     @Test
     void testEmptyTtl() {
-        WebDriverManager.main(new String[] { "clear-resolution-cache" });
-        chromedriver().ttl(0).ttlBrowsers(0).setup();
-        File driver = new File(chromedriver().getDownloadedDriverPath());
+        WebDriverManager wdm = WebDriverManager.chromedriver().ttl(0)
+                .ttlBrowsers(0);
+        wdm.setup();
+        File driver = new File(wdm.getDownloadedDriverPath());
 
         assertThat(driver).exists();
     }

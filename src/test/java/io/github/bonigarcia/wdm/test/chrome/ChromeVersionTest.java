@@ -31,7 +31,7 @@ class ChromeVersionTest extends VersionTestParent {
 
     @BeforeEach
     void setup() {
-        browserManager = WebDriverManager.chromedriver();
+        wdm = WebDriverManager.chromedriver();
         specificVersions = new String[] { "2.10", "2.33" };
     }
 

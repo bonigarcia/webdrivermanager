@@ -34,6 +34,9 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  */
 class LocalPropertiesTest {
 
+    WebDriverManager wdm = WebDriverManager.chromedriver()
+            .clearResolutionCache().avoidReadReleaseFromRepository();
+
     @Test
     void testCustomUrl() throws MalformedURLException {
         File dot = new File(".");
@@ -41,9 +44,7 @@ class LocalPropertiesTest {
                 + "/src/main/resources/versions.properties");
         URL commandsPropertiesUrl = new URL("file://" + dot.getAbsolutePath()
                 + "/src/main/resources/commands.properties");
-        WebDriverManager.chromedriver().clearResolutionCache()
-                .avoidReadReleaseFromRepository()
-                .versionsPropertiesUrl(versionsPropertiesUrl)
+        wdm.versionsPropertiesUrl(versionsPropertiesUrl)
                 .commandsPropertiesUrl(commandsPropertiesUrl).setup();
 
         assertDriverPath();
@@ -51,17 +52,14 @@ class LocalPropertiesTest {
 
     @Test
     void testLocalFirst() {
-        WebDriverManager.chromedriver().clearResolutionCache()
-                .avoidReadReleaseFromRepository()
-                .useLocalCommandsPropertiesFirst()
-                .useLocalVersionsPropertiesFirst().setup();
+        wdm.useLocalCommandsPropertiesFirst().useLocalVersionsPropertiesFirst()
+                .setup();
 
         assertDriverPath();
     }
 
     private void assertDriverPath() {
-        String driverPath = WebDriverManager.chromedriver()
-                .getDownloadedDriverPath();
+        String driverPath = wdm.getDownloadedDriverPath();
         File driver = new File(driverPath);
         assertThat(driver).exists();
     }

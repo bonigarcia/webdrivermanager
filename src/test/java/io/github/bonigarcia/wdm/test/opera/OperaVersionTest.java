@@ -31,7 +31,7 @@ class OperaVersionTest extends VersionTestParent {
 
     @BeforeEach
     void setup() {
-        browserManager = WebDriverManager.operadriver();
+        wdm = WebDriverManager.operadriver();
         specificVersions = new String[] { "0.2.2", "2.32" };
     }
 

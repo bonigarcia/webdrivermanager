@@ -209,7 +209,7 @@ public class EdgeDriverManager extends WebDriverManager {
 
     public WebDriverManager exportParameter(String exportParameter) {
         config().setEdgeDriverExport(exportParameter);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
 }

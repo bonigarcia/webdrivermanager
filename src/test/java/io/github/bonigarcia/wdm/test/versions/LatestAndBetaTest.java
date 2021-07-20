@@ -44,16 +44,14 @@ class LatestAndBetaTest {
     @ParameterizedTest
     @ValueSource(classes = { ChromeDriver.class, EdgeDriver.class })
     void testLatestAndBetaedgedriver(Class<? extends WebDriver> driverClass) {
-        WebDriverManager.getInstance(driverClass).avoidResolutionCache()
-                .avoidBrowserDetection().win().setup();
-        String edgedriverStable = WebDriverManager.getInstance(driverClass)
-                .getDownloadedDriverVersion();
+        WebDriverManager wdm = WebDriverManager.getInstance(driverClass)
+                .avoidResolutionCache().avoidBrowserDetection().win();
+        wdm.setup();
+        String edgedriverStable = wdm.getDownloadedDriverVersion();
         log.debug("edgedriver LATEST version: {}", edgedriverStable);
 
-        WebDriverManager.getInstance(driverClass).avoidResolutionCache()
-                .avoidBrowserDetection().useBetaVersions().win().setup();
-        String edgedriverBeta = WebDriverManager.getInstance(driverClass)
-                .getDownloadedDriverVersion();
+        wdm.useBetaVersions().setup();
+        String edgedriverBeta = wdm.getDownloadedDriverVersion();
         log.debug("edgedriver BETA version: {}", edgedriverBeta);
 
         assertThat(edgedriverStable).isNotEqualTo(edgedriverBeta);

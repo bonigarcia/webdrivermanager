@@ -171,12 +171,12 @@ public class ChromeDriverManager extends WebDriverManager {
     public WebDriverManager browserInDockerAndroid() {
         this.dockerEnabled = true;
         this.androidEnabled = true;
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
     public WebDriverManager exportParameter(String exportParameter) {
         config().setChromeDriverExport(exportParameter);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
 }

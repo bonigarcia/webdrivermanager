@@ -35,7 +35,7 @@ class FirefoxVersionTest extends VersionTestParent {
 
     @BeforeEach
     void setup() {
-        browserManager = WebDriverManager.firefoxdriver();
+        wdm = WebDriverManager.firefoxdriver();
         specificVersions = new String[] { "0.8.0", "0.19.1" };
     }
 

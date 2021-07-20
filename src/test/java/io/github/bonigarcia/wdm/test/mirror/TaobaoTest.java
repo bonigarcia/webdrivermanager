@@ -16,7 +16,6 @@
  */
 package io.github.bonigarcia.wdm.test.mirror;
 
-import static io.github.bonigarcia.wdm.WebDriverManager.chromedriver;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -38,27 +37,26 @@ import io.github.bonigarcia.wdm.config.WebDriverManagerException;
 
 class TaobaoTest {
 
+    WebDriverManager wdm = WebDriverManager.chromedriver()
+            .avoidBrowserDetection().useMirror().forceDownload();
+
     @Disabled("Flaky test due to slow response of npm.taobao.org")
     @Test
     void testTaobao() throws Exception {
-        chromedriver().config().setAvoidBrowserDetection(true)
-                .setChromeDriverMirrorUrl(
-                        new URL("http://npm.taobao.org/mirrors/chromedriver/"));
-        chromedriver().useMirror().forceDownload().setup();
-
-        File driver = new File(chromedriver().getDownloadedDriverPath());
+        wdm.config().setChromeDriverMirrorUrl(
+                new URL("http://npm.taobao.org/mirrors/chromedriver/"));
+        wdm.setup();
+        File driver = new File(wdm.getDownloadedDriverPath());
         assertThat(driver).exists();
     }
 
     @Disabled("Flaky test due to cnpmjs.org")
     @Test
     void testOtherMirrorUrl() throws Exception {
-        chromedriver().config().setAvoidBrowserDetection(true)
-                .setChromeDriverMirrorUrl(
-                        new URL("https://cnpmjs.org/mirrors/chromedriver/"));
-        chromedriver().useMirror().forceDownload().setup();
-
-        File driver = new File(chromedriver().getDownloadedDriverPath());
+        wdm.config().setChromeDriverMirrorUrl(
+                new URL("https://cnpmjs.org/mirrors/chromedriver/"));
+        wdm.setup();
+        File driver = new File(wdm.getDownloadedDriverPath());
         assertThat(driver).exists();
     }
 

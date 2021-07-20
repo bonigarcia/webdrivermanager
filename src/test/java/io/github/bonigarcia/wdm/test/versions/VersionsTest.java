@@ -45,9 +45,9 @@ class VersionsTest {
 
     @ParameterizedTest
     @MethodSource("data")
-    void testChromeDriverVersions(WebDriverManager driverManager) {
-        List<String> versions = driverManager.getDriverVersions();
-        log.debug("Versions of {} {}", driverManager.getClass().getSimpleName(),
+    void testChromeDriverVersions(WebDriverManager wdm) {
+        List<String> versions = wdm.getDriverVersions();
+        log.trace("Versions of {} {}", wdm.getClass().getSimpleName(),
                 versions);
         assertThat(versions).isNotNull().isNotEmpty();
     }

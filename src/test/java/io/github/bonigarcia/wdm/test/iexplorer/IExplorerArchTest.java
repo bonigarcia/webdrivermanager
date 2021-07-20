@@ -16,7 +16,6 @@
  */
 package io.github.bonigarcia.wdm.test.iexplorer;
 
-import static io.github.bonigarcia.wdm.WebDriverManager.iedriver;
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -38,20 +37,22 @@ class IExplorerArchTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
+    WebDriverManager wdm = WebDriverManager.iedriver().clearDriverCache().win();
+
     @Test
     void testIExplorer32() {
-        WebDriverManager.iedriver().clearDriverCache().win().arch32().setup();
+        wdm.arch32().setup();
         assertIEDriver();
     }
 
     @Test
     void testIExplorer64() {
-        WebDriverManager.iedriver().clearDriverCache().win().arch64().setup();
+        wdm.arch64().setup();
         assertIEDriver();
     }
 
     private void assertIEDriver() {
-        File driver = new File(iedriver().getDownloadedDriverPath());
+        File driver = new File(wdm.getDownloadedDriverPath());
         log.debug("Path for IEDriverServer {}", driver);
         assertThat(driver).exists();
     }

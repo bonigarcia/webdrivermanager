@@ -16,7 +16,6 @@
  */
 package io.github.bonigarcia.wdm.test.forced;
 
-import static io.github.bonigarcia.wdm.WebDriverManager.chromedriver;
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -41,10 +40,13 @@ class ForceOsTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
+    WebDriverManager wdm = WebDriverManager.chromedriver()
+            .avoidResolutionCache();
+
     @BeforeEach
     @AfterEach
     void setup() {
-        WebDriverManager.chromedriver().clearDriverCache();
+        wdm.clearDriverCache();
     }
 
     @ParameterizedTest
@@ -52,16 +54,16 @@ class ForceOsTest {
     void testForceOs(OperatingSystem operatingSystem) {
         switch (operatingSystem) {
         case WIN:
-            chromedriver().win().avoidResolutionCache().setup();
+            wdm.win().setup();
             break;
         case LINUX:
-            chromedriver().linux().avoidResolutionCache().setup();
+            wdm.linux().setup();
             break;
         case MAC:
-            chromedriver().mac().avoidResolutionCache().setup();
+            wdm.mac().setup();
             break;
         }
-        File driver = new File(chromedriver().getDownloadedDriverPath());
+        File driver = new File(wdm.getDownloadedDriverPath());
         log.debug("OS {} - driver path {}", operatingSystem, driver);
         assertThat(driver).exists();
     }

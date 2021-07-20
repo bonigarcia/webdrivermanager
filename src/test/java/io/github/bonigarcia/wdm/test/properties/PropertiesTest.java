@@ -34,10 +34,10 @@ class PropertiesTest {
 
     @Test
     void testCustomProperties() {
-        WebDriverManager chromedriver = WebDriverManager.chromedriver();
-        chromedriver.config().setProperties("wdm-test.properties");
-        chromedriver.setup();
-        String driverPath = chromedriver.getDownloadedDriverPath();
+        WebDriverManager wdm = WebDriverManager.chromedriver();
+        wdm.config().setProperties("wdm-test.properties");
+        wdm.setup();
+        String driverPath = wdm.getDownloadedDriverPath();
         File driver = new File(driverPath);
         assertThat(driver).exists();
     }

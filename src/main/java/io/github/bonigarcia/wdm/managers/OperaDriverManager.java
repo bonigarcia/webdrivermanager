@@ -171,7 +171,7 @@ public class OperaDriverManager extends WebDriverManager {
 
     public WebDriverManager exportParameter(String exportParameter) {
         config().setOperaDriverExport(exportParameter);
-        return instanceMap.get(getDriverManagerType());
+        return this;
     }
 
 }

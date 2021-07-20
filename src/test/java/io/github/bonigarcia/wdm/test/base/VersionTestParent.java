@@ -37,7 +37,7 @@ import io.github.bonigarcia.wdm.config.OperatingSystem;
  */
 abstract public class VersionTestParent {
 
-    protected WebDriverManager browserManager;
+    protected WebDriverManager wdm;
     protected String[] specificVersions;
     protected OperatingSystem os;
 
@@ -48,24 +48,24 @@ abstract public class VersionTestParent {
     void testLatestVersion(Architecture architecture) throws Exception {
         String osLabel = "";
         if (os != null) {
-            browserManager.operatingSystem(os);
+            wdm.operatingSystem(os);
             osLabel = " os=" + os;
         }
-        log.debug("Test latest {} [arch={}{}]",
-                browserManager.getDriverManagerType(), architecture, osLabel);
+        log.debug("Test latest {} [arch={}{}]", wdm.getDriverManagerType(),
+                architecture, osLabel);
 
         switch (architecture) {
         case X32:
-            browserManager.arch32().setup();
+            wdm.arch32().setup();
             break;
         case X64:
-            browserManager.arch64().setup();
+            wdm.arch64().setup();
             break;
         default:
-            browserManager.setup();
+            wdm.setup();
         }
 
-        assertThat(browserManager.getDownloadedDriverVersion()).isNotNull();
+        assertThat(wdm.getDownloadedDriverVersion()).isNotNull();
     }
 
     @ParameterizedTest
@@ -73,20 +73,20 @@ abstract public class VersionTestParent {
     void testSpecificVersions(Architecture architecture) throws Exception {
         for (String specificVersion : specificVersions) {
             if (architecture != DEFAULT) {
-                browserManager.architecture(architecture);
+                wdm.architecture(architecture);
             }
             String osLabel = "";
             if (os != null) {
-                browserManager.operatingSystem(os);
+                wdm.operatingSystem(os);
                 osLabel = " os=" + os;
             }
             log.debug("Test {} version={} [arch={}{}]",
-                    browserManager.getDriverManagerType(), specificVersion,
-                    architecture, osLabel);
+                    wdm.getDriverManagerType(), specificVersion, architecture,
+                    osLabel);
 
-            browserManager.driverVersion(specificVersion).setup();
+            wdm.driverVersion(specificVersion).setup();
 
-            assertThat(browserManager.getDownloadedDriverVersion())
+            assertThat(wdm.getDownloadedDriverVersion())
                     .isEqualTo(specificVersion);
         }
     }

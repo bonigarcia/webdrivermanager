@@ -37,23 +37,24 @@ class EdgeArmTest {
 
     @Test
     void testEdgeArm() {
-        WebDriverManager driverManager = WebDriverManager.edgedriver();
+        WebDriverManager wdm = WebDriverManager.edgedriver().win()
+                .avoidBrowserDetection();
 
         // 1. Force downloading (empty cache)
-        driverManager.clearDriverCache();
-        checkArm(driverManager);
+        wdm.clearDriverCache();
+        checkArm(wdm);
 
         // 2. Using cache
-        checkArm(driverManager);
+        checkArm(wdm);
     }
 
-    private void checkArm(WebDriverManager driverManager) {
-        driverManager.setup();
-        String driverPath = driverManager.win().getDownloadedDriverPath();
-        log.debug("Driver path (default arch) {}", driverPath);
+    private void checkArm(WebDriverManager wdm) {
+        wdm.arch64().setup();
+        String driverPath = wdm.getDownloadedDriverPath();
+        log.debug("Driver path (X64) {}", driverPath);
 
-        driverManager.arm64().setup();
-        String driverPathArm64 = driverManager.win().getDownloadedDriverPath();
+        wdm.arm64().setup();
+        String driverPathArm64 = wdm.getDownloadedDriverPath();
         log.debug("Driver path (ARM64) {}", driverPathArm64);
 
         assertThat(driverPath).isNotEqualTo(driverPathArm64);
