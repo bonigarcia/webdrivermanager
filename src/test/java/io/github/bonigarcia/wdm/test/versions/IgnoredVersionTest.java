@@ -41,7 +41,7 @@ class IgnoredVersionTest {
         String driverVersion = "81.0.4044.69";
         String[] ignoredVersions = { driverVersion };
 
-        WebDriverManager wdm = WebDriverManager.chromedriver()
+        WebDriverManager wdm = WebDriverManager.chromedriver().forceDownload()
                 .driverVersion(driverVersion)
                 .ignoreDriverVersions(ignoredVersions).avoidFallback();
         assertThatThrownBy(wdm::setup)
