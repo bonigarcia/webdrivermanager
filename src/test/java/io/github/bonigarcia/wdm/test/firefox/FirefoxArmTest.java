@@ -39,8 +39,8 @@ class FirefoxArmTest {
     void testFirefoxArm() {
         WebDriverManager wdm = WebDriverManager.firefoxdriver();
 
-        // 1. Force downloading (empty cache)
-        wdm.clearDriverCache();
+        // 1. Force downloading
+        wdm.forceDownload();
         checkArm(wdm);
 
         // 2. Using cache

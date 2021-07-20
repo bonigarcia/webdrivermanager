@@ -16,7 +16,6 @@
  */
 package io.github.bonigarcia.wdm.test.forced;
 
-import static io.github.bonigarcia.wdm.config.OperatingSystem.WIN;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.params.ParameterizedTest;
@@ -42,9 +41,8 @@ class ForceDownloadTest {
             OperaDriver.class, EdgeDriver.class })
     void testForceDownload(Class<? extends WebDriver> driverClass) {
         WebDriverManager wdm = WebDriverManager.getInstance(driverClass);
-        wdm.forceDownload().avoidTmpFolder().avoidBrowserDetection()
-                .avoidReadReleaseFromRepository().timeout(20)
-                .operatingSystem(WIN).setup();
+        wdm.forceDownload().avoidBrowserDetection()
+                .avoidReadReleaseFromRepository().timeout(20).setup();
         assertThat(wdm.getDownloadedDriverPath()).isNotNull();
     }
 
