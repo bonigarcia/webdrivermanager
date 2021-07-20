@@ -227,21 +227,26 @@ public class DockerService {
         return containerId;
     }
 
-    public String execCommandInContainer(String containerId, String... command)
-            throws DockerException {
+    public String execCommandInContainer(String containerId,
+            String... command) {
         String commandStr = Arrays.toString(command);
         log.trace("Running command {} in container {}", commandStr,
                 containerId);
         String execId = dockerClient.execCreateCmd(containerId).withCmd(command)
                 .withAttachStdout(true).withAttachStderr(true).exec().getId();
         final StringBuilder output = new StringBuilder();
-        dockerClient.execStartCmd(execId).exec(new Adapter<Frame>() {
-            @Override
-            public void onNext(Frame object) {
-                output.append(new String(object.getPayload(), UTF_8));
-                super.onNext(object);
-            }
-        });
+        try {
+            dockerClient.execStartCmd(execId).exec(new Adapter<Frame>() {
+                @Override
+                public void onNext(Frame object) {
+                    output.append(new String(object.getPayload(), UTF_8));
+                    super.onNext(object);
+                }
+            }).awaitCompletion();
+        } catch (InterruptedException e) {
+            log.error("Exception execution command {} on container {}",
+                    commandStr, containerId, e);
+        }
         log.trace("Result of command {} in container {}: {}", commandStr,
                 containerId, output);
         return output.toString();
@@ -658,6 +663,10 @@ public class DockerService {
 
     public String getVersionFromImage(String dockerImage) {
         return dockerImage.substring(dockerImage.indexOf(":") + 1);
+    }
+
+    public DockerClient getDockerClient() {
+        return dockerClient;
     }
 
 }

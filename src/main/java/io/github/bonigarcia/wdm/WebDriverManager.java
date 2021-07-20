@@ -409,6 +409,10 @@ public abstract class WebDriverManager {
                 getDriverManagerType().getBrowserNameLowerCase());
     }
 
+    public DockerService getDockerService() {
+        return dockerService;
+    }
+
     public WebDriverManager browserInDocker() {
         this.dockerEnabled = true;
         return instanceMap.get(getDriverManagerType());
@@ -750,6 +754,16 @@ public abstract class WebDriverManager {
         } catch (IOException e) {
             throw new WebDriverManagerException(e);
         }
+    }
+
+    public String getDockerBrowserContainerId(WebDriver driver) {
+        return (String) getPropertyFromWebDriverBrowser(driver,
+                WebDriverBrowser::getBrowserContainerId);
+    }
+
+    public String getDockerBrowserContainerId() {
+        return (String) getPropertyFromFirstWebDriverBrowser(
+                WebDriverBrowser::getBrowserContainerId);
     }
 
     public URL getDockerSeleniumServerUrl(WebDriver driver) {
@@ -1518,6 +1532,7 @@ public abstract class WebDriverManager {
         WebDriverBrowser driverBrowser = new WebDriverBrowser();
         driverBrowser.addDockerContainer(browserContainer);
         driverBrowser.setSeleniumServerUrl(seleniumServerUrl);
+        driverBrowser.setBrowserContainerId(browserContainer.getContainerId());
         webDriverList.add(driverBrowser);
 
         WebDriver driver = webDriverCreator
