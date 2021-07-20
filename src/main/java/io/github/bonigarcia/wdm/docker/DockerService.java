@@ -243,9 +243,10 @@ public class DockerService {
                     super.onNext(object);
                 }
             }).awaitCompletion();
-        } catch (Exception e) {
+        } catch (InterruptedException e) {
             log.error("Exception execution command {} on container {}",
                     commandStr, containerId, e);
+            Thread.currentThread().interrupt();
         }
         log.trace("Result of command {} in container {}: {}", commandStr,
                 containerId, output);
