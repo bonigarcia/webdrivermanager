@@ -27,8 +27,6 @@ import static org.slf4j.LoggerFactory.getLogger;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -51,22 +49,16 @@ class CacheTest {
 
     static final Logger log = getLogger(lookup().lookupClass());
 
-    @BeforeEach
-    @AfterEach
-    void cleanCache() {
-        WebDriverManager.chromedriver().clearResolutionCache();
-    }
-
     @ParameterizedTest
     @MethodSource("cacheProvider")
     void testCache(DriverManagerType driverManagerType, String driverName,
             String driverVersion, Architecture arch, OperatingSystem os)
             throws Exception {
 
-        WebDriverManager browserManager = WebDriverManager
-                .getInstance(driverManagerType);
-        browserManager.clearResolutionCache().forceDownload()
-                .operatingSystem(os).driverVersion(driverVersion).setup();
+        WebDriverManager wdm = WebDriverManager.getInstance(driverManagerType)
+                .clearResolutionCache().forceDownload().operatingSystem(os)
+                .driverVersion(driverVersion);
+        wdm.setup();
 
         CacheHandler cacheHandler = new CacheHandler(new Config());
         Optional<String> driverFromCache = cacheHandler.getDriverFromCache(

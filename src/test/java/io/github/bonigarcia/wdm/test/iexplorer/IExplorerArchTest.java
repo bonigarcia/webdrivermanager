@@ -37,7 +37,7 @@ class IExplorerArchTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
-    WebDriverManager wdm = WebDriverManager.iedriver().clearDriverCache().win();
+    WebDriverManager wdm = WebDriverManager.iedriver().win();
 
     @Test
     void testIExplorer32() {

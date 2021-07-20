@@ -42,7 +42,7 @@ class EdgeMacTest {
         String libName = "libc++.dylib";
         String driverVersion = "87.0.664.75";
 
-        WebDriverManager wdm = WebDriverManager.edgedriver().clearDriverCache()
+        WebDriverManager wdm = WebDriverManager.edgedriver()
                 .driverVersion(driverVersion).mac();
         wdm.setup();
         String downloadedDriverPath = wdm.getDownloadedDriverPath();

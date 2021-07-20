@@ -21,7 +21,6 @@ import static org.assertj.core.api.Assumptions.assumeThat;
 
 import java.io.File;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,7 +47,7 @@ class ChromeBetaTest {
     @BeforeAll
     static void setupClass() {
         assumeThat(chromeBetaFile).exists();
-        WebDriverManager.chromedriver().clearResolutionCache()
+        WebDriverManager.chromedriver()
                 .browserVersionDetectionCommand(chromeBetaPath + " --version")
                 .setup();
     }
@@ -65,11 +64,6 @@ class ChromeBetaTest {
         if (driver != null) {
             driver.quit();
         }
-    }
-
-    @AfterAll
-    static void teardownClass() {
-        WebDriverManager.chromedriver().clearResolutionCache();
     }
 
     @Test
