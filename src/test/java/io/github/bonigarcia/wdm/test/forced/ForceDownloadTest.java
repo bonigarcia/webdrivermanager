@@ -17,7 +17,9 @@
 package io.github.bonigarcia.wdm.test.forced;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.condition.OS.WINDOWS;
 
+import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.WebDriver;
@@ -34,6 +36,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @author Boni Garcia
  * @since 2.1.1
  */
+@DisabledOnOs(WINDOWS)
 class ForceDownloadTest {
 
     @ParameterizedTest
