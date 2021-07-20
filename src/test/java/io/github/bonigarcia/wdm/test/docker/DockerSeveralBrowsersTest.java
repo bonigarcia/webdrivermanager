@@ -25,7 +25,6 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.file.Path;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,13 +46,12 @@ class DockerSeveralBrowsersTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
-    static final int WAIT_TIME_SEC = 15;
+    static final int WAIT_TIME_SEC = 10;
 
     WebDriver driver1, driver2;
 
     WebDriverManager wdm = WebDriverManager.chromedriver().browserInDocker()
-            .dockerLang("ES").dockerTimezone("Europe/Madrid").enableVnc()
-            .enableRecording();
+            .dockerLang("ES").dockerTimezone("Europe/Madrid").enableVnc();
 
     @BeforeEach
     void setupTest() {
@@ -89,9 +87,6 @@ class DockerSeveralBrowsersTest {
         HttpURLConnection huc = (HttpURLConnection) dockerSessionUrl
                 .openConnection();
         assertThat(huc.getResponseCode()).isEqualTo(HTTP_OK);
-
-        Path recordingPath = wdm.getDockerRecordingPath(driver);
-        assertThat(recordingPath).exists();
     }
 
 }
