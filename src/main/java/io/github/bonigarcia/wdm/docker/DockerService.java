@@ -95,8 +95,12 @@ public class DockerService {
         this.httpClient = httpClient;
         this.resolutionCache = resolutionCache;
 
-        DockerHost dockerHostFromEnv = DockerHost.fromEnv();
-        dockerClient = getDockerClient(dockerHostFromEnv.endpoint());
+        String dockerDaemonUrl = config.getDockerDaemonUrl();
+        String dockerHost = isNullOrEmpty(dockerDaemonUrl)
+                ? DockerHost.fromEnv().endpoint()
+                : dockerDaemonUrl;
+
+        dockerClient = getDockerClient(dockerHost);
     }
 
     private DockerClient getDockerClient(String dockerHost) {
@@ -326,9 +330,9 @@ public class DockerService {
         dockerClient.close();
     }
 
-    public void updateDockerClient(String url) {
-        log.debug("Updating Docker client using URL {}", url);
-        dockerClient = getDockerClient(url);
+    public void updateDockerClient(String dockerHost) {
+        log.debug("Updating Docker client using {}", dockerHost);
+        dockerClient = getDockerClient(dockerHost);
     }
 
     public String getImageVersionFromDockerHub(
