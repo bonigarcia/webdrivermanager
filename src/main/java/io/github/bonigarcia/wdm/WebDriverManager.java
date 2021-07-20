@@ -68,6 +68,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 
 import javax.xml.namespace.NamespaceContext;
@@ -752,48 +753,44 @@ public abstract class WebDriverManager {
     }
 
     public URL getDockerSeleniumServerUrl(WebDriver driver) {
-        URL url = null;
-        Optional<WebDriverBrowser> webDriverBrowser = findWebDriverBrowser(
-                driver);
-        if (webDriverBrowser.isPresent()) {
-            url = webDriverBrowser.get().getSeleniumServerUrl();
-        }
-        return url;
+        return (URL) getPropertyFromWebDriverBrowser(driver,
+                WebDriverBrowser::getSeleniumServerUrl);
     }
 
     public URL getDockerSeleniumServerUrl() {
-        return webDriverList.isEmpty() ? null
-                : getSeleniumServerUrl(webDriverList.get(0));
+        return (URL) getPropertyFromWebDriverBrowser(webDriverList.get(0),
+                WebDriverBrowser::getSeleniumServerUrl);
     }
 
     public URL getDockerNoVncUrl(WebDriver driver) {
-        URL url = null;
-        Optional<WebDriverBrowser> webDriverBrowser = findWebDriverBrowser(
-                driver);
-        if (webDriverBrowser.isPresent()) {
-            url = webDriverBrowser.get().getNoVncUrl();
-        }
-        return url;
+        return (URL) getPropertyFromWebDriverBrowser(driver,
+                WebDriverBrowser::getNoVncUrl);
     }
 
     public URL getDockerNoVncUrl() {
-        return webDriverList.isEmpty() ? null
-                : getDockerNoVncUrl(webDriverList.get(0));
+        return (URL) getPropertyFromWebDriverBrowser(webDriverList.get(0),
+                WebDriverBrowser::getNoVncUrl);
     }
 
     public Path getDockerRecordingPath(WebDriver driver) {
-        Path path = null;
-        Optional<WebDriverBrowser> webDriverBrowser = findWebDriverBrowser(
-                driver);
-        if (webDriverBrowser.isPresent()) {
-            path = webDriverBrowser.get().getRecordingPath();
-        }
-        return path;
+        return (Path) getPropertyFromWebDriverBrowser(driver,
+                WebDriverBrowser::getRecordingPath);
     }
 
     public Path getDockerRecordingPath() {
-        return webDriverList.isEmpty() ? null
-                : getDockerRecordingPath(webDriverList.get(0));
+        return (Path) getPropertyFromWebDriverBrowser(webDriverList.get(0),
+                WebDriverBrowser::getRecordingPath);
+    }
+
+    protected Object getPropertyFromWebDriverBrowser(WebDriver driver,
+            Function<WebDriverBrowser, Object> function) {
+        Object object = null;
+        Optional<WebDriverBrowser> webDriverBrowser = findWebDriverBrowser(
+                driver);
+        if (webDriverBrowser.isPresent()) {
+            object = function.apply(webDriverBrowser.get());
+        }
+        return object;
     }
 
     protected Optional<WebDriverBrowser> findWebDriverBrowser(
@@ -807,37 +804,17 @@ public abstract class WebDriverManager {
         return empty();
     }
 
-    protected URL getSeleniumServerUrl(WebDriverBrowser driverBrowser) {
-        URL url = null;
+    protected Object getPropertyFromWebDriverBrowser(
+            WebDriverBrowser driverBrowser,
+            Function<WebDriverBrowser, Object> function) {
+        Object object = null;
         if (webDriverList.isEmpty()) {
-            log.error(
-                    "Selenium Server URL is not available since there is no browsers in Docker");
+            log.warn(
+                    "Property not available since there is no browsers in Docker");
         } else {
-            url = driverBrowser.getSeleniumServerUrl();
+            object = function.apply(driverBrowser);
         }
-        return url;
-    }
-
-    protected URL getDockerNoVncUrl(WebDriverBrowser driverBrowser) {
-        URL url = null;
-        if (webDriverList.isEmpty()) {
-            log.error(
-                    "NoVNC URL is not available since there is no browsers in Docker");
-        } else {
-            url = driverBrowser.getNoVncUrl();
-        }
-        return url;
-    }
-
-    protected Path getDockerRecordingPath(WebDriverBrowser driverBrowser) {
-        Path path = null;
-        if (webDriverList.isEmpty()) {
-            log.error(
-                    "Path of recording is not availalbe since there is no browsers in Docker");
-        } else {
-            path = driverBrowser.getRecordingPath();
-        }
-        return path;
+        return object;
     }
 
     // ------------
