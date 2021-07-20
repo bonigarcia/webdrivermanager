@@ -42,7 +42,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @since 5.0.0
  */
 @EnabledOnOs(LINUX)
-class DockerSeveralBrowsersTest {
+class DockerSeveralBrowsersDifferentVersionsTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
@@ -51,18 +51,17 @@ class DockerSeveralBrowsersTest {
     WebDriver driver1, driver2;
 
     WebDriverManager wdm = WebDriverManager.chromedriver().browserInDocker()
-            .dockerLang("ES").dockerTimezone("Europe/Madrid").enableVnc();
+            .enableVnc();
 
     @BeforeEach
     void setupTest() {
         driver1 = wdm.create();
-        driver2 = wdm.create();
+        driver2 = wdm.browserVersion("beta").create();
     }
 
     @AfterEach
     void teardown() {
-        wdm.quit(driver1);
-        wdm.quit(driver2);
+        wdm.quit();
     }
 
     @Test
