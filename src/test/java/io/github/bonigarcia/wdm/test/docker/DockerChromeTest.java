@@ -43,14 +43,16 @@ class DockerChromeTest {
 
     WebDriver driver;
 
+    WebDriverManager wdm = WebDriverManager.chromedriver().browserInDocker();
+
     @BeforeEach
     void setupTest() {
-        driver = WebDriverManager.chromedriver().browserInDocker().create();
+        driver = wdm.create();
     }
 
     @AfterEach
     void teardown() {
-        WebDriverManager.chromedriver().quit();
+        wdm.quit();
     }
 
     @Test

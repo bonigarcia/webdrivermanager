@@ -21,7 +21,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.condition.OS.LINUX;
 import static org.slf4j.LoggerFactory.getLogger;
 
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -43,17 +42,14 @@ class DockerChromeVersionsTest {
 
     WebDriver driver;
 
-    @AfterEach
-    void teardown() {
-        WebDriverManager.chromedriver().quit();
-    }
-
     @ParameterizedTest
     @ValueSource(strings = { "", "91", "91.0", "latest", "latest-1",
             "latest-2" })
     void test(String browserVersion) {
-        driver = WebDriverManager.chromedriver().clearResolutionCache()
-                .browserInDocker().browserVersion(browserVersion).create();
+        WebDriverManager wdm = WebDriverManager.chromedriver()
+                .clearResolutionCache().browserInDocker()
+                .browserVersion(browserVersion);
+        driver = wdm.create();
 
         String sutUrl = "https://github.com/bonigarcia/webdrivermanager";
         driver.get(sutUrl);
@@ -62,6 +58,8 @@ class DockerChromeVersionsTest {
 
         assertThat(title)
                 .contains("Automated driver management for Selenium WebDriver");
+
+        wdm.quit();
     }
 
 }

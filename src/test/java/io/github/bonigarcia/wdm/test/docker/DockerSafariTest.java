@@ -43,14 +43,16 @@ class DockerSafariTest {
 
     WebDriver driver;
 
+    WebDriverManager wdm = WebDriverManager.safaridriver().browserInDocker();
+
     @BeforeEach
     void setupTest() {
-        driver = WebDriverManager.safaridriver().browserInDocker().create();
+        driver = wdm.create();
     }
 
     @AfterEach
     void teardown() {
-        WebDriverManager.safaridriver().quit();
+        wdm.quit();
     }
 
     @Test

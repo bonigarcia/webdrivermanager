@@ -346,18 +346,19 @@ public abstract class WebDriverManager {
         try {
             WebDriver driver = driverBrowser.getDriver();
             if (driver != null) {
+                log.debug("Quitting {}", driver);
                 driver.quit();
             }
 
-            if (dockerService != null) {
-                List<DockerContainer> dockerContainerList = driverBrowser
-                        .getDockerContainerList();
+            List<DockerContainer> dockerContainerList = driverBrowser
+                    .getDockerContainerList();
+            if (dockerContainerList != null) {
                 dockerContainerList.stream()
                         .forEach(dockerService::stopAndRemoveContainer);
             }
         } catch (Exception e) {
             log.warn("Exception closing {} ({})", driverBrowser.getDriver(),
-                    e.getMessage());
+                    e.getMessage(), e);
         }
     }
 

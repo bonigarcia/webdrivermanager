@@ -43,14 +43,16 @@ class DockerEdgeTest {
 
     WebDriver driver;
 
+    WebDriverManager wdm = WebDriverManager.edgedriver().browserInDocker();
+
     @BeforeEach
     void setupTest() {
-        driver = WebDriverManager.edgedriver().browserInDocker().create();
+        driver = wdm.create();
     }
 
     @AfterEach
     void teardown() {
-        WebDriverManager.edgedriver().quit();
+        wdm.quit();
     }
 
     @Test

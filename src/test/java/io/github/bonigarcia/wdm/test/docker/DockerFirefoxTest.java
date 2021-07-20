@@ -43,14 +43,16 @@ class DockerFirefoxTest {
 
     WebDriver driver;
 
+    WebDriverManager wdm = WebDriverManager.firefoxdriver().browserInDocker();
+
     @BeforeEach
     void setupTest() {
-        driver = WebDriverManager.firefoxdriver().browserInDocker().create();
+        driver = wdm.create();
     }
 
     @AfterEach
     void teardown() {
-        WebDriverManager.firefoxdriver().quit();
+        wdm.quit();
     }
 
     @Test

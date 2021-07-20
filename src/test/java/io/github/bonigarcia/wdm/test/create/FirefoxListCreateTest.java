@@ -44,19 +44,20 @@ class FirefoxListCreateTest {
 
     List<WebDriver> drivers;
 
+    WebDriverManager wdm = WebDriverManager.firefoxdriver();
+
     @BeforeEach
     void setupTest() {
         FirefoxBinary firefoxBinary = new FirefoxBinary();
         firefoxBinary.addCommandLineOptions("--headless");
         FirefoxOptions options = new FirefoxOptions();
         options.setBinary(firefoxBinary);
-        drivers = WebDriverManager.firefoxdriver().capabilities(options)
-                .create(2);
+        drivers = wdm.capabilities(options).create(2);
     }
 
     @AfterEach
     void teardown() {
-        WebDriverManager.firefoxdriver().quit();
+        wdm.quit();
     }
 
     @Test
