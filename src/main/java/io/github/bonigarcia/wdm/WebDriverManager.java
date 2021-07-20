@@ -758,7 +758,7 @@ public abstract class WebDriverManager {
     }
 
     public URL getDockerSeleniumServerUrl() {
-        return (URL) getPropertyFromWebDriverBrowser(webDriverList.get(0),
+        return (URL) getPropertyFromFirstWebDriverBrowser(
                 WebDriverBrowser::getSeleniumServerUrl);
     }
 
@@ -768,7 +768,7 @@ public abstract class WebDriverManager {
     }
 
     public URL getDockerNoVncUrl() {
-        return (URL) getPropertyFromWebDriverBrowser(webDriverList.get(0),
+        return (URL) getPropertyFromFirstWebDriverBrowser(
                 WebDriverBrowser::getNoVncUrl);
     }
 
@@ -778,7 +778,7 @@ public abstract class WebDriverManager {
     }
 
     public Path getDockerRecordingPath() {
-        return (Path) getPropertyFromWebDriverBrowser(webDriverList.get(0),
+        return (Path) getPropertyFromFirstWebDriverBrowser(
                 WebDriverBrowser::getRecordingPath);
     }
 
@@ -804,15 +804,14 @@ public abstract class WebDriverManager {
         return empty();
     }
 
-    protected Object getPropertyFromWebDriverBrowser(
-            WebDriverBrowser driverBrowser,
+    protected Object getPropertyFromFirstWebDriverBrowser(
             Function<WebDriverBrowser, Object> function) {
         Object object = null;
         if (webDriverList.isEmpty()) {
             log.warn(
                     "Property not available since there is no browsers in Docker");
         } else {
-            object = function.apply(driverBrowser);
+            object = function.apply(webDriverList.get(0));
         }
         return object;
     }
