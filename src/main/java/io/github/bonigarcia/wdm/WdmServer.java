@@ -75,10 +75,12 @@ public class WdmServer {
     static final Logger log = getLogger(lookup().lookupClass());
 
     private Map<String, URL> sessionMap;
+    private Map<String, WebDriverManager> wdmMap;
     private Config config;
 
     public WdmServer(int port) {
         sessionMap = new ConcurrentHashMap<>();
+        wdmMap = new ConcurrentHashMap<>();
         config = new Config();
 
         Javalin app = Javalin.create().start(port);
@@ -127,12 +129,13 @@ public class WdmServer {
         // POST /session
         boolean isSessionCreate = session != null
                 && session.getDesiredCapabilities() != null;
+        WebDriverManager wdm = null;
         if (isSessionCreate) {
             String browserName = session.getDesiredCapabilities()
                     .getBrowserName();
             String version = session.getDesiredCapabilities().getVersion();
-            WebDriverManager wdm = WebDriverManager.getInstance(browserName)
-                    .browserInDocker().browserVersion(version);
+            wdm = WebDriverManager.getInstance(browserName).browserInDocker()
+                    .browserVersion(version);
             wdm.create();
             seleniumServerUrl = wdm.getDockerSeleniumServerUrl();
         } else {
@@ -152,12 +155,16 @@ public class WdmServer {
         if (isSessionCreate) {
             String sessionId = getSessionIdFromResponse(response);
             sessionMap.put(sessionId, seleniumServerUrl);
+            wdmMap.put(sessionId, wdm);
         }
 
         // DELETE /session/sessionId
         if (requestMethod.equalsIgnoreCase(DELETE)
                 && requestPath.startsWith(SESSION + "/")) {
-            WebDriverManager.chromedriver().quit();
+            String sessionIdFromPath = getSessionIdFromPath(requestPath);
+            wdmMap.get(sessionIdFromPath).quit();
+            wdmMap.remove(sessionIdFromPath);
+            sessionMap.remove(sessionIdFromPath);
         }
     }
 
