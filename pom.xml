@@ -135,6 +135,11 @@
             <artifactId>guava</artifactId>
             <version>${guava.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.brotli</groupId>
+            <artifactId>dec</artifactId>
+            <version>0.1.2</version>
+        </dependency>
 
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
