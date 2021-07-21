@@ -19,7 +19,6 @@ package io.github.bonigarcia.wdm.test.server;
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.condition.OS.LINUX;
-import static org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT;
 import static org.openqa.selenium.net.PortProber.findFreePort;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -28,7 +27,6 @@ import java.net.URL;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.condition.EnabledOnOs;
-import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.Capabilities;
@@ -46,7 +44,6 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @author Boni Garcia
  * @since 5.0.0
  */
-@Execution(CONCURRENT)
 @EnabledOnOs(LINUX)
 class ServerSeleniumTest {
 
