@@ -43,14 +43,16 @@ class DockerOperaTest {
 
     WebDriver driver;
 
+    WebDriverManager wdm = WebDriverManager.operadriver().browserInDocker();
+
     @BeforeEach
     void setupTest() {
-        driver = WebDriverManager.operadriver().browserInDocker().create();
+        driver = wdm.create();
     }
 
     @AfterEach
     void teardown() {
-        WebDriverManager.operadriver().quit();
+        wdm.quit();
     }
 
     @Test
