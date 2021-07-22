@@ -20,8 +20,8 @@ import static org.junit.jupiter.api.condition.OS.LINUX;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.openqa.selenium.firefox.FirefoxDriver;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.test.base.VersionTestParent;
 
 /**
@@ -35,7 +35,7 @@ class FirefoxVersionTest extends VersionTestParent {
 
     @BeforeEach
     void setup() {
-        wdm = WebDriverManager.firefoxdriver();
+        driverClass = FirefoxDriver.class;
         specificVersions = new String[] { "0.8.0", "0.19.1" };
     }
 

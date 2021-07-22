@@ -21,7 +21,6 @@ import static io.github.bonigarcia.wdm.config.OperatingSystem.WIN;
 import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.edge.EdgeDriver;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.test.base.VersionTestParent;
 
 /**
@@ -34,7 +33,7 @@ class EdgeVersionTest extends VersionTestParent {
 
     @BeforeEach
     void setup() {
-        wdm = WebDriverManager.getInstance(EdgeDriver.class);
+        driverClass = EdgeDriver.class;
         os = WIN;
         specificVersions = new String[] { "75.0.139.20", "82.0.459.1" };
     }

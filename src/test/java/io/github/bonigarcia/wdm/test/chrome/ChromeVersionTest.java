@@ -17,8 +17,8 @@
 package io.github.bonigarcia.wdm.test.chrome;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.openqa.selenium.chrome.ChromeDriver;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.test.base.VersionTestParent;
 
 /**
@@ -31,7 +31,7 @@ class ChromeVersionTest extends VersionTestParent {
 
     @BeforeEach
     void setup() {
-        wdm = WebDriverManager.chromedriver();
+        driverClass = ChromeDriver.class;
         specificVersions = new String[] { "2.10", "2.33" };
     }
 

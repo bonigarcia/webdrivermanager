@@ -23,6 +23,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.edge.EdgeDriver;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -37,7 +39,7 @@ import io.github.bonigarcia.wdm.config.OperatingSystem;
  */
 abstract public class VersionTestParent {
 
-    protected WebDriverManager wdm;
+    protected Class<? extends WebDriver> driverClass;
     protected String[] specificVersions;
     protected OperatingSystem os;
 
@@ -46,6 +48,8 @@ abstract public class VersionTestParent {
     @ParameterizedTest
     @EnumSource(names = { "DEFAULT", "X32", "X64" })
     void testLatestVersion(Architecture architecture) throws Exception {
+        WebDriverManager wdm = WebDriverManager.getInstance(EdgeDriver.class);
+
         String osLabel = "";
         if (os != null) {
             wdm.operatingSystem(os);
@@ -71,6 +75,8 @@ abstract public class VersionTestParent {
     @ParameterizedTest
     @EnumSource(names = { "DEFAULT", "X32", "X64" })
     void testSpecificVersions(Architecture architecture) throws Exception {
+        WebDriverManager wdm = WebDriverManager.getInstance(EdgeDriver.class);
+
         for (String specificVersion : specificVersions) {
             if (architecture != DEFAULT) {
                 wdm.architecture(architecture);
