@@ -452,8 +452,8 @@ public abstract class WebDriverManager {
         return this;
     }
 
-    public WebDriverManager capabilities(Capabilities options) {
-        capabilities = options;
+    public WebDriverManager capabilities(Capabilities capabilities) {
+        this.capabilities = capabilities;
         return this;
     }
 
