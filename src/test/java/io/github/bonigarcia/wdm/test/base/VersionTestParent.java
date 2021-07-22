@@ -51,22 +51,16 @@ abstract public class VersionTestParent {
 
         String osLabel = "";
         if (os != null) {
-            wdm.operatingSystem(os);
+            wdm = wdm.operatingSystem(os);
             osLabel = " os=" + os;
         }
+        if (architecture != DEFAULT) {
+            wdm = wdm.architecture(architecture);
+        }
+
         log.debug("Test latest {} [arch={}{}]", wdm.getDriverManagerType(),
                 architecture, osLabel);
-
-        switch (architecture) {
-        case X32:
-            wdm.arch32().setup();
-            break;
-        case X64:
-            wdm.arch64().setup();
-            break;
-        default:
-            wdm.setup();
-        }
+        wdm.setup();
 
         assertThat(wdm.getDownloadedDriverVersion()).isNotNull();
     }
@@ -77,6 +71,7 @@ abstract public class VersionTestParent {
         WebDriverManager wdm = WebDriverManager.getInstance(driverClass);
 
         for (String specificVersion : specificVersions) {
+
             if (architecture != DEFAULT) {
                 wdm = wdm.architecture(architecture);
             }
@@ -85,11 +80,12 @@ abstract public class VersionTestParent {
                 wdm = wdm.operatingSystem(os);
                 osLabel = " os=" + os;
             }
+            wdm = wdm.driverVersion(specificVersion);
+
             log.debug("Test {} version={} [arch={}{}]",
                     wdm.getDriverManagerType(), specificVersion, architecture,
                     osLabel);
-
-            wdm.driverVersion(specificVersion).setup();
+            wdm.setup();
 
             assertThat(wdm.getDownloadedDriverVersion())
                     .isEqualTo(specificVersion);
