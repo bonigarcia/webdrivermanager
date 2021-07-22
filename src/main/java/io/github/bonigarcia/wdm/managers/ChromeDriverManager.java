@@ -30,11 +30,12 @@ import java.util.Optional;
 import javax.xml.namespace.NamespaceContext;
 
 import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.remote.BrowserType;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
 import io.github.bonigarcia.wdm.config.OperatingSystem;
+import io.github.bonigarcia.wdm.webdriver.OptionsWithArguments;
 
 /**
  * Manager for Chrome.
@@ -158,7 +159,8 @@ public class ChromeDriverManager extends WebDriverManager {
 
     @Override
     protected Capabilities getCapabilities() {
-        ChromeOptions options = new ChromeOptions();
+        OptionsWithArguments options = new OptionsWithArguments(
+                BrowserType.CHROME, "goog:chromeOptions");
         if (!androidEnabled) {
             options.addArguments("--no-sandbox");
             options.addArguments("--disable-gpu");
