@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.TreeMap;
 
 import org.openqa.selenium.MutableCapabilities;
@@ -55,11 +54,6 @@ public class EdgeOptionsWithArguments extends MutableCapabilities {
     public EdgeOptionsWithArguments addArguments(List<String> arguments) {
         args.addAll(arguments);
         return this;
-    }
-
-    @Override
-    protected int amendHashCode() {
-        return Objects.hash(args);
     }
 
     @Override

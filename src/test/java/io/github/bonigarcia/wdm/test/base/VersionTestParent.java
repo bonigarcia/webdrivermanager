@@ -86,6 +86,7 @@ abstract public class VersionTestParent {
                     wdm.getDriverManagerType(), specificVersion, architecture,
                     osLabel);
             wdm.setup();
+            wdm.reset();
 
             assertThat(wdm.getDownloadedDriverVersion())
                     .isEqualTo(specificVersion);

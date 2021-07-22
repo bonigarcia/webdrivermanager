@@ -259,6 +259,8 @@ public abstract class WebDriverManager {
             return iedriver();
         case "org.openqa.selenium.edge.EdgeDriver":
             return edgedriver();
+        case "org.openqa.selenium.safari.SafariDriver":
+            return safaridriver();
         default:
             return voiddriver();
         }
@@ -450,8 +452,8 @@ public abstract class WebDriverManager {
         return this;
     }
 
-    public WebDriverManager capabilities(Capabilities options) {
-        capabilities = options;
+    public WebDriverManager capabilities(Capabilities capabilities) {
+        this.capabilities = capabilities;
         return this;
     }
 
