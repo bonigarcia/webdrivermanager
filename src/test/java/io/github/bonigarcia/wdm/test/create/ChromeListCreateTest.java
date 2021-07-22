@@ -26,32 +26,29 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxBinary;
-import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 /**
- * Test with Firefox and WebDriverManager's creator.
+ * Test with Chrome and WebDriverManager's creator.
  *
  * @author Boni Garcia
  * @since 5.0.0
  */
-class FirefoxListCreateTest {
+class ChromeListCreateTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
     List<WebDriver> drivers;
 
-    WebDriverManager wdm = WebDriverManager.firefoxdriver();
+    WebDriverManager wdm = WebDriverManager.chromedriver();
 
     @BeforeEach
     void setupTest() {
-        FirefoxBinary firefoxBinary = new FirefoxBinary();
-        firefoxBinary.addCommandLineOptions("--headless");
-        FirefoxOptions options = new FirefoxOptions();
-        options.setBinary(firefoxBinary);
+        ChromeOptions options = new ChromeOptions();
+        options.setHeadless(true);
         drivers = wdm.capabilities(options).create(2);
     }
 
