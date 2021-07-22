@@ -48,7 +48,7 @@ abstract public class VersionTestParent {
     @ParameterizedTest
     @EnumSource(names = { "DEFAULT", "X32", "X64" })
     void testLatestVersion(Architecture architecture) throws Exception {
-        WebDriverManager wdm = WebDriverManager.getInstance(EdgeDriver.class);
+        WebDriverManager wdm = WebDriverManager.getInstance(driverClass);
 
         String osLabel = "";
         if (os != null) {
@@ -75,15 +75,15 @@ abstract public class VersionTestParent {
     @ParameterizedTest
     @EnumSource(names = { "DEFAULT", "X32", "X64" })
     void testSpecificVersions(Architecture architecture) throws Exception {
-        WebDriverManager wdm = WebDriverManager.getInstance(EdgeDriver.class);
+        WebDriverManager wdm = WebDriverManager.getInstance(driverClass);
 
         for (String specificVersion : specificVersions) {
             if (architecture != DEFAULT) {
-                wdm.architecture(architecture);
+                wdm = wdm.architecture(architecture);
             }
             String osLabel = "";
             if (os != null) {
-                wdm.operatingSystem(os);
+                wdm = wdm.operatingSystem(os);
                 osLabel = " os=" + os;
             }
             log.debug("Test {} version={} [arch={}{}]",
