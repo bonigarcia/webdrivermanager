@@ -259,6 +259,8 @@ public abstract class WebDriverManager {
             return iedriver();
         case "org.openqa.selenium.edge.EdgeDriver":
             return edgedriver();
+        case "org.openqa.selenium.safari.SafariDriver":
+            return safaridriver();
         default:
             return voiddriver();
         }
