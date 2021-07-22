@@ -19,7 +19,6 @@ package io.github.bonigarcia.wdm.managers;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.FIREFOX;
 import static java.util.Optional.empty;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
@@ -117,16 +116,16 @@ public class FirefoxDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected List<File> postDownload(File archive) {
-        List<File> fileList = super.postDownload(archive);
+    protected void exportDriver(String variableValue) {
         if (config().getOperatingSystem().isMac()) {
             // https://firefox-source-docs.mozilla.org/testing/geckodriver/Notarization.html
             log.debug(
                     "Bypass notarization requirement for geckodriver on Mac OS");
             Shell.runAndWait("xattr", "-r", "-d", "com.apple.quarantine",
-                    fileList.iterator().next().toString());
+                    variableValue);
         }
-        return fileList;
+
+        super.exportDriver(variableValue);
     }
 
     public WebDriverManager exportParameter(String exportParameter) {
