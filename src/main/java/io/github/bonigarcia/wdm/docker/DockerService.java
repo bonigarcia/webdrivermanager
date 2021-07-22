@@ -598,6 +598,7 @@ public class DockerService {
 
         if (config.isEnabledDockerVnc()) {
             String vncPort = getBindPort(containerId, dockerVncPort + "/tcp");
+            log.trace("The VNC port is {}", vncPort);
             browserContainer.setVncPort(vncPort);
         }
 
