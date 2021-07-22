@@ -17,8 +17,8 @@
 package io.github.bonigarcia.wdm.test.opera;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.openqa.selenium.opera.OperaDriver;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.test.base.VersionTestParent;
 
 /**
@@ -31,7 +31,7 @@ class OperaVersionTest extends VersionTestParent {
 
     @BeforeEach
     void setup() {
-        wdm = WebDriverManager.operadriver();
+        driverClass = OperaDriver.class;
         specificVersions = new String[] { "0.2.2", "2.32" };
     }
 

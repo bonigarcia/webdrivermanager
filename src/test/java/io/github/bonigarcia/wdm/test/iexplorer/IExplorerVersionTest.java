@@ -22,7 +22,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.test.base.VersionTestParent;
 
 /**
@@ -36,9 +35,8 @@ class IExplorerVersionTest extends VersionTestParent {
 
     @BeforeEach
     void setup() {
+        driverClass = InternetExplorerDriver.class;
         os = WIN;
-        wdm = WebDriverManager
-                .getInstance(InternetExplorerDriver.class);
         specificVersions = new String[] { "2.39", "2.47" };
     }
 

@@ -29,6 +29,7 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
+import io.github.bonigarcia.wdm.versions.Shell;
 
 /**
  * Manager for Firefox.
@@ -112,6 +113,19 @@ public class FirefoxDriverManager extends WebDriverManager {
     @Override
     protected Capabilities getCapabilities() {
         return new FirefoxOptions();
+    }
+
+    @Override
+    protected void exportDriver(String variableValue) {
+        if (config().getOperatingSystem().isMac()) {
+            // https://firefox-source-docs.mozilla.org/testing/geckodriver/Notarization.html
+            log.debug(
+                    "Bypass notarization requirement for geckodriver on Mac OS");
+            Shell.runAndWait("xattr", "-r", "-d", "com.apple.quarantine",
+                    variableValue);
+        }
+
+        super.exportDriver(variableValue);
     }
 
     public WebDriverManager exportParameter(String exportParameter) {

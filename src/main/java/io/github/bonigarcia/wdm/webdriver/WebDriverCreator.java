@@ -17,7 +17,6 @@
 package io.github.bonigarcia.wdm.webdriver;
 
 import static java.lang.System.currentTimeMillis;
-import static java.lang.Thread.currentThread;
 import static java.lang.Thread.sleep;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.concurrent.TimeUnit.SECONDS;
@@ -102,7 +101,7 @@ public class WebDriverCreator {
                 } catch (InterruptedException e2) {
                     log.warn("Interrupted exception creating WebDriver object",
                             e2);
-                    currentThread().interrupt();
+                    Thread.currentThread().interrupt();
                 }
             }
 

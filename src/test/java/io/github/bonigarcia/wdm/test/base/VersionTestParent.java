@@ -23,6 +23,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
+import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -37,7 +38,7 @@ import io.github.bonigarcia.wdm.config.OperatingSystem;
  */
 abstract public class VersionTestParent {
 
-    protected WebDriverManager wdm;
+    protected Class<? extends WebDriver> driverClass;
     protected String[] specificVersions;
     protected OperatingSystem os;
 
@@ -46,24 +47,20 @@ abstract public class VersionTestParent {
     @ParameterizedTest
     @EnumSource(names = { "DEFAULT", "X32", "X64" })
     void testLatestVersion(Architecture architecture) throws Exception {
+        WebDriverManager wdm = WebDriverManager.getInstance(driverClass);
+
         String osLabel = "";
         if (os != null) {
-            wdm.operatingSystem(os);
+            wdm = wdm.operatingSystem(os);
             osLabel = " os=" + os;
         }
+        if (architecture != DEFAULT) {
+            wdm = wdm.architecture(architecture);
+        }
+
         log.debug("Test latest {} [arch={}{}]", wdm.getDriverManagerType(),
                 architecture, osLabel);
-
-        switch (architecture) {
-        case X32:
-            wdm.arch32().setup();
-            break;
-        case X64:
-            wdm.arch64().setup();
-            break;
-        default:
-            wdm.setup();
-        }
+        wdm.setup();
 
         assertThat(wdm.getDownloadedDriverVersion()).isNotNull();
     }
@@ -71,20 +68,24 @@ abstract public class VersionTestParent {
     @ParameterizedTest
     @EnumSource(names = { "DEFAULT", "X32", "X64" })
     void testSpecificVersions(Architecture architecture) throws Exception {
+        WebDriverManager wdm = WebDriverManager.getInstance(driverClass);
+
         for (String specificVersion : specificVersions) {
+
             if (architecture != DEFAULT) {
-                wdm.architecture(architecture);
+                wdm = wdm.architecture(architecture);
             }
             String osLabel = "";
             if (os != null) {
-                wdm.operatingSystem(os);
+                wdm = wdm.operatingSystem(os);
                 osLabel = " os=" + os;
             }
+            wdm = wdm.driverVersion(specificVersion);
+
             log.debug("Test {} version={} [arch={}{}]",
                     wdm.getDriverManagerType(), specificVersion, architecture,
                     osLabel);
-
-            wdm.driverVersion(specificVersion).setup();
+            wdm.setup();
 
             assertThat(wdm.getDownloadedDriverVersion())
                     .isEqualTo(specificVersion);

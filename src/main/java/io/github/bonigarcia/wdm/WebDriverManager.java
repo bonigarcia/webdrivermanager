@@ -1483,11 +1483,12 @@ public abstract class WebDriverManager {
         DockerContainer browserContainer = dockerService.startBrowserContainer(
                 browserImage, browserCacheKey, browserVersion, androidEnabled);
         browserContainer.setBrowserName(browserName);
-        String seleniumServerUrl = browserContainer.getSeleniumServerUrl();
+        String seleniumServerUrl = browserContainer.getContainerUrl();
 
         WebDriverBrowser driverBrowser = new WebDriverBrowser();
         driverBrowser.addDockerContainer(browserContainer);
         driverBrowser.setSeleniumServerUrl(seleniumServerUrl);
+        log.trace("The Selenium Serverl URL is {}", seleniumServerUrl);
         driverBrowser.setBrowserContainerId(browserContainer.getContainerId());
         webDriverList.add(driverBrowser);
 
@@ -1505,7 +1506,7 @@ public abstract class WebDriverManager {
                     noVncImage, "novnc-container", noVncVersion,
                     browserContainer);
             driverBrowser.addDockerContainer(noVncContainer);
-            String noVncUrl = noVncContainer.getSeleniumServerUrl();
+            String noVncUrl = noVncContainer.getContainerUrl();
             driverBrowser.setNoVncUrl(noVncUrl);
 
             log.info("Docker session noVNC URL: {}", noVncUrl);
