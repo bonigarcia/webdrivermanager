@@ -20,7 +20,7 @@
 
         <!-- provided -->
         <javalin.version>3.13.10</javalin.version>
-        <selenium.version>3.141.59</selenium.version>
+        <selenium.version>4.0.0-beta-4</selenium.version>
 
         <!-- test -->
         <junit.version>5.7.2</junit.version>
