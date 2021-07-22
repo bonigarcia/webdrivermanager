@@ -36,8 +36,6 @@ import com.google.common.collect.ImmutableList;
  */
 public class EdgeOptionsWithArguments extends MutableCapabilities {
 
-    private static final long serialVersionUID = -1545177795938321206L;
-
     public static final String CAPABILITY = "ms:edgeOptions";
 
     private List<String> args = new ArrayList<>();
