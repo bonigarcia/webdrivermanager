@@ -24,7 +24,6 @@ import static org.slf4j.LoggerFactory.getLogger;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.edge.EdgeDriver;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
