@@ -158,7 +158,7 @@ public abstract class WebDriverManager {
 
     public abstract DriverManagerType getDriverManagerType();
 
-    protected Config config = new Config();
+    protected Config config;
     protected HttpClient httpClient;
     protected Downloader downloader;
     protected ResolutionCache resolutionCache;
@@ -175,10 +175,22 @@ public abstract class WebDriverManager {
     protected boolean shutdownHook = false;
     protected boolean dockerEnabled = false;
     protected boolean androidEnabled = false;
-    protected List<WebDriverBrowser> webDriverList = new CopyOnWriteArrayList<>();
+    protected List<WebDriverBrowser> webDriverList;
 
     protected String downloadedDriverVersion;
     protected String downloadedDriverPath;
+
+    protected WebDriverManager() {
+        config = new Config();
+        cacheHandler = new CacheHandler(config);
+        httpClient = new HttpClient(config);
+        downloader = new Downloader(httpClient, config, this::postDownload);
+        resolutionCache = new ResolutionCache(config);
+        dockerService = new DockerService(config, httpClient, resolutionCache);
+        versionDetector = new VersionDetector(config, httpClient);
+        webDriverList = new CopyOnWriteArrayList<>();
+        webDriverCreator = new WebDriverCreator(config);
+    }
 
     public Config config() {
         return config;
@@ -294,10 +306,6 @@ public abstract class WebDriverManager {
 
     public void setup() {
         DriverManagerType driverManagerType = getDriverManagerType();
-        initResolutionCache();
-        cacheHandler = new CacheHandler(config);
-        httpClient = new HttpClient(config());
-        dockerService = new DockerService(config, httpClient, resolutionCache);
 
         if (config().getClearingDriverCache()) {
             clearDriverCache();
@@ -365,10 +373,6 @@ public abstract class WebDriverManager {
     }
 
     public Optional<Path> getBrowserPath() {
-        if (versionDetector == null) {
-            httpClient = new HttpClient(config());
-            versionDetector = new VersionDetector(config, httpClient);
-        }
         return versionDetector.getBrowserPath(
                 getDriverManagerType().getBrowserNameLowerCase());
     }
@@ -665,7 +669,6 @@ public abstract class WebDriverManager {
     }
 
     public WebDriverManager clearResolutionCache() {
-        initResolutionCache();
         resolutionCache.clear();
         return this;
     }
@@ -709,7 +712,6 @@ public abstract class WebDriverManager {
     }
 
     public List<String> getDriverVersions() {
-        httpClient = new HttpClient(config());
         try {
             List<URL> driverUrls = getDriverUrls();
             List<String> driverVersionList = new ArrayList<>();
@@ -810,10 +812,6 @@ public abstract class WebDriverManager {
 
     protected void manage(String driverVersion) {
         try (HttpClient wdmHttpClient = httpClient) {
-            versionDetector = new VersionDetector(config, httpClient);
-            downloader = new Downloader(httpClient, config(),
-                    this::postDownload);
-
             if (isUnknown(driverVersion)) {
                 driverVersion = resolveDriverVersion(driverVersion);
             }
@@ -917,10 +915,6 @@ public abstract class WebDriverManager {
             }
         }
         return driverVersion;
-    }
-
-    protected void initResolutionCache() {
-        resolutionCache = new ResolutionCache(config);
     }
 
     protected String download(String driverVersion) throws IOException {
@@ -1404,9 +1398,6 @@ public abstract class WebDriverManager {
 
     protected WebDriver instantiateDriver() {
         WebDriver driver = null;
-        if (webDriverCreator == null) {
-            webDriverCreator = new WebDriverCreator(config);
-        }
         try {
             String remoteAddress = config().getRemoteAddress();
             if (dockerEnabled) {
