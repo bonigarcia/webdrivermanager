@@ -1407,6 +1407,7 @@ public abstract class WebDriverManager {
                         .orElse(getCapabilities());
                 driver = webDriverCreator.createRemoteWebDriver(remoteAddress,
                         caps);
+                webDriverList.add(new WebDriverBrowser(driver));
 
             } else {
                 driver = createLocalWebDriver();
