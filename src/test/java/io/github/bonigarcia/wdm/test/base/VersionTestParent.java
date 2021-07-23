@@ -51,11 +51,11 @@ abstract public class VersionTestParent {
 
         String osLabel = "";
         if (os != null) {
-            wdm = wdm.operatingSystem(os);
+            wdm.operatingSystem(os);
             osLabel = " os=" + os;
         }
         if (architecture != DEFAULT) {
-            wdm = wdm.architecture(architecture);
+            wdm.architecture(architecture);
         }
 
         log.debug("Test latest {} [arch={}{}]", wdm.getDriverManagerType(),
@@ -72,14 +72,14 @@ abstract public class VersionTestParent {
             WebDriverManager wdm = WebDriverManager.getInstance(driverClass);
 
             if (architecture != DEFAULT) {
-                wdm = wdm.architecture(architecture);
+                wdm.architecture(architecture);
             }
             String osLabel = "";
             if (os != null) {
-                wdm = wdm.operatingSystem(os);
+                wdm.operatingSystem(os);
                 osLabel = " os=" + os;
             }
-            wdm = wdm.driverVersion(specificVersion);
+            wdm.driverVersion(specificVersion);
 
             log.debug("Test {} version={} [arch={}{}]",
                     wdm.getDriverManagerType(), specificVersion, architecture,
