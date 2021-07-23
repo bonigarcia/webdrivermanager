@@ -65,6 +65,7 @@ import java.util.Scanner;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
 import java.util.regex.Matcher;
+import java.util.stream.Collectors;
 
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.DocumentBuilder;
@@ -730,6 +731,23 @@ public abstract class WebDriverManager {
         } catch (IOException e) {
             throw new WebDriverManagerException(e);
         }
+    }
+
+    public WebDriver getWebDriver() {
+        List<WebDriver> driverList = getWebDriverList();
+        return driverList.isEmpty() ? null : driverList.iterator().next();
+    }
+
+    public List<WebDriver> getWebDriverList() {
+        List<WebDriver> webdriverList = new ArrayList<>();
+        if (webDriverList.isEmpty()) {
+            log.warn("WebDriver object(s) not available");
+        } else {
+            webdriverList = webDriverList.stream()
+                    .map(WebDriverBrowser::getDriver)
+                    .collect(Collectors.toList());
+        }
+        return webdriverList;
     }
 
     public String getDockerBrowserContainerId(WebDriver driver) {
