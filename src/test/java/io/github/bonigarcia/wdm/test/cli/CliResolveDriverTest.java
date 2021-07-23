@@ -45,14 +45,15 @@ class CliResolveDriverTest {
 
     @ParameterizedTest
     @MethodSource("data")
-    void testInteractive(String browser, String driver) {
+    void testCli(String browser, String driver) {
         log.debug("Running WebDriverManager CLI with arguments: {}", browser);
         WebDriverManager.main(new String[] { "resolveDriverFor=" + browser });
         File driverFile = new File(driver);
         boolean exists = driverFile.exists();
+        assertThat(exists).isTrue();
         boolean delete = driverFile.delete();
-        assertThat(exists && delete).isTrue();
-        log.debug("CLI test resolving driver for {} OK", browser);
+        log.debug("CLI test resolving driver for {} OK (driver deleted: {})",
+                browser, delete);
     }
 
     static Stream<Arguments> data() {

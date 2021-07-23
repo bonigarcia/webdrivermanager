@@ -68,9 +68,8 @@ abstract public class VersionTestParent {
     @ParameterizedTest
     @EnumSource(names = { "DEFAULT", "X32", "X64" })
     void testSpecificVersions(Architecture architecture) throws Exception {
-        WebDriverManager wdm = WebDriverManager.getInstance(driverClass);
-
         for (String specificVersion : specificVersions) {
+            WebDriverManager wdm = WebDriverManager.getInstance(driverClass);
 
             if (architecture != DEFAULT) {
                 wdm = wdm.architecture(architecture);
@@ -86,10 +85,10 @@ abstract public class VersionTestParent {
                     wdm.getDriverManagerType(), specificVersion, architecture,
                     osLabel);
             wdm.setup();
-            wdm.reset();
 
             assertThat(wdm.getDownloadedDriverVersion())
                     .isEqualTo(specificVersion);
+            wdm.reset();
         }
     }
 

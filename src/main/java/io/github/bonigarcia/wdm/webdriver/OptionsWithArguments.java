@@ -23,35 +23,36 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.openqa.selenium.MutableCapabilities;
-import org.openqa.selenium.remote.BrowserType;
 import org.openqa.selenium.remote.CapabilityType;
 
 import com.google.common.collect.ImmutableList;
 
 /**
- * Edge options which allows to include arguments (not available in Selenium 3).
+ * Options which allows to include arguments (for compatibility with Selenium 3
+ * and 4).
  *
  * @author Boni Garcia
  * @since 5.0.0
  */
-public class EdgeOptionsWithArguments extends MutableCapabilities {
+public class OptionsWithArguments extends MutableCapabilities {
 
     private static final long serialVersionUID = -1545177795938321206L;
 
-    public static final String CAPABILITY = "ms:edgeOptions";
+    private String capability;
 
     private List<String> args = new ArrayList<>();
 
-    public EdgeOptionsWithArguments() {
-        setCapability(CapabilityType.BROWSER_NAME, BrowserType.EDGE);
+    public OptionsWithArguments(String browserType, String capability) {
+        setCapability(CapabilityType.BROWSER_NAME, browserType);
+        this.capability = capability;
     }
 
-    public EdgeOptionsWithArguments addArguments(String... arguments) {
+    public OptionsWithArguments addArguments(String... arguments) {
         addArguments(ImmutableList.copyOf(arguments));
         return this;
     }
 
-    public EdgeOptionsWithArguments addArguments(List<String> arguments) {
+    public OptionsWithArguments addArguments(List<String> arguments) {
         args.addAll(arguments);
         return this;
     }
@@ -61,7 +62,7 @@ public class EdgeOptionsWithArguments extends MutableCapabilities {
         Map<String, Object> toReturn = new TreeMap<>(super.asMap());
         Map<String, Object> options = new TreeMap<>();
         options.put("args", ImmutableList.copyOf(args));
-        toReturn.put(CAPABILITY, options);
+        toReturn.put(capability, options);
         return Collections.unmodifiableMap(toReturn);
     }
 
