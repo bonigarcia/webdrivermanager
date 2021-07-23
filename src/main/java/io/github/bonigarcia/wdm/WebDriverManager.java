@@ -1525,12 +1525,14 @@ public abstract class WebDriverManager {
     protected WebDriver createLocalWebDriver() throws ClassNotFoundException,
             InstantiationException, IllegalAccessException,
             InvocationTargetException, NoSuchMethodException {
-        Class<?> browserClass = Class
-                .forName(getDriverManagerType().browserClass());
-        WebDriver driver = webDriverCreator.createLocalWebDriver(browserClass,
-                capabilities);
-        webDriverList.add(new WebDriverBrowser(driver));
-
+        WebDriver driver = null;
+        if (getDriverManagerType() != null) {
+            Class<?> browserClass = Class
+                    .forName(getDriverManagerType().browserClass());
+            driver = webDriverCreator.createLocalWebDriver(browserClass,
+                    capabilities);
+            webDriverList.add(new WebDriverBrowser(driver));
+        }
         return driver;
     }
 
