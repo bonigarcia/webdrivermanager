@@ -69,7 +69,8 @@ abstract public class VersionTestParent {
     @EnumSource(names = { "DEFAULT", "X32", "X64" })
     void testSpecificVersions(Architecture architecture) throws Exception {
         for (String specificVersion : specificVersions) {
-            WebDriverManager wdm = WebDriverManager.getInstance(driverClass);
+            WebDriverManager wdm = WebDriverManager.getInstance(driverClass)
+                    .driverVersion(specificVersion);
 
             if (architecture != DEFAULT) {
                 wdm.architecture(architecture);
@@ -79,7 +80,6 @@ abstract public class VersionTestParent {
                 wdm.operatingSystem(os);
                 osLabel = " os=" + os;
             }
-            wdm.driverVersion(specificVersion);
 
             log.debug("Test {} version={} [arch={}{}]",
                     wdm.getDriverManagerType(), specificVersion, architecture,
