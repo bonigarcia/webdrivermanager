@@ -21,6 +21,7 @@ import static io.github.bonigarcia.wdm.config.Architecture.X32;
 import static io.github.bonigarcia.wdm.config.Architecture.X64;
 import static io.github.bonigarcia.wdm.config.Config.isNullOrEmpty;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROME;
+import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROMIUM;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.EDGE;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.IEXPLORER;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.OPERA;
@@ -231,6 +232,12 @@ public abstract class WebDriverManager {
 
     public static WebDriverManager getInstance(
             DriverManagerType driverManagerType) {
+        // This condition is necessary for compatibility between Selenium 3 and
+        // 4 (since in Selenium 4, the class
+        // org.openqa.selenium.chromium.ChromiumDriver is not available)
+        if (driverManagerType == CHROMIUM) {
+            return chromiumdriver();
+        }
         return getDriver(driverManagerType.browserClass());
     }
 
@@ -912,8 +919,10 @@ public abstract class WebDriverManager {
                     return resolveDriverVersion("");
                 }
 
-                storeInResolutionCache(preferenceKey, driverVersion,
-                        optionalBrowserVersion.get());
+                if (!versionDetector.isSnap()) {
+                    storeInResolutionCache(preferenceKey, driverVersion,
+                            optionalBrowserVersion.get());
+                }
             }
         }
 
