@@ -293,9 +293,7 @@ public abstract class WebDriverManager {
                 manager = getInstance(DriverManagerType
                         .valueOf(defaultBrowser.toUpperCase(ROOT)));
             }
-            DriverManagerType managerType = DriverManagerType
-                    .valueOf(defaultBrowser.toUpperCase(ROOT));
-            return getInstance(managerType);
+            return manager;
 
         } catch (Exception e) {
             log.error("Error trying to get manager for browser {}",

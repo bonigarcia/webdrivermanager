@@ -48,6 +48,7 @@ class GenericCreateTest {
     @AfterEach
     void teardown() {
         wdm.quit();
+        System.clearProperty("wdm.defaultBrowser");
     }
 
     @ParameterizedTest
