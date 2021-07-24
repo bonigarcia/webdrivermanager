@@ -23,7 +23,6 @@
         <junit.version>5.7.2</junit.version>
         <assertj.version>3.20.2</assertj.version>
         <mockserver.version>5.11.2</mockserver.version>
-        <guava.version>30.1.1-jre</guava.version>
 
         <!-- plugins -->
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
@@ -111,11 +110,6 @@
             <groupId>com.github.docker-java</groupId>
             <artifactId>docker-java-transport-httpclient5</artifactId>
             <version>${docker-java.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
         </dependency>
 
         <dependency>
