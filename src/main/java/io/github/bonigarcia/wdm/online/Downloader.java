@@ -295,29 +295,15 @@ public class Downloader {
                         }
                     }
                 } else {
-                    checkFileExists(entryFile);
-                    OutputStream out = new FileOutputStream(entryFile);
-                    IOUtils.copy(taris, out);
-                    out.close();
-                    if (entryFile.getName().endsWith(".gz")) {
-                        unTarGz(entryFile.getAbsoluteFile());
+                    try (OutputStream out = new FileOutputStream(entryFile)) {
+                        IOUtils.copy(taris, out);
+                        out.close();
+                        if (entryFile.getName().endsWith(".gz")) {
+                            unTarGz(entryFile.getAbsoluteFile());
+                        }
                     }
                 }
             }
-        }
-    }
-
-    protected void checkFileExists(File file) throws IOException {
-        if (file.isDirectory()) {
-            if (!file.exists()) {
-                file.mkdir();
-            }
-        } else {
-            if (file.getParentFile() != null
-                    && !file.getParentFile().exists()) {
-                file.getParentFile().mkdirs();
-            }
-            file.createNewFile();
         }
     }
 
