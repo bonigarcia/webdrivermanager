@@ -297,7 +297,6 @@ public class Downloader {
                 } else {
                     try (OutputStream out = new FileOutputStream(entryFile)) {
                         IOUtils.copy(taris, out);
-                        out.close();
                         if (entryFile.getName().endsWith(".gz")) {
                             unTarGz(entryFile.getAbsoluteFile());
                         }
