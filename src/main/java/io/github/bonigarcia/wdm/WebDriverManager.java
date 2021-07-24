@@ -198,39 +198,39 @@ public abstract class WebDriverManager {
         return config;
     }
 
-    public static WebDriverManager chromedriver() {
+    public static synchronized WebDriverManager chromedriver() {
         return new ChromeDriverManager();
     }
 
-    public static WebDriverManager chromiumdriver() {
+    public static synchronized WebDriverManager chromiumdriver() {
         return new ChromiumDriverManager();
     }
 
-    public static WebDriverManager firefoxdriver() {
+    public static synchronized WebDriverManager firefoxdriver() {
         return new FirefoxDriverManager();
     }
 
-    public static WebDriverManager operadriver() {
+    public static synchronized WebDriverManager operadriver() {
         return new OperaDriverManager();
     }
 
-    public static WebDriverManager edgedriver() {
+    public static synchronized WebDriverManager edgedriver() {
         return new EdgeDriverManager();
     }
 
-    public static WebDriverManager iedriver() {
+    public static synchronized WebDriverManager iedriver() {
         return new InternetExplorerDriverManager();
     }
 
-    public static WebDriverManager safaridriver() {
+    public static synchronized WebDriverManager safaridriver() {
         return new SafariDriverManager();
     }
 
-    protected static WebDriverManager voiddriver() {
+    protected static synchronized WebDriverManager voiddriver() {
         return new VoidDriverManager();
     }
 
-    public static WebDriverManager getInstance(
+    public static synchronized WebDriverManager getInstance(
             DriverManagerType driverManagerType) {
         // This condition is necessary for compatibility between Selenium 3 and
         // 4 (since in Selenium 4, the class
@@ -241,7 +241,8 @@ public abstract class WebDriverManager {
         return getDriver(driverManagerType.browserClass());
     }
 
-    public static WebDriverManager getInstance(String browserName) {
+    public static synchronized WebDriverManager getInstance(
+            String browserName) {
         DriverManagerType managerType;
         switch (browserName) {
         case "operablink":
@@ -261,11 +262,13 @@ public abstract class WebDriverManager {
         return getInstance(managerType);
     }
 
-    public static WebDriverManager getInstance(Class<?> webDriverClass) {
+    public static synchronized WebDriverManager getInstance(
+            Class<?> webDriverClass) {
         return getDriver(webDriverClass.getName());
     }
 
-    protected static WebDriverManager getDriver(String webDriverClass) {
+    protected static synchronized WebDriverManager getDriver(
+            String webDriverClass) {
         switch (webDriverClass) {
         case "org.openqa.selenium.chrome.ChromeDriver":
             return chromedriver();
@@ -286,7 +289,7 @@ public abstract class WebDriverManager {
         }
     }
 
-    public static WebDriverManager getInstance() {
+    public static synchronized WebDriverManager getInstance() {
         WebDriverManager manager = voiddriver();
         String defaultBrowser = manager.config().getDefaultBrowser();
         try {
