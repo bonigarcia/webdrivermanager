@@ -453,6 +453,11 @@ public abstract class WebDriverManager {
         return this;
     }
 
+    public WebDriverManager recordingPrefix(String prefix) {
+        config().setDockerRecordingPrefix(prefix);
+        return this;
+    }
+
     public WebDriverManager recordingOutput(String path) {
         return recordingOutput(Paths.get(path));
     }

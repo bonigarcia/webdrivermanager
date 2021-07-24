@@ -223,6 +223,8 @@ public class Config {
             "wdm.dockerRecordingFrameRate", Integer.class);
     ConfigKey<Path> dockerRecordingOutput = new ConfigKey<>(
             "wdm.dockerRecordingOutput", Path.class);
+    ConfigKey<String> dockerRecordingPrefix = new ConfigKey<>(
+            "wdm.dockerRecordingPrefix", String.class);
     ConfigKey<String> dockerBrowserSelenoidImageFormat = new ConfigKey<>(
             "wdm.dockerBrowserSelenoidImageFormat", String.class);
     ConfigKey<String> dockerBrowserTwilioImageFormat = new ConfigKey<>(
@@ -1140,6 +1142,15 @@ public class Config {
 
     public Config setDockerRecordingOutput(Path value) {
         this.dockerRecordingOutput.setValue(value);
+        return this;
+    }
+
+    public String getDockerRecordingPrefix() {
+        return resolve(dockerRecordingPrefix);
+    }
+
+    public Config setDockerRecordingPrefix(String value) {
+        this.dockerRecordingPrefix.setValue(value);
         return this;
     }
 

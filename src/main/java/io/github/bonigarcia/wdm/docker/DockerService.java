@@ -82,6 +82,7 @@ public class DockerService {
     private static final String DEV = "dev";
     private static final String LATEST_MINUS = "latest-";
     private static final String RECORDING_EXT = ".mp4";
+    private static final String SEPARATOR = "_";
 
     private Config config;
     private HttpClient httpClient;
@@ -352,7 +353,7 @@ public class DockerService {
             DockerHubService dockerHubService = new DockerHubService(config,
                     httpClient);
             List<DockerHubTag> dockerHubTags;
-            String tagPreffix = browserName + "_";
+            String tagPreffix = browserName + SEPARATOR;
             int minusIndex = getMinusIndex(browserVersion);
 
             String dockerBrowserImageFormat = config
@@ -654,8 +655,12 @@ public class DockerService {
             recordingPath = dockerRecordingPath;
         } else {
             String sessionId = browserContainer.getSessionId();
-            String recordingFileName = browserContainer.getBrowserName() + "_"
-                    + sessionId + RECORDING_EXT;
+            String prefix = config.getDockerRecordingPrefix();
+            if (isNullOrEmpty(prefix)) {
+                prefix = browserContainer.getBrowserName();
+            }
+            String recordingFileName = prefix + SEPARATOR + sessionId
+                    + RECORDING_EXT;
             recordingPath = Paths.get(dockerRecordingPath.toString(),
                     recordingFileName);
         }
