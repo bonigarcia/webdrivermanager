@@ -695,7 +695,7 @@ public abstract class WebDriverManager {
         return this;
     }
 
-    public void reset() {
+    public synchronized void reset() {
         config().reset();
         mirrorLog = false;
         forcedArch = false;
@@ -709,11 +709,11 @@ public abstract class WebDriverManager {
 
     // ------------
 
-    public String getDownloadedDriverPath() {
+    public synchronized String getDownloadedDriverPath() {
         return downloadedDriverPath;
     }
 
-    public String getDownloadedDriverVersion() {
+    public synchronized String getDownloadedDriverVersion() {
         return downloadedDriverVersion;
     }
 
