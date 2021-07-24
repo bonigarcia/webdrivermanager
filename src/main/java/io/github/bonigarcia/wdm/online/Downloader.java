@@ -30,10 +30,6 @@ import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
 import static org.apache.commons.io.FileUtils.deleteDirectory;
 import static org.apache.commons.io.FileUtils.listFiles;
 import static org.apache.commons.io.FileUtils.moveFileToDirectory;
-import static org.rauschig.jarchivelib.ArchiveFormat.TAR;
-import static org.rauschig.jarchivelib.ArchiverFactory.createArchiver;
-import static org.rauschig.jarchivelib.CompressionType.BZIP2;
-import static org.rauschig.jarchivelib.CompressionType.GZIP;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
@@ -51,7 +47,6 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.rauschig.jarchivelib.Archiver;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.config.Config;
@@ -188,9 +183,7 @@ public class Downloader {
         if (extractFile) {
             log.info("Extracting driver from compressed file {}", fileName);
         }
-        if (fileName.endsWith("tar.bz2")) {
-            unBZip2(compressedFile);
-        } else if (fileName.endsWith("tar.gz")) {
+        if (fileName.endsWith("tar.gz")) {
             unTarGz(compressedFile);
         } else if (fileName.endsWith("gz")) {
             unGzip(compressedFile);
@@ -272,15 +265,17 @@ public class Downloader {
     }
 
     private void unTarGz(File archive) throws IOException {
-        Archiver archiver = createArchiver(TAR, GZIP);
-        archiver.extract(archive, archive.getParentFile());
         log.trace("unTarGz {}", archive);
-    }
-
-    private void unBZip2(File archive) throws IOException {
-        Archiver archiver = createArchiver(TAR, BZIP2);
-        archiver.extract(archive, archive.getParentFile());
-        log.trace("Unbzip2 {}", archive);
+        try (GZIPInputStream gis = new GZIPInputStream(
+                new FileInputStream(archive));
+                FileOutputStream fos = new FileOutputStream(
+                        archive.getParentFile())) {
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = gis.read(buffer)) > 0) {
+                fos.write(buffer, 0, len);
+            }
+        }
     }
 
     protected void setFileExecutable(File file) {
