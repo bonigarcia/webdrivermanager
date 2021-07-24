@@ -30,10 +30,6 @@ import static org.apache.commons.io.FileUtils.copyInputStreamToFile;
 import static org.apache.commons.io.FileUtils.deleteDirectory;
 import static org.apache.commons.io.FileUtils.listFiles;
 import static org.apache.commons.io.FileUtils.moveFileToDirectory;
-import static org.rauschig.jarchivelib.ArchiveFormat.TAR;
-import static org.rauschig.jarchivelib.ArchiverFactory.createArchiver;
-import static org.rauschig.jarchivelib.CompressionType.BZIP2;
-import static org.rauschig.jarchivelib.CompressionType.GZIP;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
@@ -41,6 +37,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -51,7 +48,9 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.rauschig.jarchivelib.Archiver;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.config.Config;
@@ -188,9 +187,7 @@ public class Downloader {
         if (extractFile) {
             log.info("Extracting driver from compressed file {}", fileName);
         }
-        if (fileName.endsWith("tar.bz2")) {
-            unBZip2(compressedFile);
-        } else if (fileName.endsWith("tar.gz")) {
+        if (fileName.endsWith("tar.gz")) {
             unTarGz(compressedFile);
         } else if (fileName.endsWith("gz")) {
             unGzip(compressedFile);
@@ -271,16 +268,42 @@ public class Downloader {
         }
     }
 
-    private void unTarGz(File archive) throws IOException {
-        Archiver archiver = createArchiver(TAR, GZIP);
-        archiver.extract(archive, archive.getParentFile());
-        log.trace("unTarGz {}", archive);
-    }
-
-    private void unBZip2(File archive) throws IOException {
-        Archiver archiver = createArchiver(TAR, BZIP2);
-        archiver.extract(archive, archive.getParentFile());
-        log.trace("Unbzip2 {}", archive);
+    public void unTarGz(File tarGzFile) throws IOException {
+        String destDir = tarGzFile.getParent();
+        TarArchiveEntry entry = null;
+        TarArchiveEntry[] subEntries = null;
+        File subEntryFile = null;
+        try (FileInputStream fis = new FileInputStream(tarGzFile);
+                GZIPInputStream gis = new GZIPInputStream(fis);
+                TarArchiveInputStream taris = new TarArchiveInputStream(gis);) {
+            while ((entry = taris.getNextTarEntry()) != null) {
+                StringBuilder entryFileName = new StringBuilder();
+                entryFileName.append(destDir).append(File.separator)
+                        .append(entry.getName());
+                File entryFile = new File(entryFileName.toString());
+                if (entry.isDirectory()) {
+                    if (!entryFile.exists()) {
+                        entryFile.mkdir();
+                    }
+                    subEntries = entry.getDirectoryEntries();
+                    for (int i = 0; i < subEntries.length; i++) {
+                        try (OutputStream out = new FileOutputStream(
+                                subEntryFile)) {
+                            subEntryFile = new File(entryFileName.toString(),
+                                    subEntries[i].getName());
+                            IOUtils.copy(taris, out);
+                        }
+                    }
+                } else {
+                    try (OutputStream out = new FileOutputStream(entryFile)) {
+                        IOUtils.copy(taris, out);
+                        if (entryFile.getName().endsWith(".gz")) {
+                            unTarGz(entryFile.getAbsoluteFile());
+                        }
+                    }
+                }
+            }
+        }
     }
 
     protected void setFileExecutable(File file) {

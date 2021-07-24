@@ -21,6 +21,7 @@ import static io.github.bonigarcia.wdm.config.Architecture.X32;
 import static io.github.bonigarcia.wdm.config.Architecture.X64;
 import static io.github.bonigarcia.wdm.config.Config.isNullOrEmpty;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROME;
+import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROMIUM;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.EDGE;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.IEXPLORER;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.OPERA;
@@ -42,7 +43,7 @@ import static javax.xml.xpath.XPathConstants.NODESET;
 import static javax.xml.xpath.XPathFactory.newInstance;
 import static org.apache.commons.io.FileUtils.cleanDirectory;
 import static org.apache.commons.io.FilenameUtils.removeExtension;
-import static org.apache.commons.lang3.StringUtils.isNumeric;
+import static org.apache.commons.lang.StringUtils.isNumeric;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.BufferedReader;
@@ -65,6 +66,7 @@ import java.util.Scanner;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
 import java.util.regex.Matcher;
+import java.util.stream.Collectors;
 
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.DocumentBuilder;
@@ -73,7 +75,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.jsoup.Jsoup;
@@ -192,7 +194,7 @@ public abstract class WebDriverManager {
         webDriverCreator = new WebDriverCreator(config);
     }
 
-    public Config config() {
+    public synchronized Config config() {
         return config;
     }
 
@@ -230,6 +232,12 @@ public abstract class WebDriverManager {
 
     public static WebDriverManager getInstance(
             DriverManagerType driverManagerType) {
+        // This condition is necessary for compatibility between Selenium 3 and
+        // 4 (since in Selenium 4, the class
+        // org.openqa.selenium.chromium.ChromiumDriver is not available)
+        if (driverManagerType == CHROMIUM) {
+            return chromiumdriver();
+        }
         return getDriver(driverManagerType.browserClass());
     }
 
@@ -293,9 +301,7 @@ public abstract class WebDriverManager {
                 manager = getInstance(DriverManagerType
                         .valueOf(defaultBrowser.toUpperCase(ROOT)));
             }
-            DriverManagerType managerType = DriverManagerType
-                    .valueOf(defaultBrowser.toUpperCase(ROOT));
-            return getInstance(managerType);
+            return manager;
 
         } catch (Exception e) {
             log.error("Error trying to get manager for browser {}",
@@ -304,7 +310,7 @@ public abstract class WebDriverManager {
         return manager;
     }
 
-    public void setup() {
+    public synchronized void setup() {
         DriverManagerType driverManagerType = getDriverManagerType();
 
         if (config().getClearingDriverCache()) {
@@ -321,12 +327,12 @@ public abstract class WebDriverManager {
         }
     }
 
-    public WebDriver create() {
+    public synchronized WebDriver create() {
         setup();
         return instantiateDriver();
     }
 
-    public List<WebDriver> create(int numberOfBrowser) {
+    public synchronized List<WebDriver> create(int numberOfBrowser) {
         List<WebDriver> browserList = new ArrayList<>();
         for (int i = 0; i < numberOfBrowser; i++) {
             if (i == 0) {
@@ -337,12 +343,12 @@ public abstract class WebDriverManager {
         return browserList;
     }
 
-    public void quit() {
+    public synchronized void quit() {
         webDriverList.stream().forEach(this::quit);
         webDriverList.clear();
     }
 
-    public void quit(WebDriver driver) {
+    public synchronized void quit(WebDriver driver) {
         Optional<WebDriverBrowser> webDriverBrowser = findWebDriverBrowser(
                 driver);
         if (webDriverBrowser.isPresent()) {
@@ -689,7 +695,7 @@ public abstract class WebDriverManager {
         return this;
     }
 
-    public void reset() {
+    public synchronized void reset() {
         config().reset();
         mirrorLog = false;
         forcedArch = false;
@@ -703,11 +709,11 @@ public abstract class WebDriverManager {
 
     // ------------
 
-    public String getDownloadedDriverPath() {
+    public synchronized String getDownloadedDriverPath() {
         return downloadedDriverPath;
     }
 
-    public String getDownloadedDriverVersion() {
+    public synchronized String getDownloadedDriverVersion() {
         return downloadedDriverVersion;
     }
 
@@ -732,6 +738,23 @@ public abstract class WebDriverManager {
         } catch (IOException e) {
             throw new WebDriverManagerException(e);
         }
+    }
+
+    public WebDriver getWebDriver() {
+        List<WebDriver> driverList = getWebDriverList();
+        return driverList.isEmpty() ? null : driverList.iterator().next();
+    }
+
+    public List<WebDriver> getWebDriverList() {
+        List<WebDriver> webdriverList = new ArrayList<>();
+        if (webDriverList.isEmpty()) {
+            log.warn("WebDriver object(s) not available");
+        } else {
+            webdriverList = webDriverList.stream()
+                    .map(WebDriverBrowser::getDriver)
+                    .collect(Collectors.toList());
+        }
+        return webdriverList;
     }
 
     public String getDockerBrowserContainerId(WebDriver driver) {
@@ -896,8 +919,10 @@ public abstract class WebDriverManager {
                     return resolveDriverVersion("");
                 }
 
-                storeInResolutionCache(preferenceKey, driverVersion,
-                        optionalBrowserVersion.get());
+                if (!versionDetector.isSnap()) {
+                    storeInResolutionCache(preferenceKey, driverVersion,
+                            optionalBrowserVersion.get());
+                }
             }
         }
 
@@ -1407,6 +1432,7 @@ public abstract class WebDriverManager {
                         .orElse(getCapabilities());
                 driver = webDriverCreator.createRemoteWebDriver(remoteAddress,
                         caps);
+                webDriverList.add(new WebDriverBrowser(driver));
 
             } else {
                 driver = createLocalWebDriver();
@@ -1525,12 +1551,14 @@ public abstract class WebDriverManager {
     protected WebDriver createLocalWebDriver() throws ClassNotFoundException,
             InstantiationException, IllegalAccessException,
             InvocationTargetException, NoSuchMethodException {
-        Class<?> browserClass = Class
-                .forName(getDriverManagerType().browserClass());
-        WebDriver driver = webDriverCreator.createLocalWebDriver(browserClass,
-                capabilities);
-        webDriverList.add(new WebDriverBrowser(driver));
-
+        WebDriver driver = null;
+        if (getDriverManagerType() != null) {
+            Class<?> browserClass = Class
+                    .forName(getDriverManagerType().browserClass());
+            driver = webDriverCreator.createLocalWebDriver(browserClass,
+                    capabilities);
+            webDriverList.add(new WebDriverBrowser(driver));
+        }
         return driver;
     }
 

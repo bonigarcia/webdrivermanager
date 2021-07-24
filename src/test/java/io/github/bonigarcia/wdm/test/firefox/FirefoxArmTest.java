@@ -50,11 +50,17 @@ class FirefoxArmTest {
     private void checkArm(WebDriverManager wdm) {
         wdm.driverVersion("0.29.1").mac().arch64().setup();
         String driverPath = wdm.getDownloadedDriverPath();
-        log.debug("Driver path (X64) {}", driverPath);
+        log.debug("Driver path (arch={} driverVersion={} OS={}) {}",
+                wdm.config().getArchitecture(),
+                wdm.config().getGeckoDriverVersion(),
+                wdm.config().getOperatingSystem(), driverPath);
 
         wdm.driverVersion("0.29.1").mac().arm64().setup();
         String driverPathArm64 = wdm.getDownloadedDriverPath();
-        log.debug("Driver path (ARM64) {}", driverPathArm64);
+        log.debug("Driver path (arch={} driverVersion={} OS={}) {}",
+                wdm.config().getArchitecture(),
+                wdm.config().getGeckoDriverVersion(),
+                wdm.config().getOperatingSystem(), driverPathArm64);
 
         assertThat(driverPath).isNotEqualTo(driverPathArm64);
     }

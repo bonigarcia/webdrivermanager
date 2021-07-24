@@ -24,11 +24,13 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -62,13 +64,11 @@ class ServerSeleniumTest {
     }
 
     @ParameterizedTest
-    @ValueSource(classes = { ChromeOptions.class, FirefoxOptions.class })
-    void testServerSeleniumServer(Class<? extends Capabilities> capabilities)
-            throws Exception {
+    @MethodSource("data")
+    void testServerSeleniumServer(Capabilities capabilities) throws Exception {
         String serverUrl = String.format("http://localhost:%s/", serverPort);
-
-        Capabilities caps = capabilities.getDeclaredConstructor().newInstance();
-        WebDriver driver = new RemoteWebDriver(new URL(serverUrl), caps);
+        WebDriver driver = new RemoteWebDriver(new URL(serverUrl),
+                capabilities);
 
         String sutUrl = "https://github.com/bonigarcia/webdrivermanager";
         driver.get(sutUrl);
@@ -79,6 +79,18 @@ class ServerSeleniumTest {
                 .contains("Automated driver management for Selenium WebDriver");
 
         driver.close();
+    }
+
+    static Stream<Arguments> data() {
+        ChromeOptions chromeOptions = new ChromeOptions();
+        chromeOptions.addArguments("--no-sandbox");
+        chromeOptions.addArguments("--disable-gpu");
+        chromeOptions.addArguments("--disable-dev-shm-usage");
+
+        FirefoxOptions firefoxOptions = new FirefoxOptions();
+
+        return Stream.of(Arguments.of(chromeOptions),
+                Arguments.of(firefoxOptions));
     }
 
 }
