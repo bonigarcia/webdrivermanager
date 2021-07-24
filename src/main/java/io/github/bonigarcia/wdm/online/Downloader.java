@@ -37,6 +37,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -47,6 +48,9 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.config.Config;
@@ -264,17 +268,56 @@ public class Downloader {
         }
     }
 
-    private void unTarGz(File archive) throws IOException {
-        log.trace("unTarGz {}", archive);
-        try (GZIPInputStream gis = new GZIPInputStream(
-                new FileInputStream(archive));
-                FileOutputStream fos = new FileOutputStream(
-                        archive.getParentFile())) {
-            byte[] buffer = new byte[1024];
-            int len;
-            while ((len = gis.read(buffer)) > 0) {
-                fos.write(buffer, 0, len);
+    public void unTarGz(File tarGzFile) throws IOException {
+        String destDir = tarGzFile.getParent();
+        TarArchiveEntry entry = null;
+        TarArchiveEntry[] subEntries = null;
+        File subEntryFile = null;
+        try (FileInputStream fis = new FileInputStream(tarGzFile);
+                GZIPInputStream gis = new GZIPInputStream(fis);
+                TarArchiveInputStream taris = new TarArchiveInputStream(gis);) {
+            while ((entry = taris.getNextTarEntry()) != null) {
+                StringBuilder entryFileName = new StringBuilder();
+                entryFileName.append(destDir).append(File.separator)
+                        .append(entry.getName());
+                File entryFile = new File(entryFileName.toString());
+                if (entry.isDirectory()) {
+                    if (!entryFile.exists()) {
+                        entryFile.mkdir();
+                    }
+                    subEntries = entry.getDirectoryEntries();
+                    for (int i = 0; i < subEntries.length; i++) {
+                        try (OutputStream out = new FileOutputStream(
+                                subEntryFile)) {
+                            subEntryFile = new File(entryFileName.toString(),
+                                    subEntries[i].getName());
+                            IOUtils.copy(taris, out);
+                        }
+                    }
+                } else {
+                    checkFileExists(entryFile);
+                    OutputStream out = new FileOutputStream(entryFile);
+                    IOUtils.copy(taris, out);
+                    out.close();
+                    if (entryFile.getName().endsWith(".gz")) {
+                        unTarGz(entryFile.getAbsoluteFile());
+                    }
+                }
             }
+        }
+    }
+
+    protected void checkFileExists(File file) throws IOException {
+        if (file.isDirectory()) {
+            if (!file.exists()) {
+                file.mkdir();
+            }
+        } else {
+            if (file.getParentFile() != null
+                    && !file.getParentFile().exists()) {
+                file.getParentFile().mkdirs();
+            }
+            file.createNewFile();
         }
     }
 
