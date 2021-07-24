@@ -18,7 +18,7 @@ package io.github.bonigarcia.wdm.test.server;
 
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.stream.Collectors.toList;
-import static org.apache.commons.lang3.SystemUtils.IS_OS_WINDOWS;
+import static org.apache.commons.lang.SystemUtils.IS_OS_WINDOWS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.openqa.selenium.net.PortProber.findFreePort;
 import static org.slf4j.LoggerFactory.getLogger;
