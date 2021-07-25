@@ -35,8 +35,6 @@ import org.openqa.selenium.remote.CapabilityType;
  */
 public class OptionsWithArguments extends MutableCapabilities {
 
-    private static final long serialVersionUID = -1545177795938321206L;
-
     private String capability;
 
     private List<String> args = new ArrayList<>();

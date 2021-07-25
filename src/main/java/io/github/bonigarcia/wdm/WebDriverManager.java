@@ -54,11 +54,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
@@ -1367,8 +1369,10 @@ public abstract class WebDriverManager {
             if (dockerEnabled) {
                 driver = createDockerWebDriver();
             } else if (!isNullOrEmpty(remoteAddress)) {
+                Capabilities caps = Optional.ofNullable(capabilities)
+                        .orElse(getCapabilities());
                 driver = webDriverCreator.createRemoteWebDriver(remoteAddress,
-                        getMergedCapabilities());
+                        caps);
                 webDriverList.add(new WebDriverBrowser(driver));
 
             } else {
@@ -1509,6 +1513,19 @@ public abstract class WebDriverManager {
 
     protected Capabilities getCapabilities() {
         return new MutableCapabilities();
+    }
+
+    protected void addArgumentsForDockerIfRequired(Capabilities options)
+            throws IllegalAccessException, IllegalArgumentException,
+            InvocationTargetException, NoSuchMethodException,
+            SecurityException {
+        if (dockerEnabled && !androidEnabled) {
+            Method addArgumentsMethod = options.getClass()
+                    .getMethod("addArguments", List.class);
+            List<String> defaultArgs = Arrays.asList("--no-sandbox",
+                    "--disable-gpu", "--disable-dev-shm-usage");
+            addArgumentsMethod.invoke(options, defaultArgs);
+        }
     }
 
     protected static void logCliError(String browserForResolving,

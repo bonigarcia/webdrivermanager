@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.remote.BrowserType;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -201,11 +202,20 @@ public class EdgeDriverManager extends WebDriverManager {
 
     @Override
     protected Capabilities getCapabilities() {
-        OptionsWithArguments options = new OptionsWithArguments(
-                BrowserType.EDGE, "ms:edgeOptions");
-        options.addArguments("--no-sandbox");
-        options.addArguments("--disable-gpu");
-        options.addArguments("--disable-dev-shm-usage");
+        Capabilities options = new EdgeOptions();
+        try {
+            addArgumentsForDockerIfRequired(options);
+        } catch (Exception e) {
+            log.error(
+                    "Exception adding default arguments for Docker, retyring with custom class");
+            options = new OptionsWithArguments(BrowserType.EDGE,
+                    "ms:edgeOptions");
+            try {
+                addArgumentsForDockerIfRequired(options);
+            } catch (Exception e1) {
+                log.error("Exception getting default capabilities", e);
+            }
+        }
         return options;
     }
 
