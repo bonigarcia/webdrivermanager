@@ -17,7 +17,6 @@
             <unpack>true</unpack>
             <includes>
                 <include>ch.qos.logback:logback-classic:jar</include>
-                <include>com.google.guava:guava:jar</include>
             </includes>
             <useTransitiveFiltering>true</useTransitiveFiltering>
         </dependencySet>
@@ -26,6 +25,7 @@
             <unpack>true</unpack>
             <includes>
                 <include>io.javalin:javalin:jar</include>
+                <include>org.seleniumhq.selenium:selenium-java:jar</include>
             </includes>
             <useTransitiveFiltering>true</useTransitiveFiltering>
         </dependencySet>

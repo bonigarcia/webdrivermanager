@@ -13,6 +13,7 @@
         <gson.version>2.8.7</gson.version>
         <jsoup.version>1.14.1</jsoup.version>
         <docker-java.version>3.2.11</docker-java.version>
+        <guava.version>30.1.1-jre</guava.version>
 
         <!-- provided -->
         <javalin.version>3.13.10</javalin.version>
@@ -22,8 +23,6 @@
         <logback.version>1.2.4</logback.version>
         <junit.version>5.7.2</junit.version>
         <assertj.version>3.20.2</assertj.version>
-        <mockserver.version>5.11.2</mockserver.version>
-        <guava.version>30.1.1-jre</guava.version>
 
         <!-- plugins -->
         <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
@@ -112,6 +111,11 @@
             <artifactId>docker-java-transport-httpclient5</artifactId>
             <version>${docker-java.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.seleniumhq.selenium</groupId>
@@ -142,24 +146,6 @@
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <version>${assertj.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.mock-server</groupId>
-            <artifactId>mockserver-netty</artifactId>
-            <version>${mockserver.version}</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>ch.qos.logback</groupId>
-                    <artifactId>logback-classic</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${guava.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
