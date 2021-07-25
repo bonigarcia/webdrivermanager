@@ -77,27 +77,33 @@ public class WdmServer {
     private Map<String, URL> sessionMap;
     private Map<String, WebDriverManager> wdmMap;
     private Config config;
+    private String path;
 
     public WdmServer(int port) {
         sessionMap = new ConcurrentHashMap<>();
         wdmMap = new ConcurrentHashMap<>();
         config = new Config();
 
+        String serverPath = config.getServerPath();
+        path = serverPath.endsWith("/")
+                ? serverPath.substring(0, serverPath.length() - 1)
+                : serverPath;
+
         Javalin app = Javalin.create().start(port);
         Handler handler = this::handleRequest;
 
         // Resolve drivers
-        app.get("/chromedriver", handler);
-        app.get("/firefoxdriver", handler);
-        app.get("/edgedriver", handler);
-        app.get("/iedriver", handler);
-        app.get("/operadriver", handler);
+        app.get(path + "/chromedriver", handler);
+        app.get(path + "/firefoxdriver", handler);
+        app.get(path + "/edgedriver", handler);
+        app.get(path + "/iedriver", handler);
+        app.get(path + "/operadriver", handler);
 
         // Selenium Server
-        app.post(SESSION, handler);
-        app.post(SESSION + "/*", handler);
-        app.get(SESSION + "/*", handler);
-        app.delete(SESSION + "/*", handler);
+        app.post(path + SESSION, handler);
+        app.post(path + SESSION + "/*", handler);
+        app.get(path + SESSION + "/*", handler);
+        app.delete(path + SESSION + "/*", handler);
 
         log.info("WebDriverManager server listening on port {}", port);
     }
@@ -120,7 +126,7 @@ public class WdmServer {
 
     private void seleniumServer(Context ctx) throws IOException {
         String requestMethod = ctx.method();
-        String requestPath = ctx.path();
+        String requestPath = ctx.path().replace(path, "");
         String requestBody = ctx.body();
         log.trace("Body: {} ", requestBody);
         Session session = new Gson().fromJson(requestBody, Session.class);
@@ -147,7 +153,7 @@ public class WdmServer {
         String response = exchange(
                 seleniumServerUrl.toString().replaceAll("/\\z", "")
                         + requestPath,
-                requestMethod, requestBody, config.getTimeout());
+                requestMethod, requestBody, config.getServerTimeoutSec());
         log.info("Response: {}", response);
         ctx.contentType("application/json");
         ctx.result(response);
@@ -187,7 +193,7 @@ public class WdmServer {
 
     private Optional<WebDriverManager> createDriverManager(String requestPath) {
         Optional<WebDriverManager> out;
-        switch (requestPath.substring(1)) {
+        switch (requestPath.replace(path, "").substring(1)) {
         case "chromedriver":
             out = Optional.of(chromedriver());
             break;

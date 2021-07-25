@@ -175,8 +175,6 @@ public class Config {
     ConfigKey<Boolean> useChromiumDriverSnap = new ConfigKey<>(
             "wdm.useChromiumDriverSnap", Boolean.class);
 
-    ConfigKey<Integer> serverPort = new ConfigKey<>("wdm.serverPort",
-            Integer.class);
     ConfigKey<Integer> ttl = new ConfigKey<>("wdm.ttl", Integer.class);
     ConfigKey<Integer> ttlForBrowsers = new ConfigKey<>("wdm.ttlForBrowsers",
             Integer.class);
@@ -186,6 +184,13 @@ public class Config {
             "wdm.browserVersionDetectionRegex", String.class);
     ConfigKey<String> browserVersionDetectionCommand = new ConfigKey<>(
             "wdm.browserVersionDetectionCommand", String.class);
+
+    ConfigKey<Integer> serverPort = new ConfigKey<>("wdm.serverPort",
+            Integer.class);
+    ConfigKey<String> serverPath = new ConfigKey<>("wdm.serverPath",
+            String.class);
+    ConfigKey<Integer> serverTimeoutSec = new ConfigKey<>(
+            "wdm.serverTimeoutSec", Integer.class);
 
     ConfigKey<String> dockerDaemonUrl = new ConfigKey<>("wdm.dockerDaemonUrl",
             String.class);
@@ -644,15 +649,6 @@ public class Config {
         return this;
     }
 
-    public int getServerPort() {
-        return resolve(serverPort);
-    }
-
-    public Config setServerPort(int value) {
-        this.serverPort.setValue(value);
-        return this;
-    }
-
     public int getTtl() {
         return resolve(ttl);
     }
@@ -947,6 +943,33 @@ public class Config {
 
     public Config setBrowserVersionDetectionCommand(String value) {
         this.browserVersionDetectionCommand.setValue(value);
+        return this;
+    }
+
+    public int getServerPort() {
+        return resolve(serverPort);
+    }
+
+    public Config setServerPath(String value) {
+        this.serverPath.setValue(value);
+        return this;
+    }
+
+    public String getServerPath() {
+        return resolve(serverPath);
+    }
+
+    public Config setServerPort(int value) {
+        this.serverPort.setValue(value);
+        return this;
+    }
+
+    public int getServerTimeoutSec() {
+        return resolve(serverTimeoutSec);
+    }
+
+    public Config setServerTimeoutSec(int value) {
+        this.serverTimeoutSec.setValue(value);
         return this;
     }
 
