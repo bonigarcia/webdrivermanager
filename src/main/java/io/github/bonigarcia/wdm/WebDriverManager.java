@@ -1367,10 +1367,8 @@ public abstract class WebDriverManager {
             if (dockerEnabled) {
                 driver = createDockerWebDriver();
             } else if (!isNullOrEmpty(remoteAddress)) {
-                Capabilities caps = Optional.ofNullable(capabilities)
-                        .orElse(getCapabilities());
                 driver = webDriverCreator.createRemoteWebDriver(remoteAddress,
-                        caps);
+                        getMergedCapabilities());
                 webDriverList.add(new WebDriverBrowser(driver));
 
             } else {
@@ -1384,6 +1382,14 @@ public abstract class WebDriverManager {
         addShutdownHookIfRequired();
 
         return driver;
+    }
+
+    protected Capabilities getMergedCapabilities() {
+        Capabilities caps = getCapabilities();
+        if (capabilities != null) {
+            caps = caps.merge(capabilities);
+        }
+        return caps;
     }
 
     protected void addShutdownHookIfRequired() {
@@ -1450,8 +1456,8 @@ public abstract class WebDriverManager {
         driverBrowser.setBrowserContainerId(browserContainer.getContainerId());
         webDriverList.add(driverBrowser);
 
-        WebDriver driver = webDriverCreator
-                .createRemoteWebDriver(seleniumServerUrl, getCapabilities());
+        WebDriver driver = webDriverCreator.createRemoteWebDriver(
+                seleniumServerUrl, getMergedCapabilities());
         driverBrowser.setDriver(driver);
         String sessionId = webDriverCreator
                 .getSessionId(driverBrowser.getDriver());
