@@ -17,6 +17,7 @@
             <unpack>true</unpack>
             <includes>
                 <include>ch.qos.logback:logback-classic:jar</include>
+                <include>com.google.guava:guava:jar</include>
             </includes>
             <useTransitiveFiltering>true</useTransitiveFiltering>
         </dependencySet>
