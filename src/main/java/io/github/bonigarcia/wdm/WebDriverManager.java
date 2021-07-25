@@ -181,8 +181,8 @@ public abstract class WebDriverManager {
     protected boolean androidEnabled = false;
     protected List<WebDriverBrowser> webDriverList;
 
-    protected String downloadedDriverVersion;
-    protected String downloadedDriverPath;
+    protected volatile String downloadedDriverVersion;
+    protected volatile String downloadedDriverPath;
 
     protected WebDriverManager() {
         config = new Config();
