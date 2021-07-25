@@ -1387,8 +1387,7 @@ public abstract class WebDriverManager {
         }
     }
 
-    protected static void startServer(String[] args) {
-        int port = new Config().getServerPort();
+    protected static void startServer(String[] args, int port) {
         if (args.length > 1 && isNumeric(args[1])) {
             port = parseInt(args[1]);
         }
@@ -1396,7 +1395,7 @@ public abstract class WebDriverManager {
     }
 
     protected static void logCliError(String browserForResolving,
-            String browserForDocker) {
+            String browserForDocker, int port) {
         log.error("There are 3 options to run WebDriverManager CLI");
         log.error("1. To resolve drivers locally:");
         log.error("\tWebDriverManager {}browserName", CLI_RESOLVER);
@@ -1409,7 +1408,7 @@ public abstract class WebDriverManager {
 
         log.error("3. As a server:");
         log.error("\tWebDriverManager {} <port>", CLI_SERVER);
-        log.error("\t(where default port is 4041)");
+        log.error("\t(where the default port is {})", port);
     }
 
     protected Optional<String> getLatestDriverVersionFromRepository() {
@@ -1580,12 +1579,13 @@ public abstract class WebDriverManager {
     public static void main(String[] args) {
         String browserForResolving = "chrome|edge|firefox|opera|chromium|iexplorer";
         String browserForNoVnc = "chrome|edge|firefox|opera|chrome-mobile";
+        int port = new Config().getServerPort();
         if (args.length <= 0) {
-            logCliError(browserForResolving, browserForNoVnc);
+            logCliError(browserForResolving, browserForNoVnc, port);
         } else {
             String arg = args[0].toLowerCase(ROOT);
             if (arg.equals(CLI_SERVER)) {
-                startServer(args);
+                startServer(args, port);
             } else if (arg.startsWith(CLI_RESOLVER.toLowerCase(ROOT))) {
                 String browser = arg.substring(CLI_RESOLVER.length());
                 resolveLocal(browserForResolving, browser);
@@ -1593,7 +1593,7 @@ public abstract class WebDriverManager {
                 String browser = arg.substring(CLI_DOCKER.length());
                 runInDocker(browserForNoVnc, browser);
             } else {
-                logCliError(browserForResolving, browserForNoVnc);
+                logCliError(browserForResolving, browserForNoVnc, port);
             }
         }
     }
