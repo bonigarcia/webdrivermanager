@@ -28,7 +28,6 @@ import static org.apache.commons.lang.SystemUtils.IS_OS_LINUX;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.IOException;
-import java.net.Socket;
 import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -36,7 +35,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
@@ -85,7 +83,6 @@ public class DockerService {
     private static final String LATEST_MINUS = "latest-";
     private static final String RECORDING_EXT = ".mp4";
     private static final String SEPARATOR = "_";
-    private static final int POLL_TIME_SEC = 1;
 
     private Config config;
     private HttpClient httpClient;
@@ -512,9 +509,8 @@ public class DockerService {
         envs.add("AUTOCONNECT=true");
         envs.add("VNC_PASSWORD=" + config.getDockerVncPassword());
         String vncAddress = browserContainer.getGateway();
-        int vncPort = Integer.parseInt(browserContainer.getVncPort());
+        String vncPort = browserContainer.getVncPort();
         log.trace("VNC server URL: vnc://{}:{}", vncAddress, vncPort);
-        waitForPort(vncAddress, vncPort);
         envs.add("VNC_SERVER=" + vncAddress + ":" + vncPort);
 
         // network
@@ -535,40 +531,6 @@ public class DockerService {
         noVncContainer.setContainerUrl(noVncUrl);
 
         return noVncContainer;
-    }
-
-    public void waitForPort(String host, int port) {
-        int waitTimeoutSec = config.getTimeout();
-        long timeoutMs = System.currentTimeMillis()
-                + TimeUnit.SECONDS.toMillis(waitTimeoutSec);
-        log.trace("Waiting for {}:{} to be available (timeout {} seconds)",
-                host, port, waitTimeoutSec);
-        while (!portAvailable(host, port)) {
-            log.trace("Port {}:{} not available ... waiting {} second", host,
-                    port, POLL_TIME_SEC);
-            try {
-                if (System.currentTimeMillis() > timeoutMs) {
-                    throw new WebDriverManagerException("Timeout of "
-                            + waitTimeoutSec + " seconds waiting for " + host
-                            + ":" + port);
-                }
-                Thread.sleep(TimeUnit.SECONDS.toMillis(POLL_TIME_SEC));
-
-            } catch (InterruptedException e) {
-                log.warn("Interruptec execption wating for {}:{}", host, port);
-                Thread.currentThread().interrupt();
-            }
-        }
-    }
-
-    public boolean portAvailable(String host, int port) {
-        try (Socket socket = new Socket(host, port)) {
-            log.trace("Port {}:{} available", host, port);
-            return true;
-        } catch (IOException e) {
-            log.trace("Port {}:{} not available", host, port);
-            return false;
-        }
     }
 
     public DockerContainer startBrowserContainer(String dockerImage,
