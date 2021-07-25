@@ -1515,15 +1515,15 @@ public abstract class WebDriverManager {
         return new MutableCapabilities();
     }
 
-    protected void addArgumentsForDockerIfRequired(Capabilities options)
+    protected void addDefaultArgumentsForDocker(Capabilities options)
             throws IllegalAccessException, IllegalArgumentException,
             InvocationTargetException, NoSuchMethodException,
             SecurityException {
         if (dockerEnabled && !androidEnabled) {
             Method addArgumentsMethod = options.getClass()
                     .getMethod("addArguments", List.class);
-            List<String> defaultArgs = Arrays.asList("--no-sandbox",
-                    "--disable-gpu", "--disable-dev-shm-usage");
+            List<String> defaultArgs = Arrays
+                    .asList(config.getDockerDefaultArgs().split(","));
             addArgumentsMethod.invoke(options, defaultArgs);
         }
     }

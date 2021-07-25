@@ -204,14 +204,14 @@ public class EdgeDriverManager extends WebDriverManager {
     protected Capabilities getCapabilities() {
         Capabilities options = new EdgeOptions();
         try {
-            addArgumentsForDockerIfRequired(options);
+            addDefaultArgumentsForDocker(options);
         } catch (Exception e) {
             log.error(
                     "Exception adding default arguments for Docker, retyring with custom class");
             options = new OptionsWithArguments(BrowserType.EDGE,
                     "ms:edgeOptions");
             try {
-                addArgumentsForDockerIfRequired(options);
+                addDefaultArgumentsForDocker(options);
             } catch (Exception e1) {
                 log.error("Exception getting default capabilities", e);
             }

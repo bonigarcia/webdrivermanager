@@ -246,6 +246,8 @@ public class Config {
             "wdm.dockerCustomImage", String.class);
     ConfigKey<String> dockerVolumes = new ConfigKey<>("wdm.dockerVolumes",
             String.class);
+    ConfigKey<String> dockerDefaultArgs = new ConfigKey<>(
+            "wdm.dockerDefaultArgs", String.class);
 
     ConfigKey<String> remoteAddress = new ConfigKey<>("wdm.remoteAddress",
             String.class);
@@ -1256,6 +1258,15 @@ public class Config {
 
     public Config setDockerVolumes(String value) {
         this.dockerVolumes.setValue(value);
+        return this;
+    }
+
+    public String getDockerDefaultArgs() {
+        return resolve(dockerDefaultArgs);
+    }
+
+    public Config setDockerDefaultArgs(String value) {
+        this.dockerDefaultArgs.setValue(value);
         return this;
     }
 

@@ -162,14 +162,14 @@ public class ChromeDriverManager extends WebDriverManager {
     protected Capabilities getCapabilities() {
         Capabilities options = new ChromeOptions();
         try {
-            addArgumentsForDockerIfRequired(options);
+            addDefaultArgumentsForDocker(options);
         } catch (Exception e) {
             log.error(
                     "Exception adding default arguments for Docker, retyring with custom class");
             options = new OptionsWithArguments(BrowserType.CHROME,
                     "goog:chromeOptions");
             try {
-                addArgumentsForDockerIfRequired(options);
+                addDefaultArgumentsForDocker(options);
             } catch (Exception e1) {
                 log.error("Exception getting default capabilities", e);
             }
