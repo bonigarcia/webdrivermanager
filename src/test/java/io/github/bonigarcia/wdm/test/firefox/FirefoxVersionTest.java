@@ -36,7 +36,7 @@ class FirefoxVersionTest extends VersionTestParent {
     @BeforeEach
     void setup() {
         driverClass = FirefoxDriver.class;
-        specificVersions = new String[] { "0.8.0", "0.19.1" };
+        specificVersions = new String[] { "0.20.0", "0.29.0" };
     }
 
 }
