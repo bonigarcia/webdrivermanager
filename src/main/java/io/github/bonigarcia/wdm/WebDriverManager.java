@@ -1340,77 +1340,6 @@ public abstract class WebDriverManager {
         return url;
     }
 
-    protected static void resolveLocal(String validBrowsers, String browser) {
-        log.info("Using WebDriverManager to resolve {}", browser);
-        try {
-            DriverManagerType driverManagerType = DriverManagerType
-                    .valueOf(browser.toUpperCase(ROOT));
-            WebDriverManager wdm = WebDriverManager
-                    .getInstance(driverManagerType).avoidExport().cachePath(".")
-                    .forceDownload().avoidResolutionCache();
-            if (browser.equalsIgnoreCase("iexplorer")) {
-                wdm.operatingSystem(WIN);
-            }
-            wdm.avoidOutputTree().setup();
-        } catch (Exception e) {
-            log.error("Driver for {} not found (valid browsers {})", browser,
-                    validBrowsers);
-        }
-    }
-
-    protected static void runInDocker(String validBrowsers, String browser) {
-        log.info("Using WebDriverManager to run {} in Docker", browser);
-        try {
-            WebDriverManager wdm;
-            if (browser.equalsIgnoreCase("chrome-mobile")) {
-                wdm = WebDriverManager.chromedriver().browserInDockerAndroid()
-                        .enableVnc().avoidResolutionCache();
-
-            } else {
-                DriverManagerType driverManagerType = DriverManagerType
-                        .valueOf(browser.toUpperCase(ROOT));
-                wdm = WebDriverManager.getInstance(driverManagerType)
-                        .browserInDocker().enableVnc().avoidResolutionCache();
-            }
-            wdm.create();
-
-            log.info("Press ENTER to exit");
-            Scanner scanner = new Scanner(System.in);
-            scanner.nextLine();
-            scanner.close();
-
-            wdm.quit();
-
-        } catch (Exception e) {
-            log.error("Browser {} not available in Docker (valid browsers {})",
-                    browser, validBrowsers);
-        }
-    }
-
-    protected static void startServer(String[] args, int port) {
-        if (args.length > 1 && isNumeric(args[1])) {
-            port = parseInt(args[1]);
-        }
-        new WdmServer(port);
-    }
-
-    protected static void logCliError(String browserForResolving,
-            String browserForDocker, int port) {
-        log.error("There are 3 options to run WebDriverManager CLI");
-        log.error("1. To resolve drivers locally:");
-        log.error("\tWebDriverManager {}browserName", CLI_RESOLVER);
-        log.error("\t(where browserName is: {})", browserForResolving);
-
-        log.error(
-                "2. To run a browser in a Docker container (and use it trough noVNC):");
-        log.error("\tWebDriverManager {}browserName", CLI_DOCKER);
-        log.error("\t(where browserName={})", browserForDocker);
-
-        log.error("3. As a server:");
-        log.error("\tWebDriverManager {} <port>", CLI_SERVER);
-        log.error("\t(where the default port is {})", port);
-    }
-
     protected Optional<String> getLatestDriverVersionFromRepository() {
         return empty();
     }
@@ -1576,6 +1505,80 @@ public abstract class WebDriverManager {
         return new MutableCapabilities();
     }
 
+    protected static void logCliError(String browserForResolving,
+            String browserForDocker, int port) {
+        log.error("There are 3 options to run WebDriverManager CLI");
+        log.error("1. To resolve drivers locally:");
+        log.error("\tWebDriverManager {}browserName", CLI_RESOLVER);
+        log.error("\t(where browserName is: {})", browserForResolving);
+
+        log.error(
+                "2. To run a browser in a Docker container (and use it trough noVNC):");
+        log.error("\tWebDriverManager {}browserName <browserVersion>",
+                CLI_DOCKER);
+        log.error("\t(where browserName={})", browserForDocker);
+
+        log.error("3. As a server:");
+        log.error("\tWebDriverManager {} <port>", CLI_SERVER);
+        log.error("\t(where the default port is {})", port);
+    }
+
+    protected static void resolveLocal(String validBrowsers, String browser) {
+        log.info("Using WebDriverManager to resolve {}", browser);
+        try {
+            DriverManagerType driverManagerType = DriverManagerType
+                    .valueOf(browser.toUpperCase(ROOT));
+            WebDriverManager wdm = WebDriverManager
+                    .getInstance(driverManagerType).avoidExport().cachePath(".")
+                    .forceDownload().avoidResolutionCache();
+            if (browser.equalsIgnoreCase("iexplorer")) {
+                wdm.operatingSystem(WIN);
+            }
+            wdm.avoidOutputTree().setup();
+        } catch (Exception e) {
+            log.error("Driver for {} not found (valid browsers {})", browser,
+                    validBrowsers);
+        }
+    }
+
+    protected static void runInDocker(String[] args, String validBrowsers,
+            String browser) {
+        log.info("Using WebDriverManager to run {} in Docker", browser);
+        try {
+            WebDriverManager wdm;
+            if (browser.equalsIgnoreCase("chrome-mobile")) {
+                wdm = WebDriverManager.chromedriver().browserInDockerAndroid();
+            } else {
+                DriverManagerType driverManagerType = DriverManagerType
+                        .valueOf(browser.toUpperCase(ROOT));
+                wdm = WebDriverManager.getInstance(driverManagerType)
+                        .browserInDocker();
+            }
+            if (args.length > 1) {
+                wdm.browserVersion(args[1]);
+            }
+            wdm.enableVnc().avoidResolutionCache().create();
+
+            log.info("Press ENTER to exit");
+            Scanner scanner = new Scanner(System.in);
+            scanner.nextLine();
+            scanner.close();
+
+            wdm.quit();
+
+        } catch (Exception e) {
+            log.error("Browser {} not available in Docker (valid browsers {})",
+                    browser, validBrowsers);
+        }
+    }
+
+    protected static void startServer(String[] args, int port) {
+        if (args.length > 1 && isNumeric(args[1])) {
+            port = parseInt(args[1]);
+        }
+        new WdmServer(port);
+    }
+
     public static void main(String[] args) {
         String browserForResolving = "chrome|edge|firefox|opera|chromium|iexplorer";
         String browserForNoVnc = "chrome|edge|firefox|opera|chrome-mobile";
@@ -1591,7 +1594,7 @@ public abstract class WebDriverManager {
                 resolveLocal(browserForResolving, browser);
             } else if (arg.startsWith(CLI_DOCKER.toLowerCase(ROOT))) {
                 String browser = arg.substring(CLI_DOCKER.length());
-                runInDocker(browserForNoVnc, browser);
+                runInDocker(args, browserForNoVnc, browser);
             } else {
                 logCliError(browserForResolving, browserForNoVnc, port);
             }
