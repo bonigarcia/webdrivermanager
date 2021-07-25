@@ -955,8 +955,7 @@ public abstract class WebDriverManager {
         return driverVersion;
     }
 
-    protected synchronized String download(String driverVersion)
-            throws IOException {
+    protected String download(String driverVersion) throws IOException {
         if (driverVersion.startsWith(".")) {
             driverVersion = driverVersion.substring(1);
         }
@@ -967,7 +966,7 @@ public abstract class WebDriverManager {
                 getDriverName(), getDriverManagerType());
     }
 
-    protected synchronized void exportDriver(String variableValue) {
+    protected void exportDriver(String variableValue) {
         downloadedDriverPath = variableValue;
         Optional<String> exportParameter = getExportParameter();
         if (!config.isAvoidExport() && exportParameter.isPresent()) {
