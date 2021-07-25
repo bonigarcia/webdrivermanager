@@ -16,15 +16,13 @@
  */
 package io.github.bonigarcia.wdm.webdriver;
 
-import static java.lang.System.currentTimeMillis;
-import static java.lang.Thread.sleep;
 import static java.lang.invoke.MethodHandles.lookup;
-import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.lang.reflect.InvocationTargetException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
@@ -72,7 +70,8 @@ public class WebDriverCreator {
             Capabilities capabilities) {
         WebDriver webdriver = null;
         int waitTimeoutSec = config.getTimeout();
-        long timeoutMs = currentTimeMillis() + SECONDS.toMillis(waitTimeoutSec);
+        long timeoutMs = System.currentTimeMillis()
+                + TimeUnit.SECONDS.toMillis(waitTimeoutSec);
 
         String browserName = capabilities.getBrowserName();
         log.debug("Creating WebDriver object for {} at {} with {}", browserName,
@@ -92,12 +91,12 @@ public class WebDriverCreator {
                 try {
                     log.trace("{} creating WebDriver object ({})",
                             e1.getClass().getSimpleName(), e1.getMessage());
-                    if (currentTimeMillis() > timeoutMs) {
+                    if (System.currentTimeMillis() > timeoutMs) {
                         throw new WebDriverManagerException(
                                 "Timeout of " + waitTimeoutSec
                                         + " seconds creating WebDriver object");
                     }
-                    sleep(SECONDS.toMillis(POLL_TIME_SEC));
+                    Thread.sleep(TimeUnit.SECONDS.toMillis(POLL_TIME_SEC));
                 } catch (InterruptedException e2) {
                     log.warn("Interrupted exception creating WebDriver object",
                             e2);
