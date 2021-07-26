@@ -20,7 +20,7 @@
         <selenium.version>4.0.0-beta-4</selenium.version>
 
         <!-- test -->
-        <logback.version>1.2.4</logback.version>
+        <logback.version>1.2.4-groovyless</logback.version>
         <junit.version>5.7.2</junit.version>
         <assertj.version>3.20.2</assertj.version>
 
