@@ -17,6 +17,7 @@
 package io.github.bonigarcia.wdm.webdriver;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -24,8 +25,6 @@ import java.util.TreeMap;
 
 import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.remote.CapabilityType;
-
-import com.google.common.collect.ImmutableList;
 
 /**
  * Options which allows to include arguments (for compatibility with Selenium 3
@@ -35,8 +34,6 @@ import com.google.common.collect.ImmutableList;
  * @since 5.0.0
  */
 public class OptionsWithArguments extends MutableCapabilities {
-
-    private static final long serialVersionUID = -1545177795938321206L;
 
     private String capability;
 
@@ -48,7 +45,7 @@ public class OptionsWithArguments extends MutableCapabilities {
     }
 
     public OptionsWithArguments addArguments(String... arguments) {
-        addArguments(ImmutableList.copyOf(arguments));
+        addArguments(Collections.unmodifiableList(Arrays.asList(arguments)));
         return this;
     }
 
@@ -61,7 +58,7 @@ public class OptionsWithArguments extends MutableCapabilities {
     public Map<String, Object> asMap() {
         Map<String, Object> toReturn = new TreeMap<>(super.asMap());
         Map<String, Object> options = new TreeMap<>();
-        options.put("args", ImmutableList.copyOf(args));
+        options.put("args", Collections.unmodifiableList(args));
         toReturn.put(capability, options);
         return Collections.unmodifiableMap(toReturn);
     }

@@ -175,8 +175,6 @@ public class Config {
     ConfigKey<Boolean> useChromiumDriverSnap = new ConfigKey<>(
             "wdm.useChromiumDriverSnap", Boolean.class);
 
-    ConfigKey<Integer> serverPort = new ConfigKey<>("wdm.serverPort",
-            Integer.class);
     ConfigKey<Integer> ttl = new ConfigKey<>("wdm.ttl", Integer.class);
     ConfigKey<Integer> ttlForBrowsers = new ConfigKey<>("wdm.ttlForBrowsers",
             Integer.class);
@@ -186,6 +184,13 @@ public class Config {
             "wdm.browserVersionDetectionRegex", String.class);
     ConfigKey<String> browserVersionDetectionCommand = new ConfigKey<>(
             "wdm.browserVersionDetectionCommand", String.class);
+
+    ConfigKey<Integer> serverPort = new ConfigKey<>("wdm.serverPort",
+            Integer.class);
+    ConfigKey<String> serverPath = new ConfigKey<>("wdm.serverPath",
+            String.class);
+    ConfigKey<Integer> serverTimeoutSec = new ConfigKey<>(
+            "wdm.serverTimeoutSec", Integer.class);
 
     ConfigKey<String> dockerDaemonUrl = new ConfigKey<>("wdm.dockerDaemonUrl",
             String.class);
@@ -223,6 +228,8 @@ public class Config {
             "wdm.dockerRecordingFrameRate", Integer.class);
     ConfigKey<Path> dockerRecordingOutput = new ConfigKey<>(
             "wdm.dockerRecordingOutput", Path.class);
+    ConfigKey<String> dockerRecordingPrefix = new ConfigKey<>(
+            "wdm.dockerRecordingPrefix", String.class);
     ConfigKey<String> dockerBrowserSelenoidImageFormat = new ConfigKey<>(
             "wdm.dockerBrowserSelenoidImageFormat", String.class);
     ConfigKey<String> dockerBrowserTwilioImageFormat = new ConfigKey<>(
@@ -239,6 +246,8 @@ public class Config {
             "wdm.dockerCustomImage", String.class);
     ConfigKey<String> dockerVolumes = new ConfigKey<>("wdm.dockerVolumes",
             String.class);
+    ConfigKey<String> dockerDefaultArgs = new ConfigKey<>(
+            "wdm.dockerDefaultArgs", String.class);
 
     ConfigKey<String> remoteAddress = new ConfigKey<>("wdm.remoteAddress",
             String.class);
@@ -642,15 +651,6 @@ public class Config {
         return this;
     }
 
-    public int getServerPort() {
-        return resolve(serverPort);
-    }
-
-    public Config setServerPort(int value) {
-        this.serverPort.setValue(value);
-        return this;
-    }
-
     public int getTtl() {
         return resolve(ttl);
     }
@@ -948,6 +948,33 @@ public class Config {
         return this;
     }
 
+    public int getServerPort() {
+        return resolve(serverPort);
+    }
+
+    public Config setServerPath(String value) {
+        this.serverPath.setValue(value);
+        return this;
+    }
+
+    public String getServerPath() {
+        return resolve(serverPath);
+    }
+
+    public Config setServerPort(int value) {
+        this.serverPort.setValue(value);
+        return this;
+    }
+
+    public int getServerTimeoutSec() {
+        return resolve(serverTimeoutSec);
+    }
+
+    public Config setServerTimeoutSec(int value) {
+        this.serverTimeoutSec.setValue(value);
+        return this;
+    }
+
     public String getDockerDaemonUrl() {
         return resolve(dockerDaemonUrl);
     }
@@ -1143,6 +1170,15 @@ public class Config {
         return this;
     }
 
+    public String getDockerRecordingPrefix() {
+        return resolve(dockerRecordingPrefix);
+    }
+
+    public Config setDockerRecordingPrefix(String value) {
+        this.dockerRecordingPrefix.setValue(value);
+        return this;
+    }
+
     public String getDockerBrowserSelenoidImageFormat() {
         return resolve(dockerBrowserSelenoidImageFormat);
     }
@@ -1222,6 +1258,15 @@ public class Config {
 
     public Config setDockerVolumes(String value) {
         this.dockerVolumes.setValue(value);
+        return this;
+    }
+
+    public String getDockerDefaultArgs() {
+        return resolve(dockerDefaultArgs);
+    }
+
+    public Config setDockerDefaultArgs(String value) {
+        this.dockerDefaultArgs.setValue(value);
         return this;
     }
 

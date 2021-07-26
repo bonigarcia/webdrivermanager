@@ -82,6 +82,7 @@ public class DockerService {
     private static final String DEV = "dev";
     private static final String LATEST_MINUS = "latest-";
     private static final String RECORDING_EXT = ".mp4";
+    private static final String SEPARATOR = "_";
 
     private Config config;
     private HttpClient httpClient;
@@ -352,7 +353,7 @@ public class DockerService {
             DockerHubService dockerHubService = new DockerHubService(config,
                     httpClient);
             List<DockerHubTag> dockerHubTags;
-            String tagPreffix = browserName + "_";
+            String tagPreffix = browserName + SEPARATOR;
             int minusIndex = getMinusIndex(browserVersion);
 
             String dockerBrowserImageFormat = config
@@ -507,8 +508,10 @@ public class DockerService {
         List<String> envs = new ArrayList<>();
         envs.add("AUTOCONNECT=true");
         envs.add("VNC_PASSWORD=" + config.getDockerVncPassword());
-        envs.add("VNC_SERVER=" + browserContainer.getGateway() + ":"
-                + browserContainer.getVncPort());
+        String vncAddress = browserContainer.getGateway();
+        String vncPort = browserContainer.getVncPort();
+        log.trace("VNC server URL: vnc://{}:{}", vncAddress, vncPort);
+        envs.add("VNC_SERVER=" + vncAddress + ":" + vncPort);
 
         // network
         String network = config.getDockerNetwork();
@@ -654,8 +657,12 @@ public class DockerService {
             recordingPath = dockerRecordingPath;
         } else {
             String sessionId = browserContainer.getSessionId();
-            String recordingFileName = browserContainer.getBrowserName() + "_"
-                    + sessionId + RECORDING_EXT;
+            String prefix = config.getDockerRecordingPrefix();
+            if (isNullOrEmpty(prefix)) {
+                prefix = browserContainer.getBrowserName();
+            }
+            String recordingFileName = prefix + SEPARATOR + sessionId
+                    + RECORDING_EXT;
             recordingPath = Paths.get(dockerRecordingPath.toString(),
                     recordingFileName);
         }

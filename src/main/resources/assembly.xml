@@ -25,6 +25,7 @@
             <unpack>true</unpack>
             <includes>
                 <include>io.javalin:javalin:jar</include>
+                <include>org.seleniumhq.selenium:selenium-java:jar</include>
             </includes>
             <useTransitiveFiltering>true</useTransitiveFiltering>
         </dependencySet>

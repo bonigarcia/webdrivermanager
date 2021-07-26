@@ -70,7 +70,7 @@ abstract public class VersionTestParent {
     void testSpecificVersions(Architecture architecture) throws Exception {
         for (String specificVersion : specificVersions) {
             WebDriverManager wdm = WebDriverManager.getInstance(driverClass)
-                    .driverVersion(specificVersion);
+                    .avoidResolutionCache().driverVersion(specificVersion);
 
             if (architecture != DEFAULT) {
                 wdm.architecture(architecture);

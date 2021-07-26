@@ -30,6 +30,7 @@ import java.util.Optional;
 import javax.xml.namespace.NamespaceContext;
 
 import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.BrowserType;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -159,12 +160,19 @@ public class ChromeDriverManager extends WebDriverManager {
 
     @Override
     protected Capabilities getCapabilities() {
-        OptionsWithArguments options = new OptionsWithArguments(
-                BrowserType.CHROME, "goog:chromeOptions");
-        if (!androidEnabled) {
-            options.addArguments("--no-sandbox");
-            options.addArguments("--disable-gpu");
-            options.addArguments("--disable-dev-shm-usage");
+        Capabilities options = new ChromeOptions();
+        try {
+            addDefaultArgumentsForDocker(options);
+        } catch (Exception e) {
+            log.error(
+                    "Exception adding default arguments for Docker, retyring with custom class");
+            options = new OptionsWithArguments(BrowserType.CHROME,
+                    "goog:chromeOptions");
+            try {
+                addDefaultArgumentsForDocker(options);
+            } catch (Exception e1) {
+                log.error("Exception getting default capabilities", e);
+            }
         }
         return options;
     }
