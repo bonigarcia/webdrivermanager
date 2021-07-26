@@ -105,7 +105,8 @@ public class WdmServer {
         app.get(path + SESSION + "/*", handler);
         app.delete(path + SESSION + "/*", handler);
 
-        log.info("WebDriverManager server listening on port {}", port);
+        log.info("WebDriverManager server listening on http://127.0.0.1:{}{}",
+                port, path);
     }
 
     private void handleRequest(Context ctx) throws IOException {
