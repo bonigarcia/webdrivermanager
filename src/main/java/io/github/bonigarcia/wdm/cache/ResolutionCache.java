@@ -143,6 +143,7 @@ public class ResolutionCache {
     private void clearFromResolutionCache(String key) {
         props.remove(key);
         props.remove(getExpirationKey(key));
+        storeProperties();
     }
 
     public void clear() {
