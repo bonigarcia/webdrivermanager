@@ -45,6 +45,7 @@ class EdgeArmTest {
         checkArm(wdm);
 
         // 2. Using cache
+        wdm.reset();
         checkArm(wdm);
     }
 
