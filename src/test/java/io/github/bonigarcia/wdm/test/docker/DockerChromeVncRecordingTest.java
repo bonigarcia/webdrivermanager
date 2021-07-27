@@ -75,7 +75,7 @@ class DockerChromeVncRecordingTest {
         log.debug("The title of {} is {}", sutUrl, title);
         Wait<WebDriver> wait = new WebDriverWait(driver,
                 Duration.ofSeconds(30));
-        wait.until(d -> !d.getTitle().isEmpty());
+        wait.until(d -> d.getTitle().contains("Selenium WebDriver"));
         assertThat(driver.getTitle()).containsIgnoringCase("WebDriverManager");
 
         URL dockerSessionUrl = wdm.getDockerNoVncUrl();

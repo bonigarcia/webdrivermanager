@@ -56,7 +56,7 @@ class GenericCreateTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "chrome", "chrome-in-docker" })
+    @ValueSource(strings = { "chrome", "firefox" })
     void test(String defaultBrowser) {
         System.setProperty("wdm.defaultBrowser", defaultBrowser);
         wdm = WebDriverManager.getInstance();
@@ -69,7 +69,7 @@ class GenericCreateTest {
 
         Wait<WebDriver> wait = new WebDriverWait(driver,
                 Duration.ofSeconds(30));
-        wait.until(d -> !d.getTitle().isEmpty());
+        wait.until(d -> d.getTitle().contains("Selenium WebDriver"));
         assertThat(driver.getTitle()).containsIgnoringCase("WebDriverManager");
     }
 
