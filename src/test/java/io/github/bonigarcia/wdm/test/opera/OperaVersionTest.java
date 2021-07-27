@@ -32,7 +32,7 @@ class OperaVersionTest extends VersionTestParent {
     @BeforeEach
     void setup() {
         driverClass = OperaDriver.class;
-        specificVersions = new String[] { "0.2.2", "2.32" };
+        specificVersions = new String[] { "2.45", "91.0.4472.77" };
     }
 
 }
