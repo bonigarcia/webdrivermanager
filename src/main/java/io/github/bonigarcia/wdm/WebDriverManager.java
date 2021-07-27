@@ -173,7 +173,6 @@ public abstract class WebDriverManager {
 
     protected boolean mirrorLog;
     protected boolean forcedArch;
-    protected boolean forcedOs;
     protected int retryCount = 0;
     protected Capabilities capabilities;
     protected boolean shutdownHook = false;
@@ -361,7 +360,7 @@ public abstract class WebDriverManager {
         }
     }
 
-    protected void quit(WebDriverBrowser driverBrowser) {
+    protected synchronized void quit(WebDriverBrowser driverBrowser) {
         try {
             WebDriver driver = driverBrowser.getDriver();
             if (driver != null) {
@@ -381,7 +380,7 @@ public abstract class WebDriverManager {
         }
     }
 
-    public Optional<Path> getBrowserPath() {
+    public synchronized Optional<Path> getBrowserPath() {
         return versionDetector.getBrowserPath(
                 getDriverManagerType().getBrowserNameLowerCase());
     }
@@ -538,7 +537,6 @@ public abstract class WebDriverManager {
 
     public WebDriverManager operatingSystem(OperatingSystem os) {
         config().setOs(os.name());
-        forcedOs = true;
         return this;
     }
 
@@ -712,7 +710,6 @@ public abstract class WebDriverManager {
         config().reset();
         mirrorLog = false;
         forcedArch = false;
-        forcedOs = false;
         retryCount = 0;
         shutdownHook = false;
         dockerEnabled = false;
