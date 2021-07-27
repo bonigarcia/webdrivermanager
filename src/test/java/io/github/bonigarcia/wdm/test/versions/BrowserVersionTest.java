@@ -40,14 +40,14 @@ class BrowserVersionTest {
     @Test
     void testChromeVersion() {
         WebDriverManager wdm = WebDriverManager.chromedriver();
-        wdm.browserVersion("81").avoidResolutionCache().setup();
+        wdm.browserVersion("91").avoidResolutionCache().setup();
         assertDriver(wdm);
     }
 
     @Test
     void testFirefoxVersion() {
         WebDriverManager wdm = WebDriverManager.firefoxdriver();
-        wdm.browserVersion("75").avoidResolutionCache().setup();
+        wdm.browserVersion("90").avoidResolutionCache().setup();
         assertDriver(wdm);
     }
 

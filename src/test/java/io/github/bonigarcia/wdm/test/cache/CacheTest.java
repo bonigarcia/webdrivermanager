@@ -70,9 +70,9 @@ class CacheTest {
 
     static Stream<Arguments> cacheProvider() {
         return Stream.of(
-                Arguments.of(CHROME, "chromedriver", "81.0.4044.69", DEFAULT,
+                Arguments.of(CHROME, "chromedriver", "91.0.4472.101", DEFAULT,
                         LINUX),
-                Arguments.of(FIREFOX, "geckodriver", "0.26.0", DEFAULT, LINUX));
+                Arguments.of(FIREFOX, "geckodriver", "0.29.0", DEFAULT, LINUX));
     }
 
 }

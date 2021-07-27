@@ -38,7 +38,7 @@ class IgnoredVersionTest {
 
     @Test
     void ignoredVersionsChrome() {
-        String driverVersion = "81.0.4044.69";
+        String driverVersion = "91.0.4472.101";
         String[] ignoredVersions = { driverVersion };
 
         WebDriverManager wdm = WebDriverManager.chromedriver().forceDownload()
@@ -50,7 +50,7 @@ class IgnoredVersionTest {
 
     @Test
     void ignoredVersionsFirefox() {
-        String[] ignoredVersions = { "0.27.0", "0.26.0" };
+        String[] ignoredVersions = { "0.28.0", "0.29.0" };
         WebDriverManager wdm = WebDriverManager.firefoxdriver();
         wdm.ignoreDriverVersions(ignoredVersions).setup();
         String driverVersion = wdm.getDownloadedDriverVersion();

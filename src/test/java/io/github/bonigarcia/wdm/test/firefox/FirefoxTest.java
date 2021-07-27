@@ -51,7 +51,7 @@ class FirefoxTest {
 
     @BeforeAll
     static void setupClass() {
-        WebDriverManager.firefoxdriver().setup();
+        WebDriverManager.firefoxdriver().driverVersion("0.29.1").setup();
     }
 
     @BeforeEach
