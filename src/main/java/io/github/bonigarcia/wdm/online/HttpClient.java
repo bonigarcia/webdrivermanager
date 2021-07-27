@@ -30,6 +30,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -39,6 +40,7 @@ import java.net.URL;
 import java.net.UnknownHostException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.StringTokenizer;
@@ -53,6 +55,9 @@ import org.apache.hc.client5.http.auth.NTCredentials;
 import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.entity.DeflateInputStreamFactory;
+import org.apache.hc.client5.http.entity.GZIPInputStreamFactory;
+import org.apache.hc.client5.http.entity.InputStreamFactory;
 import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
@@ -67,6 +72,7 @@ import org.apache.hc.core5.http.config.Registry;
 import org.apache.hc.core5.http.config.RegistryBuilder;
 import org.apache.hc.core5.ssl.SSLContexts;
 import org.apache.hc.core5.ssl.TrustStrategy;
+import org.brotli.dec.BrotliInputStream;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.config.Config;
@@ -111,6 +117,19 @@ public class HttpClient implements Closeable {
                     .build();
             PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager(
                     socketFactoryRegistry);
+            
+            // Add decompression handlers
+            final LinkedHashMap<String, InputStreamFactory> contentDecoderMap = new LinkedHashMap<>();
+            contentDecoderMap.put("br", new InputStreamFactory() {
+                @Override
+                public InputStream create(InputStream inStream) throws IOException {
+                    return new BrotliInputStream(inStream);
+                }
+            });
+            contentDecoderMap.put("gzip", GZIPInputStreamFactory.getInstance());
+            contentDecoderMap.put("x-gzip", GZIPInputStreamFactory.getInstance());
+            contentDecoderMap.put("deflate", DeflateInputStreamFactory.getInstance());
+            builder.setContentDecoderRegistry(contentDecoderMap);
 
             builder.setConnectionManager(cm);
         } catch (Exception e) {

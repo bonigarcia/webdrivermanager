@@ -14,6 +14,7 @@
         <jsoup.version>1.14.1</jsoup.version>
         <docker-java.version>3.2.11</docker-java.version>
         <guava.version>30.1.1-jre</guava.version>
+        <brotli.version>0.1.2</brotli.version>
 
         <!-- provided -->
         <javalin.version>3.13.10</javalin.version>
@@ -115,6 +116,11 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
             <version>${guava.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.brotli</groupId>
+            <artifactId>dec</artifactId>
+            <version>${brotli.version}</version>
         </dependency>
 
         <dependency>
