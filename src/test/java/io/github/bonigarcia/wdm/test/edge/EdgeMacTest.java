@@ -43,7 +43,8 @@ class EdgeMacTest {
         String driverVersion = "87.0.664.75";
 
         WebDriverManager wdm = WebDriverManager.edgedriver()
-                .driverVersion(driverVersion).mac().avoidResolutionCache();
+                .driverVersion(driverVersion).mac().avoidResolutionCache()
+                .avoidBrowserDetection();
         wdm.setup();
         String downloadedDriverPath = wdm.getDownloadedDriverPath();
 
