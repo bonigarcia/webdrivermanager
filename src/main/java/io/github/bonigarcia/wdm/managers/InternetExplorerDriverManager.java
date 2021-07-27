@@ -114,7 +114,7 @@ public class InternetExplorerDriverManager extends WebDriverManager {
     }
 
     @Override
-    public synchronized Optional<Path> getBrowserPath() {
+    public Optional<Path> getBrowserPath() {
         throw new WebDriverManagerException("The browser path of "
                 + getDriverManagerType().getBrowserName()
                 + " cannot be found since it is a legacy browser and not maintained in the commands database");

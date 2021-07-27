@@ -195,7 +195,7 @@ public abstract class WebDriverManager {
         webDriverCreator = new WebDriverCreator(config);
     }
 
-    public synchronized Config config() {
+    public Config config() {
         return config;
     }
 
@@ -314,7 +314,7 @@ public abstract class WebDriverManager {
         return manager;
     }
 
-    public synchronized void setup() {
+    public void setup() {
         if (config().getClearingDriverCache()) {
             clearDriverCache();
         }
@@ -329,12 +329,12 @@ public abstract class WebDriverManager {
         }
     }
 
-    public synchronized WebDriver create() {
+    public WebDriver create() {
         setup();
         return instantiateDriver();
     }
 
-    public synchronized List<WebDriver> create(int numberOfBrowser) {
+    public List<WebDriver> create(int numberOfBrowser) {
         List<WebDriver> browserList = new ArrayList<>();
         for (int i = 0; i < numberOfBrowser; i++) {
             if (i == 0) {
@@ -345,12 +345,12 @@ public abstract class WebDriverManager {
         return browserList;
     }
 
-    public synchronized void quit() {
+    public void quit() {
         webDriverList.stream().forEach(this::quit);
         webDriverList.clear();
     }
 
-    public synchronized void quit(WebDriver driver) {
+    public void quit(WebDriver driver) {
         Optional<WebDriverBrowser> webDriverBrowser = findWebDriverBrowser(
                 driver);
         if (webDriverBrowser.isPresent()) {
@@ -360,7 +360,7 @@ public abstract class WebDriverManager {
         }
     }
 
-    protected synchronized void quit(WebDriverBrowser driverBrowser) {
+    protected void quit(WebDriverBrowser driverBrowser) {
         try {
             WebDriver driver = driverBrowser.getDriver();
             if (driver != null) {
@@ -380,7 +380,7 @@ public abstract class WebDriverManager {
         }
     }
 
-    public synchronized Optional<Path> getBrowserPath() {
+    public Optional<Path> getBrowserPath() {
         return versionDetector.getBrowserPath(
                 getDriverManagerType().getBrowserNameLowerCase());
     }
@@ -706,7 +706,7 @@ public abstract class WebDriverManager {
         return this;
     }
 
-    public synchronized void reset() {
+    public void reset() {
         config().reset();
         mirrorLog = false;
         forcedArch = false;
@@ -719,11 +719,11 @@ public abstract class WebDriverManager {
 
     // ------------
 
-    public synchronized String getDownloadedDriverPath() {
+    public String getDownloadedDriverPath() {
         return downloadedDriverPath;
     }
 
-    public synchronized String getDownloadedDriverVersion() {
+    public String getDownloadedDriverVersion() {
         return downloadedDriverVersion;
     }
 
@@ -952,7 +952,8 @@ public abstract class WebDriverManager {
         return driverVersion;
     }
 
-    protected synchronized String download(String driverVersion) throws IOException {
+    protected String download(String driverVersion)
+            throws IOException {
         if (driverVersion.startsWith(".")) {
             driverVersion = driverVersion.substring(1);
         }
@@ -963,7 +964,7 @@ public abstract class WebDriverManager {
                 getDriverName(), getDriverManagerType());
     }
 
-    protected synchronized void exportDriver(String variableValue) {
+    protected void exportDriver(String variableValue) {
         downloadedDriverPath = variableValue;
         Optional<String> exportParameter = getExportParameter();
         if (!config.isAvoidExport() && exportParameter.isPresent()) {
