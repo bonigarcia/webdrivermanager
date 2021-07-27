@@ -195,7 +195,7 @@ public abstract class WebDriverManager {
         webDriverCreator = new WebDriverCreator(config);
     }
 
-    public Config config() {
+    public synchronized Config config() {
         return config;
     }
 
@@ -314,7 +314,7 @@ public abstract class WebDriverManager {
         return manager;
     }
 
-    public void setup() {
+    public synchronized void setup() {
         if (config().getClearingDriverCache()) {
             clearDriverCache();
         }
@@ -329,12 +329,12 @@ public abstract class WebDriverManager {
         }
     }
 
-    public WebDriver create() {
+    public synchronized WebDriver create() {
         setup();
         return instantiateDriver();
     }
 
-    public List<WebDriver> create(int numberOfBrowser) {
+    public synchronized List<WebDriver> create(int numberOfBrowser) {
         List<WebDriver> browserList = new ArrayList<>();
         for (int i = 0; i < numberOfBrowser; i++) {
             if (i == 0) {
@@ -345,12 +345,12 @@ public abstract class WebDriverManager {
         return browserList;
     }
 
-    public void quit() {
+    public synchronized void quit() {
         webDriverList.stream().forEach(this::quit);
         webDriverList.clear();
     }
 
-    public void quit(WebDriver driver) {
+    public synchronized void quit(WebDriver driver) {
         Optional<WebDriverBrowser> webDriverBrowser = findWebDriverBrowser(
                 driver);
         if (webDriverBrowser.isPresent()) {
@@ -360,7 +360,7 @@ public abstract class WebDriverManager {
         }
     }
 
-    protected void quit(WebDriverBrowser driverBrowser) {
+    protected synchronized void quit(WebDriverBrowser driverBrowser) {
         try {
             WebDriver driver = driverBrowser.getDriver();
             if (driver != null) {
