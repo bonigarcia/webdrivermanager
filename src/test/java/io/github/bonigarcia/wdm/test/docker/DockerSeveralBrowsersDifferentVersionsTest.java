@@ -25,12 +25,15 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.time.Duration;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -67,9 +70,9 @@ class DockerSeveralBrowsersDifferentVersionsTest {
     @Test
     void test() throws Exception {
         exercise(driver1, "https://github.com/bonigarcia/webdrivermanager",
-                "Automated driver management for Selenium WebDriver");
+                "WebDriverManager");
         exercise(driver2, "https://github.com/bonigarcia/selenium-jupiter",
-                "JUnit 5 extension for Selenium WebDriver");
+                "Selenium-Jupiter");
 
         // Active wait to manually inspect
         Thread.sleep(SECONDS.toMillis(WAIT_TIME_SEC));
@@ -78,8 +81,11 @@ class DockerSeveralBrowsersDifferentVersionsTest {
     void exercise(WebDriver driver, String sutUrl, String expectedTitleContains)
             throws Exception {
         driver.get(sutUrl);
-        String title = driver.getTitle();
-        assertThat(title).contains(expectedTitleContains);
+        Wait<WebDriver> wait = new WebDriverWait(driver,
+                Duration.ofSeconds(30));
+        wait.until(d -> !d.getTitle().isEmpty());
+        assertThat(driver.getTitle())
+                .containsIgnoringCase(expectedTitleContains);
 
         URL dockerSessionUrl = wdm.getDockerNoVncUrl(driver);
         log.debug("The noVNC URL is {}", dockerSessionUrl);

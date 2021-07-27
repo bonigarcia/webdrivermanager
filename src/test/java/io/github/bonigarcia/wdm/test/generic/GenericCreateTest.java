@@ -21,11 +21,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.condition.OS.LINUX;
 import static org.slf4j.LoggerFactory.getLogger;
 
+import java.time.Duration;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -63,8 +67,10 @@ class GenericCreateTest {
         String title = driver.getTitle();
         log.debug("The title of {} is {}", sutUrl, title);
 
-        assertThat(title)
-                .contains("Automated driver management for Selenium WebDriver");
+        Wait<WebDriver> wait = new WebDriverWait(driver,
+                Duration.ofSeconds(30));
+        wait.until(d -> !d.getTitle().isEmpty());
+        assertThat(driver.getTitle()).containsIgnoringCase("WebDriverManager");
     }
 
 }

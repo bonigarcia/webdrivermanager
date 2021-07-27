@@ -24,6 +24,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.Duration;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -36,6 +37,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -75,8 +78,10 @@ class ServerSeleniumTest {
         String title = driver.getTitle();
         log.debug("The title of {} is {}", sutUrl, title);
 
-        assertThat(title)
-                .contains("Automated driver management for Selenium WebDriver");
+        Wait<WebDriver> wait = new WebDriverWait(driver,
+                Duration.ofSeconds(30));
+        wait.until(d -> !d.getTitle().isEmpty());
+        assertThat(driver.getTitle()).containsIgnoringCase("WebDriverManager");
 
         driver.close();
     }

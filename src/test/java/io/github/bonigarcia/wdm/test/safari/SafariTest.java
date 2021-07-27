@@ -22,6 +22,7 @@ import static org.assertj.core.api.Assumptions.assumeThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.Optional;
 
 import org.junit.jupiter.api.AfterEach;
@@ -30,6 +31,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.safari.SafariDriver;
+import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -75,7 +78,9 @@ class SafariTest {
         String title = driver.getTitle();
         log.debug("The title of {} is {}", sutUrl, title);
 
-        assertThat(title)
-                .contains("Automated driver management for Selenium WebDriver");
+        Wait<WebDriver> wait = new WebDriverWait(driver,
+                Duration.ofSeconds(30));
+        wait.until(d -> !d.getTitle().isEmpty());
+        assertThat(driver.getTitle()).containsIgnoringCase("WebDriverManager");
     }
 }
