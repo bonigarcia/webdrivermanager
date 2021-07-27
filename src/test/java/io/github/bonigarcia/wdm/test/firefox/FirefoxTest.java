@@ -18,6 +18,7 @@ package io.github.bonigarcia.wdm.test.firefox;
 
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.condition.OS.MAC;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.time.Duration;
@@ -26,6 +27,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.Wait;
@@ -40,6 +42,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @author Boni Garcia
  * @since 1.5.0
  */
+@DisabledOnOs(MAC)
 class FirefoxTest {
 
     final Logger log = getLogger(lookup().lookupClass());
