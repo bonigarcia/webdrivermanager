@@ -48,6 +48,9 @@
         <project.build.sourceEncoding>${project.encondig}</project.build.sourceEncoding>
         <project.reporting.outputEncoding>${project.encondig}</project.reporting.outputEncoding>
 
+        <!-- format date -->
+        <maven.build.timestamp.format>dd-MM-yyyy</maven.build.timestamp.format>
+
         <!-- custom -->
         <wdm.mainClass>io.github.bonigarcia.wdm.WebDriverManager</wdm.mainClass>
         <wdm.agentClass>io.github.bonigarcia.wdm.WdmAgent</wdm.agentClass>
@@ -295,6 +298,10 @@
                                 <docinfo1>true</docinfo1>
                                 <toclevels>3</toclevels>
                                 <sectnums></sectnums>
+                                <revnumber>${project.version}</revnumber>
+                                <docdatetime>${maven.build.timestamp}</docdatetime>
+                                <lang>en</lang>
+                                <last-update-label>Released on</last-update-label>
                             </attributes>
                         </configuration>
                     </execution>
