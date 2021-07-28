@@ -292,6 +292,7 @@
                                 <idprefix />
                                 <idseparator>-</idseparator>
                                 <docinfo1>true</docinfo1>
+                                <toclevels>3</toclevels>
                                 <sectnums></sectnums>
                             </attributes>
                         </configuration>

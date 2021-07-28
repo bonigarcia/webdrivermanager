@@ -7,32 +7,25 @@ Version {project-version}
 ifndef::imagesdir[:imagesdir: img]
 ifndef::sourcedir[:sourcedir: ../..]
 
-// *WebDriverManager* is a library which allows to automate the management of the drivers (e.g. _chromedriver_, _geckodriver_, etc.) required by https://www.selenium.dev/[Selenium WebDriver].
-
 == Motivation
 
 https://seleniumhq.github.io/docs/site/en/webdriver/[Selenium WebDriver] allows to control different types of browsers (such as Chrome, Firefox, Edge, and so on) programmatically using different programming languages. This is very useful to implement automated tests for web applications. Nevertheless, in order to use WebDriver, we need to pay a prize. For security reasons, the automated manipulation of a browser can only be done using native features of the browser. In practical terms, it means that a binary file must be placed in between the test using the WebDriver API and the actual browser. One the one hand, the communication between the WebDriver object and that binary is done using the (https://www.w3.org/TR/webdriver/)[W3C WebDriver specification], formerly called _JSON Wire Protocol_. It consists basically on a REST service using JSON for requests and responses. On the other hand, the communication between the binary and the browser is done using native capabilities of the browser. Therefore, the general schema of Selenium WebDriver can be illustrated as follows:
 
 [.thumb]
-.WebDriver general scenario
-image::webdriver-general-schema.png[scaledwidth=100%]
+.Selenium WebDriver Architecture
+image::selenium-webdriver-archquitecture.png[scaledwidth=100%]
 
-From a tester point of view, the need of this binary component is a pain in the neck, since it should be downloaded manually for the proper platform running the test (i.e. Windows, Linux, Mac). Moreover, the binary version should be constantly updated. The majority of browsers evolve quite fast, and the corresponding binary file required by WebDriver needs to be also updated. The following picture shows a fine-grained diagram of the different flavor of WebDriver binaries and browsers:
-
-[.thumb]
-.WebDriver scenario for Chrome, Firefox, Opera, PhantomJS, Edge, and Internet Explorer
-image::webdriver-particular-schemas.png[scaledwidth=100%]
+From a tester point of view, the need of this binary component is a pain in the neck, since it should be downloaded manually for the proper platform running the test (i.e. Windows, Linux, Mac). Moreover, the binary version should be constantly updated. The majority of browsers evolve quite fast, and the corresponding binary file required by WebDriver needs to be also updated.
 
 Concerning Java, in order to locate these drivers, the absolute path of the binary controlling the browser should be exported in a given environment variable before creating a WebDriver instance, as follows:
 
 [source,java]
 ----
 System.setProperty("webdriver.chrome.driver", "/path/to/chromedriver");
+System.setProperty("webdriver.gecko.driver", "/path/to/geckodriver");
+System.setProperty("webdriver.edge.driver", "/path/to/msedgedriver");
 System.setProperty("webdriver.opera.driver", "/path/to/operadriver");
 System.setProperty("webdriver.ie.driver", "C:/path/to/IEDriverServer.exe");
-System.setProperty("webdriver.edge.driver", "C:/path/to/MicrosoftWebDriver.exe");
-System.setProperty("phantomjs.binary.path", "/path/to/phantomjs");
-System.setProperty("webdriver.gecko.driver", "/path/to/geckodriver");
 ----
 
 In order to simplify the life of Java WebDriver users, in March 2015 the utility https://github.com/bonigarcia/webdrivermanager[WebDriverManager] was first released. WebDriverManager is a library which automates all this process (download the proper binary and export the proper variable) for Java in runtime. The WebDriverManager API is quite simple, providing a singleton object for each of the above mentioned browsers:
@@ -41,9 +34,8 @@ In order to simplify the life of Java WebDriver users, in March 2015 the utility
 ----
 WebDriverManager.chromedriver().setup();
 WebDriverManager.firefoxdriver().setup();
-WebDriverManager.operadriver().setup();
-WebDriverManager.phantomjs().setup();
 WebDriverManager.edgedriver().setup();
+WebDriverManager.operadriver().setup();
 WebDriverManager.iedriver().setup();;
 ----
 
@@ -135,9 +127,28 @@ Under construction.
 
 Under construction.
 
-== Support
+[discrete]
+==== HTTP response code 403
 
 Under construction.
+
+[discrete]
+==== Testing localhost
+
+Under construction.
+
+[discrete]
+==== Docker and chromedriver 92+
+
+Under construction.
+
+== Support
+
+There are several ways to get in touch with WebDriverManager:
+
+* Questions about WebDriverManager are supposed to be discussed in https://stackoverflow.com/questions/tagged/webdrivermanager_java[StackOverflow], using the tag _webdrivermanager_java_.
+* Comments, suggestions and bug-reporting should be done using the https://github.com/bonigarcia/webdrivermanager/issues[GitHub issues].
+* If you think WebDriverManager can be enhanced, consider contribute to the project by means of a  https://github.com/bonigarcia/webdrivermanager/pulls[pull request].
 
 == Contributing
 
@@ -149,9 +160,4 @@ Under construction.
 
 == About
 
-*WebDriverManager* (Copyright © 2017-2021) is a project created by http://bonigarcia.github.io/[Boni Garcia] (https://twitter.com/boni_gg[@boni_gg]) licensed under http://www.apache.org/licenses/LICENSE-2.0[Apache 2.0 License]. This documentation is released under the terms of https://creativecommons.org/licenses/by/3.0/[CC BY 3.0] (also available in link:webdrivermanager.pdf[PDF]). There are several ways to get in touch with WebDriverManager:
-
-* Questions about WebDriverManager are supposed to be discussed in https://stackoverflow.com/questions/tagged/webdrivermanager_java[StackOverflow], using the tag _webdrivermanager_java_.
-* Comments, suggestions and bug-reporting should be done using the https://github.com/bonigarcia/webdrivermanager/issues[GitHub issues].
-* If you think WebDriverManager can be enhanced, consider contribute to the project by means of a  https://github.com/bonigarcia/webdrivermanager/pulls[pull request].
-
+*WebDriverManager* (Copyright © 2017-2021) is an open-source project created and maintained by http://bonigarcia.github.io/[Boni Garcia] (https://twitter.com/boni_gg[@boni_gg]) licensed under http://www.apache.org/licenses/LICENSE-2.0[Apache 2.0 License]. This documentation (also available in link:webdrivermanager.pdf[PDF]) is released under the terms of https://creativecommons.org/licenses/by/3.0/[CC BY 3.0]. 
