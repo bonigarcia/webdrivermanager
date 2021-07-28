@@ -318,8 +318,8 @@ p a > code:hover { color: #444444; }
 
 #toctitle { color: #3c3d3f; }
 
-@media only screen and (min-width: 1280px) { body.toc2 { padding-left: 18em; }
-  #toc.toc2 { position: fixed; width: 18em; left: 0; top: 0; border-right: 1px solid #cccccc; border-bottom: 0; z-index: 1000; padding: 1em; height: 100%; overflow: auto; }
+@media only screen and (min-width: 1280px) { body.toc2 { padding-left: 19em; }
+  #toc.toc2 { position: fixed; width: 19em; left: 0; top: 0; border-right: 1px solid #cccccc; border-bottom: 0; z-index: 1000; padding: 1em; height: 100%; overflow: auto; }
   #toc.toc2 #toctitle { margin-top: 0; }
   #toc.toc2 > ul { font-size: 1.1em; }
   #toc.toc2 ul ul { margin-left: 0; padding-left: 1.25em; }
@@ -661,5 +661,5 @@ table.tableblock.grid-all { -webkit-border-radius: 0; border-radius: 0; -webkit-
     font-family: 'Publica Play Regular';
     font-style: normal;
     font-weight: normal;
-    src: local('Publica Play Regular'), url('FaceType-PublicaPlay-Regular.woff') format('woff');
+    src: url('./css/FaceType-PublicaPlay-Regular.woff') format('woff');
 }

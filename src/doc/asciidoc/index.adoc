@@ -81,6 +81,10 @@ NOTE: As of JUnit 5.1, extensions can be registered programmatically via `@Regis
 
 Under construction.
 
+==== Resolution Algorithm
+
+Under construction.
+
 === Browser Finder
 
 Under construction.
@@ -90,6 +94,14 @@ Under construction.
 Under construction.
 
 === Browsers in Docker
+
+Under construction.
+
+==== Recordings
+
+Under construction.
+
+==== Remote Desktop
 
 Under construction.
 
