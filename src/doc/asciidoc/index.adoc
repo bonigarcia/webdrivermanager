@@ -22,10 +22,10 @@ System.setProperty("webdriver.ie.driver", "C:/path/to/IEDriverServer.exe");
 ----
 3. Maintenance. Last but not least, we need to warranty the compatibility between driver and browser in time. This step is relevant since modern browsers automatically upgrade themselves (i.e., they are _evergreen_ browsers), and for this reason, the compatibility driver-browser is not warranted in the long run. For instance, when a WebDriver test using Chrome faces a driver incompatibility, it reports the following error message: "_this version of chromedriver only supports chrome version N_." As you can see in https://stackoverflow.com/search?q=this+version+of+chromedriver+only+supports+Chrome+version[StackOverflow], this is a recurrent problem for manually managed drivers (chromedriver in this case).
 
-*WebDriverManager* is an open-source Java library that carries out this <<driver-management,driver management process>> in a fully automated manner. In addition, as of version 5, WebDriverManager provides other relevant features, such as the ability to <<browser-finder,find if a browser is installed>> in the system, <<webdriver-builder,build WebDriver objects>> (such as `ChromeDriver,` `FirefoDriver,` etc.), and the capability to run <<browsers-in-docker,browsers in Docker containers>> containers seamlessly.
+https://github.com/bonigarcia/webdrivermanager[WebDriverManager] is an open-source Java library that carries out this <<driver-management,driver management process>> in a fully automated manner. In addition, as of version 5, WebDriverManager provides other relevant features, such as the ability to <<browser-finder,find if a browser is installed>> in the system, <<webdriver-builder,build WebDriver objects>> (such as `ChromeDriver,` `FirefoDriver,` etc.), and the capability to run <<browsers-in-docker,browsers in Docker containers>> containers seamlessly.
 
 == Setup
-Using WebDriverManager is very easy. First, you need to import the dependency in your project (typically as _test_ dependency). In Maven, it is done as follows:
+WebDriverManager is primarily used as a Java dependency (although <<other-usages,other usages>> are also possible). We can typically use a _build tool_ (such as https://maven.apache.org/[Maven] or https://gradle.org/[Gradle]) to resolve the WebDriverManager dependency. In Maven, it can be done as follows (notice that it is declared using the `test` scope, since it is typically used in tests clasess):
 
 [source,xml]
 <dependency>
@@ -35,26 +35,22 @@ Using WebDriverManager is very easy. First, you need to import the dependency in
     <scope>test</scope>
 </dependency>
 
-The dependency (typically _test_) to be declared in a Gradle project is as follows:
+In the case of a Gradle project, we can declare WebDriverManager as follows:
 
 [source,json]
 dependencies {
     testImplementation("io.github.bonigarcia:webdrivermanager:5.0.0")
 }
 
-Then, you need to declare _Selenium-Jupiter_ extension in your JUnit 5 test, simply annotating your test with `@ExtendWith(SeleniumJupiter.class)`. Finally, you need to include one or more parameters in your `@Test` methods (or constructor) whose types implements the `WebDriver` interface (e.g. `ChromeDriver` to use Chrome, `FirefoxDriver` for Firefox, and so for). That's it. _Selenium-Jupiter_ control the lifecycle of the `WebDriver` object internally, and you just need to use the `WebDriver` object in your test to drive the browser(s) you want. For example:
+== Features
+
+=== Driver Management
+Under construction.
 
 [source,java]
 ----
 include::../../test/java/io/github/bonigarcia/wdm/test/chrome/ChromeTest.java[tags=snippet-in-doc,indent=0]
 ----
-
-NOTE: As of JUnit 5.1, extensions can be registered programmatically via `@RegisterExtension` or automatically via Java's `ServiceLoader`. Both mechanisms can be used with _Selenium-Jupiter_.
-
-== Features
-
-=== Driver Management
-Under construction.
 
 ==== Resolution Algorithm
 Under construction.
