@@ -1,20 +1,17 @@
 = WebDriverManager
 Boni García
 :revnumber: {project-version}
-:example-caption!: 
 
 == Motivation
+https://seleniumhq.github.io/docs/site/en/webdriver/[Selenium WebDriver] is a library that allows controlling web browsers programmatically. It provides a cross-browser API that can be used to drive web browsers (e.g., Chrome, Edge, or Firefox, among others) using different programming languages (e.g., Java, JavaScript, Python, C#, or Ruby). The primary use of Selenium WebDriver is implementing automated tests for web applications.
 
-https://seleniumhq.github.io/docs/site/en/webdriver/[Selenium WebDriver] allows to control different types of browsers (such as Chrome, Firefox, Edge, and so on) programmatically using different programming languages. This is very useful to implement automated tests for web applications. Nevertheless, in order to use WebDriver, we need to pay a prize. For security reasons, the automated manipulation of a browser can only be done using native features of the browser. In practical terms, it means that a binary file must be placed in between the test using the WebDriver API and the actual browser. One the one hand, the communication between the WebDriver object and that binary is done using the (https://www.w3.org/TR/webdriver/)[W3C WebDriver specification], formerly called _JSON Wire Protocol_. It consists basically on a REST service using JSON for requests and responses. On the other hand, the communication between the binary and the browser is done using native capabilities of the browser. Therefore, the general schema of Selenium WebDriver can be illustrated as follows:
+Selenium WebDriver carries out the automation using the native support of each browser. For this reason, we need to place a binary file called *driver* between the test using the Selenium WebDriver API and the browser to be controlled. Examples of drivers for major web browsers nowadays are https://chromedriver.chromium.org/[chromedriver] (for Chrome), https://github.com/mozilla/geckodriver/[geckodriver] (for Firefox), or https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/[msedgedriver] (for Edge).
 
-[.thumb]
-.Selenium WebDriver Architecture
-image::selenium-webdriver-archquitecture.png[scaledwidth=100%]
+From a practical point of view, we need to carry out a _driver management process_ to use Selenium WebDriver. This process consists on:
 
-From a tester point of view, the need of this binary component is a pain in the neck, since it should be downloaded manually for the proper platform running the test (i.e. Windows, Linux, Mac). Moreover, the binary version should be constantly updated. The majority of browsers evolve quite fast, and the corresponding binary file required by WebDriver needs to be also updated.
-
-Concerning Java, in order to locate these drivers, the absolute path of the binary controlling the browser should be exported in a given environment variable before creating a WebDriver instance, as follows:
-
+1. Download. Drivers are platform-specific binary files. Therefore, we need to identify the driver type we need (e.g., chromedriver if we want to use Chrome), the operating system (typically, Windows, Linux, or Mac OS), the architecture (typically, 32 or 64 bits), and very important, the version. Each driver release is usually compatible with a given browser version(s). For this reason, we need to find out the correct driver version for a specific browser version.
+2. Setup. Once we have downloaded the driver to our computer, we need to provide a way to locate this driver from our Selenium WebDriver tests. In Java, this setup can be done in two different ways. First, we can add the driver location to our +PATH+ environmental variable. Second, we can use _Java system properties_ to export the driver path. Each driver path should be identified using a given system property, as follows:
++
 [source,java]
 ----
 System.setProperty("webdriver.chrome.driver", "/path/to/chromedriver");
@@ -23,20 +20,11 @@ System.setProperty("webdriver.edge.driver", "/path/to/msedgedriver");
 System.setProperty("webdriver.opera.driver", "/path/to/operadriver");
 System.setProperty("webdriver.ie.driver", "C:/path/to/IEDriverServer.exe");
 ----
+3. Maintenance. Last but not least, we need to warranty the compatibility between driver and browser in time. This step is relevant since modern browsers automatically upgrade themselves (i.e., they are _evergreen_ browsers), and for this reason, the compatibility driver-browser is not warranted in the long run. For instance, when a WebDriver test using Chrome faces a driver incompatibility, it reports the following error message: "_this version of chromedriver only supports chrome version N_." As you can see in https://stackoverflow.com/search?q=this+version+of+chromedriver+only+supports+Chrome+version[StackOverflow], this is a recurrent problem for manually managed drivers (chromedriver in this case).
 
-In order to simplify the life of Java WebDriver users, in March 2015 the utility https://github.com/bonigarcia/webdrivermanager[WebDriverManager] was first released. WebDriverManager is a library which automates all this process (download the proper binary and export the proper variable) for Java in runtime. The WebDriverManager API is quite simple, providing a singleton object for each of the above mentioned browsers:
-
-[source,java]
-----
-WebDriverManager.chromedriver().setup();
-WebDriverManager.firefoxdriver().setup();
-WebDriverManager.edgedriver().setup();
-WebDriverManager.operadriver().setup();
-WebDriverManager.iedriver().setup();;
-----
+*WebDriverManager* is an open-source Java library that carries out this <<driver-management,driver management process>> in a fully automated manner. In addition, as of version 5, WebDriverManager provides other relevant features, such as the ability to <<browser-finder,find if a browser is installed>> in the system, <<webdriver-builder,build WebDriver objects>> (such as `ChromeDriver,` `FirefoDriver,` etc.), and the capability to run <<browsers-in-docker,browsers in Docker containers>> containers seamlessly.
 
 == Setup
-
 Using WebDriverManager is very easy. First, you need to import the dependency in your project (typically as _test_ dependency). In Maven, it is done as follows:
 
 [source,xml]
@@ -61,36 +49,29 @@ Then, you need to declare _Selenium-Jupiter_ extension in your JUnit 5 test, sim
 include::../../test/java/io/github/bonigarcia/wdm/test/chrome/ChromeTest.java[tags=snippet-in-doc,indent=0]
 ----
 
-NOTE: As of JUnit 5.1, extensions can be registered programmatically via `@RegisterExtension` or automatically via Java’s `ServiceLoader`. Both mechanisms can be used with _Selenium-Jupiter_.
+NOTE: As of JUnit 5.1, extensions can be registered programmatically via `@RegisterExtension` or automatically via Java's `ServiceLoader`. Both mechanisms can be used with _Selenium-Jupiter_.
 
 == Features
 
 === Driver Management
-
 Under construction.
 
 ==== Resolution Algorithm
-
 Under construction.
 
 === Browser Finder
-
 Under construction.
 
 === WebDriver Builder
-
 Under construction.
 
 === Browsers in Docker
-
 Under construction.
 
 ==== Recordings
-
 Under construction.
 
 ==== Remote Desktop
-
 Under construction.
 
 == Other Usages
@@ -148,12 +129,11 @@ There are several ways to get in touch with WebDriverManager:
 
 == Contributing
 
-Under construction.
+To do.
 
 == Further documentation
 
-Under construction.
+To do.
 
 == About
-
 WebDriverManager (Copyright © 2017-2021) is an open-source project created and maintained by https://bonigarcia.org/[Boni García] (https://twitter.com/boni_gg[@boni_gg]), licensed under the terms of https://www.apache.org/licenses/LICENSE-2.0[Apache 2.0 License]. This documentation (also available in link:webdrivermanager.pdf[PDF]) is released under the terms of https://creativecommons.org/licenses/by-nc-sa/2.0/[CC BY-NC-SA 2.0].

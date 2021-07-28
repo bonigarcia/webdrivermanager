@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm.test.chrome;
 
+//tag::snippet-in-doc[]
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.AfterEach;
