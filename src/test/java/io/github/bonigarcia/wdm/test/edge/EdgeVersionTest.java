@@ -19,7 +19,6 @@ package io.github.bonigarcia.wdm.test.edge;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.WIN;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.parallel.Isolated;
 import org.openqa.selenium.edge.EdgeDriver;
 
 import io.github.bonigarcia.wdm.test.base.VersionTestParent;
@@ -30,7 +29,6 @@ import io.github.bonigarcia.wdm.test.base.VersionTestParent;
  * @author Boni Garcia
  * @since 1.3.0
  */
-@Isolated
 class EdgeVersionTest extends VersionTestParent {
 
     @BeforeEach

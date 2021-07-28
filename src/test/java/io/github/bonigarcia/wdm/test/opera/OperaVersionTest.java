@@ -17,7 +17,6 @@
 package io.github.bonigarcia.wdm.test.opera;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.parallel.Isolated;
 import org.openqa.selenium.opera.OperaDriver;
 
 import io.github.bonigarcia.wdm.test.base.VersionTestParent;
@@ -28,7 +27,6 @@ import io.github.bonigarcia.wdm.test.base.VersionTestParent;
  * @author Boni Garcia
  * @since 1.2.2
  */
-@Isolated
 class OperaVersionTest extends VersionTestParent {
 
     @BeforeEach

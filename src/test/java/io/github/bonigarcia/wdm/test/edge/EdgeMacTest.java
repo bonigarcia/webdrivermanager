@@ -23,7 +23,6 @@ import static org.slf4j.LoggerFactory.getLogger;
 import java.io.File;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Isolated;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -34,7 +33,6 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @author Boni Garcia
  * @since 4.3.1
  */
-@Isolated
 class EdgeMacTest {
 
     static final Logger log = getLogger(lookup().lookupClass());
