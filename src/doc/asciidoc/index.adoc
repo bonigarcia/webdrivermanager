@@ -1,11 +1,7 @@
 = WebDriverManager
 Boni García
-Version {project-version}
-
 :revnumber: {project-version}
 :example-caption!: 
-ifndef::imagesdir[:imagesdir: img]
-ifndef::sourcedir[:sourcedir: ../..]
 
 == Motivation
 
@@ -160,4 +156,4 @@ Under construction.
 
 == About
 
-*WebDriverManager* (Copyright © 2017-2021) is an open-source project created and maintained by http://bonigarcia.github.io/[Boni Garcia] (https://twitter.com/boni_gg[@boni_gg]) licensed under http://www.apache.org/licenses/LICENSE-2.0[Apache 2.0 License]. This documentation (also available in link:webdrivermanager.pdf[PDF]) is released under the terms of https://creativecommons.org/licenses/by/3.0/[CC BY 3.0]. 
+WebDriverManager (Copyright © 2017-2021) is an open-source project created and maintained by https://bonigarcia.org/[Boni García] (https://twitter.com/boni_gg[@boni_gg]), licensed under the terms of https://www.apache.org/licenses/LICENSE-2.0[Apache 2.0 License]. This documentation (also available in link:webdrivermanager.pdf[PDF]) is released under the terms of https://creativecommons.org/licenses/by-nc-sa/2.0/[CC BY-NC-SA 2.0].

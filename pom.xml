@@ -282,10 +282,11 @@
                         </goals>
                         <configuration>
                             <backend>html5</backend>
-                            <sourceHighlighter>coderay</sourceHighlighter>
                             <attributes>
+                                <source-highlighter>coderay</source-highlighter>
                                 <stylesheet>css/styles.css</stylesheet>
                                 <imagesdir>./img</imagesdir>
+                                <sourcedir>../..</sourcedir>
                                 <toc>left</toc>
                                 <icons>font</icons>
                                 <sectanchors>true</sectanchors>
@@ -307,13 +308,15 @@
                             <backend>pdf</backend>
                             <sourceDirectory>src/doc/asciidoc</sourceDirectory>
                             <sourceDocumentName>index.adoc</sourceDocumentName>
-                            <sourceHighlighter>coderay</sourceHighlighter>
                             <attributes>
+                                <source-highlighter>coderay</source-highlighter>
                                 <imagesdir>./img</imagesdir>
                                 <pagenums />
                                 <toc />
                                 <idprefix />
                                 <idseparator>-</idseparator>
+                                <icons>font</icons>
+                                <sectnums></sectnums>
                             </attributes>
                         </configuration>
                     </execution>
