@@ -676,21 +676,13 @@ table.tableblock.grid-all { -webkit-border-radius: 0; border-radius: 0; -webkit-
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 <link rel="icon" type="image/png" href="//bonigarcia.org/img/webdrivermanager.png">
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-92JGC4402E"></script>
 <script>
-	(function(i, s, o, g, r, a, m) {
-		i['GoogleAnalyticsObject'] = r;
-		i[r] = i[r] || function() {
-			(i[r].q = i[r].q || []).push(arguments)
-		}, i[r].l = 1 * new Date();
-		a = s.createElement(o), m = s.getElementsByTagName(o)[0];
-		a.async = 1;
-		a.src = g;
-		m.parentNode.insertBefore(a, m)
-	})(window, document, 'script', '//www.google-analytics.com/analytics.js',
-			'ga');
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
 
-	ga('create', 'UA-53455200-3', 'auto');
-	ga('send', 'pageview');
+  gtag('config', 'G-92JGC4402E');
 </script>
 <script data-ad-client="ca-pub-9920641391577028" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 </head>
@@ -883,7 +875,7 @@ class ChromeTest {
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-As of JUnit 5.1, extensions can be registered programmatically via <code>@RegisterExtension</code> or automatically via Java’s <code>ServiceLoader</code>.
+As of JUnit 5.1, extensions can be registered programmatically via <code>@RegisterExtension</code> or automatically via Java’s <code>ServiceLoader</code>. Both mechanisms can be used with <em>Selenium-Jupiter</em>.
 </td>
 </tr>
 </table>
