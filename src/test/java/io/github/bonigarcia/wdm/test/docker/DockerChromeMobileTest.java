@@ -17,35 +17,27 @@
 package io.github.bonigarcia.wdm.test.docker;
 
 import static java.lang.invoke.MethodHandles.lookup;
-import static java.net.HttpURLConnection.HTTP_OK;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
-
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.nio.file.Path;
-import java.time.Duration;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.Wait;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 @Disabled("Hardware server or virtual machine with nested virtualization support is required to run Chrome Mobile images")
-class DockerChromeAndroidVncRecordingTest {
+class DockerChromeMobileTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
     WebDriver driver;
 
     WebDriverManager wdm = WebDriverManager.chromedriver()
-            .browserInDockerAndroid().enableVnc().enableRecording();
+            .browserInDockerAndroid();
 
     @BeforeEach
     void setupTest() {
@@ -58,25 +50,9 @@ class DockerChromeAndroidVncRecordingTest {
     }
 
     @Test
-    void test() throws Exception {
-        String sutUrl = "https://bonigarcia.org/webdrivermanager";
-        driver.get(sutUrl);
-        String title = driver.getTitle();
-        log.debug("The title of {} is {}", sutUrl, title);
-        Wait<WebDriver> wait = new WebDriverWait(driver,
-                Duration.ofSeconds(30));
-        wait.until(d -> d.getTitle().contains("WebDriverManager"));
-
-        URL dockerSessionUrl = wdm.getDockerNoVncUrl();
-        HttpURLConnection huc = (HttpURLConnection) dockerSessionUrl
-                .openConnection();
-        assertThat(huc.getResponseCode()).isEqualTo(HTTP_OK);
-
-        // Active wait for manual inspection
-        Thread.sleep(Duration.ofSeconds(10).toMillis());
-
-        Path recordingPath = wdm.getDockerRecordingPath();
-        assertThat(recordingPath).exists();
+    void test() {
+        driver.get("https://bonigarcia.org/webdrivermanager/");
+        assertThat(driver.getTitle()).contains("WebDriverManager");
     }
 
 }
