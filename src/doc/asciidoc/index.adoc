@@ -80,7 +80,7 @@ This process is different for each browser. In Chrome and Edge, their respective
 3. Once the driver version is discovered, WebDriverManager downloads this driver to a local cache (located at `~/.cache/selenium` by default). These drivers are reused in subsequent calls.
 4. Finally, WebDriverManager exports the driver path using Java system properties (e.g., `webdriver.chrome.driver` in the case of the Chrome manager).
 
-This process automated the first two stages of the driver management previously introduced, i.e., download and setup. To support the third stage (i.e., maintenance), WebDriverManager implements _resolution cache_. This cache (called by default `resolution.properties` and stored in the driver cache) is a file that stores the relationship between the resolved driver and browser versions. This relationship is valid during a given _time-to-live_ (TTL). The default value for this TTL is 1 hour for browsers and 1 day for drivers. In other words, the discovered browser version is valid for 1 hour, and the driver version is correct for 1 day. This mechanism improves the performance dramatically since the second (and following) calls to the resolution algorithm for the same browser are resolved using local resources (i.e., without using the shell nor requesting external servers).
+This process automated the first two stages of the driver management previously introduced, i.e., download and setup. To support the third stage (i.e., maintenance), WebDriverManager implements _resolution cache_. This cache (called by default `resolution.properties` and stored in the root of the driver cache) is a file that stores the relationship between the resolved driver and browser versions. This relationship is valid during a given _time-to-live_ (TTL). The default value for this TTL is 1 hour for browsers and 1 day for drivers. In other words, the discovered browser version is valid for 1 hour, and the driver version is correct for 1 day. This mechanism improves the performance dramatically since the second (and following) calls to the resolution algorithm for the same browser are resolved using local resources (i.e., without using the shell nor requesting external servers).
 
 ==== Generic Manager
 WebDriverManager provides a _generic manager_, i.e., a manager that can be parameterized to act as a specific manager (for Chrome, Firefox, etc.). You can create a manager using this feature using the method `getInstance()` of the WebDriverManager API. The method can be invoked using the following options:
@@ -108,10 +108,21 @@ In this test, the optional browser path is used to disable conditionally (i.e., 
 include::../../test/java/io/github/bonigarcia/wdm/test/safari/SafariTest.java[tags=snippet-in-doc,indent=0]
 ----
 
-NOTE: Internally, WebDriverManager uses the content of the https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/commands.properties[commands database] to detect the possible browser path in different operating systems.
+NOTE: Internally, WebDriverManager uses the content of the https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/commands.properties[commands database] to detect the possible browser paths in different operating systems.
 
 === WebDriver Builder
-Under construction.
+As of version 5, WebDriverManager allows instantiating `WebDriver` objects (e.g. `ChromeDriver`, `FirefoxDriver`, etc.) using the WebDriverManager API. This feature is available using the method `create()` of each manager. The following test shows a simple example. Notice that the WebDriverManager call to the `setup()` method is not required when using this feature since the driver management is done internally by WebDriverManager. To complement this feature, WebDriverManager provides the method `quit()` to close the created `WebDriver` instances gracefully.
+
+[source,java]
+----
+include::../../test/java/io/github/bonigarcia/wdm/test/create/ChromeCreateTest.java[tags=snippet-in-doc,indent=0]
+----
+
+The WebDriverManager API provides different methods to enhance the creation of `WebDriver` objects, such as:
+
+* Method `capabilities()`: To specify WebDriver `Capabilities` (see https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/create/ChromeCapabilitiesCreateTest.java[example]).
+* Method `remoteAddress()`: To specify the remote URL in the `RemoteWebDriver` instance (typically when using a Selenium Server). See https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/create/ChromeRemoteTest.java[example].
+* Integer parameter in the method `create()`. This option is used to create a list of `WebDriver` objects instead of a single instance. See https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/create/ChromeListCreateTest.java[example].
 
 === Browsers in Docker
 Under construction.
