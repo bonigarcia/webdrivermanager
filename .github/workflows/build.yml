@@ -36,9 +36,10 @@ jobs:
         sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/edge stable main" > /etc/apt/sources.list.d/microsoft-edge-dev.list'
         sudo rm microsoft.gpg
         sudo apt update && sudo apt install microsoft-edge-beta
-    - name: Run tests
+    - name: Run tests in Linux
       if: matrix.os == 'ubuntu-latest'
       run: mvn -B test
+    - name: Run tests in Windows and Mac
       if: matrix.os != 'ubuntu-latest'
       run: mvn -B test -Dtest=!Docker*
     - name: Upload analysis to SonarCloud
