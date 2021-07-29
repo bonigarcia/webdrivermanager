@@ -16,43 +16,26 @@
  */
 package io.github.bonigarcia.wdm.test.create;
 
-import static java.lang.invoke.MethodHandles.lookup;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.condition.OS.LINUX;
-import static org.slf4j.LoggerFactory.getLogger;
 
 import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-/**
- * Test with Chrome and WebDriverManager's creator.
- *
- * @author Boni Garcia
- * @since 5.0.0
- */
-@EnabledOnOs(LINUX)
 class ChromeListCreateTest {
 
-    final Logger log = getLogger(lookup().lookupClass());
-
-    List<WebDriver> drivers;
+    List<WebDriver> driverList;
 
     WebDriverManager wdm = WebDriverManager.chromedriver();
 
     @BeforeEach
-    void setupTest() {
-        ChromeOptions options = new ChromeOptions();
-        options.setHeadless(true);
-        drivers = wdm.capabilities(options).create(2);
+    void setupEach() {
+        driverList = wdm.create(2);
     }
 
     @AfterEach
@@ -62,10 +45,13 @@ class ChromeListCreateTest {
 
     @Test
     void test() {
-        drivers.forEach((driver) -> {
-            String sutUrl = "https://github.com/bonigarcia/webdrivermanager";
-            driver.get(sutUrl);
-            assertThat(driver).isNotNull();
+        driverList.forEach((driver) -> {
+            // Exercise
+            driver.get("https://bonigarcia.org/webdrivermanager/");
+            String title = driver.getTitle();
+
+            // Verify
+            assertThat(title).contains("WebDriverManager");
         });
     }
 

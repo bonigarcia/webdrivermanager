@@ -16,32 +16,17 @@
  */
 package io.github.bonigarcia.wdm.test.create;
 
-import static java.lang.invoke.MethodHandles.lookup;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.slf4j.LoggerFactory.getLogger;
-
-import java.time.Duration;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.support.ui.Wait;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-/**
- * Test with Chrome with Capabilities and WebDriverManager's creator.
- *
- * @author Boni Garcia
- * @since 5.0.0
- */
 class ChromeCapabilitiesCreateTest {
-
-    final Logger log = getLogger(lookup().lookupClass());
 
     WebDriver driver;
 
@@ -61,15 +46,12 @@ class ChromeCapabilitiesCreateTest {
 
     @Test
     void test() {
-        String sutUrl = "https://github.com/bonigarcia/webdrivermanager";
-        driver.get(sutUrl);
+        // Exercise
+        driver.get("https://bonigarcia.org/webdrivermanager/");
         String title = driver.getTitle();
-        log.debug("The title of {} is {}", sutUrl, title);
 
-        Wait<WebDriver> wait = new WebDriverWait(driver,
-                Duration.ofSeconds(30));
-        wait.until(d -> d.getTitle().contains("Selenium WebDriver"));
-        assertThat(driver.getTitle()).containsIgnoringCase("WebDriverManager");
+        // Verify
+        assertThat(title).contains("WebDriverManager");
     }
 
 }
