@@ -264,7 +264,7 @@ public abstract class WebDriverManager {
     }
 
     public static synchronized WebDriverManager getInstance(
-            Class<?> webDriverClass) {
+            Class<? extends WebDriver> webDriverClass) {
         return getDriver(webDriverClass.getName());
     }
 
@@ -952,8 +952,7 @@ public abstract class WebDriverManager {
         return driverVersion;
     }
 
-    protected String download(String driverVersion)
-            throws IOException {
+    protected String download(String driverVersion) throws IOException {
         if (driverVersion.startsWith(".")) {
             driverVersion = driverVersion.substring(1);
         }
