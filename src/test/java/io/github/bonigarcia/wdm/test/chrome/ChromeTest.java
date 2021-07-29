@@ -53,9 +53,10 @@ class ChromeTest {
     void test() {
         // Exercise
         driver.get("https://bonigarcia.org/webdrivermanager/");
+        String title = driver.getTitle();
 
         // Verify
-        assertThat(driver.getTitle()).contains("WebDriverManager");
+        assertThat(title).contains("WebDriverManager");
     }
 
 }

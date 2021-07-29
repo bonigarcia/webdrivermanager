@@ -16,13 +16,10 @@
  */
 package io.github.bonigarcia.wdm.test.opera;
 
-import static java.lang.invoke.MethodHandles.lookup;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assumptions.assumeThat;
-import static org.slf4j.LoggerFactory.getLogger;
 
 import java.nio.file.Path;
-import java.time.Duration;
 import java.util.Optional;
 
 import org.junit.jupiter.api.AfterEach;
@@ -31,26 +28,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.opera.OperaDriver;
-import org.openqa.selenium.support.ui.Wait;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-/**
- * Test with Opera browser.
- *
- * @author Boni Garcia
- * @since 1.0.0
- */
 class OperaTest {
-
-    final Logger log = getLogger(lookup().lookupClass());
 
     WebDriver driver;
 
     @BeforeAll
-    static void setupClass() {
+    static void setupAll() {
         Optional<Path> browserPath = WebDriverManager.operadriver()
                 .getBrowserPath();
         assumeThat(browserPath).isPresent();
@@ -59,7 +45,7 @@ class OperaTest {
     }
 
     @BeforeEach
-    void setupTest() {
+    void setupEach() {
         driver = new OperaDriver();
     }
 
@@ -72,15 +58,12 @@ class OperaTest {
 
     @Test
     void test() {
-        String sutUrl = "https://github.com/bonigarcia/webdrivermanager";
-        driver.get(sutUrl);
+        // Exercise
+        driver.get("https://bonigarcia.org/webdrivermanager/");
         String title = driver.getTitle();
-        log.debug("The title of {} is {}", sutUrl, title);
 
-        Wait<WebDriver> wait = new WebDriverWait(driver,
-                Duration.ofSeconds(30));
-        wait.until(d -> d.getTitle().contains("Selenium WebDriver"));
-        assertThat(driver.getTitle()).containsIgnoringCase("WebDriverManager");
+        // Verify
+        assertThat(title).contains("WebDriverManager");
     }
 
 }
