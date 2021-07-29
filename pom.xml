@@ -34,7 +34,6 @@
         <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
         <maven-asciidoctor-plugin.version>2.2.1</maven-asciidoctor-plugin.version>
         <asciidoctorj-pdf.version>1.6.0</asciidoctorj-pdf.version>
-        <copy-rename-maven-plugin.version>1.0.1</copy-rename-maven-plugin.version>
         <maven-site.version>3.9.1</maven-site.version>
         <maven-project-info-reports.version>3.1.2</maven-project-info-reports.version>
 
@@ -315,6 +314,7 @@
                             <backend>pdf</backend>
                             <sourceDirectory>src/doc/asciidoc</sourceDirectory>
                             <sourceDocumentName>index.adoc</sourceDocumentName>
+                            <outputFile>webdrivermanager.pdf</outputFile>
                             <attributes>
                                 <source-highlighter>coderay</source-highlighter>
                                 <imagesdir>./img</imagesdir>
@@ -325,24 +325,6 @@
                                 <icons>font</icons>
                                 <sectnums></sectnums>
                             </attributes>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.coderplus.maven.plugins</groupId>
-                <artifactId>copy-rename-maven-plugin</artifactId>
-                <version>${copy-rename-maven-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>rename-file</id>
-                        <phase>post-site</phase>
-                        <goals>
-                            <goal>rename</goal>
-                        </goals>
-                        <configuration>
-                            <sourceFile>${project.build.directory}/generated-docs/index.pdf</sourceFile>
-                            <destinationFile>${project.build.directory}/generated-docs/webdrivermanager.pdf</destinationFile>
                         </configuration>
                     </execution>
                 </executions>
