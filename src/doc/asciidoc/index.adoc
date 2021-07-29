@@ -111,7 +111,7 @@ include::../../test/java/io/github/bonigarcia/wdm/test/safari/SafariTest.java[ta
 NOTE: Internally, WebDriverManager uses the content of the https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/commands.properties[commands database] to detect the possible browser paths in different operating systems.
 
 === WebDriver Builder
-As of version 5, WebDriverManager allows instantiating `WebDriver` objects (e.g. `ChromeDriver`, `FirefoxDriver`, etc.) using the WebDriverManager API. This feature is available using the method `create()` of each manager. The following test shows a simple example. Notice that the WebDriverManager call to the `setup()` method is not required when using this feature since the driver management is done internally by WebDriverManager. To complement this feature, WebDriverManager provides the method `quit()` to close the created `WebDriver` instances gracefully.
+As of version 5, WebDriverManager allows instantiating `WebDriver` objects (e.g. `ChromeDriver`, `FirefoxDriver`, etc.) using the WebDriverManager API. This feature is available using the method `create()` of each manager. The following example shows a test using this feature. Notice that the WebDriverManager call to the `setup()` method is not required when using this feature since the driver management is done internally by WebDriverManager. To complement this feature, WebDriverManager provides the method `quit()` to close the created `WebDriver` instances gracefully.
 
 [source,java]
 ----
@@ -125,73 +125,111 @@ The WebDriverManager API provides different methods to enhance the creation of `
 * Integer parameter in the method `create()`. This option is used to create a list of `WebDriver` objects instead of a single instance. See https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/create/ChromeListCreateTest.java[example].
 
 === Browsers in Docker
-Under construction.
+Another relevant new feature available in WebDriverManager 5 is the ability to create browsers in https://www.docker.com/[Docker] containers out of the box. The requirement to use this feature is to have installed a https://docs.docker.com/engine/[Docker Engine] in the machine running the tests. To use it, we need to invoke the method `browserInDocker()` in conjunction with `create()` of a given manager. This way, WebDriverManager pulls the image from https://hub.docker.com/[Docker Hub], starts the container, and instantiates the `WebDriver` object to use it. The following test shows a simple example using Chrome in Docker:
 
-==== Recordings
-Under construction.
+[source,java]
+----
+include::../../test/java/io/github/bonigarcia/wdm/test/docker/DockerChromeTest.java[tags=snippet-in-doc,indent=0]
+----
+
+NOTE: When using browsers in Docker containers, the call to the method `quit()` of the WebDriverManager API allows the disposal of the browser container(s).
+
+The used Docker images by WebDriverManager have been created and maintained by https://aerokube.com/images/latest/[Aerokube]. Therefore, the available browsers to be executed as Docker containers in WebDriverManager are: Chrome (like the previous example), Firefox (see https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerFirefoxTest.java[example]), Edge (see https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerEdgeTest.java[example]), Opera (see https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerOperaTest.java[example]), and Safari (see https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerSafariTest.java[example]).
+
+The case of Safari is particular since a real Safari browser can only be executed under a Mac OS machine. This way, the _Safari_ Docker containers use the https://webkit.org/[WebKit engine]. This engine is the same used in browser containers, and therefore, from a functional point of view, both browsers (a real Safari and this Docker image) should behave in the same way.
+
+In addition to these browsers, there is one more alternative: Chrome Mobile (i.e., Chrome on an Android device). To use this browser, you need to invoke the method `browserInDockerAndroid()` of a Chrome manager, just like in this https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerChromeMobileTest.java[example]. Notice that a hardware server or virtual machine with nested virtualization support is required to run Chrome Mobile images.
+
+==== Browser Versions
+A significant aspect of the browser containers presented so far is that WebDriverManager connects to Docker Hub to discover the latest available release when the browser version is not specified (like the examples explained before). This way, the _dockerized_ browsers of tests handled by WebDriverManager are auto-maintained, in the sense that these tests use the latest version available without any further effort.
+
+Nevertheless, we can force to use a given browser version in Docker using the method `browserVersion()` of the WebDriverManager API. This method accepts a `String` parameter specifying the version. This version can be fixed (e.g., `91.0`), and it also accepts the following wildcards:
+
+* `"latest"` : To specify the latest version explicitly (default option).
+* `"latest-N"` : Where `N` is an integer value to be subtracted from the current stable version. For example, if we specify `latest-1` (i.e., _latest version minus one_), the previous version to the stable release will be used (see an example https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerChromeVersionsTest.java[here]).
+* `"beta"`: To use the beta version. This version is only available for Chrome and Firefox, thanks to the Docker images maintained by https://hub.docker.com/r/twilio/selenoid/[Twilio] (a fork of the Aerokube images for the beta and development versions of Chrome and Firefox).
+* `"dev"`: To use the development version (again, for Chrome and Firefox).
+
+The following example shows a test using Chrome beta in Docker (see a similar example using Firefox dev https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerFirefoxDevTest.java[here]).
+
+[source,java]
+----
+include::../../test/java/io/github/bonigarcia/wdm/test/docker/DockerChromeBetaTest.java[tags=snippet-in-doc,indent=0]
+----
 
 ==== Remote Desktop
-Under construction.
+A possible inconvenience of using browsers in Docker is that we cannot see what is happening inside the container by default. To improve this situation, WebDriverManager allows connecting to the remote desktop session of a browser simply invoking the method `enableVnc()` of a dockerized browser. When using this option, two different technologies are used internally:
+
+* Virtual Network Computing (VNC), a graphical desktop sharing system. In WebDriverManager, a VNC server is started in the browser container.
+* https://novnc.com/[noVNC], a open-source web-based VNC client. In WebDriverManager, a custom https://github.com/bonigarcia/novnc[noVNC Docker image] is used to connect through noVNC.
+
+The following example shows a test that enables this feature. WebDriverManager writes the noVNC URL in the `INFO` trace logs. In addition, as shown in this example, this URL can be found by invoking the method `getDockerNoVncUrl()`. We can use this URL to inspect and interact with the browser during the test execution (as shown in the following picture).
+
+[source,java]
+----
+include::../../test/java/io/github/bonigarcia/wdm/test/docker/DockerChromeVncTest.java[tags=snippet-in-doc,indent=0]
+----
+
+[[vnc]]
+[.thumb]
+.Example of noVNC session using Chrome in Docker
+image::wdm-vnc.png[scaledwidth=100%]
+
+==== Recordings
+We can record 
+
+==== Advanced Capabilities
+To do.
 
 == Other Usages
 
 === WDM CLI
-
-Under construction.
+To do
 
 === WDM Server
-
-Under construction.
+To do
 
 === WDM in Docker
-
-Under construction.
+To do.
 
 === WDM Agent
+To do.
 
-Under construction.
+=== Selenium-Jupiter
+To do.
 
 == Examples
-
-Under construction.
+To do.
 
 == Configuration
-
-Under construction.
+To do.
 
 == Known issues
-
-Under construction.
+To do
 
 [discrete]
 ==== HTTP response code 403
-
-Under construction.
+To do.
 
 [discrete]
 ==== Testing localhost
-
-Under construction.
+To do.
 
 [discrete]
 ==== Docker and chromedriver 92+
-
-Under construction.
+To do.
 
 == Support
-
 There are several ways to get in touch with WebDriverManager:
 
 * Questions about WebDriverManager are supposed to be discussed in https://stackoverflow.com/questions/tagged/webdrivermanager_java[StackOverflow], using the tag _webdrivermanager_java_.
-* Comments, suggestions and bug-reporting should be done using the https://github.com/bonigarcia/webdrivermanager/issues[GitHub issues].
-* If you think WebDriverManager can be enhanced, consider contribute to the project by means of a  https://github.com/bonigarcia/webdrivermanager/pulls[pull request].
+* Comments, suggestions, and bug-reporting should be made using the https://github.com/bonigarcia/webdrivermanager/issues[GitHub issues].
+* If you think WebDriverManager can be enhanced, consider contributing to the project through a  https://github.com/bonigarcia/webdrivermanager/pulls[pull request].
 
 == Contributing
-
 To do.
 
 == Further documentation
-
 To do.
 
 == About
