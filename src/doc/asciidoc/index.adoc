@@ -98,7 +98,17 @@ include::../../test/java/io/github/bonigarcia/wdm/test/generic/GenericTest.java[
 ----
 
 === Browser Finder
-Under construction.
+As of version 5, WebDriverManager allows detecting if a given browser is installed or not in the local system. To this aim, each manager provides the method `getBrowserPath()`. This method returns an `Optional<Path>`, which is empty if a given browser is not installed in the system, or the browser path (within the optional object) if it is detected. 
+
+The following example shows an example using this feature.
+In this test, the optional browser path is used to disable conditionally (i.e., skip) the test using an https://assertj.github.io/doc/#assertj-core-assumptions[AssertJ assumption] (although other built-in assumptions available in JUnit 5 or other unit testing frameworks are also possible). All in all, this test should be executed in a Mac OS system (which should have Safari out of the box), but it should be skipped in any other machine.
+
+[source,java]
+----
+include::../../test/java/io/github/bonigarcia/wdm/test/safari/SafariTest.java[tags=snippet-in-doc,indent=0]
+----
+
+NOTE: Internally, WebDriverManager uses the content of the https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/commands.properties[commands database] to detect the possible browser path in different operating systems.
 
 === WebDriver Builder
 Under construction.
