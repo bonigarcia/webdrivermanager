@@ -69,7 +69,7 @@ WebDriverManager.chromiumdriver().setup()
 WebDriverManager.iedriver().setup();
 ----
 
-As of version 5, WebDriverManager also provides a manager for Safari (called `safaridriver()`). The case of the Safari browser is particular since this browser does not require to manage its driver to work with Selenium WebDriver. In other words, the Safari driver is built-in in the browser. Nevertheless, WebDriverManager provides this manager to be used in the WebDriver builder (especially with <<browsers-in-docker,Docker>>).
+As of version 5, WebDriverManager also provides a manager for Safari (called `safaridriver()`). The case of the Safari browser is particular since this browser does not require to manage its driver to work with Selenium WebDriver (in other words, the Safari driver is built-in within the browser). Nevertheless, WebDriverManager provides this manager to be used in the WebDriver builder (especially with <<browsers-in-docker,Docker>>).
 
 ==== Resolution Algorithm
 WebDriverManager executes a _resolution algorithm_ when calling to `setup()` in a given manager. You can find all the internal details of this algorithm in the paper https://link.springer.com/article/10.1007/s10664-021-09975-3[Automated driver management for Selenium WebDriver], published in the Springer Journal of Empirical Software Engineering. The most relevant parts of this algorithm are the following:
@@ -80,10 +80,22 @@ This process is different for each browser. In Chrome and Edge, their respective
 3. Once the driver version is discovered, WebDriverManager downloads this driver to a local cache (located at `~/.cache/selenium` by default). These drivers are reused in subsequent calls.
 4. Finally, WebDriverManager exports the driver path using Java system properties (e.g., `webdriver.chrome.driver` in the case of the Chrome manager).
 
-This process automated the first two stages of the driver management previously introduced, i.e., _download_ and _setup_. To support the third stage (i.e., _maintenance_), WebDriverManager implements _resolution cache_. This cache (called by default `resolution.properties` and stored in the driver cache) is a file that stores the relationship between the resolved driver and browser versions. This relationship is valid during a given _time-to-live_ (TTL). The default value for this TTL is 1 hour for browsers and 1 day for drivers. In other words, the discovered browser version is valid for 1 hour, and the driver version is correct for 1 day. This mechanism improves the performance dramatically since the second (and following) calls to the resolution algorithm for the same browser are resolved using local resources (i.e., without using the shell nor requesting external servers).
+This process automated the first two stages of the driver management previously introduced, i.e., download and setup. To support the third stage (i.e., maintenance), WebDriverManager implements _resolution cache_. This cache (called by default `resolution.properties` and stored in the driver cache) is a file that stores the relationship between the resolved driver and browser versions. This relationship is valid during a given _time-to-live_ (TTL). The default value for this TTL is 1 hour for browsers and 1 day for drivers. In other words, the discovered browser version is valid for 1 hour, and the driver version is correct for 1 day. This mechanism improves the performance dramatically since the second (and following) calls to the resolution algorithm for the same browser are resolved using local resources (i.e., without using the shell nor requesting external servers).
 
 ==== Generic Manager
-Under construction.
+WebDriverManager provides a _generic manager_, i.e., a manager that can be parameterized to act as a specific manager (for Chrome, Firefox, etc.). You can create a manager using this feature using the method `getInstance()` of the WebDriverManager API. The method can be invoked using the following options:
+
+* `getInstance(Class<? extends WebDriver> webDriverClass)`: Where `webDriverClass` is a class of the Selniun WebDriver standard hierarchy, such as `ChromeDriver.class`, `FirefoxDriver.class`, etc.
+* `getInstance(DriverManagerType driverManagerType)`: Where `driverManagerType` is an https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/java/io/github/bonigarcia/wdm/config/DriverManagerType.java[enumeration] provided by WebDriverManager to identify the available managers.
+* `getInstance(String browserName)`: Where `browserName` is the usual browser name as `String` (e.g., `"Chrome"`, `"Firefox"`, `"Edge"`, etc.).
+* `getInstance()`: If no parameter is specific, then the configuration key `wdm.defaultBrowser` is used to select the manager (Chrome by default). See the <<configuration,configuration>> section for further information about the configuration capabilities of WebDriverManager.
+
+The following example shows a https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests[JUnit 5 parameterized test] in which the test is repeated twice (using the classes `ChromeDriver.class` and `FirefoxDriver.class` as test parameters). As you can see, WebDriverManager instantiates the proper manager using this parameter.
+
+[source,java]
+----
+include::../../test/java/io/github/bonigarcia/wdm/test/generic/GenericTest.java[tags=snippet-in-doc,indent=0]
+----
 
 === Browser Finder
 Under construction.
