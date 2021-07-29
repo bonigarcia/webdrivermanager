@@ -16,24 +16,16 @@
  */
 package io.github.bonigarcia.wdm.test.docker;
 
-import static java.lang.invoke.MethodHandles.lookup;
-import static org.slf4j.LoggerFactory.getLogger;
-
-import java.time.Duration;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.Wait;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 class DockerOperaTest {
-
-    final Logger log = getLogger(lookup().lookupClass());
 
     WebDriver driver;
 
@@ -51,14 +43,7 @@ class DockerOperaTest {
 
     @Test
     void test() {
-        String sutUrl = "https://bonigarcia.org/webdrivermanager";
-        driver.get(sutUrl);
-        String title = driver.getTitle();
-        log.debug("The title of {} is {}", sutUrl, title);
-
-        Wait<WebDriver> wait = new WebDriverWait(driver,
-                Duration.ofSeconds(30));
-        wait.until(d -> d.getTitle().contains("WebDriverManager"));
+        driver.get("https://bonigarcia.org/webdrivermanager/");
+        assertThat(driver.getTitle()).contains("WebDriverManager");
     }
-
 }

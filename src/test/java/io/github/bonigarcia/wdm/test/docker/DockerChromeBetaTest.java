@@ -16,12 +16,7 @@
  */
 package io.github.bonigarcia.wdm.test.docker;
 
-import static java.net.HttpURLConnection.HTTP_OK;
-import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
-
-import java.net.HttpURLConnection;
-import java.net.URL;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,12 +27,10 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 
 class DockerChromeBetaTest {
 
-    static final int WAIT_TIME_SEC = 10;
-
     WebDriver driver;
 
     WebDriverManager wdm = WebDriverManager.chromedriver().browserInDocker()
-            .browserVersion("beta").enableVnc();
+            .browserVersion("beta");
 
     @BeforeEach
     void setupTest() {
@@ -52,16 +45,7 @@ class DockerChromeBetaTest {
     @Test
     void test() throws Exception {
         driver.get("https://bonigarcia.org/webdrivermanager/");
-        String title = driver.getTitle();
-        assertThat(title).contains("WebDriverManager");
-
-        URL dockerSessionUrl = wdm.getDockerNoVncUrl();
-        HttpURLConnection huc = (HttpURLConnection) dockerSessionUrl
-                .openConnection();
-        assertThat(huc.getResponseCode()).isEqualTo(HTTP_OK);
-
-        // Active wait for manual inspection
-        Thread.sleep(SECONDS.toMillis(WAIT_TIME_SEC));
+        assertThat(driver.getTitle()).contains("WebDriverManager");
     }
 
 }

@@ -18,7 +18,6 @@ package io.github.bonigarcia.wdm.test.docker;
 
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.net.HttpURLConnection.HTTP_OK;
-import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -38,18 +37,10 @@ import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-/**
- * Test with Chrome mobile in Docker using remote session (VNC) and recording.
- *
- * @author Boni Garcia
- * @since 5.0.0
- */
 @Disabled("Hardware server or virtual machine with nested virtualization support is required to run Chrome Mobile images")
 class DockerChromeAndroidVncRecordingTest {
 
     final Logger log = getLogger(lookup().lookupClass());
-
-    static final int WAIT_TIME_SEC = 10;
 
     WebDriver driver;
 
@@ -82,7 +73,7 @@ class DockerChromeAndroidVncRecordingTest {
         assertThat(huc.getResponseCode()).isEqualTo(HTTP_OK);
 
         // Active wait for manual inspection
-        Thread.sleep(SECONDS.toMillis(WAIT_TIME_SEC));
+        Thread.sleep(Duration.ofSeconds(10).toMillis());
 
         Path recordingPath = wdm.getDockerRecordingPath();
         assertThat(recordingPath).exists();

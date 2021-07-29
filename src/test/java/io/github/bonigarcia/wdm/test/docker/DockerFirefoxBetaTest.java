@@ -18,7 +18,6 @@ package io.github.bonigarcia.wdm.test.docker;
 
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.net.HttpURLConnection.HTTP_OK;
-import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -39,8 +38,6 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 class DockerFirefoxBetaTest {
 
     final Logger log = getLogger(lookup().lookupClass());
-
-    static final int WAIT_TIME_SEC = 10;
 
     WebDriver driver;
 
@@ -73,7 +70,7 @@ class DockerFirefoxBetaTest {
         assertThat(huc.getResponseCode()).isEqualTo(HTTP_OK);
 
         // Active wait for manual inspection
-        Thread.sleep(SECONDS.toMillis(WAIT_TIME_SEC));
+        Thread.sleep(Duration.ofSeconds(10).toMillis());
     }
 
 }

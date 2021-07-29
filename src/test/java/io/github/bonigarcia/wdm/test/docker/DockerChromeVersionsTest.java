@@ -16,9 +16,6 @@
  */
 package io.github.bonigarcia.wdm.test.docker;
 
-import static java.lang.invoke.MethodHandles.lookup;
-import static org.slf4j.LoggerFactory.getLogger;
-
 import java.time.Duration;
 
 import org.junit.jupiter.params.ParameterizedTest;
@@ -26,15 +23,10 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 class DockerChromeVersionsTest {
-
-    final Logger log = getLogger(lookup().lookupClass());
-
-    WebDriver driver;
 
     @ParameterizedTest
     @ValueSource(strings = { "", "91", "91.0", "latest", "latest-1",
@@ -43,13 +35,9 @@ class DockerChromeVersionsTest {
         WebDriverManager wdm = WebDriverManager.chromedriver()
                 .clearResolutionCache().browserInDocker()
                 .browserVersion(browserVersion);
-        driver = wdm.create();
+        WebDriver driver = wdm.create();
 
-        String sutUrl = "https://bonigarcia.org/webdrivermanager";
-        driver.get(sutUrl);
-        String title = driver.getTitle();
-        log.debug("The title of {} is {}", sutUrl, title);
-
+        driver.get("https://bonigarcia.org/webdrivermanager/");
         Wait<WebDriver> wait = new WebDriverWait(driver,
                 Duration.ofSeconds(30));
         wait.until(d -> d.getTitle().contains("WebDriverManager"));
