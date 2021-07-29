@@ -8,7 +8,7 @@
 
 **WebDriverManager version**: <!-- Fill the WebDriverManager version here. Notice that the latest version of WebDriverManager is always recommended. If you are using an old version, consider to update it before creating this issue. -->
 
-**WebDriverManager use**: <!-- Copy here your code in which you are using WebDriverManager. -->
+**WebDriverManager call**: <!-- Copy here your code in which you are using WebDriverManager (e.g. WebDriverManager.chromedriver().setup();). -->
 
 **WebDriverManager traces**: <!-- Copy the WebDriverManager traces here. This information is very important to analyze your issue, so please do not skip this part. If you are not using a logger in your project (logback, log4j, etc), please consider using one before creating this issue (see a tutorial here https://www.stubbornjava.com/posts/logging-in-java-with-slf4j-and-logback). For instance:
 2019-06-13 09:42:30 [main] INFO  i.g.bonigarcia.wdm.WebDriverManager.detectDriverVersionFromBrowser(575) - Using chromedriver 75.0.3770.8 (since Google Chrome 75 is installed in your machine)
@@ -16,4 +16,4 @@
 2019-06-13 09:42:30 [main] DEBUG i.g.bonigarcia.wdm.WebDriverManager.manage(530) - Driver chromedriver 75.0.3770.8 found in cache
 2019-06-13 09:42:30 [main] INFO  i.g.bonigarcia.wdm.WebDriverManager.exportDriver(1050) - Exporting webdriver.chrome.driver as C:\Users\boni\.m2\repository\webdriver\chromedriver\win32\75.0.3770.8\chromedriver.exe -->
 
-**Error trace**: <!-- Copy the Java error trace (if any) here. -->
+**Error log**: <!-- Copy the Java error trace (if any) here. -->
