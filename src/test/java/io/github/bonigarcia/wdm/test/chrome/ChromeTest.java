@@ -33,12 +33,12 @@ class ChromeTest {
     WebDriver driver;
 
     @BeforeAll
-    static void setupAll() {
+    static void setupClass() {
         WebDriverManager.chromedriver().setup();
     }
 
     @BeforeEach
-    void setupEach() {
+    void setupTest() {
         driver = new ChromeDriver();
     }
 

@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm.test.create;
 
+//tag::snippet-in-doc[]
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.AfterEach;
@@ -52,3 +53,4 @@ class ChromeCreateTest {
     }
 
 }
+//end::snippet-in-doc[]

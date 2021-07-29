@@ -34,7 +34,7 @@ class ChromeListCreateTest {
     WebDriverManager wdm = WebDriverManager.chromedriver();
 
     @BeforeEach
-    void setupEach() {
+    void setupTest() {
         driverList = wdm.create(2);
     }
 

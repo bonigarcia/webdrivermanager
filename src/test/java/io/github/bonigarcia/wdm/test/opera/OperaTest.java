@@ -36,7 +36,7 @@ class OperaTest {
     WebDriver driver;
 
     @BeforeAll
-    static void setupAll() {
+    static void setupClass() {
         Optional<Path> browserPath = WebDriverManager.operadriver()
                 .getBrowserPath();
         assumeThat(browserPath).isPresent();
@@ -45,7 +45,7 @@ class OperaTest {
     }
 
     @BeforeEach
-    void setupEach() {
+    void setupTest() {
         driver = new OperaDriver();
     }
 

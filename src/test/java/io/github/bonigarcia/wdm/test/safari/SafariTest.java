@@ -37,14 +37,14 @@ class SafariTest {
     WebDriver driver;
 
     @BeforeAll
-    static void setupAll() {
+    static void setupClass() {
         Optional<Path> browserPath = WebDriverManager.safaridriver()
                 .getBrowserPath();
         assumeThat(browserPath).isPresent();
     }
 
     @BeforeEach
-    void setupEach() {
+    void setupTest() {
         driver = new SafariDriver();
     }
 
