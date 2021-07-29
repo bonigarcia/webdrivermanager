@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm.test.docker;
 
+//tag::snippet-in-doc[]
 import static java.net.HttpURLConnection.HTTP_OK;
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -59,7 +60,8 @@ class DockerChromeVncTest {
         assertThat(huc.getResponseCode()).isEqualTo(HTTP_OK);
 
         // Active wait for manual inspection
-        Thread.sleep(Duration.ofSeconds(30).toMillis());
+        Thread.sleep(Duration.ofSeconds(60).toMillis());
     }
 
 }
+//end::snippet-in-doc[]

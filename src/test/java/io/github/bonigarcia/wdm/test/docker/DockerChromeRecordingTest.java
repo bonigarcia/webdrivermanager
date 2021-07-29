@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm.test.docker;
 
+//tag::snippet-in-doc[]
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.nio.file.Path;
@@ -65,3 +66,4 @@ class DockerChromeRecordingTest {
     }
 
 }
+//end::snippet-in-doc[]
