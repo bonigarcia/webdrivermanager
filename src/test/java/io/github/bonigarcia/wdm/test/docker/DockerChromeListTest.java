@@ -17,25 +17,16 @@
 package io.github.bonigarcia.wdm.test.docker;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.condition.OS.LINUX;
 
 import java.util.List;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.openqa.selenium.WebDriver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-/**
- * Test with a list of Chrome browsers in Docker.
- *
- * @author Boni Garcia
- * @since 5.0.0
- */
-@EnabledOnOs(LINUX)
 class DockerChromeListTest {
 
     static final int NUM_BROWSERS = 2;

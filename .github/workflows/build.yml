@@ -6,6 +6,11 @@ on:
   pull_request:
     branches: [ master ]
 
+env:
+  DISPLAY: :99
+  GITHUB_TOKEN: ${{ secrets.WDM_GITHUBTOKEN }}
+  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
 jobs:
   build:
     runs-on: ${{ matrix.os }}
@@ -32,10 +37,10 @@ jobs:
         sudo rm microsoft.gpg
         sudo apt update && sudo apt install microsoft-edge-beta
     - name: Run tests
+      if: matrix.os == 'ubuntu-latest'
       run: mvn -B test
-      env:
-        DISPLAY: :99
-        WDM_GITHUBTOKEN: ${{ secrets.WDM_GITHUBTOKEN }}
+      if: matrix.os != 'ubuntu-latest'
+      run: mvn -B test -Dtest=!Docker*
     - name: Upload analysis to SonarCloud
       if: success() && matrix.os == 'ubuntu-latest' && matrix.java == '11' && !contains(github.ref, 'pull')
       run: >
@@ -43,9 +48,6 @@ jobs:
         -Dsonar.host.url=https://sonarcloud.io
         -Dsonar.organization=bonigarcia-github
         -Dsonar.projectKey=io.github.bonigarcia:webdrivermanager
-      env:
-        GITHUB_TOKEN: ${{ secrets.WDM_GITHUBTOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
     - name: Upload coverage to Codecov
       if: success() && matrix.os == 'ubuntu-latest' && matrix.java == '11' && !contains(github.ref, 'pull')
       uses: codecov/codecov-action@v1

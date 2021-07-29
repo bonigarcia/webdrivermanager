@@ -18,12 +18,10 @@ package io.github.bonigarcia.wdm.test.docker;
 
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.condition.OS.LINUX;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.time.Duration;
 
-import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.WebDriver;
@@ -33,13 +31,6 @@ import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-/**
- * Test with Chrome in Docker.
- *
- * @author Boni Garcia
- * @since 5.0.0
- */
-@EnabledOnOs(LINUX)
 class DockerChromeVersionsTest {
 
     final Logger log = getLogger(lookup().lookupClass());

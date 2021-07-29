@@ -82,7 +82,7 @@ class DockerFirefoxBetaTest {
                 .openConnection();
         assertThat(huc.getResponseCode()).isEqualTo(HTTP_OK);
 
-        // Active wait to manually inspect
+        // Active wait for manual inspection
         Thread.sleep(SECONDS.toMillis(WAIT_TIME_SEC));
     }
 

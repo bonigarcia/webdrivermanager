@@ -20,7 +20,6 @@ import static java.lang.invoke.MethodHandles.lookup;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.condition.OS.LINUX;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.net.HttpURLConnection;
@@ -30,7 +29,6 @@ import java.time.Duration;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -38,13 +36,6 @@ import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-/**
- * Test using several browsers in Docker containers.
- *
- * @author Boni Garcia
- * @since 5.0.0
- */
-@EnabledOnOs(LINUX)
 class DockerSeveralBrowsersTest {
 
     final Logger log = getLogger(lookup().lookupClass());
@@ -75,7 +66,7 @@ class DockerSeveralBrowsersTest {
         exercise(driver2, "https://github.com/bonigarcia/selenium-jupiter",
                 "Selenium-Jupiter");
 
-        // Active wait to manually inspect
+        // Active wait for manual inspection
         Thread.sleep(SECONDS.toMillis(WAIT_TIME_SEC));
     }
 

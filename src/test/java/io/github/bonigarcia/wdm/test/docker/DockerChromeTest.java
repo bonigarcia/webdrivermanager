@@ -16,34 +16,20 @@
  */
 package io.github.bonigarcia.wdm.test.docker;
 
-import static java.lang.invoke.MethodHandles.lookup;
+//tag::snippet-in-doc[]
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.condition.OS.LINUX;
-import static org.slf4j.LoggerFactory.getLogger;
-
-import java.time.Duration;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.Wait;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-/**
- * Test with Chrome in Docker.
- *
- * @author Boni Garcia
- * @since 5.0.0
- */
 @EnabledOnOs(LINUX)
 class DockerChromeTest {
-
-    final Logger log = getLogger(lookup().lookupClass());
 
     WebDriver driver;
 
@@ -61,15 +47,13 @@ class DockerChromeTest {
 
     @Test
     void test() {
-        String sutUrl = "https://github.com/bonigarcia/webdrivermanager";
-        driver.get(sutUrl);
+        // Exercise
+        driver.get("https://bonigarcia.org/webdrivermanager/");
         String title = driver.getTitle();
-        log.debug("The title of {} is {}", sutUrl, title);
 
-        Wait<WebDriver> wait = new WebDriverWait(driver,
-                Duration.ofSeconds(30));
-        wait.until(d -> d.getTitle().contains("Selenium WebDriver"));
-        assertThat(driver.getTitle()).containsIgnoringCase("WebDriverManager");
+        // Verify
+        assertThat(title).contains("WebDriverManager");
     }
 
 }
+//end::snippet-in-doc[]

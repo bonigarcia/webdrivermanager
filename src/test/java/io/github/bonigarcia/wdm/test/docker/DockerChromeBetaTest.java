@@ -16,38 +16,21 @@
  */
 package io.github.bonigarcia.wdm.test.docker;
 
-import static java.lang.invoke.MethodHandles.lookup;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.condition.OS.LINUX;
-import static org.slf4j.LoggerFactory.getLogger;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.time.Duration;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.Wait;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-/**
- * Test with Chrome beta in Docker.
- *
- * @author Boni Garcia
- * @since 5.0.0
- */
-@EnabledOnOs(LINUX)
 class DockerChromeBetaTest {
-
-    final Logger log = getLogger(lookup().lookupClass());
 
     static final int WAIT_TIME_SEC = 10;
 
@@ -68,21 +51,16 @@ class DockerChromeBetaTest {
 
     @Test
     void test() throws Exception {
-        String sutUrl = "https://github.com/bonigarcia/webdrivermanager";
-        driver.get(sutUrl);
+        driver.get("https://bonigarcia.org/webdrivermanager/");
         String title = driver.getTitle();
-        log.debug("The title of {} is {}", sutUrl, title);
-        Wait<WebDriver> wait = new WebDriverWait(driver,
-                Duration.ofSeconds(30));
-        wait.until(d -> d.getTitle().contains("Selenium WebDriver"));
-        assertThat(driver.getTitle()).containsIgnoringCase("WebDriverManager");
+        assertThat(title).contains("WebDriverManager");
 
         URL dockerSessionUrl = wdm.getDockerNoVncUrl();
         HttpURLConnection huc = (HttpURLConnection) dockerSessionUrl
                 .openConnection();
         assertThat(huc.getResponseCode()).isEqualTo(HTTP_OK);
 
-        // Active wait to manually inspect
+        // Active wait for manual inspection
         Thread.sleep(SECONDS.toMillis(WAIT_TIME_SEC));
     }
 
