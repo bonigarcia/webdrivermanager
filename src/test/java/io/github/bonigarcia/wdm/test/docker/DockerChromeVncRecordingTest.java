@@ -60,14 +60,13 @@ class DockerChromeVncRecordingTest {
 
     @Test
     void test() throws Exception {
-        String sutUrl = "https://github.com/bonigarcia/webdrivermanager";
+        String sutUrl = "https://bonigarcia.org/webdrivermanager";
         driver.get(sutUrl);
         String title = driver.getTitle();
         log.debug("The title of {} is {}", sutUrl, title);
         Wait<WebDriver> wait = new WebDriverWait(driver,
                 Duration.ofSeconds(30));
-        wait.until(d -> d.getTitle().contains("Selenium WebDriver"));
-        assertThat(driver.getTitle()).containsIgnoringCase("WebDriverManager");
+        wait.until(d -> d.getTitle().contains("WebDriverManager"));
 
         URL dockerSessionUrl = wdm.getDockerNoVncUrl();
         HttpURLConnection huc = (HttpURLConnection) dockerSessionUrl

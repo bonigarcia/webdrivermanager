@@ -17,7 +17,6 @@
 package io.github.bonigarcia.wdm.test.docker;
 
 import static java.lang.invoke.MethodHandles.lookup;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.time.Duration;
@@ -52,15 +51,14 @@ class DockerEdgeTest {
 
     @Test
     void test() {
-        String sutUrl = "https://github.com/bonigarcia/webdrivermanager";
+        String sutUrl = "https://bonigarcia.org/webdrivermanager";
         driver.get(sutUrl);
         String title = driver.getTitle();
         log.debug("The title of {} is {}", sutUrl, title);
 
         Wait<WebDriver> wait = new WebDriverWait(driver,
                 Duration.ofSeconds(30));
-        wait.until(d -> d.getTitle().contains("Selenium WebDriver"));
-        assertThat(driver.getTitle()).containsIgnoringCase("WebDriverManager");
+        wait.until(d -> d.getTitle().contains("WebDriverManager"));
     }
 
 }

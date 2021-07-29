@@ -60,9 +60,9 @@ class DockerSeveralBrowsersDifferentVersionsTest {
 
     @Test
     void test() throws Exception {
-        exercise(driver1, "https://github.com/bonigarcia/webdrivermanager",
+        exercise(driver1, "https://bonigarcia.org/webdrivermanager",
                 "WebDriverManager");
-        exercise(driver2, "https://github.com/bonigarcia/selenium-jupiter",
+        exercise(driver2, "https://bonigarcia.org/selenium-jupiter/",
                 "Selenium-Jupiter");
 
         // Active wait for manual inspection
@@ -74,9 +74,7 @@ class DockerSeveralBrowsersDifferentVersionsTest {
         driver.get(sutUrl);
         Wait<WebDriver> wait = new WebDriverWait(driver,
                 Duration.ofSeconds(30));
-        wait.until(d -> d.getTitle().contains("Selenium WebDriver"));
-        assertThat(driver.getTitle())
-                .containsIgnoringCase(expectedTitleContains);
+        wait.until(d -> d.getTitle().contains(expectedTitleContains));
 
         URL dockerSessionUrl = wdm.getDockerNoVncUrl(driver);
         log.debug("The noVNC URL is {}", dockerSessionUrl);

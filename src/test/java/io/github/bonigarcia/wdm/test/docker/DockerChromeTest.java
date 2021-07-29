@@ -18,17 +18,14 @@ package io.github.bonigarcia.wdm.test.docker;
 
 //tag::snippet-in-doc[]
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.condition.OS.LINUX;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.openqa.selenium.WebDriver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-@EnabledOnOs(LINUX)
 class DockerChromeTest {
 
     WebDriver driver;
