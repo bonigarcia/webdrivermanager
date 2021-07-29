@@ -25,12 +25,12 @@ import org.openqa.selenium.WebDriver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-class DockerChromeBetaTest {
+class DockerFirefoxDevTest {
 
     WebDriver driver;
 
-    WebDriverManager wdm = WebDriverManager.chromedriver().browserInDocker()
-            .browserVersion("beta");
+    WebDriverManager wdm = WebDriverManager.firefoxdriver().browserInDocker()
+            .browserVersion("dev");
 
     @BeforeEach
     void setupTest() {
