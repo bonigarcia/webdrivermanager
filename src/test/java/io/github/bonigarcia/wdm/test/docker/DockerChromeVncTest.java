@@ -16,34 +16,26 @@
  */
 package io.github.bonigarcia.wdm.test.docker;
 
-import static java.lang.invoke.MethodHandles.lookup;
 import static java.net.HttpURLConnection.HTTP_OK;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.slf4j.LoggerFactory.getLogger;
 
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.file.Path;
 import java.time.Duration;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.Wait;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-class DockerChromeVncRecordingTest {
-
-    final Logger log = getLogger(lookup().lookupClass());
+class DockerChromeVncTest {
 
     WebDriver driver;
 
     WebDriverManager wdm = WebDriverManager.chromedriver().browserInDocker()
-            .enableVnc().enableRecording();
+            .enableVnc();
 
     @BeforeEach
     void setupTest() {
@@ -57,24 +49,17 @@ class DockerChromeVncRecordingTest {
 
     @Test
     void test() throws Exception {
-        String sutUrl = "https://bonigarcia.org/webdrivermanager";
-        driver.get(sutUrl);
-        String title = driver.getTitle();
-        log.debug("The title of {} is {}", sutUrl, title);
-        Wait<WebDriver> wait = new WebDriverWait(driver,
-                Duration.ofSeconds(30));
-        wait.until(d -> d.getTitle().contains("WebDriverManager"));
+        driver.get("https://bonigarcia.org/webdrivermanager/");
+        assertThat(driver.getTitle()).contains("WebDriverManager");
 
+        // Verify URL for remote session
         URL dockerSessionUrl = wdm.getDockerNoVncUrl();
         HttpURLConnection huc = (HttpURLConnection) dockerSessionUrl
                 .openConnection();
         assertThat(huc.getResponseCode()).isEqualTo(HTTP_OK);
 
         // Active wait for manual inspection
-        Thread.sleep(Duration.ofSeconds(10).toMillis());
-
-        Path recordingPath = wdm.getDockerRecordingPath();
-        assertThat(recordingPath).exists();
+        Thread.sleep(Duration.ofSeconds(30).toMillis());
     }
 
 }

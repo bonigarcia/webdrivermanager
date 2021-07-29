@@ -16,22 +16,25 @@
  */
 package io.github.bonigarcia.wdm.test.docker;
 
-//tag::snippet-in-doc[]
 import static org.assertj.core.api.Assertions.assertThat;
+
+import java.nio.file.Path;
+import java.time.Duration;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-class DockerChromeBetaTest {
+class DockerChromeRecordingTest {
 
     WebDriver driver;
 
     WebDriverManager wdm = WebDriverManager.chromedriver().browserInDocker()
-            .browserVersion("beta");
+            .enableRecording();
 
     @BeforeEach
     void setupTest() {
@@ -44,10 +47,21 @@ class DockerChromeBetaTest {
     }
 
     @Test
-    void test() {
+    void test() throws Exception {
         driver.get("https://bonigarcia.org/webdrivermanager/");
         assertThat(driver.getTitle()).contains("WebDriverManager");
+
+        // Active wait to see the navigation in the recording
+        Thread.sleep(Duration.ofSeconds(2).toMillis());
+
+        driver.findElement(By.partialLinkText("Browsers in Docker")).click();
+
+        // Active wait to generate a longer recording
+        Thread.sleep(Duration.ofSeconds(2).toMillis());
+
+        // Verify recoding file
+        Path recordingPath = wdm.getDockerRecordingPath();
+        assertThat(recordingPath).exists();
     }
 
 }
-//end::snippet-in-doc[]
