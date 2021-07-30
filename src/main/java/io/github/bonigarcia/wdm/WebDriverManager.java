@@ -1527,23 +1527,23 @@ public abstract class WebDriverManager {
 
     protected static void logCliError(String browserForResolving,
             String browserForDocker, int port) {
-        log.error("There are 3 options to run WebDriverManager CLI");
-        log.error("1. To resolve drivers locally:");
-        log.error("\tWebDriverManager {}browserName", CLI_RESOLVER);
-        log.error("\t(where browserName is: {})", browserForResolving);
-
+        log.error("The valid arguments for WebDriverManager CLI are:");
+        log.error("1. For resolving drivers locally:");
+        log.error("\t{}browserName <driverVersion>", CLI_RESOLVER);
+        log.error("(where browserName is: {})", browserForResolving);
+        log.error("");
         log.error(
-                "2. To run a browser in a Docker container (and use it trough noVNC):");
-        log.error("\tWebDriverManager {}browserName <browserVersion>",
-                CLI_DOCKER);
-        log.error("\t(where browserName={})", browserForDocker);
-
-        log.error("3. As a server:");
-        log.error("\tWebDriverManager {} <port>", CLI_SERVER);
-        log.error("\t(where the default port is {})", port);
+                "2. For running a browser in a Docker (and use it trough noVNC):");
+        log.error("\t{}browserName <browserVersion>", CLI_DOCKER);
+        log.error("(where browserName={})", browserForDocker);
+        log.error("");
+        log.error("3. For starting WebDriverManager server:");
+        log.error("\t{} <port>", CLI_SERVER);
+        log.error("(where the default port is {})", port);
     }
 
-    protected static void resolveLocal(String validBrowsers, String browser) {
+    protected static void resolveLocal(String[] args, String validBrowsers,
+            String browser) {
         log.info("Using WebDriverManager to resolve {}", browser);
         try {
             DriverManagerType driverManagerType = DriverManagerType
@@ -1553,6 +1553,9 @@ public abstract class WebDriverManager {
                     .forceDownload().avoidResolutionCache();
             if (browser.equalsIgnoreCase("iexplorer")) {
                 wdm.operatingSystem(WIN);
+            }
+            if (args.length > 1) {
+                wdm.driverVersion(args[1]);
             }
             wdm.avoidOutputTree().setup();
         } catch (Exception e) {
@@ -1611,7 +1614,7 @@ public abstract class WebDriverManager {
                 startServer(args, port);
             } else if (arg.startsWith(CLI_RESOLVER.toLowerCase(ROOT))) {
                 String browser = arg.substring(CLI_RESOLVER.length());
-                resolveLocal(browserForResolving, browser);
+                resolveLocal(args, browserForResolving, browser);
             } else if (arg.startsWith(CLI_DOCKER.toLowerCase(ROOT))) {
                 String browser = arg.substring(CLI_DOCKER.length());
                 runInDocker(args, browserForNoVnc, browser);
