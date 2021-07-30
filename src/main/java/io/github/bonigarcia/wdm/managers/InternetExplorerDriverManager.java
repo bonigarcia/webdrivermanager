@@ -53,7 +53,7 @@ public class InternetExplorerDriverManager extends WebDriverManager {
 
     @Override
     protected String getDriverVersion() {
-        return config().getInternetExplorerDriverVersion();
+        return config().getIExplorerDriverVersion();
     }
 
     @Override
@@ -63,7 +63,7 @@ public class InternetExplorerDriverManager extends WebDriverManager {
 
     @Override
     protected void setDriverVersion(String driverVersion) {
-        config().setInternetExplorerDriverVersion(driverVersion);
+        config().setIExplorerDriverVersion(driverVersion);
     }
 
     @Override
@@ -73,7 +73,7 @@ public class InternetExplorerDriverManager extends WebDriverManager {
 
     @Override
     protected URL getDriverUrl() {
-        return config().getInternetExplorerDriverUrl();
+        return config().getIExplorerDriverUrl();
     }
 
     @Override
@@ -83,12 +83,12 @@ public class InternetExplorerDriverManager extends WebDriverManager {
 
     @Override
     protected Optional<String> getExportParameter() {
-        return Optional.of(config().getInternetExplorerDriverExport());
+        return Optional.of(config().getIExplorerDriverExport());
     }
 
     @Override
     protected void setDriverUrl(URL url) {
-        config().setInternetExplorerDriverUrl(url);
+        config().setIExplorerDriverUrl(url);
     }
 
     @Override

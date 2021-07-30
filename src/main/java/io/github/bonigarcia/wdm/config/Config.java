@@ -148,12 +148,12 @@ public class Config {
     ConfigKey<URL> firefoxDriverMirrorUrl = new ConfigKey<>(
             "wdm.geckoDriverMirrorUrl", URL.class);
 
-    ConfigKey<String> internetExplorerDriverVersion = new ConfigKey<>(
-            "wdm.internetExplorerDriverVersion", String.class);
-    ConfigKey<String> internetExplorerDriverExport = new ConfigKey<>(
-            "wdm.internetExplorerDriverExport", String.class);
-    ConfigKey<URL> internetExplorerDriverUrl = new ConfigKey<>(
-            "wdm.internetExplorerDriverUrl", URL.class);
+    ConfigKey<String> iExplorerDriverVersion = new ConfigKey<>(
+            "wdm.iExplorerDriverVersion", String.class);
+    ConfigKey<String> iExplorerDriverExport = new ConfigKey<>(
+            "wdm.iExplorerDriverExport", String.class);
+    ConfigKey<URL> iExplorerDriverUrl = new ConfigKey<>(
+            "wdm.iExplorerDriverUrl", URL.class);
 
     ConfigKey<String> operaDriverVersion = new ConfigKey<>(
             "wdm.operaDriverVersion", String.class);
@@ -831,30 +831,30 @@ public class Config {
         return this;
     }
 
-    public String getInternetExplorerDriverVersion() {
-        return resolve(internetExplorerDriverVersion);
+    public String getIExplorerDriverVersion() {
+        return resolve(iExplorerDriverVersion);
     }
 
-    public Config setInternetExplorerDriverVersion(String value) {
-        this.internetExplorerDriverVersion.setValue(value);
+    public Config setIExplorerDriverVersion(String value) {
+        this.iExplorerDriverVersion.setValue(value);
         return this;
     }
 
-    public String getInternetExplorerDriverExport() {
-        return resolve(internetExplorerDriverExport);
+    public String getIExplorerDriverExport() {
+        return resolve(iExplorerDriverExport);
     }
 
     public Config setInternetExplorerDriverExport(String value) {
-        this.internetExplorerDriverExport.setValue(value);
+        this.iExplorerDriverExport.setValue(value);
         return this;
     }
 
-    public URL getInternetExplorerDriverUrl() {
-        return resolve(internetExplorerDriverUrl);
+    public URL getIExplorerDriverUrl() {
+        return resolve(iExplorerDriverUrl);
     }
 
-    public Config setInternetExplorerDriverUrl(URL value) {
-        this.internetExplorerDriverUrl.setValue(value);
+    public Config setIExplorerDriverUrl(URL value) {
+        this.iExplorerDriverUrl.setValue(value);
         return this;
     }
 
