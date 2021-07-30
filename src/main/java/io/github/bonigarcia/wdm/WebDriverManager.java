@@ -1537,7 +1537,7 @@ public abstract class WebDriverManager {
         log.error("\t{}browserName <browserVersion>", CLI_DOCKER);
         log.error("(where browserName={})", browserForDocker);
         log.error("");
-        log.error("3. For starting WebDriverManager server:");
+        log.error("3. For starting WebDriverManager Server:");
         log.error("\t{} <port>", CLI_SERVER);
         log.error("(where the default port is {})", port);
     }

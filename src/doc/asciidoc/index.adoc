@@ -221,7 +221,7 @@ WebDriverManager CLI can be used for three different purposes. We can see these 
 [ERROR]     runInDocker=browserName <browserVersion>
 [ERROR] (where browserName=chrome|edge|firefox|opera|safari|chrome-mobile)
 [ERROR]
-[ERROR] 3. For starting WebDriverManager server:
+[ERROR] 3. For starting WebDriverManager Server:
 [ERROR]     server <port>
 [ERROR] (where the default port is 4444)
 ----
@@ -297,7 +297,7 @@ The WebDriverManager Server is based on HTTP and offers two types of services. F
 * http://localhost:4444/operadriver[http://localhost:4444/operadriver]: To resolve geckodriver.
 * http://localhost:4444/iedriver[http://localhost:4444/iedriver]: To resolve geckodriver.
 
-Second, the WebDriverManager Server acts as a regular Selenium Server (i.e., a _hub_ in the classical https://www.selenium.dev/documentation/en/grid/[Selenium Grid] architecture). This feature can be used to create remote `WebDriver instances using the WebDriverManager Server (even for different language bindings than Java). The following example shows a Node.js test using Selenium WebDriver and WebDriverManager Server (notice that by default, the WebDriverManager Server URL does not require any path, i.e., http://localhost:4444/[http://localhost:4444/):
+Second, the WebDriverManager Server acts as a regular Selenium Server (i.e., a _hub_ in the classical https://www.selenium.dev/documentation/en/grid/[Selenium Grid] architecture). This feature can be used to create remote `WebDriver instances using the WebDriverManager Server (even for different language bindings than Java). The following example shows a Node.js test using Selenium WebDriver and WebDriverManager Server (notice that by default, the WebDriverManager Server URL does not require any path, i.e., http://localhost:4444/[http://localhost:4444/]):
 
 [source,javascript]
 ----
@@ -413,7 +413,7 @@ To do.
 == Known issues
 [discrete]
 ==== HTTP response code 403
-Some of the drivers (e.g., geckodriver or operadriver) are hosted on GitHub. When external clients (like WebDriverManager makes) many consecutive requests to GitHub, eventually, it responds with an HTTP 403 error (_forbidden_). 
+Some of the drivers (e.g., geckodriver or operadriver) are hosted on GitHub. When external clients (like WebDriverManager) makes many consecutive requests to GitHub, and due to its traffic rate limit, it eventually responds with an HTTP 403 error (_forbidden_), as follows:
 
 [source]
 ----
@@ -424,22 +424,33 @@ io.github.bonigarcia.wdm.config.WebDriverManagerException: Error HTTP 403 execut
     at io.github.bonigarcia.wdm.managers.FirefoxDriverManager.getDriverUrls(FirefoxDriverManager.java:95)
     at io.github.bonigarcia.wdm.WebDriverManager.createUrlHandler(WebDriverManager.java:1111)
     at io.github.bonigarcia.wdm.WebDriverManager.download(WebDriverManager.java:959)
-    at io.githu.bonigarcia.wdm.WebDriverManager.manage(WebDriverManager.java:877)
+    at io.github.bonigarcia.wdm.WebDriverManager.manage(WebDriverManager.java:877)
     at io.github.bonigarcia.wdm.WebDriverManager.fallback(WebDriverManager.java:1106)
     at io.github.bonigarcia.wdm.WebDriverManager.handleException(WebDriverManager.java:1083)
     at io.github.bonigarcia.wdm.WebDriverManager.manage(WebDriverManager.java:883)
     at io.github.bonigarcia.wdm.WebDriverManager.setup(WebDriverManager.java:328)
 ----
 
-To avoid this problem, WebDriverManager can make authenticated requests using a personal access token. See the <<configuration,configuration>> section to discover how to set up this specify in WebDriverManager.
+To avoid this problem, WebDriverManager can make authenticated requests using a https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token[personal access token]. See the <<configuration,configuration>> section to discover how to set up this token in WebDriverManager.
 
 [discrete]
 ==== Testing localhost
-To do.
+A typical case in web development is testing a web application deployed in the local host. In this case, and when using browsers in Docker containers, we need to know that the address `localhost` inside a Docker container is not the host's address but the container address. To solve this problem, we can take different approaches. In Linux, we can use the gateway address for inter-container communication. This address is usually `172.17.0.1`, and can be discovered as follows:
+
+[source,shell]
+----
+$ ip addr show docker0
+4: docker0: <NO-CARRIER,BROADCAST,MULTICAST,UP> mtu 1500 qdisc noqueue state DOWN group default
+    link/ether 02:42:b4:83:10:c8 brd ff:ff:ff:ff:ff:ff
+    inet 172.17.0.1/16 scope global docker0
+       valid_lft forever preferred_lft forever
+----
+
+When the host is Mac OS or Windows, we can use the DNS name `host.docker.internal`, which will be resolved to the internal IP address used by the host.
 
 [discrete]
 ==== Chrome 92+ in Docker
-To do.
+There is an https://bugs.chromium.org/p/chromedriver/issues/detail?id=3857[open issue] with Chrome 92+ and Docker at the time of this writing. The problem can be solved to some extent by using the argument `--disable-gpu` in Chrome and Edge. This argument already passed to these containers to avoid the issue. Nevertheless, there are still some situations in which it is not possible to fix. For instance, when using https://hub.docker.com/r/bonigarcia/webdrivermanager[WebDriverManager in Docker] in the CLI or Server mode.
 
 == Support
 There are several ways to get in touch with WebDriverManager:
