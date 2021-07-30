@@ -424,7 +424,33 @@ The following repositories contain different examples using WebDriverManager:
 * https://github.com/bonigarcia/selenium-jupiter-examples[Selenium-Jupiter Examples]: Examples using JUnit 5 and <<selenium-jupiter,Selenium-Jupiter>>.
 
 == Advanced Configuration
-To do.
+WebDriverManager provides different ways of configuration. First, by using its *Java API*. To that aim, each manager (e.g., `chromedriver()`, `firefoxdriver()`, etc., allows to concatenate different methods of this API to specify custom options or preferences. For example (the explanation of these methods and the other possibilities are explained in the tables at the end of this section):
+
+[source,java]
+----
+WebDriverManager.chromedriver().driverVersion("81.0.4044.138").setup();
+WebDriverManager.firefoxdriver().browserVersion("75").setup();
+WebDriverManager.operadriver().proxy("server:port").setup();
+WebDriverManager.edgedriver().mac().setup();
+----
+
+The second alternative to tune WebDriverManager is using *Java system properties*.  In this method, each WebDriverManager API method has its equivalence of one of a unique _configuration key_. For instance, the API method `cachePath()` (used to specify the driver cache folder) is equivalent to the configuration key `wdm.cachePath`. These types of configuration keys are set as Java system properties and can be passed when executing the test, for example, using Maven:
+
+[source,shell]
+----
+mvn test -Dwdm.cachePath=/custom/path/to/driver/cache
+----
+
+The third way to configure WebDriverManager is using *environmental variables*. The names for these variables appear from converting each configuration key name (e.g., `wdm.cachePath`) to uppercase, replacing the symbol `.` by `_` (e.g., `WDM_CACHEPATH`). This alternative can be helpful to global setup parameters at the operating system level and for specifying parameters when using WebDriverManager as a Docker container. For example:
+
+[source,shell]
+----
+docker run --rm -v ${PWD}:/wdm -e ARGS="resolveDriverFor=chrome" -e WDM_CHROMEVERSION=84 bonigarcia/webdrivermanager:5.0.0
+----
+
+NOTE: The preference order of these configuration alternatives is (in case of overlapping) is: 1) Environmental Variables. 2) Java system properties. 3) Java API.
+
+The remainder of this section describes all the possible Java methods in the WebDriverManager API and its equivalent configuration keys in three groups of capabilities: <<driver_management_config,driver management>>, <<docker_config,browsers in Docker>>, and <<server_config,WebDriverManager Server>>.
 
 [[driver_management_config]]
 .Configuration capabilities for driver management
@@ -463,6 +489,7 @@ HTTP proxy. It can be also configured using the environment variable  `HTTPS_PRO
 |`avoidFallback()`|`wdm.avoidFallback=true`|`false` (use a retries mechanism if any problem happens during the resolution algorithm)|Avoid the fallback mechanism
 |`avoidBrowserDetection()`|`wdm.avoidBrowserDetection` `=true`|`false` (browser version is detected, and the corresponding driver version s discovered)|Force to use the latest version available for a given driver
 |`avoidReadReleaseFromRepository()`|`wdm.avoidReadReleaseFrom` `Repository=true`|`false` (discover driver relase using info from the repository, e.g., https://chromedriver.storage.googleapis.com/LATEST_RELEASE[chromedriver-latest] or https://msedgedriver.azureedge.net/LATEST_STABLE[msedgedriver-latest])|Avoid using the repository info and use the https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/versions.properties[versions database] instead
+|`avoidTmpFolder()`|`wdm.avoidTmpFolder=true`|`false` (Each driver release (typically compressed) is copied in a temporal folder in the local machine, and then the driver is extracted and copied to the driver cache|Avoid using a temporal folder to download drivers (and handle driver release directly on driver cache)
 |`browserVersionDetectionCommand` `(String)`|`wdm.browserVersion` `DetectionCommand`|`""` (automatic discovery using the https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/commands.properties[commands database])|Custom browser version detection command (see example https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/chrome/ChromeBetaTest.java[here])
 |`browserVersionDetectionRegex` `(String)`|`wdm.browserVersion` `DetectionRegex`|`[\^\\d\^\\.]`|Regular expression used to extract the browser version from the shell
 |`useLocalVersionsPropertiesFirst()`|`wdm.versionsProperties` `OnlineFirst=true`|`false` (the online https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/versions.properties[versions database] is used in the <<resolution-algorithm,resolution algorithm>>)|Use local copy of the versions database
@@ -473,6 +500,26 @@ HTTP proxy. It can be also configured using the environment variable  `HTTPS_PRO
 |`clearResolutionCache()`|`wdm.clearResolutionCache` `=true`|`false` (not cleaning resolution cache)|Clean resolution cache
 |`ttl(int)`|`wdm.ttl`|`86400` (i.e., 1 day)|TTL in seconds in which the resolved driver versions are valid in the resolution cache.
 |`ttlBrowsers(int)`|`wdm.ttlForBrowsers`|`3600` (i.e., 1 hour)|TTL value in seconds in which the browser versions are valid in the resolution cache (also used for dockerized browsers).
+|=======
+
+[[docker_config]]
+.Configuration capabilities for browsers in Docker
+[options="header"]
+|=======
+|API method|Configuration key|Default value|Description
+|``|``|``|
+|``|``|``|
+|``|``|``|
+|=======
+
+[[server_config]]
+.Configuration capabilities for WebDriverManager Server
+[options="header"]
+|=======
+|API method|Configuration key|Default value|Description
+|``|``|``|
+|``|``|``|
+|``|``|``|
 |=======
 
 == Known Issues
