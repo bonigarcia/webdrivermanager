@@ -88,7 +88,7 @@ WebDriverManager provides a _generic manager_, i.e., a manager that can be param
 * `getInstance(Class<? extends WebDriver> webDriverClass)`: Where `webDriverClass` is a class of the Selniun WebDriver standard hierarchy, such as `ChromeDriver.class`, `FirefoxDriver.class`, etc.
 * `getInstance(DriverManagerType driverManagerType)`: Where `driverManagerType` is an https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/java/io/github/bonigarcia/wdm/config/DriverManagerType.java[enumeration] provided by WebDriverManager to identify the available managers.
 * `getInstance(String browserName)`: Where `browserName` is the usual browser name as `String` (e.g., `"Chrome"`, `"Firefox"`, `"Edge"`, etc.).
-* `getInstance()`: If no parameter is specified, the configuration key `wdm.defaultBrowser` is used to select the manager (Chrome by default). See the <<configuration,configuration>> section for further information about the configuration capabilities of WebDriverManager.
+* `getInstance()`: If no parameter is specified, the configuration key `wdm.defaultBrowser` is used to select the manager (Chrome by default). See the <<advanced-configuration, advanced configuration>> section for further information about the configuration capabilities of WebDriverManager.
 
 The following example shows a https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests[JUnit 5 parameterized test] in which the test is repeated twice (using the classes `ChromeDriver.class` and `FirefoxDriver.class` as test parameters). As you can see, WebDriverManager instantiates the proper manager using this parameter.
 
@@ -96,6 +96,16 @@ The following example shows a https://junit.org/junit5/docs/current/user-guide/#
 ----
 include::../../test/java/io/github/bonigarcia/wdm/test/generic/GenericTest.java[tags=snippet-in-doc,indent=0]
 ----
+
+==== Advanced Settings
+The driver management provided by WebDriverManager can be tuned in many different ways. For example, the WebDriverManager API allows configuring the driver (or browser) version to be resolved, the location of the cache path, the operating system, the architecture, the proxy settings (for the network connection), the TTL, or cleaning the driver and resolution cache, among many other attributes. See the <<advanced-configuration,advanced configuration>> settings for specific details about it. In addition, there are several WebDriverManager API specific to driver management, namely:
+
+* `getDownloadedDriverPath()`: Used to find out the path of the resolved driver in the current instance of WebDriverManager.
+* `getDownloadedDriverVersion()`: Use to find out the version of the driver resolved in the current instance of WebDriverManager.
+* `getDriverVersions()`: Used to find out the list of available driver versions in a given manager.
+* `getDriverManagerType()`: Used to get the driver manager type (and `enum`) of a given manager.
+
+WARNING: Each manager was a singleton object in older WebDriverManager releases (e.g., 4.x), while in version 5, a  new manager instance is created each time. Therefore, the usage of `getDownloadedDriverPath()` and `getDownloadedDriverVersion()` can be different in WebDriverManager 5 (i.e., these methods needs to be invoked using a WebDriverManager instance previously created). 
 
 === Browser Finder
 As of version 5, WebDriverManager allows detecting if a given browser is installed or not in the local system. To this aim, each manager provides the method `getBrowserPath()`. This method returns an `Optional<Path>`, which is empty if a given browser is not installed in the system, or the browser path (within the optional object) if it is detected. 
@@ -182,6 +192,9 @@ The following related feature is the recording of the remote session of a docker
 ----
 include::../../test/java/io/github/bonigarcia/wdm/test/docker/DockerChromeRecordingTest.java[tags=snippet-in-doc,indent=0]
 ----
+
+==== Advanced Settings
+The dockerized browser provided by WebDriverManager can be configured in different ways. For example, the WebDriverManager API allows using volumes, customizing the language and timezone inside the browser container, using custom images, configuring remote Docker daemon, customizing shared memory and in-memory filesystem (_tmpfs_), changing the screen resolution and video frame rate, customizing the recording output (folder and filename), or accessing to Docker service and client to make custom operations with Docker containers (e.g., run commands in the browser container). See the <<advanced-configuration,advanced configuration>> section for specific details about it.
 
 == Other Usages
 In addition to as a regular Java dependency, WebDriverManager can be used in other ambits. This section summarizes these usages.
@@ -407,8 +420,57 @@ The following repositories contain different examples using WebDriverManager:
 * https://github.com/bonigarcia/wdm-agent-example[WebDriverManager Agent Example]: Maven project using WebDriverManager as Agent.
 * https://github.com/bonigarcia/selenium-jupiter-examples[Selenium-Jupiter Examples]: Examples using JUnit 5 and <<selenium-jupiter,Selenium-Jupiter>>.
 
-== Configuration
+== Advanced Configuration
 To do.
+
+[[driver_management_config]]
+.Configuration capabilities for driver management
+[options="header"]
+|=======
+|API method|Configuration key|Default value|Description
+|`cachePath(String)`|`wdm.cachePath`|`~/.cache/selenium`|Folder to store drivers locally
+|`resolutionCachePath(String)`|`wdm.resolutionCachePath`|`~/.cache/selenium`|Folder to store the resolution cache
+|`driverVersion(String)`|`wdm.chromeDriverVersion`, `wdm.operaDriverVersion`, `wdm.iExplorerDriverVersion`, `wdm.edgeDriverVersion`, `wdm.geckoDriverVersion`, `wdm.chromiumDriverVersion`|`""` (automatic driver version discovery through the <<resolution-algorithm,resolution algorithm>>)|Custom driver version
+|`browserVersion(String)`|`wdm.chromeVersion`, `wdm.operaVersion`, `wdm.edgeVersion`, `wdm.firefoxVersion`, `wdm.chromiumVersion`|`""` (automatic browser version detection using the https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/commands.properties[commands database])|Custom browser version (major)
+|`forceDownload()`|`wdm.forceDownload=true`|`false` (drivers in cache are reused if available)|Force downloading driver (even if it is already in the cache)
+|`useBetaVersions()`|`wdm.useBetaVersions=true`|`false` (driver versions are skipped)|Allow the use beta versions (if possible)
+|`architecture(Architecture)`|`wdm.architecture`|`""` (automatic architecture discovery)|Force a given architecture for a driver
+|`arch32()`|`wdm.architecture=X32`|`""` (automatic architecture discovery)|Use 32-bit driver version
+|`arch64()`|`wdm.architecture=X64`|`""` (automatic architecture discovery)|Use 64-bit driver version
+|`arm64()`|`wdm.architecture=ARM64`|`""` (automatic architecture discovery)|Use ARM (Aarch) 64-bit driver version
+|`operatingSystem(OperatingSystem)`|`wdm.os`|`""` (automatic OS discovery)|Force a given operating system (`WIN`, `LINUX`,  or `MAC`
+|`win()`|`wdm.os=WIN`|`""` (automatic OS discovery)|Force Windows
+|`linux()`|`wdm.os=LINUX`|`""` (automatic OS discovery)|Force Linux
+|`mac()`|`wdm.os=MAC`|`""` (automatic OS discovery)|Force Mac OS
+|`driverRepositoryUrl(URL)`|`wdm.chromeDriverUrl`, `wdm.operaDriverUrl`, `wdm.edgeDriverUrl`, `wdm.geckoDriverUrl`, `wdm.iExplorerDriverUrl`|Driver specific URLs (available in https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/webdrivermanager.properties[webdrivermanager.properties])|Change the repository URL in which the drivers are hosted
+|`useMirror()`|`wdm.useMirror=true`|`false` (not using mirrors)|Enable the use of an existing https://npm.taobao.org/mirrors/[mirror] (available for chromedriver, geckodriver, and operadriver)
+|`proxy(String)`|`wdm.proxy`|`""` (no proxy)| Use an HTTP proxy
+for the network connection (using the notation `proxy:port` or
+`username:password@proxy:port`). It can be also configured using the environment variable `HTTPS_PROXY`
+|`proxyUser(String)`|`wdm.proxyUser`|`""` (no proxy user)|Username for the
+HTTP proxy. It can be also configured using the environment variable  `HTTPS_PROXY_USER`
+|`proxyPass(String)`|`wdm.proxyPass`|`""` (no proxy password)|Password for HTTP proxy. It can be also configured using the environment variable `HTTPS_PROXY_PASS`
+|`gitHubToken(String)`|`wdm.gitHubToken`|`""` (no GitHub token)|Personal access token for authenticated GitHub requests (see <<known-issues,known issues>>)
+|`ignoreVersions(String...)`|`wdm.ignoreVersions`|`""` (no ignored versions)|Ignore specific driver version(s)
+|`timeout(int)`|`wdm.timeout`|`30`|Timeout (in seconds) to connect and download drivers from online repositories
+|`properties(String)`|`wdm.properties`|`webdrivermanager.properties`|Properties file (in the project classpath) for configuration values
+|`avoidExport()`|`wdm.avoidExport=true`|`false` (export driver paths as Java properties (e.g. `webdriver.chrome.driver`)|Avoid step 4 in the <<resolution-algorithm,resolution algorithm>> (for instance, in the <<wdm-cli,CLI>> mode)
+|`exportParameter(String)`|`wdm.chromeDriverExport`, `wdm.geckoDriverExport`, `wdm.edgeDriverExport`, `wdm.iExplorerDriverExport`, `wdm.operaDriverExport`|Java property name used to export the driver path (available in https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/webdrivermanager.properties[webdrivermanager.properties])|Set custom property name
+|`avoidOutputTree()`|`wdm.avoidOutputTree=true`|`false` (create output tree in the driver cache, e.g., `chromedriver/linux64/2.37`|Avoid output tree (for instance, in the <<wdm-cli,CLI>> mode)
+|`avoidFallback()`|`wdm.avoidFallback=true`|`false` (use a retries mechanism if any problem happens during the resolution algorithm)|Avoid the fallback mechanism
+|`avoidBrowserDetection()`|`wdm.avoidBrowserDetection` `=true`|`false` (browser version is detected, and the corresponding driver version s discovered)|Force to use the latest version available for a given driver
+|`avoidReadReleaseFromRepository()`|`wdm.avoidReadReleaseFrom` `Repository=true`|`false` (discover driver relase using info from the repository, e.g., https://chromedriver.storage.googleapis.com/LATEST_RELEASE[chromedriver-latest] or https://msedgedriver.azureedge.net/LATEST_STABLE[msedgedriver-latest])|Avoid using the repository info and use the https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/versions.properties[versions database] instead
+|`browserVersionDetectionCommand` `(String)`|`wdm.browserVersion` `DetectionCommand`|`""` (automatic discovery using the https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/commands.properties[commands database])|Custom browser version detection command (see example https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/chrome/ChromeBetaTest.java[here])
+|`browserVersionDetectionRegex` `(String)`|`wdm.browserVersion` `DetectionRegex`|`[\^\\d\^\\.]`|Regular expression used to extract the browser version from the shell
+|`useLocalVersionsPropertiesFirst()`|`wdm.versionsProperties` `OnlineFirst=true`|`false` (the online https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/versions.properties[versions database] is used in the <<resolution-algorithm,resolution algorithm>>)|Use local copy of the versions database
+|`useLocalCommandsPropertiesFirst()`|`wdm.commandsProperties` `OnlineFirst=true`|`false` (the online https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/versions.properties[commands database] is used in the <<resolution-algorithm,resolution algorithm>>)|Use local copy of the commands database
+|`versionsPropertiesUrl(URL)`|`wdm.versionsPropertiesUrl`|Raw version of the online https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/versions.properties[versions database]|Change versions database URL
+|`commandsPropertiesUrl(URL)`|`wdm.commandsPropertiesUrl`|Raw version of the online https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/commands.properties[cmands database]|Change commands database URL
+|`clearDriverCache()`|`wdm.clearDriverCache=true`|`false` (not cleaning driver cache)|Clean driver cache
+|`clearResolutionCache()`|`wdm.clearResolutionCache` `=true`|`false` (not cleaning resolution cache)|Clean resolution cache
+|`ttl(int)`|`wdm.ttl`|`86400` (i.e., 1 day)|TTL in seconds in which the resolved driver versions are valid in the resolution cache.
+|`ttlBrowsers(int)`|`wdm.ttlForBrowsers`|`3600` (i.e., 1 hour)|TTL value in seconds in which the browser versions are valid in the resolution cache (also used for dockerized browsers).
+|=======
 
 == Known issues
 [discrete]
@@ -458,7 +520,7 @@ There are several ways to try to get community support related WebDriverManager.
 == Contributing
 If you think WebDriverManager can be enhanced, consider contributing to the project through a  https://github.com/bonigarcia/webdrivermanager/pulls[pull request].
 
-In addition, both https://opencollective.com/webdrivermanager[WebDriverManager] and https://opencollective.com/selenium-jupiter[Selenium-Jupiter] are in https://opencollective.com/bonigarcia[OpenCollective], an online funding platform for open and transparent communities. You can contribute as a https://opencollective.com/webdrivermanager/donate[donation] (i.e., an individual custom contribution), as a https://opencollective.com/webdrivermanager/contribute/backer-8132/checkout[backer] (i.e., an individual recurring contribution),  or as https://opencollective.com/webdrivermanager/contribute/sponsor-8133/checkout[sponsor] (i.e., a company recurring contribution).
+In addition, both https://opencollective.com/webdrivermanager[WebDriverManager] and https://opencollective.com/selenium-jupiter[Selenium-Jupiter] are in https://opencollective.com/bonigarcia[OpenCollective], an online funding platform for open and transparent communities. You can contribute as a https://opencollective.com/webdrivermanager/donate[donation] (i.e., an individual custom contribution), as a https://opencollective.com/webdrivermanager/contribute/backer-8132/checkout[backer] (i.e., an individual recurring contribution),  or as https://opencollective.com/webdrivermanager/contribute/sponsor-8133/checkout[sponsor] (i.e., a recurring contribution by a company).
 
 == Further documentation
 There are other resources related to WebDriverManager and automated testing you can find helpful. For instance, the following journal papers:
