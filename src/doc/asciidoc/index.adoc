@@ -1,5 +1,8 @@
 = WebDriverManager
 Boni García
+Version {project-version}
+
+:revnumber: {project-version}
 
 == Motivation
 https://seleniumhq.github.io/docs/site/en/webdriver/[Selenium WebDriver] is a library that allows controlling web browsers programmatically. It provides a cross-browser API that can be used to drive web browsers (e.g., Chrome, Edge, or Firefox, among others) using different programming languages (e.g., Java, JavaScript, Python, C#, or Ruby). The primary use of Selenium WebDriver is implementing automated tests for web applications.
@@ -88,7 +91,7 @@ WebDriverManager provides a _generic manager_, i.e., a manager that can be param
 * `getInstance(Class<? extends WebDriver> webDriverClass)`: Where `webDriverClass` is a class of the Selniun WebDriver standard hierarchy, such as `ChromeDriver.class`, `FirefoxDriver.class`, etc.
 * `getInstance(DriverManagerType driverManagerType)`: Where `driverManagerType` is an https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/java/io/github/bonigarcia/wdm/config/DriverManagerType.java[enumeration] provided by WebDriverManager to identify the available managers.
 * `getInstance(String browserName)`: Where `browserName` is the usual browser name as `String` (e.g., `"Chrome"`, `"Firefox"`, `"Edge"`, etc.).
-* `getInstance()`: If no parameter is specified, the configuration key `wdm.defaultBrowser` is used to select the manager (Chrome by default). See the <<advanced-configuration, advanced configuration>> section for further information about the configuration capabilities of WebDriverManager.
+* `getInstance()`: If no parameter is specified, the configuration key `wdm.defaultBrowser` is used to select the manager (Chrome by default). See the <<advanced-configuration,advanced configuration>> section for further information about the configuration capabilities of WebDriverManager.
 
 The following example shows a https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests[JUnit 5 parameterized test] in which the test is repeated twice (using the classes `ChromeDriver.class` and `FirefoxDriver.class` as test parameters). As you can see, WebDriverManager instantiates the proper manager using this parameter.
 
@@ -472,7 +475,7 @@ HTTP proxy. It can be also configured using the environment variable  `HTTPS_PRO
 |`ttlBrowsers(int)`|`wdm.ttlForBrowsers`|`3600` (i.e., 1 hour)|TTL value in seconds in which the browser versions are valid in the resolution cache (also used for dockerized browsers).
 |=======
 
-== Known issues
+== Known Issues
 [discrete]
 ==== HTTP response code 403
 Some of the drivers (e.g., geckodriver or operadriver) are hosted on GitHub. When external clients (like WebDriverManager) makes many consecutive requests to GitHub, and due to its traffic rate limit, it eventually responds with an HTTP 403 error (_forbidden_), as follows:
@@ -493,7 +496,7 @@ io.github.bonigarcia.wdm.config.WebDriverManagerException: Error HTTP 403 execut
     at io.github.bonigarcia.wdm.WebDriverManager.setup(WebDriverManager.java:328)
 ----
 
-To avoid this problem, WebDriverManager can make authenticated requests using a https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token[personal access token]. See the <<configuration,configuration>> section to discover how to set up this token in WebDriverManager.
+To avoid this problem, WebDriverManager can make authenticated requests using a https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token[personal access token]. See the <<advanced-configuration,advanced configuration>> section to discover how to set up this token in WebDriverManager.
 
 [discrete]
 ==== Testing localhost
@@ -522,7 +525,7 @@ If you think WebDriverManager can be enhanced, consider contributing to the proj
 
 In addition, both https://opencollective.com/webdrivermanager[WebDriverManager] and https://opencollective.com/selenium-jupiter[Selenium-Jupiter] are in https://opencollective.com/bonigarcia[OpenCollective], an online funding platform for open and transparent communities. You can contribute as a https://opencollective.com/webdrivermanager/donate[donation] (i.e., an individual custom contribution), as a https://opencollective.com/webdrivermanager/contribute/backer-8132/checkout[backer] (i.e., an individual recurring contribution),  or as https://opencollective.com/webdrivermanager/contribute/sponsor-8133/checkout[sponsor] (i.e., a recurring contribution by a company).
 
-== Further documentation
+== Further Documentation
 There are other resources related to WebDriverManager and automated testing you can find helpful. For instance, the following journal papers:
 
 * García, Boni, et al. "https://link.springer.com/article/10.1007%2Fs10664-021-09975-3[Automated driver management for Selenium WebDriver]." _Empirical Software Engineering_ 26.5 (2021): 1-51.

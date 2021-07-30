@@ -297,9 +297,8 @@
                                 <docinfo1>true</docinfo1>
                                 <toclevels>3</toclevels>
                                 <sectnums></sectnums>
-                                <revnumber>${project.version}</revnumber>
-                                <docdatetime>${maven.build.timestamp}</docdatetime>
                                 <lang>en</lang>
+                                <docdatetime>${maven.build.timestamp}</docdatetime>
                                 <last-update-label>Released on</last-update-label>
                             </attributes>
                         </configuration>
@@ -311,6 +310,7 @@
                             <goal>process-asciidoc</goal>
                         </goals>
                         <configuration>
+                            <doctype>book</doctype>
                             <backend>pdf</backend>
                             <sourceDirectory>src/doc/asciidoc</sourceDirectory>
                             <sourceDocumentName>index.adoc</sourceDocumentName>
@@ -324,6 +324,7 @@
                                 <idseparator>-</idseparator>
                                 <icons>font</icons>
                                 <sectnums></sectnums>
+                                <project-version>${project.version}</project-version>
                             </attributes>
                         </configuration>
                     </execution>
