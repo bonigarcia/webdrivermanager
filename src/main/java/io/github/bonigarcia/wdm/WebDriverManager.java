@@ -1601,7 +1601,7 @@ public abstract class WebDriverManager {
 
     public static void main(String[] args) {
         String browserForResolving = "chrome|edge|firefox|opera|chromium|iexplorer";
-        String browserForNoVnc = "chrome|edge|firefox|opera|chrome-mobile";
+        String browserForNoVnc = "chrome|edge|firefox|opera|safari|chrome-mobile";
         int port = new Config().getServerPort();
         if (args.length <= 0) {
             logCliError(browserForResolving, browserForNoVnc, port);
