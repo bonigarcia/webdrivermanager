@@ -88,7 +88,7 @@ WebDriverManager provides a _generic manager_, i.e., a manager that can be param
 * `getInstance(Class<? extends WebDriver> webDriverClass)`: Where `webDriverClass` is a class of the Selniun WebDriver standard hierarchy, such as `ChromeDriver.class`, `FirefoxDriver.class`, etc.
 * `getInstance(DriverManagerType driverManagerType)`: Where `driverManagerType` is an https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/java/io/github/bonigarcia/wdm/config/DriverManagerType.java[enumeration] provided by WebDriverManager to identify the available managers.
 * `getInstance(String browserName)`: Where `browserName` is the usual browser name as `String` (e.g., `"Chrome"`, `"Firefox"`, `"Edge"`, etc.).
-* `getInstance()`: If no parameter is specific, then the configuration key `wdm.defaultBrowser` is used to select the manager (Chrome by default). See the <<configuration,configuration>> section for further information about the configuration capabilities of WebDriverManager.
+* `getInstance()`: If no parameter is specified, the configuration key `wdm.defaultBrowser` is used to select the manager (Chrome by default). See the <<configuration,configuration>> section for further information about the configuration capabilities of WebDriverManager.
 
 The following example shows a https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests[JUnit 5 parameterized test] in which the test is repeated twice (using the classes `ChromeDriver.class` and `FirefoxDriver.class` as test parameters). As you can see, WebDriverManager instantiates the proper manager using this parameter.
 
@@ -101,7 +101,7 @@ include::../../test/java/io/github/bonigarcia/wdm/test/generic/GenericTest.java[
 As of version 5, WebDriverManager allows detecting if a given browser is installed or not in the local system. To this aim, each manager provides the method `getBrowserPath()`. This method returns an `Optional<Path>`, which is empty if a given browser is not installed in the system, or the browser path (within the optional object) if it is detected. 
 
 The following example shows an example using this feature.
-In this test, the optional browser path is used to disable conditionally (i.e., skip) the test using an https://assertj.github.io/doc/#assertj-core-assumptions[AssertJ assumption] (although other built-in assumptions available in JUnit 5 or other unit testing frameworks are also possible). All in all, this test should be executed in a Mac OS system (which should have Safari out of the box), but it should be skipped in any other machine.
+In this test, the optional browser path is used to disable conditionally (i.e., skip) the test using an https://assertj.github.io/doc/#assertj-core-assumptions[AssertJ assumption] (although other built-in assumptions available in JUnit 5 or other unit testing frameworks are also possible). All in all, this test should be executed in a Mac OS system (which should have Safari out of the box), but it should be skipped in any other operating system.
 
 [source,java]
 ----
@@ -450,20 +450,29 @@ When the host is Mac OS or Windows, we can use the DNS name `host.docker.interna
 
 [discrete]
 ==== Chrome 92+ in Docker
-There is an https://bugs.chromium.org/p/chromedriver/issues/detail?id=3857[open issue] with Chrome 92+ and Docker at the time of this writing. The problem can be solved to some extent by using the argument `--disable-gpu` in Chrome and Edge. This argument already passed to these containers to avoid the issue. Nevertheless, there are still some situations in which it is not possible to fix. For instance, when using https://hub.docker.com/r/bonigarcia/webdrivermanager[WebDriverManager in Docker] in the CLI or Server mode.
+There is an https://bugs.chromium.org/p/chromedriver/issues/detail?id=3857[open issue] with Chrome 92+ and Docker at the time of this writing. The problem can be solved to some extent by using the argument `--disable-gpu` in Chrome and Edge. This argument already passed to these containers to avoid the issue. Nevertheless, some situations are still impossible to fix (e.g., when using https://hub.docker.com/r/bonigarcia/webdrivermanager[WebDriverManager in Docker in the CLI or Server mode).
 
 == Support
-There are several ways to get in touch with WebDriverManager:
-
-* Questions about WebDriverManager are supposed to be discussed in https://stackoverflow.com/questions/tagged/webdrivermanager_java[StackOverflow], using the tag _webdrivermanager_java_.
-* Comments, suggestions, and bug-reporting should be made using the https://github.com/bonigarcia/webdrivermanager/issues[GitHub issues].
-* If you think WebDriverManager can be enhanced, consider contributing to the project through a  https://github.com/bonigarcia/webdrivermanager/pulls[pull request].
+There are several ways to try to get community support related WebDriverManager. First, questions about WebDriverManager can be discussed in https://stackoverflow.com/questions/tagged/webdrivermanager_java[StackOverflow], using the tag _webdrivermanager_java_. In addition, comments, suggestions, and bug-reporting should be made using the https://github.com/bonigarcia/webdrivermanager/issues[GitHub issues].
 
 == Contributing
-To do.
+If you think WebDriverManager can be enhanced, consider contributing to the project through a  https://github.com/bonigarcia/webdrivermanager/pulls[pull request].
+
+In addition, both https://opencollective.com/webdrivermanager[WebDriverManager] and https://opencollective.com/selenium-jupiter[Selenium-Jupiter] are in https://opencollective.com/bonigarcia[OpenCollective], an online funding platform for open and transparent communities. You can contribute as a https://opencollective.com/webdrivermanager/donate[donation] (i.e., an individual custom contribution), as a https://opencollective.com/webdrivermanager/contribute/backer-8132/checkout[backer] (i.e., an individual recurring contribution),  or as https://opencollective.com/webdrivermanager/contribute/sponsor-8133/checkout[sponsor] (i.e., a company recurring contribution).
 
 == Further documentation
-To do.
+There are other resources related to WebDriverManager and automated testing you can find helpful. For instance, the following journal papers:
+
+* García, Boni, et al. "https://link.springer.com/article/10.1007%2Fs10664-021-09975-3[Automated driver management for Selenium WebDriver]." _Empirical Software Engineering_ 26.5 (2021): 1-51.
+* García, Boni, et al. "https://www.mdpi.com/2079-9292/9/7/1067[A survey of the Selenium ecosystem]." _Electronics_ 9.7 (2020): 1067.
+* García, Boni, et al. "https://www.mdpi.com/2079-9292/9/3/462[Assessment of QoE for video and audio in WebRTC applications using full-reference models]." _Electronics_ 9.3 (2020): 462.
+* García, Boni, et al. "https://www.mdpi.com/2079-9292/8/8/854[Practical evaluation of VMAF perceptual video quality for WebRTC applications]." _Electronics_ 8.8 (2019): 854.
+* García, Boni, et al. "http://ieeexplore.ieee.org/document/7992926/[WebRTC testing: challenges and practical solutions]." _IEEE Communications Standards Magazine_ 1.2 (2017): 36-42.
+* García, Boni, and Juan Carlos Dueñas. "http://www.rintonpress.com/journals/jweonline.html#v14n56[Web browsing automation for applications quality control]." _Journal of web engineering_ (2015): 474-502.
+
+Or the following book:
+
+* García, Boni. https://www.amazon.com/Mastering-Software-Testing-JUnit-Comprehensive-ebook/dp/B076ZQCK5Q/[Mastering Software Testing with JUnit 5]. _Packt Publishing Ltd_, 2017.
 
 == About
 WebDriverManager (Copyright © 2017-2021) is an open-source project created and maintained by https://bonigarcia.org/[Boni García] (https://twitter.com/boni_gg[@boni_gg]), licensed under the terms of https://www.apache.org/licenses/LICENSE-2.0[Apache 2.0 License]. This documentation (also available in link:webdrivermanager.pdf[PDF]) is released under the terms of https://creativecommons.org/licenses/by-nc-sa/2.0/[CC BY-NC-SA 2.0].
