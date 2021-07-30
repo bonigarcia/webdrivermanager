@@ -1557,6 +1557,9 @@ public abstract class WebDriverManager {
             if (args.length > 1) {
                 wdm.driverVersion(args[1]);
             }
+            if (wdm.getDockerService().isRunningInsideDocker()) {
+                wdm.avoidBrowserDetection();
+            }
             wdm.avoidOutputTree().setup();
         } catch (Exception e) {
             log.error("Driver for {} not found (valid browsers {})", browser,
