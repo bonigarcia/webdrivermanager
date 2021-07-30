@@ -526,7 +526,7 @@ public class DockerService {
         String containerId = startContainer(noVncContainer);
 
         noVncContainer.setContainerId(containerId);
-        String noVncHost = getHost(containerId, network);
+        String noVncHost = getDefaultHost();
         String noVncPort = getBindPort(containerId, dockerNoVncPort + "/tcp");
         String noVncUrlFormat = "http://%s:%s/";
         String noVncUrl = format(noVncUrlFormat, noVncHost, noVncPort);
