@@ -122,18 +122,20 @@ public class DockerService {
 
     public String getHost(String containerId, String network) {
         String host = getDefaultHost();
-        if (IS_OS_LINUX) {
-            String[] commandArray = new String[] { "bash", "-c",
-                    "cat /proc/self/cgroup | grep docker" };
-            String container = runAndWait(false, commandArray);
-            if (!isNullOrEmpty(container)) {
-                host = getGateway(containerId, network);
-                log.debug(
-                        "WebDriverManager running inside a Docker container. Using gateway address: {}",
-                        host);
-            }
+        if (IS_OS_LINUX && isRunningInsideDocker()) {
+            host = getGateway(containerId, network);
+            log.debug(
+                    "WebDriverManager running inside a Docker container. Using gateway address: {}",
+                    host);
         }
         return host;
+    }
+
+    public boolean isRunningInsideDocker() {
+        String[] commandArray = new String[] { "bash", "-c",
+                "cat /proc/self/cgroup | grep docker" };
+        String commandOutput = runAndWait(false, commandArray);
+        return !isNullOrEmpty(commandOutput);
     }
 
     public String getDefaultHost() {
