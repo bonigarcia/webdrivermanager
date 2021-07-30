@@ -176,27 +176,227 @@ include::../../test/java/io/github/bonigarcia/wdm/test/docker/DockerChromeVncTes
 image::wdm-vnc.png[scaledwidth=100%]
 
 ==== Recordings
-We can record 
+The following related feature is the recording of the remote session of a dockerized browser. To enable it, we need to invoke the method `enableRecording()` in WebDriverManager. Internally, WebDriverManager starts another Docker container using https://ffmpeg.org/[FFmpeg] to record the browser session. At the end of the test, we can find the recording in MP4, by default, in the same folder of the project root. The following example shows a simple using this feature.
 
-==== Advanced Capabilities
-To do.
+[source,java]
+----
+include::../../test/java/io/github/bonigarcia/wdm/test/docker/DockerChromeRecordingTest.java[tags=snippet-in-doc,indent=0]
+----
 
 == Other Usages
+In addition to as a regular Java dependency, WebDriverManager can be used in other ambits. This section summarizes these usages.
 
 === WDM CLI
-To do
+WebDriverManager can be used interactively from the Command Line Interface (CLI), i.e., the shell. There are three different ways to use WebDriverManager as a CLI tool:
+
+1. Using the WebDriverManager _fat-JAR_ (i.e., WebDriverManager with all its dependencies in a single executable JAR file). This JAR file is released on GitHub with every new version of WebDriverManager. You can download the latest version from https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-5.0.0/webdrivermanager-5.0.0-fat.jar[here]. Once you get this file, you  need to use the following command in the shell (where `<args>` are the accepted arguments, explained below):
++
+[source,shell]
+----
+java -jar webdrivermanager-5.0.0-fat.jar <args>
+----
+2. Using the source code. WebDriverManager is hosted on https://github.com/bonigarcia/webdrivermanager[GitHub]. We can use Maven to manage its Java source code. For example, to run the CLI mode using Maven and the source code, we need to invoke the following Maven command in the shell from the project root:
++
+[source,shell]
+----
+mvn exec:java -Dexec.args="<args>"
+----
+3. Using the WebDriverManager Docker container. Each new release of WebDriverManager is pushed to https://hub.docker.com/r/bonigarcia/webdrivermanager[Docker Hub] as a container based on https://hub.docker.com/_/openjdk[OpenJDK] plus the WebDriverManager fat-JAR. The default command to run the WebDriverManager Docker container is described below. Check out the section <<wdm-in-docker,WDM in Docker>> for further details about it.
++
+[source,shell]
+----
+docker run --rm -e ARGS="<args>" bonigarcia/webdrivermanager:5.0.0
+----
+
+WebDriverManager CLI can be used for three different purposes. We can see these options launching the CLI with empty or invalid arguments (`<args>` in the commands before). In this case, the output of WebDriverManager CLI is the following:
+
+[source,shell]
+----
+[ERROR] The valid arguments for WebDriverManager CLI are:
+[ERROR] 1. For resolving drivers locally:
+[ERROR]     resolveDriverFor=browserName <driverVersion>
+[ERROR] (where browserName is: chrome|edge|firefox|opera|chromium|iexplorer)
+[ERROR]
+[ERROR] 2. For running a browser in a Docker (and use it trough noVNC):
+[ERROR]     runInDocker=browserName <browserVersion>
+[ERROR] (where browserName=chrome|edge|firefox|opera|safari|chrome-mobile)
+[ERROR]
+[ERROR] 3. For starting WebDriverManager server:
+[ERROR]     server <port>
+[ERROR] (where the default port is 4444)
+----
+
+[discrete]
+==== Option 1: Driver Resolver
+WebDriverManager CLI can be used to resolve drivers (e.g., chromedriver, geckodriver) using the usual <<resolution-algorithm,resolution algorithm>>, but executed directly from the shell. This feature can be interesting if we want to download drivers outside a Java program. To use this option, we need to invoke WebDriverManager CLI using the following arguments (supposing we need to resolve chromedriver):
+
+* Fat-JAR:
+[source,shell]
+----
+java -jar webdrivermanager-5.0.0-fat.jar resolveDriverFor=chrome
+----
+* Source code:
+[source,shell]
+----
+mvn exec:java -Dexec.args="resolveDriverFor=chrome"
+----
+* Docker container:
+[source,shell]
+----
+docker run --rm -v ${PWD}:/wdm -e ARGS="resolveDriverFor=chrome" bonigarcia/webdrivermanager:5.0.0
+----
+
+[discrete]
+==== Option 2: Browsers in Docker
+WebDriverManager CLI can be used to execute browsers in Docker containers and interact with them using noVNC. This feature can be interesting for _exploratory testing_ for web applications using different types and versions of web browsers. To use this option, the arguments we need to use are the following (supposing we want to use Chrome):
+
+* Fat-JAR:
+[source,shell]
+----
+java -jar webdrivermanager-5.0.0-fat.jar runInDocker=chrome
+----
+* Source code:
+[source,shell]
+----
+mvn exec:java -Dexec.args="runInDocker=chrome"
+----
+* Docker container:
+[source,shell]
+----
+docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -e ARGS="runInDocker=chrome 91" bonigarcia/webdrivermanager:5.0.0
+----
+
+WARNING: There is an https://bugs.chromium.org/p/chromedriver/issues/detail?id=3857[open issue] with Chrome 92+ and Docker at the time of this writing. For this reason, the previous Docker container command uses Chrome 91. For further information, see <<known-issues, known issues>>.
+
+[discrete]
+==== Option 3: Server
+Finally, WebDriverManager CLI allows starting the WebDriverManager Server, as follows (see next section for more details about it):
+
+* Fat-JAR:
+[source,shell]
+----
+java -jar webdrivermanager-5.0.0-fat.jar server
+----
+* Source code:
+[source,shell]
+----
+mvn exec:java -Dexec.args="server"
+----
+* Docker container:
+[source,shell]
+----
+docker run --rm -p 4444:4444 -v /var/run/docker.sock:/var/run/docker.sock bonigarcia/webdrivermanager:5.0.0
+----
 
 === WDM Server
-To do
+The WebDriverManager Server is based on HTTP, and it offers two types of services. First, it can be used to resolve drivers. To this aim, the WebDriverManager Server exposes a REST-like API to resolve drivers (chromedriver, geckodriver, etc.). The endpoints provided by  this API are the following (supposing that WebDriverManager is running the localhost in its default port, i.e., 4444):
 
-=== WDM in Docker
-To do.
+* http://localhost:4444/chromedriver[http://localhost:4444/chromedriver]: To resolve chromedriver.
+* http://localhost:4444/firefoxdriver[http://localhost:4444/firefoxdriver]: To resolve geckodriver.
+* http://localhost:4444/edgedriver[http://localhost:4444/edgedriver]: To resolve msedgedriver.
+* http://localhost:4444/operadriver[http://localhost:4444/operadriver]: To resolve geckodriver.
+* http://localhost:4444/iedriver[http://localhost:4444/iedriver]: To resolve geckodriver.
+
+Second, the WebDriverManager Server acts as a regular Selenium Server (i.e., a _hub_ in the classical https://www.selenium.dev/documentation/en/grid/[Selenium Grid] architecture). This feature can be used to create remote `WebDriver instances using the WebDriverManager Server (even for different language bindings than Java). The following example shows a Node.js test using Selenium WebDriver and WebDriverManager Server (notice that by default, the WebDriverManager Server URL does not require any path, i.e., http://localhost:4444/[http://localhost:4444/):
+
+[source,javascript]
+----
+var webdriver = require("selenium-webdriver");
+
+async function wdmServerTest() {
+    var wdmServerUrl = "http://localhost:4444/";
+    var capabilities = {
+        browserName : "chrome",
+        version: "91.0"
+    };
+
+    try {
+        var driver = await new webdriver.Builder().usingServer(wdmServerUrl)
+                .withCapabilities(capabilities).build();
+
+        var sutUrl = "https://bonigarcia.org/webdrivermanager/";
+        await driver.get(sutUrl);
+
+        await driver.getTitle().then(function(title) {
+            console.log("The title of " + sutUrl + " is '" + title + "'")
+        });
+
+    } catch (err) {
+        console.error("Something went wrong!\n", err.stack);
+
+    } finally {
+        if (driver) {
+            driver.quit();
+        }
+    }
+}
+
+wdmServerTest();
+----
 
 === WDM Agent
-To do.
+WebDriverManager can also be used as _Java Agent_. In other words, using the JVM instrumentation API, WebDriverManager can intercept applications running on the JVM and modify their bytecode. The WebDriverManager Agent uses this approach to check the objects being created in the JVM. Before Selenium WebDriver objects are instantiated (`ChromeDriver`, `FirefoxDriver`, etc.), the required manager is used to resolve its driver (chromedriver, geckodriver, etc.). Thanks to this approach, we can get rid of the WebDriverManager call (e.g. `WebDriverManager.chromedriver.setup()`) from our test, for example:
+
+[source,java]
+----
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+class ChromeAgentTest {
+
+    WebDriver driver;
+
+    @BeforeEach
+    void setupTest() {
+        driver = new ChromeDriver();
+    }
+
+    @AfterEach
+    void teardown() {
+        if (driver != null) {
+            driver.quit();
+        }
+    }
+
+    @Test
+    void test() {
+        // Test logic
+    }
+
+}
+----
+
+To configure the WebDriverManager Agent, we need to specify the path of the WebDriverManager https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-5.0.0/webdrivermanager-5.0.0-fat.jar[fat-JAR] using the JVM flag `-javaagent:/path/to/webdrivermanager-5.0.0-fat.jar`. Alternatively, it can be done using Maven (see a complete project example https://github.com/bonigarcia/wdm-agent-example/[here]).
 
 === Selenium-Jupiter
-To do.
+WebDriverManager is the heart of the project https://github.com/bonigarcia/selenium-jupiter[Selenium-Jupiter], an open-source JUnit 5 extension for Selenium WebDriver. Selenium-Jupiter uses the programming model provided by JUnit 5 (called _Jupiter_) together with WebDriverManager to create tests with reduced boilerplate code. For instance, thanks to the Jupiter feature for parameter resolution, we can declare a type of the `WebDriver` hierarchy (e.g., `ChromeDriver`) as a test parameter. Selenium-Jupiter resolves its driver and makes it available for the test (and the browser is gracefully closed at the end of the test). For example:
+
+[source,java]
+----
+import static org.assertj.core.api.Assertions.assertThat;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+import io.github.bonigarcia.seljup.SeleniumJupiter;
+
+@ExtendWith(SeleniumJupiter.class)
+class ChromeJupiterTest {
+
+    @Test
+    void test(ChromeDriver driver) {
+        driver.get("https://bonigarcia.org/selenium-jupiter/");
+        assertThat(driver.getTitle()).contains("Selenium-Jupiter");
+    }
+
+}
+----
+
+Selenium-Jupiter provides a lot of extra features, such as seamless integration with Docker, test templates (for cross-browser testing), conditional test execution (depending on the availability of browsers), conditional screenshots and recordings (when tests fail), and more. For more details, read the https://bonigarcia.org/selenium-jupiter/[documentation].
 
 == Examples
 To do.
@@ -216,7 +416,7 @@ To do.
 To do.
 
 [discrete]
-==== Docker and chromedriver 92+
+==== Chrome 92+ in Docker
 To do.
 
 == Support
