@@ -3,7 +3,7 @@ FROM openjdk:11-jdk-slim
 ARG VERSION
 
 ENV WDM_JAR=webdrivermanager-${VERSION}-fat.jar
-ENV BROWSER=server
+ENV ARGS=server
 ENV HOME_DIR=/root
 ENV CACHE_DIR=/wdm
 
@@ -15,4 +15,4 @@ EXPOSE 4444
 
 WORKDIR ${HOME_DIR}
 
-CMD ["sh", "-c", "java -Dwdm.cachePath=${CACHE_DIR} -Dwdm.resolutionCachePath=${HOME_DIR} -jar ${WDM_JAR} ${BROWSER}"]
+CMD ["sh", "-c", "java -Dwdm.cachePath=${CACHE_DIR} -Dwdm.resolutionCachePath=${HOME_DIR} -jar ${WDM_JAR} ${ARGS}"]
