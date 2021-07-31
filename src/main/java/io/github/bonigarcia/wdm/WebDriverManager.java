@@ -405,6 +405,11 @@ public abstract class WebDriverManager {
         return this;
     }
 
+    public WebDriverManager dockerNetwork(String network) {
+        config().setDockerNetwork(network);
+        return this;
+    }
+
     public WebDriverManager dockerTimezone(String timezone) {
         config().setDockerTimezone(timezone);
         return this;
