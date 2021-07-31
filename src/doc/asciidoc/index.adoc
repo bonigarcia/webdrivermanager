@@ -75,6 +75,8 @@ WebDriverManager.chromiumdriver().setup()
 WebDriverManager.iedriver().setup();
 ----
 
+TIP: Although not mandatory, it is highly recommended to use a logger library to trace your application and tests. In the case of WebDriverManager, you will see the relevant steps of the driver management following its traces. See for example the following https://www.stubbornjava.com/posts/logging-in-java-with-slf4j-and-logback)[tutorial] to use http://www.slf4j.org/[SLF4J ] and http://logback.qos.ch/[Logback].
+
 As of version 5, WebDriverManager also provides a manager for Safari (called `safaridriver()`). The case of the Safari browser is particular since this browser does not require to manage its driver to work with Selenium WebDriver (in other words, the Safari driver is built-in within the browser). Nevertheless, WebDriverManager provides this manager to be used in the WebDriver builder (especially with <<browsers-in-docker,Docker>>).
 
 ==== Resolution Algorithm
