@@ -59,22 +59,22 @@
 
     <name>WebDriverManager</name>
     <description>
-		Automated driver management for Selenium WebDriver
+		Automated driver management and Docker builder for Selenium WebDriver
 	</description>
-    <url>https://github.com/bonigarcia/webdrivermanager</url>
+    <url>https://bonigarcia.org/webdrivermanager/</url>
 
     <developers>
         <developer>
             <id>bonigarcia</id>
             <name>Boni Garcia</name>
-            <url>https://bonigarcia.github.io/</url>
+            <url>https://bonigarcia.org/</url>
         </developer>
     </developers>
 
     <licenses>
         <license>
             <name>Apache 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+            <url>https://www.apache.org/licenses/LICENSE-2.0</url>
         </license>
     </licenses>
 
