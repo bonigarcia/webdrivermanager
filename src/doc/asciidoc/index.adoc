@@ -619,6 +619,8 @@ There are two ways to try to get community support related to WebDriverManager. 
 == Support
 https://opencollective.com/webdrivermanager[WebDriverManager] is part of https://opencollective.com/bonigarcia[OpenCollective], an online funding platform for open and transparent communities. You can support the project by contributing as a backer (i.e., a personal https://opencollective.com/webdrivermanager/donate[donation] or https://opencollective.com/webdrivermanager/contribute/backer-8132/checkout[recurring contribution]) or as a https://opencollective.com/webdrivermanager/contribute/sponsor-8133/checkout[sponsor] (i.e., a recurring contribution by a company).
 
+ifndef::backend-pdf[]
+ifndef::backend-epub3[]
 [discrete]
 === Backers
 ++++
@@ -630,6 +632,8 @@ include::backers.html[]
 ++++
 include::sponsors.html[]
 ++++
+endif::[]
+endif::[]
 
 == Further Documentation
 There are other resources related to WebDriverManager and automated testing you can find helpful. For instance, the following journal papers:
