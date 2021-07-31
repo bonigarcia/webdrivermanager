@@ -642,10 +642,7 @@ span.icon > [class^="icon-"], span.icon > [class*=" icon-"] { cursor: default; }
 
 .exampleblock > .content { background-color: transparent; border-color: #c9c9c9; }
 
-.sidebarblock { background-image: url('./img/sidebar-bg.jpg'); -webkit-border-radius: 5px; border-radius: 5px; }
-.sidebarblock > .content > .title { color: #f1f1f1; text-shadow: 0px 2px 2px black; font-size: 1.25em; font-weight: bold; }
-.sidebarblock > .content ul, .sidebarblock > .content p { color: #f1f1f1; text-shadow: 0px 1px 1px black; }
-.sidebarblock > .content .title { color: #dfdfdf; }
+.sidebarblock > .content > .title { font-size: 1.25em; font-weight: bold; }
 .sidebarblock > .content code { color: #333; }
 .sidebarblock > .content a { color: #60B5D8; }
 .sidebarblock > .content a:hover { color: #FAA94C; }
