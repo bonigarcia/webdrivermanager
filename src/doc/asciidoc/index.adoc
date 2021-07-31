@@ -199,7 +199,19 @@ include::../../test/java/io/github/bonigarcia/wdm/test/docker/DockerChromeRecord
 ----
 
 ==== Advanced Settings
-The dockerized browser provided by WebDriverManager can be configured in different ways. For example, the WebDriverManager API allows using volumes, customizing the language and timezone inside the browser container, using custom images, configuring remote Docker daemon, customizing shared memory and in-memory filesystem (_tmpfs_), changing the screen resolution and video frame rate, customizing the recording output (folder and filename), or accessing to Docker service and client to make custom operations with Docker containers (e.g., run commands in the browser container). See the <<advanced-configuration,advanced configuration>> section for specific details about it.
+The dockerized browser provided by WebDriverManager can be configured in different ways. For example, the WebDriverManager API allows using volumes, customizing the language and timezone inside the browser container, using custom images, configuring remote Docker daemon, customizing shared memory and in-memory filesystem (_tmpfs_), changing the screen resolution and video frame rate, or customizing the recording output (folder and filename). See the <<advanced-configuration,advanced configuration>> section for specific details about it.
+
+In addition, the WebDriverManager API provides several methods to get the most of the dockerized browsers, namely:
+
+* `getDockerRecordingPath()`: Get path of the session recording.
+* `getDockerNoVncUrl()`: Ger URL of the remote desktop noVNC session.
+* `getDockerSeleniumServerUrl()`: Get URL of the underlying Selenium Server (inside the container) that allows controlling the remote (dockerized) browser.
+* `getDockerService()`: It allows access to the Docker service and client (based on https://github.com/docker-java/docker-java[docker-java]) to make custom operations with Docker containers (e.g., run commands in the browser container, see example https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerExecCommandInContainerTest.java[here]).
+* `getDockerBrowserContainerId()`: Get browser container id (required for advance operation using the Docker client)
+* `getWebDriver()`: Get the previously created `WebDriver` object (the same as the returned by the method `create()`.
+* `getWebDriverList`: Get the previously created `WebDriver` objects (if any).
+
+A manager instance can be used to create more than one `WebDriver` object. For this reason, the methods `getDockerRecordingPath()`, `getDockerNoVncUrl()`, `getDockerSeleniumServerUrl()`, `getDockerBrowserContainerId()`, and `quit()` are overloaded, allowing to specify an `WebDriver` instance. When no parameter is specified in these methods, WebDriverManager returns the first `WebDriver` object (this is a usual case, i.e., a manager creates a single instance of `WebDriver`). You can see an example of a manager used to create more than one browser https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerSeveralBrowsersDifferentVersionsTest.java[here].
 
 == Other Usages
 In addition to as a regular Java dependency, WebDriverManager can be used in other ambits. This section summarizes these usages.
@@ -436,7 +448,7 @@ WebDriverManager.operadriver().proxy("server:port").setup();
 WebDriverManager.edgedriver().mac().setup();
 ----
 
-NOTE: In addition to the methods presented in this section, each manager provides a method called `config()` that allows configuring all the possible parameters of WebDriverManager.
+NOTE: In addition to the methods presented in this section, each manager provides a method called `config()` that allows configuring all the possible parameters of WebDriverManager. In addition, WebDriverManager provides the metho `reset()` to restore to the default values the parameters of a given manager.
 
 The second alternative to tune WebDriverManager is using _Java system properties_.  In this method, each WebDriverManager API method has its equivalence of one of a unique _configuration key_. For instance, the API method `cachePath()` (used to specify the driver cache folder) is equivalent to the configuration key `wdm.cachePath`. These types of configuration keys can be passed when executing the tests, for example, using Maven:
 
@@ -512,9 +524,9 @@ HTTP proxy. It can be also configured using the environment variable  `HTTPS_PRO
 |=======
 |API method|Configuration key|Default value|Description
 |`dockerDaemonUrl(String)`|`wdm.dockerDaemonUrl`|`""`|URL of remote https://docs.docker.com/engine/reference/commandline/dockerd/[Docker daemon]
-|`dockerTimezone(String)`|`wdm.dockerTimezone`|`Etc/UTC`|https://en.wikipedia.org/wiki/List_of_tz_database_time_zones[Timezone] in browser container
+|`dockerTimezone(String)`|`wdm.dockerTimezone`|`Etc/UTC`|https://en.wikipedia.org/wiki/List_of_tz_database_time_zones[Timezone] of the browser container
 |`dockerNetwork(String)`|`wdm.dockerNetwork`|`bridge`|Docker network name
-|`dockerLang(String)`|`wdm.dockerLang`|`EN`|https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes[Languge] in Docker container
+|`dockerLang(String)`|`wdm.dockerLang`|`EN`|https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes[Language] of the browser container
 |`dockerShmSize(String)`|`wdm.dockerShmSize`|`256m`|Docker https://docs.docker.com/engine/reference/run/[shared memory] in bytes. Unit is optional and can be `b` (bytes), `k` (kilobytes), `m` (megabytes), or `g` (gigabytes)
 |`dockerTmpfsSize(String)`|`wdm.dockerTmpfsSize`|`128m`|Docker in-memory filesystem (https://docs.docker.com/engine/reference/run/#tmpfs-mount-tmpfs-filesystems[tmpfs]). Units follows the same approach than the shared memory
 |`dockerTmpfsMount(String)`|`wdm.dockerTmpfsMount`|`/tmp`|Mount point for in-memory filesystem
@@ -526,7 +538,7 @@ HTTP proxy. It can be also configured using the environment variable  `HTTPS_PRO
 |`dockerRecordingOutput(String)` `dockerRecordingOutput(Path)`|`wdm.dockerRecordingOutput`|`.`|Path for the recording output
 |`dockerRecordingPrefix(String)`|`wdm.dockerRecordingPrefix`|Browser name|Prefix to be appended to the session id (in the recording filename)
 |`dockerCustomImage(String)`|`wdm.dockerCustomImage`|`""`|Custom image to be used as browser in Docker
-| `dockerVolume(String)` `dockerVolumes(String[])`|`wdm.dockerVolumes`|`""`|Comma-separated volumes (or string array) using the format `"\local\path:\container\path"`
+| `dockerVolume(String)` `dockerVolumes(String[])`|`wdm.dockerVolumes`|`""`|Docker volumes (single or array) using the format `"\local\path:\container\path"`
 |=======
 
 [[server_config]]

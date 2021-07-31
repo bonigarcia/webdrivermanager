@@ -330,6 +330,8 @@
                                 <icons>font</icons>
                                 <sectnums></sectnums>
                                 <lang>en</lang>
+                                <revnumber>${project.version}</revnumber>
+                                <revdate>${maven.build.timestamp}</revdate>
                             </attributes>
                         </configuration>
                     </execution>
@@ -354,6 +356,8 @@
                                 <idseparator>-</idseparator>
                                 <icons>font</icons>
                                 <sectnums></sectnums>
+                                <lang>en</lang>
+                                <revnumber>${project.version}</revnumber>
                                 <revdate>${maven.build.timestamp}</revdate>
                             </attributes>
                         </configuration>

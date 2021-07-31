@@ -345,48 +345,9 @@ public abstract class WebDriverManager {
         return browserList;
     }
 
-    public synchronized void quit() {
-        webDriverList.stream().forEach(this::quit);
-        webDriverList.clear();
-    }
-
-    public synchronized void quit(WebDriver driver) {
-        Optional<WebDriverBrowser> webDriverBrowser = findWebDriverBrowser(
-                driver);
-        if (webDriverBrowser.isPresent()) {
-            WebDriverBrowser driverBrowser = webDriverBrowser.get();
-            quit(driverBrowser);
-            webDriverList.remove(driverBrowser);
-        }
-    }
-
-    protected synchronized void quit(WebDriverBrowser driverBrowser) {
-        try {
-            WebDriver driver = driverBrowser.getDriver();
-            if (driver != null) {
-                log.debug("Quitting {}", driver);
-                driver.quit();
-            }
-
-            List<DockerContainer> dockerContainerList = driverBrowser
-                    .getDockerContainerList();
-            if (dockerContainerList != null) {
-                dockerContainerList.stream()
-                        .forEach(dockerService::stopAndRemoveContainer);
-            }
-        } catch (Exception e) {
-            log.warn("Exception closing {} ({})", driverBrowser.getDriver(),
-                    e.getMessage(), e);
-        }
-    }
-
     public Optional<Path> getBrowserPath() {
         return versionDetector.getBrowserPath(
                 getDriverManagerType().getBrowserNameLowerCase());
-    }
-
-    public DockerService getDockerService() {
-        return dockerService;
     }
 
     public WebDriverManager browserInDocker() {
@@ -772,6 +733,41 @@ public abstract class WebDriverManager {
         return webdriverList;
     }
 
+    public synchronized void quit() {
+        webDriverList.stream().forEach(this::quit);
+        webDriverList.clear();
+    }
+
+    public synchronized void quit(WebDriver driver) {
+        Optional<WebDriverBrowser> webDriverBrowser = findWebDriverBrowser(
+                driver);
+        if (webDriverBrowser.isPresent()) {
+            WebDriverBrowser driverBrowser = webDriverBrowser.get();
+            quit(driverBrowser);
+            webDriverList.remove(driverBrowser);
+        }
+    }
+
+    protected synchronized void quit(WebDriverBrowser driverBrowser) {
+        try {
+            WebDriver driver = driverBrowser.getDriver();
+            if (driver != null) {
+                log.debug("Quitting {}", driver);
+                driver.quit();
+            }
+
+            List<DockerContainer> dockerContainerList = driverBrowser
+                    .getDockerContainerList();
+            if (dockerContainerList != null) {
+                dockerContainerList.stream()
+                        .forEach(dockerService::stopAndRemoveContainer);
+            }
+        } catch (Exception e) {
+            log.warn("Exception closing {} ({})", driverBrowser.getDriver(),
+                    e.getMessage(), e);
+        }
+    }
+
     public String getDockerBrowserContainerId(WebDriver driver) {
         return (String) getPropertyFromWebDriverBrowser(driver,
                 WebDriverBrowser::getBrowserContainerId);
@@ -810,6 +806,10 @@ public abstract class WebDriverManager {
     public Path getDockerRecordingPath() {
         return (Path) getPropertyFromFirstWebDriverBrowser(
                 WebDriverBrowser::getRecordingPath);
+    }
+
+    public DockerService getDockerService() {
+        return dockerService;
     }
 
     protected Object getPropertyFromWebDriverBrowser(WebDriver driver,
