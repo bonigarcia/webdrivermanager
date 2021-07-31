@@ -266,16 +266,21 @@ WebDriverManager CLI can be used for three different purposes. We can see these 
 WebDriverManager CLI can be used to resolve drivers (e.g., chromedriver, geckodriver) applying the usual <<resolution-algorithm,resolution algorithm>> from the shell. This feature can be interesting if we want to download drivers outside a Java program. To use this option, we need to invoke WebDriverManager CLI using the following arguments (supposing we need to resolve chromedriver):
 
 * Fat-JAR:
+
 [source,shell]
 ----
 java -jar webdrivermanager-5.0.0-fat.jar resolveDriverFor=chrome
 ----
+
 * Source code:
+
 [source,shell]
 ----
 mvn exec:java -Dexec.args="resolveDriverFor=chrome"
 ----
+
 * Docker container:
+
 [source,shell]
 ----
 docker run --rm -v ${PWD}:/wdm -e ARGS="resolveDriverFor=chrome" bonigarcia/webdrivermanager:5.0.0
@@ -286,16 +291,21 @@ docker run --rm -v ${PWD}:/wdm -e ARGS="resolveDriverFor=chrome" bonigarcia/webd
 WebDriverManager CLI can be used to execute browsers in Docker containers and interact with them using noVNC. This feature can be interesting for _exploratory testing_ for web applications using different types and versions of web browsers. To use this option, the arguments we need to use are the following (supposing we want to use Chrome):
 
 * Fat-JAR:
+
 [source,shell]
 ----
 java -jar webdrivermanager-5.0.0-fat.jar runInDocker=chrome
 ----
+
 * Source code:
+
 [source,shell]
 ----
 mvn exec:java -Dexec.args="runInDocker=chrome"
 ----
+
 * Docker container:
+
 [source,shell]
 ----
 docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -e ARGS="runInDocker=chrome 91" bonigarcia/webdrivermanager:5.0.0
@@ -308,16 +318,21 @@ WARNING: There is an https://bugs.chromium.org/p/chromedriver/issues/detail?id=3
 Finally, WebDriverManager CLI allows starting the WebDriverManager Server, as follows (see <<wdm-server,next section>> for more details about it):
 
 * Fat-JAR:
+
 [source,shell]
 ----
 java -jar webdrivermanager-5.0.0-fat.jar server
 ----
+
 * Source code:
+
 [source,shell]
 ----
 mvn exec:java -Dexec.args="server"
 ----
+
 * Docker container:
+
 [source,shell]
 ----
 docker run --rm -p 4444:4444 -v /var/run/docker.sock:/var/run/docker.sock bonigarcia/webdrivermanager:5.0.0
