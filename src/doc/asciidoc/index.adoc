@@ -642,8 +642,8 @@ There are other resources related to WebDriverManager and automated testing you 
 * García, Boni, et al. "https://www.mdpi.com/2079-9292/9/7/1067[A survey of the Selenium ecosystem]." _Electronics_ 9.7 (2020): 1067.
 * García, Boni, et al. "https://www.mdpi.com/2079-9292/9/3/462[Assessment of QoE for video and audio in WebRTC applications using full-reference models]." _Electronics_ 9.3 (2020): 462.
 * García, Boni, et al. "https://www.mdpi.com/2079-9292/8/8/854[Practical evaluation of VMAF perceptual video quality for WebRTC applications]." _Electronics_ 8.8 (2019): 854.
-* García, Boni, et al. "http://ieeexplore.ieee.org/document/7992926/[WebRTC testing: challenges and practical solutions]." _IEEE Communications Standards Magazine_ 1.2 (2017): 36-42.
-* García, Boni, and Juan Carlos Dueñas. "http://www.rintonpress.com/journals/jweonline.html#v14n56[Web browsing automation for applications quality control]." _Journal of web engineering_ (2015): 474-502.
+* García, Boni, et al. "https://ieeexplore.ieee.org/document/7992926/[WebRTC testing: challenges and practical solutions]." _IEEE Communications Standards Magazine_ 1.2 (2017): 36-42.
+* García, Boni, and Juan Carlos Dueñas. "https://www.rintonpress.com/journals/jweonline.html#v14n56[Web browsing automation for applications quality control]." _Journal of web engineering_ (2015): 474-502.
 
 Or the following book:
 
