@@ -613,13 +613,23 @@ When the host is Mac OS or Windows, we can use the DNS name `host.docker.interna
 ==== Chrome 92+ in Docker
 There is an https://bugs.chromium.org/p/chromedriver/issues/detail?id=3857[open issue] with Chrome 92+ and Docker at the time of this writing. The problem can be solved to some extent by using the argument `--disable-gpu` in Chrome and Edge. This argument is used by WebDriverManager 5 to avoid the issue. Nevertheless, some situations are still impossible to fix (e.g., when using https://hub.docker.com/r/bonigarcia/webdrivermanager[WebDriverManager in Docker] as CLI or Server).
 
+== Community
+There are two ways to try to get community support related to WebDriverManager. First, questions about it can be discussed in https://stackoverflow.com/questions/tagged/webdrivermanager_java[StackOverflow], using the tag _webdrivermanager_java_. In addition, comments, suggestions, and bug-reporting should be made using the https://github.com/bonigarcia/webdrivermanager/issues[GitHub issues]. Finally, if you think WebDriverManager can be enhanced, consider contributing to the project through a  https://github.com/bonigarcia/webdrivermanager/pulls[pull request].
+
 == Support
-There are two ways to try to get community support related WebDriverManager. First, questions about WebDriverManager can be discussed in https://stackoverflow.com/questions/tagged/webdrivermanager_java[StackOverflow], using the tag _webdrivermanager_java_. In addition, comments, suggestions, and bug-reporting should be made using the https://github.com/bonigarcia/webdrivermanager/issues[GitHub issues].
+https://opencollective.com/webdrivermanager[WebDriverManager] is part of https://opencollective.com/bonigarcia[OpenCollective], an online funding platform for open and transparent communities. You can support the project by contributing as a backer (i.e., a personal https://opencollective.com/webdrivermanager/donate[donation] or https://opencollective.com/webdrivermanager/contribute/backer-8132/checkout[recurring contribution]) or as a https://opencollective.com/webdrivermanager/contribute/sponsor-8133/checkout[sponsor] (i.e., a recurring contribution by a company).
 
-== Contributing
-If you think WebDriverManager can be enhanced, consider contributing to the project through a  https://github.com/bonigarcia/webdrivermanager/pulls[pull request].
+[discrete]
+=== Backers
+++++
+include::backers.html[]
+++++
 
-In addition, both https://opencollective.com/webdrivermanager[WebDriverManager] and https://opencollective.com/selenium-jupiter[Selenium-Jupiter] are part of https://opencollective.com/bonigarcia[OpenCollective], an online funding platform for open and transparent communities. You can contribute with the project as a https://opencollective.com/webdrivermanager/donate[donation] (i.e., an individual custom contribution), as a https://opencollective.com/webdrivermanager/contribute/backer-8132/checkout[backer] (i.e., an individual recurring contribution),  or as https://opencollective.com/webdrivermanager/contribute/sponsor-8133/checkout[sponsor] (i.e., a recurring contribution by a company).
+[discrete]
+=== Sponsors
+++++
+include::sponsors.html[]
+++++
 
 == Further Documentation
 There are other resources related to WebDriverManager and automated testing you can find helpful. For instance, the following journal papers:
