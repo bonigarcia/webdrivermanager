@@ -7,7 +7,7 @@ Version {project-version}
 == Motivation
 https://seleniumhq.github.io/docs/site/en/webdriver/[Selenium WebDriver] is a library that allows controlling web browsers programmatically. It provides a cross-browser API that can be used to drive web browsers (e.g., Chrome, Edge, or Firefox, among others) using different programming languages (e.g., Java, JavaScript, Python, C#, or Ruby). The primary use of Selenium WebDriver is implementing automated tests for web applications.
 
-Selenium WebDriver carries out the automation using the native support of each browser. For this reason, we need to place a binary file called *driver* between the test using the Selenium WebDriver API and the browser to be controlled. Examples of drivers for major web browsers nowadays are https://chromedriver.chromium.org/[chromedriver] (for Chrome), https://github.com/mozilla/geckodriver/[geckodriver] (for Firefox), or https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/[msedgedriver] (for Edge). As you can see in the following picture, the communication between the WebDriver API and the driver binary is done using a standard protocol called the (https://www.w3.org/TR/webdriver/)[W3C WebDriver specification] (formerly the so-called _JSON Wire Protocol_). Then, the communication between the driver and the browser is done using the native capabilities of each browser.
+Selenium WebDriver carries out the automation using the native support of each browser. For this reason, we need to place a binary file called _driver_ between the test using the Selenium WebDriver API and the browser to be controlled. Examples of drivers for major web browsers nowadays are https://chromedriver.chromium.org/[chromedriver] (for Chrome), https://github.com/mozilla/geckodriver/[geckodriver] (for Firefox), or https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/[msedgedriver] (for Edge). As you can see in the following picture, the communication between the WebDriver API and the driver binary is done using a standard protocol called https://www.w3.org/TR/webdriver/[W3C WebDriver] (formerly the so-called _JSON Wire Protocol_). Then, the communication between the driver and the browser is done using the native capabilities of each browser.
 
 [[webdriver_arch]]
 [.thumb]
@@ -134,7 +134,7 @@ include::../../test/java/io/github/bonigarcia/wdm/test/create/ChromeCreateTest.j
 The WebDriverManager API provides different methods to enhance the creation of `WebDriver` objects, such as:
 
 * Method `capabilities()`: To specify WebDriver `Capabilities` (see https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/create/ChromeCapabilitiesCreateTest.java[example]).
-* Method `remoteAddress()`: To specify the remote URL in the `RemoteWebDriver` instance (typically when using a Selenium Server). See https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/create/ChromeRemoteTest.java[example].
+* Method `remoteAddress()`: To specify the remote URL in the `RemoteWebDriver` instance (typically when using a Selenium Server). See https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/create/ChromeRemoteTest.java[example]. This method is equivalent to the configuration key `wdm.remoteAddress` (see <<advanced-configuration,configuration>> section).
 * Integer parameter in the method `create()`. This option is used to create a list of `WebDriver` objects instead of a single instance. See https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/create/ChromeListCreateTest.java[example].
 
 === Browsers in Docker
@@ -424,7 +424,7 @@ The following repositories contain different examples using WebDriverManager:
 * https://github.com/bonigarcia/selenium-jupiter-examples[Selenium-Jupiter Examples]: Examples using JUnit 5 and <<selenium-jupiter,Selenium-Jupiter>>.
 
 == Advanced Configuration
-WebDriverManager provides different ways of configuration. First, by using its *Java API*. To that aim, each manager (e.g., `chromedriver()`, `firefoxdriver()`, etc., allows to concatenate different methods of this API to specify custom options or preferences. For example (the explanation of these methods and the other possibilities are explained in the tables at the end of this section):
+WebDriverManager provides different ways of configuration. First, by using its _Java API_. To that aim, each manager (e.g., `chromedriver()`, `firefoxdriver()`, etc., allows to concatenate different methods of this API to specify custom options or preferences. For example (the explanation of these methods and the other possibilities are explained in the tables at the end of this section):
 
 [source,java]
 ----
@@ -434,14 +434,16 @@ WebDriverManager.operadriver().proxy("server:port").setup();
 WebDriverManager.edgedriver().mac().setup();
 ----
 
-The second alternative to tune WebDriverManager is using *Java system properties*.  In this method, each WebDriverManager API method has its equivalence of one of a unique _configuration key_. For instance, the API method `cachePath()` (used to specify the driver cache folder) is equivalent to the configuration key `wdm.cachePath`. These types of configuration keys are set as Java system properties and can be passed when executing the test, for example, using Maven:
+NOTE: In addition to the methods presented in the following tables, each manager provides a method called `config()` that allows configuring all the possible parameters of WebDriverManager.
+
+The second alternative to tune WebDriverManager is using _Java system properties_.  In this method, each WebDriverManager API method has its equivalence of one of a unique _configuration key_. For instance, the API method `cachePath()` (used to specify the driver cache folder) is equivalent to the configuration key `wdm.cachePath`. These types of configuration keys are set as Java system properties and can be passed when executing the test, for example, using Maven:
 
 [source,shell]
 ----
 mvn test -Dwdm.cachePath=/custom/path/to/driver/cache
 ----
 
-The third way to configure WebDriverManager is using *environmental variables*. The names for these variables appear from converting each configuration key name (e.g., `wdm.cachePath`) to uppercase, replacing the symbol `.` by `_` (e.g., `WDM_CACHEPATH`). This alternative can be helpful to global setup parameters at the operating system level and for specifying parameters when using WebDriverManager as a Docker container. For example:
+The third way to configure WebDriverManager is using _environmental variables_. The names for these variables appear from converting each configuration key name (e.g., `wdm.cachePath`) to uppercase, replacing the symbol `.` by `_` (e.g., `WDM_CACHEPATH`). This alternative can be helpful to global setup parameters at the operating system level and for specifying parameters when using WebDriverManager as a Docker container. For example:
 
 [source,shell]
 ----
@@ -467,7 +469,7 @@ The remainder of this section describes all the possible Java methods in the Web
 |`arch32()`|`wdm.architecture=X32`|`""` (automatic architecture discovery)|Use 32-bit driver version
 |`arch64()`|`wdm.architecture=X64`|`""` (automatic architecture discovery)|Use 64-bit driver version
 |`arm64()`|`wdm.architecture=ARM64`|`""` (automatic architecture discovery)|Use ARM (Aarch) 64-bit driver version
-|`operatingSystem(OperatingSystem)`|`wdm.os`|`""` (automatic OS discovery)|Force a given operating system (`WIN`, `LINUX`,  or `MAC`
+|`operatingSystem(Operating` `System)`|`wdm.os`|`""` (automatic OS discovery)|Force a given operating system (`WIN`, `LINUX`,  or `MAC`
 |`win()`|`wdm.os=WIN`|`""` (automatic OS discovery)|Force Windows
 |`linux()`|`wdm.os=LINUX`|`""` (automatic OS discovery)|Force Linux
 |`mac()`|`wdm.os=MAC`|`""` (automatic OS discovery)|Force Mac OS
@@ -479,7 +481,7 @@ for the network connection (using the notation `proxy:port` or
 |`proxyUser(String)`|`wdm.proxyUser`|`""` (no proxy user)|Username for the
 HTTP proxy. It can be also configured using the environment variable  `HTTPS_PROXY_USER`
 |`proxyPass(String)`|`wdm.proxyPass`|`""` (no proxy password)|Password for HTTP proxy. It can be also configured using the environment variable `HTTPS_PROXY_PASS`
-|`gitHubToken(String)`|`wdm.gitHubToken`|`""` (no GitHub token)|Personal access token for authenticated GitHub requests (see <<known-issues,known issues>>)
+|`gitHubToken(String)`|`wdm.gitHubToken`|`""` (no GitHub token)|Personal access token for authenticated GitHub requests (see <<known-issues,known issues>>). It can be also configured using the environment variable `GITHUB_TOKEN`
 |`ignoreVersions(String...)`|`wdm.ignoreVersions`|`""` (no ignored versions)|Ignore specific driver version(s)
 |`timeout(int)`|`wdm.timeout`|`30`|Timeout (in seconds) to connect and download drivers from online repositories
 |`properties(String)`|`wdm.properties`|`webdrivermanager.properties`|Properties file (in the project classpath) for configuration values
@@ -488,12 +490,12 @@ HTTP proxy. It can be also configured using the environment variable  `HTTPS_PRO
 |`avoidOutputTree()`|`wdm.avoidOutputTree=true`|`false` (create output tree in the driver cache, e.g., `chromedriver/linux64/2.37`|Avoid output tree (for instance, in the <<wdm-cli,CLI>> mode)
 |`avoidFallback()`|`wdm.avoidFallback=true`|`false` (use a retries mechanism if any problem happens during the resolution algorithm)|Avoid the fallback mechanism
 |`avoidBrowserDetection()`|`wdm.avoidBrowserDetection` `=true`|`false` (browser version is detected, and the corresponding driver version s discovered)|Force to use the latest version available for a given driver
-|`avoidReadReleaseFromRepository()`|`wdm.avoidReadReleaseFrom` `Repository=true`|`false` (discover driver relase using info from the repository, e.g., https://chromedriver.storage.googleapis.com/LATEST_RELEASE[chromedriver-latest] or https://msedgedriver.azureedge.net/LATEST_STABLE[msedgedriver-latest])|Avoid using the repository info and use the https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/versions.properties[versions database] instead
+|`avoidReadReleaseFrom` `Repository()`|`wdm.avoidReadReleaseFrom` `Repository=true`|`false` (discover driver relase using info from the repository, e.g., https://chromedriver.storage.googleapis.com/LATEST_RELEASE[chromedriver-latest] or https://msedgedriver.azureedge.net/LATEST_STABLE[msedgedriver-latest])|Avoid using the repository info and use the https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/versions.properties[versions database] instead
 |`avoidTmpFolder()`|`wdm.avoidTmpFolder=true`|`false` (Each driver release (typically compressed) is copied in a temporal folder in the local machine, and then the driver is extracted and copied to the driver cache|Avoid using a temporal folder to download drivers (and handle driver release directly on driver cache)
-|`browserVersionDetectionCommand` `(String)`|`wdm.browserVersion` `DetectionCommand`|`""` (automatic discovery using the https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/commands.properties[commands database])|Custom browser version detection command (see example https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/chrome/ChromeBetaTest.java[here])
-|`browserVersionDetectionRegex` `(String)`|`wdm.browserVersion` `DetectionRegex`|`[\^\\d\^\\.]`|Regular expression used to extract the browser version from the shell
-|`useLocalVersionsPropertiesFirst()`|`wdm.versionsProperties` `OnlineFirst=true`|`false` (the online https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/versions.properties[versions database] is used in the <<resolution-algorithm,resolution algorithm>>)|Use local copy of the versions database
-|`useLocalCommandsPropertiesFirst()`|`wdm.commandsProperties` `OnlineFirst=true`|`false` (the online https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/versions.properties[commands database] is used in the <<resolution-algorithm,resolution algorithm>>)|Use local copy of the commands database
+|`browserVersionDetection` `Command(String)`|`wdm.browserVersion` `DetectionCommand`|`""` (automatic discovery using the https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/commands.properties[commands database])|Custom browser version detection command (see example https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/chrome/ChromeBetaTest.java[here])
+|`browserVersionDetection` `Regex(String)`|`wdm.browserVersion` `DetectionRegex`|`[\^\\d\^\\.]`|Regular expression used to extract the browser version from the shell
+|`useLocalVersionsProperties` `First()`|`wdm.versionsProperties` `OnlineFirst=true`|`false` (the online https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/versions.properties[versions database] is used in the <<resolution-algorithm,resolution algorithm>>)|Use local copy of the versions database
+|`useLocalCommandsProperties` `First()`|`wdm.commandsProperties` `OnlineFirst=true`|`false` (the online https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/versions.properties[commands database] is used in the <<resolution-algorithm,resolution algorithm>>)|Use local copy of the commands database
 |`versionsPropertiesUrl(URL)`|`wdm.versionsPropertiesUrl`|Raw version of the online https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/versions.properties[versions database]|Change versions database URL
 |`commandsPropertiesUrl(URL)`|`wdm.commandsPropertiesUrl`|Raw version of the online https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/commands.properties[cmands database]|Change commands database URL
 |`clearDriverCache()`|`wdm.clearDriverCache=true`|`false` (not cleaning driver cache)|Clean driver cache
@@ -507,9 +509,22 @@ HTTP proxy. It can be also configured using the environment variable  `HTTPS_PRO
 [options="header"]
 |=======
 |API method|Configuration key|Default value|Description
-|``|``|``|
-|``|``|``|
-|``|``|``|
+|`dockerDaemonUrl(String)`|`wdm.dockerDaemonUrl`|`""`|URL of remote https://docs.docker.com/engine/reference/commandline/dockerd/[Docker daemon]
+|`dockerTimezone(String)`|`wdm.dockerTimezone`|`Etc/UTC`|https://en.wikipedia.org/wiki/List_of_tz_database_time_zones[Timezone] in browser container
+|`dockerNetwork(String)`|`wdm.dockerNetwork`|`bridge`|Docker network name
+|`dockerLang(String)`|`wdm.dockerLang`|`EN`|https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes[Languge] in Docker container
+|`dockerShmSize(String)`|`wdm.dockerShmSize`|`256m`|Docker https://docs.docker.com/engine/reference/run/[shared memory] in bytes. Unit is optional and can be `b` (bytes), `k` (kilobytes), `m` (megabytes), or `g` (gigabytes)
+|`dockerTmpfsSize(String)`|`wdm.dockerTmpfsSize`|`128m`|Docker in-memory filesystem (https://docs.docker.com/engine/reference/run/#tmpfs-mount-tmpfs-filesystems[tmpfs]). Units follows the same approach than the shared memory
+|`dockerTmpfsMount(String)`|`wdm.dockerTmpfsMount`|`/tmp`|Mount point for in-memory filesystem
+|`dockerStopTimeoutSec(Integer)`|`wdm.dockerStopTimeoutSec`|`5`|Max time to kill a container (in seconds) after stopping it
+|`enableVnc()`|`wdm.dockerEnableVnc=true`|`false`|Enable <<remote-desktop,desktop remote session>> for browsers in Docker
+|`enableRecording()`|`wdm.dockerEnableRecording=true`|`false`|Enable the <<recordings,recordings>> of the browser session in Docker
+|`dockerScreenResolution(String)`|`wdm.dockerScreenResolution`|`1280x1080x24`|Screen resolution of the browser desktop session in format `<width>x<height>x<colors-depth>`
+|`dockerRecordingFrameRate(int)`|`wdm.dockerRecordingFrameRate`|`12`|Frame rate for recordings
+|`dockerRecordingOutput(String)` `dockerRecordingOutput(Path)`|`wdm.dockerRecordingOutput`|`.`|Path for the recording output
+|`dockerRecordingPrefix(String)`|`wdm.dockerRecordingPrefix`|Browser name|Prefix to be appended to the session id (in the recording filename)
+|`dockerCustomImage(String)`|`wdm.dockerCustomImage`|`""`|Custom image to be used as browser in Docker
+| `dockerVolume(String)` `dockerVolumes(String[])`|`wdm.dockerVolumes`|`""`|Comma-separated volumes (or string array) using the format `"\local\path:\container\path"`
 |=======
 
 [[server_config]]
@@ -517,9 +532,9 @@ HTTP proxy. It can be also configured using the environment variable  `HTTPS_PRO
 [options="header"]
 |=======
 |API method|Configuration key|Default value|Description
-|``|``|``|
-|``|``|``|
-|``|``|``|
+|`serverPort(int)`|`wdm.serverPort`|`4444`|Port of WebDriverManager Server
+|`serverPath(String)`|`wdm.serverPath`|`/`|Path of WebDriverManager Server
+|`serverTimeoutSec(int)`|`wdm.serverTimeoutSec`|`60`|Timeout (in seconds) for WebDriverManager server
 |=======
 
 == Known Issues
