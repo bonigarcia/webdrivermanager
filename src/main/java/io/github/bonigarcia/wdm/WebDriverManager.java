@@ -1504,6 +1504,9 @@ public abstract class WebDriverManager {
             InvocationTargetException, NoSuchMethodException {
         WebDriver driver = null;
         if (getDriverManagerType() != null) {
+            if (getDriverManagerType() == CHROMIUM) {
+                capabilities = getCapabilities();
+            }
             Class<?> browserClass = Class
                     .forName(getDriverManagerType().browserClass());
             driver = webDriverCreator.createLocalWebDriver(browserClass,
