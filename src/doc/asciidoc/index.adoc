@@ -221,7 +221,7 @@ A manager instance can be used to create more than one `WebDriver` object. For t
 == Other Usages
 In addition to as a regular Java dependency, WebDriverManager can be used in other ambits. This section summarizes these usages.
 
-=== WDM CLI
+=== WebDriverManager CLI
 WebDriverManager can be used interactively from the Command Line Interface (CLI), i.e., the shell. There are three different ways to use WebDriverManager as a CLI tool:
 
 1. Using the WebDriverManager _fat-JAR_ (i.e., WebDriverManager with all its dependencies in a single executable JAR file). This JAR file is released on GitHub with every new version of WebDriverManager. You can download the latest version from https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-5.0.0/webdrivermanager-5.0.0-fat.jar[here]. Once you get this file, you  need to use the following command in the shell (where `<args>` are the accepted arguments, explained below):
@@ -315,7 +315,7 @@ WARNING: There is an https://bugs.chromium.org/p/chromedriver/issues/detail?id=3
 
 [discrete]
 ==== Option 3: Server
-Finally, WebDriverManager CLI allows starting the WebDriverManager Server, as follows (see <<wdm-server,next section>> for more details about it):
+Finally, WebDriverManager CLI allows starting the WebDriverManager Server, as follows (see <<webdrivermanager-server,next section>> for more details about it):
 
 * Fat-JAR:
 
@@ -338,7 +338,7 @@ mvn exec:java -Dexec.args="server"
 docker run --rm -p 4444:4444 -v /var/run/docker.sock:/var/run/docker.sock bonigarcia/webdrivermanager:5.0.0
 ----
 
-=== WDM Server
+=== WebDriverManager Server
 The WebDriverManager Server is based on HTTP and offers two types of services. First, it can be used to resolve drivers (chromedriver, geckodriver, etc.). The WebDriverManager Server exposes a simple REST-like API to this aim. WebDriverManager Server sends the resolved driver as an HTTP attachment in the response. The endpoints provided by this API are the following (supposing that WebDriverManager is running the localhost in its default port, i.e., 4444):
 
 * http://localhost:4444/chromedriver[http://localhost:4444/chromedriver]: To resolve chromedriver.
@@ -384,7 +384,7 @@ async function wdmServerTest() {
 wdmServerTest();
 ----
 
-=== WDM Agent
+=== WebDriverManager Agent
 WebDriverManager can also be used as _Java Agent_. In this case, and using the JVM instrumentation API, WebDriverManager intercepts calls to applications running on the JVM and modifies their bytecode. In particular, the WebDriverManager Agent uses this technique to check the objects being created in the JVM. Before Selenium WebDriver objects are instantiated (`ChromeDriver`, `FirefoxDriver`, etc.), the required manager is used to resolve its driver (chromedriver, geckodriver, etc.). Thanks to this approach, we can get rid of the WebDriverManager call (e.g. `WebDriverManager.chromedriver.setup();`) from our test, for example:
 
 [source,java]
@@ -519,9 +519,9 @@ HTTP proxy. It can be also configured using the environment variable  `HTTPS_PRO
 |`ignoreVersions(String...)`|`wdm.ignoreVersions`|`""` (no ignored versions)|Ignore specific driver version(s)
 |`timeout(int)`|`wdm.timeout`|`30`|Timeout (in seconds) to connect and download drivers from online repositories
 |`properties(String)`|`wdm.properties`|`webdrivermanager.properties`|Properties file (in the project classpath) for default configuration values
-|`avoidExport()`|`wdm.avoidExport=true`|`false` (export driver paths as Java properties (e.g. `webdriver.chrome.driver`)|Avoid step 4 in the <<resolution-algorithm,resolution algorithm>> (for instance, in the <<wdm-cli,CLI>> mode)
+|`avoidExport()`|`wdm.avoidExport=true`|`false` (export driver paths as Java properties (e.g. `webdriver.chrome.driver`)|Avoid step 4 in the <<resolution-algorithm,resolution algorithm>> (for instance, in the <<webdrivermanager-cli,CLI>> mode)
 |`exportParameter(String)`|`wdm.chromeDriverExport`, `wdm.geckoDriverExport`, `wdm.edgeDriverExport`, `wdm.iExplorerDriverExport`, `wdm.operaDriverExport`|Java property name used to export the driver path (available in https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/webdrivermanager.properties[webdrivermanager.properties])|Set custom property name
-|`avoidOutputTree()`|`wdm.avoidOutputTree=true`|`false` (create output tree in the driver cache, e.g., `chromedriver/linux64/2.37`|Avoid output tree (for instance, in the <<wdm-cli,CLI>> mode)
+|`avoidOutputTree()`|`wdm.avoidOutputTree=true`|`false` (create output tree in the driver cache, e.g., `chromedriver/linux64/2.37`|Avoid output tree (for instance, in the <<webdrivermanager-cli,CLI>> mode)
 |`avoidFallback()`|`wdm.avoidFallback=true`|`false` (use a retries mechanism if any problem happens during the resolution algorithm)|Avoid the fallback mechanism
 |`avoidBrowserDetection()`|`wdm.avoidBrowserDetection` `=true`|`false` (browser version is detected, and the corresponding driver version s discovered)|Force to use the latest version available for a given driver
 |`avoidReadReleaseFrom` `Repository()`|`wdm.avoidReadReleaseFrom` `Repository=true`|`false` (discover driver relase using info from the repository, e.g., https://chromedriver.storage.googleapis.com/LATEST_RELEASE[chromedriver-latest] or https://msedgedriver.azureedge.net/LATEST_STABLE[msedgedriver-latest])|Avoid using the repository info and use the https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/versions.properties[versions database] instead
