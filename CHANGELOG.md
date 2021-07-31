@@ -1,5 +1,42 @@
 # Changelog
 
+## [5.0.0] - 2021-08-01
+### Added
+- New documentation: https://bonigarcia.org/webdrivermanager/ (sources: AsciiDoc, generated: HTML, PDF, EPUB)
+- New high-level feature: browser finder (using the info of the commands database)
+- New high-level feature: WebDriver builder (using local/remote browsers)
+- New high-level feature: Browsers in Docker containers (using Aerokube images, with recording, VNC access, etc.)
+- Improved CLI mode: allow to run browsers in Docker container and inspect them through noVNC
+- Improved Sever mode: use WDM server as a Selenium Server (a "hub" in the classical Selenium Grid jargon)
+- Include manager for safaridriver, used to get Safari path and dockerized browser (WebKit engine)
+- Include shutdown hook for closing WebDriver objects (and release Docker containers, if any)
+- Include API method gitHubToken() to specify a personal access token for authenticated GitHub requests
+- Include API method avoidTmpFolder() to avoid the use of the temporal folder when downloading drivers (issue #657)
+- Include API method arm64() to specify ARM64 architecture
+- Bypass notarization requirement for geckodriver on Mac OS
+- Include support for generic driver (using config key wdm.defaultBrowser)
+
+### Fixed
+- Register decompression for HTTP client (issue #677)
+- Use --disable-gpu flag as default arguments for Docker containers (in Chrome and Edge)
+
+### Changed
+- Not using singletons in managers (e.g. chromedriver(), firefoxdriver()). Now, each manager returns a new instance each time
+- Change name of configuration keys (and corresponding API methods) containing the word internetExplorer to iExplorer
+- Use Java 11
+- Use JUnit 5 in tests
+- Use Selenium 4 in tests
+- Use AssertJ for assertions in tests
+- Use selenium-java as provided dependency
+
+### Removed
+- Remove managers for PhantomJS (depecrated browser) and SeleniumServerStandalone (scarce use)
+- Remove API method globalConfig() (it has no sense since managers are not singleton anymore)
+- Remove API methods gitHubTokenName() and gitHubTokenSecret(), replaced by gitHubToken()
+- Remove API localRepositoryUser() and localRepositoryPassword() (redundant)
+- Remove commons-io, commons-lang3, jarchivelib (compile), and okhttp (provided) artifacts
+
+
 ## [4.4.3] - 2021-05-09
 ### Added
 - Support for ARM64 (Aarch64) architecture (issue #634)
