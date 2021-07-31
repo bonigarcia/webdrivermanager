@@ -381,7 +381,7 @@ table.tableblock #preamble > .sectionbody > .paragraph:first-of-type p { font-si
 
 .exampleblock > .content > :last-child > :last-child, .exampleblock > .content .olist > ol > li:last-child > :last-child, .exampleblock > .content .ulist > ul > li:last-child > :last-child, .exampleblock > .content .qlist > ol > li:last-child > :last-child, .sidebarblock > .content > :last-child > :last-child, .sidebarblock > .content .olist > ol > li:last-child > :last-child, .sidebarblock > .content .ulist > ul > li:last-child > :last-child, .sidebarblock > .content .qlist > ol > li:last-child > :last-child { margin-bottom: 0; }
 
-.literalblock > .content pre, .listingblock > .content pre { background: url('./img/pre-bg.jpg'); border-width: 0 0 1px 0; border-style: solid; border-color: #f0f0f0; -webkit-border-radius: 4px; border-radius: 4px; padding: 15px; word-wrap: break-word; }
+.literalblock > .content pre, .listingblock > .content pre { border-width: 0 0 1px 0; border-style: solid; border-color: #f0f0f0; -webkit-border-radius: 4px; border-radius: 4px; padding: 15px; word-wrap: break-word; }
 .literalblock > .content pre.nowrap, .listingblock > .content pre.nowrap { overflow-x: auto; white-space: pre; word-wrap: normal; }
 .literalblock > .content pre > code, .listingblock > .content pre > code { display: block; }
 @media only screen { .literalblock > .content pre, .listingblock > .content pre { font-size: 0.64em; } }
