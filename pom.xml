@@ -163,6 +163,12 @@
             <version>${assertj.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.seleniumhq.selenium</groupId>
+            <artifactId>selenium-grid</artifactId>
+            <version>${selenium.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>

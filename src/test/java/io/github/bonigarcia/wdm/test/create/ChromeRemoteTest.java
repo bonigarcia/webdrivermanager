@@ -19,17 +19,26 @@ package io.github.bonigarcia.wdm.test.create;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.grid.Main;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-@Disabled
 class ChromeRemoteTest {
 
     WebDriver driver;
+
+    @BeforeAll
+    static void setup() {
+        // Resolve driver for Selenium Grid
+        WebDriverManager.chromedriver().setup();
+
+        // Start Selenium Grid in standalone mode
+        Main.main(new String[] { "standalone", "--port", "4444" });
+    }
 
     @BeforeEach
     void setupTest() {
