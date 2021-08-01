@@ -13,19 +13,15 @@
             <unpack>true</unpack>
         </dependencySet>
         <dependencySet>
+            <scope>provided</scope>
+            <unpack>true</unpack>
+        </dependencySet>
+        <dependencySet>
             <scope>test</scope>
             <unpack>true</unpack>
             <includes>
                 <include>ch.qos.logback:logback-classic:jar</include>
-            </includes>
-            <useTransitiveFiltering>true</useTransitiveFiltering>
-        </dependencySet>
-        <dependencySet>
-            <scope>provided</scope>
-            <unpack>true</unpack>
-            <includes>
-                <include>io.javalin:javalin:jar</include>
-                <include>org.seleniumhq.selenium:selenium-java:jar</include>
+                <include>org.seleniumhq.selenium:selenium-grid</include>
             </includes>
             <useTransitiveFiltering>true</useTransitiveFiltering>
         </dependencySet>

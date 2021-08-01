@@ -95,7 +95,7 @@ WebDriverManager provides a _generic manager_, i.e., a manager that can be param
 
 * `getInstance(Class<?> webDriverClass)`: Where `webDriverClass` is a class of the Selenium WebDriver standard hierarchy, such as `ChromeDriver.class`, `FirefoxDriver.class`, etc.
 * `getInstance(DriverManagerType driverManagerType)`: Where `driverManagerType` is an https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/java/io/github/bonigarcia/wdm/config/DriverManagerType.java[enumeration] provided by WebDriverManager to identify the available managers.
-* `getInstance(String browserName)`: Where `browserName` is the usual browser name as `String` (e.g., `"Chrome"`, `"Firefox"`, `"Edge"`, etc.).
+* `getInstance(String browserName)`: Where `browserName` is the usual browser name as `String` (i.e., `"Chrome"`, `"Firefox"`, `"Edge"`, `"Opera"`, `"Chromium"`, or `"IExplorer"`).
 * `getInstance()`: If no parameter is specified, the configuration key `wdm.defaultBrowser` is used to select the manager (Chrome by default). See the <<advanced-configuration,advanced configuration>> section for further information about the configuration capabilities of WebDriverManager.
 
 The following example shows a https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests[JUnit 5 parameterized test] in which the test is repeated twice (using the classes `ChromeDriver.class` and `FirefoxDriver.class` as test parameters). As you can see, WebDriverManager instantiates the proper manager using this parameter.
@@ -159,11 +159,13 @@ include::../../test/java/io/github/bonigarcia/wdm/test/docker/DockerChromeTest.j
 
 NOTE: When using browsers in Docker containers, the call to the method `quit()` of the WebDriverManager API allows the disposal of the browser container(s).
 
-The used Docker images by WebDriverManager have been created and maintained by https://aerokube.com/images/latest/[Aerokube]. Therefore, the available browsers to be executed as Docker containers in WebDriverManager are: Chrome (like the previous example), Firefox (see https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerFirefoxTest.java[example]), Edge (see https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerEdgeTest.java[example]), Opera (see https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerOperaTest.java[example]), and Safari (see https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerSafariTest.java[example]).
+The used Docker images by WebDriverManager have been created and maintained by https://aerokube.com/images/latest/[Aerokube]. Therefore, the available browsers to be executed as Docker containers in WebDriverManager are Chrome (like the previous example), https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerFirefoxTest.java[Firefox], https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerEdgeTest.java[Edge], https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerOperaTest.java[Opera], and https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerSafariTest.java[Safari].
 
-The case of Safari is particular since a real Safari browser can only be executed under a Mac OS machine. This way, the _Safari_ Docker containers use the https://webkit.org/[WebKit engine]. This engine is the same used in browser containers, and therefore, from a functional point of view, both browsers (a real Safari and this Docker image) should behave in the same way.
+NOTE: The case of Safari is particular since a real Safari browser can only be executed under a Mac OS machine. This way, the _Safari_ Docker containers use the https://webkit.org/[WebKit engine]. This engine is the same used in browser containers, and therefore, from a functional point of view, both browsers (a real Safari and this Docker image) should behave in the same way.
 
-In addition to these browsers, there is one more alternative: Chrome Mobile (i.e., Chrome on an Android device). To use this browser, you need to invoke the method `browserInDockerAndroid()` of a Chrome manager, just like in this https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerChromeMobileTest.java[example]. Notice that a hardware server or virtual machine with nested virtualization support is required to run Chrome Mobile images.
+In addition to these browsers, there is one more alternative: Chrome Mobile (i.e., Chrome on an Android device). To use this browser, you need to invoke the method `browserInDockerAndroid()` of a Chrome manager, just like in this https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerChromeMobileTest.java[example]. 
+
+WARNING: Notice that a hardware server or virtual machine with nested virtualization support is required to run Chrome Mobile images.
 
 ==== Browser Versions
 A significant aspect of the browser containers presented so far is that WebDriverManager connects to Docker Hub to discover the latest available release when the browser version is not specified (like the examples explained before). This way, the _dockerized_ browsers of tests handled by WebDriverManager are auto-maintained, in the sense that these tests use the latest version available without any additional effort.
@@ -254,15 +256,15 @@ WebDriverManager CLI can be used for three different purposes. We can see these 
 ----
 [ERROR] The valid arguments for WebDriverManager CLI are:
 [ERROR] 1. For resolving drivers locally:
-[ERROR]     resolveDriverFor=browserName <driverVersion>
+[ERROR]         resolveDriverFor browserName <driverVersion>
 [ERROR] (where browserName is: chrome|edge|firefox|opera|chromium|iexplorer)
 [ERROR]
 [ERROR] 2. For running a browser in a Docker (and use it trough noVNC):
-[ERROR]     runInDocker=browserName <browserVersion>
-[ERROR] (where browserName=chrome|edge|firefox|opera|safari|chrome-mobile)
+[ERROR]         runInDocker browserName <browserVersion>
+[ERROR] (where browserName is: chrome|edge|firefox|opera|safari|chrome-mobile)
 [ERROR]
 [ERROR] 3. For starting WebDriverManager Server:
-[ERROR]     server <port>
+[ERROR]         server <port>
 [ERROR] (where the default port is 4444)
 ----
 
@@ -274,21 +276,21 @@ WebDriverManager CLI can be used to resolve drivers (e.g., chromedriver, geckodr
 
 [source,shell]
 ----
-java -jar webdrivermanager-5.0.0-fat.jar resolveDriverFor=chrome
+java -jar webdrivermanager-5.0.0-fat.jar resolveDriverFor chrome
 ----
 
 * Source code:
 
 [source,shell]
 ----
-mvn exec:java -Dexec.args="resolveDriverFor=chrome"
+mvn exec:java -Dexec.args="resolveDriverFor chrome"
 ----
 
 * Docker container:
 
 [source,shell]
 ----
-docker run --rm -v ${PWD}:/wdm -e ARGS="resolveDriverFor=chrome" bonigarcia/webdrivermanager:5.0.0
+docker run --rm -v ${PWD}:/wdm -e ARGS="resolveDriverFor chrome" bonigarcia/webdrivermanager:5.0.0
 ----
 
 [discrete]
@@ -299,21 +301,21 @@ WebDriverManager CLI can be used to execute browsers in Docker containers and in
 
 [source,shell]
 ----
-java -jar webdrivermanager-5.0.0-fat.jar runInDocker=chrome
+java -jar webdrivermanager-5.0.0-fat.jar runInDocker chrome
 ----
 
 * Source code:
 
 [source,shell]
 ----
-mvn exec:java -Dexec.args="runInDocker=chrome"
+mvn exec:java -Dexec.args="runInDocker chrome"
 ----
 
 * Docker container:
 
 [source,shell]
 ----
-docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -e ARGS="runInDocker=chrome 91" bonigarcia/webdrivermanager:5.0.0
+docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -e ARGS="runInDocker chrome 91" bonigarcia/webdrivermanager:5.0.0
 ----
 
 WARNING: There is an https://bugs.chromium.org/p/chromedriver/issues/detail?id=3857[open issue] with Chrome 92+ and Docker at the time of this writing. For this reason, the previous Docker container command uses Chrome 91. For further information, see <<known-issues, known issues>>.
@@ -460,7 +462,7 @@ For example, this https://github.com/bonigarcia/webdrivermanager/blob/master/src
 
 [source,shell]
 ----
-boni@ubuntu:~$ java -jar webdrivermanager-5.0.0-fat.jar resolveDriverFor=chrome
+boni@ubuntu:~$ java -jar webdrivermanager-5.0.0-fat.jar resolveDriverFor chrome
 [INFO] Using WebDriverManager to resolve chrome
 [DEBUG] Detecting chrome version using online commands.properties
 [DEBUG] Running command on the shell: [google-chrome, --version]
@@ -546,7 +548,7 @@ The third way to configure WebDriverManager is using _environmental variables_. 
 
 [source,shell]
 ----
-docker run --rm -v ${PWD}:/wdm -e ARGS="resolveDriverFor=chrome" -e WDM_CHROMEVERSION=84 bonigarcia/webdrivermanager:5.0.0
+docker run --rm -v ${PWD}:/wdm -e ARGS="resolveDriverFor chrome" -e WDM_CHROMEVERSION=84 bonigarcia/webdrivermanager:5.0.0
 ----
 
 NOTE: The preference order of these configuration alternatives is (in case of overlapping) is: 1) Environmental Variables. 2) Java system properties. 3) Java API.
