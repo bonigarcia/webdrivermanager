@@ -460,26 +460,30 @@ For example, this https://github.com/bonigarcia/webdrivermanager/blob/master/src
 
 [source,shell]
 ----
-$ java -jar webdrivermanager-5.0.0-fat.jar resolveDriverFor=chrome
+boni@ubuntu:~$ java -jar webdrivermanager-5.0.0-fat.jar resolveDriverFor=chrome
 [INFO] Using WebDriverManager to resolve chrome
-[DEBUG] The driver version for CHROME is unknown ... trying with latest
-[DEBUG] Latest version of chromedriver according to https://chromedriver.storage.googleapis.com/LATEST_RELEASE is 92.0.4515.107
+[DEBUG] Detecting chrome version using online commands.properties
+[DEBUG] Running command on the shell: [google-chrome, --version]
+[DEBUG] Result: Google Chrome 92.0.4515.107
+[DEBUG] Latest version of chromedriver according to https://chromedriver.storage.googleapis.com/LATEST_RELEASE_92 is 92.0.4515.107
+[INFO] Using chromedriver 92.0.4515.107 (resolved driver for Chrome 92)
 [INFO] Reading https://chromedriver.storage.googleapis.com/ to seek chromedriver
 [DEBUG] Driver to be downloaded chromedriver 92.0.4515.107
-[INFO] Downloading https://chromedriver.storage.googleapis.com/92.0.4515.107/chromedriver_win32.zip
+[INFO] Downloading https://chromedriver.storage.googleapis.com/92.0.4515.107/chromedriver_linux64.zip
 [INFO] Extracting driver from compressed file chromedriver_linux64.zip
 [INFO] Driver location: /home/boni/chromedriver
 
-$ java -jar selenium-server-4.0.0.jar standalone
-19:30:13.856 INFO [LoggingOptions.configureLogEncoding] - Using the system default encoding
-19:30:13.861 INFO [OpenTelemetryTracer.createTracer] - Using OpenTelemetry for tracing
-19:30:16.544 INFO [NodeOptions.getSessionFactories] - Detected 8 available processors
-19:30:16.574 INFO [NodeOptions.discoverDrivers] - Discovered 1 driver(s)
-19:30:16.585 INFO [NodeOptions.report] - Adding Chrome for {"browserName": "chrome","platformName": "LINUX64"} 8 times
-19:30:16.895 INFO [Node.<init>] - Binding additional locator mechanisms: id, name
-19:30:16.909 INFO [LocalDistributor.add] - Added node 28984501-8745-45de-8f47-71e70358a66d at http://172.18.112.1:4444.
-19:30:16.913 INFO [GridModel.setAvailability] - Switching node 28984501-8745-45de-8f47-71e70358a66d (uri: http://172.18.112.1:4444) from DOWN to UP
-19:30:18.156 INFO [Standalone.execute] - Started Selenium Standalone 4.0.0-beta-4 (revision 29f46d02dd): http://172.18.112.1:4444
+boni@ubuntu:~$ java -jar selenium-server-4.0.0-beta-4.jar standalone
+20:19:03.815 INFO [LoggingOptions.configureLogEncoding] - Using the system default encoding
+20:19:03.818 INFO [OpenTelemetryTracer.createTracer] - Using OpenTelemetry for tracing
+20:19:04.272 INFO [NodeOptions.getSessionFactories] - Detected 8 available processors
+20:19:04.284 INFO [NodeOptions.discoverDrivers] - Discovered 1 driver(s)
+20:19:04.296 INFO [NodeOptions.report] - Adding Chrome for {"browserName": "chrome","platformName": "LINUX"} 8 times
+20:19:04.310 INFO [Node.<init>] - Binding additional locator mechanisms: name, id
+20:19:04.322 INFO [LocalDistributor.add] - Added node 4651dc4d-3e07-43e7-b8d5-7368c95ea76d at http://172.17.0.1:4444.
+20:19:04.324 INFO [GridModel.setAvailability] - Switching node 4651dc4d-3e07-43e7-b8d5-7368c95ea76d (uri: http://172.17.0.1:4444) from DOWN to UP
+20:19:04.438 INFO [Standalone.execute] - Started Selenium Standalone 4.0.0-beta-4 (revision 29f46d02dd): http://172.17.0.1:4444
+
 ----
 
 === Appium
