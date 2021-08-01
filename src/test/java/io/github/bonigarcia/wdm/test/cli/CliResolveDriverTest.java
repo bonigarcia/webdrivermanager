@@ -47,7 +47,7 @@ class CliResolveDriverTest {
     @MethodSource("data")
     void testCli(String browser, String driver) {
         log.debug("Running WebDriverManager CLI with arguments: {}", browser);
-        WebDriverManager.main(new String[] { "resolveDriverFor=" + browser });
+        WebDriverManager.main(new String[] { "resolveDriverFor", browser });
         File driverFile = new File(driver);
         boolean exists = driverFile.exists();
         assertThat(exists).isTrue();

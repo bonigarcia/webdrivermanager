@@ -51,7 +51,7 @@ class CliDockerTest {
             System.setIn(intro);
             log.debug("Running WebDriverManager CLI with arguments: {}",
                     browser);
-            WebDriverManager.main(new String[] { "runInDocker=" + browser });
+            WebDriverManager.main(new String[] { "runInDocker", browser });
             log.debug("CLI test runing {} in Docker OK", browser);
         });
     }
