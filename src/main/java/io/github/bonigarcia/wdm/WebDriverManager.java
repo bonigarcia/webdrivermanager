@@ -44,6 +44,7 @@ import static javax.xml.xpath.XPathFactory.newInstance;
 import static org.apache.commons.io.FileUtils.cleanDirectory;
 import static org.apache.commons.io.FilenameUtils.removeExtension;
 import static org.apache.commons.lang.StringUtils.isNumeric;
+import static org.apache.commons.lang.SystemUtils.IS_OS_LINUX;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.BufferedReader;
@@ -1565,7 +1566,7 @@ public abstract class WebDriverManager {
             if (args.length > 1) {
                 wdm.driverVersion(args[1]);
             }
-            if (wdm.getDockerService().isRunningInsideDocker()) {
+            if (IS_OS_LINUX && wdm.getDockerService().isRunningInsideDocker()) {
                 wdm.avoidBrowserDetection();
             }
             wdm.avoidOutputTree().setup();
