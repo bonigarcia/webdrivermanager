@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm.test.create;
 
+//tag::snippet-in-doc[]
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.AfterEach;
@@ -32,7 +33,7 @@ class ChromeRemoteTest {
     WebDriver driver;
 
     @BeforeAll
-    static void setup() {
+    static void setupClass() {
         // Resolve driver for Selenium Grid
         WebDriverManager.chromedriver().setup();
 
@@ -55,12 +56,9 @@ class ChromeRemoteTest {
 
     @Test
     void test() {
-        // Exercise
         driver.get("https://bonigarcia.org/webdrivermanager/");
-        String title = driver.getTitle();
-
-        // Verify
-        assertThat(title).contains("WebDriverManager");
+        assertThat(driver.getTitle()).contains("WebDriverManager");
     }
 
 }
+//end::snippet-in-doc[]
