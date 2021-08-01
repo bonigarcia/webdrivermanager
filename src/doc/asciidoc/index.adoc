@@ -229,7 +229,7 @@ In addition to as a regular Java dependency, WebDriverManager can be used in oth
 === WebDriverManager CLI
 WebDriverManager can be used interactively from the Command Line Interface (CLI), i.e., the shell. There are three different ways to use WebDriverManager as a CLI tool:
 
-1. Using the WebDriverManager _fat-JAR_ (i.e., WebDriverManager with all its dependencies in a single executable JAR file). This JAR file is released on GitHub with every new version of WebDriverManager. You can download the latest version from https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-5.0.0/webdrivermanager-5.0.0-fat.jar[here]. Once you get this file, you  need to use the following command in the shell (where `<args>` are the accepted arguments, explained below):
+1. Using the WebDriverManager _fat-JAR_ (i.e., WebDriverManager with all its dependencies in a single executable JAR file). This JAR file is generated from the source using the Maven command `mvn compile assembly:single`, and it is released on GitHub with every new version of WebDriverManager. You can download the latest of this fat-JAR from https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-5.0.0/webdrivermanager-5.0.0-fat.jar[here]. Once you get this file, you  need to use the following command in the shell (where `<args>` are the accepted arguments, explained below):
 +
 [source,shell]
 ----
@@ -352,7 +352,7 @@ The WebDriverManager Server is based on HTTP and offers two types of services. F
 * http://localhost:4444/operadriver[http://localhost:4444/operadriver]: To resolve geckodriver.
 * http://localhost:4444/iedriver[http://localhost:4444/iedriver]: To resolve geckodriver.
 
-Second, the WebDriverManager Server acts as a regular Selenium Server (i.e., a _hub_ in the classical https://www.selenium.dev/documentation/en/grid/[Selenium Grid] architecture). This feature can be used to create remote `WebDriver` instances using the WebDriverManager Server (even for different language bindings than Java). The following example shows a Node.js test using Selenium WebDriver and WebDriverManager Server (notice that by default, the WebDriverManager Server URL does not require any path, i.e., http://localhost:4444/[http://localhost:4444/]):
+Second, the WebDriverManager Server acts as a regular Selenium Server (i.e., a _hub_ in the classical Selenium Grid). This feature can be used to create remote `WebDriver` instances using the WebDriverManager Server (even for different language bindings than Java). The following example shows a Node.js test using Selenium WebDriver and WebDriverManager Server (notice that by default, the WebDriverManager Server URL does not require any path, i.e., http://localhost:4444/[http://localhost:4444/]):
 
 [source,javascript]
 ----
@@ -452,6 +452,62 @@ class ChromeJupiterTest {
 ----
 
 Selenium-Jupiter provides more different features, such as seamless integration with Docker, test templates (for cross-browser testing), conditional test execution (depending on the availability of browsers), conditional screenshots and recordings (when tests fail), and more. For further details, read the https://bonigarcia.org/selenium-jupiter/[Selenium-Jupiter documentation].
+
+=== Selenium Grid
+https://www.selenium.dev/documentation/en/grid/[Selenium Grid] is an infrastructure that allows serving remote browsers to be used in Selenium WebDriver tests. The nodes in which the browsers are executed in Selenium Grid also require managing the required drivers (chromedriver, geckodriver, etc.). To manage these drivers, as usual, we can use WebDriverManager.
+
+For example, this https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/create/ChromeRemoteTest.java[test] shows how to start a Selenium Grid in standalone mode, resolving the driver with WebDriverManager and registering a Chrome browser in the Selenium Server. In addition, if we start Selenium Grid from the shell, we can complement it with WebDriverManager CLI to resolve the required drivers, as follows:
+
+[source,shell]
+----
+$ java -jar webdrivermanager-5.0.0-fat.jar resolveDriverFor=chrome
+[INFO] Using WebDriverManager to resolve chrome
+[DEBUG] The driver version for CHROME is unknown ... trying with latest
+[DEBUG] Latest version of chromedriver according to https://chromedriver.storage.googleapis.com/LATEST_RELEASE is 92.0.4515.107
+[INFO] Reading https://chromedriver.storage.googleapis.com/ to seek chromedriver
+[DEBUG] Driver to be downloaded chromedriver 92.0.4515.107
+[INFO] Downloading https://chromedriver.storage.googleapis.com/92.0.4515.107/chromedriver_win32.zip
+[INFO] Extracting driver from compressed file chromedriver_linux64.zip
+[INFO] Driver location: /home/boni/chromedriver
+
+$ java -jar selenium-server-4.0.0.jar standalone
+19:30:13.856 INFO [LoggingOptions.configureLogEncoding] - Using the system default encoding
+19:30:13.861 INFO [OpenTelemetryTracer.createTracer] - Using OpenTelemetry for tracing
+19:30:16.544 INFO [NodeOptions.getSessionFactories] - Detected 8 available processors
+19:30:16.574 INFO [NodeOptions.discoverDrivers] - Discovered 1 driver(s)
+19:30:16.585 INFO [NodeOptions.report] - Adding Chrome for {"browserName": "chrome","platformName": "LINUX64"} 8 times
+19:30:16.895 INFO [Node.<init>] - Binding additional locator mechanisms: id, name
+19:30:16.909 INFO [LocalDistributor.add] - Added node 28984501-8745-45de-8f47-71e70358a66d at http://172.18.112.1:4444.
+19:30:16.913 INFO [GridModel.setAvailability] - Switching node 28984501-8745-45de-8f47-71e70358a66d (uri: http://172.18.112.1:4444) from DOWN to UP
+19:30:18.156 INFO [Standalone.execute] - Started Selenium Standalone 4.0.0-beta-4 (revision 29f46d02dd): http://172.18.112.1:4444
+----
+
+=== Appium
+https://appium.io/[Appium] is a test automation framework for mobile applications. In the same way that Selenium WebDriver, Appium also speaks the W3C WebDriver protocol to drive web browsers on mobile devices. For this reason, the required driver must be present to control mobile browsers with Appium.
+
+Again, WebDriverManager can help in this task. The following snippet shows a Java method that creates a `WebDriver` object using the driver path for Chrome browser in an Android device:
+
+[source,java]
+----
+    public WebDriver createChromeAndroidDriver(String browserVersion,
+            String deviceName, URL appiumServerUrl) {
+        // Resolve driver and get its path
+        WebDriverManager wdm = WebDriverManager.chromedriver()
+                .browserVersion(browserVersion);
+        wdm.setup();
+        String chromedriverPath = wdm.getDownloadedDriverPath();
+
+        // Create WebDriver instance using the driver path
+        DesiredCapabilities capabilities = new DesiredCapabilities();
+        capabilities.setCapability("browserName", "chrome");
+        capabilities.setCapability("version", browserVersion);
+        capabilities.setCapability("deviceName", deviceName);
+        capabilities.setCapability("platformName", "android");
+        capabilities.setCapability("chromedriverExecutable", chromedriverPath);
+
+        return new AndroidDriver<WebElement>(appiumServerUrl, capabilities);
+    }
+----
 
 == Examples
 The following repositories contain different examples using WebDriverManager:
