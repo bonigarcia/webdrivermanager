@@ -33,12 +33,6 @@ import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-/**
- * Test with Firefox browser.
- *
- * @author Boni Garcia
- * @since 1.5.0
- */
 class FirefoxTest {
 
     final Logger log = getLogger(lookup().lookupClass());
