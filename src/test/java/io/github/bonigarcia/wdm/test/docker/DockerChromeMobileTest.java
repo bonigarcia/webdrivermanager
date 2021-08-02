@@ -29,7 +29,7 @@ import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-@Disabled("Hardware server or virtual machine with nested virtualization support is required to run Chrome Mobile images")
+@Disabled("Hardware virtualization (hypervisor) or a VM with nested virtualization are required")
 class DockerChromeMobileTest {
 
     final Logger log = getLogger(lookup().lookupClass());

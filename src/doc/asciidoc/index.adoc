@@ -159,13 +159,13 @@ include::../../test/java/io/github/bonigarcia/wdm/test/docker/DockerChromeTest.j
 
 NOTE: When using browsers in Docker containers, the call to the method `quit()` of the WebDriverManager API allows the disposal of the browser container(s).
 
-The used Docker images by WebDriverManager have been created and maintained by https://aerokube.com/images/latest/[Aerokube]. Therefore, the available browsers to be executed as Docker containers in WebDriverManager are Chrome (like the previous example), https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerFirefoxTest.java[Firefox], https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerEdgeTest.java[Edge], https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerOperaTest.java[Opera], and https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerSafariTest.java[Safari].
+The used Docker images by Selenium-Jupiter have been created and maintained by https://aerokube.com/selenoid/[Aerokube] (you can check the available versions on the https://aerokube.com/images/latest/[browser images] page). Therefore, the available browsers to be executed as Docker containers in WebDriverManager are Chrome (like the previous example), https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerFirefoxTest.java[Firefox], https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerEdgeTest.java[Edge], https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerOperaTest.java[Opera], and https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerSafariTest.java[Safari].
 
 NOTE: The case of Safari is particular since a real Safari browser can only be executed under a Mac OS machine. This way, the _Safari_ Docker containers use the https://webkit.org/[WebKit engine]. This engine is the same used in browser containers, and therefore, from a functional point of view, both browsers (a real Safari and this Docker image) should behave in the same way.
 
 In addition to these browsers, there is one more alternative: Chrome Mobile (i.e., Chrome on an Android device). To use this browser, you need to invoke the method `browserInDockerAndroid()` of a Chrome manager, just like in this https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerChromeMobileTest.java[example]. 
 
-WARNING: Notice that a hardware server or virtual machine with nested virtualization support is required to run Chrome Mobile images.
+WARNING: Notice you will need hardware virtualization (hypervisor) or a virtual machine with nested virtualization support to run Chrome Mobile images.
 
 ==== Browser Versions
 A significant aspect of the browser containers presented so far is that WebDriverManager connects to Docker Hub to discover the latest available release when the browser version is not specified (like the examples explained before). This way, the _dockerized_ browsers of tests handled by WebDriverManager are auto-maintained, in the sense that these tests use the latest version available without any additional effort.
@@ -516,13 +516,13 @@ Again, WebDriverManager can help in this task. The following snippet shows a Jav
 ----
 
 == Examples
-The following repositories contain different examples using WebDriverManager:
+All the examples presented in this documentation are available in the https://github.com/bonigarcia/webdrivermanager/tree/master/src/test/java/io/github/bonigarcia/wdm/test/[WebDriverManager tests]. Moreover, different public repositories contain test examples using WebDriverManager, such as:
 
 * https://github.com/bonigarcia/webdrivermanager-basic[WebDriverManager Basic]: A simple project using JUnit 5, Selenium WebDriver, and WebDriverManager.
 * https://github.com/bonigarcia/webdrivermanager-examples[WebDriverManager Examples]: Different examples with JUnit 5, Selenium WebDriver, and WebDriverManager.
 * https://github.com/bonigarcia/webdrivermanager-spring-boot[WebDriverManager Spring-Boot]: Another simple project using Spring-Boot, JUnit 5, Selenium WebDriver, and WebDriverManager.
 * https://github.com/bonigarcia/wdm-agent-example[WebDriverManager Agent Example]: Maven project using WebDriverManager as Agent.
-* https://github.com/bonigarcia/selenium-jupiter-examples[Selenium-Jupiter Examples]: Examples using JUnit 5 and <<selenium-jupiter,Selenium-Jupiter>>.
+* https://github.com/bonigarcia/selenium-webdriver-java[Selenium WebDriver with Java]: A comprehensive collection of Selenium WebDriver 4 examples using Java as language binding.
 
 == Advanced Configuration
 WebDriverManager provides different ways of configuration. First, by using its _Java API_. To that aim, each manager (e.g., `chromedriver()`, `firefoxdriver()`, etc., allows to concatenate different methods of this API to specify custom options or preferences. For example (the explanation of these methods and the other possibilities are explained in the tables at the end of this section):
@@ -537,7 +537,7 @@ WebDriverManager.edgedriver().mac().setup();
 
 NOTE: In addition to the methods presented in this section, each manager provides a method called `config()` that allows configuring all the possible parameters of WebDriverManager. In addition, WebDriverManager provides the metho `reset()` to restore to the default values the parameters of a given manager.
 
-The second alternative to tune WebDriverManager is using _Java system properties_.  In this method, each WebDriverManager API method has its equivalence of one of a unique _configuration key_. For instance, the API method `cachePath()` (used to specify the driver cache folder) is equivalent to the configuration key `wdm.cachePath`. These types of configuration keys can be passed when executing the tests, for example, using Maven:
+The second alternative to tune WebDriverManager is using _Java system properties_.  In this method, each WebDriverManager API method has its equivalence of a unique _configuration key_. For instance, the API method `cachePath()` (used to specify the driver cache folder) is equivalent to the configuration key `wdm.cachePath`. These types of configuration keys can be passed when executing the tests, for example, using Maven:
 
 [source,shell]
 ----
