@@ -29,7 +29,9 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -105,8 +107,16 @@ public class WdmServer {
         app.get(path + SESSION + "/*", handler);
         app.delete(path + SESSION + "/*", handler);
 
-        log.info("WebDriverManager server listening on http://127.0.0.1:{}{}",
-                port, path);
+        String localHostAddress;
+        try {
+            localHostAddress = InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            localHostAddress = InetAddress.getLoopbackAddress()
+                    .getHostAddress();
+        }
+
+        log.info("WebDriverManager Server listening on http://{}:{}{}",
+                localHostAddress, port, path);
     }
 
     private void handleRequest(Context ctx) throws IOException {
