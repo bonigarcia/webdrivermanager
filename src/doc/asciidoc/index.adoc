@@ -98,7 +98,7 @@ WebDriverManager provides a _generic manager_, i.e., a manager that can be param
 * `getInstance(String browserName)`: Where `browserName` is the usual browser name as `String` (i.e., `"Chrome"`, `"Firefox"`, `"Edge"`, `"Opera"`, `"Chromium"`, or `"IExplorer"`).
 * `getInstance()`: If no parameter is specified, the configuration key `wdm.defaultBrowser` is used to select the manager (Chrome by default). See the <<advanced-configuration,advanced configuration>> section for further information about the configuration capabilities of WebDriverManager.
 
-The following example shows a https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests[JUnit 5 parameterized test] in which the test is repeated twice (using the classes `ChromeDriver.class` and `FirefoxDriver.class` as test parameters). As you can see, WebDriverManager uses this parameter to instantiate the proper manager and create the `WebDriver` instance (see <<webDriver-builder,WebDriver Builder>> section for more information about this feature).
+The following example shows a https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests[JUnit 5 parameterized test] in which the test is repeated twice (using the classes `ChromeDriver.class` and `FirefoxDriver.class` as test parameters). As you can see, WebDriverManager uses this parameter to instantiate the proper manager and create the `WebDriver` instance (see <<webdriver-builder,WebDriver Builder>> section for more information about this feature).
 
 [source,java]
 ----
@@ -203,7 +203,7 @@ include::../../test/java/io/github/bonigarcia/wdm/test/docker/DockerChromeVncTes
 image::wdm-vnc.png[scaledwidth=100%]
 
 ==== Recordings
-The following related feature is the recording of the remote session of a dockerized browser. To enable it, we need to invoke the method `enableRecording()` in WebDriverManager. Internally, WebDriverManager starts another Docker container using https://ffmpeg.org/[FFmpeg] to record the browser session. At the end of the test, we can find the recording in MP4, by default, in the same folder of the project root. The following example shows a simple using this feature.
+The following related feature is the recording of the remote session of a dockerized browser. To enable it, we need to invoke the method `enableRecording()` in WebDriverManager. Internally, WebDriverManager starts another Docker container using https://ffmpeg.org/[FFmpeg] to record the browser session. At the end of the test, we can find the recording in MP4 (by default, with a filename composed by the browser name followed by the symbol `_` and the session id) located in the project root folder (you can change this behavior using <<advanced-configuration, configuration capabilities>>. The following test shows an example of this feature.
 
 [source,java]
 ----
@@ -622,8 +622,8 @@ HTTP proxy. It can be also configured using the environment variable  `HTTPS_PRO
 |`enableRecording()`|`wdm.dockerEnableRecording=true`|`false`|Enable the <<recordings,recordings>> of the browser session in Docker
 |`dockerScreenResolution(String)`|`wdm.dockerScreenResolution`|`1280x1080x24`|Screen resolution of the browser desktop session in format `<width>x<height>x<colors-depth>`
 |`dockerRecordingFrameRate(int)`|`wdm.dockerRecordingFrameRate`|`12`|Frame rate for recordings
-|`dockerRecordingOutput(String)` `dockerRecordingOutput(Path)`|`wdm.dockerRecordingOutput`|`.`|Path for the recording output
-|`dockerRecordingPrefix(String)`|`wdm.dockerRecordingPrefix`|Browser name|Prefix to be appended to the session id (in the recording filename)
+|`dockerRecordingOutput(String)` `dockerRecordingOutput(Path)`|`wdm.dockerRecordingOutput`|`.`|Path for the recording output. This value can be a folder or complete path (if it ends with `.mp4`)
+|`dockerRecordingPrefix(String)`|`wdm.dockerRecordingPrefix`|Browser name|Prefix to be appended to default filname (i.e., broser name plus `_` plus session id)
 |`dockerCustomImage(String)`|`wdm.dockerCustomImage`|`""`|Custom image to be used as browser in Docker
 | `dockerVolume(String)` `dockerVolumes(String[])`|`wdm.dockerVolumes`|`""`|Docker volumes (single or array) using the format `"\local\path:\container\path"`
 |=======
