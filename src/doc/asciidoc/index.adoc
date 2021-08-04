@@ -53,10 +53,10 @@ dependencies {
 }
 
 == Features
-WebDriverManager provides a fluent API available using the class `WebDriverManager` (package `io.github.bonigarcia.wdm`). This class provides a group of static methods that allow creating _managers_, i.e., objects devoted to providing automated driver management and other features.
+WebDriverManager provides a fluent API available using the class `WebDriverManager` (package `io.github.bonigarcia.wdm`). This class provides a group of static methods to create _managers_, i.e., objects devoted to providing automated driver management and other features.
 
 === Driver Management
-The primary use of WebDriverManager is the automation of driver management. For using this feature, you need to select a given manager in the WebDriverMager API (e.g., `chromedriver()` for Chrome) and invoke the method `setup()`. The following example shows a test case using https://junit.org/junit5/[JUnit 5], Selenium WebDriver, WebDriverManager, and https://joel-costigliola.github.io/assertj/[AssertJ] (for fluent assertions). In this test, we invoke WebDriverManager in the setup method for all tests (`@BeforeAll`). This way, the required driver (chromedriver in this case) will be available for all the WebDriver tests using Chrome in this class.
+The primary use of WebDriverManager is the automation of driver management. For using this feature, you need to select a given manager in the WebDriverMager API (e.g., `chromedriver()` for Chrome) and invoke the method `setup()`. The following example shows a test case using https://junit.org/junit5/[JUnit 5], Selenium WebDriver, WebDriverManager, and https://joel-costigliola.github.io/assertj/[AssertJ] (for fluent assertions). In this test, we invoke WebDriverManager in the setup method for all tests (`@BeforeAll`). This way, the required driver (chromedriver) will be available for all the WebDriver tests using Chrome in this class.
 
 [source,java]
 ----
@@ -80,7 +80,7 @@ As of version 5, WebDriverManager also provides a manager for Safari (called `sa
 TIP: Although not mandatory, it is highly recommended to use a logger library to trace your application and tests. In the case of WebDriverManager, you will see the relevant steps of the driver management following its traces. See for example the following https://www.stubbornjava.com/posts/logging-in-java-with-slf4j-and-logback)[tutorial] to use http://www.slf4j.org/[SLF4J ] and http://logback.qos.ch/[Logback]. Also, you can see an example of a WebDriverManager test using logging https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/firefox/FirefoxTest.java[here] (this example uses this https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/logback.xml[configuration file]).
 
 ==== Resolution Algorithm
-WebDriverManager executes a _resolution algorithm_ when calling to `setup()` in a given manager. You can find all the internal details of this algorithm in the paper https://link.springer.com/article/10.1007/s10664-021-09975-3[Automated driver management for Selenium WebDriver], published in the Springer Journal of Empirical Software Engineering in 2021. The most relevant parts of this algorithm are the following:
+WebDriverManager executes a _resolution algorithm_ when calling to `setup()` in a given manager. You can find all its internal details in the paper https://link.springer.com/article/10.1007/s10664-021-09975-3[Automated driver management for Selenium WebDriver], published in the Springer Journal of Empirical Software Engineering in 2021. The most relevant parts of this algorithm are the following:
 
 1. WebDriverManager tries to find the browser version. To this aim, WebDriverManager uses internally a knowledge database called https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/commands.properties[commands database]. This database is a collection of shell commands used to discover the version of a given browser in the different operating systems (e.g., `google-chrome --version` for Chrome in Linux).
 2. Using the browser version, it tries to find the proper driver version.
@@ -98,7 +98,7 @@ WebDriverManager provides a _generic manager_, i.e., a manager that can be param
 * `getInstance(String browserName)`: Where `browserName` is the usual browser name as `String` (i.e., `"Chrome"`, `"Firefox"`, `"Edge"`, `"Opera"`, `"Chromium"`, or `"IExplorer"`).
 * `getInstance()`: If no parameter is specified, the configuration key `wdm.defaultBrowser` is used to select the manager (Chrome by default). See the <<advanced-configuration,advanced configuration>> section for further information about the configuration capabilities of WebDriverManager.
 
-The following example shows a https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests[JUnit 5 parameterized test] in which the test is repeated twice (using the classes `ChromeDriver.class` and `FirefoxDriver.class` as test parameters). As you can see, WebDriverManager instantiates the proper manager using this parameter.
+The following example shows a https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests[JUnit 5 parameterized test] in which the test is repeated twice (using the classes `ChromeDriver.class` and `FirefoxDriver.class` as test parameters). As you can see, WebDriverManager uses this parameter to instantiate the proper manager and create the `WebDriver` instance (see <<webDriver-builder,WebDriver Builder>> section for more information about this feature).
 
 [source,java]
 ----
@@ -110,13 +110,13 @@ The driver management provided by WebDriverManager can be tuned in many differen
 
 * `getDownloadedDriverPath()`: Used to find out the path of the resolved driver in the current instance of WebDriverManager.
 * `getDownloadedDriverVersion()`: Use to find out the version of the driver resolved in the current instance of WebDriverManager.
-* `getDriverVersions()`: Used to find out the list of available driver versions in a given manager.
+* `getDriverVersions()`: Used to find the list of available driver versions in a given manager.
 * `getDriverManagerType()`: Used to get the driver manager type (and `enum`) of a given manager.
 
 WARNING: Each manager was a singleton object in older WebDriverManager releases (e.g., 4.x), while in version 5, a  new manager instance is created each time. Therefore, the usage of `getDownloadedDriverPath()` and `getDownloadedDriverVersion()` can be different in WebDriverManager 5 (i.e., these methods need to be invoked using a WebDriverManager instance previously created). 
 
 === Browser Finder
-As of version 5, WebDriverManager allows detecting if a given browser is installed or not in the local system. To this aim, each manager provides the method `getBrowserPath()`. This method returns an `Optional<Path>`, which is empty if a given browser is not installed in the system, or the browser path (within the optional object) if it is detected. 
+As of version 5, WebDriverManager allows detecting if a given browser is installed or not in the local system. To this aim, each manager provides the method `getBrowserPath()`. This method returns an `Optional<Path>`, which is empty if a given browser is not installed in the system or the browser path (within the optional object) when detected. 
 
 The following example shows an example using this feature.
 In this test, the optional browser path is used to disable conditionally (i.e., skip) the test using an https://assertj.github.io/doc/#assertj-core-assumptions[AssertJ assumption] (although other built-in assumptions available in JUnit 5 or other unit testing frameworks are also possible). All in all, this test should be executed in a Mac OS system (which should have Safari out of the box), but it should be skipped in any other operating system.
@@ -129,7 +129,7 @@ include::../../test/java/io/github/bonigarcia/wdm/test/safari/SafariTest.java[ta
 NOTE: Internally, WebDriverManager uses the content of the https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/commands.properties[commands database] to detect the possible browser paths in different operating systems.
 
 === WebDriver Builder
-As of version 5, WebDriverManager allows instantiating `WebDriver` objects (e.g. `ChromeDriver`, `FirefoxDriver`, etc.) using the WebDriverManager API. This feature is available using the method `create()` of each manager. The following example shows a test using this feature. Notice that the WebDriverManager call to the `setup()` method is not required when using this feature since the driver management is done internally by WebDriverManager. To complement this feature, WebDriverManager provides the method `quit()` to close the created `WebDriver` instances gracefully.
+As of version 5, WebDriverManager allows instantiating `WebDriver` objects (e.g. `ChromeDriver`, `FirefoxDriver`, etc.) using the WebDriverManager API. This feature is available using the method `create()` of each manager. The following example shows a test using this feature. Notice that the WebDriverManager call to the `setup()` method is not required when using this feature since the driver management is done internally by WebDriverManager. WebDriverManager provides the method `quit()` to close the created `WebDriver` instances gracefully to complement this feature.
 
 [source,java]
 ----
@@ -170,7 +170,7 @@ WARNING: Notice you will need hardware virtualization (hypervisor) or a virtual 
 ==== Browser Versions
 A significant aspect of the browser containers presented so far is that WebDriverManager connects to Docker Hub to discover the latest available release when the browser version is not specified (like the examples explained before). This way, the _dockerized_ browsers of tests handled by WebDriverManager are auto-maintained, in the sense that these tests use the latest version available without any additional effort.
 
-Nevertheless, we can force to use a given browser version in Docker using the method `browserVersion()` of the WebDriverManager API. This method accepts a `String` parameter specifying the version. This version can be fixed (e.g., `91.0`), and it also accepts the following wildcards:
+Nevertheless, we can force a given browser version in Docker using the method `browserVersion()` of the WebDriverManager API. This method accepts a `String` parameter specifying the version. This version can be fixed (e.g., `91.0`), and it also accepts the following wildcards:
 
 * `"latest"` : To specify the latest version explicitly (default option).
 * `"latest-N"` : Where `N` is an integer value to be subtracted from the current stable version. For example, if we specify `latest-1` (i.e., _latest version minus one_), the previous version to the stable release will be used (see an example https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerChromeVersionsTest.java[here]).
@@ -185,7 +185,7 @@ include::../../test/java/io/github/bonigarcia/wdm/test/docker/DockerChromeBetaTe
 ----
 
 ==== Remote Desktop
-A possible inconvenience of using browsers in Docker is that we cannot see what is happening inside the container by default. To improve this situation, WebDriverManager allows connecting to the remote desktop session of a browser simply invoking the method `enableVnc()` of a dockerized browser. When using this option, two different technologies are used internally:
+A possible inconvenience of using browsers in Docker is that we cannot see what is happening inside the container by default. To improve this situation, WebDriverManager allows connecting to the remote desktop session simply invoking the method `enableVnc()` of a dockerized browser. When using this option, two different technologies are used internally:
 
 * Virtual Network Computing (https://en.wikipedia.org/wiki/Virtual_Network_Computing[VNC]), a graphical desktop sharing system. In WebDriverManager, a VNC server is started in the browser container.
 * https://novnc.com/[noVNC], a open-source web-based VNC client. In WebDriverManager, a custom https://github.com/bonigarcia/novnc[noVNC Docker image] is used to connect through noVNC.
@@ -354,7 +354,7 @@ The WebDriverManager Server is based on HTTP and offers two types of services. F
 * http://localhost:4444/operadriver[http://localhost:4444/operadriver]: To resolve geckodriver.
 * http://localhost:4444/iedriver[http://localhost:4444/iedriver]: To resolve geckodriver.
 
-Second, the WebDriverManager Server acts as a regular Selenium Server (i.e., a _hub_ in the classical Selenium Grid). This feature can be used to create remote `WebDriver` instances using the WebDriverManager Server (even for different language bindings than Java). The following example shows a Node.js test using Selenium WebDriver and WebDriverManager Server (notice that by default, the WebDriverManager Server URL does not require any path, i.e., http://localhost:4444/[http://localhost:4444/]):
+Second, the WebDriverManager Server acts as a regular Selenium Server (i.e., a _hub_ in the classical Selenium Grid architecture). This feature can be used to create remote `WebDriver` instances using the WebDriverManager Server (even for different language bindings than Java). The following example shows a Node.js test using Selenium WebDriver and WebDriverManager Server (notice that by default, the WebDriverManager Server URL does not require any path, i.e., http://localhost:4444/[http://localhost:4444/]):
 
 [source,javascript]
 ----
@@ -429,7 +429,7 @@ class ChromeAgentTest {
 To configure the WebDriverManager Agent, we need to specify the path of the WebDriverManager https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-5.0.0/webdrivermanager-5.0.0-fat.jar[fat-JAR] using the JVM flag `-javaagent:/path/to/webdrivermanager-5.0.0-fat.jar`. Alternatively, it can be done using Maven (see a complete project example https://github.com/bonigarcia/wdm-agent-example/[here]).
 
 === Selenium-Jupiter
-WebDriverManager is the heart of the project https://github.com/bonigarcia/selenium-jupiter[Selenium-Jupiter], an open-source JUnit 5 extension for Selenium WebDriver. Selenium-Jupiter uses the programming and extension model provided by JUnit 5 (called https://junit.org/junit5/docs/current/user-guide/[Jupiter]) together with WebDriverManager to create tests with reduced boilerplate code. For instance, thanks to the Jupiter feature for parameter resolution, we can declare a type of the `WebDriver` hierarchy (e.g., `ChromeDriver`) as a test parameter. Internally, Selenium-Jupiter resolves its driver and creates the instance before tests, and then, the browser is gracefully closed at the end of the test. For example:
+WebDriverManager is the heart of the project https://github.com/bonigarcia/selenium-jupiter[Selenium-Jupiter], an open-source JUnit 5 extension for Selenium WebDriver. Selenium-Jupiter uses the programming and extension model provided by JUnit 5 (named https://junit.org/junit5/docs/current/user-guide/[Jupiter]) together with WebDriverManager to create tests with reduced boilerplate code. For instance, thanks to the Jupiter feature for parameter resolution, we can declare a type of the `WebDriver` hierarchy (e.g., `ChromeDriver`) as a test parameter. Internally, Selenium-Jupiter resolves its driver and creates the instance before tests, and then, the browser is gracefully closed at the end of the test. For example:
 
 [source,java]
 ----
@@ -535,7 +535,7 @@ WebDriverManager.operadriver().proxy("server:port").setup();
 WebDriverManager.edgedriver().mac().setup();
 ----
 
-NOTE: In addition to the methods presented in this section, each manager provides a method called `config()` that allows configuring all the possible parameters of WebDriverManager. In addition, WebDriverManager provides the metho `reset()` to restore to the default values the parameters of a given manager.
+NOTE: In addition to the methods presented in this section, each manager provides a `config()` method that allows configuring all the possible parameters of WebDriverManager. In addition, WebDriverManager provides the metho `reset()` to restore to the default values the parameters of a given manager.
 
 The second alternative to tune WebDriverManager is using _Java system properties_.  In this method, each WebDriverManager API method has its equivalence of a unique _configuration key_. For instance, the API method `cachePath()` (used to specify the driver cache folder) is equivalent to the configuration key `wdm.cachePath`. These types of configuration keys can be passed when executing the tests, for example, using Maven:
 
@@ -678,7 +678,7 @@ When the host is Mac OS or Windows, we can use the DNS name `host.docker.interna
 
 [discrete]
 ==== Chrome 92+ in Docker
-There is an https://bugs.chromium.org/p/chromedriver/issues/detail?id=3857[open issue] with Chrome 92+ and Docker at the time of this writing. The problem can be solved to some extent by using the argument `--disable-gpu` in Chrome and Edge. This argument is used by WebDriverManager 5 to avoid the issue. Nevertheless, some situations are still impossible to fix (e.g., when using https://hub.docker.com/r/bonigarcia/webdrivermanager[WebDriverManager in Docker] as CLI or Server).
+There is an https://bugs.chromium.org/p/chromedriver/issues/detail?id=3857[open issue] with Chrome 92+ and Docker at the time of this writing. The problem can be solved by using the argument `--disable-gpu` in Chrome and Edge. This argument is used by WebDriverManager 5 to avoid the issue. Nevertheless, some situations are still impossible to fix (e.g., when using https://hub.docker.com/r/bonigarcia/webdrivermanager[WebDriverManager in Docker] as CLI or Server).
 
 == Community
 There are two ways to try to get community support related to WebDriverManager. First, questions about it can be discussed in https://stackoverflow.com/questions/tagged/webdrivermanager_java[StackOverflow], using the tag _webdrivermanager_java_. In addition, comments, suggestions, and bug-reporting should be made using the https://github.com/bonigarcia/webdrivermanager/issues[GitHub issues]. Finally, if you think WebDriverManager can be enhanced, consider contributing to the project through a  https://github.com/bonigarcia/webdrivermanager/pulls[pull request].
