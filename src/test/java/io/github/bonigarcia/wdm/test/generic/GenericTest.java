@@ -34,9 +34,7 @@ class GenericTest {
 
     @AfterEach
     void teardown() {
-        if (driver != null) {
-            driver.quit();
-        }
+        driver.quit();
     }
 
     @ParameterizedTest
