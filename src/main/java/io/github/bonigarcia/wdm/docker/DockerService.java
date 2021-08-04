@@ -659,12 +659,12 @@ public class DockerService {
             recordingPath = dockerRecordingPath;
         } else {
             String sessionId = browserContainer.getSessionId();
+            String recordingFileName = browserContainer.getBrowserName()
+                    + SEPARATOR + sessionId + RECORDING_EXT;
             String prefix = config.getDockerRecordingPrefix();
-            if (isNullOrEmpty(prefix)) {
-                prefix = browserContainer.getBrowserName();
+            if (!isNullOrEmpty(prefix)) {
+                recordingFileName = prefix + recordingFileName;
             }
-            String recordingFileName = prefix + SEPARATOR + sessionId
-                    + RECORDING_EXT;
             recordingPath = Paths.get(dockerRecordingPath.toString(),
                     recordingFileName);
         }
