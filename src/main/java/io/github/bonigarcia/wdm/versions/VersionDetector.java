@@ -87,7 +87,8 @@ public class VersionDetector {
         String onlineMessage = online ? ONLINE : LOCAL;
         log.debug("Getting driver version for {} from {} {}", key,
                 onlineMessage, propertiesName);
-        String value = getProperties(propertiesName, online).getProperty(key);
+        String value = getValueFromProperties(
+                getProperties(propertiesName, online), key);
         if (value == null) {
             String notOnlineMessage = online ? LOCAL : ONLINE;
             log.debug("Driver for {} not found in {} properties (using {} {})",
@@ -96,6 +97,12 @@ public class VersionDetector {
             value = getProperties(propertiesName, !online).getProperty(key);
         }
         return value == null ? empty() : Optional.of(value);
+    }
+
+    public String getValueFromProperties(Properties properties, String key) {
+        String keyWithOs = key + "." + config.getOperatingSystem().getName();
+        return Optional.ofNullable(properties.getProperty(keyWithOs))
+                .orElse(properties.getProperty(key));
     }
 
     public Optional<String> getDriverVersionFromRepository(

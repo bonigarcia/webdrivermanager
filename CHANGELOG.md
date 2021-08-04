@@ -15,6 +15,7 @@
 - Include API method arm64() to specify ARM64 architecture
 - Bypass notarization requirement for geckodriver on Mac OS
 - Include support for generic driver (using config key wdm.defaultBrowser)
+- Allow to specify different driver version per operating system in the versions database (needed for problem detected in geckodriver 0.29.1 in Mac, but required for Windows when using Firefox 90)
 
 ### Fixed
 - Register decompression for HTTP client (issue #677)
