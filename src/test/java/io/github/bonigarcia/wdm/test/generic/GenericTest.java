@@ -41,12 +41,9 @@ class GenericTest {
 
     @ParameterizedTest
     @ValueSource(classes = { ChromeDriver.class, FirefoxDriver.class })
-    void test(Class<? extends WebDriver> webDriverClass) throws Exception {
-        // Driver management
-        WebDriverManager.getInstance(webDriverClass).setup();
-
-        // Driver instantiation
-        driver = webDriverClass.getDeclaredConstructor().newInstance();
+    void test(Class<? extends WebDriver> webDriverClass) {
+        // Driver management and WebDriver instantiation
+        driver = WebDriverManager.getInstance(webDriverClass).create();
 
         // Exercise
         driver.get("https://bonigarcia.org/webdrivermanager/");
