@@ -85,6 +85,8 @@ import org.jsoup.Jsoup;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.remote.SessionId;
 import org.slf4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -761,8 +763,11 @@ public abstract class WebDriverManager {
         try {
             WebDriver driver = driverBrowser.getDriver();
             if (driver != null) {
-                log.debug("Quitting {}", driver);
-                driver.quit();
+                SessionId sessionId = ((RemoteWebDriver) driver).getSessionId();
+                if (sessionId != null) {
+                    log.debug("Quitting {}", driver);
+                    driver.quit();
+                }
             }
 
             List<DockerContainer> dockerContainerList = driverBrowser
