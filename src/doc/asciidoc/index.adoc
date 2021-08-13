@@ -371,7 +371,7 @@ async function wdmServerTest() {
         var driver = await new webdriver.Builder().usingServer(wdmServerUrl)
                 .withCapabilities(capabilities).build();
 
-        var sutUrl = "https://bonigarcia.org/webdrivermanager/";
+        var sutUrl = "https://bonigarcia.dev/selenium-webdriver-java/";
         await driver.get(sutUrl);
 
         await driver.getTitle().then(function(title) {
@@ -442,18 +442,18 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import io.github.bonigarcia.seljup.SeleniumJupiter;
 
 @ExtendWith(SeleniumJupiter.class)
-class ChromeJupiterTest {
+class ChromeTest {
 
     @Test
     void test(ChromeDriver driver) {
-        driver.get("https://bonigarcia.org/selenium-jupiter/");
-        assertThat(driver.getTitle()).contains("Selenium-Jupiter");
+        driver.get("https://bonigarcia.dev/selenium-webdriver-java/");
+        assertThat(driver.getTitle()).contains("Selenium WebDriver");
     }
 
 }
 ----
 
-Selenium-Jupiter provides more different features, such as seamless integration with Docker, test templates (for cross-browser testing), conditional test execution (depending on the availability of browsers), conditional screenshots and recordings (when tests fail), and more. For further details, read the https://bonigarcia.org/selenium-jupiter/[Selenium-Jupiter documentation].
+Selenium-Jupiter provides more different features, such as seamless integration with Docker, test templates (for cross-browser testing), conditional test execution (depending on the availability of browsers), conditional screenshots and recordings (when tests fail), and more. For further details, read the https://bonigarcia.dev/selenium-jupiter/[Selenium-Jupiter documentation].
 
 === Selenium Grid
 https://www.selenium.dev/documentation/en/grid/[Selenium Grid] is an infrastructure that allows serving remote browsers to be used in Selenium WebDriver tests. The nodes in which the browsers are executed in Selenium Grid also require managing the required drivers (chromedriver, geckodriver, etc.). To manage these drivers, as usual, we can use WebDriverManager.
@@ -717,4 +717,4 @@ Or the following book:
 * García, Boni. https://www.amazon.com/Mastering-Software-Testing-JUnit-Comprehensive-ebook/dp/B076ZQCK5Q/[Mastering Software Testing with JUnit 5]. _Packt Publishing Ltd_, 2017.
 
 == About
-WebDriverManager (Copyright © 2017-2021) is an open-source project created and maintained by https://bonigarcia.org/[Boni García] (https://twitter.com/boni_gg[@boni_gg]), licensed under the terms of https://www.apache.org/licenses/LICENSE-2.0[Apache 2.0 License]. This documentation (also available in link:webdrivermanager.pdf[PDF] and link:webdrivermanager.epub[EPUB]) is released under the terms of https://creativecommons.org/licenses/by-nc-sa/2.0/[CC BY-NC-SA 2.0].
+WebDriverManager (Copyright © 2017-2021) is an open-source project created and maintained by https://bonigarcia.dev/[Boni García] (https://twitter.com/boni_gg[@boni_gg]), licensed under the terms of https://www.apache.org/licenses/LICENSE-2.0[Apache 2.0 License]. This documentation (also available in link:webdrivermanager.pdf[PDF] and link:webdrivermanager.epub[EPUB]) is released under the terms of https://creativecommons.org/licenses/by-nc-sa/2.0/[CC BY-NC-SA 2.0].
