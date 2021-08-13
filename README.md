@@ -530,7 +530,7 @@ $ mvn test
 2020-05-12 15:38:49 [main] DEBUG i.g.bonigarcia.wdm.WebDriverManager.manage(520) -- Driver chromedriver 81.0.4044.138 found in cache
 2020-05-12 15:38:49 [main] INFO  i.g.bonigarcia.wdm.WebDriverManager.exportDriver(615) -- Exporting webdriver.chrome.driver as /home/boni/.cache/selenium/webdriver/chromedriver/linux64/81.0.4044.138/chromedriver
 Starting ChromeDriver 81.0.4044.138 (8c6c7ba89cc9453625af54f11fd83179e23450fa-refs/branch-heads/4044@{#999}) on port 31286
-2020-05-12 15:38:50 [main] DEBUG i.g.b.wdm.agent.test.ChromeTest.test(54) -- The title of https://bonigarcia.org/selenium-jupiter/ is Selenium-Jupiter: JUnit 5 extension for Selenium
+2020-05-12 15:38:50 [main] DEBUG i.g.b.wdm.agent.test.ChromeTest.test(54) -- The title of https://bonigarcia.github.io/selenium-jupiter/ is Selenium-Jupiter: JUnit 5 extension for Selenium
 [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.814 s - in io.github.bonigarcia.wdm.agent.test.ChromeTest
 [INFO] Running io.github.bonigarcia.wdm.agent.test.FirefoxTest
 2020-05-12 15:46:04 [main] DEBUG io.github.bonigarcia.wdm.WdmAgent.transform(86) -- WebDriverManager Agent is going to resolve the driver for Firefox
@@ -538,7 +538,7 @@ Starting ChromeDriver 81.0.4044.138 (8c6c7ba89cc9453625af54f11fd83179e23450fa-re
 2020-05-12 15:46:04 [main] INFO  i.g.bonigarcia.wdm.WebDriverManager.resolveDriverVersion(571) -- Using geckodriver 0.26.0 (since Firefox 76 is installed in your machine)
 2020-05-12 15:46:04 [main] DEBUG i.g.bonigarcia.wdm.WebDriverManager.manage(520) -- Driver geckodriver 0.26.0 found in cache
 2020-05-12 15:46:04 [main] INFO  i.g.bonigarcia.wdm.WebDriverManager.exportDriver(615) -- Exporting webdriver.gecko.driver as /home/boni/.cache/selenium/webdriver/geckodriver/linux64/0.26.0/geckodriver
-2020-05-12 15:46:07 [main] DEBUG i.g.b.wdm.agent.test.FirefoxTest.test(54) -- The title of https://bonigarcia.org/selenium-jupiter/ is Selenium-Jupiter: JUnit 5 extension for Selenium
+2020-05-12 15:46:07 [main] DEBUG i.g.b.wdm.agent.test.FirefoxTest.test(54) -- The title of https://bonigarcia.github.io/selenium-jupiter/ is Selenium-Jupiter: JUnit 5 extension for Selenium
 [INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.163 s - in io.github.bonigarcia.wdm.agent.test.FirefoxTest
 [INFO]
 [INFO] Results:

@@ -57,10 +57,11 @@ class DockerSeveralBrowsersDifferentVersionsTest {
 
     @Test
     void test() throws Exception {
-        exercise(driver1, "https://bonigarcia.org/webdrivermanager",
-                "WebDriverManager");
-        exercise(driver2, "https://bonigarcia.org/selenium-jupiter/",
-                "Selenium-Jupiter");
+        exercise(driver1, "https://bonigarcia.dev/selenium-webdriver-java/",
+                "Selenium WebDriver");
+        exercise(driver2,
+                "https://bonigarcia.dev/selenium-webdriver-java/slow-calculator.html",
+                "Selenium WebDriver");
 
         // Active wait for manual inspection
         Thread.sleep(Duration.ofSeconds(10).toMillis());

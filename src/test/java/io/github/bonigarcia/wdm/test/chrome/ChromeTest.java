@@ -50,11 +50,11 @@ class ChromeTest {
     @Test
     void test() {
         // Exercise
-        driver.get("https://bonigarcia.org/webdrivermanager/");
+        driver.get("https://bonigarcia.dev/selenium-webdriver-java/");
         String title = driver.getTitle();
 
         // Verify
-        assertThat(title).contains("WebDriverManager");
+        assertThat(title).contains("Selenium WebDriver");
     }
 
 }

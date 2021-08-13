@@ -43,7 +43,7 @@ class DockerOperaTest {
 
     @Test
     void test() {
-        driver.get("https://bonigarcia.org/webdrivermanager/");
-        assertThat(driver.getTitle()).contains("WebDriverManager");
+        driver.get("https://bonigarcia.dev/selenium-webdriver-java/");
+        assertThat(driver.getTitle()).contains("Selenium WebDriver");
     }
 }

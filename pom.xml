@@ -62,13 +62,13 @@
     <description>
 		Automated driver management and Docker builder for Selenium WebDriver
 	</description>
-    <url>https://bonigarcia.org/webdrivermanager/</url>
+    <url>https://bonigarcia.dev/webdrivermanager/</url>
 
     <developers>
         <developer>
             <id>bonigarcia</id>
             <name>Boni Garcia</name>
-            <url>https://bonigarcia.org/</url>
+            <url>https://bonigarcia.dev/</url>
         </developer>
     </developers>
 

@@ -58,13 +58,13 @@ class DockerCustomImageTest {
 
     @Test
     void test() throws Exception {
-        String sutUrl = "https://bonigarcia.org/webdrivermanager";
+        String sutUrl = "https://bonigarcia.dev/selenium-webdriver-java/";
         driver.get(sutUrl);
         String title = driver.getTitle();
         log.debug("The title of {} is {}", sutUrl, title);
         Wait<WebDriver> wait = new WebDriverWait(driver,
                 Duration.ofSeconds(30));
-        wait.until(d -> d.getTitle().contains("WebDriverManager"));
+        wait.until(d -> d.getTitle().contains("Selenium WebDriver"));
 
         URL dockerSessionUrl = wdm.getDockerNoVncUrl();
         HttpURLConnection huc = (HttpURLConnection) dockerSessionUrl

@@ -49,13 +49,13 @@ class DockerChromeRecordingTest {
 
     @Test
     void test() throws Exception {
-        driver.get("https://bonigarcia.org/webdrivermanager/");
-        assertThat(driver.getTitle()).contains("WebDriverManager");
+        driver.get("https://bonigarcia.dev/selenium-webdriver-java/");
+        assertThat(driver.getTitle()).contains("Selenium WebDriver");
 
         // Active wait to see the navigation in the recording
         Thread.sleep(Duration.ofSeconds(2).toMillis());
 
-        driver.findElement(By.partialLinkText("Browsers in Docker")).click();
+        driver.findElement(By.partialLinkText("form")).click();
 
         // Active wait to generate a longer recording
         Thread.sleep(Duration.ofSeconds(2).toMillis());

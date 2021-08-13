@@ -2,7 +2,7 @@
 
 ## [5.0.0] - 2021-08-01
 ### Added
-- New documentation: https://bonigarcia.org/webdrivermanager/ (sources: AsciiDoc, generated: HTML, PDF, EPUB)
+- New documentation: https://bonigarcia.dev/webdrivermanager/ (sources: AsciiDoc, generated: HTML, PDF, EPUB)
 - New high-level feature: browser finder (using the info of the commands database)
 - New high-level feature: WebDriver builder (using local/remote browsers)
 - New high-level feature: Browsers in Docker containers (using Aerokube images, with recording, VNC access, etc.)

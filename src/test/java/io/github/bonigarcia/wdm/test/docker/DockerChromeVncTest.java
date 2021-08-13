@@ -50,8 +50,8 @@ class DockerChromeVncTest {
 
     @Test
     void test() throws Exception {
-        driver.get("https://bonigarcia.org/webdrivermanager/");
-        assertThat(driver.getTitle()).contains("WebDriverManager");
+        driver.get("https://bonigarcia.dev/selenium-webdriver-java/");
+        assertThat(driver.getTitle()).contains("Selenium WebDriver");
 
         // Verify URL for remote session
         URL dockerSessionUrl = wdm.getDockerNoVncUrl();
