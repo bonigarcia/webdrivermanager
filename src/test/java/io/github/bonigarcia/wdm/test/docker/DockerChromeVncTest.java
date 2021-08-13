@@ -60,7 +60,7 @@ class DockerChromeVncTest {
         assertThat(huc.getResponseCode()).isEqualTo(HTTP_OK);
 
         // Active wait for manual inspection
-        Thread.sleep(Duration.ofSeconds(60).toMillis());
+        Thread.sleep(Duration.ofSeconds(30).toMillis());
     }
 
 }
