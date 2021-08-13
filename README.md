@@ -106,10 +106,10 @@ WebDriverManager is part of [OpenCollective], an online funding platform for ope
 <a href="https://opencollective.com/webdrivermanager/sponsor/1/website" target="_blank"><img src="https://opencollective.com/webdrivermanager/sponsor/1/avatar.svg"></a>
 
 ## About
-WebDriverManager (Copyright &copy; 2015-2021) is a project created and maintained by [Boni García] and licensed under the terms of the [Apache 2.0 License].
+WebDriverManager (Copyright &copy; 2015-2021) is a project created and maintained by [Boni Garcia] and licensed under the terms of the [Apache 2.0 License].
 
 [Logo]: https://bonigarcia.github.io/img/wdm.png
-[WebDriverManager]: https://bonigarcia.org/webdrivermanager/
+[WebDriverManager]: https://bonigarcia.dev/webdrivermanager/
 [Selenium WebDriver]: https://seleniumhq.github.io/docs/site/en/webdriver/
 [JUnit 5]: https://junit.org/junit5/
 [Docker]: https://www.docker.com/
@@ -120,5 +120,5 @@ WebDriverManager (Copyright &copy; 2015-2021) is a project created and maintaine
 [donation]: https://opencollective.com/webdrivermanager/donate
 [recurring contribution]: https://opencollective.com/webdrivermanager/contribute/backer-8132/checkout
 [sponsor]: https://opencollective.com/webdrivermanager/contribute/sponsor-8133/checkout
-[Boni García]: https://bonigarcia.org/
+[Boni Garcia]: https://bonigarcia.dev/
 [Apache 2.0 License]: https://www.apache.org/licenses/LICENSE-2.0
