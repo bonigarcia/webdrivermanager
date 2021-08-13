@@ -31,26 +31,30 @@ System.setProperty("webdriver.ie.driver", "C:/path/to/IEDriverServer.exe");
 
 .What is WebDriverManager?
 ****
-https://github.com/bonigarcia/webdrivermanager[WebDriverManager] is an open-source Java library that carries out the management (i.e., download, setup, and maintenance) of the drivers required by https://seleniumhq.github.io/docs/site/en/webdriver/[Selenium WebDriver] (e.g., chromedriver, geckodriver, msedgedriver, etc.) in a fully automated manner. In addition, as of version 5, WebDriverManager provides other relevant features, such as the capability to <<browser-finder,discover browsers>> installed in the local system, <<webdriver-builder,building WebDriver objects>> (such as `ChromeDriver`, `FirefoxDriver`, `EdgeDriver`, etc.), and running <<browsers-in-docker,browsers in Docker containers>> seamlessly.
+https://github.com/bonigarcia/webdrivermanager[WebDriverManager] is an open-source Java library that carries out the management (i.e., download, setup, and maintenance) of the drivers required by Selenium WebDriver (e.g., chromedriver, geckodriver, msedgedriver, etc.) in a fully automated manner. In addition, as of version 5, WebDriverManager provides other relevant features, such as the capability to <<browser-finder,discover browsers>> installed in the local system, <<webdriver-builder,building WebDriver objects>> (such as `ChromeDriver`, `FirefoxDriver`, `EdgeDriver`, etc.), and running <<browsers-in-docker,browsers in Docker containers>> seamlessly.
 ****
 
 == Setup
-WebDriverManager is primarily used as a Java dependency (although <<other-usages,other usages>> are also possible). We typically use a _build tool_ (such as https://maven.apache.org/[Maven] or https://gradle.org/[Gradle]) to resolve the WebDriverManager dependency. In Maven, it can be done as follows (notice that it is declared using the `test` scope, since it is typically used in tests clasess):
+WebDriverManager is primarily used as a Java dependency (although <<other-usages,other usages>> are also possible). We typically use a _build tool_ (such as https://maven.apache.org/[Maven] or https://gradle.org/[Gradle]) to resolve the WebDriverManager dependency. In Maven, it can be done as follows (notice that it is declared using the `test` scope, since it is typically used in tests classes):
 
-[source,xml]
+[source,xml,subs="attributes+"]
+----
 <dependency>
     <groupId>io.github.bonigarcia</groupId>
     <artifactId>webdrivermanager</artifactId>
-    <version>5.0.0</version>
+    <version>{project-version}</version>
     <scope>test</scope>
 </dependency>
+----
 
 In the case of a Gradle project, we can declare WebDriverManager as follows (again, for tests):
 
-[source,json]
+[source,json,subs="attributes+"]
+----
 dependencies {
-    testImplementation("io.github.bonigarcia:webdrivermanager:5.0.0")
+    testImplementation("io.github.bonigarcia:webdrivermanager:{project-version}")
 }
+----
 
 == Features
 WebDriverManager provides a fluent API available using the class `WebDriverManager` (package `io.github.bonigarcia.wdm`). This class provides a group of static methods to create _managers_, i.e., objects devoted to providing automated driver management and other features.
@@ -231,11 +235,11 @@ In addition to as a regular Java dependency, WebDriverManager can be used in oth
 === WebDriverManager CLI
 WebDriverManager can be used interactively from the Command Line Interface (CLI), i.e., the shell. There are three different ways to use WebDriverManager as a CLI tool:
 
-1. Using the WebDriverManager _fat-JAR_ (i.e., WebDriverManager with all its dependencies in a single executable JAR file). This JAR file is generated from the source using the Maven command `mvn compile assembly:single`, and it is released on GitHub with every new version of WebDriverManager. You can download the latest of this fat-JAR from https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-5.0.0/webdrivermanager-5.0.0-fat.jar[here]. Once you get this file, you  need to use the following command in the shell (where `<args>` are the accepted arguments, explained below):
+1. Using the WebDriverManager _fat-JAR_ (i.e., WebDriverManager with all its dependencies in a single executable JAR file). This JAR file is generated from the source using the Maven command `mvn compile assembly:single`, and it is released on GitHub with every new version of WebDriverManager. You can download the latest of this fat-JAR from https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-{project-version}/webdrivermanager-{project-version}-fat.jar[here]. Once you get this file, you  need to use the following command in the shell (where `<args>` are the accepted arguments, explained below):
 +
-[source,shell]
+[source,shell,subs="attributes+"]
 ----
-java -jar webdrivermanager-5.0.0-fat.jar <args>
+java -jar webdrivermanager-{project-version}-fat.jar <args>
 ----
 2. Using the source code. WebDriverManager is hosted on https://github.com/bonigarcia/webdrivermanager[GitHub]. We can use Maven to manage its Java source code. For example, to run the CLI mode using Maven and the source code, we need to invoke the following Maven command in the shell from the project root:
 +
@@ -245,9 +249,9 @@ mvn exec:java -Dexec.args="<args>"
 ----
 3. Using the WebDriverManager Docker container. Each new release of WebDriverManager is pushed to https://hub.docker.com/r/bonigarcia/webdrivermanager[Docker Hub] as a container based on https://hub.docker.com/_/openjdk[OpenJDK] plus the WebDriverManager fat-JAR. The default command to run the WebDriverManager Docker container is described below.        
 +
-[source,shell]
+[source,shell,subs="attributes+"]
 ----
-docker run --rm -e ARGS="<args>" bonigarcia/webdrivermanager:5.0.0
+docker run --rm -e ARGS="<args>" bonigarcia/webdrivermanager:{project-version}
 ----
 
 WebDriverManager CLI can be used for three different purposes. We can see these options launching the CLI with empty or invalid arguments (`<args>` in the commands before). In this case, the output of WebDriverManager CLI is the following:
@@ -274,9 +278,9 @@ WebDriverManager CLI can be used to resolve drivers (e.g., chromedriver, geckodr
 
 * Fat-JAR:
 
-[source,shell]
+[source,shell,subs="attributes+"]
 ----
-java -jar webdrivermanager-5.0.0-fat.jar resolveDriverFor chrome
+java -jar webdrivermanager-{project-version}-fat.jar resolveDriverFor chrome
 ----
 
 * Source code:
@@ -288,9 +292,9 @@ mvn exec:java -Dexec.args="resolveDriverFor chrome"
 
 * Docker container:
 
-[source,shell]
+[source,shell,subs="attributes+"]
 ----
-docker run --rm -v ${PWD}:/wdm -e ARGS="resolveDriverFor chrome" bonigarcia/webdrivermanager:5.0.0
+docker run --rm -v ${PWD}:/wdm -e ARGS="resolveDriverFor chrome" bonigarcia/webdrivermanager:{project-version}
 ----
 
 [discrete]
@@ -299,9 +303,9 @@ WebDriverManager CLI can be used to execute browsers in Docker containers and in
 
 * Fat-JAR:
 
-[source,shell]
+[source,shell,subs="attributes+"]
 ----
-java -jar webdrivermanager-5.0.0-fat.jar runInDocker chrome
+java -jar webdrivermanager-{project-version}-fat.jar runInDocker chrome
 ----
 
 * Source code:
@@ -313,9 +317,9 @@ mvn exec:java -Dexec.args="runInDocker chrome"
 
 * Docker container:
 
-[source,shell]
+[source,shell,subs="attributes+"]
 ----
-docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -e ARGS="runInDocker chrome 91" bonigarcia/webdrivermanager:5.0.0
+docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -e ARGS="runInDocker chrome 91" bonigarcia/webdrivermanager:{project-version}
 ----
 
 WARNING: There is an https://bugs.chromium.org/p/chromedriver/issues/detail?id=3857[open issue] with Chrome 92+ and Docker at the time of this writing. For this reason, the previous Docker container command uses Chrome 91. For further information, see <<known-issues, known issues>>.
@@ -326,9 +330,9 @@ Finally, WebDriverManager CLI allows starting the WebDriverManager Server, as fo
 
 * Fat-JAR:
 
-[source,shell]
+[source,shell,subs="attributes+"]
 ----
-java -jar webdrivermanager-5.0.0-fat.jar server
+java -jar webdrivermanager-{project-version}-fat.jar server
 ----
 
 * Source code:
@@ -340,9 +344,9 @@ mvn exec:java -Dexec.args="server"
 
 * Docker container:
 
-[source,shell]
+[source,shell,subs="attributes+"]
 ----
-docker run --rm -p 4444:4444 -v /var/run/docker.sock:/var/run/docker.sock bonigarcia/webdrivermanager:5.0.0
+docker run --rm -p 4444:4444 -v /var/run/docker.sock:/var/run/docker.sock bonigarcia/webdrivermanager:{project-version}
 ----
 
 === WebDriverManager Server
@@ -426,7 +430,7 @@ class ChromeAgentTest {
 }
 ----
 
-To configure the WebDriverManager Agent, we need to specify the path of the WebDriverManager https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-5.0.0/webdrivermanager-5.0.0-fat.jar[fat-JAR] using the JVM flag `-javaagent:/path/to/webdrivermanager-5.0.0-fat.jar`. Alternatively, it can be done using Maven (see a complete project example https://github.com/bonigarcia/wdm-agent-example/[here]).
+To configure the WebDriverManager Agent, we need to specify the path of the WebDriverManager https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-{project-version}/webdrivermanager-{project-version}-fat.jar[fat-JAR] using the JVM flag `-javaagent:/path/to/webdrivermanager-{project-version}-fat.jar`. Alternatively, it can be done using Maven (see a complete project example https://github.com/bonigarcia/wdm-agent-example/[here]).
 
 === Selenium-Jupiter
 WebDriverManager is the heart of the project https://github.com/bonigarcia/selenium-jupiter[Selenium-Jupiter], an open-source JUnit 5 extension for Selenium WebDriver. Selenium-Jupiter uses the programming and extension model provided by JUnit 5 (named https://junit.org/junit5/docs/current/user-guide/[Jupiter]) together with WebDriverManager to create tests with reduced boilerplate code. For instance, thanks to the Jupiter feature for parameter resolution, we can declare a type of the `WebDriver` hierarchy (e.g., `ChromeDriver`) as a test parameter. Internally, Selenium-Jupiter resolves its driver and creates the instance before tests, and then, the browser is gracefully closed at the end of the test. For example:
@@ -460,9 +464,9 @@ https://www.selenium.dev/documentation/en/grid/[Selenium Grid] is an infrastruct
 
 For example, this https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/create/ChromeRemoteTest.java[test] shows how to start a Selenium Grid in standalone mode, resolving the driver with WebDriverManager and registering a Chrome browser in the Selenium Server. In addition, if we start Selenium Grid from the shell, we can complement it with WebDriverManager CLI to resolve the required drivers, as follows:
 
-[source,shell]
+[source,shell,subs="attributes+"]
 ----
-boni@ubuntu:~$ java -jar webdrivermanager-5.0.0-fat.jar resolveDriverFor chrome
+boni@ubuntu:~$ java -jar webdrivermanager-{project-version}-fat.jar resolveDriverFor chrome
 [INFO] Using WebDriverManager to resolve chrome
 [DEBUG] Detecting chrome version using online commands.properties
 [DEBUG] Running command on the shell: [google-chrome, --version]
@@ -546,9 +550,9 @@ mvn test -Dwdm.cachePath=/custom/path/to/driver/cache
 
 The third way to configure WebDriverManager is using _environmental variables_. The names for these variables are made from converting each configuration key name (e.g., `wdm.cachePath`) to uppercase and replacing the symbol `.` with `_` (e.g., `WDM_CACHEPATH`). These variables can be helpful to global setup parameters at the operating system level. Also, it allows specifying a custom setup when using WebDriverManager as a Docker container. For example:
 
-[source,shell]
+[source,shell,subs="attributes+"]
 ----
-docker run --rm -v ${PWD}:/wdm -e ARGS="resolveDriverFor chrome" -e WDM_CHROMEVERSION=84 bonigarcia/webdrivermanager:5.0.0
+docker run --rm -v ${PWD}:/wdm -e ARGS="resolveDriverFor chrome" -e WDM_CHROMEVERSION=84 bonigarcia/webdrivermanager:{project-version}
 ----
 
 NOTE: The preference order of these configuration alternatives is (in case of overlapping) is: 1) Environmental Variables. 2) Java system properties. 3) Java API.
