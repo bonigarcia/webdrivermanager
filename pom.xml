@@ -317,7 +317,7 @@
                                 <sectnums></sectnums>
                                 <lang>en</lang>
                                 <docdatetime>${maven.build.timestamp}</docdatetime>
-                                <last-update-label>Released on</last-update-label>
+                                <last-update-label>Updated on</last-update-label>
                             </attributes>
                         </configuration>
                     </execution>
