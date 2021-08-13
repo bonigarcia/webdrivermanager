@@ -289,7 +289,7 @@
                 <configuration>
                     <sourceDirectory>src/doc/asciidoc</sourceDirectory>
                     <attributes>
-                        <endpoint-url>https://bonigarcia.org</endpoint-url>
+                        <endpoint-url>https://bonigarcia.dev</endpoint-url>
                         <sourcedir>${project.build.sourceDirectory}</sourcedir>
                         <project-version>${project.version}</project-version>
                     </attributes>
