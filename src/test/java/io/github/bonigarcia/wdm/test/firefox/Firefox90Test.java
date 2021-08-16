@@ -42,7 +42,7 @@ class Firefox90Test {
     static Stream<Arguments> data() {
         return Stream.of(Arguments.of(OperatingSystem.MAC, "0.29.0"),
                 Arguments.of(OperatingSystem.LINUX, "0.29.1"),
-                Arguments.of(OperatingSystem.WIN, "0.29.1"));
+                Arguments.of(OperatingSystem.WIN, "0.29.0"));
     }
 
 }
