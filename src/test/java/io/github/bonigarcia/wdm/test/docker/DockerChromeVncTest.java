@@ -58,9 +58,10 @@ class DockerChromeVncTest {
         HttpURLConnection huc = (HttpURLConnection) dockerSessionUrl
                 .openConnection();
         assertThat(huc.getResponseCode()).isEqualTo(HTTP_OK);
+        huc.disconnect();
 
         // Active wait for manual inspection
-        Thread.sleep(Duration.ofSeconds(30).toMillis());
+        Thread.sleep(Duration.ofSeconds(60).toMillis());
     }
 
 }
