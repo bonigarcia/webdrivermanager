@@ -17,10 +17,8 @@
 package io.github.bonigarcia.wdm.test.docker;
 
 //tag::snippet-in-doc[]
-import static java.net.HttpURLConnection.HTTP_OK;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.Duration;
 
@@ -54,11 +52,8 @@ class DockerChromeVncTest {
         assertThat(driver.getTitle()).contains("Selenium WebDriver");
 
         // Verify URL for remote session
-        URL dockerSessionUrl = wdm.getDockerNoVncUrl();
-        HttpURLConnection huc = (HttpURLConnection) dockerSessionUrl
-                .openConnection();
-        assertThat(huc.getResponseCode()).isEqualTo(HTTP_OK);
-        huc.disconnect();
+        URL noVncUrl = wdm.getDockerNoVncUrl();
+        assertThat(noVncUrl).isNotNull();
 
         // Active wait for manual inspection
         Thread.sleep(Duration.ofSeconds(60).toMillis());
