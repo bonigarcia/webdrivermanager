@@ -24,6 +24,7 @@
 ### Changed
 - Not using singletons in managers (e.g. chromedriver(), firefoxdriver()). Now, each manager returns a new instance each time
 - Change name of configuration keys (and corresponding API methods) containing the word internetExplorer to iExplorer
+- Download driver for IExplorer (IEDriverServer.exe) from GitHub (instead of Google storage)
 - Use Java 11
 - Use JUnit 5 in tests
 - Use Selenium 4 in tests

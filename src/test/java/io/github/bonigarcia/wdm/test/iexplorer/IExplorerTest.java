@@ -37,7 +37,7 @@ class IExplorerTest {
 
     final Logger log = getLogger(lookup().lookupClass());
 
-    WebDriverManager wdm = WebDriverManager.iedriver().win();
+    WebDriverManager wdm = WebDriverManager.iedriver().win().arch32();
 
     @Test
     void testIExplorerLatest() {
@@ -47,7 +47,7 @@ class IExplorerTest {
 
     @Test
     void testIExplorerVersion() {
-        wdm.driverVersion("3.11").setup();
+        wdm.driverVersion("2.53.1").setup();
         assertIEDriver();
     }
 

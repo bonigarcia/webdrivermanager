@@ -117,6 +117,7 @@ public class UrlHandler {
                 candidateUrls.remove(url);
             }
         }
+
         this.driverVersion = foundFriverVersion;
         this.candidateUrls = out;
     }
@@ -228,10 +229,9 @@ public class UrlHandler {
     }
 
     public Integer versionCompare(String str1, String str2) {
-        String[] vals1 = str1.replace("v", "").replace("-" + BETA, "")
-                .split("\\.");
-        String[] vals2 = str2.replace("v", "").replace("-" + BETA, "")
-                .split("\\.");
+        String versionRegex = config.getBrowserVersionDetectionRegex();
+        String[] vals1 = str1.replaceAll(versionRegex, "").split("\\.");
+        String[] vals2 = str2.replaceAll(versionRegex, "").split("\\.");
 
         if (vals1[0].equals("")) {
             vals1[0] = "0";
@@ -287,7 +287,9 @@ public class UrlHandler {
                     driverVersionLabel);
             throw new WebDriverManagerException(errorMessage);
         }
-        return candidateUrls.iterator().next();
+        return shortDriverName.equalsIgnoreCase("IEDriverServer")
+                ? candidateUrls.get(candidateUrls.size() - 1)
+                : candidateUrls.iterator().next();
     }
 
 }

@@ -93,8 +93,7 @@ public class InternetExplorerDriverManager extends WebDriverManager {
 
     @Override
     protected List<URL> getDriverUrls() throws IOException {
-        return getDriversFromXml(getDriverUrl(), "//s3:Contents/s3:Key",
-                getS3NamespaceContext());
+        return getDriversFromGitHub();
     }
 
     @Override
@@ -123,6 +122,13 @@ public class InternetExplorerDriverManager extends WebDriverManager {
     @Override
     protected Capabilities getCapabilities() {
         return new InternetExplorerOptions();
+    }
+
+    @Override
+    protected String getCurrentVersion(URL url) {
+        String currentVersion = super.getCurrentVersion(url);
+        String versionRegex = config.getBrowserVersionDetectionRegex();
+        return currentVersion.replaceAll(versionRegex, "");
     }
 
     public WebDriverManager exportParameter(String exportParameter) {
