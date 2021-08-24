@@ -287,9 +287,8 @@ public class UrlHandler {
                     driverVersionLabel);
             throw new WebDriverManagerException(errorMessage);
         }
-        return shortDriverName.equalsIgnoreCase("IEDriverServer")
-                ? candidateUrls.get(candidateUrls.size() - 1)
-                : candidateUrls.iterator().next();
+
+        return candidateUrls.iterator().next();
     }
 
 }

@@ -22,6 +22,7 @@ import static java.util.Optional.empty;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,6 +34,7 @@ import org.openqa.selenium.ie.InternetExplorerOptions;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
 import io.github.bonigarcia.wdm.config.WebDriverManagerException;
+import io.github.bonigarcia.wdm.versions.UrlComparator;
 
 /**
  * Manager for Internet Explorer.
@@ -93,7 +95,9 @@ public class InternetExplorerDriverManager extends WebDriverManager {
 
     @Override
     protected List<URL> getDriverUrls() throws IOException {
-        return getDriversFromGitHub();
+        List<URL> driverUrls = getDriversFromGitHub();
+        Collections.sort(driverUrls, new UrlComparator());
+        return driverUrls;
     }
 
     @Override
