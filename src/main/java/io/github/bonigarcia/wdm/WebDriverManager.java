@@ -775,9 +775,11 @@ public abstract class WebDriverManager {
             WebDriverBrowser driverBrowser) {
         List<DockerContainer> dockerContainerList = driverBrowser
                 .getDockerContainerList();
-        DockerContainer recorderContainer = dockerContainerList.get(0);
-        dockerService.stopAndRemoveContainer(recorderContainer);
-        dockerContainerList.remove(0);
+        if (dockerContainerList != null && !dockerContainerList.isEmpty()) {
+            DockerContainer recorderContainer = dockerContainerList.get(0);
+            dockerService.stopAndRemoveContainer(recorderContainer);
+            dockerContainerList.remove(0);
+        }
     }
 
     protected synchronized void quit(WebDriverBrowser driverBrowser) {
