@@ -759,6 +759,27 @@ public abstract class WebDriverManager {
         }
     }
 
+    public synchronized void stopDockerRecording() {
+        webDriverList.stream().forEach(this::stopDockerRecording);
+    }
+
+    public synchronized void stopDockerRecording(WebDriver driver) {
+        Optional<WebDriverBrowser> webDriverBrowser = findWebDriverBrowser(
+                driver);
+        if (webDriverBrowser.isPresent()) {
+            stopDockerRecording(webDriverBrowser.get());
+        }
+    }
+
+    protected synchronized void stopDockerRecording(
+            WebDriverBrowser driverBrowser) {
+        List<DockerContainer> dockerContainerList = driverBrowser
+                .getDockerContainerList();
+        DockerContainer recorderContainer = dockerContainerList.get(0);
+        dockerService.stopAndRemoveContainer(recorderContainer);
+        dockerContainerList.remove(0);
+    }
+
     protected synchronized void quit(WebDriverBrowser driverBrowser) {
         try {
             WebDriver driver = driverBrowser.getDriver();
