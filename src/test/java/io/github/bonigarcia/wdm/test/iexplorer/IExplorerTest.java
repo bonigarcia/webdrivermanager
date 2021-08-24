@@ -16,14 +16,15 @@
  */
 package io.github.bonigarcia.wdm.test.iexplorer;
 
-import static java.lang.invoke.MethodHandles.lookup;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.slf4j.LoggerFactory.getLogger;
 
-import java.io.File;
-
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
@@ -33,28 +34,34 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @author Boni Garcia
  * @since 1.0.0
  */
+@Disabled
 class IExplorerTest {
 
-    final Logger log = getLogger(lookup().lookupClass());
+    WebDriver driver;
 
-    WebDriverManager wdm = WebDriverManager.iedriver().win().arch32();
+    @BeforeAll
+    static void setupClass() {
+        WebDriverManager.iedriver().setup();
+    }
 
-    @Test
-    void testIExplorerLatest() {
-        wdm.setup();
-        assertIEDriver();
+    @BeforeEach
+    void setupTest() {
+        driver = new InternetExplorerDriver();
+    }
+
+    @AfterEach
+    void teardown() {
+        driver.quit();
     }
 
     @Test
-    void testIExplorerVersion() {
-        wdm.driverVersion("2.53.1").setup();
-        assertIEDriver();
-    }
+    void test() {
+        // Exercise
+        driver.get("https://bonigarcia.dev/selenium-webdriver-java/");
+        String title = driver.getTitle();
 
-    private void assertIEDriver() {
-        File driver = new File(wdm.getDownloadedDriverPath());
-        log.debug("Path for IEDriverServer {}", driver);
-        assertThat(driver).exists();
+        // Verify
+        assertThat(title).contains("Selenium WebDriver");
     }
 
 }

@@ -16,28 +16,45 @@
  */
 package io.github.bonigarcia.wdm.test.iexplorer;
 
-import static io.github.bonigarcia.wdm.config.OperatingSystem.WIN;
+import static java.lang.invoke.MethodHandles.lookup;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.slf4j.LoggerFactory.getLogger;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
-import org.openqa.selenium.ie.InternetExplorerDriver;
+import java.io.File;
 
-import io.github.bonigarcia.wdm.test.base.VersionTestParent;
+import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 /**
- * Test asserting IEDriverServer versions.
+ * Test with Internet Explorer browser.
  *
  * @author Boni Garcia
- * @since 1.2.2
+ * @since 1.0.0
  */
-@Disabled
-class IExplorerVersionTest extends VersionTestParent {
+class IExplorerVersionTest {
 
-    @BeforeEach
-    void setup() {
-        driverClass = InternetExplorerDriver.class;
-        os = WIN;
-        specificVersions = new String[] { "2.39", "2.47" };
+    final Logger log = getLogger(lookup().lookupClass());
+
+    WebDriverManager wdm = WebDriverManager.iedriver().win().arch32();
+
+    @Test
+    void testIExplorerLatest() {
+        wdm.setup();
+        assertIEDriver();
+    }
+
+    @Test
+    void testIExplorerVersion() {
+        wdm.driverVersion("2.53.1").setup();
+        assertIEDriver();
+    }
+
+    private void assertIEDriver() {
+        File driver = new File(wdm.getDownloadedDriverPath());
+        log.debug("Path for IEDriverServer {}", driver);
+        assertThat(driver).exists();
     }
 
 }
