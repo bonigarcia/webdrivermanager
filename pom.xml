@@ -293,6 +293,7 @@
                         <sourcedir>${project.build.sourceDirectory}</sourcedir>
                         <project-version>${project.version}</project-version>
                     </attributes>
+                    <outputDirectory>${basedir}/docs</outputDirectory>
                 </configuration>
                 <executions>
                     <execution>
