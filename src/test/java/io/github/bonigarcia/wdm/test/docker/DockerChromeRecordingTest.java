@@ -52,12 +52,12 @@ class DockerChromeRecordingTest {
         driver.get("https://bonigarcia.dev/selenium-webdriver-java/");
         assertThat(driver.getTitle()).contains("Selenium WebDriver");
 
-        // Active wait to see the navigation in the recording
+        // Pause to see the navigation in the recording
         Thread.sleep(Duration.ofSeconds(2).toMillis());
 
         driver.findElement(By.partialLinkText("form")).click();
 
-        // Active wait to generate a longer recording
+        // Pause to generate a longer recording
         Thread.sleep(Duration.ofSeconds(2).toMillis());
 
         // Verify recoding file

@@ -71,7 +71,7 @@ class DockerCustomImageTest {
                 .openConnection();
         assertThat(huc.getResponseCode()).isEqualTo(HTTP_OK);
 
-        // Active wait for manual inspection
+        // Pause for manual inspection
         Thread.sleep(Duration.ofSeconds(10).toMillis());
 
         Path recordingPath = wdm.getDockerRecordingPath();

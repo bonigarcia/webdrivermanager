@@ -64,7 +64,7 @@ class DockerSeveralBrowsersTest {
                 "https://bonigarcia.dev/selenium-webdriver-java/slow-calculator.html",
                 "Selenium WebDriver");
 
-        // Active wait for manual inspection
+        // Pause for manual inspection
         Thread.sleep(Duration.ofSeconds(10).toMillis());
     }
 

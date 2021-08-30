@@ -55,7 +55,7 @@ class DockerChromeVncTest {
         URL noVncUrl = wdm.getDockerNoVncUrl();
         assertThat(noVncUrl).isNotNull();
 
-        // Active wait for manual inspection
+        // Pause for manual inspection
         Thread.sleep(Duration.ofSeconds(60).toMillis());
     }
 
