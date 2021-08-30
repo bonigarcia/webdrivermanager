@@ -38,6 +38,7 @@
         <asciidoctorj-epub3.version>1.5.1</asciidoctorj-epub3.version>
         <maven-site.version>3.9.1</maven-site.version>
         <maven-project-info-reports.version>3.1.2</maven-project-info-reports.version>
+        <maven-javadoc-plugin.version>3.3.0</maven-javadoc-plugin.version>
 
         <!-- Java version -->
         <java.version>11</java.version>
@@ -387,6 +388,11 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
                 <version>${maven-project-info-reports.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc-plugin.version}</version>
             </plugin>
         </plugins>
     </build>
