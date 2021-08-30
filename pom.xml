@@ -1,11 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.github.bonigarcia</groupId>
     <artifactId>webdrivermanager</artifactId>
-    <version>5.0.0-SNAPSHOT</version>
+    <version>5.0.0</version>
 
     <properties>
         <!-- compile -->
@@ -316,7 +314,7 @@
                                 <idseparator>-</idseparator>
                                 <docinfo1>true</docinfo1>
                                 <toclevels>3</toclevels>
-                                <sectnums></sectnums>
+                                <sectnums />
                                 <lang>en</lang>
                                 <docdatetime>${maven.build.timestamp}</docdatetime>
                                 <last-update-label>Updated on</last-update-label>
@@ -343,7 +341,7 @@
                                 <idprefix />
                                 <idseparator>-</idseparator>
                                 <icons>font</icons>
-                                <sectnums></sectnums>
+                                <sectnums />
                                 <lang>en</lang>
                                 <revnumber>${project.version}</revnumber>
                                 <revdate>${maven.build.timestamp}</revdate>
@@ -370,7 +368,7 @@
                                 <idprefix />
                                 <idseparator>-</idseparator>
                                 <icons>font</icons>
-                                <sectnums></sectnums>
+                                <sectnums />
                                 <lang>en</lang>
                                 <revnumber>${project.version}</revnumber>
                                 <revdate>${maven.build.timestamp}</revdate>
