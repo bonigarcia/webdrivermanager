@@ -1,6 +1,6 @@
 # Changelog
 
-## [5.0.0] - 2021-08-01
+## [5.0.0] - 2021-08-30
 ### Added
 - New documentation: https://bonigarcia.dev/webdrivermanager/ (sources: AsciiDoc, generated: HTML, PDF, EPUB)
 - New high-level feature: browser finder (using the info of the commands database)
@@ -32,7 +32,7 @@
 - Use selenium-java as provided dependency
 
 ### Removed
-- Remove managers for PhantomJS (depecrated browser) and SeleniumServerStandalone (scarce use)
+- Remove managers for PhantomJS (deprecated browser) and SeleniumServerStandalone (scarce use)
 - Remove API method globalConfig() (it has no sense since managers are not singleton anymore)
 - Remove API methods gitHubTokenName() and gitHubTokenSecret(), replaced by gitHubToken()
 - Remove API localRepositoryUser() and localRepositoryPassword() (redundant)
