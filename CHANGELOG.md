@@ -1,5 +1,10 @@
 # Changelog
 
+## [5.0.1] - 2021-08-31
+### Changed
+- Downgrade to Java 8
+
+
 ## [5.0.0] - 2021-08-30
 ### Added
 - New documentation: https://bonigarcia.dev/webdrivermanager/ (sources: AsciiDoc, generated: HTML, PDF, EPUB)
