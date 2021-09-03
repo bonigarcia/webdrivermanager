@@ -192,7 +192,6 @@ public abstract class WebDriverManager {
         httpClient = new HttpClient(config);
         downloader = new Downloader(httpClient, config, this::postDownload);
         resolutionCache = new ResolutionCache(config);
-        dockerService = new DockerService(config, httpClient, resolutionCache);
         versionDetector = new VersionDetector(config, httpClient);
         webDriverList = new CopyOnWriteArrayList<>();
         webDriverCreator = new WebDriverCreator(config);
@@ -845,7 +844,10 @@ public abstract class WebDriverManager {
                 WebDriverBrowser::getRecordingPath);
     }
 
-    public DockerService getDockerService() {
+    public synchronized DockerService getDockerService() {
+        if (dockerService == null) {
+            dockerService = new DockerService(config, httpClient, resolutionCache);
+        }
         return dockerService;
     }
 
