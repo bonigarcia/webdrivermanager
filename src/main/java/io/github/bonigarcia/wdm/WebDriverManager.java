@@ -777,8 +777,11 @@ public abstract class WebDriverManager {
                 .getDockerContainerList();
         if (dockerContainerList != null && !dockerContainerList.isEmpty()) {
             DockerContainer recorderContainer = dockerContainerList.get(0);
-            dockerService.stopAndRemoveContainer(recorderContainer);
-            dockerContainerList.remove(0);
+            if (recorderContainer.getImageId()
+                    .equals(config.getDockerRecordingImage())) {
+                dockerService.stopAndRemoveContainer(recorderContainer);
+                dockerContainerList.remove(0);
+            }
         }
     }
 
