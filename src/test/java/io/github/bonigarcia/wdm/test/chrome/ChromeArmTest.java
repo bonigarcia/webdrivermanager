@@ -36,7 +36,7 @@ class ChromeArmTest {
     final Logger log = getLogger(lookup().lookupClass());
 
     @Test
-    void testEdgeArm() {
+    void testChromeArm() {
         WebDriverManager wdm = WebDriverManager.chromedriver().mac()
                 .avoidBrowserDetection();
 
@@ -50,7 +50,7 @@ class ChromeArmTest {
     }
 
     private void checkArm(WebDriverManager wdm) {
-        wdm.setup();
+        wdm.arch64().setup();
         String driverPath = wdm.getDownloadedDriverPath();
         log.debug("Driver path (X64) {}", driverPath);
 
