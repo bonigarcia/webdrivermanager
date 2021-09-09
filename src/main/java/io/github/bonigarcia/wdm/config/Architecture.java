@@ -45,8 +45,8 @@ public enum Architecture {
         return this.archLabels.stream();
     }
 
-    public boolean matchString(String string) {
-        return archLabelsStream().anyMatch(x -> string.contains(x));
+    public boolean matchString(String strMatch) {
+        return archLabelsStream().anyMatch(strMatch::contains);
     }
 
     public boolean matchUrl(URL url) {
