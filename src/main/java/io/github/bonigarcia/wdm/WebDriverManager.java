@@ -778,7 +778,7 @@ public abstract class WebDriverManager {
             DockerContainer recorderContainer = dockerContainerList.get(0);
             if (recorderContainer.getImageId()
                     .equals(config.getDockerRecordingImage())) {
-                dockerService.stopAndRemoveContainer(recorderContainer);
+                getDockerService().stopAndRemoveContainer(recorderContainer);
                 dockerContainerList.remove(0);
             }
         }
@@ -799,7 +799,7 @@ public abstract class WebDriverManager {
                     .getDockerContainerList();
             if (dockerContainerList != null) {
                 dockerContainerList.stream()
-                        .forEach(dockerService::stopAndRemoveContainer);
+                        .forEach(getDockerService()::stopAndRemoveContainer);
             }
         } catch (Exception e) {
             log.warn("Exception closing {} ({})", driverBrowser.getDriver(),
@@ -849,7 +849,8 @@ public abstract class WebDriverManager {
 
     public synchronized DockerService getDockerService() {
         if (dockerService == null) {
-            dockerService = new DockerService(config, httpClient, resolutionCache);
+            dockerService = new DockerService(config, httpClient,
+                    resolutionCache);
         }
         return dockerService;
     }
@@ -1470,30 +1471,33 @@ public abstract class WebDriverManager {
         String browserImage;
         if (!isNullOrEmpty(dockerCustomImage)) {
             browserImage = dockerCustomImage;
-            browserVersion = dockerService.getVersionFromImage(browserImage);
+            browserVersion = getDockerService()
+                    .getVersionFromImage(browserImage);
             browserCacheKey += "custom";
 
         } else {
-            if (isUnknown(browserVersion) || dockerService
+            if (isUnknown(browserVersion) || getDockerService()
                     .isBrowserVersionLatesMinus(browserVersion)) {
                 browserCacheKey += isNullOrEmpty(browserVersion) ? "latest"
                         : browserVersion;
-                browserVersion = dockerService.getImageVersionFromDockerHub(
-                        getDriverManagerType(), browserCacheKey, browserName,
-                        browserVersion, androidEnabled);
+                browserVersion = getDockerService()
+                        .getImageVersionFromDockerHub(getDriverManagerType(),
+                                browserCacheKey, browserName, browserVersion,
+                                androidEnabled);
             } else {
-                if (!dockerService.isBrowserVersionWildCard(browserVersion)
+                if (!getDockerService().isBrowserVersionWildCard(browserVersion)
                         && !browserVersion.contains(".")) {
                     browserVersion += ".0";
                 }
                 browserCacheKey += browserVersion;
             }
-            browserImage = dockerService.getDockerImage(browserName,
+            browserImage = getDockerService().getDockerImage(browserName,
                     browserVersion, androidEnabled);
         }
 
-        DockerContainer browserContainer = dockerService.startBrowserContainer(
-                browserImage, browserCacheKey, browserVersion, androidEnabled);
+        DockerContainer browserContainer = getDockerService()
+                .startBrowserContainer(browserImage, browserCacheKey,
+                        browserVersion, androidEnabled);
         browserContainer.setBrowserName(browserName);
         String seleniumServerUrl = browserContainer.getContainerUrl();
 
@@ -1513,10 +1517,11 @@ public abstract class WebDriverManager {
 
         if (config.isEnabledDockerVnc()) {
             String noVncImage = config.getDockerNoVncImage();
-            String noVncVersion = dockerService.getVersionFromImage(noVncImage);
-            DockerContainer noVncContainer = dockerService.startNoVncContainer(
-                    noVncImage, "novnc-container", noVncVersion,
-                    browserContainer);
+            String noVncVersion = getDockerService()
+                    .getVersionFromImage(noVncImage);
+            DockerContainer noVncContainer = getDockerService()
+                    .startNoVncContainer(noVncImage, "novnc-container",
+                            noVncVersion, browserContainer);
             driverBrowser.addDockerContainer(noVncContainer);
             String noVncUrl = noVncContainer.getContainerUrl();
             driverBrowser.setNoVncUrl(noVncUrl);
@@ -1526,9 +1531,9 @@ public abstract class WebDriverManager {
 
         if (config.isEnabledDockerRecording()) {
             String recorderImage = config.getDockerRecordingImage();
-            String recorderVersion = dockerService
+            String recorderVersion = getDockerService()
                     .getVersionFromImage(recorderImage);
-            DockerContainer recorderContainer = dockerService
+            DockerContainer recorderContainer = getDockerService()
                     .startRecorderContainer(recorderImage, "recorder-container",
                             recorderVersion, browserContainer);
             driverBrowser.addDockerContainer(recorderContainer, 0);
