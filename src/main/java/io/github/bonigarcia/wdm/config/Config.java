@@ -352,6 +352,9 @@ public class Config {
     }
 
     private String defaultArchitecture() {
+        if (Architecture.ARM64.matchString(System.getProperty("os.arch"))) {
+            return "ARM64";
+        }
         return "X" + System.getProperty("sun.arch.data.model");
     }
 
@@ -571,7 +574,7 @@ public class Config {
         if ("64".equals(architectureString)) {
             return Architecture.X64;
         }
-        return Architecture.valueOf(architectureString);
+        return Architecture.valueOf(architectureString.toUpperCase(ROOT));
     }
 
     public Config setArchitecture(Architecture value) {

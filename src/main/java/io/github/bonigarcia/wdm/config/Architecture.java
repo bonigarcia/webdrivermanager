@@ -33,7 +33,7 @@ import java.util.stream.Stream;
  */
 public enum Architecture {
     DEFAULT(emptyList()), X32(asList("i686", "x86")), X64(emptyList()),
-    ARM64(asList("aarch64"));
+    ARM64(asList("aarch64", "m1"));
 
     List<String> archLabels;
 
@@ -43,6 +43,10 @@ public enum Architecture {
 
     public Stream<String> archLabelsStream() {
         return this.archLabels.stream();
+    }
+
+    public boolean matchString(String string) {
+        return archLabelsStream().anyMatch(x -> string.contains(x));
     }
 
     public boolean matchUrl(URL url) {
