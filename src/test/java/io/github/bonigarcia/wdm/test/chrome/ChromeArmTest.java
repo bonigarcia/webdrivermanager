@@ -37,8 +37,7 @@ class ChromeArmTest {
 
     @Test
     void testChromeArm() {
-        WebDriverManager wdm = WebDriverManager.chromedriver().mac()
-                .avoidBrowserDetection();
+        WebDriverManager wdm = WebDriverManager.chromedriver();
 
         // 1. Force downloading
         wdm.forceDownload();
@@ -50,11 +49,11 @@ class ChromeArmTest {
     }
 
     private void checkArm(WebDriverManager wdm) {
-        wdm.arch64().setup();
+        wdm.avoidBrowserDetection().mac().arch64().setup();
         String driverPath = wdm.getDownloadedDriverPath();
         log.debug("Driver path (X64) {}", driverPath);
 
-        wdm.arm64().setup();
+        wdm.avoidBrowserDetection().mac().arm64().setup();
         String driverPathArm64 = wdm.getDownloadedDriverPath();
         log.debug("Driver path (ARM64) {}", driverPathArm64);
 
