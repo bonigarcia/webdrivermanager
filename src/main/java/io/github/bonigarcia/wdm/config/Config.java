@@ -416,10 +416,11 @@ public class Config {
     }
 
     public File getResolutionCachePath() {
-        String resolvePath = resolvePath(resolve(resolutionCachePath));
-        String resolutionCachePath = isNullOrEmpty(resolvePath) ? getCachePath()
-                : resolvePath;
-        return getFileFromPath(resolutionCachePath);
+        String resCachePath = resolvePath(resolve(resolutionCachePath));
+        if (isNullOrEmpty(resCachePath)) {
+            resCachePath = getCachePath();
+        }
+        return getFileFromPath(resCachePath);
     }
 
     public Config setResolutionCachePath(String value) {
