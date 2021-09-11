@@ -31,8 +31,10 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -83,6 +85,7 @@ public class DockerService {
     private static final String LATEST_MINUS = "latest-";
     private static final String RECORDING_EXT = ".mp4";
     private static final String SEPARATOR = "_";
+    private static final String DATE_FORMAT = "yyyy.MM.dd_HH.mm.ss.SSS";
 
     private Config config;
     private HttpClient httpClient;
@@ -659,8 +662,11 @@ public class DockerService {
             recordingPath = dockerRecordingPath;
         } else {
             String sessionId = browserContainer.getSessionId();
+            Date now = new Date();
+            SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
             String recordingFileName = browserContainer.getBrowserName()
-                    + SEPARATOR + sessionId + RECORDING_EXT;
+                    + SEPARATOR + dateFormat.format(now) + SEPARATOR + sessionId
+                    + RECORDING_EXT;
             String prefix = config.getDockerRecordingPrefix();
             if (!isNullOrEmpty(prefix)) {
                 recordingFileName = prefix + recordingFileName;
