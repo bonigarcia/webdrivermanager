@@ -667,12 +667,12 @@ public abstract class WebDriverManager {
     }
 
     public WebDriverManager clearDriverCache() {
-        String cachePath = config().getCachePath();
+        File cacheFolder = config().getCacheFolder();
         try {
-            log.debug("Clearing driver cache at {}", cachePath);
-            cleanDirectory(new File(cachePath));
+            log.debug("Clearing driver cache at {}", cacheFolder);
+            cleanDirectory(cacheFolder);
         } catch (Exception e) {
-            log.warn("Exception deleting driver cache at {}", cachePath, e);
+            log.warn("Exception deleting driver cache at {}", cacheFolder, e);
         }
         return this;
     }

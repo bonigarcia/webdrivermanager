@@ -379,6 +379,18 @@ public class Config {
         return this;
     }
 
+    private File getFileFromPath(String path) {
+        File file = new File(path);
+        if (!file.exists()) {
+            file.mkdirs();
+        }
+        return file;
+    }
+
+    public File getCacheFolder() {
+        return getFileFromPath(getCachePath());
+    }
+
     public String getCachePath() {
         return resolvePath(resolve(cachePath));
     }
@@ -403,9 +415,11 @@ public class Config {
         return this;
     }
 
-    public String getResolutionCachePath() {
+    public File getResolutionCachePath() {
         String resolvePath = resolvePath(resolve(resolutionCachePath));
-        return isNullOrEmpty(resolvePath) ? getCachePath() : resolvePath;
+        String resolutionCachePath = isNullOrEmpty(resolvePath) ? getCachePath()
+                : resolvePath;
+        return getFileFromPath(resolutionCachePath);
     }
 
     public Config setResolutionCachePath(String value) {

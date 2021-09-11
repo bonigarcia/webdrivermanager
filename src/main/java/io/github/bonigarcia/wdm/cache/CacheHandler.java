@@ -52,11 +52,6 @@ public class CacheHandler {
 
     public CacheHandler(Config config) {
         this.config = config;
-
-        File cacheFolder = new File(config.getCachePath());
-        if (!cacheFolder.exists()) {
-            cacheFolder.mkdirs();
-        }
     }
 
     public List<File> filterCacheBy(List<File> input, String key,
@@ -76,8 +71,8 @@ public class CacheHandler {
     }
 
     public List<File> getFilesInCache() {
-        List<File> listFiles = (List<File>) listFiles(
-                new File(config.getCachePath()), null, true);
+        List<File> listFiles = (List<File>) listFiles(config.getCacheFolder(),
+                null, true);
         sort(listFiles);
         return listFiles;
     }

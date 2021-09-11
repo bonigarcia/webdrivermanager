@@ -67,14 +67,7 @@ public class ResolutionCache {
         this.config = config;
 
         if (!config.isAvoidingResolutionCache()) {
-            String resolutionCachePath = config.getResolutionCachePath();
-
-            // Create folder if not exits
-            File cacheFolder = new File(resolutionCachePath);
-            if (!cacheFolder.exists()) {
-                cacheFolder.mkdirs();
-            }
-
+            File resolutionCachePath = config.getResolutionCachePath();
             this.resolutionCacheFile = new File(resolutionCachePath,
                     config.getResolutionCache());
             try {

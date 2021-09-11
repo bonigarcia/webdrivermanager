@@ -95,7 +95,7 @@ public class Downloader {
     public File getTarget(String driverVersion, String driverName,
             DriverManagerType driverManagerType, URL url) {
         String zip = url.getFile().substring(url.getFile().lastIndexOf('/'));
-        String cachePath = config.getCachePath();
+        String cachePath = config.getCacheFolder().getAbsolutePath();
         OperatingSystem os = config.getOperatingSystem();
         String architecture = config.getArchitecture().toString()
                 .toLowerCase(ROOT);
