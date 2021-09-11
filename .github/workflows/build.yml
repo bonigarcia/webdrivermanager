@@ -41,7 +41,7 @@ jobs:
       run: mvn -B test
     - name: Run tests in Windows and Mac
       if: matrix.os != 'ubuntu-latest'
-      run: mvn -B test -Dtest=!Docker*
+      run: mvn -B test -Dtest=!Docker*,!*Remote*
     - name: Upload analysis to SonarCloud
       if: success() && matrix.os == 'ubuntu-latest' && matrix.java == '11' && !contains(github.ref, 'pull')
       run: >
