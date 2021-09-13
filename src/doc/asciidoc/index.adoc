@@ -207,7 +207,7 @@ include::../../test/java/io/github/bonigarcia/wdm/test/docker/DockerChromeVncTes
 image::wdm-vnc.png[scaledwidth=100%]
 
 ==== Recordings
-The following related feature is the recording of the remote session of a dockerized browser. To enable it, we need to invoke the method `enableRecording()` in WebDriverManager. Internally, WebDriverManager starts another Docker container using https://ffmpeg.org/[FFmpeg] to record the browser session. At the end of the test, we can find the recording in MP4 (by default, with a filename composed by the browser name followed by the symbol `_` and the session id) located in the project root folder (you can change this behavior using <<advanced-configuration, configuration capabilities>>. The following test shows an example of this feature.
+The following related feature is the recording of the remote session of a dockerized browser. To enable it, we need to invoke the method `enableRecording()` in WebDriverManager. Internally, WebDriverManager starts another Docker container using https://ffmpeg.org/[FFmpeg] to record the browser session. At the end of the test, we can find the recording in MP4 (by default, with a filename composed by the browser name followed by the symbol `_` and the system timestamp, plus another `_` and the session id) located in the project root folder (you can change this behavior using <<advanced-configuration, configuration capabilities>>. The following test shows an example of this feature.
 
 [source,java]
 ----
