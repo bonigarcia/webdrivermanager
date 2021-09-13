@@ -1,5 +1,14 @@
 # Changelog
 
+## [5.0.2] - 2021-09-13
+### Added
+- Support for ARM64 architecture in chromedriver for Mac (issue #697)
+
+### Changed
+- Enhance cachePath and resolutionCachePath mkdir (issue #696)
+- Postpone initialing DockerService (issue #691)
+
+
 ## [5.0.1] - 2021-08-31
 ### Changed
 - Downgrade to Java 8
