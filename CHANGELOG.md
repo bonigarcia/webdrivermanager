@@ -3,6 +3,7 @@
 ## [5.0.2] - 2021-09-13
 ### Added
 - Support for ARM64 architecture in chromedriver for Mac (issue #697)
+- Include current timestamp in recordings file name
 
 ### Changed
 - Enhance cachePath and resolutionCachePath mkdir (issue #696)
