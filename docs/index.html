@@ -1522,7 +1522,7 @@ Notice you will need hardware virtualization (hypervisor) or a virtual machine w
 <div class="sect3">
 <h4 id="recordings"><a class="anchor" href="#recordings"></a>3.4.3. Recordings</h4>
 <div class="paragraph">
-<p>The following related feature is the recording of the remote session of a dockerized browser. To enable it, we need to invoke the method <code>enableRecording()</code> in WebDriverManager. Internally, WebDriverManager starts another Docker container using <a href="https://ffmpeg.org/">FFmpeg</a> to record the browser session. At the end of the test, we can find the recording in MP4 (by default, with a filename composed by the browser name followed by the symbol <code>_</code> and the session id) located in the project root folder (you can change this behavior using <a href="#advanced-configuration">configuration capabilities</a>. The following test shows an example of this feature.</p>
+<p>The following related feature is the recording of the remote session of a dockerized browser. To enable it, we need to invoke the method <code>enableRecording()</code> in WebDriverManager. Internally, WebDriverManager starts another Docker container using <a href="https://ffmpeg.org/">FFmpeg</a> to record the browser session. At the end of the test, we can find the recording in MP4 (by default, with a filename composed by the browser name followed by the symbol <code><em></code> and the system timestamp, plus another <code></em></code> and the session id) located in the project root folder (you can change this behavior using <a href="#advanced-configuration">configuration capabilities</a>. The following test shows an example of this feature.</p>
 </div>
 <div class="listingblock">
 <div class="content">
