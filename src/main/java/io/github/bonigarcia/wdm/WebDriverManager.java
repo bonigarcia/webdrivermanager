@@ -431,6 +431,11 @@ public abstract class WebDriverManager {
         return this;
     }
 
+    public WebDriverManager viewOnly() {
+        config().setDockerViewOnly(true);
+        return this;
+    }
+
     public WebDriverManager enableRecording() {
         config().setDockerEnableRecording(true);
         return this;

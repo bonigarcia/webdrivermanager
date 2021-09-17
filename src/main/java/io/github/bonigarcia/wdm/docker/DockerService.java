@@ -512,6 +512,7 @@ public class DockerService {
         // envs
         List<String> envs = new ArrayList<>();
         envs.add("AUTOCONNECT=true");
+        envs.add("VIEW_ONLY=" + config.getDockerViewOnly());
         envs.add("VNC_PASSWORD=" + config.getDockerVncPassword());
         String vncAddress = browserContainer.getGateway();
         String vncPort = browserContainer.getVncPort();

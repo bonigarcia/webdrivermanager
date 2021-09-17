@@ -212,6 +212,8 @@ public class Config {
             "wdm.dockerStopTimeoutSec", Integer.class);
     ConfigKey<Boolean> dockerEnableVnc = new ConfigKey<>("wdm.dockerEnableVnc",
             Boolean.class);
+    ConfigKey<Boolean> dockerViewOnly = new ConfigKey<>("wdm.dockerViewOnly",
+            Boolean.class);
     ConfigKey<Boolean> dockerEnableRecording = new ConfigKey<>(
             "wdm.dockerEnableRecording", Boolean.class);
     ConfigKey<String> dockerScreenResolution = new ConfigKey<>(
@@ -1100,6 +1102,15 @@ public class Config {
 
     public Config setDockerEnableVnc(boolean value) {
         this.dockerEnableVnc.setValue(value);
+        return this;
+    }
+
+    public boolean getDockerViewOnly() {
+        return resolve(dockerViewOnly);
+    }
+
+    public Config setDockerViewOnly(boolean value) {
+        this.dockerViewOnly.setValue(value);
         return this;
     }
 
