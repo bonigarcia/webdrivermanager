@@ -153,7 +153,7 @@ public class UrlHandler {
 
         candidateUrls = config.getArchitecture().filterArm64(candidateUrls);
 
-        if ((forcedArch || candidateUrls.size() > 1) && arch != null) {
+        if (forcedArch && candidateUrls.size() > 1 && arch != null) {
             candidateUrls = candidateUrls.stream().filter(arch::matchUrl)
                     .collect(toList());
         }
