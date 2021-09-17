@@ -30,16 +30,14 @@ class ChromeCreateTest {
 
     WebDriver driver;
 
-    WebDriverManager wdm = WebDriverManager.chromedriver();
-
     @BeforeEach
     void setupTest() {
-        driver = wdm.create();
+        driver = WebDriverManager.chromedriver().create();
     }
 
     @AfterEach
     void teardown() {
-        wdm.quit();
+        driver.quit();
     }
 
     @Test

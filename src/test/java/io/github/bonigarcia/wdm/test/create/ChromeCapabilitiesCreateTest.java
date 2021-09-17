@@ -30,18 +30,16 @@ class ChromeCapabilitiesCreateTest {
 
     WebDriver driver;
 
-    WebDriverManager wdm = WebDriverManager.chromedriver();
-
     @BeforeEach
     void setupTest() {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--headless");
-        driver = wdm.capabilities(options).create();
+        driver = WebDriverManager.chromedriver().capabilities(options).create();
     }
 
     @AfterEach
     void teardown() {
-        wdm.quit();
+        driver.quit();
     }
 
     @Test
