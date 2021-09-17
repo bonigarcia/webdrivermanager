@@ -58,7 +58,8 @@ public enum Architecture {
         if (this != ARM64) {
             return input.stream()
                     .filter(x -> !x.toString().toLowerCase(ROOT)
-                            .contains(ARM64.toString().toLowerCase(ROOT)))
+                            .contains(ARM64.toString().toLowerCase(ROOT))
+                            && !ARM64.matchString(x.toString()))
                     .collect(toList());
         }
         return input;
