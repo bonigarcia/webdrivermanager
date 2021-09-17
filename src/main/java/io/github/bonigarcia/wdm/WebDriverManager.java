@@ -175,7 +175,6 @@ public abstract class WebDriverManager {
     protected DockerService dockerService;
 
     protected boolean mirrorLog;
-    protected boolean forcedArch;
     protected int retryCount = 0;
     protected Capabilities capabilities;
     protected boolean shutdownHook = false;
@@ -482,7 +481,6 @@ public abstract class WebDriverManager {
 
     public WebDriverManager architecture(Architecture architecture) {
         config().setArchitecture(architecture);
-        forcedArch = true;
         return this;
     }
 
@@ -690,7 +688,6 @@ public abstract class WebDriverManager {
     public void reset() {
         config().reset();
         mirrorLog = false;
-        forcedArch = false;
         retryCount = 0;
         shutdownHook = false;
         dockerEnabled = false;
@@ -1198,7 +1195,7 @@ public abstract class WebDriverManager {
             }
 
             // Rest of filters
-            urlHandler.filterByArch(architecture, forcedArch);
+            urlHandler.filterByArch(architecture);
             urlHandler.filterByIgnoredVersions(config().getIgnoreVersions());
             urlHandler.filterByBeta(config().isUseBetaVersions());
 

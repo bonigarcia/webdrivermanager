@@ -147,21 +147,20 @@ public class UrlHandler {
         }
     }
 
-    public void filterByArch(Architecture arch, boolean forcedArch) {
+    public void filterByArch(Architecture arch) {
         log.trace("URLs before filtering by architecture ({}): {}", arch,
                 candidateUrls);
 
         candidateUrls = config.getArchitecture().filterArm64(candidateUrls);
 
-        if (forcedArch && candidateUrls.size() > 1 && arch != null) {
+        if (candidateUrls.size() > 1 && arch != null) {
             candidateUrls = candidateUrls.stream().filter(arch::matchUrl)
                     .collect(toList());
         }
         log.trace("URLs after filtering by architecture ({}): {}", arch,
                 candidateUrls);
 
-        if (candidateUrls.isEmpty() && !forcedArch
-                && !candidateUrls.isEmpty()) {
+        if (candidateUrls.isEmpty() && !candidateUrls.isEmpty()) {
             candidateUrls = singletonList(
                     candidateUrls.get(candidateUrls.size() - 1));
             log.trace(
