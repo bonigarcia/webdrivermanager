@@ -623,6 +623,7 @@ HTTP proxy. It can be also configured using the environment variable  `HTTPS_PRO
 |`dockerTmpfsMount(String)`|`wdm.dockerTmpfsMount`|`/tmp`|Mount point for in-memory filesystem
 |`dockerStopTimeoutSec(Integer)`|`wdm.dockerStopTimeoutSec`|`5`|Max time to kill a container (in seconds) after stopping it
 |`enableVnc()`|`wdm.dockerEnableVnc=true`|`false`|Enable <<remote-desktop,desktop remote session>> for browsers in Docker
+|`viewOnly()`|`wdm.dockerViewOnly=true`|`false`|Run remote desktop session (noVNC) in view-only mode
 |`enableRecording()`|`wdm.dockerEnableRecording=true`|`false`|Enable the <<recordings,recordings>> of the browser session in Docker
 |`dockerScreenResolution(String)`|`wdm.dockerScreenResolution`|`1280x1080x24`|Screen resolution of the browser desktop session in format `<width>x<height>x<colors-depth>`
 |`dockerRecordingFrameRate(int)`|`wdm.dockerRecordingFrameRate`|`12`|Frame rate for recordings
