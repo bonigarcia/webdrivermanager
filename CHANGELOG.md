@@ -1,5 +1,13 @@
 # Changelog
 
+## [5.0.3] - 2021-09-17
+### Added
+- Include viewOnly (for noVNC) as API method and config parameter (issue #704)
+
+### Fixed
+- Filter ARM64 architecture using all possible labels (issue #700)
+
+
 ## [5.0.2] - 2021-09-13
 ### Added
 - Support for ARM64 architecture in chromedriver for Mac (issue #697)
