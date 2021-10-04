@@ -15,7 +15,7 @@
         <brotli.version>0.1.2</brotli.version>
 
         <!-- provided -->
-        <javalin.version>4.0.1</javalin.version>
+        <javalin.version>4.1.0</javalin.version>
         <selenium.version>4.0.0-rc-2</selenium.version>
 
         <!-- test -->
