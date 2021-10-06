@@ -36,7 +36,6 @@ import java.util.Optional;
 
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.edge.EdgeOptions;
-import org.openqa.selenium.remote.BrowserType;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.Architecture;
@@ -208,7 +207,7 @@ public class EdgeDriverManager extends WebDriverManager {
         } catch (Exception e) {
             log.error(
                     "Exception adding default arguments for Docker, retyring with custom class");
-            options = new OptionsWithArguments(BrowserType.EDGE,
+            options = new OptionsWithArguments("MicrosoftEdge",
                     "ms:edgeOptions");
             try {
                 addDefaultArgumentsForDocker(options);

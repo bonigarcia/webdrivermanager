@@ -31,7 +31,6 @@ import javax.xml.namespace.NamespaceContext;
 
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.BrowserType;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
@@ -166,8 +165,7 @@ public class ChromeDriverManager extends WebDriverManager {
         } catch (Exception e) {
             log.error(
                     "Exception adding default arguments for Docker, retyring with custom class");
-            options = new OptionsWithArguments(BrowserType.CHROME,
-                    "goog:chromeOptions");
+            options = new OptionsWithArguments("chrome", "goog:chromeOptions");
             try {
                 addDefaultArgumentsForDocker(options);
             } catch (Exception e1) {
