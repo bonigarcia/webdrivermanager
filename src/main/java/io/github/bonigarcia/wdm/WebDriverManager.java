@@ -464,6 +464,11 @@ public abstract class WebDriverManager {
         return this;
     }
 
+    public WebDriverManager remoteAddress(URL remoteAddress) {
+        config().setRemoteAddress(remoteAddress.toString());
+        return this;
+    }
+
     public WebDriverManager dockerImage(String dockerImage) {
         config().setDockerCustomImage(dockerImage);
         return this;
