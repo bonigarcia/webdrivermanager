@@ -43,7 +43,7 @@ class DockerSafariTest {
 
     @Test
     void test() {
-        driver.get("https://bonigarcia.dev/selenium-webdriver-java/");
+        driver.get("https://github.com/bonigarcia/selenium-webdriver-java");
         assertThat(driver.getTitle()).contains("Selenium WebDriver");
     }
 
