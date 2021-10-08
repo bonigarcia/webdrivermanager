@@ -574,8 +574,7 @@ public class DockerService {
         if (androidEnabled) {
             envs.add("QTWEBENGINE_DISABLE_SANDBOX=1");
         }
-        if (dockerImage.contains("chrome")
-                && Integer.parseInt(browserVersion) >= 94) {
+        if (isChromeAllowedOrigins(dockerImage, browserVersion)) {
             envs.add("DRIVER_ARGS=--whitelisted-ips='' --allowed-origins='*'");
         }
 
@@ -616,6 +615,22 @@ public class DockerService {
         }
 
         return browserContainer;
+    }
+
+    private boolean isChromeAllowedOrigins(String dockerImage,
+            String browserVersion) {
+        if (dockerImage.contains("chrome")) {
+            int iPoint = browserVersion.indexOf(".");
+            if (iPoint != -1) {
+                browserVersion = browserVersion.substring(0, iPoint);
+            }
+            try {
+                return Integer.parseInt(browserVersion) >= 94;
+            } catch (Exception e) {
+                return true; // beta and dev
+            }
+        }
+        return false;
     }
 
     public DockerContainer startRecorderContainer(String dockerImage,
