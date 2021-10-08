@@ -574,7 +574,8 @@ public class DockerService {
         if (androidEnabled) {
             envs.add("QTWEBENGINE_DISABLE_SANDBOX=1");
         }
-        if (dockerImage.contains("chrome")) {
+        if (dockerImage.contains("chrome")
+                && Integer.parseInt(browserVersion) >= 94) {
             envs.add("DRIVER_ARGS=--whitelisted-ips='' --allowed-origins='*'");
         }
 
