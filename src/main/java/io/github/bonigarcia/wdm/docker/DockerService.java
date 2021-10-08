@@ -574,6 +574,9 @@ public class DockerService {
         if (androidEnabled) {
             envs.add("QTWEBENGINE_DISABLE_SANDBOX=1");
         }
+        if (dockerImage.contains("chrome")) {
+            envs.add("DRIVER_ARGS=--whitelisted-ips='' --allowed-origins='*'");
+        }
 
         // network
         String network = config.getDockerNetwork();
