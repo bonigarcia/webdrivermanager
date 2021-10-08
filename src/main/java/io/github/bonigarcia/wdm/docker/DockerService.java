@@ -620,15 +620,9 @@ public class DockerService {
     private boolean isChromeAllowedOrigins(String dockerImage,
             String browserVersion) {
         if (dockerImage.contains("chrome")) {
-            int iPoint = browserVersion.indexOf(".");
-            if (iPoint != -1) {
-                browserVersion = browserVersion.substring(0, iPoint);
-            }
-            try {
-                return Integer.parseInt(browserVersion) >= 94;
-            } catch (Exception e) {
-                return true; // beta and dev
-            }
+            browserVersion = browserVersion
+                    .replaceAll(config.getBrowserVersionDetectionRegex(), "");
+            return new VersionComparator().compare(browserVersion, "94") >= 0;
         }
         return false;
     }
