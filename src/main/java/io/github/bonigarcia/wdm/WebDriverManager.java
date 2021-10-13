@@ -415,6 +415,16 @@ public abstract class WebDriverManager {
         return this;
     }
 
+    public WebDriverManager dockerEnvVariables(String[] envVariables) {
+        config().setDockerEnvVariables(String.join(",", envVariables));
+        return this;
+    }
+
+    public WebDriverManager dockerEnvVariable(String envVariable) {
+        config().setDockerEnvVariables(envVariable);
+        return this;
+    }
+
     public WebDriverManager dockerScreenResolution(String screenResolution) {
         config().setDockerScreenResolution(screenResolution);
         return this;

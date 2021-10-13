@@ -248,6 +248,7 @@ public class Config {
             "wdm.dockerCustomImage", String.class);
     ConfigKey<String> dockerVolumes = new ConfigKey<>("wdm.dockerVolumes",
             String.class);
+    ConfigKey<String> dockerEnvVariables = new ConfigKey<>("wdm.dockerEnvVariables", String.class);
     ConfigKey<String> dockerDefaultArgs = new ConfigKey<>(
             "wdm.dockerDefaultArgs", String.class);
 
@@ -1287,6 +1288,20 @@ public class Config {
 
     public Config setDockerVolumes(String value) {
         this.dockerVolumes.setValue(value);
+        return this;
+    }
+
+    public List<String> getDockerEnvVariables() {
+        String envVariables = resolve(dockerEnvVariables);
+        String[] out = {};
+        if (!isNullOrEmpty(envVariables)) {
+            out = envVariables.split(",");
+        }
+        return Arrays.asList(out);
+    }
+
+    public Config setDockerEnvVariables(String value) {
+        this.dockerEnvVariables.setValue(value);
         return this;
     }
 
