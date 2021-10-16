@@ -532,7 +532,6 @@ public class DockerService {
         String vncPort = browserContainer.getVncPort();
         log.trace("VNC server URL: vnc://{}:{}", vncAddress, vncPort);
         envs.add("VNC_SERVER=" + vncAddress + ":" + vncPort);
-        envs.addAll(config.getDockerEnvVariables());
 
         // network
         String network = config.getDockerNetwork();
@@ -657,7 +656,6 @@ public class DockerService {
         envs.add("FILE_NAME=" + recordingPath.getFileName().toString());
         envs.add("VIDEO_SIZE=" + config.getDockerVideoSize());
         envs.add("FRAME_RATE=" + config.getDockerRecordingFrameRate());
-        envs.addAll(config.getDockerEnvVariables());
 
         // network
         String network = config.getDockerNetwork();
