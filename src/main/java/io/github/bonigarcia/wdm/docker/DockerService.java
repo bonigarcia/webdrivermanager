@@ -99,12 +99,26 @@ public class DockerService {
         this.httpClient = httpClient;
         this.resolutionCache = resolutionCache;
 
+        boolean createDockerClient = true;
+        if (config.isDockerLocalFallback()) {
+            String dockerInfo = runAndWait(false, "docker", "info");
+            if (isNullOrEmpty(dockerInfo) || dockerInfo.contains("error")) {
+                createDockerClient = false;
+                log.warn(
+                        "Docker is not available in your machine... local browsers are used instead");
+            }
+        }
+        if (createDockerClient) {
+            this.dockerClient = createDockerClient();
+        }
+    }
+
+    private DockerClient createDockerClient() {
         String dockerDaemonUrl = config.getDockerDaemonUrl();
         String dockerHost = isNullOrEmpty(dockerDaemonUrl)
                 ? DockerHost.fromEnv().endpoint()
                 : dockerDaemonUrl;
-
-        dockerClient = getDockerClient(dockerHost);
+        return getDockerClient(dockerHost);
     }
 
     private DockerClient getDockerClient(String dockerHost) {

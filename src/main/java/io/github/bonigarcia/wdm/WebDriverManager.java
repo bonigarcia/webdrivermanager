@@ -330,7 +330,7 @@ public abstract class WebDriverManager {
         if (config().getClearingResolutionCache()) {
             clearResolutionCache();
         }
-        if (dockerEnabled || !isNullOrEmpty(config().getRemoteAddress())) {
+        if (isUsingDocker() || !isNullOrEmpty(config().getRemoteAddress())) {
             return;
         }
         if (getDriverManagerType() != null) {
@@ -362,6 +362,10 @@ public abstract class WebDriverManager {
     public WebDriverManager browserInDocker() {
         dockerEnabled = true;
         return this;
+    }
+
+    protected boolean isUsingDocker() {
+        return dockerEnabled && getDockerService().getDockerClient() != null;
     }
 
     public WebDriverManager browserInDockerAndroid() {
@@ -405,18 +409,8 @@ public abstract class WebDriverManager {
         return this;
     }
 
-    public WebDriverManager dockerVolumes(String[] volumes) {
+    public WebDriverManager dockerVolumes(String... volumes) {
         config().setDockerVolumes(String.join(",", volumes));
-        return this;
-    }
-
-    public WebDriverManager dockerVolume(String volume) {
-        config().setDockerVolumes(volume);
-        return this;
-    }
-
-    public WebDriverManager dockerEnvVariables(String... envVariables) {
-        config().setDockerEnvVariables(envVariables);
         return this;
     }
 
@@ -427,6 +421,11 @@ public abstract class WebDriverManager {
 
     public WebDriverManager dockerRecordingFrameRate(int frameRate) {
         config().setDockerRecordingFrameRate(frameRate);
+        return this;
+    }
+
+    public WebDriverManager avoidDockerLocalFallback() {
+        config().setDockerLocalFallback(false);
         return this;
     }
 
@@ -1423,7 +1422,7 @@ public abstract class WebDriverManager {
         WebDriver driver = null;
         try {
             String remoteAddress = config().getRemoteAddress();
-            if (dockerEnabled) {
+            if (isUsingDocker()) {
                 driver = createDockerWebDriver();
             } else if (!isNullOrEmpty(remoteAddress)) {
                 Capabilities caps = Optional.ofNullable(capabilities)
@@ -1583,7 +1582,7 @@ public abstract class WebDriverManager {
             throws IllegalAccessException, IllegalArgumentException,
             InvocationTargetException, NoSuchMethodException,
             SecurityException {
-        if (dockerEnabled && !androidEnabled) {
+        if (isUsingDocker() && !androidEnabled) {
             Method addArgumentsMethod = options.getClass()
                     .getMethod("addArguments", List.class);
             List<String> defaultArgs = Arrays
