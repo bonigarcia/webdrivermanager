@@ -1300,8 +1300,8 @@ public class Config {
         return Arrays.asList(out);
     }
 
-    public Config setDockerEnvVariables(String value) {
-        this.dockerEnvVariables.setValue(value);
+    public Config setDockerEnvVariables(String... value) {
+        this.dockerEnvVariables.setValue(String.join(",",value));
         return this;
     }
 
