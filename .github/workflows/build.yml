@@ -36,9 +36,6 @@ jobs:
         sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/edge stable main" > /etc/apt/sources.list.d/microsoft-edge-dev.list'
         sudo rm microsoft.gpg
         sudo apt update && sudo apt install microsoft-edge-beta
-    - name: Disable firewall on Windows
-      if: matrix.os == 'windows-latest'
-      run: netsh advfirewall set allprofiles state off
     - name: Run tests on Linux
       if: matrix.os == 'ubuntu-latest'
       run: mvn -B test
