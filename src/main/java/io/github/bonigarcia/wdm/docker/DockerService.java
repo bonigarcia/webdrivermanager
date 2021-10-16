@@ -102,7 +102,7 @@ public class DockerService {
         boolean createDockerClient = true;
         if (config.isDockerLocalFallback()) {
             String dockerInfo = runAndWait(false, "docker", "info");
-            if (dockerInfo.contains("error")) {
+            if (isNullOrEmpty(dockerInfo) || dockerInfo.contains("error")) {
                 createDockerClient = false;
                 log.warn(
                         "Docker is not available in your machine... local browsers are used instead");
