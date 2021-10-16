@@ -409,13 +409,8 @@ public abstract class WebDriverManager {
         return this;
     }
 
-    public WebDriverManager dockerVolumes(String[] volumes) {
+    public WebDriverManager dockerVolumes(String... volumes) {
         config().setDockerVolumes(String.join(",", volumes));
-        return this;
-    }
-
-    public WebDriverManager dockerVolume(String volume) {
-        config().setDockerVolumes(volume);
         return this;
     }
 
