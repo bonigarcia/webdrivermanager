@@ -248,7 +248,8 @@ public class Config {
             "wdm.dockerCustomImage", String.class);
     ConfigKey<String> dockerVolumes = new ConfigKey<>("wdm.dockerVolumes",
             String.class);
-    ConfigKey<String> dockerEnvVariables = new ConfigKey<>("wdm.dockerEnvVariables", String.class);
+    ConfigKey<String> dockerEnvVariables = new ConfigKey<>(
+            "wdm.dockerEnvVariables", String.class);
     ConfigKey<String> dockerDefaultArgs = new ConfigKey<>(
             "wdm.dockerDefaultArgs", String.class);
     ConfigKey<Boolean> dockerLocalFallback = new ConfigKey<>(
@@ -1288,8 +1289,8 @@ public class Config {
         return volumes;
     }
 
-    public Config setDockerVolumes(String value) {
-        this.dockerVolumes.setValue(value);
+    public Config setDockerVolumes(String... value) {
+        this.dockerVolumes.setValue(join(":", value));
         return this;
     }
 
@@ -1303,7 +1304,7 @@ public class Config {
     }
 
     public Config setDockerEnvVariables(String... value) {
-        this.dockerEnvVariables.setValue(String.join(",",value));
+        this.dockerEnvVariables.setValue(String.join(",", value));
         return this;
     }
 
