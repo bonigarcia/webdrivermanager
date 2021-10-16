@@ -1084,8 +1084,8 @@ public class Config {
 
     public String getDockerTmpfsMount() {
         if (IS_OS_WINDOWS) {
-            String tmpdir = System.getProperty("java.io.tmpdir");
-            tmpdir = "//" + tmpdir.replace(":\\", "/").replace("\\", "/");
+            String tmpdir = new File("").getAbsolutePath();
+            tmpdir = "/" + tmpdir.replace(":\\", "/").replace("\\", "/");
             log.trace("Using temporal folder for Tmpfs: {}", tmpdir);
             return tmpdir;
         }
