@@ -591,7 +591,7 @@ public class DockerService {
             envs.add("QTWEBENGINE_DISABLE_SANDBOX=1");
         }
         if (isChromeAllowedOrigins(dockerImage, browserVersion)) {
-            envs.add("DRIVER_ARGS=--whitelisted-ips='' --allowed-origins='*'");
+            envs.add("DRIVER_ARGS=--whitelisted-ips= --allowed-origins=*");
         }
 
         // network
@@ -638,7 +638,7 @@ public class DockerService {
         if (dockerImage.contains("chrome")) {
             browserVersion = browserVersion
                     .replaceAll(config.getBrowserVersionDetectionRegex(), "");
-            return new VersionComparator().compare(browserVersion, "94") >= 0;
+            return new VersionComparator().compare(browserVersion, "95") >= 0;
         }
         return false;
     }
