@@ -100,7 +100,7 @@ public class DockerService {
         this.resolutionCache = resolutionCache;
 
         boolean createDockerClient = true;
-        if (config.isDockerLocalFallback()) {
+        if (config.isDockerLocalFallback() && !isRunningInsideDocker()) {
             String dockerInfo = runAndWait(false, "docker", "info");
             if (isNullOrEmpty(dockerInfo) || dockerInfo.contains("error")) {
                 createDockerClient = false;
