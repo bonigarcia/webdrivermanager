@@ -19,6 +19,7 @@ package io.github.bonigarcia.wdm.test.docker;
 //tag::snippet-in-doc[]
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.Duration;
 
@@ -53,10 +54,20 @@ class DockerChromeVncTest {
 
         // Verify URL for remote session
         URL noVncUrl = wdm.getDockerNoVncUrl();
-        assertThat(noVncUrl).isNotNull();
+        assertThat(isOnline(noVncUrl)).isTrue();
 
         // Pause for manual inspection
         Thread.sleep(Duration.ofSeconds(60).toMillis());
+    }
+
+    boolean isOnline(URL url) {
+        try {
+            HttpURLConnection connection = (HttpURLConnection) url
+                    .openConnection();
+            return connection.getResponseCode() == 200;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 }
