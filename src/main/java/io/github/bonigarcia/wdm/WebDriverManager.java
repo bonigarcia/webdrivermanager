@@ -859,6 +859,16 @@ public abstract class WebDriverManager {
                 WebDriverBrowser::getNoVncUrl);
     }
 
+    public String getDockerVncUrl(WebDriver driver) {
+        return (String) getPropertyFromWebDriverBrowser(driver,
+                WebDriverBrowser::getVncUrl);
+    }
+
+    public String getDockerVncUrl() {
+        return (String) getPropertyFromFirstWebDriverBrowser(
+                WebDriverBrowser::getVncUrl);
+    }
+
     public Path getDockerRecordingPath(WebDriver driver) {
         return (Path) getPropertyFromWebDriverBrowser(driver,
                 WebDriverBrowser::getRecordingPath);
@@ -1547,6 +1557,7 @@ public abstract class WebDriverManager {
             driverBrowser.addDockerContainer(noVncContainer);
             String noVncUrl = noVncContainer.getContainerUrl();
             driverBrowser.setNoVncUrl(noVncUrl);
+            driverBrowser.setVncUrl(noVncContainer.getVncAddress());
 
             log.info("Docker session noVNC URL: {}", noVncUrl);
         }

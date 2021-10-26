@@ -44,6 +44,7 @@ public class WebDriverBrowser {
     List<DockerContainer> dockerContainerList;
     String browserContainerId;
     String noVncUrl;
+    String vncUrl;
     String seleniumServerUrl;
     Path recordingPath;
     int identityHash;
@@ -93,6 +94,14 @@ public class WebDriverBrowser {
 
     public void setNoVncUrl(String noVncUrl) {
         this.noVncUrl = noVncUrl;
+    }
+
+    public String getVncUrl() {
+        return vncUrl;
+    }
+
+    public void setVncUrl(String vncUrl) {
+        this.vncUrl = vncUrl;
     }
 
     public URL getSeleniumServerUrl() {

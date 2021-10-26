@@ -52,6 +52,7 @@ public class DockerContainer {
     private String gateway;
     private String address;
     private String vncPort;
+    private String vncAddress;
     private String sessionId;
     private String browserName;
     private Path recordingPath;
@@ -158,6 +159,14 @@ public class DockerContainer {
 
     public void setVncPort(String vncPort) {
         this.vncPort = vncPort;
+    }
+
+    public String getVncAddress() {
+        return vncAddress;
+    }
+
+    public void setVncAddress(String vncAddress) {
+        this.vncAddress = vncAddress;
     }
 
     public String getSessionId() {

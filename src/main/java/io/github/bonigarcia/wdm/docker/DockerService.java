@@ -530,7 +530,6 @@ public class DockerService {
         envs.add("VNC_PASSWORD=" + config.getDockerVncPassword());
         String vncAddress = browserContainer.getGateway();
         String vncPort = browserContainer.getVncPort();
-        log.trace("VNC server URL: vnc://{}:{}", vncAddress, vncPort);
         envs.add("VNC_SERVER=" + vncAddress + ":" + vncPort);
 
         // network
@@ -626,8 +625,11 @@ public class DockerService {
 
         if (config.isEnabledDockerVnc()) {
             String vncPort = getBindPort(containerId, dockerVncPort + "/tcp");
-            log.trace("The VNC port is {}", vncPort);
             browserContainer.setVncPort(vncPort);
+            String vncAddress = format("vnc://%s:%s/", getDefaultHost(),
+                    vncPort);
+            log.debug("VNC server URL: {}", vncAddress);
+            browserContainer.setVncAddress(vncAddress);
         }
 
         return browserContainer;
