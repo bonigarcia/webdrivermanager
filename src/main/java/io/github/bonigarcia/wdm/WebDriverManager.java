@@ -1557,7 +1557,7 @@ public abstract class WebDriverManager {
             driverBrowser.addDockerContainer(noVncContainer);
             String noVncUrl = noVncContainer.getContainerUrl();
             driverBrowser.setNoVncUrl(noVncUrl);
-            driverBrowser.setVncUrl(noVncContainer.getVncAddress());
+            driverBrowser.setVncUrl(browserContainer.getVncAddress());
 
             log.info("Docker session noVNC URL: {}", noVncUrl);
         }
