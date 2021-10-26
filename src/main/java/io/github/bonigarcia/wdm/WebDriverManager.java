@@ -56,6 +56,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
@@ -321,6 +322,16 @@ public abstract class WebDriverManager {
                     defaultBrowser, e);
         }
         return manager;
+    }
+
+    public static boolean isOnline(URL url) {
+        try {
+            HttpURLConnection connection = (HttpURLConnection) url
+                    .openConnection();
+            return connection.getResponseCode() == 200;
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     public synchronized void setup() {
