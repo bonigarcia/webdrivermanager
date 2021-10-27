@@ -287,14 +287,6 @@ public class DockerService {
             throw new WebDriverManagerException("Port " + exposed
                     + " is not bindable in container " + dockerImage);
         }
-        for (int i = 0; i < exposedPort.length; i++) {
-            log.debug("exposedPort[{}]={}", i, exposedPort[i]);
-            log.debug("exposedPort[{}].getHostPortSpec()={}", i,
-                    exposedPort[i].getHostPortSpec());
-            log.debug("exposedPort[{}].getRawValues()={}", i,
-                    exposedPort[i].getRawValues());
-            log.debug("-------------------------");
-        }
 
         return exposedPort[0].getHostPortSpec();
     }
