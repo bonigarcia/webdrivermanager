@@ -110,7 +110,7 @@ WebDriverManager (Copyright &copy; 2015-2021) is a project created and maintaine
 
 [Logo]: https://bonigarcia.github.io/img/wdm.png
 [WebDriverManager]: https://bonigarcia.dev/webdrivermanager/
-[Selenium WebDriver]: https://seleniumhq.github.io/docs/site/en/webdriver/
+[Selenium WebDriver]: https://www.selenium.dev/documentation/webdriver/
 [JUnit 5]: https://junit.org/junit5/
 [Docker]: https://www.docker.com/
 [Docker Engine]: https://docs.docker.com/engine/
