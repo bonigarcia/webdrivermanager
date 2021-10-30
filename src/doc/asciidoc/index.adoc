@@ -97,7 +97,7 @@ This process automated the first two stages of the driver management previously 
 ==== Generic Manager
 WebDriverManager provides a _generic manager_, i.e., a manager that can be parameterized to act as a specific manager (for Chrome, Firefox, etc.). You can create a manager using this feature using the method `getInstance()` of the WebDriverManager API. The method can be invoked using the following options:
 
-* `getInstance(Class<?> webDriverClass)`: Where `webDriverClass` is a class of the Selenium WebDriver standard hierarchy, such as `ChromeDriver.class`, `FirefoxDriver.class`, etc.
+* `getInstance(Class<? extends WebDriver> webDriverClass)`: Where `webDriverClass` is a class of the Selenium WebDriver standard hierarchy, such as `ChromeDriver.class`, `FirefoxDriver.class`, etc.
 * `getInstance(DriverManagerType driverManagerType)`: Where `driverManagerType` is an https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/java/io/github/bonigarcia/wdm/config/DriverManagerType.java[enumeration] provided by WebDriverManager to identify the available managers.
 * `getInstance(String browserName)`: Where `browserName` is the usual browser name as `String` (i.e., `"Chrome"`, `"Firefox"`, `"Edge"`, `"Opera"`, `"Chromium"`, `"Safari"`, or `"IExplorer"`).
 * `getInstance()`: If no parameter is specified, the configuration key `wdm.defaultBrowser` is used to select the manager (Chrome by default). See the <<advanced-configuration,advanced configuration>> section for further information about the configuration capabilities of WebDriverManager.

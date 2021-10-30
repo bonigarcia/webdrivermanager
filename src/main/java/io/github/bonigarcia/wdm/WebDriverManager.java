@@ -274,7 +274,7 @@ public abstract class WebDriverManager {
     }
 
     public static synchronized WebDriverManager getInstance(
-            Class<?> webDriverClass) {
+            Class<? extends WebDriver> webDriverClass) {
         return getDriver(webDriverClass.getName());
     }
 
