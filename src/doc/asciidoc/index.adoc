@@ -67,7 +67,7 @@ The primary use of WebDriverManager is the automation of driver management. For 
 include::../../test/java/io/github/bonigarcia/wdm/test/chrome/ChromeTest.java[tags=snippet-in-doc,indent=0]
 ----
 
-WebDriverManager provides a set _managers_ for Chrome, Firefox, Edge, Opera, Chromium, and Internet Explorer. The basic use of these managers is the following:
+WebDriverManager provides a set of _managers_ for Chrome, Firefox, Edge, Opera, Chromium, and Internet Explorer. The basic use of these managers is the following:
 
 [source,java]
 ----
@@ -99,7 +99,7 @@ WebDriverManager provides a _generic manager_, i.e., a manager that can be param
 
 * `getInstance(Class<?> webDriverClass)`: Where `webDriverClass` is a class of the Selenium WebDriver standard hierarchy, such as `ChromeDriver.class`, `FirefoxDriver.class`, etc.
 * `getInstance(DriverManagerType driverManagerType)`: Where `driverManagerType` is an https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/java/io/github/bonigarcia/wdm/config/DriverManagerType.java[enumeration] provided by WebDriverManager to identify the available managers.
-* `getInstance(String browserName)`: Where `browserName` is the usual browser name as `String` (i.e., `"Chrome"`, `"Firefox"`, `"Edge"`, `"Opera"`, `"Chromium"`, or `"IExplorer"`).
+* `getInstance(String browserName)`: Where `browserName` is the usual browser name as `String` (i.e., `"Chrome"`, `"Firefox"`, `"Edge"`, `"Opera"`, `"Chromium"`, `"Safari"`, or `"IExplorer"`).
 * `getInstance()`: If no parameter is specified, the configuration key `wdm.defaultBrowser` is used to select the manager (Chrome by default). See the <<advanced-configuration,advanced configuration>> section for further information about the configuration capabilities of WebDriverManager.
 
 The following example shows a https://junit.org/junit5/docs/current/user-guide/#writing-tests-parameterized-tests[JUnit 5 parameterized test] in which the test is repeated twice (using the classes `ChromeDriver.class` and `FirefoxDriver.class` as test parameters). As you can see, WebDriverManager uses this parameter to instantiate the proper manager and create the `WebDriver` instance (see <<webdriver-builder,WebDriver Builder>> section for more information about this feature).
