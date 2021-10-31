@@ -28,6 +28,7 @@ import static io.github.bonigarcia.wdm.config.DriverManagerType.OPERA;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.LINUX;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.MAC;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.WIN;
+import static io.github.bonigarcia.wdm.versions.Shell.runAndWait;
 import static java.lang.Integer.parseInt;
 import static java.lang.String.valueOf;
 import static java.lang.System.getenv;
@@ -323,6 +324,12 @@ public abstract class WebDriverManager {
                     defaultBrowser, e);
         }
         return manager;
+    }
+
+    public static boolean isDockerAvailable() {
+        String dockerInfo = runAndWait(false, "docker", "info");
+        return isNullOrEmpty(dockerInfo) && !dockerInfo.contains("error")
+                && dockerInfo.contains("linux");
     }
 
     public static boolean isOnline(String url) {

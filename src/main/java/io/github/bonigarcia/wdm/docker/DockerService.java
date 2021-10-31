@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm.docker;
 
+import static io.github.bonigarcia.wdm.WebDriverManager.isDockerAvailable;
 import static io.github.bonigarcia.wdm.config.Config.isNullOrEmpty;
 import static io.github.bonigarcia.wdm.docker.DockerHost.defaultAddress;
 import static io.github.bonigarcia.wdm.versions.Shell.runAndWait;
@@ -101,8 +102,7 @@ public class DockerService {
 
         boolean createDockerClient = true;
         if (config.isDockerLocalFallback() && !isRunningInsideDocker()) {
-            String dockerInfo = runAndWait(false, "docker", "info");
-            if (isNullOrEmpty(dockerInfo) || dockerInfo.contains("error")) {
+            if (!isDockerAvailable()) {
                 createDockerClient = false;
                 log.warn(
                         "Docker is not available in your machine... local browsers are used instead");
