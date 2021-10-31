@@ -57,6 +57,7 @@ import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
@@ -322,6 +323,14 @@ public abstract class WebDriverManager {
                     defaultBrowser, e);
         }
         return manager;
+    }
+
+    public static boolean isOnline(String url) {
+        try {
+            return isOnline(new URL(url));
+        } catch (MalformedURLException e) {
+            return false;
+        }
     }
 
     public static boolean isOnline(URL url) {
