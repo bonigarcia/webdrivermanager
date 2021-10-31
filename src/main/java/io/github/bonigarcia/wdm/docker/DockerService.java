@@ -100,15 +100,11 @@ public class DockerService {
         this.httpClient = httpClient;
         this.resolutionCache = resolutionCache;
 
-        boolean createDockerClient = true;
-        if (config.isDockerLocalFallback() && !isRunningInsideDocker()) {
-            if (!isDockerAvailable()) {
-                createDockerClient = false;
-                log.warn(
-                        "Docker is not available in your machine... local browsers are used instead");
-            }
-        }
-        if (createDockerClient) {
+        if (config.isDockerLocalFallback() && !isRunningInsideDocker()
+                && !isDockerAvailable()) {
+            log.warn(
+                    "Docker is not available in your machine... local browsers are used instead");
+        } else {
             this.dockerClient = createDockerClient();
         }
     }
