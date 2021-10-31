@@ -17,7 +17,10 @@
 package io.github.bonigarcia.wdm.test.docker;
 
 //tag::snippet-in-doc[]
+import static io.github.bonigarcia.wdm.WebDriverManager.isDockerAvailable;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assumptions.assumeThat;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,6 +38,7 @@ class DockerChromeBetaTest {
 
     @BeforeEach
     void setupTest() {
+        assumeThat(isDockerAvailable()).isTrue();
         driver = wdm.create();
     }
 
