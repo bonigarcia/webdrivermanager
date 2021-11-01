@@ -16,7 +16,7 @@
 As of version 5, the documentation of WebDriverManager has moved [here][WebDriverManager]. This site contains all the features, examples, configuration, and advanced capabilities of WebDriverManager.
 
 ## Driver Management
-The primary use of WebDriverManager is the automation of driver management. For using this feature, you need to select a given manager in the WebDriverMager API (e.g., `chromedriver()` for Chrome) and invoke the method `setup()`. The following example shows the skeleton of a test case using [JUnit 5], [Selenium WebDriver], and [WebDriverManager].
+The primary use of WebDriverManager is the automation of driver management. For using this feature, you need to select a given manager in the WebDriverManager API (e.g., `chromedriver()` for Chrome) and invoke the method `setup()`. The following example shows the skeleton of a test case using [JUnit 5], [Selenium WebDriver], and [WebDriverManager].
 
 ```java
 import org.junit.jupiter.api.AfterEach;
