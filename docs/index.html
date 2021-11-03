@@ -828,7 +828,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <h2 id="motivation"><a class="anchor" href="#motivation"></a>1. Motivation</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p><a href="https://seleniumhq.github.io/docs/site/en/webdriver/">Selenium WebDriver</a> is a library that allows controlling web browsers programmatically. It provides a cross-browser API that can be used to drive web browsers (e.g., Chrome, Edge, or Firefox, among others) using different programming languages (e.g., Java, JavaScript, Python, C#, or Ruby). The primary use of Selenium WebDriver is implementing automated tests for web applications.</p>
+<p><a href="https://www.selenium.dev/documentation/webdriver/">Selenium WebDriver</a> is a library that allows controlling web browsers programmatically. It provides a cross-browser API that can be used to drive web browsers (e.g., Chrome, Edge, or Firefox, among others) using different programming languages (e.g., Java, JavaScript, Python, C#, or Ruby). The primary use of Selenium WebDriver is implementing automated tests for web applications.</p>
 </div>
 <div class="paragraph">
 <p>Selenium WebDriver carries out the automation using the native support of each browser. For this reason, we need to place a binary file called <em>driver</em> between the test using the Selenium WebDriver API and the browser to be controlled. Examples of drivers for major web browsers nowadays are <a href="https://chromedriver.chromium.org/">chromedriver</a> (for Chrome), <a href="https://github.com/mozilla/geckodriver/">geckodriver</a> (for Firefox), or <a href="https://developer.microsoft.com/en-us/microsoft-edge/tools/webdriver/">msedgedriver</a> (for Edge). As you can see in the following picture, the communication between the WebDriver API and the driver binary is done using a standard protocol called <a href="https://www.w3.org/TR/webdriver/">W3C WebDriver</a> (formerly the so-called <em>JSON Wire Protocol</em>). Then, the communication between the driver and the browser is done using the native capabilities of each browser.</p>
@@ -1246,7 +1246,7 @@ When using this feature, WebDriverManager stores internally a reference to the <
 <p>Method <code>capabilities()</code>: To specify WebDriver <code>Capabilities</code> (see <a href="https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/create/ChromeCapabilitiesCreateTest.java">example</a>).</p>
 </li>
 <li>
-<p>Method <code>remoteAddress()</code>: To specify the remote URL in the <code>RemoteWebDriver</code> instance (typically when using a Selenium Server). This method is equivalent to the configuration key <code>wdm.remoteAddress</code> (see <a href="#advanced-configuration">configuration</a> section). The following example shows a test using this method. Notice that this test starts <a href="https://www.selenium.dev/documentation/en/grid/">Selenium Grid</a> in standalone mode before the test. To that, WebDriverManager is also used (since the browser controlled by Selenium Grid also requires a driver):</p>
+<p>Method <code>remoteAddress()</code>: To specify the remote URL in the <code>RemoteWebDriver</code> instance, typically when using a Selenium Server or a cloud provider (such as <a href="https://saucelabs.com/">Sauce Labs</a>, <a href="https://www.lambdatest.com/">LambdaTest</a>, etc.). This method is equivalent to the configuration key <code>wdm.remoteAddress</code> (see <a href="#advanced-configuration">configuration</a> section). The following example shows a test using this method. Notice that this test starts <a href="https://www.selenium.dev/documentation/en/grid/">Selenium Grid</a> in standalone mode before the test. To that, WebDriverManager is also used (since the browser controlled by Selenium Grid also requires a driver):</p>
 </li>
 </ul>
 </div>
@@ -2580,10 +2580,9 @@ HTTP proxy. It can be also configured using the environment variable  <code>HTTP
 <p><a href="https://opencollective.com/webdrivermanager">WebDriverManager</a> is part of <a href="https://opencollective.com/bonigarcia">OpenCollective</a>, an online funding platform for open and transparent communities. You can support the project by contributing as a backer (i.e., a personal <a href="https://opencollective.com/webdrivermanager/donate">donation</a> or <a href="https://opencollective.com/webdrivermanager/contribute/backer-8132/checkout">recurring contribution</a>) or as a <a href="https://opencollective.com/webdrivermanager/contribute/sponsor-8133/checkout">sponsor</a> (i.e., a recurring contribution by a company).</p>
 </div>
 <h3 id="backers" class="discrete">Backers</h3>
-<a href="https://opencollective.com/webdrivermanager#backers" target="_blank"><img src="https://opencollective.com/webdrivermanager/backers.svg?width=890"></a>
+<a href="https://opencollective.com/webdrivermanager" target="_blank"><img src="https://opencollective.com/webdrivermanager/backers.svg?width=890"></a>
 <h3 id="sponsors" class="discrete">Sponsors</h3>
-<a href="https://opencollective.com/webdrivermanager/sponsor/0/website" target="_blank"><img src="https://opencollective.com/webdrivermanager/sponsor/0/avatar.svg"></a>
-<a href="https://opencollective.com/webdrivermanager/sponsor/1/website" target="_blank"><img src="https://opencollective.com/webdrivermanager/sponsor/1/avatar.svg"></a>
+<a href="https://opencollective.com/webdrivermanager" target="_blank"><img src="https://opencollective.com/webdrivermanager/sponsor.svg?width=890"></a>
 </div>
 </div>
 <div class="sect1">
