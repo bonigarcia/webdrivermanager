@@ -1455,7 +1455,7 @@ public abstract class WebDriverManager {
         return empty();
     }
 
-    protected WebDriver instantiateDriver() {
+    protected synchronized WebDriver instantiateDriver() {
         WebDriver driver = null;
         try {
             String remoteAddress = config().getRemoteAddress();
@@ -1595,9 +1595,10 @@ public abstract class WebDriverManager {
         return driverBrowser.getDriver();
     }
 
-    protected WebDriver createLocalWebDriver() throws ClassNotFoundException,
-            InstantiationException, IllegalAccessException,
-            InvocationTargetException, NoSuchMethodException {
+    protected synchronized WebDriver createLocalWebDriver()
+            throws ClassNotFoundException, InstantiationException,
+            IllegalAccessException, InvocationTargetException,
+            NoSuchMethodException {
         WebDriver driver = null;
         if (getDriverManagerType() != null) {
             if (getDriverManagerType() == CHROMIUM) {
