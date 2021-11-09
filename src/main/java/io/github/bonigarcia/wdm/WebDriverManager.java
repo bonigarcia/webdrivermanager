@@ -1600,12 +1600,12 @@ public abstract class WebDriverManager {
             IllegalAccessException, InvocationTargetException,
             NoSuchMethodException {
         WebDriver driver = null;
-        if (getDriverManagerType() != null) {
-            if (getDriverManagerType() == CHROMIUM) {
+        DriverManagerType managerType = getDriverManagerType();
+        if (managerType != null) {
+            if (managerType == CHROMIUM) {
                 capabilities = getCapabilities();
             }
-            Class<?> browserClass = Class
-                    .forName(getDriverManagerType().browserClass());
+            Class<?> browserClass = Class.forName(managerType.browserClass());
             driver = webDriverCreator.createLocalWebDriver(browserClass,
                     capabilities);
             webDriverList.add(new WebDriverBrowser(driver));

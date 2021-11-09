@@ -50,7 +50,7 @@ public class WebDriverCreator {
         this.config = config;
     }
 
-    public WebDriver createLocalWebDriver(Class<?> browserClass,
+    public synchronized WebDriver createLocalWebDriver(Class<?> browserClass,
             Capabilities capabilities)
             throws InstantiationException, IllegalAccessException,
             InvocationTargetException, NoSuchMethodException {
