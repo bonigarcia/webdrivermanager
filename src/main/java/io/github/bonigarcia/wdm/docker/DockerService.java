@@ -37,9 +37,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.github.dockerjava.api.model.AuthConfig;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 
 import com.github.dockerjava.api.DockerClient;
@@ -509,9 +512,19 @@ public class DockerService {
         return browserVersion.toLowerCase(ROOT).contains(LATEST_MINUS);
     }
 
+    private String getPrefixedDockerImage(String dockerImage) {
+        String newDockerImage = dockerImage;
+        String prefix = config.getDockerPrivateEndpoint();
+        if (StringUtils.isNotBlank(prefix)) {
+            newDockerImage = String.format("%s/%s", prefix, dockerImage);
+        }
+        return newDockerImage;
+    }
+
     public DockerContainer startNoVncContainer(String dockerImage,
             String cacheKey, String browserVersion,
             DockerContainer browserContainer) {
+        dockerImage = getPrefixedDockerImage(dockerImage);
         // pull image
         pullImageIfNecessary(cacheKey, dockerImage, browserVersion);
 
@@ -551,6 +564,7 @@ public class DockerService {
 
     public DockerContainer startBrowserContainer(String dockerImage,
             String cacheKey, String browserVersion, boolean androidEnabled) {
+        dockerImage = getPrefixedDockerImage(dockerImage);
         // pull image
         pullImageIfNecessary(cacheKey, dockerImage, browserVersion);
 
@@ -645,6 +659,7 @@ public class DockerService {
     public DockerContainer startRecorderContainer(String dockerImage,
             String cacheKey, String recorderVersion,
             DockerContainer browserContainer) {
+        dockerImage = getPrefixedDockerImage(dockerImage);
         // pull image
         pullImageIfNecessary(cacheKey, dockerImage, recorderVersion);
 
