@@ -559,6 +559,7 @@ public class DockerService {
         String dockerBrowserPort = String
                 .valueOf(config.getDockerBrowserPort());
         exposedPorts.add(dockerBrowserPort);
+        exposedPorts.add("8080");
 
         // shmSize
         long shmSize = config.getDockerMemSizeBytes(config.getDockerShmSize());
@@ -570,6 +571,15 @@ public class DockerService {
                         .getDockerMemSizeBytes(config.getDockerTmpfsSize())))
                 .withTarget(config.getDockerTmpfsMount());
         mounts.add(tmpfsMount);
+
+        // binds
+        List<String> binds = new ArrayList<>();
+        String dockerVolumes = config.getDockerVolumes();
+        if (!isNullOrEmpty(dockerVolumes)) {
+            List<String> volumeList = Arrays.asList(dockerVolumes.split(","));
+            log.trace("Using custom volumes: {}", volumeList);
+            binds.addAll(volumeList);
+        }
 
         // envs
         List<String> envs = new ArrayList<>();
@@ -596,7 +606,7 @@ public class DockerService {
         // builder
         DockerBuilder dockerBuilder = DockerContainer.dockerBuilder(dockerImage)
                 .exposedPorts(exposedPorts).network(network).mounts(mounts)
-                .shmSize(shmSize).envs(envs).sysadmin();
+                .binds(binds).shmSize(shmSize).envs(envs).sysadmin();
         if (androidEnabled) {
             dockerBuilder = dockerBuilder.privileged();
         }
