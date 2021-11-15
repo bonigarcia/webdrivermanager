@@ -559,7 +559,6 @@ public class DockerService {
         String dockerBrowserPort = String
                 .valueOf(config.getDockerBrowserPort());
         exposedPorts.add(dockerBrowserPort);
-        exposedPorts.add("8080");
 
         // shmSize
         long shmSize = config.getDockerMemSizeBytes(config.getDockerShmSize());
