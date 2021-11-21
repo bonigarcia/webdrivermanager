@@ -631,6 +631,7 @@ HTTP proxy. It can be also configured using the environment variable  `HTTPS_PRO
 |`dockerRecordingPrefix(String)`|`wdm.dockerRecordingPrefix`|Browser name|Prefix to be appended to default filname (i.e., broser name plus `_` plus session id)
 |`dockerCustomImage(String)`|`wdm.dockerCustomImage`|`""`|Custom image to be used as browser in Docker
 | `dockerVolume(String)` `dockerVolumes(String[])`|`wdm.dockerVolumes`|`""`|Docker volumes (single or array) using the format `"\local\path:\container\path"`
+| `dockerPrivateEndpoint(String)`|`wdm.dockerPrivateEndpoint`|`""`|Used to prefix pull images when you have a private registry with authentication i.e docker-hub-remote.myprivate.com will be prefixed to pull as docker-hub-remote.myprivate.com/selenoid/vnc and so on for any images used (video recorder, novnc etc..), docker login docker-hub-remote.myprivate.com is still required in order to get the auth credentials stored in the .docker/config.json, for MacOS users make sure to configure your engine to store the credentials in the config.json instead of keychain storage.
 |=======
 
 [[server_config]]
