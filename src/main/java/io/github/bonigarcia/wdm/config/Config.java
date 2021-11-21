@@ -255,6 +255,9 @@ public class Config {
     ConfigKey<Boolean> dockerLocalFallback = new ConfigKey<>(
             "wdm.dockerLocalFallback", Boolean.class);
 
+    ConfigKey<String> dockerPrivateEndpoint = new ConfigKey<>(
+            "wdm.dockerPrivateEndpoint", String.class);
+
     ConfigKey<String> remoteAddress = new ConfigKey<>("wdm.remoteAddress",
             String.class);
 
@@ -1323,6 +1326,15 @@ public class Config {
 
     public Config setDockerLocalFallback(boolean value) {
         this.dockerLocalFallback.setValue(value);
+        return this;
+    }
+
+    public String getDockerPrivateEndpoint() {
+        return resolve(dockerPrivateEndpoint);
+    }
+
+    public Config setDockerPrivateEndpoint(String value) {
+        this.dockerPrivateEndpoint.setValue(value);
         return this;
     }
 
