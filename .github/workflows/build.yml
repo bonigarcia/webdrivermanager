@@ -31,11 +31,9 @@ jobs:
     - name: Install Edge on Linux
       if: matrix.os == 'ubuntu-latest'
       run: |
-        curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
-        sudo install -o root -g root -m 644 microsoft.gpg /etc/apt/trusted.gpg.d/
-        sudo sh -c 'echo "deb [arch=amd64] https://packages.microsoft.com/repos/edge stable main" > /etc/apt/sources.list.d/microsoft-edge-dev.list'
-        sudo rm microsoft.gpg
-        sudo apt update && sudo apt install microsoft-edge-beta
+        wget -q https://packages.microsoft.com/keys/microsoft.asc -O- | sudo apt-key add -
+        sudo add-apt-repository "deb [arch=amd64] https://packages.microsoft.com/repos/edge stable main"
+        sudo apt install microsoft-edge-dev
     - name: Run tests on Linux
       if: matrix.os == 'ubuntu-latest'
       run: mvn -B test
