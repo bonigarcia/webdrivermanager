@@ -24,7 +24,7 @@ jobs:
     - name: Set up Java
       uses: actions/setup-java@v2
       with:
-        distribution: 'adopt'
+        distribution: 'zulu'
         java-version: ${{ matrix.java }}
     - name: Start Xvfb
       run: Xvfb :99 &
