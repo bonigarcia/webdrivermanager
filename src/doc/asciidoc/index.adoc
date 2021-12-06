@@ -709,18 +709,19 @@ endif::[]
 endif::[]
 
 == Further Documentation
-There are other resources related to WebDriverManager and automated testing you can find helpful. For instance, the following journal papers:
+There are other resources related to Selenium-Jupiter and automated testing you can find helpful. For instance, the following books:
+
+* García, Boni. https://www.oreilly.com/library/view/hands-on-selenium-webdriver/9781098109998/[Hands-On Selenium WebDriver with Java]. _O'Reilly Media, Inc._, Currently on early relase. Final release available on 2022.
+* García, Boni. https://www.amazon.com/Mastering-Software-Testing-JUnit-Comprehensive-ebook/dp/B076ZQCK5Q/[Mastering Software Testing with JUnit 5]. _Packt Publishing Ltd_, 2017.
+
+Or the following journal papers:
 
 * García, Boni, et al. "https://link.springer.com/article/10.1007%2Fs10664-021-09975-3[Automated driver management for Selenium WebDriver]." _Empirical Software Engineering_ 26.5 (2021): 1-51.
 * García, Boni, et al. "https://www.mdpi.com/2079-9292/9/7/1067[A survey of the Selenium ecosystem]." _Electronics_ 9.7 (2020): 1067.
 * García, Boni, et al. "https://www.mdpi.com/2079-9292/9/3/462[Assessment of QoE for video and audio in WebRTC applications using full-reference models]." _Electronics_ 9.3 (2020): 462.
 * García, Boni, et al. "https://www.mdpi.com/2079-9292/8/8/854[Practical evaluation of VMAF perceptual video quality for WebRTC applications]." _Electronics_ 8.8 (2019): 854.
-* García, Boni, et al. "http://ieeexplore.ieee.org/document/7992926/[WebRTC testing: challenges and practical solutions]." _IEEE Communications Standards Magazine_ 1.2 (2017): 36-42.
-* García, Boni, and Juan Carlos Dueñas. "http://www.rintonpress.com/journals/jweonline.html#v14n56[Web browsing automation for applications quality control]." _Journal of web engineering_ (2015): 474-502.
-
-Or the following book:
-
-* García, Boni. https://www.amazon.com/Mastering-Software-Testing-JUnit-Comprehensive-ebook/dp/B076ZQCK5Q/[Mastering Software Testing with JUnit 5]. _Packt Publishing Ltd_, 2017.
+* García, Boni, et al. "https://ieeexplore.ieee.org/document/7992926/[WebRTC testing: challenges and practical solutions]." _IEEE Communications Standards Magazine_ 1.2 (2017): 36-42.
+* García, Boni, and Juan Carlos Dueñas. "https://www.rintonpress.com/journals/jweonline.html#v14n56[Web browsing automation for applications quality control]." _Journal of web engineering_ (2015): 474-502.
 
 == About
 WebDriverManager (Copyright © 2015-2021) is an open-source project created and maintained by https://bonigarcia.dev/[Boni García] (https://twitter.com/boni_gg[@boni_gg]), licensed under the terms of https://www.apache.org/licenses/LICENSE-2.0[Apache 2.0 License]. This documentation (also available in link:webdrivermanager.pdf[PDF] and link:webdrivermanager.epub[EPUB]) is released under the terms of https://creativecommons.org/licenses/by-nc-sa/2.0/[CC BY-NC-SA 2.0].
