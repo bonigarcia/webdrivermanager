@@ -1525,7 +1525,7 @@ public abstract class WebDriverManager {
 
         } else {
             if (isUnknown(browserVersion) || getDockerService()
-                    .isBrowserVersionLatesMinus(browserVersion)) {
+                    .isBrowserVersionLatestMinus(browserVersion)) {
                 browserCacheKey += isNullOrEmpty(browserVersion) ? "latest"
                         : browserVersion;
                 browserVersion = getDockerService()

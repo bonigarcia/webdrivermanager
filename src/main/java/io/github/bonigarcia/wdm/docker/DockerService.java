@@ -451,7 +451,7 @@ public class DockerService {
 
     public int getMinusIndex(String browserVersion) {
         int minusIndex = 0;
-        if (isBrowserVersionLatesMinus(browserVersion)) {
+        if (isBrowserVersionLatestMinus(browserVersion)) {
             minusIndex = Integer.parseInt(browserVersion
                     .substring(browserVersion.indexOf(LATEST_MINUS)
                             + LATEST_MINUS.length()));
@@ -498,7 +498,7 @@ public class DockerService {
 
     public boolean isBrowserVersionWildCard(String browserVersion) {
         return isBrowserVersionBetaOrDev(browserVersion)
-                || isBrowserVersionLatesMinus(browserVersion);
+                || isBrowserVersionLatestMinus(browserVersion);
     }
 
     public boolean isBrowserVersionBetaOrDev(String browserVersion) {
