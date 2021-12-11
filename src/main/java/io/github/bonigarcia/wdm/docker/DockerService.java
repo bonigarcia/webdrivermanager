@@ -506,8 +506,14 @@ public class DockerService {
                 || browserVersion.equalsIgnoreCase(DEV);
     }
 
-    public boolean isBrowserVersionLatesMinus(String browserVersion) {
+    public boolean isBrowserVersionLatestMinus(String browserVersion) {
         return browserVersion.toLowerCase(ROOT).contains(LATEST_MINUS);
+    }
+
+    @Deprecated
+    /* Replaced by {@link #isBrowserVersionLatestMinus(String)} */
+    public boolean isBrowserVersionLatesMinus(String browserVersion) {
+        return isBrowserVersionLatestMinus(browserVersion);
     }
 
     private String getPrefixedDockerImage(String dockerImage) {
