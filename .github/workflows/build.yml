@@ -10,8 +10,6 @@ env:
   DISPLAY: :99
   GITHUB_TOKEN: ${{ secrets.WDM_GITHUBTOKEN }}
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-  MOZ_PROFILER_STARTUP: 1
-  MOZ_PROFILER_SHUTDOWN: geckodriver-profile.json
 
 jobs:
   build:
@@ -52,9 +50,3 @@ jobs:
     - name: Upload coverage to Codecov
       if: success() && matrix.os == 'ubuntu-latest' && matrix.java == '11' && !contains(github.ref, 'pull')
       uses: codecov/codecov-action@v1
-    - name: Archive production artifacts
-      uses: actions/upload-artifact@v2
-      with:
-        name: json-files
-        path: |
-          *.json
