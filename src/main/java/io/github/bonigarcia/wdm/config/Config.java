@@ -538,8 +538,14 @@ public class Config {
         return this;
     }
 
-    public boolean getVersionsPropertiesOnlineFirst() {
+    public boolean isVersionsPropertiesOnlineFirst() {
         return resolve(versionsPropertiesOnlineFirst);
+    }
+
+    @Deprecated
+    /* Replaced by {@link #isVersionsPropertiesOnlineFirst()} */
+    public boolean getVersionsPropertiesOnlineFirst() {
+        return isVersionsPropertiesOnlineFirst();
     }
 
     public Config setVersionsPropertiesOnlineFirst(boolean value) {
@@ -547,8 +553,14 @@ public class Config {
         return this;
     }
 
-    public boolean getCommandsPropertiesOnlineFirst() {
+    public boolean isCommandsPropertiesOnlineFirst() {
         return resolve(commandsPropertiesOnlineFirst);
+    }
+
+    @Deprecated
+    /* Replaced by {@link #isCommandsPropertiesOnlineFirst()} */
+    public boolean getCommandsPropertiesOnlineFirst() {
+        return isCommandsPropertiesOnlineFirst();
     }
 
     public Config setCommandsPropertiesOnlineFirst(boolean value) {
@@ -1105,8 +1117,14 @@ public class Config {
         return this;
     }
 
-    public boolean isEnabledDockerVnc() {
+    public boolean isDockerEnabledVnc() {
         return resolve(dockerEnableVnc);
+    }
+
+    @Deprecated
+    /* Replaced by {@link #isDockerEnabledVnc()} */
+    public boolean isEnabledDockerVnc() {
+        return isDockerEnabledVnc();
     }
 
     public Config setDockerEnableVnc(boolean value) {
@@ -1114,8 +1132,14 @@ public class Config {
         return this;
     }
 
-    public boolean getDockerViewOnly() {
+    public boolean isDockerViewOnly() {
         return resolve(dockerViewOnly);
+    }
+
+    @Deprecated
+    /* Replaced by {@link #isDockerViewOnly()} */
+    public boolean getDockerViewOnly() {
+        return isDockerViewOnly();
     }
 
     public Config setDockerViewOnly(boolean value) {
@@ -1123,8 +1147,14 @@ public class Config {
         return this;
     }
 
-    public boolean isEnabledDockerRecording() {
+    public boolean isDockerEnabledRecording() {
         return resolve(dockerEnableRecording);
+    }
+
+    @Deprecated
+    /* Replaced by {@link #isDockerEnabledRecording()} */
+    public boolean isEnabledDockerRecording() {
+        return isDockerEnabledRecording();
     }
 
     public Config setDockerEnableRecording(boolean value) {

@@ -1656,7 +1656,7 @@ public abstract class WebDriverManager {
             log.info("Docker session noVNC URL: {}", noVncUrl);
         }
 
-        if (config.isEnabledDockerRecording()) {
+        if (config.isDockerEnabledRecording()) {
             String recorderImage = config.getDockerRecordingImage();
             String recorderVersion = getDockerService()
                     .getVersionFromImage(recorderImage);
