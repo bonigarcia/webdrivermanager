@@ -82,7 +82,7 @@ public class VersionDetector {
             key = key.replace("chromium", "chrome");
         }
 
-        boolean online = config.getVersionsPropertiesOnlineFirst();
+        boolean online = config.isVersionsPropertiesOnlineFirst();
         String propertiesName = VERSIONS_PROPERTIES;
         String onlineMessage = online ? ONLINE : LOCAL;
         log.debug("Getting driver version for {} from {} {}", key,
@@ -135,7 +135,7 @@ public class VersionDetector {
 
         String pathStr = "";
         Properties commandsProperties = getProperties(COMMANDS_PROPERTIES,
-                config.getCommandsPropertiesOnlineFirst());
+                config.isCommandsPropertiesOnlineFirst());
         List<String> commandsPerOs = getCommandsList(browserName,
                 commandsProperties);
 
@@ -197,7 +197,7 @@ public class VersionDetector {
             return browserVersionUsingProperties;
         }
 
-        boolean online = config.getCommandsPropertiesOnlineFirst();
+        boolean online = config.isCommandsPropertiesOnlineFirst();
         String propertiesName = COMMANDS_PROPERTIES;
         Properties commandsProperties = getProperties(propertiesName, online);
 
