@@ -471,17 +471,45 @@ public abstract class WebDriverManager {
         return this;
     }
 
-    public WebDriverManager recordingPrefix(String prefix) {
+    public WebDriverManager dockerRecordingPrefix(String prefix) {
         config().setDockerRecordingPrefix(prefix);
         return this;
     }
 
-    public WebDriverManager recordingOutput(String path) {
-        return recordingOutput(Paths.get(path));
+    @Deprecated
+    /* Replaced by {@link #dockerRecordingPrefix(String)} */
+    public WebDriverManager recordingPrefix(String prefix) {
+        return dockerRecordingPrefix(prefix);
     }
 
-    public WebDriverManager recordingOutput(Path path) {
+    public WebDriverManager dockerRecordingOutput(String path) {
+        return dockerRecordingOutput(Paths.get(path));
+    }
+
+    public WebDriverManager dockerRecordingOutput(Path path) {
         config().setDockerRecordingOutput(path);
+        return this;
+    }
+
+    @Deprecated
+    /* Replaced by {@link #dockerRecordingOutput(String)} */
+    public WebDriverManager recordingOutput(String path) {
+        return dockerRecordingOutput(Paths.get(path));
+    }
+
+    @Deprecated
+    /* Replaced by {@link #dockerRecordingOutput(Path)} */
+    public WebDriverManager recordingOutput(Path path) {
+        return dockerRecordingOutput(path);
+    }
+
+    public WebDriverManager dockerPrivateEndpoint(String endpoint) {
+        config().setDockerPrivateEndpoint(endpoint);
+        return this;
+    }
+
+    public WebDriverManager dockerStopTimeoutSec(Integer timeout) {
+        config().setDockerStopTimeoutSec(timeout);
         return this;
     }
 
@@ -500,9 +528,15 @@ public abstract class WebDriverManager {
         return this;
     }
 
-    public WebDriverManager dockerImage(String dockerImage) {
+    public WebDriverManager dockerCustomImage(String dockerImage) {
         config().setDockerCustomImage(dockerImage);
         return this;
+    }
+
+    @Deprecated
+    /* Replaced by {@link #dockerCustomImage(String)} */
+    public WebDriverManager dockerImage(String dockerImage) {
+        return dockerCustomImage(dockerImage);
     }
 
     public WebDriverManager driverVersion(String driverVersion) {
