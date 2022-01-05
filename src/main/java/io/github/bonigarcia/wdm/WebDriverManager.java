@@ -61,6 +61,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -73,6 +74,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.DocumentBuilder;
@@ -324,6 +328,33 @@ public abstract class WebDriverManager {
                     defaultBrowser, e);
         }
         return manager;
+    }
+
+    public static Path zipFolder(Path sourceFolder) {
+        Path zipFile = null;
+        try {
+            zipFile = Files.createTempFile("", ".zip");
+            try (ZipOutputStream zipOutputStream = new ZipOutputStream(
+                    Files.newOutputStream(zipFile));
+                    Stream<Path> paths = Files.walk(sourceFolder)) {
+                paths.filter(path -> !Files.isDirectory(path)).forEach(path -> {
+                    ZipEntry zipEntry = new ZipEntry(
+                            sourceFolder.relativize(path).toString());
+                    try {
+                        zipOutputStream.putNextEntry(zipEntry);
+                        Files.copy(path, zipOutputStream);
+                        zipOutputStream.closeEntry();
+                    } catch (IOException e) {
+                        log.warn("Exception adding entry {} to zip", zipEntry,
+                                e);
+                    }
+                });
+            }
+            log.debug("Zipping {} folder to {}", zipFile);
+        } catch (IOException e) {
+            log.warn("Exception zipping folder {}", sourceFolder, e);
+        }
+        return zipFile;
     }
 
     public static boolean isDockerAvailable() {
