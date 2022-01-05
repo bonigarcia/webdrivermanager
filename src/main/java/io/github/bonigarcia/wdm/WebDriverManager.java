@@ -350,7 +350,7 @@ public abstract class WebDriverManager {
                     }
                 });
             }
-            log.debug("Zipping {} folder to {}", zipFile);
+            log.debug("Zipping {} folder to {}", sourceFolder, zipFile);
         } catch (IOException e) {
             log.warn("Exception zipping folder {}", sourceFolder, e);
         }
