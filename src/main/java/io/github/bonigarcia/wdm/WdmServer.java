@@ -91,22 +91,29 @@ public class WdmServer {
                 ? serverPath.substring(0, serverPath.length() - 1)
                 : serverPath;
 
-        Javalin app = Javalin.create().start(port);
-        Handler handler = this::handleRequest;
+        try (Javalin app = Javalin.create().start(port)) {
+            Handler handler = this::handleRequest;
 
-        // Resolve drivers
-        app.get(path + "/chromedriver", handler);
-        app.get(path + "/firefoxdriver", handler);
-        app.get(path + "/edgedriver", handler);
-        app.get(path + "/iedriver", handler);
-        app.get(path + "/operadriver", handler);
+            // Resolve drivers
+            app.get(path + "/chromedriver", handler);
+            app.get(path + "/firefoxdriver", handler);
+            app.get(path + "/edgedriver", handler);
+            app.get(path + "/iedriver", handler);
+            app.get(path + "/operadriver", handler);
 
-        // Selenium Server
-        app.post(path + SESSION, handler);
-        app.post(path + SESSION + "/*", handler);
-        app.get(path + SESSION + "/*", handler);
-        app.delete(path + SESSION + "/*", handler);
+            // Selenium Server
+            app.post(path + SESSION, handler);
+            app.post(path + SESSION + "/*", handler);
+            app.get(path + SESSION + "/*", handler);
+            app.delete(path + SESSION + "/*", handler);
 
+            String localHostAddress = getLocalHostAddress();
+            log.info("WebDriverManager Server listening on http://{}:{}{}",
+                    localHostAddress, port, path);
+        }
+    }
+
+    private String getLocalHostAddress() {
         String localHostAddress;
         try {
             localHostAddress = InetAddress.getLocalHost().getHostAddress();
@@ -114,9 +121,7 @@ public class WdmServer {
             localHostAddress = InetAddress.getLoopbackAddress()
                     .getHostAddress();
         }
-
-        log.info("WebDriverManager Server listening on http://{}:{}{}",
-                localHostAddress, port, path);
+        return localHostAddress;
     }
 
     private void handleRequest(Context ctx) throws IOException {
