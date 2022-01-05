@@ -37,8 +37,8 @@ jobs:
     - name: Run tests on Linux
       if: matrix.os == 'ubuntu-latest'
       run: mvn -B test
-    - name: Run tests on Windows and Mac
-      if: matrix.os != 'ubuntu-latest'
+    - name: Run tests on Mac
+      if: matrix.os == 'macos-latest'
       run: mvn -B test -Dtest=!Docker*
     - name: Upload analysis to SonarCloud
       if: success() && matrix.os == 'ubuntu-latest' && matrix.java == '11' && !contains(github.ref, 'pull')
