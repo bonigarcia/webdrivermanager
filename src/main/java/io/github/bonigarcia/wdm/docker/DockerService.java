@@ -183,7 +183,7 @@ public class DockerService {
                 hostConfigBuilder.withPrivileged(true);
             }
             if (dockerContainer.isSysadmin()) {
-                log.trace("Adding sysadmin capabilty");
+                log.trace("Adding sysadmin capability");
                 hostConfigBuilder.withCapAdd(Capability.SYS_ADMIN);
             }
 
@@ -300,7 +300,7 @@ public class DockerService {
                         }).awaitCompletion();
                 log.trace("Docker image {} pulled", imageId);
 
-                if (!config.isAvoidingResolutionCache()) {
+                if (!config.isAvoidResolutionCache()) {
                     resolutionCache.putValueInResolutionCacheIfEmpty(cacheKey,
                             imageVersion, config.getTtlForBrowsers());
                 }

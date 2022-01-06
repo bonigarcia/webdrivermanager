@@ -351,10 +351,10 @@ public abstract class WebDriverManager {
     }
 
     public synchronized void setup() {
-        if (config().getClearingDriverCache()) {
+        if (config().isClearDriverCache()) {
             clearDriverCache();
         }
-        if (config().getClearingResolutionCache()) {
+        if (config().isClearResolutionCache()) {
             clearResolutionCache();
         }
         if (isUsingDocker() || !isNullOrEmpty(config().getRemoteAddress())) {
@@ -1137,7 +1137,7 @@ public abstract class WebDriverManager {
     }
 
     protected boolean useResolutionCache() {
-        return !config().isAvoidingResolutionCache();
+        return !config().isAvoidResolutionCache();
     }
 
     protected boolean isUnknown(String driverVersion) {

@@ -66,7 +66,7 @@ public class ResolutionCache {
     public ResolutionCache(Config config) {
         this.config = config;
 
-        if (!config.isAvoidingResolutionCache()) {
+        if (!config.isAvoidResolutionCache()) {
             File resolutionCachePath = config.getResolutionCachePath();
             this.resolutionCacheFile = new File(resolutionCachePath,
                     config.getResolutionCache());
