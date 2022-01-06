@@ -502,8 +502,14 @@ public class Config {
         return this;
     }
 
-    public boolean isAvoidingResolutionCache() {
+    public boolean isAvoidResolutionCache() {
         return resolve(avoidResolutionCache);
+    }
+
+    @Deprecated
+    /* Replaced by {@link #isAvoidResolutionCache()} */
+    public boolean isAvoidingResolutionCache() {
+        return isAvoidResolutionCache();
     }
 
     public Config setAvoidResolutionCache(boolean value) {
@@ -586,8 +592,14 @@ public class Config {
         return this;
     }
 
-    public boolean getClearingResolutionCache() {
+    public boolean isClearResolutionCache() {
         return resolve(clearResolutionCache);
+    }
+
+    @Deprecated
+    /* Replaced by {@link #isClearResolutionCache()} */
+    public boolean getClearingResolutionCache() {
+        return isClearResolutionCache();
     }
 
     public Config setClearResolutionCache(Boolean value) {
@@ -595,8 +607,14 @@ public class Config {
         return this;
     }
 
-    public boolean getClearingDriverCache() {
+    public boolean isClearDriverCache() {
         return resolve(clearDriverCache);
+    }
+
+    @Deprecated
+    /* Replaced by {@link #isClearDriverCache()} */
+    public boolean getClearingDriverCache() {
+        return isClearDriverCache();
     }
 
     public Config setClearDriverCache(Boolean value) {
