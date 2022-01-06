@@ -476,8 +476,10 @@ public abstract class WebDriverManager {
         return this;
     }
 
+    /**
+     * @deprecated Replaced by {@link #dockerRecordingPrefix(String)}
+     */
     @Deprecated
-    /* Replaced by {@link #dockerRecordingPrefix(String)} */
     public WebDriverManager recordingPrefix(String prefix) {
         return dockerRecordingPrefix(prefix);
     }
@@ -491,14 +493,18 @@ public abstract class WebDriverManager {
         return this;
     }
 
+    /**
+     * @deprecated Replaced by {@link #dockerRecordingOutput(String)}
+     */
     @Deprecated
-    /* Replaced by {@link #dockerRecordingOutput(String)} */
     public WebDriverManager recordingOutput(String path) {
         return dockerRecordingOutput(Paths.get(path));
     }
 
+    /**
+     * @deprecated Replaced by {@link #dockerRecordingOutput(String)}
+     */
     @Deprecated
-    /* Replaced by {@link #dockerRecordingOutput(Path)} */
     public WebDriverManager recordingOutput(Path path) {
         return dockerRecordingOutput(path);
     }
@@ -533,8 +539,10 @@ public abstract class WebDriverManager {
         return this;
     }
 
+    /**
+     * @deprecated Replaced by {@link #dockerCustomImage(String)}
+     */
     @Deprecated
-    /* Replaced by {@link #dockerCustomImage(String)} */
     public WebDriverManager dockerImage(String dockerImage) {
         return dockerCustomImage(dockerImage);
     }
