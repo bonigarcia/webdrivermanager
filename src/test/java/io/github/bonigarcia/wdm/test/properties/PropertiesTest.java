@@ -36,8 +36,8 @@ import static org.assertj.core.api.Assertions.assertThat;
  */
 class PropertiesTest {
     private static final String CUSTOM_VALUE = "custom_value";
+    private static final String CUSTOM_URL = "https://custom_url";
 
-    // TODO override default config ?
     @Test
     void testCustomProperties() {
         WebDriverManager wdm = WebDriverManager.chromedriver();
@@ -92,7 +92,8 @@ class PropertiesTest {
         assertThat(config.getChromeDriverExport()).isEqualTo("webdriver.chrome.driver");
         assertThat(config.getChromeDownloadUrlPattern()).isEqualTo("https://chromedriver.storage.googleapis.com/%s/chromedriver_%s%s.zip");
 
-//        config.getGeckoDriverVersion()
+//      Deprecated !!!!
+//        config.getGeckoDriverVersion();
 //        wdm.geckoDriverUrl=https://api.github.com/repos/mozilla/geckodriver/releases
 //        wdm.geckoDriverMirrorUrl=https://npm.taobao.org/mirrors/geckodriver
 //        wdm.geckoDriverExport=webdriver.gecko.driver
@@ -195,6 +196,7 @@ class PropertiesTest {
         Config config = wdm.config();
         wdm.setup();
 
+        // Default properties
         config.setArchitecture(X32);
         assertThat(config.getArchitecture()).isEqualTo(X32);
 
@@ -270,64 +272,218 @@ class PropertiesTest {
         config.setServerTimeoutSec(15);
         assertThat(config.getServerTimeoutSec()).isEqualTo(15);
 
-        assertThat(config.getChromeDriverUrl()).isEqualTo(new URL("https://chromedriver.storage.googleapis.com/"));
-        assertThat(config.getChromeDriverMirrorUrl()).isEqualTo(new URL("https://npm.taobao.org/mirrors/chromedriver/"));
-        assertThat(config.getChromeDriverExport()).isEqualTo("webdriver.chrome.driver");
-        assertThat(config.getChromeDownloadUrlPattern()).isEqualTo("https://chromedriver.storage.googleapis.com/%s/chromedriver_%s%s.zip");
+        config.setChromeDriverUrl(new URL(CUSTOM_URL));
+        assertThat(config.getChromeDriverUrl()).isEqualTo(new URL(CUSTOM_URL));
 
+        config.setChromeDriverMirrorUrl(new URL(CUSTOM_URL));
+        assertThat(config.getChromeDriverMirrorUrl()).isEqualTo(new URL(CUSTOM_URL));
+
+        config.setChromeDriverExport(CUSTOM_VALUE);
+        assertThat(config.getChromeDriverExport()).isEqualTo(CUSTOM_VALUE);
+
+        config.setChromeDownloadUrlPattern(CUSTOM_VALUE);
+        assertThat(config.getChromeDownloadUrlPattern()).isEqualTo(CUSTOM_VALUE);
+
+//      Deprecated !!!!
 //        config.getGeckoDriverVersion()
 //        wdm.geckoDriverUrl=https://api.github.com/repos/mozilla/geckodriver/releases
 //        wdm.geckoDriverMirrorUrl=https://npm.taobao.org/mirrors/geckodriver
 //        wdm.geckoDriverExport=webdriver.gecko.driver
 
-        assertThat(config.getOperaDriverUrl()).isEqualTo(new URL("https://api.github.com/repos/operasoftware/operachromiumdriver/releases"));
-        assertThat(config.getOperaDriverMirrorUrl()).isEqualTo(new URL("https://npm.taobao.org/mirrors/operadriver"));
-        assertThat(config.getOperaDriverExport()).isEqualTo("webdriver.opera.driver");
+        config.setOperaDriverUrl(new URL(CUSTOM_URL));
+        assertThat(config.getOperaDriverUrl()).isEqualTo(new URL(CUSTOM_URL));
 
-        assertThat(config.getEdgeDriverUrl()).isEqualTo(new URL("https://msedgedriver.azureedge.net/"));
-        assertThat(config.getEdgeDriverExport()).isEqualTo("webdriver.edge.driver");
-        assertThat(config.getEdgeDownloadUrlPattern()).isEqualTo("https://msedgewebdriverstorage.blob.core.windows.net/edgewebdriver/%s/edgedriver_%s%s.zip");
+        config.setOperaDriverMirrorUrl(new URL(CUSTOM_URL));
+        assertThat(config.getOperaDriverMirrorUrl()).isEqualTo(new URL(CUSTOM_URL));
 
-        assertThat(config.getIExplorerDriverUrl()).isEqualTo(new URL("https://api.github.com/repos/SeleniumHQ/selenium/releases"));
-        assertThat(config.getIExplorerDriverExport()).isEqualTo("webdriver.ie.driver");
+        config.setOperaDriverExport(CUSTOM_VALUE);
+        assertThat(config.getOperaDriverExport()).isEqualTo(CUSTOM_VALUE);
 
-        assertThat(config.getChromiumDriverSnapPath()).isEqualTo("/snap/bin/chromium.chromedriver");
-        assertThat(config.isUseChromiumDriverSnap()).isTrue();
+        config.setEdgeDriverUrl(new URL(CUSTOM_URL));
+        assertThat(config.getEdgeDriverUrl()).isEqualTo(new URL(CUSTOM_URL));
 
-        assertThat(config.isVersionsPropertiesOnlineFirst()).isTrue();
-        assertThat(config.getVersionsPropertiesUrl()).isEqualTo(new URL("https://raw.githubusercontent.com/bonigarcia/webdrivermanager/master/src/main/resources/versions.properties"));
+        config.setEdgeDriverExport(CUSTOM_VALUE);
+        assertThat(config.getEdgeDriverExport()).isEqualTo(CUSTOM_VALUE);
 
-        assertThat(config.isCommandsPropertiesOnlineFirst()).isTrue();
-        assertThat(config.getCommandsPropertiesUrl()).isEqualTo(new URL("https://raw.githubusercontent.com/bonigarcia/webdrivermanager/master/src/main/resources/commands.properties"));
+        config.setEdgeDownloadUrlPattern(CUSTOM_VALUE);
+        assertThat(config.getEdgeDownloadUrlPattern()).isEqualTo(CUSTOM_VALUE);
 
-        assertThat(config.getDockerHubUrl()).isEqualTo("https://hub.docker.com/");
-        assertThat(config.getDockerNetwork()).isEqualTo("bridge");
-        assertThat(config.getDockerTimezone()).isEqualTo("Etc/UTC");
-        assertThat(config.getDockerLang()).isEqualTo("EN");
-        assertThat(config.getDockerShmSize()).isEqualTo("256m");
-        assertThat(config.getDockerTmpfsSize()).isEqualTo("128m");
-        assertThat(config.getDockerTmpfsMount()).isEqualTo("/tmp");
-        assertThat(config.getDockerStopTimeoutSec()).isEqualTo(5);
-        assertThat(config.isDockerEnabledVnc()).isFalse();
-        assertThat(config.isDockerViewOnly()).isFalse();
-        assertThat(config.isDockerEnabledRecording()).isFalse();
-        assertThat(config.getDockerScreenResolution()).isEqualTo("1280x1080x24");
-        assertThat(config.getDockerVncPassword()).isEqualTo("selenoid");
-        assertThat(config.getDockerBrowserPort()).isEqualTo(4444);
-        assertThat(config.getDockerVncPort()).isEqualTo(5900);
-        assertThat(config.getDockerNoVncPort()).isEqualTo(6080);
-        assertThat(config.getDockerRecordingFrameRate()).isEqualTo(12);
-        assertThat(config.getDockerRecordingOutput()).isEqualTo(Paths.get("."));
-        assertThat(config.getDockerBrowserSelenoidImageFormat()).isEqualTo("selenoid/vnc:%s_%s");
-        assertThat(config.getDockerBrowserTwilioImageFormat()).isEqualTo("twilio/selenoid:%s_%s");
-        assertThat(config.getDockerBrowserAerokubeImageFormat()).isEqualTo("browsers/%s:%s");
-        assertThat(config.getDockerBrowserMobileImageFormat()).isEqualTo("selenoid/%s:%s");
-        assertThat(config.getDockerRecordingImage()).isEqualTo("selenoid/video-recorder:7.1");
-        assertThat(config.getDockerNoVncImage()).isEqualTo("bonigarcia/novnc:1.1.0");
-        assertThat(config.getDockerDefaultArgs()).isEqualTo("--disable-gpu");
-        assertThat(config.isDockerLocalFallback()).isTrue();
+        config.setIExplorerDriverUrl(new URL(CUSTOM_URL));
+        assertThat(config.getIExplorerDriverUrl()).isEqualTo(new URL(CUSTOM_URL));
 
+        config.setIExplorerDriverExport(CUSTOM_VALUE);
+        assertThat(config.getIExplorerDriverExport()).isEqualTo(CUSTOM_VALUE);
 
+        config.setChromiumDriverSnapPath(CUSTOM_VALUE);
+        assertThat(config.getChromiumDriverSnapPath()).isEqualTo(CUSTOM_VALUE);
+
+        config.setUseChromiumDriverSnap(false);
+        assertThat(config.isUseChromiumDriverSnap()).isFalse();
+
+        config.setVersionsPropertiesOnlineFirst(false);
+        assertThat(config.isVersionsPropertiesOnlineFirst()).isFalse();
+
+        config.setVersionsPropertiesUrl(new URL(CUSTOM_URL));
+        assertThat(config.getVersionsPropertiesUrl()).isEqualTo(new URL(CUSTOM_URL));
+
+        config.setCommandsPropertiesOnlineFirst(false);
+        assertThat(config.isCommandsPropertiesOnlineFirst()).isFalse();
+
+        config.setCommandsPropertiesUrl(new URL(CUSTOM_URL));
+        assertThat(config.getCommandsPropertiesUrl()).isEqualTo(new URL(CUSTOM_URL));
+
+        config.setDockerHubUrl(CUSTOM_VALUE);
+        assertThat(config.getDockerHubUrl()).isEqualTo(CUSTOM_VALUE);
+
+        config.setDockerNetwork(CUSTOM_VALUE);
+        assertThat(config.getDockerNetwork()).isEqualTo(CUSTOM_VALUE);
+
+        config.setDockerTimezone(CUSTOM_VALUE);
+        assertThat(config.getDockerTimezone()).isEqualTo(CUSTOM_VALUE);
+
+        config.setDockerLang(CUSTOM_VALUE);
+        assertThat(config.getDockerLang()).isEqualTo(CUSTOM_VALUE);
+
+        config.setDockerShmSize(CUSTOM_VALUE);
+        assertThat(config.getDockerShmSize()).isEqualTo(CUSTOM_VALUE);
+
+        config.setDockerTmpfsSize(CUSTOM_VALUE);
+        assertThat(config.getDockerTmpfsSize()).isEqualTo(CUSTOM_VALUE);
+
+        config.setDockerTmpfsMount(CUSTOM_VALUE);
+        assertThat(config.getDockerTmpfsMount()).isEqualTo(CUSTOM_VALUE);
+
+        config.setDockerStopTimeoutSec(15);
+        assertThat(config.getDockerStopTimeoutSec()).isEqualTo(15);
+
+        config.setDockerEnabledVnc(true);
+        assertThat(config.isDockerEnabledVnc()).isTrue();
+
+        config.setDockerViewOnly(true);
+        assertThat(config.isDockerViewOnly()).isTrue();
+
+        config.setDockerEnabledRecording(true);
+        assertThat(config.isDockerEnabledRecording()).isTrue();
+
+        config.setDockerScreenResolution(CUSTOM_VALUE);
+        assertThat(config.getDockerScreenResolution()).isEqualTo(CUSTOM_VALUE);
+
+        config.setDockerVncPassword(CUSTOM_VALUE);
+        assertThat(config.getDockerVncPassword()).isEqualTo(CUSTOM_VALUE);
+
+        config.setDockerBrowserPort(15);
+        assertThat(config.getDockerBrowserPort()).isEqualTo(15);
+
+        config.setDockerVncPort(15);
+        assertThat(config.getDockerVncPort()).isEqualTo(15);
+
+        config.setDockerNoVncPort(15);
+        assertThat(config.getDockerNoVncPort()).isEqualTo(15);
+
+        config.setDockerRecordingFrameRate(15);
+        assertThat(config.getDockerRecordingFrameRate()).isEqualTo(15);
+
+        config.setDockerRecordingOutput(Paths.get(CUSTOM_VALUE));
+        assertThat(config.getDockerRecordingOutput()).isEqualTo(Paths.get(CUSTOM_VALUE));
+
+        config.setDockerBrowserSelenoidImageFormat(CUSTOM_VALUE);
+        assertThat(config.getDockerBrowserSelenoidImageFormat()).isEqualTo(CUSTOM_VALUE);
+
+        config.setDockerBrowserTwilioImageFormat(CUSTOM_VALUE);
+        assertThat(config.getDockerBrowserTwilioImageFormat()).isEqualTo(CUSTOM_VALUE);
+
+        config.setDockerBrowserAerokubeImageFormat(CUSTOM_VALUE);
+        assertThat(config.getDockerBrowserAerokubeImageFormat()).isEqualTo(CUSTOM_VALUE);
+
+        config.setDockerBrowserMobileImageFormat(CUSTOM_VALUE);
+        assertThat(config.getDockerBrowserMobileImageFormat()).isEqualTo(CUSTOM_VALUE);
+
+        config.setDockerRecordingImage(CUSTOM_VALUE);
+        assertThat(config.getDockerRecordingImage()).isEqualTo(CUSTOM_VALUE);
+
+        config.setDockerNoVncImage(CUSTOM_VALUE);
+        assertThat(config.getDockerNoVncImage()).isEqualTo(CUSTOM_VALUE);
+
+        config.setDockerDefaultArgs(CUSTOM_VALUE);
+        assertThat(config.getDockerDefaultArgs()).isEqualTo(CUSTOM_VALUE);
+
+        config.setDockerLocalFallback(false);
+        assertThat(config.isDockerLocalFallback()).isFalse();
+
+        // Empty properties
+        config.setProxy(CUSTOM_VALUE);
+        assertThat(config.getProxy()).isEqualTo(CUSTOM_VALUE);
+
+        config.setProxyUser(CUSTOM_VALUE);
+        assertThat(config.getProxyUser()).isEqualTo(CUSTOM_VALUE);
+
+        config.setProxyPass(CUSTOM_VALUE);
+        assertThat(config.getProxyPass()).isEqualTo(CUSTOM_VALUE);
+
+        config.setRemoteAddress(CUSTOM_VALUE);
+        assertThat(config.getRemoteAddress()).isEqualTo(CUSTOM_VALUE);
+
+        config.setBrowserVersionDetectionCommand(CUSTOM_VALUE);
+        assertThat(config.getBrowserVersionDetectionCommand()).isEqualTo(CUSTOM_VALUE);
+
+        config.setBrowserVersionDetectionCommand(CUSTOM_VALUE);
+        assertThat(config.getBrowserVersionDetectionCommand()).isEqualTo(CUSTOM_VALUE);
+
+        config.setIgnoreVersions(CUSTOM_VALUE);
+        assertThat(config.getIgnoreVersions()).containsExactly(CUSTOM_VALUE);
+
+        config.setGitHubToken(CUSTOM_VALUE);
+        assertThat(config.getGitHubToken()).isEqualTo(CUSTOM_VALUE);
+
+        config.setChromeDriverVersion(CUSTOM_VALUE);
+        assertThat(config.getChromeDriverVersion()).isEqualTo(CUSTOM_VALUE);
+
+        config.setChromeVersion(CUSTOM_VALUE);
+        assertThat(config.getChromeVersion()).isEqualTo(CUSTOM_VALUE);
+
+        config.setEdgeDriverVersion(CUSTOM_VALUE);
+        assertThat(config.getEdgeDriverVersion()).isEqualTo(CUSTOM_VALUE);
+
+        config.setEdgeVersion(CUSTOM_VALUE);
+        assertThat(config.getEdgeVersion()).isEqualTo(CUSTOM_VALUE);
+
+        config.setGeckoDriverVersion(CUSTOM_VALUE);
+        assertThat(config.getGeckoDriverVersion()).isEqualTo(CUSTOM_VALUE);
+
+        config.setFirefoxVersion(CUSTOM_VALUE);
+        assertThat(config.getFirefoxVersion()).isEqualTo(CUSTOM_VALUE);
+
+        config.setIExplorerDriverVersion(CUSTOM_VALUE);
+        assertThat(config.getIExplorerDriverVersion()).isEqualTo(CUSTOM_VALUE);
+
+        config.setOperaDriverVersion(CUSTOM_VALUE);
+        assertThat(config.getOperaDriverVersion()).isEqualTo(CUSTOM_VALUE);
+
+        config.setOperaVersion(CUSTOM_VALUE);
+        assertThat(config.getOperaVersion()).isEqualTo(CUSTOM_VALUE);
+
+        config.setChromiumDriverVersion(CUSTOM_VALUE);
+        assertThat(config.getChromiumDriverVersion()).isEqualTo(CUSTOM_VALUE);
+
+        config.setChromiumVersion(CUSTOM_VALUE);
+        assertThat(config.getChromiumVersion()).isEqualTo(CUSTOM_VALUE);
+
+        config.setDockerDaemonUrl(CUSTOM_VALUE);
+        assertThat(config.getDockerDaemonUrl()).isEqualTo(CUSTOM_VALUE);
+
+        config.setDockerRecordingPrefix(CUSTOM_VALUE);
+        assertThat(config.getDockerRecordingPrefix()).isEqualTo(CUSTOM_VALUE);
+
+        config.setDockerCustomImage(CUSTOM_VALUE);
+        assertThat(config.getDockerCustomImage()).isEqualTo(CUSTOM_VALUE);
+
+        config.setDockerVolumes(CUSTOM_VALUE);
+        assertThat(config.getDockerVolumes()).isEqualTo(CUSTOM_VALUE);
+
+        config.setDockerEnvVariables(CUSTOM_VALUE);
+        assertThat(config.getDockerEnvVariables()).containsExactly(CUSTOM_VALUE);
+
+        config.setDockerPrivateEndpoint(CUSTOM_VALUE);
+        assertThat(config.getDockerPrivateEndpoint()).isEqualTo(CUSTOM_VALUE);
     }
-
 }
