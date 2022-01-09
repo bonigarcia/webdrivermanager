@@ -488,7 +488,7 @@ public abstract class WebDriverManager {
     }
 
     public WebDriverManager enableVnc() {
-        config().setDockerEnableVnc(true);
+        config().setDockerEnabledVnc(true);
         return this;
     }
 
@@ -498,7 +498,7 @@ public abstract class WebDriverManager {
     }
 
     public WebDriverManager enableRecording() {
-        config().setDockerEnableRecording(true);
+        config().setDockerEnabledRecording(true);
         return this;
     }
 

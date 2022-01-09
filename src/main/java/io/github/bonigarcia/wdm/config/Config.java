@@ -504,8 +504,10 @@ public class Config {
         return resolve(avoidResolutionCache);
     }
 
+    /**
+     * @deprecated Replaced by {@link #isAvoidResolutionCache()}
+     */
     @Deprecated
-    /* Replaced by {@link #isAvoidResolutionCache()} */
     public boolean isAvoidingResolutionCache() {
         return isAvoidResolutionCache();
     }
@@ -546,8 +548,10 @@ public class Config {
         return resolve(versionsPropertiesOnlineFirst);
     }
 
+    /**
+     * @deprecated Replaced by {@link #isVersionsPropertiesOnlineFirst()}
+     */
     @Deprecated
-    /* Replaced by {@link #isVersionsPropertiesOnlineFirst()} */
     public boolean getVersionsPropertiesOnlineFirst() {
         return isVersionsPropertiesOnlineFirst();
     }
@@ -561,8 +565,10 @@ public class Config {
         return resolve(commandsPropertiesOnlineFirst);
     }
 
+    /**
+     * @deprecated Replaced by {@link #isCommandsPropertiesOnlineFirst()}
+     */
     @Deprecated
-    /* Replaced by {@link #isCommandsPropertiesOnlineFirst()} */
     public boolean getCommandsPropertiesOnlineFirst() {
         return isCommandsPropertiesOnlineFirst();
     }
@@ -594,8 +600,10 @@ public class Config {
         return resolve(clearResolutionCache);
     }
 
+    /**
+     * @deprecated Replaced by {@link #isClearResolutionCache()}
+     */
     @Deprecated
-    /* Replaced by {@link #isClearResolutionCache()} */
     public boolean getClearingResolutionCache() {
         return isClearResolutionCache();
     }
@@ -609,8 +617,10 @@ public class Config {
         return resolve(clearDriverCache);
     }
 
+    /**
+     * @deprecated Replaced by {@link #isClearDriverCache()}
+     */
     @Deprecated
-    /* Replaced by {@link #isClearDriverCache()} */
     public boolean getClearingDriverCache() {
         return isClearDriverCache();
     }
@@ -901,9 +911,17 @@ public class Config {
         return resolve(iExplorerDriverExport);
     }
 
-    public Config setInternetExplorerDriverExport(String value) {
+    public Config setIExplorerDriverExport(String value) {
         this.iExplorerDriverExport.setValue(value);
         return this;
+    }
+
+    /**
+     * @deprecated Replaced by {@link #setIExplorerDriverExport(String)}
+     */
+    @Deprecated
+    public Config setInternetExplorerDriverExport(String value) {
+        return setIExplorerDriverExport(value);
     }
 
     public URL getIExplorerDriverUrl() {
@@ -1137,23 +1155,35 @@ public class Config {
         return resolve(dockerEnableVnc);
     }
 
+    /**
+     * @deprecated Replaced by {@link #isDockerEnabledVnc()}
+     */
     @Deprecated
-    /* Replaced by {@link #isDockerEnabledVnc()} */
     public boolean isEnabledDockerVnc() {
         return isDockerEnabledVnc();
     }
 
-    public Config setDockerEnableVnc(boolean value) {
+    public Config setDockerEnabledVnc(boolean value) {
         this.dockerEnableVnc.setValue(value);
         return this;
+    }
+
+    /**
+     * @deprecated Replaced by {@link #setDockerEnabledVnc(boolean)}
+     */
+    @Deprecated
+    public Config setDockerEnableVnc(boolean value) {
+        return setDockerEnabledVnc(value);
     }
 
     public boolean isDockerViewOnly() {
         return resolve(dockerViewOnly);
     }
 
+    /**
+     * @deprecated Replaced by {@link #isDockerViewOnly()}
+     */
     @Deprecated
-    /* Replaced by {@link #isDockerViewOnly()} */
     public boolean getDockerViewOnly() {
         return isDockerViewOnly();
     }
@@ -1167,15 +1197,25 @@ public class Config {
         return resolve(dockerEnableRecording);
     }
 
+    /**
+     * @deprecated Replaced by {@link #isDockerEnabledRecording()}
+     */
     @Deprecated
-    /* Replaced by {@link #isDockerEnabledRecording()} */
     public boolean isEnabledDockerRecording() {
         return isDockerEnabledRecording();
     }
 
-    public Config setDockerEnableRecording(boolean value) {
+    public Config setDockerEnabledRecording(boolean value) {
         this.dockerEnableRecording.setValue(value);
         return this;
+    }
+
+    /**
+     * @deprecated Replaced by {@link #setDockerEnabledRecording(boolean)}
+     */
+    @Deprecated
+    public Config setDockerEnableRecording(boolean value) {
+        return setDockerEnabledRecording(value);
     }
 
     public String getDockerScreenResolution() {
