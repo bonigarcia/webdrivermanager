@@ -107,6 +107,12 @@ public class WdmServer {
         app.get(path + SESSION + "/*", handler);
         app.delete(path + SESSION + "/*", handler);
 
+        String localHostAddress = getLocalHostAddress();
+        log.info("WebDriverManager Server listening on http://{}:{}{}",
+                localHostAddress, port, path);
+    }
+
+    private String getLocalHostAddress() {
         String localHostAddress;
         try {
             localHostAddress = InetAddress.getLocalHost().getHostAddress();
@@ -114,9 +120,7 @@ public class WdmServer {
             localHostAddress = InetAddress.getLoopbackAddress()
                     .getHostAddress();
         }
-
-        log.info("WebDriverManager Server listening on http://{}:{}{}",
-                localHostAddress, port, path);
+        return localHostAddress;
     }
 
     private void handleRequest(Context ctx) throws IOException {

@@ -15,13 +15,13 @@
         <brotli.version>0.1.2</brotli.version>
 
         <!-- provided -->
-        <javalin.version>4.1.1</javalin.version>
+        <javalin.version>4.2.0</javalin.version>
         <selenium.version>4.1.1</selenium.version>
 
         <!-- test -->
-        <logback.version>1.2.9</logback.version>
+        <logback.version>1.2.10</logback.version>
         <junit.version>5.8.2</junit.version>
-        <assertj.version>3.21.0</assertj.version>
+        <assertj.version>3.22.0</assertj.version>
         <mockserver.version>5.11.2</mockserver.version>
 
         <!-- plugins -->
@@ -32,9 +32,9 @@
         <exec-maven-plugin.version>3.0.0</exec-maven-plugin.version>
         <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
         <maven-asciidoctor-plugin.version>2.2.1</maven-asciidoctor-plugin.version>
-        <asciidoctorj-pdf.version>1.6.0</asciidoctorj-pdf.version>
+        <asciidoctorj-pdf.version>1.6.2</asciidoctorj-pdf.version>
         <asciidoctorj-epub3.version>1.5.1</asciidoctorj-epub3.version>
-        <maven-site.version>3.9.1</maven-site.version>
+        <maven-site.version>3.10.0</maven-site.version>
         <maven-project-info-reports.version>3.1.2</maven-project-info-reports.version>
         <maven-javadoc-plugin.version>3.3.1</maven-javadoc-plugin.version>
 

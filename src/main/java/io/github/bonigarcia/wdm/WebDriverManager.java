@@ -61,6 +61,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -73,6 +74,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.DocumentBuilder;
@@ -326,6 +330,33 @@ public abstract class WebDriverManager {
         return manager;
     }
 
+    public static Path zipFolder(Path sourceFolder) {
+        Path zipFile = null;
+        try {
+            zipFile = Files.createTempFile("", ".zip");
+            try (ZipOutputStream zipOutputStream = new ZipOutputStream(
+                    Files.newOutputStream(zipFile));
+                    Stream<Path> paths = Files.walk(sourceFolder)) {
+                paths.filter(path -> !Files.isDirectory(path)).forEach(path -> {
+                    ZipEntry zipEntry = new ZipEntry(
+                            sourceFolder.relativize(path).toString());
+                    try {
+                        zipOutputStream.putNextEntry(zipEntry);
+                        Files.copy(path, zipOutputStream);
+                        zipOutputStream.closeEntry();
+                    } catch (IOException e) {
+                        log.warn("Exception adding entry {} to zip", zipEntry,
+                                e);
+                    }
+                });
+            }
+            log.debug("Zipping {} folder to {}", sourceFolder, zipFile);
+        } catch (IOException e) {
+            log.warn("Exception zipping folder {}", sourceFolder, e);
+        }
+        return zipFile;
+    }
+
     public static boolean isDockerAvailable() {
         String dockerInfo = runAndWait(false, "docker", "info");
         return !isNullOrEmpty(dockerInfo) && !dockerInfo.contains("error")
@@ -471,17 +502,51 @@ public abstract class WebDriverManager {
         return this;
     }
 
-    public WebDriverManager recordingPrefix(String prefix) {
+    public WebDriverManager dockerRecordingPrefix(String prefix) {
         config().setDockerRecordingPrefix(prefix);
         return this;
     }
 
-    public WebDriverManager recordingOutput(String path) {
-        return recordingOutput(Paths.get(path));
+    /**
+     * @deprecated Replaced by {@link #dockerRecordingPrefix(String)}
+     */
+    @Deprecated
+    public WebDriverManager recordingPrefix(String prefix) {
+        return dockerRecordingPrefix(prefix);
     }
 
-    public WebDriverManager recordingOutput(Path path) {
+    public WebDriverManager dockerRecordingOutput(String path) {
+        return dockerRecordingOutput(Paths.get(path));
+    }
+
+    public WebDriverManager dockerRecordingOutput(Path path) {
         config().setDockerRecordingOutput(path);
+        return this;
+    }
+
+    /**
+     * @deprecated Replaced by {@link #dockerRecordingOutput(String)}
+     */
+    @Deprecated
+    public WebDriverManager recordingOutput(String path) {
+        return dockerRecordingOutput(Paths.get(path));
+    }
+
+    /**
+     * @deprecated Replaced by {@link #dockerRecordingOutput(String)}
+     */
+    @Deprecated
+    public WebDriverManager recordingOutput(Path path) {
+        return dockerRecordingOutput(path);
+    }
+
+    public WebDriverManager dockerPrivateEndpoint(String endpoint) {
+        config().setDockerPrivateEndpoint(endpoint);
+        return this;
+    }
+
+    public WebDriverManager dockerStopTimeoutSec(Integer timeout) {
+        config().setDockerStopTimeoutSec(timeout);
         return this;
     }
 
@@ -500,9 +565,17 @@ public abstract class WebDriverManager {
         return this;
     }
 
-    public WebDriverManager dockerImage(String dockerImage) {
+    public WebDriverManager dockerCustomImage(String dockerImage) {
         config().setDockerCustomImage(dockerImage);
         return this;
+    }
+
+    /**
+     * @deprecated Replaced by {@link #dockerCustomImage(String)}
+     */
+    @Deprecated
+    public WebDriverManager dockerImage(String dockerImage) {
+        return dockerCustomImage(dockerImage);
     }
 
     public WebDriverManager driverVersion(String driverVersion) {

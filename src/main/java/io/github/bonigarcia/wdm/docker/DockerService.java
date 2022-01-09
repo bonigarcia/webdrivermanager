@@ -510,8 +510,10 @@ public class DockerService {
         return browserVersion.toLowerCase(ROOT).contains(LATEST_MINUS);
     }
 
+    /**
+     * @deprecated Replaced by {@link #isBrowserVersionLatestMinus(String)}
+     */
     @Deprecated
-    /* Replaced by {@link #isBrowserVersionLatestMinus(String)} */
     public boolean isBrowserVersionLatesMinus(String browserVersion) {
         return isBrowserVersionLatestMinus(browserVersion);
     }
