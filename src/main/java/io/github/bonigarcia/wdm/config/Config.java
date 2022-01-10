@@ -248,6 +248,8 @@ public class Config {
             "wdm.dockerCustomImage", String.class);
     ConfigKey<String> dockerVolumes = new ConfigKey<>("wdm.dockerVolumes",
             String.class);
+    ConfigKey<String> dockerExtraHosts = new ConfigKey<>("wdm.dockerExtraHosts",
+            String.class);
     ConfigKey<String> dockerEnvVariables = new ConfigKey<>(
             "wdm.dockerEnvVariables", String.class);
     ConfigKey<String> dockerDefaultArgs = new ConfigKey<>(
@@ -1294,6 +1296,20 @@ public class Config {
 
     public Config setDockerVolumes(String... value) {
         this.dockerVolumes.setValue(join(":", value));
+        return this;
+    }
+
+    public List<String> getDockerExtraHosts() {
+        String extraHosts = resolve(dockerExtraHosts);
+        String[] out = {};
+        if (!isNullOrEmpty(extraHosts)) {
+            out = extraHosts.split(",");
+        }
+        return Arrays.asList(out);
+    }
+
+    public Config setDockerExtraHosts(String... value) {
+        this.dockerExtraHosts.setValue(join(",", value));
         return this;
     }
 
