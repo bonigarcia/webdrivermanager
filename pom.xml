@@ -30,7 +30,7 @@
         <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
         <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
         <exec-maven-plugin.version>3.0.0</exec-maven-plugin.version>
-        <maven-jar-plugin.version>3.2.0</maven-jar-plugin.version>
+        <maven-jar-plugin.version>3.2.1</maven-jar-plugin.version>
         <maven-asciidoctor-plugin.version>2.2.1</maven-asciidoctor-plugin.version>
         <asciidoctorj-pdf.version>1.6.2</asciidoctorj-pdf.version>
         <asciidoctorj-epub3.version>1.5.1</asciidoctorj-epub3.version>
