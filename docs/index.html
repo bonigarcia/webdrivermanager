@@ -872,6 +872,83 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 </div>
 </div>
 </div>
+<style>
+#carbonads * {
+	margin: initial;
+	padding: initial;
+}
+
+#carbonads {
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+		Oxygen-Sans, Ubuntu, Cantarell, 'Helvetica Neue', Helvetica, Arial,
+		sans-serif;
+}
+
+#carbonads {
+	display: flex;
+	max-width: 330px;
+	background-color: hsl(0, 0%, 98%);
+	box-shadow: 0 1px 4px 1px hsla(0, 0%, 0%, 0.1);
+	z-index: 100;
+}
+
+#carbonads a {
+	color: inherit;
+	text-decoration: none;
+}
+
+#carbonads a:hover {
+	color: inherit;
+}
+
+#carbonads span {
+	position: relative;
+	display: block;
+	overflow: hidden;
+}
+
+#carbonads .carbon-wrap {
+	display: flex;
+}
+
+#carbonads .carbon-img {
+	display: block;
+	margin: 0;
+	line-height: 1;
+}
+
+#carbonads .carbon-img img {
+	display: block;
+}
+
+#carbonads .carbon-text {
+	font-size: 13px;
+	padding: 10px;
+	margin-bottom: 16px;
+	line-height: 1.5;
+	text-align: left;
+}
+
+#carbonads .carbon-poweredby {
+	display: block;
+	padding: 6px 8px;
+	background: #f1f1f2;
+	text-align: center;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
+	font-weight: 600;
+	font-size: 8px;
+	line-height: 1;
+	border-top-left-radius: 3px;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+}
+</style>
+
+<script async type="text/javascript"
+	src="//cdn.carbonads.com/carbon.js?serve=CEADT23M&placement=bonigarciadev"
+	id="_carbonads_js"></script>
 </div>
 </div>
 <div class="sect1">
@@ -959,7 +1036,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 </div>
 </div>
 <div class="paragraph">
-<p>WebDriverManager provides a set <em>managers</em> for Chrome, Firefox, Edge, Opera, Chromium, and Internet Explorer. The basic use of these managers is the following:</p>
+<p>WebDriverManager provides a set of <em>managers</em> for Chrome, Firefox, Edge, Opera, Chromium, and Internet Explorer. The basic use of these managers is the following:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1020,13 +1097,13 @@ This process is different for each browser. In Chrome and Edge, their respective
 <div class="ulist">
 <ul>
 <li>
-<p><code>getInstance(Class&lt;?&gt; webDriverClass)</code>: Where <code>webDriverClass</code> is a class of the Selenium WebDriver standard hierarchy, such as <code>ChromeDriver.class</code>, <code>FirefoxDriver.class</code>, etc.</p>
+<p><code>getInstance(Class&lt;? extends WebDriver&gt; webDriverClass)</code>: Where <code>webDriverClass</code> is a class of the Selenium WebDriver standard hierarchy, such as <code>ChromeDriver.class</code>, <code>FirefoxDriver.class</code>, etc.</p>
 </li>
 <li>
 <p><code>getInstance(DriverManagerType driverManagerType)</code>: Where <code>driverManagerType</code> is an <a href="https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/java/io/github/bonigarcia/wdm/config/DriverManagerType.java">enumeration</a> provided by WebDriverManager to identify the available managers.</p>
 </li>
 <li>
-<p><code>getInstance(String browserName)</code>: Where <code>browserName</code> is the usual browser name as <code>String</code> (i.e., <code>"Chrome"</code>, <code>"Firefox"</code>, <code>"Edge"</code>, <code>"Opera"</code>, <code>"Chromium"</code>, or <code>"IExplorer"</code>).</p>
+<p><code>getInstance(String browserName)</code>: Where <code>browserName</code> is the usual browser name as <code>String</code> (i.e., <code>"Chrome"</code>, <code>"Firefox"</code>, <code>"Edge"</code>, <code>"Opera"</code>, <code>"Chromium"</code>, <code>"Safari"</code>, or <code>"IExplorer"</code>).</p>
 </li>
 <li>
 <p><code>getInstance()</code>: If no parameter is specified, the configuration key <code>wdm.defaultBrowser</code> is used to select the manager (Chrome by default). See the <a href="#advanced-configuration">advanced configuration</a> section for further information about the configuration capabilities of WebDriverManager.</p>
@@ -1409,7 +1486,10 @@ Notice you will need hardware virtualization (hypervisor) or a virtual machine w
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">static</span> <span class="include">org.assertj.core.api.Assertions.assertThat</span>;
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">static</span> <span class="include">io.github.bonigarcia.wdm.WebDriverManager.isDockerAvailable</span>;
+
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.assertj.core.api.Assertions.assertThat</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.assertj.core.api.Assumptions.assumeThat</span>;
 
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.AfterEach</span>;
 <span class="keyword">import</span> <span class="include">org.junit.jupiter.api.BeforeEach</span>;
@@ -1427,6 +1507,7 @@ Notice you will need hardware virtualization (hypervisor) or a virtual machine w
 
     <span class="annotation">@BeforeEach</span>
     <span class="type">void</span> setupTest() {
+        assumeThat(isDockerAvailable()).isTrue();
         driver = wdm.create();
     }
 
@@ -2471,10 +2552,16 @@ HTTP proxy. It can be also configured using the environment variable  <code>HTTP
 <td class="tableblock halign-left valign-top"><p class="tableblock">Custom image to be used as browser in Docker</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dockerVolume(String)</code> <code>dockerVolumes(String[])</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dockerVolumes(String[])</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>wdm.dockerVolumes</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>""</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Docker volumes (single or array) using the format <code>"\local\path:\container\path"</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dockerPrivateEndpoint(String)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>wdm.dockerPrivateEndpoint</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>""</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Used to prefix pull images when you have a private registry with authentication i.e docker-hub-remote.myprivate.com will be prefixed to pull as docker-hub-remote.myprivate.com/selenoid/vnc and so on for any images used (video recorder, novnc etc..), docker login docker-hub-remote.myprivate.com is still required in order to get the auth credentials stored in the .docker/config.json, for MacOS users make sure to configure your engine to store the credentials in the config.json instead of keychain storage.</p></td>
 </tr>
 </tbody>
 </table>
@@ -2589,7 +2676,20 @@ HTTP proxy. It can be also configured using the environment variable  <code>HTTP
 <h2 id="further-documentation"><a class="anchor" href="#further-documentation"></a>10. Further Documentation</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>There are other resources related to WebDriverManager and automated testing you can find helpful. For instance, the following journal papers:</p>
+<p>There are other resources related to Selenium-Jupiter and automated testing you can find helpful. For instance, the following books:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>García, Boni. <a href="https://www.oreilly.com/library/view/hands-on-selenium-webdriver/9781098109998/">Hands-On Selenium WebDriver with Java</a>. <em>O&#8217;Reilly Media, Inc.</em>, Currently on early relase. Final release available on 2022.</p>
+</li>
+<li>
+<p>García, Boni. <a href="https://www.amazon.com/Mastering-Software-Testing-JUnit-Comprehensive-ebook/dp/B076ZQCK5Q/">Mastering Software Testing with JUnit 5</a>. <em>Packt Publishing Ltd</em>, 2017.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Or the following journal papers:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -2606,20 +2706,10 @@ HTTP proxy. It can be also configured using the environment variable  <code>HTTP
 <p>García, Boni, et al. "<a href="https://www.mdpi.com/2079-9292/8/8/854">Practical evaluation of VMAF perceptual video quality for WebRTC applications</a>." <em>Electronics</em> 8.8 (2019): 854.</p>
 </li>
 <li>
-<p>García, Boni, et al. "<a href="http://ieeexplore.ieee.org/document/7992926/">WebRTC testing: challenges and practical solutions</a>." <em>IEEE Communications Standards Magazine</em> 1.2 (2017): 36-42.</p>
+<p>García, Boni, et al. "<a href="https://ieeexplore.ieee.org/document/7992926/">WebRTC testing: challenges and practical solutions</a>." <em>IEEE Communications Standards Magazine</em> 1.2 (2017): 36-42.</p>
 </li>
 <li>
-<p>García, Boni, and Juan Carlos Dueñas. "<a href="http://www.rintonpress.com/journals/jweonline.html#v14n56">Web browsing automation for applications quality control</a>." <em>Journal of web engineering</em> (2015): 474-502.</p>
-</li>
-</ul>
-</div>
-<div class="paragraph">
-<p>Or the following book:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>García, Boni. <a href="https://www.amazon.com/Mastering-Software-Testing-JUnit-Comprehensive-ebook/dp/B076ZQCK5Q/">Mastering Software Testing with JUnit 5</a>. <em>Packt Publishing Ltd</em>, 2017.</p>
+<p>García, Boni, and Juan Carlos Dueñas. "<a href="https://www.rintonpress.com/journals/jweonline.html#v14n56">Web browsing automation for applications quality control</a>." <em>Journal of web engineering</em> (2015): 474-502.</p>
 </li>
 </ul>
 </div>
@@ -2637,7 +2727,7 @@ HTTP proxy. It can be also configured using the environment variable  <code>HTTP
 <div id="footer">
 <div id="footer-text">
 Version 5.0.3<br>
-Updated on 17-09-2021
+Updated on 10-01-2022
 </div>
 </div>
 </body>
