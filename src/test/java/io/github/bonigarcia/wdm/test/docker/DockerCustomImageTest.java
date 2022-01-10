@@ -43,7 +43,7 @@ class DockerCustomImageTest {
     WebDriver driver;
 
     WebDriverManager wdm = WebDriverManager.chromedriver().browserInDocker()
-            .dockerImage("selenoid/vnc:chrome_90.0").enableVnc()
+            .dockerCustomImage("selenoid/vnc:chrome_90.0").enableVnc()
             .enableRecording().viewOnly();
 
     @BeforeEach
