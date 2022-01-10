@@ -34,6 +34,14 @@ System.setProperty("webdriver.ie.driver", "C:/path/to/IEDriverServer.exe");
 https://github.com/bonigarcia/webdrivermanager[WebDriverManager] is an open-source Java library that carries out the management (i.e., download, setup, and maintenance) of the drivers required by Selenium WebDriver (e.g., chromedriver, geckodriver, msedgedriver, etc.) in a fully automated manner. In addition, as of version 5, WebDriverManager provides other relevant features, such as the capability to <<browser-finder,discover browsers>> installed in the local system, <<webdriver-builder,building WebDriver objects>> (such as `ChromeDriver`, `FirefoxDriver`, `EdgeDriver`, etc.), and running <<browsers-in-docker,browsers in Docker containers>> seamlessly.
 ****
 
+ifndef::backend-pdf[]
+ifndef::backend-epub3[]
+++++
+include::carbon.html[]
+++++
+endif::[]
+endif::[]
+
 == Setup
 WebDriverManager is primarily used as a Java dependency (although <<other-usages,other usages>> are also possible). We typically use a _build tool_ (such as https://maven.apache.org/[Maven] or https://gradle.org/[Gradle]) to resolve the WebDriverManager dependency. In Maven, it can be done as follows (notice that it is declared using the `test` scope, since it is typically used in tests classes):
 
