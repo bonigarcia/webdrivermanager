@@ -471,6 +471,11 @@ public abstract class WebDriverManager {
         return this;
     }
 
+    public WebDriverManager dockerExtraHosts(String... hosts) {
+        config().setDockerExtraHosts(String.join(",", hosts));
+        return this;
+    }
+
     public WebDriverManager dockerScreenResolution(String screenResolution) {
         config().setDockerScreenResolution(screenResolution);
         return this;

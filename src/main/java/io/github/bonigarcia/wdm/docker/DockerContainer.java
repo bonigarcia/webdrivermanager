@@ -21,6 +21,7 @@ import static java.util.Optional.of;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,6 +38,7 @@ import com.github.dockerjava.api.model.Mount;
 public class DockerContainer {
 
     private List<String> exposedPorts;
+    private List<String> extraHosts;
     private String imageId;
     private Optional<List<Bind>> binds;
     private Optional<List<String>> envs;
@@ -61,6 +63,7 @@ public class DockerContainer {
         this.imageId = builder.imageId;
         this.exposedPorts = builder.exposedPorts != null ? builder.exposedPorts
                 : new ArrayList<>();
+        this.extraHosts = builder.extraHosts != null ? builder.extraHosts : new ArrayList<>();
         this.binds = builder.binds != null ? of(builder.binds) : empty();
         this.envs = builder.envs != null ? of(builder.envs) : empty();
         this.network = builder.network != null ? of(builder.network) : empty();
@@ -91,6 +94,10 @@ public class DockerContainer {
 
     public List<String> getExposedPorts() {
         return exposedPorts;
+    }
+
+    public String[] getExtraHosts() {
+        return Arrays.copyOf(extraHosts.toArray(), extraHosts.size(), String[].class);
     }
 
     public Optional<String> getNetwork() {
@@ -205,6 +212,7 @@ public class DockerContainer {
         private boolean privileged = false;
         private boolean sysadmin = false;
         private List<String> exposedPorts;
+        private List<String> extraHosts;
 
         public DockerBuilder(String imageId) {
             this.imageId = imageId;
@@ -212,6 +220,11 @@ public class DockerContainer {
 
         public DockerBuilder exposedPorts(List<String> ports) {
             this.exposedPorts = ports;
+            return this;
+        }
+
+        public DockerBuilder extraHosts(List<String> extraHosts) {
+            this.extraHosts = extraHosts;
             return this;
         }
 
