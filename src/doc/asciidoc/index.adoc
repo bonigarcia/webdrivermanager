@@ -14,6 +14,14 @@ Selenium WebDriver carries out the automation using the native support of each b
 .Selenium WebDriver Architecture
 image::selenium-webdriver-architecture.png[scaledwidth=100%]
 
+ifndef::backend-pdf[]
+ifndef::backend-epub3[]
+++++
+include::carbon.html[]
+++++
+endif::[]
+endif::[]
+
 From a practical point of view, we need to make a _driver management process_ to use Selenium WebDriver. This process consists on:
 
 1. Download. Drivers are platform-specific binary files. To download the proper driver, we have to identify the driver type we need (e.g., chromedriver if we want to use Chrome), the operating system (typically, Windows, Linux, or Mac OS), the architecture (typically, 32 or 64 bits), and very important, the driver version. Concerning the version, each driver release is usually compatible with a given browser version(s). For this reason, we need to discover the correct driver version for a specific browser release (typically reading the driver documentation or release notes).
@@ -33,14 +41,6 @@ System.setProperty("webdriver.ie.driver", "C:/path/to/IEDriverServer.exe");
 ****
 https://github.com/bonigarcia/webdrivermanager[WebDriverManager] is an open-source Java library that carries out the management (i.e., download, setup, and maintenance) of the drivers required by Selenium WebDriver (e.g., chromedriver, geckodriver, msedgedriver, etc.) in a fully automated manner. In addition, as of version 5, WebDriverManager provides other relevant features, such as the capability to <<browser-finder,discover browsers>> installed in the local system, <<webdriver-builder,building WebDriver objects>> (such as `ChromeDriver`, `FirefoxDriver`, `EdgeDriver`, etc.), and running <<browsers-in-docker,browsers in Docker containers>> seamlessly.
 ****
-
-ifndef::backend-pdf[]
-ifndef::backend-epub3[]
-++++
-include::carbon.html[]
-++++
-endif::[]
-endif::[]
 
 == Setup
 WebDriverManager is primarily used as a Java dependency (although <<other-usages,other usages>> are also possible). We typically use a _build tool_ (such as https://maven.apache.org/[Maven] or https://gradle.org/[Gradle]) to resolve the WebDriverManager dependency. In Maven, it can be done as follows (notice that it is declared using the `test` scope, since it is typically used in tests classes):

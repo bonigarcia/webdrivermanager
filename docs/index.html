@@ -839,39 +839,6 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 </div>
 <div class="title">Figure 1. Selenium WebDriver Architecture</div>
 </div>
-<div class="paragraph">
-<p>From a practical point of view, we need to make a <em>driver management process</em> to use Selenium WebDriver. This process consists on:</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>Download. Drivers are platform-specific binary files. To download the proper driver, we have to identify the driver type we need (e.g., chromedriver if we want to use Chrome), the operating system (typically, Windows, Linux, or Mac OS), the architecture (typically, 32 or 64 bits), and very important, the driver version. Concerning the version, each driver release is usually compatible with a given browser version(s). For this reason, we need to discover the correct driver version for a specific browser release (typically reading the driver documentation or release notes).</p>
-</li>
-<li>
-<p>Setup. Once we have downloaded the driver to our computer, we need to provide a way to locate this driver from our Selenium WebDriver tests. In Java, this setup can be done in two different ways. First, we can add the driver location to our <code>PATH</code> environmental variable. Second, we can use <em>Java system properties</em> to export the driver path. Each driver path should be identified using a given system property, as follows:</p>
-<div class="listingblock">
-<div class="content">
-<pre class="CodeRay highlight"><code data-lang="java"><span class="predefined-type">System</span>.setProperty(<span class="string"><span class="delimiter">&quot;</span><span class="content">webdriver.chrome.driver</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">/path/to/chromedriver</span><span class="delimiter">&quot;</span></span>);
-<span class="predefined-type">System</span>.setProperty(<span class="string"><span class="delimiter">&quot;</span><span class="content">webdriver.gecko.driver</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">/path/to/geckodriver</span><span class="delimiter">&quot;</span></span>);
-<span class="predefined-type">System</span>.setProperty(<span class="string"><span class="delimiter">&quot;</span><span class="content">webdriver.edge.driver</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">/path/to/msedgedriver</span><span class="delimiter">&quot;</span></span>);
-<span class="predefined-type">System</span>.setProperty(<span class="string"><span class="delimiter">&quot;</span><span class="content">webdriver.opera.driver</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">/path/to/operadriver</span><span class="delimiter">&quot;</span></span>);
-<span class="predefined-type">System</span>.setProperty(<span class="string"><span class="delimiter">&quot;</span><span class="content">webdriver.ie.driver</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">C:/path/to/IEDriverServer.exe</span><span class="delimiter">&quot;</span></span>);</code></pre>
-</div>
-</div>
-</li>
-<li>
-<p>Maintenance. Last but not least, we need to warranty the compatibility between driver and browser in time. This step is relevant since modern browsers automatically upgrade themselves (i.e., they are <em>evergreen</em> browsers), and for this reason, the compatibility driver-browser is not warranted in the long run. For instance, when a WebDriver test using Chrome faces a driver incompatibility, it reports the following error message: "<em>this version of chromedriver only supports chrome version N</em>." As you can see in <a href="https://stackoverflow.com/search?q=this+version+of+chromedriver+only+supports+Chrome+version">StackOverflow</a>, this is a recurrent problem for manually managed drivers (chromedriver in this case).</p>
-</li>
-</ol>
-</div>
-<div class="sidebarblock">
-<div class="content">
-<div class="title">What is WebDriverManager?</div>
-<div class="paragraph">
-<p><a href="https://github.com/bonigarcia/webdrivermanager">WebDriverManager</a> is an open-source Java library that carries out the management (i.e., download, setup, and maintenance) of the drivers required by Selenium WebDriver (e.g., chromedriver, geckodriver, msedgedriver, etc.) in a fully automated manner. In addition, as of version 5, WebDriverManager provides other relevant features, such as the capability to <a href="#browser-finder">discover browsers</a> installed in the local system, <a href="#webdriver-builder">building WebDriver objects</a> (such as <code>ChromeDriver</code>, <code>FirefoxDriver</code>, <code>EdgeDriver</code>, etc.), and running <a href="#browsers-in-docker">browsers in Docker containers</a> seamlessly.</p>
-</div>
-</div>
-</div>
 <style>
 #carbonads * {
 	margin: initial;
@@ -949,6 +916,40 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <script async type="text/javascript"
 	src="//cdn.carbonads.com/carbon.js?serve=CEADT23M&placement=bonigarciadev"
 	id="_carbonads_js"></script>
+<br>
+<div class="paragraph">
+<p>From a practical point of view, we need to make a <em>driver management process</em> to use Selenium WebDriver. This process consists on:</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>Download. Drivers are platform-specific binary files. To download the proper driver, we have to identify the driver type we need (e.g., chromedriver if we want to use Chrome), the operating system (typically, Windows, Linux, or Mac OS), the architecture (typically, 32 or 64 bits), and very important, the driver version. Concerning the version, each driver release is usually compatible with a given browser version(s). For this reason, we need to discover the correct driver version for a specific browser release (typically reading the driver documentation or release notes).</p>
+</li>
+<li>
+<p>Setup. Once we have downloaded the driver to our computer, we need to provide a way to locate this driver from our Selenium WebDriver tests. In Java, this setup can be done in two different ways. First, we can add the driver location to our <code>PATH</code> environmental variable. Second, we can use <em>Java system properties</em> to export the driver path. Each driver path should be identified using a given system property, as follows:</p>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="predefined-type">System</span>.setProperty(<span class="string"><span class="delimiter">&quot;</span><span class="content">webdriver.chrome.driver</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">/path/to/chromedriver</span><span class="delimiter">&quot;</span></span>);
+<span class="predefined-type">System</span>.setProperty(<span class="string"><span class="delimiter">&quot;</span><span class="content">webdriver.gecko.driver</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">/path/to/geckodriver</span><span class="delimiter">&quot;</span></span>);
+<span class="predefined-type">System</span>.setProperty(<span class="string"><span class="delimiter">&quot;</span><span class="content">webdriver.edge.driver</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">/path/to/msedgedriver</span><span class="delimiter">&quot;</span></span>);
+<span class="predefined-type">System</span>.setProperty(<span class="string"><span class="delimiter">&quot;</span><span class="content">webdriver.opera.driver</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">/path/to/operadriver</span><span class="delimiter">&quot;</span></span>);
+<span class="predefined-type">System</span>.setProperty(<span class="string"><span class="delimiter">&quot;</span><span class="content">webdriver.ie.driver</span><span class="delimiter">&quot;</span></span>, <span class="string"><span class="delimiter">&quot;</span><span class="content">C:/path/to/IEDriverServer.exe</span><span class="delimiter">&quot;</span></span>);</code></pre>
+</div>
+</div>
+</li>
+<li>
+<p>Maintenance. Last but not least, we need to warranty the compatibility between driver and browser in time. This step is relevant since modern browsers automatically upgrade themselves (i.e., they are <em>evergreen</em> browsers), and for this reason, the compatibility driver-browser is not warranted in the long run. For instance, when a WebDriver test using Chrome faces a driver incompatibility, it reports the following error message: "<em>this version of chromedriver only supports chrome version N</em>." As you can see in <a href="https://stackoverflow.com/search?q=this+version+of+chromedriver+only+supports+Chrome+version">StackOverflow</a>, this is a recurrent problem for manually managed drivers (chromedriver in this case).</p>
+</li>
+</ol>
+</div>
+<div class="sidebarblock">
+<div class="content">
+<div class="title">What is WebDriverManager?</div>
+<div class="paragraph">
+<p><a href="https://github.com/bonigarcia/webdrivermanager">WebDriverManager</a> is an open-source Java library that carries out the management (i.e., download, setup, and maintenance) of the drivers required by Selenium WebDriver (e.g., chromedriver, geckodriver, msedgedriver, etc.) in a fully automated manner. In addition, as of version 5, WebDriverManager provides other relevant features, such as the capability to <a href="#browser-finder">discover browsers</a> installed in the local system, <a href="#webdriver-builder">building WebDriver objects</a> (such as <code>ChromeDriver</code>, <code>FirefoxDriver</code>, <code>EdgeDriver</code>, etc.), and running <a href="#browsers-in-docker">browsers in Docker containers</a> seamlessly.</p>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
