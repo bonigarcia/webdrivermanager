@@ -1,4 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.github.bonigarcia</groupId>
@@ -12,6 +14,7 @@
         <jsoup.version>1.14.3</jsoup.version>
         <docker-java.version>3.2.13</docker-java.version>
         <brotli.version>0.1.2</brotli.version>
+        <commons-lang3.version>3.12.0</commons-lang3.version>
 
         <!-- provided -->
         <javalin.version>4.3.0</javalin.version>
@@ -124,6 +127,11 @@
             <groupId>org.brotli</groupId>
             <artifactId>dec</artifactId>
             <version>${brotli.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>${commons-lang3.version}</version>
         </dependency>
 
         <dependency>
