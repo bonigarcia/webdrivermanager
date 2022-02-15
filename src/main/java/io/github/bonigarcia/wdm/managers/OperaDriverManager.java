@@ -111,8 +111,17 @@ public class OperaDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected List<URL> getDriverUrls() throws IOException {
-        return getDriversFromGitHub();
+    protected List<URL> getDriverUrls(String driverVersion) throws IOException {
+        if (isUseMirror()) {
+            String versionPath = driverVersion;
+            if (!driverVersion.isEmpty()) {
+                versionPath = driverVersion.startsWith("0") ? "v" + versionPath
+                        : "v." + versionPath;
+            }
+            return getDriversFromMirror(getMirrorUrl().get(), versionPath);
+        } else {
+            return getDriversFromGitHub(driverVersion);
+        }
     }
 
     @Override

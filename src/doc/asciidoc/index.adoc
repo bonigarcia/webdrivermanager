@@ -587,7 +587,7 @@ The remainder of this section describes all the possible Java methods in the Web
 |`linux()`|`wdm.os=LINUX`|`""` (automatic OS discovery)|Force Linux
 |`mac()`|`wdm.os=MAC`|`""` (automatic OS discovery)|Force Mac OS
 |`driverRepositoryUrl(URL)`|`wdm.chromeDriverUrl`, `wdm.operaDriverUrl`, `wdm.edgeDriverUrl`, `wdm.geckoDriverUrl`, `wdm.iExplorerDriverUrl`|Driver specific URLs (available in https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/webdrivermanager.properties[webdrivermanager.properties])|Change the repository URL in which the drivers are hosted
-|`useMirror()`|`wdm.useMirror=true`|`false` (not using mirrors)|Enable the use of a driver repository https://npm.taobao.org/mirrors/[mirror] (available for chromedriver, geckodriver, and operadriver)
+|`useMirror()`|`wdm.useMirror=true`|`false` (not using mirrors)|Enable the use of a driver repository https://registry.npmmirror.com/binary.html[mirror] (available for chromedriver, geckodriver, and operadriver)
 |`proxy(String)`|`wdm.proxy`|`""` (no proxy)| Use an HTTP proxy
 for the network connection (using the notation `proxy:port` or
 `username:password@proxy:port`). It can be also configured using the environment variable `HTTPS_PROXY`

@@ -36,7 +36,7 @@ import io.github.bonigarcia.wdm.config.DriverManagerType;
 public class VoidDriverManager extends WebDriverManager {
 
     @Override
-    protected List<URL> getDriverUrls() throws IOException {
+    protected List<URL> getDriverUrls(String driverVersion) throws IOException {
         return emptyList();
     }
 

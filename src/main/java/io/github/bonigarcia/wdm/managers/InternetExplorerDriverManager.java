@@ -94,8 +94,8 @@ public class InternetExplorerDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected List<URL> getDriverUrls() throws IOException {
-        List<URL> driverUrls = getDriversFromGitHub();
+    protected List<URL> getDriverUrls(String driverVersion) throws IOException {
+        List<URL> driverUrls = getDriversFromGitHub(driverVersion);
         Collections.sort(driverUrls, new UrlComparator());
         return driverUrls;
     }

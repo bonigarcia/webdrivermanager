@@ -66,7 +66,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -88,7 +87,6 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
-import org.jsoup.Jsoup;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
@@ -125,6 +123,7 @@ import io.github.bonigarcia.wdm.managers.VoidDriverManager;
 import io.github.bonigarcia.wdm.online.Downloader;
 import io.github.bonigarcia.wdm.online.GitHubApi;
 import io.github.bonigarcia.wdm.online.HttpClient;
+import io.github.bonigarcia.wdm.online.NpmMirror;
 import io.github.bonigarcia.wdm.online.S3NamespaceContext;
 import io.github.bonigarcia.wdm.online.UrlHandler;
 import io.github.bonigarcia.wdm.versions.VersionComparator;
@@ -150,7 +149,8 @@ public abstract class WebDriverManager {
     protected static final String CLI_RESOLVER = "resolveDriverFor";
     protected static final String CLI_DOCKER = "runInDocker";
 
-    protected abstract List<URL> getDriverUrls() throws IOException;
+    protected abstract List<URL> getDriverUrls(String driverVersion)
+            throws IOException;
 
     protected abstract String getDriverName();
 
@@ -181,7 +181,6 @@ public abstract class WebDriverManager {
     protected WebDriverCreator webDriverCreator;
     protected DockerService dockerService;
 
-    protected boolean mirrorLog;
     protected int retryCount = 0;
     protected Capabilities capabilities;
     protected boolean shutdownHook = false;
@@ -795,7 +794,6 @@ public abstract class WebDriverManager {
 
     public void reset() {
         config().reset();
-        mirrorLog = false;
         retryCount = 0;
         shutdownHook = false;
         dockerEnabled = false;
@@ -814,13 +812,17 @@ public abstract class WebDriverManager {
     }
 
     public List<String> getDriverVersions() {
+        List<String> driverVersionList = new ArrayList<>();
         try {
-            List<URL> driverUrls = getDriverUrls();
-            List<String> driverVersionList = new ArrayList<>();
+            List<URL> driverUrls = isUseMirror()
+                    ? getDriversFromMirror(getMirrorUrl().get(), "")
+                    : getDriverUrls("");
+
             for (URL url : driverUrls) {
                 String driverVersion = getCurrentVersion(url);
                 if (driverVersion.isEmpty()
-                        || driverVersion.equalsIgnoreCase("icons")) {
+                        || driverVersion.equalsIgnoreCase("icons")
+                        || driverVersion.equalsIgnoreCase(getDriverName())) {
                     continue;
                 }
                 if (!driverVersionList.contains(driverVersion)) {
@@ -830,6 +832,7 @@ public abstract class WebDriverManager {
             log.trace("Driver version list before sorting {}",
                     driverVersionList);
             sort(driverVersionList, new VersionComparator());
+
             return driverVersionList;
         } catch (IOException e) {
             throw new WebDriverManagerException(e);
@@ -1218,18 +1221,28 @@ public abstract class WebDriverManager {
                 || driverVersion.equalsIgnoreCase("latest");
     }
 
+    protected boolean isUseMirror() {
+        return getMirrorUrl().isPresent() && config().isUseMirror();
+    }
+
     protected String getCurrentVersion(URL url) {
-        String currentVersion = "";
-        String pattern = "/([^/]*?)/[^/]*?" + getShortDriverName();
-        Matcher matcher = compile(pattern, CASE_INSENSITIVE)
-                .matcher(url.getFile());
-        boolean find = matcher.find();
-        if (find) {
-            currentVersion = matcher.group(1);
+        if (isUseMirror()) {
+            int i = url.getFile().lastIndexOf(SLASH);
+            int j = url.getFile().substring(0, i).lastIndexOf(SLASH) + 1;
+            return url.getFile().substring(j, i);
         } else {
-            log.trace("Version not found in URL {}", url);
+            String currentVersion = "";
+            String pattern = "/([^/]*?)/[^/]*?" + getShortDriverName();
+            Matcher matcher = compile(pattern, CASE_INSENSITIVE)
+                    .matcher(url.getFile());
+            boolean find = matcher.find();
+            if (find) {
+                currentVersion = matcher.group(1);
+            } else {
+                log.trace("Version not found in URL {}", url);
+            }
+            return currentVersion;
         }
-        return currentVersion;
     }
 
     protected void handleException(Exception e, String driverVersion) {
@@ -1277,7 +1290,7 @@ public abstract class WebDriverManager {
 
     protected UrlHandler createUrlHandler(String driverVersion)
             throws IOException {
-        List<URL> candidateUrls = getDriverUrls();
+        List<URL> candidateUrls = getDriverUrls(driverVersion);
         String shortDriverName = getShortDriverName();
         UrlHandler urlHandler = new UrlHandler(config(), candidateUrls,
                 driverVersion, shortDriverName, this::buildUrl);
@@ -1332,45 +1345,36 @@ public abstract class WebDriverManager {
         return urlHandler;
     }
 
-    /**
-     * This method works also for http://npm.taobao.org/ and
-     * https://bitbucket.org/ mirrors.
-     */
-    protected List<URL> getDriversFromMirror(URL driverUrl) throws IOException {
-        if (!mirrorLog) {
-            log.debug("Crawling driver list from mirror {}", driverUrl);
-            mirrorLog = true;
-        } else {
-            log.trace("[Recursive call] Crawling driver list from mirror {}",
-                    driverUrl);
-        }
-
-        String driverStr = driverUrl.toString();
-        String driverOrigin = String.format("%s://%s", driverUrl.getProtocol(),
-                driverUrl.getAuthority());
-
-        try (CloseableHttpResponse response = getHttpClient()
-                .execute(getHttpClient().createHttpGet(driverUrl))) {
-            InputStream in = response.getEntity().getContent();
-            org.jsoup.nodes.Document doc = Jsoup.parse(in, null, driverStr);
-            Iterator<org.jsoup.nodes.Element> iterator = doc.select("a")
-                    .iterator();
-            List<URL> urlList = new ArrayList<>();
-
-            while (iterator.hasNext()) {
-                String link = iterator.next().attr("abs:href");
-                if (link.startsWith(driverStr) && link.endsWith(SLASH)) {
-                    urlList.addAll(getDriversFromMirror(new URL(link)));
-                } else if (link.startsWith(driverOrigin)
-                        && !link.contains("icons")
-                        && (link.toLowerCase(ROOT).endsWith(".bz2")
-                                || link.toLowerCase(ROOT).endsWith(".zip")
-                                || link.toLowerCase(ROOT).endsWith(".gz"))) {
-                    urlList.add(new URL(link));
-                }
+    protected List<URL> getDriversFromMirror(URL driverUrl,
+            String driverVersion) throws IOException {
+        List<URL> urls = new ArrayList<>();
+        if (isNullOrEmpty(driverVersion)) {
+            List<URL> mirrorUrls = getMirrorUrls(driverUrl, "");
+            for (URL url : mirrorUrls) {
+                urls.addAll(getMirrorUrls(url, ""));
             }
-            return urlList;
+        } else {
+            urls = getMirrorUrls(driverUrl, driverVersion + "/");
         }
+        return urls;
+    }
+
+    private List<URL> getMirrorUrls(URL driverUrl, String versionPath)
+            throws MalformedURLException, IOException {
+        List<URL> urls;
+        HttpGet get = getHttpClient()
+                .createHttpGet(new URL(driverUrl, versionPath));
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(
+                getHttpClient().execute(get).getEntity().getContent()))) {
+
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            Gson gson = gsonBuilder.create();
+            NpmMirror[] releaseArray = gson.fromJson(reader, NpmMirror[].class);
+
+            urls = Arrays.stream(releaseArray).map(release -> release.getUrl())
+                    .collect(Collectors.toList());
+        }
+        return urls;
     }
 
     protected NamespaceContext getNamespaceContext() {
@@ -1435,14 +1439,14 @@ public abstract class WebDriverManager {
         return getHttpClient().execute(get).getEntity().getContent();
     }
 
-    protected List<URL> getDriversFromGitHub() throws IOException {
+    protected List<URL> getDriversFromGitHub(String driverVersion)
+            throws IOException {
         List<URL> urls;
         URL driverUrl = getDriverUrl();
         logSeekRepo(driverUrl);
 
-        Optional<URL> mirrorUrl = getMirrorUrl();
-        if (mirrorUrl.isPresent() && config().isUseMirror()) {
-            urls = getDriversFromMirror(mirrorUrl.get());
+        if (isUseMirror()) {
+            urls = getDriversFromMirror(getMirrorUrl().get(), driverVersion);
 
         } else {
             try (BufferedReader reader = new BufferedReader(

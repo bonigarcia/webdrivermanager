@@ -96,24 +96,12 @@ public class ChromeDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected List<URL> getDriverUrls() throws IOException {
-        Optional<URL> mirrorUrl = getMirrorUrl();
-        if (mirrorUrl.isPresent() && config().isUseMirror()) {
-            return getDriversFromMirror(mirrorUrl.get());
+    protected List<URL> getDriverUrls(String driverVersion) throws IOException {
+        if (isUseMirror()) {
+            return getDriversFromMirror(getMirrorUrl().get(), driverVersion);
         } else {
             return getDriversFromXml(getDriverUrl(), "//s3:Contents/s3:Key",
                     getS3NamespaceContext());
-        }
-    }
-
-    @Override
-    protected String getCurrentVersion(URL url) {
-        if (config().isUseMirror()) {
-            int i = url.getFile().lastIndexOf(SLASH);
-            int j = url.getFile().substring(0, i).lastIndexOf(SLASH) + 1;
-            return url.getFile().substring(j, i);
-        } else {
-            return super.getCurrentVersion(url);
         }
     }
 

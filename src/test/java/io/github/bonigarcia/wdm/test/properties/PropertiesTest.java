@@ -91,8 +91,8 @@ class PropertiesTest {
 
         assertThat(config.getChromeDriverUrl()).isEqualTo(
                 new URL("https://chromedriver.storage.googleapis.com/"));
-        assertThat(config.getChromeDriverMirrorUrl()).isEqualTo(
-                new URL("https://npm.taobao.org/mirrors/chromedriver/"));
+        assertThat(config.getChromeDriverMirrorUrl()).isEqualTo(new URL(
+                "https://registry.npmmirror.com/-/binary/chromedriver/"));
         assertThat(config.getChromeDriverExport())
                 .isEqualTo("webdriver.chrome.driver");
         assertThat(config.getChromeDownloadUrlPattern()).isEqualTo(
@@ -101,7 +101,7 @@ class PropertiesTest {
         assertThat(config.getOperaDriverUrl()).isEqualTo(new URL(
                 "https://api.github.com/repos/operasoftware/operachromiumdriver/releases"));
         assertThat(config.getOperaDriverMirrorUrl()).isEqualTo(
-                new URL("https://npm.taobao.org/mirrors/operadriver"));
+                new URL("https://registry.npmmirror.com/-/binary/operadriver"));
         assertThat(config.getOperaDriverExport())
                 .isEqualTo("webdriver.opera.driver");
 

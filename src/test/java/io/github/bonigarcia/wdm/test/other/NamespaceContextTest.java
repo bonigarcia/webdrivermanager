@@ -50,7 +50,7 @@ class NamespaceContextTest {
     @Test
     void testS3BucketListNamespaceContextUrls() throws IOException {
         TestWebDriverManager testManager = new TestWebDriverManager();
-        List<URL> urls = testManager.getDriverUrls();
+        List<URL> urls = testManager.getDriverUrls("");
         assertThat(urls).isNotEmpty();
     }
 
@@ -89,7 +89,8 @@ class NamespaceContextTest {
     private static final class TestWebDriverManager extends WebDriverManager {
 
         @Override
-        protected List<URL> getDriverUrls() throws IOException {
+        protected List<URL> getDriverUrls(String driverVersion)
+                throws IOException {
             httpClient = new HttpClient(config());
             return getDriversFromXml(getDriverUrl(), "//s3:Contents/s3:Key",
                     getS3NamespaceContext());

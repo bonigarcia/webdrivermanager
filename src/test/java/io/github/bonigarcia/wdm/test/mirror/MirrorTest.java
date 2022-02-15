@@ -21,50 +21,64 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.File;
 import java.net.URL;
+import java.util.List;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.WebDriverManagerException;
 
 /**
- * Test for taobao.org mirror.
+ * Test for mirror repository.
  *
  * @author Boni Garcia
  * @since 1.6.1
  */
 
-class TaobaoTest {
+class MirrorTest {
 
-    WebDriverManager wdm = WebDriverManager.chromedriver()
-            .avoidBrowserDetection().useMirror().forceDownload();
-
-    @Disabled("Flaky test due to slow response of npm.taobao.org")
     @Test
-    void testTaobao() throws Exception {
-        wdm.config().setChromeDriverMirrorUrl(
-                new URL("http://npm.taobao.org/mirrors/chromedriver/"));
-        wdm.setup();
-        File driver = new File(wdm.getDownloadedDriverPath());
-        assertThat(driver).exists();
-    }
-
-    @Disabled("Flaky test due to cnpmjs.org")
-    @Test
-    void testOtherMirrorUrl() throws Exception {
-        wdm.config().setChromeDriverMirrorUrl(
-                new URL("https://cnpmjs.org/mirrors/chromedriver/"));
+    void testMirrorChrome() throws Exception {
+        WebDriverManager wdm = WebDriverManager.chromedriver()
+                .avoidBrowserDetection().clearResolutionCache().useMirror()
+                .forceDownload();
+        wdm.config().setChromeDriverMirrorUrl(new URL(
+                "https://registry.npmmirror.com/-/binary/chromedriver/"));
         wdm.setup();
         File driver = new File(wdm.getDownloadedDriverPath());
         assertThat(driver).exists();
     }
 
     @Test
-    void testTaobaoException() {
+    void testMirrorFirefox() throws Exception {
+        WebDriverManager wdm = WebDriverManager.firefoxdriver().useMirror()
+                .forceDownload();
+        wdm.setup();
+        File driver = new File(wdm.getDownloadedDriverPath());
+        assertThat(driver).exists();
+    }
+
+    @Test
+    void testMirrorOpera() throws Exception {
+        WebDriverManager wdm = WebDriverManager.operadriver().useMirror()
+                .forceDownload();
+        wdm.setup();
+        File driver = new File(wdm.getDownloadedDriverPath());
+        assertThat(driver).exists();
+    }
+
+    @Test
+    void testMirrorException() {
         WebDriverManager manager = WebDriverManager.edgedriver();
         assertThatThrownBy(manager::useMirror)
                 .isInstanceOf(WebDriverManagerException.class);
+    }
+
+    @Test
+    void testMirrorDriverList() {
+        List<String> driverVersions = WebDriverManager.chromedriver()
+                .useMirror().getDriverVersions();
+        assertThat(driverVersions).isNotEmpty();
     }
 
 }

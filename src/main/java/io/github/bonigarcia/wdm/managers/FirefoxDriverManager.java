@@ -91,8 +91,16 @@ public class FirefoxDriverManager extends WebDriverManager {
     }
 
     @Override
-    protected List<URL> getDriverUrls() throws IOException {
-        return getDriversFromGitHub();
+    protected List<URL> getDriverUrls(String driverVersion) throws IOException {
+        if (isUseMirror()) {
+            String versionPath = driverVersion;
+            if (!driverVersion.isEmpty() && !driverVersion.equals("0.3.0")) {
+                versionPath = "v" + versionPath;
+            }
+            return getDriversFromMirror(getMirrorUrl().get(), versionPath);
+        } else {
+            return getDriversFromGitHub(driverVersion);
+        }
     }
 
     @Override
