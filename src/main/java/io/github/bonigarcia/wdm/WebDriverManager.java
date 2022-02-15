@@ -44,8 +44,8 @@ import static javax.xml.xpath.XPathConstants.NODESET;
 import static javax.xml.xpath.XPathFactory.newInstance;
 import static org.apache.commons.io.FileUtils.cleanDirectory;
 import static org.apache.commons.io.FilenameUtils.removeExtension;
-import static org.apache.commons.lang.StringUtils.isNumeric;
-import static org.apache.commons.lang.SystemUtils.IS_OS_LINUX;
+import static org.apache.commons.lang3.StringUtils.isNumeric;
+import static org.apache.commons.lang3.SystemUtils.IS_OS_LINUX;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.BufferedReader;
@@ -85,7 +85,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.jsoup.Jsoup;
@@ -1342,6 +1342,8 @@ public abstract class WebDriverManager {
      * https://bitbucket.org/ mirrors.
      */
     protected List<URL> getDriversFromMirror(URL driverUrl) throws IOException {
+        // TODO: use https://registry.npmmirror.com/-/binary/chromedriver
+
         if (!mirrorLog) {
             log.debug("Crawling driver list from mirror {}", driverUrl);
             mirrorLog = true;
@@ -1354,16 +1356,25 @@ public abstract class WebDriverManager {
         String driverOrigin = String.format("%s://%s", driverUrl.getProtocol(),
                 driverUrl.getAuthority());
 
+        System.out.println("***************  " + driverUrl);
+
         try (CloseableHttpResponse response = httpClient
                 .execute(httpClient.createHttpGet(driverUrl))) {
+
+            System.out.println("-------------> " + response.getCode());
             InputStream in = response.getEntity().getContent();
             org.jsoup.nodes.Document doc = Jsoup.parse(in, null, driverStr);
+
+            System.out.println("**driverStr ************  " + driverStr);
+            System.out.println("----> HTML:  " + doc.html());
+
             Iterator<org.jsoup.nodes.Element> iterator = doc.select("a")
                     .iterator();
             List<URL> urlList = new ArrayList<>();
 
             while (iterator.hasNext()) {
                 String link = iterator.next().attr("abs:href");
+                System.out.println("************* " + link);
                 if (link.startsWith(driverStr) && link.endsWith(SLASH)) {
                     urlList.addAll(getDriversFromMirror(new URL(link)));
                 } else if (link.startsWith(driverOrigin)
