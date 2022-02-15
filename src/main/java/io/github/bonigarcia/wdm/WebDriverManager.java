@@ -197,7 +197,7 @@ public abstract class WebDriverManager {
     }
 
     public synchronized Config config() {
-        return config;
+        return Optional.ofNullable(config).orElse(new Config());
     }
 
     public static synchronized WebDriverManager chromedriver() {
@@ -890,7 +890,7 @@ public abstract class WebDriverManager {
         if (dockerContainerList != null && !dockerContainerList.isEmpty()) {
             DockerContainer recorderContainer = dockerContainerList.get(0);
             if (recorderContainer.getImageId()
-                    .equals(config.getDockerRecordingImage())) {
+                    .equals(config().getDockerRecordingImage())) {
                 getDockerService().stopAndRemoveContainer(recorderContainer);
                 dockerContainerList.remove(0);
             }
@@ -972,7 +972,7 @@ public abstract class WebDriverManager {
 
     public synchronized DockerService getDockerService() {
         if (dockerService == null) {
-            dockerService = new DockerService(config, httpClient,
+            dockerService = new DockerService(config(), getHttpClient(),
                     resolutionCache);
         }
         return dockerService;
@@ -1015,11 +1015,12 @@ public abstract class WebDriverManager {
     // ------------
 
     protected void manage(String driverVersion) {
-        try (HttpClient wdmHttpClient = httpClient) {
+        try (HttpClient wdmHttpClient = getHttpClient()) {
             if (isUnknown(driverVersion)) {
                 driverVersion = resolveDriverVersion(driverVersion);
             }
-            if (versionDetector.isSnap() && config.isUseChromiumDriverSnap()) {
+            if (versionDetector.isSnap()
+                    && config().isUseChromiumDriverSnap()) {
                 String chromiumDriverSnapPath = config()
                         .getChromiumDriverSnapPath();
                 File snapChromiumDriverPath = new File(chromiumDriverSnapPath);
@@ -1089,7 +1090,7 @@ public abstract class WebDriverManager {
                         getDriverManagerType().getBrowserName(),
                         optionalBrowserVersion.get());
 
-                if (config.getIgnoreVersions().contains(driverVersion)) {
+                if (config().getIgnoreVersions().contains(driverVersion)) {
                     String formerBrowserVersion = valueOf(
                             parseInt(optionalBrowserVersion.get()) - 1);
                     log.info(
@@ -1137,7 +1138,7 @@ public abstract class WebDriverManager {
     protected void exportDriver(String variableValue) {
         downloadedDriverPath = variableValue;
         Optional<String> exportParameter = getExportParameter();
-        if (!config.isAvoidExport() && exportParameter.isPresent()) {
+        if (!config().isAvoidExport() && exportParameter.isPresent()) {
             String variableName = exportParameter.get();
             log.info("Exporting {} as {}", variableName, variableValue);
             System.setProperty(variableName, variableValue);
@@ -1351,8 +1352,8 @@ public abstract class WebDriverManager {
         String driverOrigin = String.format("%s://%s", driverUrl.getProtocol(),
                 driverUrl.getAuthority());
 
-        try (CloseableHttpResponse response = httpClient
-                .execute(httpClient.createHttpGet(driverUrl))) {
+        try (CloseableHttpResponse response = getHttpClient()
+                .execute(getHttpClient().createHttpGet(driverUrl))) {
             InputStream in = response.getEntity().getContent();
             org.jsoup.nodes.Document doc = Jsoup.parse(in, null, driverStr);
             Iterator<org.jsoup.nodes.Element> iterator = doc.select("a")
@@ -1388,8 +1389,8 @@ public abstract class WebDriverManager {
         logSeekRepo(driverUrl);
         List<URL> urls = new ArrayList<>();
         try {
-            try (CloseableHttpResponse response = httpClient
-                    .execute(httpClient.createHttpGet(driverUrl))) {
+            try (CloseableHttpResponse response = getHttpClient()
+                    .execute(getHttpClient().createHttpGet(driverUrl))) {
                 Document xml = loadXML(response.getEntity().getContent());
                 XPath xPath = newInstance().newXPath();
                 if (namespaceContext.isPresent()) {
@@ -1424,7 +1425,7 @@ public abstract class WebDriverManager {
 
     protected InputStream openGitHubConnection(URL driverUrl)
             throws IOException {
-        HttpGet get = httpClient.createHttpGet(driverUrl);
+        HttpGet get = getHttpClient().createHttpGet(driverUrl);
 
         String gitHubToken = config().getGitHubToken();
         if (isNullOrEmpty(gitHubToken)) {
@@ -1434,7 +1435,7 @@ public abstract class WebDriverManager {
             get.addHeader("Authorization", "token " + gitHubToken);
         }
 
-        return httpClient.execute(get).getEntity().getContent();
+        return getHttpClient().execute(get).getEntity().getContent();
     }
 
     protected List<URL> getDriversFromGitHub() throws IOException {
@@ -1443,7 +1444,7 @@ public abstract class WebDriverManager {
         logSeekRepo(driverUrl);
 
         Optional<URL> mirrorUrl = getMirrorUrl();
-        if (mirrorUrl.isPresent() && config.isUseMirror()) {
+        if (mirrorUrl.isPresent() && config().isUseMirror()) {
             urls = getDriversFromMirror(mirrorUrl.get());
 
         } else {
@@ -1472,7 +1473,7 @@ public abstract class WebDriverManager {
     }
 
     protected HttpClient getHttpClient() {
-        return httpClient;
+        return Optional.ofNullable(httpClient).orElse(new HttpClient(config()));
     }
 
     protected FilenameFilter getFolderFilter() {
@@ -1638,8 +1639,8 @@ public abstract class WebDriverManager {
                 .getSessionId(driverBrowser.getDriver());
         browserContainer.setSessionId(sessionId);
 
-        if (config.isDockerEnabledVnc()) {
-            String noVncImage = config.getDockerNoVncImage();
+        if (config().isDockerEnabledVnc()) {
+            String noVncImage = config().getDockerNoVncImage();
             String noVncVersion = getDockerService()
                     .getVersionFromImage(noVncImage);
             DockerContainer noVncContainer = getDockerService()
@@ -1653,8 +1654,8 @@ public abstract class WebDriverManager {
             log.info("Docker session noVNC URL: {}", noVncUrl);
         }
 
-        if (config.isDockerEnabledRecording()) {
-            String recorderImage = config.getDockerRecordingImage();
+        if (config().isDockerEnabledRecording()) {
+            String recorderImage = config().getDockerRecordingImage();
             String recorderVersion = getDockerService()
                     .getVersionFromImage(recorderImage);
             DockerContainer recorderContainer = getDockerService()
@@ -1700,7 +1701,7 @@ public abstract class WebDriverManager {
             Method addArgumentsMethod = options.getClass()
                     .getMethod("addArguments", List.class);
             List<String> defaultArgs = Arrays
-                    .asList(config.getDockerDefaultArgs().split(","));
+                    .asList(config().getDockerDefaultArgs().split(","));
             addArgumentsMethod.invoke(options, defaultArgs);
         }
     }
