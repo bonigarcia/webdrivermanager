@@ -183,7 +183,7 @@ public class DockerService {
                 hostConfigBuilder.withPrivileged(true);
             }
             if (dockerContainer.isSysadmin()) {
-                log.trace("Adding sysadmin capabilty");
+                log.trace("Adding sysadmin capability");
                 hostConfigBuilder.withCapAdd(Capability.SYS_ADMIN);
             }
 
@@ -300,7 +300,7 @@ public class DockerService {
                         }).awaitCompletion();
                 log.trace("Docker image {} pulled", imageId);
 
-                if (!config.isAvoidingResolutionCache()) {
+                if (!config.isAvoidResolutionCache()) {
                     resolutionCache.putValueInResolutionCacheIfEmpty(cacheKey,
                             imageVersion, config.getTtlForBrowsers());
                 }
@@ -542,7 +542,7 @@ public class DockerService {
         // envs
         List<String> envs = new ArrayList<>();
         envs.add("AUTOCONNECT=true");
-        envs.add("VIEW_ONLY=" + config.getDockerViewOnly());
+        envs.add("VIEW_ONLY=" + config.isDockerViewOnly());
         envs.add("VNC_PASSWORD=" + config.getDockerVncPassword());
         String vncAddress = browserContainer.getGateway();
         String vncPort = browserContainer.getVncPort();
@@ -608,7 +608,7 @@ public class DockerService {
         envs.addAll(config.getDockerEnvVariables());
 
         String dockerVncPort = String.valueOf(config.getDockerVncPort());
-        if (config.isEnabledDockerVnc()) {
+        if (config.isDockerEnabledVnc()) {
             envs.add("ENABLE_VNC=true");
             exposedPorts.add(dockerVncPort);
         }
@@ -649,7 +649,7 @@ public class DockerService {
         browserContainer.setAddress(address);
         log.trace("Browser remote URL {}", browserUrl);
 
-        if (config.isEnabledDockerVnc()) {
+        if (config.isDockerEnabledVnc()) {
             String vncPort = getBindPort(containerId, dockerVncPort + "/tcp");
             browserContainer.setVncPort(vncPort);
             String vncAddress = format("vnc://%s:%s/", getDefaultHost(),

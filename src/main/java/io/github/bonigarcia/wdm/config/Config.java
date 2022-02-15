@@ -500,8 +500,16 @@ public class Config {
         return this;
     }
 
-    public boolean isAvoidingResolutionCache() {
+    public boolean isAvoidResolutionCache() {
         return resolve(avoidResolutionCache);
+    }
+
+    /**
+     * @deprecated Replaced by {@link #isAvoidResolutionCache()}
+     */
+    @Deprecated
+    public boolean isAvoidingResolutionCache() {
+        return isAvoidResolutionCache();
     }
 
     public Config setAvoidResolutionCache(boolean value) {
@@ -536,8 +544,16 @@ public class Config {
         return this;
     }
 
-    public boolean getVersionsPropertiesOnlineFirst() {
+    public boolean isVersionsPropertiesOnlineFirst() {
         return resolve(versionsPropertiesOnlineFirst);
+    }
+
+    /**
+     * @deprecated Replaced by {@link #isVersionsPropertiesOnlineFirst()}
+     */
+    @Deprecated
+    public boolean getVersionsPropertiesOnlineFirst() {
+        return isVersionsPropertiesOnlineFirst();
     }
 
     public Config setVersionsPropertiesOnlineFirst(boolean value) {
@@ -545,8 +561,16 @@ public class Config {
         return this;
     }
 
-    public boolean getCommandsPropertiesOnlineFirst() {
+    public boolean isCommandsPropertiesOnlineFirst() {
         return resolve(commandsPropertiesOnlineFirst);
+    }
+
+    /**
+     * @deprecated Replaced by {@link #isCommandsPropertiesOnlineFirst()}
+     */
+    @Deprecated
+    public boolean getCommandsPropertiesOnlineFirst() {
+        return isCommandsPropertiesOnlineFirst();
     }
 
     public Config setCommandsPropertiesOnlineFirst(boolean value) {
@@ -572,8 +596,16 @@ public class Config {
         return this;
     }
 
-    public boolean getClearingResolutionCache() {
+    public boolean isClearResolutionCache() {
         return resolve(clearResolutionCache);
+    }
+
+    /**
+     * @deprecated Replaced by {@link #isClearResolutionCache()}
+     */
+    @Deprecated
+    public boolean getClearingResolutionCache() {
+        return isClearResolutionCache();
     }
 
     public Config setClearResolutionCache(Boolean value) {
@@ -581,8 +613,16 @@ public class Config {
         return this;
     }
 
-    public boolean getClearingDriverCache() {
+    public boolean isClearDriverCache() {
         return resolve(clearDriverCache);
+    }
+
+    /**
+     * @deprecated Replaced by {@link #isClearDriverCache()}
+     */
+    @Deprecated
+    public boolean getClearingDriverCache() {
+        return isClearDriverCache();
     }
 
     public Config setClearDriverCache(Boolean value) {
@@ -871,9 +911,17 @@ public class Config {
         return resolve(iExplorerDriverExport);
     }
 
-    public Config setInternetExplorerDriverExport(String value) {
+    public Config setIExplorerDriverExport(String value) {
         this.iExplorerDriverExport.setValue(value);
         return this;
+    }
+
+    /**
+     * @deprecated Replaced by {@link #setIExplorerDriverExport(String)}
+     */
+    @Deprecated
+    public Config setInternetExplorerDriverExport(String value) {
+        return setIExplorerDriverExport(value);
     }
 
     public URL getIExplorerDriverUrl() {
@@ -1103,17 +1151,41 @@ public class Config {
         return this;
     }
 
-    public boolean isEnabledDockerVnc() {
+    public boolean isDockerEnabledVnc() {
         return resolve(dockerEnableVnc);
     }
 
-    public Config setDockerEnableVnc(boolean value) {
+    /**
+     * @deprecated Replaced by {@link #isDockerEnabledVnc()}
+     */
+    @Deprecated
+    public boolean isEnabledDockerVnc() {
+        return isDockerEnabledVnc();
+    }
+
+    public Config setDockerEnabledVnc(boolean value) {
         this.dockerEnableVnc.setValue(value);
         return this;
     }
 
-    public boolean getDockerViewOnly() {
+    /**
+     * @deprecated Replaced by {@link #setDockerEnabledVnc(boolean)}
+     */
+    @Deprecated
+    public Config setDockerEnableVnc(boolean value) {
+        return setDockerEnabledVnc(value);
+    }
+
+    public boolean isDockerViewOnly() {
         return resolve(dockerViewOnly);
+    }
+
+    /**
+     * @deprecated Replaced by {@link #isDockerViewOnly()}
+     */
+    @Deprecated
+    public boolean getDockerViewOnly() {
+        return isDockerViewOnly();
     }
 
     public Config setDockerViewOnly(boolean value) {
@@ -1121,13 +1193,29 @@ public class Config {
         return this;
     }
 
-    public boolean isEnabledDockerRecording() {
+    public boolean isDockerEnabledRecording() {
         return resolve(dockerEnableRecording);
     }
 
-    public Config setDockerEnableRecording(boolean value) {
+    /**
+     * @deprecated Replaced by {@link #isDockerEnabledRecording()}
+     */
+    @Deprecated
+    public boolean isEnabledDockerRecording() {
+        return isDockerEnabledRecording();
+    }
+
+    public Config setDockerEnabledRecording(boolean value) {
         this.dockerEnableRecording.setValue(value);
         return this;
+    }
+
+    /**
+     * @deprecated Replaced by {@link #setDockerEnabledRecording(boolean)}
+     */
+    @Deprecated
+    public Config setDockerEnableRecording(boolean value) {
+        return setDockerEnabledRecording(value);
     }
 
     public String getDockerScreenResolution() {

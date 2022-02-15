@@ -382,10 +382,10 @@ public abstract class WebDriverManager {
     }
 
     public synchronized void setup() {
-        if (config().getClearingDriverCache()) {
+        if (config().isClearDriverCache()) {
             clearDriverCache();
         }
-        if (config().getClearingResolutionCache()) {
+        if (config().isClearResolutionCache()) {
             clearResolutionCache();
         }
         if (isUsingDocker() || !isNullOrEmpty(config().getRemoteAddress())) {
@@ -488,7 +488,7 @@ public abstract class WebDriverManager {
     }
 
     public WebDriverManager enableVnc() {
-        config().setDockerEnableVnc(true);
+        config().setDockerEnabledVnc(true);
         return this;
     }
 
@@ -498,7 +498,7 @@ public abstract class WebDriverManager {
     }
 
     public WebDriverManager enableRecording() {
-        config().setDockerEnableRecording(true);
+        config().setDockerEnabledRecording(true);
         return this;
     }
 
@@ -1210,7 +1210,7 @@ public abstract class WebDriverManager {
     }
 
     protected boolean useResolutionCache() {
-        return !config().isAvoidingResolutionCache();
+        return !config().isAvoidResolutionCache();
     }
 
     protected boolean isUnknown(String driverVersion) {
@@ -1651,7 +1651,7 @@ public abstract class WebDriverManager {
             log.info("Docker session noVNC URL: {}", noVncUrl);
         }
 
-        if (config.isEnabledDockerRecording()) {
+        if (config.isDockerEnabledRecording()) {
             String recorderImage = config.getDockerRecordingImage();
             String recorderVersion = getDockerService()
                     .getVersionFromImage(recorderImage);
