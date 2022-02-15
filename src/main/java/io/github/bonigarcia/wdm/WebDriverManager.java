@@ -194,6 +194,7 @@ public abstract class WebDriverManager {
 
     protected WebDriverManager() {
         config = new Config();
+        webDriverList = new CopyOnWriteArrayList<>();
     }
 
     public synchronized Config config() {
@@ -379,10 +380,6 @@ public abstract class WebDriverManager {
         httpClient = new HttpClient(config());
         downloader = new Downloader(getHttpClient(), config(),
                 this::postDownload);
-        resolutionCache = new ResolutionCache(config());
-        versionDetector = new VersionDetector(config(), getHttpClient());
-        webDriverList = new CopyOnWriteArrayList<>();
-        webDriverCreator = new WebDriverCreator(config());
 
         if (config().isClearDriverCache()) {
             clearDriverCache();
@@ -415,7 +412,7 @@ public abstract class WebDriverManager {
     }
 
     public Optional<Path> getBrowserPath() {
-        return versionDetector.getBrowserPath(
+        return getVersionDetector().getBrowserPath(
                 getDriverManagerType().getBrowserNameLowerCase());
     }
 
@@ -781,7 +778,7 @@ public abstract class WebDriverManager {
     }
 
     public WebDriverManager clearResolutionCache() {
-        resolutionCache.clear();
+        getResolutionCache().clear();
         return this;
     }
 
@@ -978,7 +975,7 @@ public abstract class WebDriverManager {
     public synchronized DockerService getDockerService() {
         if (dockerService == null) {
             dockerService = new DockerService(config(), getHttpClient(),
-                    resolutionCache);
+                    getResolutionCache());
         }
         return dockerService;
     }
@@ -1008,7 +1005,7 @@ public abstract class WebDriverManager {
     protected Object getPropertyFromFirstWebDriverBrowser(
             Function<WebDriverBrowser, Object> function) {
         Object object = null;
-        if (webDriverList.isEmpty()) {
+        if (webDriverList == null || webDriverList.isEmpty()) {
             log.warn(
                     "Property not available since there is no browsers in Docker");
         } else {
@@ -1024,7 +1021,7 @@ public abstract class WebDriverManager {
             if (isUnknown(driverVersion)) {
                 driverVersion = resolveDriverVersion(driverVersion);
             }
-            if (versionDetector.isSnap()
+            if (getVersionDetector().isSnap()
                     && config().isUseChromiumDriverSnap()) {
                 String chromiumDriverSnapPath = config()
                         .getChromiumDriverSnapPath();
@@ -1085,7 +1082,7 @@ public abstract class WebDriverManager {
                         optionalBrowserVersion);
             }
             if (!optionalDriverVersion.isPresent()) {
-                optionalDriverVersion = versionDetector
+                optionalDriverVersion = getVersionDetector()
                         .getDriverVersionFromProperties(preferenceKey);
             }
             if (optionalDriverVersion.isPresent()) {
@@ -1106,7 +1103,7 @@ public abstract class WebDriverManager {
                     return resolveDriverVersion("");
                 }
 
-                if (!versionDetector.isSnap()) {
+                if (!getVersionDetector().isSnap()) {
                     storeInResolutionCache(preferenceKey, driverVersion,
                             optionalBrowserVersion.get());
                 }
@@ -1155,10 +1152,10 @@ public abstract class WebDriverManager {
     protected void storeInResolutionCache(String preferenceKey,
             String resolvedDriverVersion, String resolvedBrowserVersion) {
         if (useResolutionCache()) {
-            resolutionCache.putValueInResolutionCacheIfEmpty(
+            getResolutionCache().putValueInResolutionCacheIfEmpty(
                     getKeyForResolutionCache(), resolvedBrowserVersion,
                     config().getTtlForBrowsers());
-            resolutionCache.putValueInResolutionCacheIfEmpty(preferenceKey,
+            getResolutionCache().putValueInResolutionCacheIfEmpty(preferenceKey,
                     resolvedDriverVersion, config().getTtl());
         }
     }
@@ -1167,8 +1164,8 @@ public abstract class WebDriverManager {
             String preferenceKey) {
         Optional<String> optionalBrowserVersion = empty();
         if (useResolutionCacheWithKey(preferenceKey)) {
-            optionalBrowserVersion = Optional.of(
-                    resolutionCache.getValueFromResolutionCache(preferenceKey));
+            optionalBrowserVersion = Optional.of(getResolutionCache()
+                    .getValueFromResolutionCache(preferenceKey));
         }
         return optionalBrowserVersion;
     }
@@ -1187,7 +1184,7 @@ public abstract class WebDriverManager {
     }
 
     protected Optional<String> getBrowserVersionFromTheShell() {
-        return versionDetector.getBrowserVersionFromTheShell(
+        return getVersionDetector().getBrowserVersionFromTheShell(
                 getDriverManagerType().getBrowserNameLowerCase());
     }
 
@@ -1201,7 +1198,7 @@ public abstract class WebDriverManager {
         Optional<String> optionalBrowserVersion;
 
         if (useResolutionCacheWithKey(driverManagerTypeLowerCase)) {
-            optionalBrowserVersion = Optional.of(resolutionCache
+            optionalBrowserVersion = Optional.of(getResolutionCache()
                     .getValueFromResolutionCache(driverManagerTypeLowerCase));
 
             log.trace("Detected {} version {}", getDriverManagerType(),
@@ -1214,7 +1211,7 @@ public abstract class WebDriverManager {
 
     protected boolean useResolutionCacheWithKey(String key) {
         return useResolutionCache()
-                && resolutionCache.checkKeyInResolutionCache(key);
+                && getResolutionCache().checkKeyInResolutionCache(key);
     }
 
     protected boolean useResolutionCache() {
@@ -1481,6 +1478,21 @@ public abstract class WebDriverManager {
         return Optional.ofNullable(httpClient).orElse(new HttpClient(config()));
     }
 
+    protected ResolutionCache getResolutionCache() {
+        return Optional.ofNullable(resolutionCache)
+                .orElse(new ResolutionCache(config()));
+    }
+
+    protected VersionDetector getVersionDetector() {
+        return Optional.ofNullable(versionDetector)
+                .orElse(new VersionDetector(config(), getHttpClient()));
+    }
+
+    protected WebDriverCreator getWebDriverCreator() {
+        return Optional.ofNullable(webDriverCreator)
+                .orElse(new WebDriverCreator(config()));
+    }
+
     protected FilenameFilter getFolderFilter() {
         return (dir, name) -> dir.isDirectory()
                 && name.toLowerCase(ROOT).contains(getDriverName());
@@ -1501,9 +1513,10 @@ public abstract class WebDriverManager {
     protected Optional<String> getDriverVersionFromRepository(
             Optional<String> driverVersion) {
         return config().isAvoidReadReleaseFromRepository() ? empty()
-                : versionDetector.getDriverVersionFromRepository(driverVersion,
-                        getDriverUrl(), getVersionCharset(), getDriverName(),
-                        getLatestVersionLabel(), LATEST_RELEASE, getOsLabel());
+                : getVersionDetector().getDriverVersionFromRepository(
+                        driverVersion, getDriverUrl(), getVersionCharset(),
+                        getDriverName(), getLatestVersionLabel(),
+                        LATEST_RELEASE, getOsLabel());
     }
 
     protected URL getDriverUrlCkeckingMirror(URL url) {
@@ -1545,8 +1558,8 @@ public abstract class WebDriverManager {
             } else if (!isNullOrEmpty(remoteAddress)) {
                 Capabilities caps = Optional.ofNullable(capabilities)
                         .orElse(getCapabilities());
-                driver = webDriverCreator.createRemoteWebDriver(remoteAddress,
-                        caps);
+                driver = getWebDriverCreator()
+                        .createRemoteWebDriver(remoteAddress, caps);
                 webDriverList.add(new WebDriverBrowser(driver));
 
             } else {
@@ -1637,10 +1650,10 @@ public abstract class WebDriverManager {
         driverBrowser.setBrowserContainerId(browserContainer.getContainerId());
         webDriverList.add(driverBrowser);
 
-        WebDriver driver = webDriverCreator.createRemoteWebDriver(
+        WebDriver driver = getWebDriverCreator().createRemoteWebDriver(
                 seleniumServerUrl, getMergedCapabilities());
         driverBrowser.setDriver(driver);
-        String sessionId = webDriverCreator
+        String sessionId = getWebDriverCreator()
                 .getSessionId(driverBrowser.getDriver());
         browserContainer.setSessionId(sessionId);
 
@@ -1687,7 +1700,7 @@ public abstract class WebDriverManager {
                 capabilities = getCapabilities();
             }
             Class<?> browserClass = Class.forName(managerType.browserClass());
-            driver = webDriverCreator.createLocalWebDriver(browserClass,
+            driver = getWebDriverCreator().createLocalWebDriver(browserClass,
                     capabilities);
             webDriverList.add(new WebDriverBrowser(driver));
         }
