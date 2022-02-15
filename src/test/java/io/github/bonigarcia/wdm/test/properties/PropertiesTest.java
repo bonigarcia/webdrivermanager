@@ -16,17 +16,18 @@
  */
 package io.github.bonigarcia.wdm.test.properties;
 
-import io.github.bonigarcia.wdm.WebDriverManager;
-import io.github.bonigarcia.wdm.config.Config;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import static io.github.bonigarcia.wdm.config.Architecture.X32;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.io.File;
 import java.net.URL;
 import java.nio.file.Paths;
 
-import static io.github.bonigarcia.wdm.config.Architecture.X32;
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+import io.github.bonigarcia.wdm.config.Config;
 
 /**
  * Using different properties.
@@ -57,11 +58,10 @@ class PropertiesTest {
         Config config = wdm.config();
         wdm.setup();
 
-//        assertThat(config.getArchitecture()).isEqualTo(defaultArchitecture()); // Maybe set this method public
-//        assertThat(config.getOs()).isEqualTo(defaultOsName()); // Maybe set this method public
-
-        assertThat(config.getCachePath()).isEqualTo(System.getProperty("user.home") + "/.cache/selenium");
-        assertThat(config.getResolutionCachePath()).isEqualTo(new File(System.getProperty("user.home") + "/.cache/selenium"));
+        assertThat(new File(config.getCachePath())).isEqualTo(
+                new File(System.getProperty("user.home"), ".cache/selenium"));
+        assertThat(config.getResolutionCachePath()).isEqualTo(
+                new File(System.getProperty("user.home"), ".cache/selenium"));
         assertThat(config.isForceDownload()).isFalse();
         assertThat(config.isUseMirror()).isFalse();
         assertThat(config.isUseBetaVersions()).isFalse();
@@ -77,48 +77,60 @@ class PropertiesTest {
         assertThat(config.isClearDriverCache()).isFalse();
 
         assertThat(config.getTimeout()).isEqualTo(30);
-        assertThat(config.getResolutionCache()).isEqualTo("resolution.properties");
+        assertThat(config.getResolutionCache())
+                .isEqualTo("resolution.properties");
         assertThat(config.getTtl()).isEqualTo(86400);
         assertThat(config.getTtlForBrowsers()).isEqualTo(3600);
-        assertThat(config.getBrowserVersionDetectionRegex()).isEqualTo("[^\\d^\\.]");
+        assertThat(config.getBrowserVersionDetectionRegex())
+                .isEqualTo("[^\\d^\\.]");
         assertThat(config.getDefaultBrowser()).isEqualTo("chrome");
 
         assertThat(config.getServerPort()).isEqualTo(4444);
         assertThat(config.getServerPath()).isEqualTo("/");
         assertThat(config.getServerTimeoutSec()).isEqualTo(60);
 
-        assertThat(config.getChromeDriverUrl()).isEqualTo(new URL("https://chromedriver.storage.googleapis.com/"));
-        assertThat(config.getChromeDriverMirrorUrl()).isEqualTo(new URL("https://npm.taobao.org/mirrors/chromedriver/"));
-        assertThat(config.getChromeDriverExport()).isEqualTo("webdriver.chrome.driver");
-        assertThat(config.getChromeDownloadUrlPattern()).isEqualTo("https://chromedriver.storage.googleapis.com/%s/chromedriver_%s%s.zip");
+        assertThat(config.getChromeDriverUrl()).isEqualTo(
+                new URL("https://chromedriver.storage.googleapis.com/"));
+        assertThat(config.getChromeDriverMirrorUrl()).isEqualTo(
+                new URL("https://npm.taobao.org/mirrors/chromedriver/"));
+        assertThat(config.getChromeDriverExport())
+                .isEqualTo("webdriver.chrome.driver");
+        assertThat(config.getChromeDownloadUrlPattern()).isEqualTo(
+                "https://chromedriver.storage.googleapis.com/%s/chromedriver_%s%s.zip");
 
-//      Deprecated !!!!
-//        config.getGeckoDriverVersion();
-//        wdm.geckoDriverUrl=https://api.github.com/repos/mozilla/geckodriver/releases
-//        wdm.geckoDriverMirrorUrl=https://npm.taobao.org/mirrors/geckodriver
-//        wdm.geckoDriverExport=webdriver.gecko.driver
+        assertThat(config.getOperaDriverUrl()).isEqualTo(new URL(
+                "https://api.github.com/repos/operasoftware/operachromiumdriver/releases"));
+        assertThat(config.getOperaDriverMirrorUrl()).isEqualTo(
+                new URL("https://npm.taobao.org/mirrors/operadriver"));
+        assertThat(config.getOperaDriverExport())
+                .isEqualTo("webdriver.opera.driver");
 
-        assertThat(config.getOperaDriverUrl()).isEqualTo(new URL("https://api.github.com/repos/operasoftware/operachromiumdriver/releases"));
-        assertThat(config.getOperaDriverMirrorUrl()).isEqualTo(new URL("https://npm.taobao.org/mirrors/operadriver"));
-        assertThat(config.getOperaDriverExport()).isEqualTo("webdriver.opera.driver");
+        assertThat(config.getEdgeDriverUrl())
+                .isEqualTo(new URL("https://msedgedriver.azureedge.net/"));
+        assertThat(config.getEdgeDriverExport())
+                .isEqualTo("webdriver.edge.driver");
+        assertThat(config.getEdgeDownloadUrlPattern()).isEqualTo(
+                "https://msedgewebdriverstorage.blob.core.windows.net/edgewebdriver/%s/edgedriver_%s%s.zip");
 
-        assertThat(config.getEdgeDriverUrl()).isEqualTo(new URL("https://msedgedriver.azureedge.net/"));
-        assertThat(config.getEdgeDriverExport()).isEqualTo("webdriver.edge.driver");
-        assertThat(config.getEdgeDownloadUrlPattern()).isEqualTo("https://msedgewebdriverstorage.blob.core.windows.net/edgewebdriver/%s/edgedriver_%s%s.zip");
+        assertThat(config.getIExplorerDriverUrl()).isEqualTo(new URL(
+                "https://api.github.com/repos/SeleniumHQ/selenium/releases"));
+        assertThat(config.getIExplorerDriverExport())
+                .isEqualTo("webdriver.ie.driver");
 
-        assertThat(config.getIExplorerDriverUrl()).isEqualTo(new URL("https://api.github.com/repos/SeleniumHQ/selenium/releases"));
-        assertThat(config.getIExplorerDriverExport()).isEqualTo("webdriver.ie.driver");
-
-        assertThat(config.getChromiumDriverSnapPath()).isEqualTo("/snap/bin/chromium.chromedriver");
+        assertThat(config.getChromiumDriverSnapPath())
+                .isEqualTo("/snap/bin/chromium.chromedriver");
         assertThat(config.isUseChromiumDriverSnap()).isTrue();
 
         assertThat(config.isVersionsPropertiesOnlineFirst()).isTrue();
-        assertThat(config.getVersionsPropertiesUrl()).isEqualTo(new URL("https://raw.githubusercontent.com/bonigarcia/webdrivermanager/master/src/main/resources/versions.properties"));
+        assertThat(config.getVersionsPropertiesUrl()).isEqualTo(new URL(
+                "https://raw.githubusercontent.com/bonigarcia/webdrivermanager/master/src/main/resources/versions.properties"));
 
         assertThat(config.isCommandsPropertiesOnlineFirst()).isTrue();
-        assertThat(config.getCommandsPropertiesUrl()).isEqualTo(new URL("https://raw.githubusercontent.com/bonigarcia/webdrivermanager/master/src/main/resources/commands.properties"));
+        assertThat(config.getCommandsPropertiesUrl()).isEqualTo(new URL(
+                "https://raw.githubusercontent.com/bonigarcia/webdrivermanager/master/src/main/resources/commands.properties"));
 
-        assertThat(config.getDockerHubUrl()).isEqualTo("https://hub.docker.com/");
+        assertThat(config.getDockerHubUrl())
+                .isEqualTo("https://hub.docker.com/");
         assertThat(config.getDockerNetwork()).isEqualTo("bridge");
         assertThat(config.getDockerTimezone()).isEqualTo("Etc/UTC");
         assertThat(config.getDockerLang()).isEqualTo("EN");
@@ -129,19 +141,26 @@ class PropertiesTest {
         assertThat(config.isDockerEnabledVnc()).isFalse();
         assertThat(config.isDockerViewOnly()).isFalse();
         assertThat(config.isDockerEnabledRecording()).isFalse();
-        assertThat(config.getDockerScreenResolution()).isEqualTo("1280x1080x24");
+        assertThat(config.getDockerScreenResolution())
+                .isEqualTo("1280x1080x24");
         assertThat(config.getDockerVncPassword()).isEqualTo("selenoid");
         assertThat(config.getDockerBrowserPort()).isEqualTo(4444);
         assertThat(config.getDockerVncPort()).isEqualTo(5900);
         assertThat(config.getDockerNoVncPort()).isEqualTo(6080);
         assertThat(config.getDockerRecordingFrameRate()).isEqualTo(12);
         assertThat(config.getDockerRecordingOutput()).isEqualTo(Paths.get("."));
-        assertThat(config.getDockerBrowserSelenoidImageFormat()).isEqualTo("selenoid/vnc:%s_%s");
-        assertThat(config.getDockerBrowserTwilioImageFormat()).isEqualTo("twilio/selenoid:%s_%s");
-        assertThat(config.getDockerBrowserAerokubeImageFormat()).isEqualTo("browsers/%s:%s");
-        assertThat(config.getDockerBrowserMobileImageFormat()).isEqualTo("selenoid/%s:%s");
-        assertThat(config.getDockerRecordingImage()).isEqualTo("selenoid/video-recorder:7.1");
-        assertThat(config.getDockerNoVncImage()).isEqualTo("bonigarcia/novnc:1.1.0");
+        assertThat(config.getDockerBrowserSelenoidImageFormat())
+                .isEqualTo("selenoid/vnc:%s_%s");
+        assertThat(config.getDockerBrowserTwilioImageFormat())
+                .isEqualTo("twilio/selenoid:%s_%s");
+        assertThat(config.getDockerBrowserAerokubeImageFormat())
+                .isEqualTo("browsers/%s:%s");
+        assertThat(config.getDockerBrowserMobileImageFormat())
+                .isEqualTo("selenoid/%s:%s");
+        assertThat(config.getDockerRecordingImage())
+                .isEqualTo("selenoid/video-recorder:7.1");
+        assertThat(config.getDockerNoVncImage())
+                .isEqualTo("bonigarcia/novnc:1.1.0");
         assertThat(config.getDockerDefaultArgs()).isEqualTo("--disable-gpu");
         assertThat(config.isDockerLocalFallback()).isTrue();
     }
@@ -207,7 +226,8 @@ class PropertiesTest {
         assertThat(config.getCachePath()).isEqualTo(CUSTOM_VALUE);
 
         config.setResolutionCachePath(CUSTOM_VALUE);
-        assertThat(config.getResolutionCachePath()).isEqualTo(new File(CUSTOM_VALUE));
+        assertThat(config.getResolutionCachePath())
+                .isEqualTo(new File(CUSTOM_VALUE));
 
         config.setForceDownload(true);
         assertThat(config.isForceDownload()).isTrue();
@@ -258,7 +278,8 @@ class PropertiesTest {
         assertThat(config.getTtlForBrowsers()).isEqualTo(15);
 
         config.setBrowserVersionDetectionRegex(CUSTOM_VALUE);
-        assertThat(config.getBrowserVersionDetectionRegex()).isEqualTo(CUSTOM_VALUE);
+        assertThat(config.getBrowserVersionDetectionRegex())
+                .isEqualTo(CUSTOM_VALUE);
 
         config.setDefaultBrowser(CUSTOM_VALUE);
         assertThat(config.getDefaultBrowser()).isEqualTo(CUSTOM_VALUE);
@@ -276,25 +297,22 @@ class PropertiesTest {
         assertThat(config.getChromeDriverUrl()).isEqualTo(new URL(CUSTOM_URL));
 
         config.setChromeDriverMirrorUrl(new URL(CUSTOM_URL));
-        assertThat(config.getChromeDriverMirrorUrl()).isEqualTo(new URL(CUSTOM_URL));
+        assertThat(config.getChromeDriverMirrorUrl())
+                .isEqualTo(new URL(CUSTOM_URL));
 
         config.setChromeDriverExport(CUSTOM_VALUE);
         assertThat(config.getChromeDriverExport()).isEqualTo(CUSTOM_VALUE);
 
         config.setChromeDownloadUrlPattern(CUSTOM_VALUE);
-        assertThat(config.getChromeDownloadUrlPattern()).isEqualTo(CUSTOM_VALUE);
-
-//      Deprecated !!!!
-//        config.getGeckoDriverVersion()
-//        wdm.geckoDriverUrl=https://api.github.com/repos/mozilla/geckodriver/releases
-//        wdm.geckoDriverMirrorUrl=https://npm.taobao.org/mirrors/geckodriver
-//        wdm.geckoDriverExport=webdriver.gecko.driver
+        assertThat(config.getChromeDownloadUrlPattern())
+                .isEqualTo(CUSTOM_VALUE);
 
         config.setOperaDriverUrl(new URL(CUSTOM_URL));
         assertThat(config.getOperaDriverUrl()).isEqualTo(new URL(CUSTOM_URL));
 
         config.setOperaDriverMirrorUrl(new URL(CUSTOM_URL));
-        assertThat(config.getOperaDriverMirrorUrl()).isEqualTo(new URL(CUSTOM_URL));
+        assertThat(config.getOperaDriverMirrorUrl())
+                .isEqualTo(new URL(CUSTOM_URL));
 
         config.setOperaDriverExport(CUSTOM_VALUE);
         assertThat(config.getOperaDriverExport()).isEqualTo(CUSTOM_VALUE);
@@ -309,7 +327,8 @@ class PropertiesTest {
         assertThat(config.getEdgeDownloadUrlPattern()).isEqualTo(CUSTOM_VALUE);
 
         config.setIExplorerDriverUrl(new URL(CUSTOM_URL));
-        assertThat(config.getIExplorerDriverUrl()).isEqualTo(new URL(CUSTOM_URL));
+        assertThat(config.getIExplorerDriverUrl())
+                .isEqualTo(new URL(CUSTOM_URL));
 
         config.setIExplorerDriverExport(CUSTOM_VALUE);
         assertThat(config.getIExplorerDriverExport()).isEqualTo(CUSTOM_VALUE);
@@ -324,13 +343,15 @@ class PropertiesTest {
         assertThat(config.isVersionsPropertiesOnlineFirst()).isFalse();
 
         config.setVersionsPropertiesUrl(new URL(CUSTOM_URL));
-        assertThat(config.getVersionsPropertiesUrl()).isEqualTo(new URL(CUSTOM_URL));
+        assertThat(config.getVersionsPropertiesUrl())
+                .isEqualTo(new URL(CUSTOM_URL));
 
         config.setCommandsPropertiesOnlineFirst(false);
         assertThat(config.isCommandsPropertiesOnlineFirst()).isFalse();
 
         config.setCommandsPropertiesUrl(new URL(CUSTOM_URL));
-        assertThat(config.getCommandsPropertiesUrl()).isEqualTo(new URL(CUSTOM_URL));
+        assertThat(config.getCommandsPropertiesUrl())
+                .isEqualTo(new URL(CUSTOM_URL));
 
         config.setDockerHubUrl(CUSTOM_VALUE);
         assertThat(config.getDockerHubUrl()).isEqualTo(CUSTOM_VALUE);
@@ -384,19 +405,24 @@ class PropertiesTest {
         assertThat(config.getDockerRecordingFrameRate()).isEqualTo(15);
 
         config.setDockerRecordingOutput(Paths.get(CUSTOM_VALUE));
-        assertThat(config.getDockerRecordingOutput()).isEqualTo(Paths.get(CUSTOM_VALUE));
+        assertThat(config.getDockerRecordingOutput())
+                .isEqualTo(Paths.get(CUSTOM_VALUE));
 
         config.setDockerBrowserSelenoidImageFormat(CUSTOM_VALUE);
-        assertThat(config.getDockerBrowserSelenoidImageFormat()).isEqualTo(CUSTOM_VALUE);
+        assertThat(config.getDockerBrowserSelenoidImageFormat())
+                .isEqualTo(CUSTOM_VALUE);
 
         config.setDockerBrowserTwilioImageFormat(CUSTOM_VALUE);
-        assertThat(config.getDockerBrowserTwilioImageFormat()).isEqualTo(CUSTOM_VALUE);
+        assertThat(config.getDockerBrowserTwilioImageFormat())
+                .isEqualTo(CUSTOM_VALUE);
 
         config.setDockerBrowserAerokubeImageFormat(CUSTOM_VALUE);
-        assertThat(config.getDockerBrowserAerokubeImageFormat()).isEqualTo(CUSTOM_VALUE);
+        assertThat(config.getDockerBrowserAerokubeImageFormat())
+                .isEqualTo(CUSTOM_VALUE);
 
         config.setDockerBrowserMobileImageFormat(CUSTOM_VALUE);
-        assertThat(config.getDockerBrowserMobileImageFormat()).isEqualTo(CUSTOM_VALUE);
+        assertThat(config.getDockerBrowserMobileImageFormat())
+                .isEqualTo(CUSTOM_VALUE);
 
         config.setDockerRecordingImage(CUSTOM_VALUE);
         assertThat(config.getDockerRecordingImage()).isEqualTo(CUSTOM_VALUE);
@@ -424,10 +450,12 @@ class PropertiesTest {
         assertThat(config.getRemoteAddress()).isEqualTo(CUSTOM_VALUE);
 
         config.setBrowserVersionDetectionCommand(CUSTOM_VALUE);
-        assertThat(config.getBrowserVersionDetectionCommand()).isEqualTo(CUSTOM_VALUE);
+        assertThat(config.getBrowserVersionDetectionCommand())
+                .isEqualTo(CUSTOM_VALUE);
 
         config.setBrowserVersionDetectionCommand(CUSTOM_VALUE);
-        assertThat(config.getBrowserVersionDetectionCommand()).isEqualTo(CUSTOM_VALUE);
+        assertThat(config.getBrowserVersionDetectionCommand())
+                .isEqualTo(CUSTOM_VALUE);
 
         config.setIgnoreVersions(CUSTOM_VALUE);
         assertThat(config.getIgnoreVersions()).containsExactly(CUSTOM_VALUE);
@@ -481,7 +509,8 @@ class PropertiesTest {
         assertThat(config.getDockerVolumes()).isEqualTo(CUSTOM_VALUE);
 
         config.setDockerEnvVariables(CUSTOM_VALUE);
-        assertThat(config.getDockerEnvVariables()).containsExactly(CUSTOM_VALUE);
+        assertThat(config.getDockerEnvVariables())
+                .containsExactly(CUSTOM_VALUE);
 
         config.setDockerPrivateEndpoint(CUSTOM_VALUE);
         assertThat(config.getDockerPrivateEndpoint()).isEqualTo(CUSTOM_VALUE);
