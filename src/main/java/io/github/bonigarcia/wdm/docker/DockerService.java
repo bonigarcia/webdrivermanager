@@ -172,7 +172,7 @@ public class DockerService {
         String imageId = dockerContainer.getImageId();
         log.info("Starting Docker container {}", imageId);
         HostConfig hostConfigBuilder = new HostConfig();
-        String containerId = null;
+        String containerId;
 
         try (CreateContainerCmd containerConfigBuilder = dockerClient
                 .createContainerCmd(imageId)) {
@@ -236,8 +236,12 @@ public class DockerService {
                         entryPoint.get().toArray(new String[] {}));
             }
 
+            hostConfigBuilder.withExtraHosts(dockerContainer.getExtraHosts());
+
             containerId = containerConfigBuilder
-                    .withHostConfig(hostConfigBuilder).exec().getId();
+                    .withHostConfig(hostConfigBuilder)
+                    .exec().getId();
+
             dockerClient.startContainerCmd(containerId).exec();
         }
 
@@ -551,10 +555,13 @@ public class DockerService {
         // network
         String network = config.getDockerNetwork();
 
+        // extra hosts
+        List<String> extraHosts = config.getDockerExtraHosts();
+
         // builder
         DockerContainer noVncContainer = DockerContainer
                 .dockerBuilder(dockerImage).exposedPorts(exposedPorts)
-                .network(network).envs(envs).build();
+                .network(network).extraHosts(extraHosts).envs(envs).build();
 
         String containerId = startContainer(noVncContainer);
 
@@ -622,10 +629,13 @@ public class DockerService {
         // network
         String network = config.getDockerNetwork();
 
+        // extra hosts
+        List<String> extraHosts = config.getDockerExtraHosts();
+
         // builder
         DockerBuilder dockerBuilder = DockerContainer.dockerBuilder(dockerImage)
                 .exposedPorts(exposedPorts).network(network).mounts(mounts)
-                .binds(binds).shmSize(shmSize).envs(envs).sysadmin();
+                .binds(binds).shmSize(shmSize).envs(envs).extraHosts(extraHosts).sysadmin();
         if (androidEnabled) {
             dockerBuilder = dockerBuilder.privileged();
         }
@@ -689,6 +699,9 @@ public class DockerService {
         // network
         String network = config.getDockerNetwork();
 
+        // extra hosts
+        List<String> extraHosts = config.getDockerExtraHosts();
+
         // binds
         List<String> binds = new ArrayList<>();
         binds.add(recordingPath.toAbsolutePath().getParent().toString()
@@ -703,7 +716,7 @@ public class DockerService {
         // builder
         DockerContainer recorderContainer = DockerContainer
                 .dockerBuilder(dockerImage).network(network).envs(envs)
-                .binds(binds).sysadmin().build();
+                .binds(binds).extraHosts(extraHosts).sysadmin().build();
 
         String containerId = startContainer(recorderContainer);
         recorderContainer.setContainerId(containerId);
