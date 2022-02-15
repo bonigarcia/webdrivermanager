@@ -1363,7 +1363,7 @@ public abstract class WebDriverManager {
     }
 
     private List<URL> getMirrorUrls(URL driverUrl, String versionPath)
-            throws MalformedURLException, IOException {
+            throws IOException {
         List<URL> urls;
         HttpGet get = getHttpClient()
                 .createHttpGet(new URL(driverUrl, versionPath));
@@ -1374,7 +1374,7 @@ public abstract class WebDriverManager {
             Gson gson = gsonBuilder.create();
             NpmMirror[] releaseArray = gson.fromJson(reader, NpmMirror[].class);
 
-            urls = Arrays.stream(releaseArray).map(release -> release.getUrl())
+            urls = Arrays.stream(releaseArray).map(NpmMirror::getUrl)
                     .collect(Collectors.toList());
         }
         return urls;

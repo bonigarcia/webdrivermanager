@@ -23,6 +23,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.List;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -74,6 +75,7 @@ class MirrorTest {
                 .isInstanceOf(WebDriverManagerException.class);
     }
 
+    @Disabled("Too slow")
     @Test
     void testMirrorDriverList() {
         List<String> driverVersions = WebDriverManager.chromedriver()
