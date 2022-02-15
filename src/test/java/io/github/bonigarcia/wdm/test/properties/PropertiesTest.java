@@ -101,7 +101,7 @@ class PropertiesTest {
         assertThat(config.getOperaDriverUrl()).isEqualTo(new URL(
                 "https://api.github.com/repos/operasoftware/operachromiumdriver/releases"));
         assertThat(config.getOperaDriverMirrorUrl()).isEqualTo(
-                new URL("https://registry.npmmirror.com/-/binary/operadriver"));
+                new URL("https://registry.npmmirror.com/-/binary/operadriver/"));
         assertThat(config.getOperaDriverExport())
                 .isEqualTo("webdriver.opera.driver");
 

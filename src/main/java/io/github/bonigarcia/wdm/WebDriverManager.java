@@ -1351,6 +1351,9 @@ public abstract class WebDriverManager {
         if (isNullOrEmpty(driverVersion)) {
             List<URL> mirrorUrls = getMirrorUrls(driverUrl, "");
             for (URL url : mirrorUrls) {
+                if (!url.getPath().endsWith("/")) {
+                    continue;
+                }
                 urls.addAll(getMirrorUrls(url, ""));
             }
         } else {
