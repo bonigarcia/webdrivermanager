@@ -34,8 +34,7 @@ class ChromeTest {
 
     @BeforeAll
     static void setupClass() {
-        WebDriverManager.chromedriver().clearResolutionCache()
-                .clearDriverCache().useMirror().setup();
+        WebDriverManager.chromedriver().setup();
     }
 
     @BeforeEach
