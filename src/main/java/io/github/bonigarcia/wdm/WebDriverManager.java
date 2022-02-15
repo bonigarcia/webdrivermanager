@@ -1342,8 +1342,6 @@ public abstract class WebDriverManager {
      * https://bitbucket.org/ mirrors.
      */
     protected List<URL> getDriversFromMirror(URL driverUrl) throws IOException {
-        // TODO: use https://registry.npmmirror.com/-/binary/chromedriver
-
         if (!mirrorLog) {
             log.debug("Crawling driver list from mirror {}", driverUrl);
             mirrorLog = true;
@@ -1356,25 +1354,16 @@ public abstract class WebDriverManager {
         String driverOrigin = String.format("%s://%s", driverUrl.getProtocol(),
                 driverUrl.getAuthority());
 
-        System.out.println("***************  " + driverUrl);
-
         try (CloseableHttpResponse response = httpClient
                 .execute(httpClient.createHttpGet(driverUrl))) {
-
-            System.out.println("-------------> " + response.getCode());
             InputStream in = response.getEntity().getContent();
             org.jsoup.nodes.Document doc = Jsoup.parse(in, null, driverStr);
-
-            System.out.println("**driverStr ************  " + driverStr);
-            System.out.println("----> HTML:  " + doc.html());
-
             Iterator<org.jsoup.nodes.Element> iterator = doc.select("a")
                     .iterator();
             List<URL> urlList = new ArrayList<>();
 
             while (iterator.hasNext()) {
                 String link = iterator.next().attr("abs:href");
-                System.out.println("************* " + link);
                 if (link.startsWith(driverStr) && link.endsWith(SLASH)) {
                     urlList.addAll(getDriversFromMirror(new URL(link)));
                 } else if (link.startsWith(driverOrigin)
