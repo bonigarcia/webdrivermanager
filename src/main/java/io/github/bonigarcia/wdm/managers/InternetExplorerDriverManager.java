@@ -131,7 +131,7 @@ public class InternetExplorerDriverManager extends WebDriverManager {
     @Override
     protected String getCurrentVersion(URL url) {
         String currentVersion = super.getCurrentVersion(url);
-        String versionRegex = config.getBrowserVersionDetectionRegex();
+        String versionRegex = config().getBrowserVersionDetectionRegex();
         return currentVersion.replaceAll(versionRegex, "");
     }
 

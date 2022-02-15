@@ -94,7 +94,7 @@ public class OperaDriverManager extends WebDriverManager {
     @Override
     protected String getCurrentVersion(URL url) {
         String currentVersion;
-        if (config.isUseMirror()) {
+        if (config().isUseMirror()) {
             int i = url.getFile().lastIndexOf(SLASH);
             int j = url.getFile().substring(0, i).lastIndexOf(SLASH) + 1;
             currentVersion = url.getFile().substring(j, i);
