@@ -136,7 +136,7 @@ public class InternetExplorerDriverManager extends WebDriverManager {
     }
 
     public WebDriverManager exportParameter(String exportParameter) {
-        config().setInternetExplorerDriverExport(exportParameter);
+        config().setIExplorerDriverExport(exportParameter);
         return this;
     }
 

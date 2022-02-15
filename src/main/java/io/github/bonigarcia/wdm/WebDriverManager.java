@@ -1636,7 +1636,7 @@ public abstract class WebDriverManager {
                 .getSessionId(driverBrowser.getDriver());
         browserContainer.setSessionId(sessionId);
 
-        if (config.isEnabledDockerVnc()) {
+        if (config.isDockerEnabledVnc()) {
             String noVncImage = config.getDockerNoVncImage();
             String noVncVersion = getDockerService()
                     .getVersionFromImage(noVncImage);
