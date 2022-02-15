@@ -194,13 +194,6 @@ public abstract class WebDriverManager {
 
     protected WebDriverManager() {
         config = new Config();
-        cacheHandler = new CacheHandler(config);
-        httpClient = new HttpClient(config);
-        downloader = new Downloader(httpClient, config, this::postDownload);
-        resolutionCache = new ResolutionCache(config);
-        versionDetector = new VersionDetector(config, httpClient);
-        webDriverList = new CopyOnWriteArrayList<>();
-        webDriverCreator = new WebDriverCreator(config);
     }
 
     public synchronized Config config() {
@@ -382,6 +375,15 @@ public abstract class WebDriverManager {
     }
 
     public synchronized void setup() {
+        cacheHandler = new CacheHandler(config());
+        httpClient = new HttpClient(config());
+        downloader = new Downloader(getHttpClient(), config(),
+                this::postDownload);
+        resolutionCache = new ResolutionCache(config());
+        versionDetector = new VersionDetector(config(), getHttpClient());
+        webDriverList = new CopyOnWriteArrayList<>();
+        webDriverCreator = new WebDriverCreator(config());
+
         if (config().isClearDriverCache()) {
             clearDriverCache();
         }
