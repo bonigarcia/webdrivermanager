@@ -10,7 +10,7 @@
         <slf4j.version>1.7.36</slf4j.version>
         <gson.version>2.9.0</gson.version>
         <jsoup.version>1.14.3</jsoup.version>
-        <docker-java.version>3.2.12</docker-java.version>
+        <docker-java.version>3.2.13</docker-java.version>
         <brotli.version>0.1.2</brotli.version>
 
         <!-- provided -->
