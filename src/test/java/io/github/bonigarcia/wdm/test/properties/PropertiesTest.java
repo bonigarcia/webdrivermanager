@@ -206,6 +206,7 @@ class PropertiesTest {
         assertThat(config.getDockerVolumes()).isEmpty();
         assertThat(config.getDockerEnvVariables()).isEmpty();
         assertThat(config.getDockerPrivateEndpoint()).isEmpty();
+        assertThat(config.getDockerExtraHosts()).isEmpty();
     }
 
     @Test
@@ -514,5 +515,8 @@ class PropertiesTest {
 
         config.setDockerPrivateEndpoint(CUSTOM_VALUE);
         assertThat(config.getDockerPrivateEndpoint()).isEqualTo(CUSTOM_VALUE);
+
+        config.setDockerPrivateEndpoint("host1:192.168.48.82,host2:192.168.48.16");
+        assertThat(config.getDockerPrivateEndpoint()).isEqualTo("host1:192.168.48.82,host2:192.168.48.16");
     }
 }
