@@ -1,5 +1,29 @@
 # Changelog
 
+## [5.1.0] - 2022-02-17
+### Added
+- Add Docker Extra Hosts API method: dockerExtraHosts(String[]) (PR #788)
+- Include static method isDockerAvailable() in WebDriverManager class
+- Include static method zipFolder(Path sourceFolder) in WebDriverManager class
+- Include static method isOnline(URL url) in WebDriverManager class
+- Include API method to get Docker VNC URL
+- Include API method to accept remote address as URL
+
+### Fixed
+- Use https://registry.npmmirror.com/ instead of https://npm.taobao.org/ for driver mirror (fix #781)
+- Create config-dependent objects in setup logic (fix #751)
+- Include arguments for whitelisted and allowed origins for chromedriver in Docker (fix #733)
+
+### Changed
+- Updated dependencies (e.g. docker-java) to the latest version
+- Use varargs in setter for Docker volumes
+- Include Apache Commons Lang3 as dependency
+
+### Removed
+- Remove Guava dependency (issue #779)
+- Deprecated several config methods (e.g. isAvoidingResolutionCache) (PR #769)
+
+
 ## [5.0.3] - 2021-09-17
 ### Added
 - Include viewOnly (for noVNC) as API method and config parameter (issue #704)
