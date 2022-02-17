@@ -21,6 +21,7 @@
 
 ### Removed
 - Remove Guava dependency (issue #779)
+- Deprecated several API methods (recordingPrefix, recordingOutput, dockerImage)
 - Deprecated several config methods (e.g. isAvoidingResolutionCache) (PR #769)
 
 
