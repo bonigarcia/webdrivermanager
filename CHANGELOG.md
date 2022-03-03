@@ -1,5 +1,10 @@
 # Changelog
 
+## [5.1.1] - 2022-xx-xx
+
+### Fixed
+- detection for snap installed browser (issue #795)
+
 ## [5.1.0] - 2022-02-17
 ### Added
 - Add Docker Extra Hosts API method: dockerExtraHosts(String[]) (PR #788)

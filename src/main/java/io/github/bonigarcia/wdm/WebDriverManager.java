@@ -1487,17 +1487,26 @@ public abstract class WebDriverManager {
 
     protected ResolutionCache getResolutionCache() {
         return Optional.ofNullable(resolutionCache)
-                .orElse(new ResolutionCache(config()));
+                .orElseGet(() -> {
+                    resolutionCache = new ResolutionCache(config());
+                    return resolutionCache;
+                });
     }
 
     protected VersionDetector getVersionDetector() {
         return Optional.ofNullable(versionDetector)
-                .orElse(new VersionDetector(config(), getHttpClient()));
+                .orElseGet(() -> {
+                    versionDetector = new VersionDetector(config(), getHttpClient());
+                    return versionDetector;
+                });
     }
 
     protected WebDriverCreator getWebDriverCreator() {
         return Optional.ofNullable(webDriverCreator)
-                .orElse(new WebDriverCreator(config()));
+                .orElseGet(() -> {
+                    webDriverCreator = new WebDriverCreator(config());
+                    return webDriverCreator;
+                });
     }
 
     protected FilenameFilter getFolderFilter() {
