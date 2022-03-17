@@ -16,9 +16,23 @@
  */
 package io.github.bonigarcia.wdm.docker;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
+import io.github.bonigarcia.wdm.config.Config;
+import io.github.bonigarcia.wdm.online.HttpClient;
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.slf4j.Logger;
+
+import static java.lang.invoke.MethodHandles.lookup;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Docker Hub tags.
@@ -33,8 +47,58 @@ public class DockerHubTags {
     Object previous;
     List<DockerHubTag> results;
 
+    final Logger log = getLogger(lookup().lookupClass());
+
+    static final String GET_IMAGE_TAGS_PATH_FORMAT = "%sv2/repositories/%s/tags?page=%s&page_size=1024";
+
+    private Config config;
+    private HttpClient client;
+
+    public DockerHubTags(Config config, HttpClient client) {
+        this.config = config;
+        this.client = client;
+    }
+
     public List<DockerHubTag> getResults() {
         return results;
+    }
+
+    public List<DockerHubTag> listTags(String dockerImageFormat) {
+        log.debug("Getting browser image list from Docker Hub");
+        List<DockerHubTag> dockerHubTagList = new ArrayList<>();
+
+        String dockerHubUrl = config.getDockerHubUrl();
+
+        String repo = dockerImageFormat.substring(0,
+                dockerImageFormat.indexOf(":"));
+        Object url = String.format(GET_IMAGE_TAGS_PATH_FORMAT, dockerHubUrl,
+                repo, 1);
+        Gson gson = new GsonBuilder().create();
+
+        try {
+            do {
+                log.trace("Sending request to {}", url);
+                HttpGet createHttpGet = client
+                        .createHttpGet(new URL(url.toString()));
+                CloseableHttpResponse response = client.execute(createHttpGet);
+                BufferedReader reader = new BufferedReader(
+                        new InputStreamReader(
+                                response.getEntity().getContent()));
+                DockerHubTags dockerHubTags = gson.fromJson(reader,
+                        DockerHubTags.class);
+
+                dockerHubTagList.addAll(dockerHubTags.getResults());
+                url = dockerHubTags.next;
+
+                response.close();
+
+            } while (url != null);
+
+        } catch (Exception e) {
+            log.warn("Exception getting browser image list from Docker Hub", e);
+        }
+        
+        return dockerHubTagList;
     }
 
     class DockerHubTag {

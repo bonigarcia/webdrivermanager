@@ -56,6 +56,7 @@ public class DockerHubService {
         this.client = client;
     }
 
+    /*
     public List<DockerHubTag> listTags(String dockerImageFormat) {
         log.debug("Getting browser image list from Docker Hub");
         List<DockerHubTag> results = new ArrayList<>();
@@ -93,5 +94,5 @@ public class DockerHubService {
 
         return results;
     }
-
+    */
 }

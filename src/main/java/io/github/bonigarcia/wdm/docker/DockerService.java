@@ -371,7 +371,7 @@ public class DockerService {
         if (!resolutionCache.checkKeyInResolutionCache(cacheKey, false)) {
             VersionComparator versionComparator = new VersionComparator();
             List<String> browserList = null;
-            DockerHubService dockerHubService = new DockerHubService(config,
+            DockerHubTags dockerHubService = new DockerHubTags(config,
                     httpClient);
             List<DockerHubTag> dockerHubTags;
             String tagPreffix = browserName + SEPARATOR;

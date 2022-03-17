@@ -57,17 +57,17 @@ public class CacheHandler {
     public List<File> filterCacheBy(List<File> input, String key,
             boolean isVersion) {
         String pathSeparator = isVersion ? separator : "";
-        List<File> output = new ArrayList<>(input);
+        List<File> filteredCache = new ArrayList<>(input);
 
         if (!key.isEmpty() && !input.isEmpty()) {
-            output = input.stream()
+            filteredCache = input.stream()
                     .filter(file -> file.toString().toLowerCase(ROOT)
                             .contains(pathSeparator + key.toLowerCase(ROOT)))
                     .collect(toList());
         }
         log.trace("Filter cache by {} -- input list {} -- output list {} ", key,
-                input, output);
-        return output;
+                input, filteredCache);
+        return filteredCache;
     }
 
     public List<File> getFilesInCache() {

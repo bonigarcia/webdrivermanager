@@ -16,21 +16,12 @@
  */
 package io.github.bonigarcia.wdm.online;
 
-import static io.github.bonigarcia.wdm.config.Config.isNullOrEmpty;
-import static java.io.File.separator;
-import static java.lang.Integer.signum;
-import static java.lang.Integer.valueOf;
-import static java.lang.invoke.MethodHandles.lookup;
-import static java.util.Arrays.copyOf;
-import static java.util.Collections.singletonList;
-import static java.util.Locale.ROOT;
-import static java.util.stream.Collectors.toList;
-import static org.slf4j.LoggerFactory.getLogger;
+import io.github.bonigarcia.wdm.config.Architecture;
+import io.github.bonigarcia.wdm.config.Config;
+import io.github.bonigarcia.wdm.config.OperatingSystem;
+import io.github.bonigarcia.wdm.config.WebDriverManagerException;
+import org.slf4j.Logger;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,12 +29,12 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-import org.slf4j.Logger;
-
-import io.github.bonigarcia.wdm.config.Architecture;
-import io.github.bonigarcia.wdm.config.Config;
-import io.github.bonigarcia.wdm.config.OperatingSystem;
-import io.github.bonigarcia.wdm.config.WebDriverManagerException;
+import static io.github.bonigarcia.wdm.config.Config.isNullOrEmpty;
+import static java.lang.invoke.MethodHandles.lookup;
+import static java.util.Collections.singletonList;
+import static java.util.Locale.ROOT;
+import static java.util.stream.Collectors.toList;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Handler for URLs (filtering, version selection).
@@ -51,14 +42,13 @@ import io.github.bonigarcia.wdm.config.WebDriverManagerException;
  * @author Boni Garcia
  * @since 4.0.0
  */
-public class UrlHandler {
+public class UrlHandler extends Configuration {
 
     public static final String ALPHA = "alpha";
     public static final String BETA = "beta";
 
     final Logger log = getLogger(lookup().lookupClass());
 
-    Config config;
     List<URL> candidateUrls;
     String driverVersion;
     String shortDriverName;
@@ -89,11 +79,12 @@ public class UrlHandler {
     }
 
     public void filterByLatestVersion(Function<URL, String> getCurrentVersion) {
-        log.trace("Checking the lastest version using URL list {}",
+        log.trace("Checking the latest version using URL list {}",
                 candidateUrls);
         List<URL> out = new ArrayList<>();
         List<URL> copyOfList = new ArrayList<>(candidateUrls);
         String foundFriverVersion = null;
+        VersionComparator versionComparator = new VersionComparator(config);
 
         for (URL url : copyOfList) {
             try {
@@ -104,7 +95,7 @@ public class UrlHandler {
                 if (isNullOrEmpty(foundFriverVersion)) {
                     foundFriverVersion = currentVersion;
                 }
-                if (versionCompare(currentVersion, foundFriverVersion) > 0) {
+                if (versionComparator.compare(currentVersion, foundFriverVersion) > 0) {
                     foundFriverVersion = currentVersion;
                     out.clear();
                 }
@@ -183,38 +174,6 @@ public class UrlHandler {
         }
     }
 
-    public String getDistroName() throws IOException {
-        String out = "";
-        final String key = "UBUNTU_CODENAME";
-        File dir = new File(separator + "etc");
-        File[] fileList = new File[0];
-        if (dir.exists()) {
-            fileList = dir.listFiles(
-                    (path, filename) -> filename.endsWith("-release"));
-        }
-        File fileVersion = new File(separator + "proc", "version");
-        if (fileVersion.exists()) {
-            fileList = copyOf(fileList, fileList.length + 1);
-            fileList[fileList.length - 1] = fileVersion;
-        }
-        for (File f : fileList) {
-            if (f.isDirectory()) {
-                continue;
-            }
-            try (BufferedReader myReader = new BufferedReader(
-                    new FileReader(f))) {
-                String strLine = null;
-                while ((strLine = myReader.readLine()) != null) {
-                    if (strLine.contains(key)) {
-                        int beginIndex = key.length();
-                        out = strLine.substring(beginIndex + 1);
-                    }
-                }
-            }
-        }
-        return out;
-    }
-
     public void resetList(List<URL> newCandidateUrls) {
         candidateUrls = newCandidateUrls.stream()
                 .filter(url -> !url.getFile().contains(driverVersion))
@@ -225,31 +184,6 @@ public class UrlHandler {
         String fileLowerCase = url.getFile().toLowerCase(ROOT);
         return !config.isUseMirror() && (fileLowerCase.contains(BETA)
                 || fileLowerCase.contains(ALPHA));
-    }
-
-    public Integer versionCompare(String str1, String str2) {
-        String versionRegex = config.getBrowserVersionDetectionRegex();
-        String[] vals1 = str1.replaceAll(versionRegex, "").split("\\.");
-        String[] vals2 = str2.replaceAll(versionRegex, "").split("\\.");
-
-        if (vals1[0].equals("")) {
-            vals1[0] = "0";
-        }
-        if (vals2[0].equals("")) {
-            vals2[0] = "0";
-        }
-
-        int i = 0;
-        while (i < vals1.length && i < vals2.length
-                && vals1[i].equals(vals2[i])) {
-            i++;
-        }
-
-        if (i < vals1.length && i < vals2.length) {
-            return signum(valueOf(vals1[i]).compareTo(valueOf(vals2[i])));
-        } else {
-            return signum(vals1.length - vals2.length);
-        }
     }
 
     public List<URL> getCandidateUrls() {

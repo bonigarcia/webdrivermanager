@@ -88,25 +88,28 @@ public class WebDriverCreator {
 
                 webdriver = new RemoteWebDriver(url, capabilities);
             } catch (Exception e1) {
-                try {
-                    log.trace("{} creating WebDriver object ({})",
-                            e1.getClass().getSimpleName(), e1.getMessage());
-                    if (System.currentTimeMillis() > timeoutMs) {
-                        throw new WebDriverManagerException(
-                                "Timeout of " + waitTimeoutSec
-                                        + " seconds creating WebDriver object");
-                    }
-                    Thread.sleep(TimeUnit.SECONDS.toMillis(POLL_TIME_SEC));
-                } catch (InterruptedException e2) {
-                    log.warn("Interrupted exception creating WebDriver object",
-                            e2);
-                    Thread.currentThread().interrupt();
-                }
+                handleException(waitTimeoutSec, timeoutMs, e1);
             }
-
         } while (webdriver == null);
 
         return webdriver;
+    }
+
+    private void handleException(int waitTimeoutSec, long timeoutMs, Exception e1) {
+        try {
+            log.trace("{} creating WebDriver object ({})",
+                    e1.getClass().getSimpleName(), e1.getMessage());
+            if (System.currentTimeMillis() > timeoutMs) {
+                throw new WebDriverManagerException(
+                        "Timeout of " + waitTimeoutSec
+                                + " seconds creating WebDriver object");
+            }
+            Thread.sleep(TimeUnit.SECONDS.toMillis(POLL_TIME_SEC));
+        } catch (InterruptedException e2) {
+            log.warn("Interrupted exception creating WebDriver object",
+                    e2);
+            Thread.currentThread().interrupt();
+        }
     }
 
     public String getSessionId(WebDriver webDriver) {
@@ -115,5 +118,4 @@ public class WebDriverCreator {
         log.debug("The sessionId is {}", sessionId);
         return sessionId;
     }
-
 }
