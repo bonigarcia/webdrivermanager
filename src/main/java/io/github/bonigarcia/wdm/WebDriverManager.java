@@ -1325,14 +1325,21 @@ public abstract class WebDriverManager {
                     urlHandler.getCandidateUrls());
             String os = config().getOs();
             Architecture architecture = config().getArchitecture();
+            boolean isEdgeArm64 = architecture == ARM64
+                    && getDriverManagerType() == EDGE;
+            boolean isMac = config().getOperatingSystem().isMac();
 
             // Filter by OS
-            if (architecture != ARM64 || getDriverManagerType() != EDGE) {
+            if (!isEdgeArm64 || isMac) {
                 urlHandler.filterByOs(getDriverName(), os);
             }
 
+            // Filter by architecture
+            if (!isEdgeArm64 && !isMac) {
+                urlHandler.filterByArch(architecture);
+            }
+
             // Rest of filters
-            urlHandler.filterByArch(architecture);
             urlHandler.filterByIgnoredVersions(config().getIgnoreVersions());
             urlHandler.filterByBeta(config().isUseBetaVersions());
 
