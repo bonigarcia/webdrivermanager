@@ -1335,7 +1335,7 @@ public abstract class WebDriverManager {
             }
 
             // Filter by architecture
-            if (!isEdgeArm64 && !isMac) {
+            if (!isEdgeArm64 || !isMac) {
                 urlHandler.filterByArch(architecture);
             }
 
@@ -1493,27 +1493,24 @@ public abstract class WebDriverManager {
     }
 
     protected ResolutionCache getResolutionCache() {
-        return Optional.ofNullable(resolutionCache)
-                .orElseGet(() -> {
-                    resolutionCache = new ResolutionCache(config());
-                    return resolutionCache;
-                });
+        return Optional.ofNullable(resolutionCache).orElseGet(() -> {
+            resolutionCache = new ResolutionCache(config());
+            return resolutionCache;
+        });
     }
 
     protected VersionDetector getVersionDetector() {
-        return Optional.ofNullable(versionDetector)
-                .orElseGet(() -> {
-                    versionDetector = new VersionDetector(config(), getHttpClient());
-                    return versionDetector;
-                });
+        return Optional.ofNullable(versionDetector).orElseGet(() -> {
+            versionDetector = new VersionDetector(config(), getHttpClient());
+            return versionDetector;
+        });
     }
 
     protected WebDriverCreator getWebDriverCreator() {
-        return Optional.ofNullable(webDriverCreator)
-                .orElseGet(() -> {
-                    webDriverCreator = new WebDriverCreator(config());
-                    return webDriverCreator;
-                });
+        return Optional.ofNullable(webDriverCreator).orElseGet(() -> {
+            webDriverCreator = new WebDriverCreator(config());
+            return webDriverCreator;
+        });
     }
 
     protected FilenameFilter getFolderFilter() {
