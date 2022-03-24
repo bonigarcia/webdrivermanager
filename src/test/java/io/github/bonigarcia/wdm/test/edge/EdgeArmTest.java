@@ -37,8 +37,8 @@ class EdgeArmTest {
 
     @Test
     void testEdgeArm() {
-        WebDriverManager wdm = WebDriverManager.edgedriver().win()
-                .avoidBrowserDetection();
+        WebDriverManager wdm = WebDriverManager.edgedriver()
+                .clearResolutionCache().win().avoidBrowserDetection();
 
         // 1. Force downloading
         wdm.forceDownload();
@@ -46,6 +46,7 @@ class EdgeArmTest {
 
         // 2. Using cache
         wdm.reset();
+        wdm.avoidBrowserDetection();
         checkArm(wdm);
     }
 
