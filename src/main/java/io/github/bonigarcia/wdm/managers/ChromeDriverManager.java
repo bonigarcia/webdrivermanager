@@ -170,6 +170,7 @@ public class ChromeDriverManager extends WebDriverManager {
         return this;
     }
 
+    @Override
     public WebDriverManager exportParameter(String exportParameter) {
         config().setChromeDriverExport(exportParameter);
         return this;

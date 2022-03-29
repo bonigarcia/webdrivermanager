@@ -26,7 +26,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.opera.OperaDriver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
@@ -41,7 +40,7 @@ class ForceDownloadTest {
 
     @ParameterizedTest
     @ValueSource(classes = { ChromeDriver.class, FirefoxDriver.class,
-            OperaDriver.class, EdgeDriver.class })
+            EdgeDriver.class })
     void testForceDownload(Class<? extends WebDriver> driverClass) {
         WebDriverManager wdm = WebDriverManager.getInstance(driverClass);
         wdm.forceDownload().avoidBrowserDetection()

@@ -172,6 +172,8 @@ public abstract class WebDriverManager {
 
     public abstract DriverManagerType getDriverManagerType();
 
+    public abstract WebDriverManager exportParameter(String exportParameter);
+
     protected Config config;
     protected HttpClient httpClient;
     protected Downloader downloader;
@@ -981,6 +983,32 @@ public abstract class WebDriverManager {
                     getResolutionCache());
         }
         return dockerService;
+    }
+
+    public WebDriverManager exportParameter(
+            DriverManagerType driverManagerType) {
+        switch (driverManagerType) {
+        case CHROME:
+        case CHROMIUM:
+            exportParameter(config().getChromeDriverExport());
+            break;
+        case FIREFOX:
+            exportParameter(config().getFirefoxDriverExport());
+            break;
+        case EDGE:
+            exportParameter(config().getEdgeDriverExport());
+            break;
+        case OPERA:
+            exportParameter(config().getOperaDriverExport());
+            break;
+        case IEXPLORER:
+            exportParameter(config().getIExplorerDriverExport());
+            break;
+        case SAFARI:
+        default:
+            break;
+        }
+        return this;
     }
 
     protected Object getPropertyFromWebDriverBrowser(WebDriver driver,

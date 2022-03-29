@@ -39,6 +39,7 @@ import io.github.bonigarcia.wdm.config.WebDriverManagerException;
  * @author Boni Garcia
  * @since 1.0.0
  */
+@SuppressWarnings("deprecation")
 public class OperaDriverManager extends WebDriverManager {
 
     @Override
@@ -178,6 +179,7 @@ public class OperaDriverManager extends WebDriverManager {
         return new OperaOptions();
     }
 
+    @Override
     public WebDriverManager exportParameter(String exportParameter) {
         config().setOperaDriverExport(exportParameter);
         return this;

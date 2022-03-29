@@ -218,6 +218,7 @@ public class EdgeDriverManager extends WebDriverManager {
         return options;
     }
 
+    @Override
     public WebDriverManager exportParameter(String exportParameter) {
         config().setEdgeDriverExport(exportParameter);
         return this;

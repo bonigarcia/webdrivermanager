@@ -156,6 +156,11 @@ class NamespaceContextTest {
             return new MutableCapabilities();
         }
 
+        @Override
+        public WebDriverManager exportParameter(String exportParameter) {
+            return this;
+        }
+
     }
 
 }

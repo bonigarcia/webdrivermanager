@@ -101,4 +101,9 @@ public class VoidDriverManager extends WebDriverManager {
         // Nothing required
     }
 
+    @Override
+    public WebDriverManager exportParameter(String exportParameter) {
+        return this;
+    }
+
 }

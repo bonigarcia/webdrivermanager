@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm.test.opera;
 
+import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROME;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assumptions.assumeThat;
 
@@ -27,26 +28,29 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.opera.OperaDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 class OperaTest {
 
     WebDriver driver;
+    static Optional<Path> browserPath;
 
     @BeforeAll
     static void setupClass() {
-        Optional<Path> browserPath = WebDriverManager.operadriver()
-                .getBrowserPath();
-        assumeThat(browserPath).isPresent();
-
-        WebDriverManager.operadriver().setup();
+        WebDriverManager operadriver = WebDriverManager.operadriver();
+        browserPath = operadriver.getBrowserPath();
+        assumeThat(browserPath.isPresent());
+        operadriver.exportParameter(CHROME).setup();
     }
 
     @BeforeEach
     void setupTest() {
-        driver = new OperaDriver();
+        ChromeOptions options = new ChromeOptions();
+        options.setBinary(browserPath.get().toFile());
+        driver = new ChromeDriver();
     }
 
     @AfterEach

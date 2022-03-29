@@ -137,6 +137,7 @@ public class FirefoxDriverManager extends WebDriverManager {
         return fileList;
     }
 
+    @Override
     public WebDriverManager exportParameter(String exportParameter) {
         config().setFirefoxDriverExport(exportParameter);
         return this;

@@ -135,6 +135,7 @@ public class InternetExplorerDriverManager extends WebDriverManager {
         return currentVersion.replaceAll(versionRegex, "");
     }
 
+    @Override
     public WebDriverManager exportParameter(String exportParameter) {
         config().setIExplorerDriverExport(exportParameter);
         return this;
