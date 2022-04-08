@@ -23,11 +23,12 @@ import static java.util.Optional.empty;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
 import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.opera.OperaOptions;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
@@ -39,7 +40,6 @@ import io.github.bonigarcia.wdm.config.WebDriverManagerException;
  * @author Boni Garcia
  * @since 1.0.0
  */
-@SuppressWarnings("deprecation")
 public class OperaDriverManager extends WebDriverManager {
 
     @Override
@@ -176,7 +176,12 @@ public class OperaDriverManager extends WebDriverManager {
 
     @Override
     protected Capabilities getCapabilities() {
-        return new OperaOptions();
+        ChromeOptions options = new ChromeOptions();
+        Optional<Path> browserPath = getBrowserPath();
+        if (browserPath.isPresent()) {
+            options.setBinary(browserPath.get().toFile());
+        }
+        return options;
     }
 
     @Override
