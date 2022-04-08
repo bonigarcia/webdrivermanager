@@ -1,9 +1,17 @@
 # Changelog
 
-## [5.1.1] - 2022-xx-xx
+## [5.1.1] - 2022-04-08
+
+### Added
+- Improve OperaDriver support, to make it compatible with Selenium 4.1.3 (issue #808)
+
+### Changed
+- Include httpclient5 dependency explicitly (issue #802)
 
 ### Fixed
-- detection for snap installed browser (issue #795)
+- Detection for snap installed browser (issue #795)
+- Support for msedgedriver in Mac M1 (issues #804 and #812)
+- Normalize path separators in WebDriverManager.zipFolder() (PR #815)
 
 ## [5.1.0] - 2022-02-17
 ### Added
