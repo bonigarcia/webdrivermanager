@@ -44,6 +44,7 @@ import static javax.xml.xpath.XPathConstants.NODESET;
 import static javax.xml.xpath.XPathFactory.newInstance;
 import static org.apache.commons.io.FileUtils.cleanDirectory;
 import static org.apache.commons.io.FilenameUtils.removeExtension;
+import static org.apache.commons.io.FilenameUtils.separatorsToUnix;
 import static org.apache.commons.lang3.StringUtils.isNumeric;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_LINUX;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -334,7 +335,7 @@ public abstract class WebDriverManager {
                     Stream<Path> paths = Files.walk(sourceFolder)) {
                 paths.filter(path -> !Files.isDirectory(path)).forEach(path -> {
                     ZipEntry zipEntry = new ZipEntry(
-                            sourceFolder.relativize(path).toString());
+                            separatorsToUnix(sourceFolder.relativize(path).toString()));
                     try {
                         zipOutputStream.putNextEntry(zipEntry);
                         Files.copy(path, zipOutputStream);
