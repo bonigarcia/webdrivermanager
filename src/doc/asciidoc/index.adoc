@@ -599,7 +599,7 @@ HTTP proxy. It can be also configured using the environment variable  `HTTPS_PRO
 |`timeout(int)`|`wdm.timeout`|`30`|Timeout (in seconds) to connect and download drivers from online repositories
 |`properties(String)`|`wdm.properties`|`webdrivermanager.properties`|Properties file (in the project classpath) for default configuration values
 |`avoidExport()`|`wdm.avoidExport=true`|`false` (export driver paths as Java properties (e.g. `webdriver.chrome.driver`)|Avoid step 4 in the <<resolution-algorithm,resolution algorithm>> (for instance, in the <<webdrivermanager-cli,CLI>> mode)
-|`exportParameter(String)`|`wdm.chromeDriverExport`, `wdm.geckoDriverExport`, `wdm.edgeDriverExport`, `wdm.iExplorerDriverExport`, `wdm.operaDriverExport`|Java property name used to export the driver path (available in https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/webdrivermanager.properties[webdrivermanager.properties])|Set custom property name. An `DriverManagerType` enum can be used insted of the `String` parameter
+|`exportParameter(String)` `exportParameter(Driver` `ManagerType)`|`wdm.chromeDriverExport`, `wdm.geckoDriverExport`, `wdm.edgeDriverExport`, `wdm.iExplorerDriverExport`, `wdm.operaDriverExport`|Java property name used to export the driver path (available in https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/webdrivermanager.properties[webdrivermanager.properties])|Set custom property name. An `DriverManagerType` enum (e.g., `CHROME`, `FIREFOX`, etc.) can be used insted of the `String` parameter
 |`avoidOutputTree()`|`wdm.avoidOutputTree=true`|`false` (create output tree in the driver cache, e.g., `chromedriver/linux64/2.37`|Avoid output tree (for instance, in the <<webdrivermanager-cli,CLI>> mode)
 |`avoidFallback()`|`wdm.avoidFallback=true`|`false` (use a retries mechanism if any problem happens during the resolution algorithm)|Avoid the fallback mechanism
 |`avoidBrowserDetection()`|`wdm.avoidBrowserDetection` `=true`|`false` (browser version is detected, and the corresponding driver version s discovered)|Force to use the latest version available for a given driver
@@ -720,11 +720,12 @@ endif::[]
 == Further Documentation
 There are other resources related to Selenium-Jupiter and automated testing you can find helpful. For instance, the following books:
 
-* García, Boni. https://www.oreilly.com/library/view/hands-on-selenium-webdriver/9781098109998/[Hands-On Selenium WebDriver with Java]. _O'Reilly Media, Inc._, Currently on early relase. Final release available on 2022.
+* García, Boni. https://www.oreilly.com/library/view/hands-on-selenium-webdriver/9781098109998/[Hands-On Selenium WebDriver with Java]. _O'Reilly Media, Inc._, 2022.
 * García, Boni. https://www.amazon.com/Mastering-Software-Testing-JUnit-Comprehensive-ebook/dp/B076ZQCK5Q/[Mastering Software Testing with JUnit 5]. _Packt Publishing Ltd_, 2017.
 
 Or the following journal papers:
 
+* García, Boni, et al. "https://www.sciencedirect.com/science/article/abs/pii/S0164121222000516[Selenium-Jupiter: A JUnit 5 extension for Selenium WebDriver]." _Journal of Systems and Software_ (2022): 111298.
 * García, Boni, et al. "https://link.springer.com/article/10.1007%2Fs10664-021-09975-3[Automated driver management for Selenium WebDriver]." _Empirical Software Engineering_ 26.5 (2021): 1-51.
 * García, Boni, et al. "https://www.mdpi.com/2079-9292/9/7/1067[A survey of the Selenium ecosystem]." _Electronics_ 9.7 (2020): 1067.
 * García, Boni, et al. "https://www.mdpi.com/2079-9292/9/3/462[Assessment of QoE for video and audio in WebRTC applications using full-reference models]." _Electronics_ 9.3 (2020): 462.
@@ -733,4 +734,4 @@ Or the following journal papers:
 * García, Boni, and Juan Carlos Dueñas. "https://www.rintonpress.com/journals/jweonline.html#v14n56[Web browsing automation for applications quality control]." _Journal of web engineering_ (2015): 474-502.
 
 == About
-WebDriverManager (Copyright © 2015-2021) is an open-source project created and maintained by https://bonigarcia.dev/[Boni García] (https://twitter.com/boni_gg[@boni_gg]), licensed under the terms of https://www.apache.org/licenses/LICENSE-2.0[Apache 2.0 License]. This documentation (also available in link:webdrivermanager.pdf[PDF] and link:webdrivermanager.epub[EPUB]) is released under the terms of https://creativecommons.org/licenses/by-nc-sa/2.0/[CC BY-NC-SA 2.0].
+WebDriverManager (Copyright © 2015-2022) is an open-source project created and maintained by https://bonigarcia.dev/[Boni García] (https://twitter.com/boni_gg[@boni_gg]), licensed under the terms of https://www.apache.org/licenses/LICENSE-2.0[Apache 2.0 License]. This documentation (also available in link:webdrivermanager.pdf[PDF] and link:webdrivermanager.epub[EPUB]) is released under the terms of https://creativecommons.org/licenses/by-nc-sa/2.0/[CC BY-NC-SA 2.0].
