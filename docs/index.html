@@ -2342,10 +2342,10 @@ HTTP proxy. It can be also configured using the environment variable  <code>HTTP
 <td class="tableblock halign-left valign-top"><p class="tableblock">Avoid step 4 in the <a href="#resolution-algorithm">resolution algorithm</a> (for instance, in the <a href="#webdrivermanager-cli">CLI</a> mode)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>exportParameter(String)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>exportParameter(String)</code> <code>exportParameter(Driver</code> <code>ManagerType)</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>wdm.chromeDriverExport</code>, <code>wdm.geckoDriverExport</code>, <code>wdm.edgeDriverExport</code>, <code>wdm.iExplorerDriverExport</code>, <code>wdm.operaDriverExport</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Java property name used to export the driver path (available in <a href="https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/webdrivermanager.properties">webdrivermanager.properties</a>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set custom property name. An <code>DriverManagerType</code> enum can be used insted of the <code>String</code> parameter</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set custom property name. An <code>DriverManagerType</code> enum (e.g., <code>CHROME</code>, <code>FIREFOX</code>, etc.) can be used insted of the <code>String</code> parameter</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>avoidOutputTree()</code></p></td>
@@ -2653,9 +2653,9 @@ HTTP proxy. It can be also configured using the environment variable  <code>HTTP
 <div class="paragraph">
 <p>When the host is Mac OS or Windows, we can use the DNS name <code>host.docker.internal</code>, which will be resolved to the internal IP address used by the host.</p>
 </div>
-<h4 id="chrome-92-in-docker" class="discrete">Chrome 92+ in Docker</h4>
+<h4 id="chrome-92-94-in-docker" class="discrete">Chrome 92-94 in Docker</h4>
 <div class="paragraph">
-<p>There is an <a href="https://bugs.chromium.org/p/chromedriver/issues/detail?id=3857">open issue</a> with Chrome 92+ and Docker at the time of this writing. The problem can be solved by using the argument <code>--disable-gpu</code> in Chrome and Edge. This argument is used by WebDriverManager 5 to avoid the issue. Nevertheless, some situations are still impossible to fix (e.g., when using <a href="https://hub.docker.com/r/bonigarcia/webdrivermanager">WebDriverManager in Docker</a> as CLI or Server).</p>
+<p>There was an <a href="https://bugs.chromium.org/p/chromedriver/issues/detail?id=3857">issue</a> that affected Chrome 92 to 94 and Docker. The problem can be solved by using the argument <code>--disable-gpu</code> in Chrome and Edge. This argument is used by WebDriverManager 5 to avoid the issue. Nevertheless, some situations are still impossible to fix (e.g., when using <a href="https://hub.docker.com/r/bonigarcia/webdrivermanager">WebDriverManager in Docker</a> as CLI or Server) for Chrome 92 to 94 in Docker.</p>
 </div>
 </div>
 </div>
@@ -2688,7 +2688,7 @@ HTTP proxy. It can be also configured using the environment variable  <code>HTTP
 <div class="ulist">
 <ul>
 <li>
-<p>García, Boni. <a href="https://www.oreilly.com/library/view/hands-on-selenium-webdriver/9781098109998/">Hands-On Selenium WebDriver with Java</a>. <em>O&#8217;Reilly Media, Inc.</em>, Currently on early relase. Final release available on 2022.</p>
+<p>García, Boni. <a href="https://www.oreilly.com/library/view/hands-on-selenium-webdriver/9781098109998/">Hands-On Selenium WebDriver with Java</a>. <em>O&#8217;Reilly Media, Inc.</em>, 2022.</p>
 </li>
 <li>
 <p>García, Boni. <a href="https://www.amazon.com/Mastering-Software-Testing-JUnit-Comprehensive-ebook/dp/B076ZQCK5Q/">Mastering Software Testing with JUnit 5</a>. <em>Packt Publishing Ltd</em>, 2017.</p>
@@ -2700,6 +2700,9 @@ HTTP proxy. It can be also configured using the environment variable  <code>HTTP
 </div>
 <div class="ulist">
 <ul>
+<li>
+<p>García, Boni, et al. "<a href="https://www.sciencedirect.com/science/article/abs/pii/S0164121222000516">Selenium-Jupiter: A JUnit 5 extension for Selenium WebDriver</a>." <em>Journal of Systems and Software</em> (2022): 111298.</p>
+</li>
 <li>
 <p>García, Boni, et al. "<a href="https://link.springer.com/article/10.1007%2Fs10664-021-09975-3">Automated driver management for Selenium WebDriver</a>." <em>Empirical Software Engineering</em> 26.5 (2021): 1-51.</p>
 </li>
@@ -2726,7 +2729,7 @@ HTTP proxy. It can be also configured using the environment variable  <code>HTTP
 <h2 id="about"><a class="anchor" href="#about"></a>11. About</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>WebDriverManager (Copyright © 2015-2021) is an open-source project created and maintained by <a href="https://bonigarcia.dev/">Boni García</a> (<a href="https://twitter.com/boni_gg">@boni_gg</a>), licensed under the terms of <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache 2.0 License</a>. This documentation (also available in <a href="webdrivermanager.pdf">PDF</a> and <a href="webdrivermanager.epub">EPUB</a>) is released under the terms of <a href="https://creativecommons.org/licenses/by-nc-sa/2.0/">CC BY-NC-SA 2.0</a>.</p>
+<p>WebDriverManager (Copyright © 2015-2022) is an open-source project created and maintained by <a href="https://bonigarcia.dev/">Boni García</a> (<a href="https://twitter.com/boni_gg">@boni_gg</a>), licensed under the terms of <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache 2.0 License</a>. This documentation (also available in <a href="webdrivermanager.pdf">PDF</a> and <a href="webdrivermanager.epub">EPUB</a>) is released under the terms of <a href="https://creativecommons.org/licenses/by-nc-sa/2.0/">CC BY-NC-SA 2.0</a>.</p>
 </div>
 </div>
 </div>
