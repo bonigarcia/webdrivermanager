@@ -89,7 +89,7 @@ public class UrlHandler {
     }
 
     public void filterByLatestVersion(Function<URL, String> getCurrentVersion) {
-        log.trace("Checking the lastest version using URL list {}",
+        log.trace("Checking the latest version using URL list {}",
                 candidateUrls);
         List<URL> out = new ArrayList<>();
         List<URL> copyOfList = new ArrayList<>(candidateUrls);
