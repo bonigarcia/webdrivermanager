@@ -775,7 +775,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <h1>WebDriverManager</h1>
 <div class="details">
 <span id="author" class="author">Boni García</span><br>
-<span id="revdate">Version 5.1.0</span>
+<span id="revdate">Version 5.1.1</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -963,7 +963,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
     <span class="tag">&lt;groupId&gt;</span>io.github.bonigarcia<span class="tag">&lt;/groupId&gt;</span>
     <span class="tag">&lt;artifactId&gt;</span>webdrivermanager<span class="tag">&lt;/artifactId&gt;</span>
-    <span class="tag">&lt;version&gt;</span>5.1.0<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;version&gt;</span>5.1.1<span class="tag">&lt;/version&gt;</span>
     <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
@@ -974,7 +974,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="json"><span class="error">d</span><span class="error">e</span><span class="error">p</span><span class="error">e</span><span class="error">n</span><span class="error">d</span><span class="error">e</span><span class="error">n</span><span class="error">c</span><span class="error">i</span><span class="error">e</span><span class="error">s</span> {
-    <span class="error">t</span><span class="error">e</span><span class="error">s</span><span class="error">t</span><span class="error">I</span><span class="error">m</span><span class="error">p</span><span class="error">l</span><span class="error">e</span><span class="error">m</span><span class="error">e</span><span class="error">n</span><span class="error">t</span><span class="error">a</span><span class="error">t</span><span class="error">i</span><span class="error">o</span><span class="error">n</span><span class="error">(</span><span class="string"><span class="delimiter">&quot;</span><span class="content">io.github.bonigarcia:webdrivermanager:5.1.0</span><span class="delimiter">&quot;</span></span><span class="error">)</span>
+    <span class="error">t</span><span class="error">e</span><span class="error">s</span><span class="error">t</span><span class="error">I</span><span class="error">m</span><span class="error">p</span><span class="error">l</span><span class="error">e</span><span class="error">m</span><span class="error">e</span><span class="error">n</span><span class="error">t</span><span class="error">a</span><span class="error">t</span><span class="error">i</span><span class="error">o</span><span class="error">n</span><span class="error">(</span><span class="string"><span class="delimiter">&quot;</span><span class="content">io.github.bonigarcia:webdrivermanager:5.1.1</span><span class="delimiter">&quot;</span></span><span class="error">)</span>
 }</code></pre>
 </div>
 </div>
@@ -1712,10 +1712,10 @@ Notice you will need hardware virtualization (hypervisor) or a virtual machine w
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Using the WebDriverManager <em>fat-JAR</em> (i.e., WebDriverManager with all its dependencies in a single executable JAR file). This JAR file is generated from the source using the Maven command <code>mvn compile assembly:single</code>, and it is released on GitHub with every new version of WebDriverManager. You can download the latest of this fat-JAR from <a href="https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-5.1.0/webdrivermanager-5.1.0-fat.jar">here</a>. Once you get this file, you  need to use the following command in the shell (where <code>&lt;args&gt;</code> are the accepted arguments, explained below):</p>
+<p>Using the WebDriverManager <em>fat-JAR</em> (i.e., WebDriverManager with all its dependencies in a single executable JAR file). This JAR file is generated from the source using the Maven command <code>mvn compile assembly:single</code>, and it is released on GitHub with every new version of WebDriverManager. You can download the latest of this fat-JAR from <a href="https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-5.1.1/webdrivermanager-5.1.1-fat.jar">here</a>. Once you get this file, you  need to use the following command in the shell (where <code>&lt;args&gt;</code> are the accepted arguments, explained below):</p>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-5.1.0-fat.jar &lt;args&gt;</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-5.1.1-fat.jar &lt;args&gt;</code></pre>
 </div>
 </div>
 </li>
@@ -1731,7 +1731,7 @@ Notice you will need hardware virtualization (hypervisor) or a virtual machine w
 <p>Using the WebDriverManager Docker container. Each new release of WebDriverManager is pushed to <a href="https://hub.docker.com/r/bonigarcia/webdrivermanager">Docker Hub</a> as a container based on <a href="https://hub.docker.com/_/openjdk">OpenJDK</a> plus the WebDriverManager fat-JAR. The default command to run the WebDriverManager Docker container is described below.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -e ARGS=&quot;&lt;args&gt;&quot; bonigarcia/webdrivermanager:5.1.0</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -e ARGS=&quot;&lt;args&gt;&quot; bonigarcia/webdrivermanager:5.1.1</code></pre>
 </div>
 </div>
 </li>
@@ -1769,7 +1769,7 @@ Notice you will need hardware virtualization (hypervisor) or a virtual machine w
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-5.1.0-fat.jar resolveDriverFor chrome</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-5.1.1-fat.jar resolveDriverFor chrome</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -1793,7 +1793,7 @@ Notice you will need hardware virtualization (hypervisor) or a virtual machine w
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -v ${PWD}:/wdm -e ARGS=&quot;resolveDriverFor chrome&quot; bonigarcia/webdrivermanager:5.1.0</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -v ${PWD}:/wdm -e ARGS=&quot;resolveDriverFor chrome&quot; bonigarcia/webdrivermanager:5.1.1</code></pre>
 </div>
 </div>
 <h4 id="option-2-browsers-in-docker" class="discrete">Option 2: Browsers in Docker</h4>
@@ -1809,7 +1809,7 @@ Notice you will need hardware virtualization (hypervisor) or a virtual machine w
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-5.1.0-fat.jar runInDocker chrome</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-5.1.1-fat.jar runInDocker chrome</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -1833,7 +1833,7 @@ Notice you will need hardware virtualization (hypervisor) or a virtual machine w
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -e ARGS=&quot;runInDocker chrome 91&quot; bonigarcia/webdrivermanager:5.1.0</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -e ARGS=&quot;runInDocker chrome 91&quot; bonigarcia/webdrivermanager:5.1.1</code></pre>
 </div>
 </div>
 <div class="admonitionblock warning">
@@ -1861,7 +1861,7 @@ There is an <a href="https://bugs.chromium.org/p/chromedriver/issues/detail?id=3
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-5.1.0-fat.jar server</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-5.1.1-fat.jar server</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -1885,7 +1885,7 @@ There is an <a href="https://bugs.chromium.org/p/chromedriver/issues/detail?id=3
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -p 4444:4444 -v /var/run/docker.sock:/var/run/docker.sock bonigarcia/webdrivermanager:5.1.0</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -p 4444:4444 -v /var/run/docker.sock:/var/run/docker.sock bonigarcia/webdrivermanager:5.1.1</code></pre>
 </div>
 </div>
 </div>
@@ -1990,7 +1990,7 @@ wdmServerTest();</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>To configure the WebDriverManager Agent, we need to specify the path of the WebDriverManager <a href="https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-5.1.0/webdrivermanager-5.1.0-fat.jar">fat-JAR</a> using the JVM flag <code>-javaagent:/path/to/webdrivermanager-5.1.0-fat.jar</code>. Alternatively, it can be done using Maven (see a complete project example <a href="https://github.com/bonigarcia/wdm-agent-example/">here</a>).</p>
+<p>To configure the WebDriverManager Agent, we need to specify the path of the WebDriverManager <a href="https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-5.1.1/webdrivermanager-5.1.1-fat.jar">fat-JAR</a> using the JVM flag <code>-javaagent:/path/to/webdrivermanager-5.1.1-fat.jar</code>. Alternatively, it can be done using Maven (see a complete project example <a href="https://github.com/bonigarcia/wdm-agent-example/">here</a>).</p>
 </div>
 </div>
 <div class="sect2">
@@ -2034,7 +2034,7 @@ wdmServerTest();</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">boni@ubuntu:~$ java -jar webdrivermanager-5.1.0-fat.jar resolveDriverFor chrome
+<pre class="CodeRay highlight"><code data-lang="shell">boni@ubuntu:~$ java -jar webdrivermanager-5.1.1-fat.jar resolveDriverFor chrome
 [INFO] Using WebDriverManager to resolve chrome
 [DEBUG] Detecting chrome version using online commands.properties
 [DEBUG] Running command on the shell: [google-chrome, --version]
@@ -2159,7 +2159,7 @@ In addition to the methods presented in this section, each manager provides a <c
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -v ${PWD}:/wdm -e ARGS=&quot;resolveDriverFor chrome&quot; -e WDM_CHROMEVERSION=84 bonigarcia/webdrivermanager:5.1.0</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -v ${PWD}:/wdm -e ARGS=&quot;resolveDriverFor chrome&quot; -e WDM_CHROMEVERSION=84 bonigarcia/webdrivermanager:5.1.1</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -2342,10 +2342,10 @@ HTTP proxy. It can be also configured using the environment variable  <code>HTTP
 <td class="tableblock halign-left valign-top"><p class="tableblock">Avoid step 4 in the <a href="#resolution-algorithm">resolution algorithm</a> (for instance, in the <a href="#webdrivermanager-cli">CLI</a> mode)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>exportParameter(String)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>exportParameter(String)</code> <code>exportParameter(Driver</code> <code>ManagerType)</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>wdm.chromeDriverExport</code>, <code>wdm.geckoDriverExport</code>, <code>wdm.edgeDriverExport</code>, <code>wdm.iExplorerDriverExport</code>, <code>wdm.operaDriverExport</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Java property name used to export the driver path (available in <a href="https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/webdrivermanager.properties">webdrivermanager.properties</a>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Set custom property name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set custom property name. An <code>DriverManagerType</code> enum (e.g., <code>CHROME</code>, <code>FIREFOX</code>, etc.) can be used insted of the <code>String</code> parameter</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>avoidOutputTree()</code></p></td>
@@ -2653,9 +2653,9 @@ HTTP proxy. It can be also configured using the environment variable  <code>HTTP
 <div class="paragraph">
 <p>When the host is Mac OS or Windows, we can use the DNS name <code>host.docker.internal</code>, which will be resolved to the internal IP address used by the host.</p>
 </div>
-<h4 id="chrome-92-in-docker" class="discrete">Chrome 92+ in Docker</h4>
+<h4 id="chrome-92-94-in-docker" class="discrete">Chrome 92-94 in Docker</h4>
 <div class="paragraph">
-<p>There is an <a href="https://bugs.chromium.org/p/chromedriver/issues/detail?id=3857">open issue</a> with Chrome 92+ and Docker at the time of this writing. The problem can be solved by using the argument <code>--disable-gpu</code> in Chrome and Edge. This argument is used by WebDriverManager 5 to avoid the issue. Nevertheless, some situations are still impossible to fix (e.g., when using <a href="https://hub.docker.com/r/bonigarcia/webdrivermanager">WebDriverManager in Docker</a> as CLI or Server).</p>
+<p>There was an <a href="https://bugs.chromium.org/p/chromedriver/issues/detail?id=3857">issue</a> that affected Chrome 92 to 94 and Docker. The problem can be solved by using the argument <code>--disable-gpu</code> in Chrome and Edge. This argument is used by WebDriverManager 5 to avoid the issue. Nevertheless, some situations are still impossible to fix (e.g., when using <a href="https://hub.docker.com/r/bonigarcia/webdrivermanager">WebDriverManager in Docker</a> as CLI or Server) for Chrome 92 to 94 in Docker.</p>
 </div>
 </div>
 </div>
@@ -2688,7 +2688,7 @@ HTTP proxy. It can be also configured using the environment variable  <code>HTTP
 <div class="ulist">
 <ul>
 <li>
-<p>García, Boni. <a href="https://www.oreilly.com/library/view/hands-on-selenium-webdriver/9781098109998/">Hands-On Selenium WebDriver with Java</a>. <em>O&#8217;Reilly Media, Inc.</em>, Currently on early relase. Final release available on 2022.</p>
+<p>García, Boni. <a href="https://www.oreilly.com/library/view/hands-on-selenium-webdriver/9781098109998/">Hands-On Selenium WebDriver with Java</a>. <em>O&#8217;Reilly Media, Inc.</em>, 2022.</p>
 </li>
 <li>
 <p>García, Boni. <a href="https://www.amazon.com/Mastering-Software-Testing-JUnit-Comprehensive-ebook/dp/B076ZQCK5Q/">Mastering Software Testing with JUnit 5</a>. <em>Packt Publishing Ltd</em>, 2017.</p>
@@ -2700,6 +2700,9 @@ HTTP proxy. It can be also configured using the environment variable  <code>HTTP
 </div>
 <div class="ulist">
 <ul>
+<li>
+<p>García, Boni, et al. "<a href="https://www.sciencedirect.com/science/article/abs/pii/S0164121222000516">Selenium-Jupiter: A JUnit 5 extension for Selenium WebDriver</a>." <em>Journal of Systems and Software</em> (2022): 111298.</p>
+</li>
 <li>
 <p>García, Boni, et al. "<a href="https://link.springer.com/article/10.1007%2Fs10664-021-09975-3">Automated driver management for Selenium WebDriver</a>." <em>Empirical Software Engineering</em> 26.5 (2021): 1-51.</p>
 </li>
@@ -2726,15 +2729,15 @@ HTTP proxy. It can be also configured using the environment variable  <code>HTTP
 <h2 id="about"><a class="anchor" href="#about"></a>11. About</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>WebDriverManager (Copyright © 2015-2021) is an open-source project created and maintained by <a href="https://bonigarcia.dev/">Boni García</a> (<a href="https://twitter.com/boni_gg">@boni_gg</a>), licensed under the terms of <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache 2.0 License</a>. This documentation (also available in <a href="webdrivermanager.pdf">PDF</a> and <a href="webdrivermanager.epub">EPUB</a>) is released under the terms of <a href="https://creativecommons.org/licenses/by-nc-sa/2.0/">CC BY-NC-SA 2.0</a>.</p>
+<p>WebDriverManager (Copyright © 2015-2022) is an open-source project created and maintained by <a href="https://bonigarcia.dev/">Boni García</a> (<a href="https://twitter.com/boni_gg">@boni_gg</a>), licensed under the terms of <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache 2.0 License</a>. This documentation (also available in <a href="webdrivermanager.pdf">PDF</a> and <a href="webdrivermanager.epub">EPUB</a>) is released under the terms of <a href="https://creativecommons.org/licenses/by-nc-sa/2.0/">CC BY-NC-SA 2.0</a>.</p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 5.1.0<br>
-Updated on 17-02-2022
+Version 5.1.1<br>
+Updated on 08-04-2022
 </div>
 </div>
 </body>
