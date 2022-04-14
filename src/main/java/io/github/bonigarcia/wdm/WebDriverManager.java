@@ -1748,7 +1748,9 @@ public abstract class WebDriverManager {
             if (managerType == CHROMIUM) {
                 capabilities = getCapabilities();
             }
-            Class<?> browserClass = Class.forName(managerType.browserClass());
+            Class<?> browserClass = managerType == OPERA
+                    ? Class.forName("org.openqa.selenium.chrome.ChromeDriver")
+                    : Class.forName(managerType.browserClass());
             driver = getWebDriverCreator().createLocalWebDriver(browserClass,
                     capabilities);
             webDriverList.add(new WebDriverBrowser(driver));

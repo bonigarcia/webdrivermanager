@@ -100,10 +100,10 @@ class PropertiesTest {
 
         assertThat(config.getOperaDriverUrl()).isEqualTo(new URL(
                 "https://api.github.com/repos/operasoftware/operachromiumdriver/releases"));
-        assertThat(config.getOperaDriverMirrorUrl()).isEqualTo(
-                new URL("https://registry.npmmirror.com/-/binary/operadriver/"));
+        assertThat(config.getOperaDriverMirrorUrl()).isEqualTo(new URL(
+                "https://registry.npmmirror.com/-/binary/operadriver/"));
         assertThat(config.getOperaDriverExport())
-                .isEqualTo("webdriver.opera.driver");
+                .isEqualTo("webdriver.chrome.driver");
 
         assertThat(config.getEdgeDriverUrl())
                 .isEqualTo(new URL("https://msedgedriver.azureedge.net/"));
@@ -516,7 +516,9 @@ class PropertiesTest {
         config.setDockerPrivateEndpoint(CUSTOM_VALUE);
         assertThat(config.getDockerPrivateEndpoint()).isEqualTo(CUSTOM_VALUE);
 
-        config.setDockerPrivateEndpoint("host1:192.168.48.82,host2:192.168.48.16");
-        assertThat(config.getDockerPrivateEndpoint()).isEqualTo("host1:192.168.48.82,host2:192.168.48.16");
+        config.setDockerPrivateEndpoint(
+                "host1:192.168.48.82,host2:192.168.48.16");
+        assertThat(config.getDockerPrivateEndpoint())
+                .isEqualTo("host1:192.168.48.82,host2:192.168.48.16");
     }
 }
