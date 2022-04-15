@@ -29,27 +29,23 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 class OperaTest {
 
     WebDriver driver;
-    static Optional<Path> browserPath;
 
     @BeforeAll
     static void setupClass() {
         WebDriverManager operadriver = WebDriverManager.operadriver();
-        browserPath = operadriver.getBrowserPath();
+        Optional<Path> browserPath = operadriver.getBrowserPath();
         assumeThat(browserPath.isPresent()).isTrue();
         operadriver.exportParameter(CHROME).setup();
     }
 
     @BeforeEach
     void setupTest() {
-        ChromeOptions options = new ChromeOptions();
-        options.setBinary(browserPath.get().toFile());
         driver = new ChromeDriver();
     }
 

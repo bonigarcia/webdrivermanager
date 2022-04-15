@@ -41,6 +41,9 @@ public enum DriverManagerType {
     }
 
     public String browserClass() {
+        if (browserClass.endsWith("OperaDriver")) {
+            return "org.openqa.selenium.chrome.ChromeDriver";
+        }
         return browserClass;
     }
 

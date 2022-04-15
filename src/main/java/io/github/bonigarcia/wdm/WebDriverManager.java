@@ -334,8 +334,8 @@ public abstract class WebDriverManager {
                     Files.newOutputStream(zipFile));
                     Stream<Path> paths = Files.walk(sourceFolder)) {
                 paths.filter(path -> !Files.isDirectory(path)).forEach(path -> {
-                    ZipEntry zipEntry = new ZipEntry(
-                            separatorsToUnix(sourceFolder.relativize(path).toString()));
+                    ZipEntry zipEntry = new ZipEntry(separatorsToUnix(
+                            sourceFolder.relativize(path).toString()));
                     try {
                         zipOutputStream.putNextEntry(zipEntry);
                         Files.copy(path, zipOutputStream);
