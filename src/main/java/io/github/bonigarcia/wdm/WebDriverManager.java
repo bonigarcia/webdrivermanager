@@ -23,6 +23,7 @@ import static io.github.bonigarcia.wdm.config.Config.isNullOrEmpty;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROME;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROMIUM;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.EDGE;
+import static io.github.bonigarcia.wdm.config.DriverManagerType.FIREFOX;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.IEXPLORER;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.OPERA;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.LINUX;
@@ -68,6 +69,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -84,6 +86,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
@@ -91,6 +94,9 @@ import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.SessionId;
 import org.slf4j.Logger;
@@ -149,6 +155,7 @@ public abstract class WebDriverManager {
     protected static final String CLI_SERVER = "server";
     protected static final String CLI_RESOLVER = "resolveDriverFor";
     protected static final String CLI_DOCKER = "runInDocker";
+    protected static final String BROWSER_WATCHER_ID = "kbnnckbeejhjlljpgelfponodpecfapp";
 
     protected abstract List<URL> getDriverUrls(String driverVersion)
             throws IOException;
@@ -189,6 +196,8 @@ public abstract class WebDriverManager {
     protected boolean shutdownHook = false;
     protected boolean dockerEnabled = false;
     protected boolean androidEnabled = false;
+    protected boolean watchEnabled = false;
+    protected boolean displayEnabled = false;
     protected List<WebDriverBrowser> webDriverList;
 
     protected String downloadedDriverVersion;
@@ -556,6 +565,16 @@ public abstract class WebDriverManager {
         return this;
     }
 
+    public WebDriverManager watch() {
+        watchEnabled = true;
+        return this;
+    }
+
+    public WebDriverManager watchAndDisplay() {
+        displayEnabled = true;
+        return this;
+    }
+
     public WebDriverManager capabilities(Capabilities capabilities) {
         this.capabilities = capabilities;
         return this;
@@ -806,6 +825,8 @@ public abstract class WebDriverManager {
         shutdownHook = false;
         dockerEnabled = false;
         androidEnabled = false;
+        watchEnabled = false;
+        displayEnabled = false;
         capabilities = null;
     }
 
@@ -976,6 +997,54 @@ public abstract class WebDriverManager {
     public Path getDockerRecordingPath() {
         return (Path) getPropertyFromFirstWebDriverBrowser(
                 WebDriverBrowser::getRecordingPath);
+    }
+
+    public void startRecording(WebDriver driver) {
+        Optional<WebDriverBrowser> webDriverBrowser = findWebDriverBrowser(
+                driver);
+        if (webDriverBrowser.isPresent()) {
+            webDriverBrowser.get().startRecording();
+        }
+    }
+
+    public void startRecording() {
+        webDriverList.get(0).startRecording();
+    }
+
+    public void startRecording(WebDriver driver, String recordingName) {
+        Optional<WebDriverBrowser> webDriverBrowser = findWebDriverBrowser(
+                driver);
+        if (webDriverBrowser.isPresent()) {
+            webDriverBrowser.get().startRecording(recordingName);
+        }
+    }
+
+    public void startRecording(String recordingName) {
+        webDriverList.get(0).startRecording(recordingName);
+    }
+
+    public void stopRecording(WebDriver driver) {
+        Optional<WebDriverBrowser> webDriverBrowser = findWebDriverBrowser(
+                driver);
+        if (webDriverBrowser.isPresent()) {
+            webDriverBrowser.get().stopRecording();
+        }
+    }
+
+    public void stopRecording() {
+        webDriverList.get(0).stopRecording();
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Map<String, Object>> getLogs(WebDriver driver) {
+        return (List<Map<String, Object>>) getPropertyFromWebDriverBrowser(
+                driver, WebDriverBrowser::readLogs);
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Map<String, Object>> getLogs() {
+        return (List<Map<String, Object>>) getPropertyFromFirstWebDriverBrowser(
+                WebDriverBrowser::readLogs);
     }
 
     public synchronized DockerService getDockerService() {
@@ -1600,8 +1669,47 @@ public abstract class WebDriverManager {
 
     protected synchronized WebDriver instantiateDriver() {
         WebDriver driver = null;
+        DriverManagerType managerType = getDriverManagerType();
         try {
             String remoteAddress = config().getRemoteAddress();
+            Path extensionPath = null;
+            boolean watcher = watchEnabled || displayEnabled;
+            if (watcher) {
+                String extFilename = watchEnabled ? "/browserwatcher-%s.crx"
+                        : "/browserwatcher-display-%s.crx";
+                InputStream extensionInputStream = Config.class
+                        .getResourceAsStream(String.format(extFilename,
+                                config().getBrowserWatcherVersion()));
+                extensionPath = Files.createTempFile("", ".crx");
+                File extensionFile = extensionPath.toFile();
+                FileUtils.copyInputStreamToFile(extensionInputStream,
+                        extensionFile);
+                Capabilities caps = Optional.ofNullable(capabilities)
+                        .orElse(getCapabilities());
+
+                switch (managerType) {
+                case CHROME:
+                case OPERA:
+                case CHROMIUM:
+                    ((ChromeOptions) caps).addExtensions(extensionFile);
+                    capabilities = ((ChromeOptions) caps).addArguments(
+                            "--whitelisted-extension-id=" + BROWSER_WATCHER_ID);
+                    break;
+                case EDGE:
+                    ((EdgeOptions) caps).addExtensions(extensionFile);
+                    capabilities = ((EdgeOptions) caps).addArguments(
+                            "--whitelisted-extension-id=" + BROWSER_WATCHER_ID);
+                    break;
+                case FIREFOX:
+                    log.trace(
+                            "Extension to be installed after driver instantiation");
+                    break;
+                default:
+                    log.warn("Watcher not available for {}", managerType);
+                    break;
+                }
+            }
+
             if (isUsingDocker()) {
                 driver = createDockerWebDriver();
             } else if (!isNullOrEmpty(remoteAddress)) {
@@ -1614,10 +1722,13 @@ public abstract class WebDriverManager {
             } else {
                 driver = createLocalWebDriver();
             }
+            if (watcher && managerType == FIREFOX) {
+                ((FirefoxDriver) driver).installExtension(extensionPath, true);
+            }
 
         } catch (Exception e) {
             log.error("There was an error creating WebDriver object for {}",
-                    getDriverManagerType().getBrowserName(), e);
+                    managerType.getBrowserName(), e);
         }
         addShutdownHookIfRequired();
 

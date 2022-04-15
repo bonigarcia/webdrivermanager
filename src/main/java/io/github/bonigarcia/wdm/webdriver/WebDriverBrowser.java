@@ -24,7 +24,9 @@ import java.net.URL;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 
@@ -136,6 +138,37 @@ public class WebDriverBrowser {
 
     public int calculateIdentityHash(Object object) {
         return System.identityHashCode(object);
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Map<String, Object>> readLogs() {
+        List<Map<String, Object>> logMessages = (List<Map<String, Object>>) readJavaScriptVariable(
+                "console._bwLogs");
+        return logMessages;
+    }
+
+    public Object readJavaScriptVariable(String jsVariable) {
+        return executeJavaScript("return " + jsVariable + ";");
+    }
+
+    public Object executeJavaScript(String jsCommand) {
+        return ((JavascriptExecutor) driver).executeScript(jsCommand);
+    }
+
+    public void startRecording() {
+        ((JavascriptExecutor) driver).executeScript(
+                "window.postMessage({ type: \"startRecording\" });");
+    }
+
+    public void startRecording(String recordingName) {
+        ((JavascriptExecutor) driver).executeScript(
+                "window.postMessage({ type: \"startRecording\", name: \""
+                        + recordingName + "\" });");
+    }
+
+    public void stopRecording() {
+        ((JavascriptExecutor) driver).executeScript(
+                "window.postMessage({ type: \"stopRecording\" } );");
     }
 
 }

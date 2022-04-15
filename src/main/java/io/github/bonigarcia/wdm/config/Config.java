@@ -263,6 +263,9 @@ public class Config {
     ConfigKey<String> remoteAddress = new ConfigKey<>("wdm.remoteAddress",
             String.class);
 
+    ConfigKey<String> browserWatcherVersion = new ConfigKey<>(
+            "wdm.browserWatcherVersion", String.class);
+
     private <T> T resolve(ConfigKey<T> configKey) {
         String name = configKey.getName();
         T tValue = configKey.getValue();
@@ -1365,6 +1368,15 @@ public class Config {
 
     public Config setDockerCustomImage(String value) {
         this.dockerCustomImage.setValue(value);
+        return this;
+    }
+
+    public String getBrowserWatcherVersion() {
+        return resolve(browserWatcherVersion);
+    }
+
+    public Config setBrowserWatcherVersion(String value) {
+        this.browserWatcherVersion.setValue(value);
         return this;
     }
 
