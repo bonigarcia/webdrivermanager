@@ -38,9 +38,12 @@ jobs:
         sudo apt update && sudo apt install microsoft-edge-stable
     - name: Run tests on Linux
       if: matrix.os == 'ubuntu-latest'
-      run: mvn -B test
+      run: mvn -B test -Dtest=!Record*
     - name: Run tests on Mac
       if: matrix.os == 'macos-latest'
+      run: mvn -B test -Dtest=!Docker*,!Record*
+    - name: Run tests on Windows
+      if: matrix.os == 'windows-latest'
       run: mvn -B test -Dtest=!Docker*
     - name: Upload analysis to SonarCloud
       if: success() && matrix.os == 'ubuntu-latest' && matrix.java == '11' && !contains(github.ref, 'pull')
@@ -52,3 +55,10 @@ jobs:
     - name: Upload coverage to Codecov
       if: success() && matrix.os == 'ubuntu-latest' && matrix.java == '11' && !contains(github.ref, 'pull')
       uses: codecov/codecov-action@v1
+    - name: Store recordings (only available in Windows)
+      if: always() && matrix.os == 'windows-latest'
+      uses: actions/upload-artifact@v3
+      with:
+        name: webm-files
+        path: |
+          C:\Users\runneradmin\Downloads\*.webm

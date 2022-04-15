@@ -85,8 +85,8 @@ class RecordEdgeTest {
         do {
             recFile = new File(targetFolder, REC_FILENAME + REC_EXT);
             if (System.currentTimeMillis() > timeoutMs) {
-                fail("Timeout of {} seconds waiting for recording",
-                        REC_TIMEOUT_SEC);
+                fail("Timeout of " + REC_TIMEOUT_SEC
+                        + " seconds waiting for recording " + recFile);
                 break;
             }
             Thread.sleep(POLL_TIME_MSEC);
