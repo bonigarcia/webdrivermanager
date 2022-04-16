@@ -142,9 +142,8 @@ public class WebDriverBrowser {
 
     @SuppressWarnings("unchecked")
     public List<Map<String, Object>> readLogs() {
-        List<Map<String, Object>> logMessages = (List<Map<String, Object>>) readJavaScriptVariable(
+        return (List<Map<String, Object>>) readJavaScriptVariable(
                 "console._bwLogs");
-        return logMessages;
     }
 
     public Object readJavaScriptVariable(String jsVariable) {

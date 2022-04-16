@@ -63,7 +63,7 @@ class GatherLogsFirefoxTest {
                     map.get("message"));
         }
 
-        assertThat(logMessages.size()).isEqualTo(5);
+        assertThat(logMessages).hasSize(5);
     }
 
 }
