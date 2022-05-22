@@ -198,6 +198,7 @@ public abstract class WebDriverManager {
     protected boolean androidEnabled = false;
     protected boolean watchEnabled = false;
     protected boolean displayEnabled = false;
+    protected boolean disableCsp = false;
     protected List<WebDriverBrowser> webDriverList;
 
     protected String downloadedDriverVersion;
@@ -572,6 +573,11 @@ public abstract class WebDriverManager {
 
     public WebDriverManager watchAndDisplay() {
         displayEnabled = true;
+        return this;
+    }
+
+    public WebDriverManager disableCsp() {
+        disableCsp = true;
         return this;
     }
 
@@ -1675,28 +1681,21 @@ public abstract class WebDriverManager {
             Path extensionPath = null;
             boolean watcher = watchEnabled || displayEnabled;
             if (watcher) {
-                String extFilename = watchEnabled ? "/browserwatcher-%s.crx"
-                        : "/browserwatcher-display-%s.crx";
-                InputStream extensionInputStream = Config.class
-                        .getResourceAsStream(String.format(extFilename,
-                                config().getBrowserWatcherVersion()));
-                extensionPath = Files.createTempFile("", ".crx");
-                File extensionFile = extensionPath.toFile();
-                FileUtils.copyInputStreamToFile(extensionInputStream,
-                        extensionFile);
+                extensionPath = getBrowserWatcherAsPath();
+
                 Capabilities caps = Optional.ofNullable(capabilities)
                         .orElse(getCapabilities());
-
                 switch (managerType) {
                 case CHROME:
                 case OPERA:
                 case CHROMIUM:
-                    ((ChromeOptions) caps).addExtensions(extensionFile);
+                    ((ChromeOptions) caps)
+                            .addExtensions(extensionPath.toFile());
                     capabilities = ((ChromeOptions) caps).addArguments(
                             "--whitelisted-extension-id=" + BROWSER_WATCHER_ID);
                     break;
                 case EDGE:
-                    ((EdgeOptions) caps).addExtensions(extensionFile);
+                    ((EdgeOptions) caps).addExtensions(extensionPath.toFile());
                     capabilities = ((EdgeOptions) caps).addArguments(
                             "--whitelisted-extension-id=" + BROWSER_WATCHER_ID);
                     break;
@@ -1733,6 +1732,25 @@ public abstract class WebDriverManager {
         addShutdownHookIfRequired();
 
         return driver;
+    }
+
+    protected Path getBrowserWatcherAsPath() throws IOException {
+        Path extensionPath = null;
+        String extFilename = "/browserwatcher-%s.crx";
+        if (displayEnabled && !disableCsp) {
+            extFilename = "/browserwatcher-display-%s.crx";
+        } else if (!displayEnabled && disableCsp) {
+            extFilename = "/browserwatcher-csp-%s.crx";
+        } else if (displayEnabled && disableCsp) {
+            extFilename = "/browserwatcher-display-csp-%s.crx";
+        }
+        InputStream extensionInputStream = Config.class
+                .getResourceAsStream(String.format(extFilename,
+                        config().getBrowserWatcherVersion()));
+        extensionPath = Files.createTempFile("", ".crx");
+        File extensionFile = extensionPath.toFile();
+        FileUtils.copyInputStreamToFile(extensionInputStream, extensionFile);
+        return extensionPath;
     }
 
     protected Capabilities getMergedCapabilities() {
