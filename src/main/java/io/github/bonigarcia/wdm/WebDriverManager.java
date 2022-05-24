@@ -1736,16 +1736,17 @@ public abstract class WebDriverManager {
 
     protected Path getBrowserWatcherAsPath() throws IOException {
         Path extensionPath = null;
-        String extFilename = "/browserwatcher-%s.crx";
+        String extFilename = "/browserwatcher-%s%s.crx";
+        String extModifier = "";
         if (displayEnabled && !disableCsp) {
-            extFilename = "/browserwatcher-display-%s.crx";
+            extModifier = "display-";
         } else if (!displayEnabled && disableCsp) {
-            extFilename = "/browserwatcher-csp-%s.crx";
+            extModifier = "csp-";
         } else if (displayEnabled && disableCsp) {
-            extFilename = "/browserwatcher-display-csp-%s.crx";
+            extModifier = "display-csp-";
         }
         InputStream extensionInputStream = Config.class
-                .getResourceAsStream(String.format(extFilename,
+                .getResourceAsStream(String.format(extFilename, extModifier,
                         config().getBrowserWatcherVersion()));
         extensionPath = Files.createTempFile("", ".crx");
         File extensionFile = extensionPath.toFile();
