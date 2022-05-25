@@ -39,7 +39,7 @@ System.setProperty("webdriver.ie.driver", "C:/path/to/IEDriverServer.exe");
 
 .What is WebDriverManager?
 ****
-https://github.com/bonigarcia/webdrivermanager[WebDriverManager] is an open-source Java library that carries out the management (i.e., download, setup, and maintenance) of the drivers required by Selenium WebDriver (e.g., chromedriver, geckodriver, msedgedriver, etc.) in a fully automated manner. In addition, as of version 5, WebDriverManager provides other relevant features, such as the capability to <<browser-finder,discover browsers>> installed in the local system, <<webdriver-builder,building WebDriver objects>> (such as `ChromeDriver`, `FirefoxDriver`, `EdgeDriver`, etc.), and running <<browsers-in-docker,browsers in Docker containers>> seamlessly.
+https://github.com/bonigarcia/webdrivermanager[WebDriverManager] is an open-source Java library that carries out the management (i.e., download, setup, and maintenance) of the drivers required by Selenium WebDriver (e.g., chromedriver, geckodriver, msedgedriver, etc.) in a fully automated manner. In addition, as of version 5, WebDriverManager provides other relevant features, such as the capability to <<browser-finder,discover browsers>> installed in the local system, <<webdriver-builder,building WebDriver objects>> (such as `ChromeDriver`, `FirefoxDriver`, `EdgeDriver`, etc.), running <<browsers-in-docker,browsers in Docker containers>> seamlessly, and monitoring capabilities.
 ****
 
 == Setup
@@ -235,6 +235,52 @@ In addition, the WebDriverManager API provides several methods to get the most o
 * `getWebDriverList`: Get the previously created `WebDriver` objects (if any).
 
 A manager instance can be used to create more than one `WebDriver` object. For this reason, the methods `getDockerRecordingPath()`, `getDockerNoVncUrl()`, `getDockerSeleniumServerUrl()`, `getDockerBrowserContainerId()`, and `quit()` are overloaded, allowing to specify an `WebDriver` instance. When no parameter is specified in these methods, WebDriverManager returns the first `WebDriver` object (this is a usual case, i.e., a manager creates a single instance of `WebDriver`). You can see an example of a manager used to create more than one browser https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerSeveralBrowsersDifferentVersionsTest.java[here].
+
+=== Browsers Monitoring
+As of version 5.2.0, WebDriverManager provides seamless integration with https://bonigarcia.dev/browserwatcher/[BrowserWatcher]. BrowserWatcher is a browser extension designed to monitor different aspects of web browsers such as Chrome, Firefox, or Edge. This section summarizes the features of BrowserWatcher integrated into WebDriverManager.
+
+==== Console Log Gathering
+Gathering the browser console might help find the cause of failed Selenium tests. This feature is implemented in some drivers like chromedriver, but it is not yet implemented in geckodriver (and therefore, it is not possible to gather the Firefox console). BrowserWatcher provides a cross-browser mechanism based on JavaScript to implement this feature. WebDriverManager incorporates this feature for browsers controlled with Selenium WebDriver created through the WebDriverManager method `create()` and decorated with `watch()`. Internally,  BrowserWatcher is installed as a browser extension and starts gathering browser logs during the session time. At some point, we need to invoke the WebDriverManager method `getLogs()` to get the collected logs from the Java logic. The following test shows a basic example of this feature.
+
+[source,java]
+----
+include::../../test/java/io/github/bonigarcia/wdm/test/watcher/GatherLogsFirefoxTest.java[tags=snippet-in-doc,indent=0]
+----
+
+WARNING: When using Firefox, this feature requires at least Selenium WebDriver 4.1.2.
+
+==== Console Log Displaying
+In addition to log gathering, BrowserWatcher allows displaying the console logs as dialog notifications on the page. This feature can be enabled using the method `watchAndDisplay()`, for example, as follows:
+
+[source,java]
+----
+include::../../test/java/io/github/bonigarcia/wdm/test/watcher/DisplayLogsChromeTest.java[tags=snippet-in-doc,indent=0]
+----
+
+The following picture shows an example of these notifications:
+
+[[display-console-logs-example]]
+[.thumb]
+.Display logs example
+image::display-console-logs-example-v2.png[scaledwidth=100%]
+
+==== Tab Recording
+BrowserWatcher allows recording a browser tab. This feature requires a page loaded in the current tab (in other words, it cannot record empty or configuration pages). Then, the recording is started using the method `startRecording()` and stopped with `stopRecording()`, for instance, as follows:
+
+[source,java]
+----
+include::../../test/java/io/github/bonigarcia/wdm/test/watcher/RecordEdgeTest.java[tags=snippet-in-doc,indent=0]
+----
+
+WARNING: This feature is based on the API https://developer.chrome.com/docs/extensions/reference/tabCapture/[tabCapture]. Therefore, this feature is not available in Firefox since this API is not implemented by Firefox yet.
+
+==== Disabling CSP
+https://content-security-policy.com/[Content Security Policy (CSP)] is the name of an HTTP response header that browsers use to improve the security of web pages. CSP helps to protect from attacks such as cross-site scripting (XSS). Nevertheless, developers might want to disable the CSP headers received from the server for testing purposes. For this reason, BrowserWatcher allows bypassing these CSP headers. This feature (i.e., disabling CSP headers) can be enabled in WebDriverManager using the method `disableCsp()`, as follows:
+
+[source,java]
+----
+include::../../test/java/io/github/bonigarcia/wdm/test/watcher/DisableCspFirefoxTest.java[tags=snippet-in-doc,indent=0]
+----
 
 == Other Usages
 In addition to as a regular Java dependency, WebDriverManager can be used in other ambits. This section summarizes these usages.
