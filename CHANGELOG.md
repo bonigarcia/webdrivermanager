@@ -1,5 +1,14 @@
 # Changelog
 
+## [5.2.0] - 2022-05-25
+
+### Added
+- Include monitoring features by integrating BrowserWatcher (https://bonigarcia.dev/browserwatcher/) extension. The new API methods supporting these features are: watch(), watchAndDisplay(), getLogs(), startRecording(), stopRecording(), and disableCsp()
+
+### Changed
+- Use ChromeDriver instead of OperaDriver for Opera browser
+
+
 ## [5.1.1] - 2022-04-08
 
 ### Added
@@ -12,6 +21,7 @@
 - Detection for snap installed browser (issue #795)
 - Support for msedgedriver in Mac M1 (issues #804 and #812)
 - Normalize path separators in WebDriverManager.zipFolder() (PR #815)
+
 
 ## [5.1.0] - 2022-02-17
 ### Added
