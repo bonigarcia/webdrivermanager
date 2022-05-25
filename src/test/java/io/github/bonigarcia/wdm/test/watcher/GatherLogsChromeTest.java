@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm.test.watcher;
 
+//tag::snippet-in-doc[]
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -67,3 +68,4 @@ class GatherLogsChromeTest {
     }
 
 }
+//end::snippet-in-doc[]
