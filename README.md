@@ -102,7 +102,9 @@ WebDriverManager is part of [OpenCollective], an online funding platform for ope
 <a href="https://opencollective.com/webdrivermanager" target="_blank"><img src="https://opencollective.com/webdrivermanager/backers.svg?width=890"></a>
 
 ### Sponsors
-<a href="https://opencollective.com/webdrivermanager" target="_blank"><img src="https://opencollective.com/webdrivermanager/sponsor.svg?width=890"></a>
+<a href="https://opencollective.com/webdrivermanager/sponsor/0/website" target="_blank"><img src="https://opencollective.com/webdrivermanager/sponsor/0/avatar.svg" style="width: 80px; height: 60px; object-fit: cover;"></a>
+<a href="https://opencollective.com/webdrivermanager/sponsor/1/website" target="_blank"><img src="https://opencollective.com/webdrivermanager/sponsor/1/avatar.svg" style="width: 80px; height: 60px; object-fit: cover;"></a>
+<a href="https://opencollective.com/webdrivermanager/sponsor/2/website" target="_blank"><img src="https://opencollective.com/webdrivermanager/sponsor/2/avatar.svg"></a>
 
 ## About
 WebDriverManager (Copyright &copy; 2015-2022) is a project created and maintained by [Boni Garcia] and licensed under the terms of the [Apache 2.0 License].
