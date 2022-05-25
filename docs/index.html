@@ -775,7 +775,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <h1>WebDriverManager</h1>
 <div class="details">
 <span id="author" class="author">Boni García</span><br>
-<span id="revdate">Version 5.1.1</span>
+<span id="revdate">Version 5.2.0</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -799,6 +799,14 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <li><a href="#remote-desktop">3.4.2. Remote Desktop</a></li>
 <li><a href="#recordings">3.4.3. Recordings</a></li>
 <li><a href="#advanced-settings-2">3.4.4. Advanced Settings</a></li>
+</ul>
+</li>
+<li><a href="#browsers-monitoring">3.5. Browsers Monitoring</a>
+<ul class="sectlevel3">
+<li><a href="#console-log-gathering">3.5.1. Console Log Gathering</a></li>
+<li><a href="#console-log-displaying">3.5.2. Console Log Displaying</a></li>
+<li><a href="#tab-recording">3.5.3. Tab Recording</a></li>
+<li><a href="#disabling-csp">3.5.4. Disabling CSP</a></li>
 </ul>
 </li>
 </ul>
@@ -946,7 +954,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <div class="content">
 <div class="title">What is WebDriverManager?</div>
 <div class="paragraph">
-<p><a href="https://github.com/bonigarcia/webdrivermanager">WebDriverManager</a> is an open-source Java library that carries out the management (i.e., download, setup, and maintenance) of the drivers required by Selenium WebDriver (e.g., chromedriver, geckodriver, msedgedriver, etc.) in a fully automated manner. In addition, as of version 5, WebDriverManager provides other relevant features, such as the capability to <a href="#browser-finder">discover browsers</a> installed in the local system, <a href="#webdriver-builder">building WebDriver objects</a> (such as <code>ChromeDriver</code>, <code>FirefoxDriver</code>, <code>EdgeDriver</code>, etc.), and running <a href="#browsers-in-docker">browsers in Docker containers</a> seamlessly.</p>
+<p><a href="https://github.com/bonigarcia/webdrivermanager">WebDriverManager</a> is an open-source Java library that carries out the management (i.e., download, setup, and maintenance) of the drivers required by Selenium WebDriver (e.g., chromedriver, geckodriver, msedgedriver, etc.) in a fully automated manner. In addition, as of version 5, WebDriverManager provides other relevant features, such as the capability to <a href="#browser-finder">discover browsers</a> installed in the local system, <a href="#webdriver-builder">building WebDriver objects</a> (such as <code>ChromeDriver</code>, <code>FirefoxDriver</code>, <code>EdgeDriver</code>, etc.), running <a href="#browsers-in-docker">browsers in Docker containers</a> seamlessly, and <a href="#browsers-monitoring">monitoring capabilities</a>.</p>
 </div>
 </div>
 </div>
@@ -963,7 +971,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
     <span class="tag">&lt;groupId&gt;</span>io.github.bonigarcia<span class="tag">&lt;/groupId&gt;</span>
     <span class="tag">&lt;artifactId&gt;</span>webdrivermanager<span class="tag">&lt;/artifactId&gt;</span>
-    <span class="tag">&lt;version&gt;</span>5.1.1<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;version&gt;</span>5.2.0<span class="tag">&lt;/version&gt;</span>
     <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
@@ -974,7 +982,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="json"><span class="error">d</span><span class="error">e</span><span class="error">p</span><span class="error">e</span><span class="error">n</span><span class="error">d</span><span class="error">e</span><span class="error">n</span><span class="error">c</span><span class="error">i</span><span class="error">e</span><span class="error">s</span> {
-    <span class="error">t</span><span class="error">e</span><span class="error">s</span><span class="error">t</span><span class="error">I</span><span class="error">m</span><span class="error">p</span><span class="error">l</span><span class="error">e</span><span class="error">m</span><span class="error">e</span><span class="error">n</span><span class="error">t</span><span class="error">a</span><span class="error">t</span><span class="error">i</span><span class="error">o</span><span class="error">n</span><span class="error">(</span><span class="string"><span class="delimiter">&quot;</span><span class="content">io.github.bonigarcia:webdrivermanager:5.1.1</span><span class="delimiter">&quot;</span></span><span class="error">)</span>
+    <span class="error">t</span><span class="error">e</span><span class="error">s</span><span class="error">t</span><span class="error">I</span><span class="error">m</span><span class="error">p</span><span class="error">l</span><span class="error">e</span><span class="error">m</span><span class="error">e</span><span class="error">n</span><span class="error">t</span><span class="error">a</span><span class="error">t</span><span class="error">i</span><span class="error">o</span><span class="error">n</span><span class="error">(</span><span class="string"><span class="delimiter">&quot;</span><span class="content">io.github.bonigarcia:webdrivermanager:5.2.0</span><span class="delimiter">&quot;</span></span><span class="error">)</span>
 }</code></pre>
 </div>
 </div>
@@ -989,7 +997,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <div class="sect2">
 <h3 id="driver-management"><a class="anchor" href="#driver-management"></a>3.1. Driver Management</h3>
 <div class="paragraph">
-<p>The primary use of WebDriverManager is the automation of driver management. For using this feature, you need to select a given manager in the WebDriverMager API (e.g., <code>chromedriver()</code> for Chrome) and invoke the method <code>setup()</code>. The following example shows a test case using <a href="https://junit.org/junit5/">JUnit 5</a>, Selenium WebDriver, WebDriverManager, and <a href="https://joel-costigliola.github.io/assertj/">AssertJ</a> (for fluent assertions). In this test, we invoke WebDriverManager in the setup method for all tests (<code>@BeforeAll</code>). This way, the required driver (chromedriver) will be available for all the WebDriver tests using Chrome in this class.</p>
+<p>The primary use of WebDriverManager is the automation of driver management. To use this feature, you need to select a given manager in the WebDriverMager API (e.g., <code>chromedriver()</code> for Chrome) and invoke the method <code>setup()</code>. The following example shows a test case using <a href="https://junit.org/junit5/">JUnit 5</a>, Selenium WebDriver, WebDriverManager, and <a href="https://joel-costigliola.github.io/assertj/">AssertJ</a> (for fluent assertions). In this test, we invoke WebDriverManager in the setup method for all tests (<code>@BeforeAll</code>). This way, the required driver (chromedriver) will be available for all the WebDriver tests using Chrome in this class.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1075,8 +1083,7 @@ Although not mandatory, it is highly recommended to use a logger library to trac
 <p>WebDriverManager tries to find the browser version. To this aim, WebDriverManager uses internally a knowledge database called <a href="https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/commands.properties">commands database</a>. This database is a collection of shell commands used to discover the version of a given browser in the different operating systems (e.g., <code>google-chrome --version</code> for Chrome in Linux).</p>
 </li>
 <li>
-<p>Using the browser version, it tries to find the proper driver version.
-This process is different for each browser. In Chrome and Edge, their respective drivers (chromedriver and msedgedriver) maintainers also publish resources to identify the suitable driver version for a given major browser release. For instance, to find out the version of chromedriver required for Chrome 89, we need to read the following <a href="https://chromedriver.storage.googleapis.com/LATEST_RELEASE_89">file</a>. Unfortunately, this information is not available in other browsers (e.g., Firefox and Opera) or older versions of Chrome and Firefox. For this reason, WebDriverManager uses another knowledge database called <a href="https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/versions.properties">versions database</a>. This database maps the browser releases with the known compatible driver versions.</p>
+<p>Using the browser version, WebDriverManager tries to find the proper driver version. This process is different for each browser. In Chrome and Edge, their respective drivers (chromedriver and msedgedriver) maintainers also publish resources to identify the suitable driver version for a given major browser release. For instance, to find out the version of chromedriver required for Chrome 89, we need to read the following <a href="https://chromedriver.storage.googleapis.com/LATEST_RELEASE_89">file</a>. Unfortunately, this information is not available in other browsers (e.g., Firefox and Opera) or older versions of Chrome and Firefox. For this reason, WebDriverManager uses another knowledge database called <a href="https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/versions.properties">versions database</a>. This database maps the browser releases with the known compatible driver versions.</p>
 </li>
 <li>
 <p>Once the driver version is discovered, WebDriverManager downloads this driver to a local cache (located at <code>~/.cache/selenium</code> by default). These drivers are reused in subsequent calls.</p>
@@ -1093,7 +1100,7 @@ This process is different for each browser. In Chrome and Edge, their respective
 <div class="sect3">
 <h4 id="generic-manager"><a class="anchor" href="#generic-manager"></a>3.1.2. Generic Manager</h4>
 <div class="paragraph">
-<p>WebDriverManager provides a <em>generic manager</em>, i.e., a manager that can be parameterized to act as a specific manager (for Chrome, Firefox, etc.). You can create a manager using this feature using the method <code>getInstance()</code> of the WebDriverManager API. The method can be invoked using the following options:</p>
+<p>WebDriverManager provides a <em>generic manager</em>, i.e., a manager that can be parameterized to act as a specific manager (for Chrome, Firefox, etc.). Using this feature, you can create a manager using the method <code>getInstance()</code> of the WebDriverManager API. The method can be invoked using the following options:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1157,7 +1164,7 @@ This process is different for each browser. In Chrome and Edge, their respective
 <div class="sect3">
 <h4 id="advanced-settings"><a class="anchor" href="#advanced-settings"></a>3.1.3. Advanced Settings</h4>
 <div class="paragraph">
-<p>The driver management provided by WebDriverManager can be tuned in many different ways. For example, the WebDriverManager API allows configuring the driver (or browser) version to be resolved, the location of the cache path, the operating system, the architecture, the proxy settings (for the network connection), the TTL, or cleaning the driver and resolution cache, among many other attributes. See the <a href="#advanced-configuration">advanced configuration</a> settings for specific details about it. In addition, there are several WebDriverManager API specific to driver management, namely:</p>
+<p>The driver management provided by WebDriverManager can be tuned in many different ways. For example, the WebDriverManager API allows configuring the driver (or browser) version to be resolved, the location of the cache path, the operating system, the architecture, the proxy settings (for the network connection), the TTL, or cleaning the driver and resolution cache, among many other attributes. See the <a href="#advanced-configuration">advanced configuration</a> settings for specific details about it. In addition, there are several WebDriverManager API methods specific to driver management, namely:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1196,7 +1203,7 @@ Each manager was a singleton object in older WebDriverManager releases (e.g., 4.
 </div>
 <div class="paragraph">
 <p>The following example shows an example using this feature.
-In this test, the optional browser path is used to disable conditionally (i.e., skip) the test using an <a href="https://assertj.github.io/doc/#assertj-core-assumptions">AssertJ assumption</a> (although other built-in assumptions available in JUnit 5 or other unit testing frameworks are also possible). All in all, this test should be executed in a Mac OS system (which should have Safari out of the box), but it should be skipped in any other operating system.</p>
+In this test, the optional browser path is used to disable conditionally (i.e., skip) the test using an <a href="https://assertj.github.io/doc/#assertj-core-assumptions">AssertJ assumption</a> (although other built-in assumptions available in JUnit 5 or other unit testing frameworks are also possible). This test should be executed in a Mac OS system (which should have Safari out of the box), but it should be skipped in any other operating system.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1264,7 +1271,7 @@ Internally, WebDriverManager uses the content of the <a href="https://github.com
 <div class="sect2">
 <h3 id="webdriver-builder"><a class="anchor" href="#webdriver-builder"></a>3.3. WebDriver Builder</h3>
 <div class="paragraph">
-<p>As of version 5, WebDriverManager allows instantiating <code>WebDriver</code> objects (e.g. <code>ChromeDriver</code>, <code>FirefoxDriver</code>, etc.) using the WebDriverManager API. This feature is available using the method <code>create()</code> of each manager. The following example shows a test using this feature. Notice that the WebDriverManager call to the <code>setup()</code> method is not required when using this feature since the driver management is done internally by WebDriverManager. WebDriverManager provides the method <code>quit()</code> to close the created <code>WebDriver</code> instances gracefully to complement this feature.</p>
+<p>As of version 5, WebDriverManager allows instantiating <code>WebDriver</code> objects (e.g. <code>ChromeDriver</code>, <code>FirefoxDriver</code>, etc.) using the WebDriverManager API. This feature is available using each manager&#8217;s method <code>create()</code>. The following example shows a test using this feature. Notice that the WebDriverManager call to the <code>setup()</code> method is not required when using this feature since the driver management is done internally by WebDriverManager. WebDriverManager provides the method <code>quit()</code> to close the created <code>WebDriver</code> instances gracefully to complement this feature.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1307,7 +1314,7 @@ Internally, WebDriverManager uses the content of the <a href="https://github.com
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-When using this feature, WebDriverManager stores internally a reference to the <code>WebDriver</code> objects created. In addition, a shutdown hook watches these objects are correctly released before shutting down the JVM. You can play with this feature removing the <code>teardown</code> method of the example before.
+When using this feature, WebDriverManager stores internally a reference to the <code>WebDriver</code> objects created. In addition, a shutdown hook watches these objects correctly released before shutting down the JVM. You can play with this feature by removing the <code>teardown</code> method of the example before.
 </td>
 </tr>
 </table>
@@ -1324,7 +1331,7 @@ When using this feature, WebDriverManager stores internally a reference to the <
 <p>Method <code>capabilities()</code>: To specify WebDriver <code>Capabilities</code> (see <a href="https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/create/ChromeCapabilitiesCreateTest.java">example</a>).</p>
 </li>
 <li>
-<p>Method <code>remoteAddress()</code>: To specify the remote URL in the <code>RemoteWebDriver</code> instance, typically when using a Selenium Server or a cloud provider (such as <a href="https://saucelabs.com/">Sauce Labs</a>, <a href="https://www.lambdatest.com/">LambdaTest</a>, etc.). This method is equivalent to the configuration key <code>wdm.remoteAddress</code> (see <a href="#advanced-configuration">configuration</a> section). The following example shows a test using this method. Notice that this test starts <a href="https://www.selenium.dev/documentation/en/grid/">Selenium Grid</a> in standalone mode before the test. To that, WebDriverManager is also used (since the browser controlled by Selenium Grid also requires a driver):</p>
+<p>Method <code>remoteAddress()</code>: To specify the remote URL in the <code>RemoteWebDriver</code> instance, typically when using a Selenium Server or a cloud provider (such as <a href="https://saucelabs.com/">Sauce Labs</a>, <a href="https://www.lambdatest.com/">LambdaTest</a>, etc.). This method is equivalent to the configuration key <code>wdm.remoteAddress</code> (see <a href="#advanced-configuration">configuration</a> section). The following example shows a test using this method. This test starts <a href="https://www.selenium.dev/documentation/en/grid/">Selenium Grid</a> in standalone mode before the test. To that, WebDriverManager is also used (since the browser controlled by Selenium Grid also requires a driver):</p>
 </li>
 </ul>
 </div>
@@ -1530,7 +1537,7 @@ Notice you will need hardware virtualization (hypervisor) or a virtual machine w
 <div class="sect3">
 <h4 id="remote-desktop"><a class="anchor" href="#remote-desktop"></a>3.4.2. Remote Desktop</h4>
 <div class="paragraph">
-<p>A possible inconvenience of using browsers in Docker is that we cannot see what is happening inside the container by default. To improve this situation, WebDriverManager allows connecting to the remote desktop session simply invoking the method <code>enableVnc()</code> of a dockerized browser. When using this option, two different technologies are used internally:</p>
+<p>A possible inconvenience of using browsers in Docker is that we cannot see what is happening inside the container by default. To improve this situation, WebDriverManager allows connecting to the remote desktop session simply by invoking the method <code>enableVnc()</code> of a dockerized browser. When using this option, two different technologies are used internally:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1602,7 +1609,7 @@ Notice you will need hardware virtualization (hypervisor) or a virtual machine w
 <div class="sect3">
 <h4 id="recordings"><a class="anchor" href="#recordings"></a>3.4.3. Recordings</h4>
 <div class="paragraph">
-<p>The following related feature is the recording of the remote session of a dockerized browser. To enable it, we need to invoke the method <code>enableRecording()</code> in WebDriverManager. Internally, WebDriverManager starts another Docker container using <a href="https://ffmpeg.org/">FFmpeg</a> to record the browser session. At the end of the test, we can find the recording in MP4 (by default, with a filename composed by the browser name followed by the symbol <code><em></code> and the system timestamp, plus another <code></em></code> and the session id) located in the project root folder (you can change this behavior using <a href="#advanced-configuration">configuration capabilities</a>. The following test shows an example of this feature.</p>
+<p>The following related feature is recording the remote session of a dockerized browser. To enable it, we need to invoke the method <code>enableRecording()</code> in WebDriverManager. Internally, WebDriverManager starts another Docker container using <a href="https://ffmpeg.org/">FFmpeg</a> to record the browser session. At the end of the test, we can find the recording in MP4 (by default, with a filename composed of the browser name followed by the symbol <code><em></code> and the system timestamp, plus another <code></em></code> and the session id) located in the project root folder (you can change this behavior using <a href="#advanced-configuration">configuration capabilities</a>. The following test shows an example of this feature.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1675,7 +1682,7 @@ Notice you will need hardware virtualization (hypervisor) or a virtual machine w
 <p><code>getDockerNoVncUrl()</code>: Ger URL of the remote desktop noVNC session.</p>
 </li>
 <li>
-<p><code>getDockerSeleniumServerUrl()</code>: Get URL of the underlying Selenium Server (inside the container) that allows controlling the remote (dockerized) browser.</p>
+<p><code>getDockerSeleniumServerUrl()</code>: Get the URL of the underlying Selenium Server (inside the container) that allows controlling the remote (dockerized) browser.</p>
 </li>
 <li>
 <p><code>getDockerService()</code>: It allows access to the Docker service and client (based on <a href="https://github.com/docker-java/docker-java">docker-java</a>) to make custom operations with Docker containers (e.g., run commands in the browser container, see example <a href="https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerExecCommandInContainerTest.java">here</a>).</p>
@@ -1696,6 +1703,313 @@ Notice you will need hardware virtualization (hypervisor) or a virtual machine w
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="browsers-monitoring"><a class="anchor" href="#browsers-monitoring"></a>3.5. Browsers Monitoring</h3>
+<div class="paragraph">
+<p>As of version 5.2.0, WebDriverManager provides seamless integration with <a href="https://bonigarcia.dev/browserwatcher/">BrowserWatcher</a>. BrowserWatcher is a browser extension designed to monitor different aspects of web browsers such as Chrome, Firefox, or Edge. This section summarizes the features of BrowserWatcher integrated into WebDriverManager.</p>
+</div>
+<div class="sect3">
+<h4 id="console-log-gathering"><a class="anchor" href="#console-log-gathering"></a>3.5.1. Console Log Gathering</h4>
+<div class="paragraph">
+<p>Gathering the browser console might help find the cause of failed Selenium tests. This feature is implemented in some drivers like chromedriver, but it is not yet implemented in geckodriver (and therefore, it is not possible to gather the Firefox console). BrowserWatcher provides a cross-browser mechanism based on JavaScript to implement this feature. WebDriverManager incorporates this feature for browsers controlled with Selenium WebDriver created through the WebDriverManager method <code>create()</code> and decorated with <code>watch()</code>. Internally,  BrowserWatcher is installed as a browser extension and starts gathering browser logs during the session time. At some point, we need to invoke the WebDriverManager method <code>getLogs()</code> to get the collected logs from the Java logic. The following test shows a basic example of this feature.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">static</span> <span class="include">java.lang.invoke.MethodHandles.lookup</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.assertj.core.api.Assertions.assertThat</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.slf4j.LoggerFactory.getLogger</span>;
+
+<span class="keyword">import</span> <span class="include">java.util.List</span>;
+<span class="keyword">import</span> <span class="include">java.util.Map</span>;
+
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.AfterEach</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.BeforeEach</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
+<span class="keyword">import</span> <span class="include">org.openqa.selenium.WebDriver</span>;
+<span class="keyword">import</span> <span class="include">org.slf4j.Logger</span>;
+
+<span class="keyword">import</span> <span class="include">io.github.bonigarcia.wdm.WebDriverManager</span>;
+
+<span class="type">class</span> <span class="class">GatherLogsFirefoxTest</span> {
+
+    <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">Logger</span> log = getLogger(lookup().lookupClass());
+
+    WebDriverManager wdm = WebDriverManager.firefoxdriver().watch();
+    WebDriver driver;
+
+    <span class="annotation">@BeforeEach</span>
+    <span class="type">void</span> setup() {
+        driver = wdm.create();
+    }
+
+    <span class="annotation">@AfterEach</span>
+    <span class="type">void</span> teardown() {
+        driver.quit();
+    }
+
+    <span class="annotation">@Test</span>
+    <span class="type">void</span> test() {
+        driver.get(
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">https://bonigarcia.dev/selenium-webdriver-java/console-logs.html</span><span class="delimiter">&quot;</span></span>);
+
+        <span class="predefined-type">List</span>&lt;<span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Object</span>&gt;&gt; logMessages = wdm.getLogs();
+
+        <span class="keyword">for</span> (<span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Object</span>&gt; map : logMessages) {
+            log.debug(<span class="string"><span class="delimiter">&quot;</span><span class="content">[{}] [{}.{}] {}</span><span class="delimiter">&quot;</span></span>, map.get(<span class="string"><span class="delimiter">&quot;</span><span class="content">datetime</span><span class="delimiter">&quot;</span></span>),
+                    map.get(<span class="string"><span class="delimiter">&quot;</span><span class="content">wrapper</span><span class="delimiter">&quot;</span></span>).toString().toUpperCase(),
+                    <span class="predefined-type">String</span>.format(<span class="string"><span class="delimiter">&quot;</span><span class="content">%1$-7s</span><span class="delimiter">&quot;</span></span>,
+                            map.get(<span class="string"><span class="delimiter">&quot;</span><span class="content">type</span><span class="delimiter">&quot;</span></span>).toString().toUpperCase()),
+                    map.get(<span class="string"><span class="delimiter">&quot;</span><span class="content">message</span><span class="delimiter">&quot;</span></span>));
+        }
+
+        assertThat(logMessages).hasSize(<span class="integer">5</span>);
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+When using Firefox, this feature requires at least Selenium WebDriver 4.1.2.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="console-log-displaying"><a class="anchor" href="#console-log-displaying"></a>3.5.2. Console Log Displaying</h4>
+<div class="paragraph">
+<p>In addition to log gathering, BrowserWatcher allows displaying the console logs as dialog notifications on the page. This feature can be enabled using the method <code>watchAndDisplay()</code>, for example, as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">static</span> <span class="include">java.lang.invoke.MethodHandles.lookup</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.assertj.core.api.Assertions.assertThat</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.slf4j.LoggerFactory.getLogger</span>;
+
+<span class="keyword">import</span> <span class="include">java.time.Duration</span>;
+<span class="keyword">import</span> <span class="include">java.util.List</span>;
+<span class="keyword">import</span> <span class="include">java.util.Map</span>;
+
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.AfterEach</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.BeforeEach</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
+<span class="keyword">import</span> <span class="include">org.openqa.selenium.WebDriver</span>;
+<span class="keyword">import</span> <span class="include">org.slf4j.Logger</span>;
+
+<span class="keyword">import</span> <span class="include">io.github.bonigarcia.wdm.WebDriverManager</span>;
+
+<span class="type">class</span> <span class="class">DisplayLogsChromeTest</span> {
+
+    <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">Logger</span> log = getLogger(lookup().lookupClass());
+
+    WebDriverManager wdm = WebDriverManager.chromedriver().watchAndDisplay();
+    WebDriver driver;
+
+    <span class="annotation">@BeforeEach</span>
+    <span class="type">void</span> setup() {
+        driver = wdm.create();
+    }
+
+    <span class="annotation">@AfterEach</span>
+    <span class="type">void</span> teardown() <span class="directive">throws</span> <span class="exception">InterruptedException</span> {
+        <span class="comment">// pause for manual browser inspection</span>
+        <span class="predefined-type">Thread</span>.sleep(<span class="predefined-type">Duration</span>.ofSeconds(<span class="integer">3</span>).toMillis());
+
+        driver.quit();
+    }
+
+    <span class="annotation">@Test</span>
+    <span class="type">void</span> test() {
+        driver.get(
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">https://bonigarcia.dev/selenium-webdriver-java/console-logs.html</span><span class="delimiter">&quot;</span></span>);
+
+        <span class="predefined-type">List</span>&lt;<span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Object</span>&gt;&gt; logMessages = wdm.getLogs();
+
+        <span class="keyword">for</span> (<span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Object</span>&gt; map : logMessages) {
+            log.debug(<span class="string"><span class="delimiter">&quot;</span><span class="content">[{}] [{}.{}] {}</span><span class="delimiter">&quot;</span></span>, map.get(<span class="string"><span class="delimiter">&quot;</span><span class="content">datetime</span><span class="delimiter">&quot;</span></span>),
+                    map.get(<span class="string"><span class="delimiter">&quot;</span><span class="content">wrapper</span><span class="delimiter">&quot;</span></span>).toString().toUpperCase(),
+                    <span class="predefined-type">String</span>.format(<span class="string"><span class="delimiter">&quot;</span><span class="content">%1$-7s</span><span class="delimiter">&quot;</span></span>,
+                            map.get(<span class="string"><span class="delimiter">&quot;</span><span class="content">type</span><span class="delimiter">&quot;</span></span>).toString().toUpperCase()),
+                    map.get(<span class="string"><span class="delimiter">&quot;</span><span class="content">message</span><span class="delimiter">&quot;</span></span>));
+        }
+
+        assertThat(logMessages).hasSize(<span class="integer">5</span>);
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following picture shows an example of these notifications:</p>
+</div>
+<div id="display-console-logs-example" class="imageblock thumb">
+<div class="content">
+<img src="img/display-console-logs-example-v2.png" alt="display console logs example v2">
+</div>
+<div class="title">Figure 3. Display logs example</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="tab-recording"><a class="anchor" href="#tab-recording"></a>3.5.3. Tab Recording</h4>
+<div class="paragraph">
+<p>BrowserWatcher allows recording a browser tab. This feature requires a page loaded in the current tab (in other words, it cannot record empty or configuration pages). Then, the recording is started using the method <code>startRecording()</code> and stopped with <code>stopRecording()</code>, for instance, as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">static</span> <span class="include">java.lang.invoke.MethodHandles.lookup</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.assertj.core.api.Assertions.fail</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.slf4j.LoggerFactory.getLogger</span>;
+
+<span class="keyword">import</span> <span class="include">java.io.File</span>;
+<span class="keyword">import</span> <span class="include">java.time.Duration</span>;
+<span class="keyword">import</span> <span class="include">java.util.concurrent.TimeUnit</span>;
+
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.AfterEach</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.BeforeEach</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
+<span class="keyword">import</span> <span class="include">org.openqa.selenium.By</span>;
+<span class="keyword">import</span> <span class="include">org.openqa.selenium.WebDriver</span>;
+<span class="keyword">import</span> <span class="include">org.openqa.selenium.support.ui.ExpectedConditions</span>;
+<span class="keyword">import</span> <span class="include">org.openqa.selenium.support.ui.WebDriverWait</span>;
+<span class="keyword">import</span> <span class="include">org.slf4j.Logger</span>;
+
+<span class="keyword">import</span> <span class="include">io.github.bonigarcia.wdm.WebDriverManager</span>;
+
+<span class="type">class</span> <span class="class">RecordEdgeTest</span> {
+
+    <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">Logger</span> log = getLogger(lookup().lookupClass());
+
+    <span class="directive">static</span> <span class="directive">final</span> <span class="type">int</span> REC_TIMEOUT_SEC = <span class="integer">10</span>;
+    <span class="directive">static</span> <span class="directive">final</span> <span class="type">int</span> POLL_TIME_MSEC = <span class="integer">100</span>;
+    <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">String</span> REC_FILENAME = <span class="string"><span class="delimiter">&quot;</span><span class="content">myRecordingEdge</span><span class="delimiter">&quot;</span></span>;
+    <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">String</span> REC_EXT = <span class="string"><span class="delimiter">&quot;</span><span class="content">.webm</span><span class="delimiter">&quot;</span></span>;
+
+    WebDriver driver;
+    <span class="predefined-type">File</span> targetFolder;
+    WebDriverManager wdm = WebDriverManager.edgedriver().watch();
+
+    <span class="annotation">@BeforeEach</span>
+    <span class="type">void</span> setup() {
+        driver = wdm.create();
+        targetFolder = <span class="keyword">new</span> <span class="predefined-type">File</span>(<span class="predefined-type">System</span>.getProperty(<span class="string"><span class="delimiter">&quot;</span><span class="content">user.home</span><span class="delimiter">&quot;</span></span>), <span class="string"><span class="delimiter">&quot;</span><span class="content">Downloads</span><span class="delimiter">&quot;</span></span>);
+    }
+
+    <span class="annotation">@AfterEach</span>
+    <span class="type">void</span> teardown() {
+        driver.quit();
+    }
+
+    <span class="annotation">@Test</span>
+    <span class="type">void</span> test() <span class="directive">throws</span> <span class="exception">InterruptedException</span> {
+        driver.get(
+                <span class="string"><span class="delimiter">&quot;</span><span class="content">https://bonigarcia.dev/selenium-webdriver-java/slow-calculator.html</span><span class="delimiter">&quot;</span></span>);
+
+        wdm.startRecording(REC_FILENAME);
+
+        <span class="comment">// 1 + 3</span>
+        driver.findElement(By.xpath(<span class="string"><span class="delimiter">&quot;</span><span class="content">//span[text()='1']</span><span class="delimiter">&quot;</span></span>)).click();
+        driver.findElement(By.xpath(<span class="string"><span class="delimiter">&quot;</span><span class="content">//span[text()='+']</span><span class="delimiter">&quot;</span></span>)).click();
+        driver.findElement(By.xpath(<span class="string"><span class="delimiter">&quot;</span><span class="content">//span[text()='3']</span><span class="delimiter">&quot;</span></span>)).click();
+        driver.findElement(By.xpath(<span class="string"><span class="delimiter">&quot;</span><span class="content">//span[text()='=']</span><span class="delimiter">&quot;</span></span>)).click();
+
+        <span class="comment">// ... should be 4, wait for it</span>
+        WebDriverWait wait = <span class="keyword">new</span> WebDriverWait(driver, <span class="predefined-type">Duration</span>.ofSeconds(<span class="integer">10</span>));
+        wait.until(ExpectedConditions.textToBe(By.className(<span class="string"><span class="delimiter">&quot;</span><span class="content">screen</span><span class="delimiter">&quot;</span></span>), <span class="string"><span class="delimiter">&quot;</span><span class="content">4</span><span class="delimiter">&quot;</span></span>));
+
+        wdm.stopRecording();
+
+        <span class="type">long</span> timeoutMs = <span class="predefined-type">System</span>.currentTimeMillis()
+                + <span class="predefined-type">TimeUnit</span>.SECONDS.toMillis(REC_TIMEOUT_SEC);
+
+        <span class="predefined-type">File</span> recFile;
+        <span class="keyword">do</span> {
+            recFile = <span class="keyword">new</span> <span class="predefined-type">File</span>(targetFolder, REC_FILENAME + REC_EXT);
+            <span class="keyword">if</span> (<span class="predefined-type">System</span>.currentTimeMillis() &gt; timeoutMs) {
+                fail(<span class="string"><span class="delimiter">&quot;</span><span class="content">Timeout of </span><span class="delimiter">&quot;</span></span> + REC_TIMEOUT_SEC
+                        + <span class="string"><span class="delimiter">&quot;</span><span class="content"> seconds waiting for recording </span><span class="delimiter">&quot;</span></span> + recFile);
+                <span class="keyword">break</span>;
+            }
+            <span class="predefined-type">Thread</span>.sleep(POLL_TIME_MSEC);
+
+        } <span class="keyword">while</span> (!recFile.exists());
+
+        log.debug(<span class="string"><span class="delimiter">&quot;</span><span class="content">Recording available at {}</span><span class="delimiter">&quot;</span></span>, recFile);
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+This feature is based on the API <a href="https://developer.chrome.com/docs/extensions/reference/tabCapture/">tabCapture</a>. Therefore, this feature is not available in Firefox since this API is not implemented by Firefox yet.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="disabling-csp"><a class="anchor" href="#disabling-csp"></a>3.5.4. Disabling CSP</h4>
+<div class="paragraph">
+<p><a href="https://content-security-policy.com/">Content Security Policy (CSP)</a> is the name of an HTTP response header that browsers use to improve the security of web pages. CSP helps to protect from attacks such as cross-site scripting (XSS). Nevertheless, developers might want to disable the CSP headers received from the server for testing purposes. For this reason, BrowserWatcher allows bypassing these CSP headers. This feature (i.e., disabling CSP headers) can be enabled in WebDriverManager using the method <code>disableCsp()</code>, as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">static</span> <span class="include">java.lang.invoke.MethodHandles.lookup</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.assertj.core.api.Assertions.assertThat</span>;
+<span class="keyword">import</span> <span class="include">static</span> <span class="include">org.slf4j.LoggerFactory.getLogger</span>;
+
+<span class="keyword">import</span> <span class="include">java.util.List</span>;
+<span class="keyword">import</span> <span class="include">java.util.Map</span>;
+
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.AfterEach</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.BeforeEach</span>;
+<span class="keyword">import</span> <span class="include">org.junit.jupiter.api.Test</span>;
+<span class="keyword">import</span> <span class="include">org.openqa.selenium.WebDriver</span>;
+<span class="keyword">import</span> <span class="include">org.slf4j.Logger</span>;
+
+<span class="keyword">import</span> <span class="include">io.github.bonigarcia.wdm.WebDriverManager</span>;
+
+<span class="type">class</span> <span class="class">DisableCspFirefoxTest</span> {
+
+    <span class="directive">static</span> <span class="directive">final</span> <span class="predefined-type">Logger</span> log = getLogger(lookup().lookupClass());
+
+    WebDriverManager wdm = WebDriverManager.firefoxdriver().watch()
+            .disableCsp();
+    WebDriver driver;
+
+    <span class="annotation">@BeforeEach</span>
+    <span class="type">void</span> setup() {
+        driver = wdm.create();
+    }
+
+    <span class="annotation">@AfterEach</span>
+    <span class="type">void</span> teardown() {
+        driver.quit();
+    }
+
+    <span class="annotation">@Test</span>
+    <span class="type">void</span> test() {
+        driver.get(<span class="string"><span class="delimiter">&quot;</span><span class="content">https://paypal.com/</span><span class="delimiter">&quot;</span></span>);
+        <span class="predefined-type">List</span>&lt;<span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Object</span>&gt;&gt; logMessages = wdm.getLogs();
+        assertThat(logMessages).isNotNull();
+    }
+
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -1712,10 +2026,10 @@ Notice you will need hardware virtualization (hypervisor) or a virtual machine w
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Using the WebDriverManager <em>fat-JAR</em> (i.e., WebDriverManager with all its dependencies in a single executable JAR file). This JAR file is generated from the source using the Maven command <code>mvn compile assembly:single</code>, and it is released on GitHub with every new version of WebDriverManager. You can download the latest of this fat-JAR from <a href="https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-5.1.1/webdrivermanager-5.1.1-fat.jar">here</a>. Once you get this file, you  need to use the following command in the shell (where <code>&lt;args&gt;</code> are the accepted arguments, explained below):</p>
+<p>Using the WebDriverManager <em>fat-JAR</em> (i.e., WebDriverManager with all its dependencies in a single executable JAR file). This JAR file is generated from the source using the Maven command <code>mvn compile assembly:single</code>, and it is released on GitHub with every new version of WebDriverManager. You can download the latest of this fat-JAR from <a href="https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-5.2.0/webdrivermanager-5.2.0-fat.jar">here</a>. Once you get this file, you  need to use the following command in the shell (where <code>&lt;args&gt;</code> are the accepted arguments, explained below):</p>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-5.1.1-fat.jar &lt;args&gt;</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-5.2.0-fat.jar &lt;args&gt;</code></pre>
 </div>
 </div>
 </li>
@@ -1731,14 +2045,14 @@ Notice you will need hardware virtualization (hypervisor) or a virtual machine w
 <p>Using the WebDriverManager Docker container. Each new release of WebDriverManager is pushed to <a href="https://hub.docker.com/r/bonigarcia/webdrivermanager">Docker Hub</a> as a container based on <a href="https://hub.docker.com/_/openjdk">OpenJDK</a> plus the WebDriverManager fat-JAR. The default command to run the WebDriverManager Docker container is described below.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -e ARGS=&quot;&lt;args&gt;&quot; bonigarcia/webdrivermanager:5.1.1</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -e ARGS=&quot;&lt;args&gt;&quot; bonigarcia/webdrivermanager:5.2.0</code></pre>
 </div>
 </div>
 </li>
 </ol>
 </div>
 <div class="paragraph">
-<p>WebDriverManager CLI can be used for three different purposes. We can see these options launching the CLI with empty or invalid arguments (<code>&lt;args&gt;</code> in the commands before). In this case, the output of WebDriverManager CLI is the following:</p>
+<p>WebDriverManager CLI can be used for three different purposes. We can see these options by launching the CLI with empty or invalid arguments (<code>&lt;args&gt;</code> in the commands before). In this case, the output of WebDriverManager CLI is the following:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1758,7 +2072,7 @@ Notice you will need hardware virtualization (hypervisor) or a virtual machine w
 </div>
 <h4 id="option-1-driver-resolver" class="discrete">Option 1: Driver Resolver</h4>
 <div class="paragraph">
-<p>WebDriverManager CLI can be used to resolve drivers (e.g., chromedriver, geckodriver) applying the usual <a href="#resolution-algorithm">resolution algorithm</a> from the shell. This feature can be interesting if we want to download drivers outside a Java program. To use this option, we need to invoke WebDriverManager CLI using the following arguments (supposing we need to resolve chromedriver):</p>
+<p>WebDriverManager CLI can be used to resolve drivers (e.g., chromedriver, geckodriver) by applying the usual <a href="#resolution-algorithm">resolution algorithm</a> from the shell. This feature can be interesting if we want to download drivers outside a Java program. To use this option, we need to invoke WebDriverManager CLI using the following arguments (supposing we need to resolve chromedriver):</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1769,7 +2083,7 @@ Notice you will need hardware virtualization (hypervisor) or a virtual machine w
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-5.1.1-fat.jar resolveDriverFor chrome</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-5.2.0-fat.jar resolveDriverFor chrome</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -1793,12 +2107,12 @@ Notice you will need hardware virtualization (hypervisor) or a virtual machine w
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -v ${PWD}:/wdm -e ARGS=&quot;resolveDriverFor chrome&quot; bonigarcia/webdrivermanager:5.1.1</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -v ${PWD}:/wdm -e ARGS=&quot;resolveDriverFor chrome&quot; bonigarcia/webdrivermanager:5.2.0</code></pre>
 </div>
 </div>
 <h4 id="option-2-browsers-in-docker" class="discrete">Option 2: Browsers in Docker</h4>
 <div class="paragraph">
-<p>WebDriverManager CLI can be used to execute browsers in Docker containers and interact with them using noVNC. This feature can be interesting for <em>exploratory testing</em> for web applications using different types and versions of web browsers. To use this option, the arguments we need to use are the following (supposing we want to use Chrome):</p>
+<p>WebDriverManager CLI can execute browsers in Docker containers and interact with them using noVNC. This feature can be interesting for <em>exploratory testing</em> for web applications using different types and versions of web browsers. To use this option, the arguments we need to use are the following (supposing we want to use Chrome):</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1809,7 +2123,7 @@ Notice you will need hardware virtualization (hypervisor) or a virtual machine w
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-5.1.1-fat.jar runInDocker chrome</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-5.2.0-fat.jar runInDocker chrome</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -1833,7 +2147,7 @@ Notice you will need hardware virtualization (hypervisor) or a virtual machine w
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -e ARGS=&quot;runInDocker chrome 91&quot; bonigarcia/webdrivermanager:5.1.1</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -e ARGS=&quot;runInDocker chrome 91&quot; bonigarcia/webdrivermanager:5.2.0</code></pre>
 </div>
 </div>
 <div class="admonitionblock warning">
@@ -1861,7 +2175,7 @@ There is an <a href="https://bugs.chromium.org/p/chromedriver/issues/detail?id=3
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-5.1.1-fat.jar server</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-5.2.0-fat.jar server</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -1885,14 +2199,14 @@ There is an <a href="https://bugs.chromium.org/p/chromedriver/issues/detail?id=3
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -p 4444:4444 -v /var/run/docker.sock:/var/run/docker.sock bonigarcia/webdrivermanager:5.1.1</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -p 4444:4444 -v /var/run/docker.sock:/var/run/docker.sock bonigarcia/webdrivermanager:5.2.0</code></pre>
 </div>
 </div>
 </div>
 <div class="sect2">
 <h3 id="webdrivermanager-server"><a class="anchor" href="#webdrivermanager-server"></a>4.2. WebDriverManager Server</h3>
 <div class="paragraph">
-<p>The WebDriverManager Server is based on HTTP and offers two types of services. First, it can be used to resolve drivers (chromedriver, geckodriver, etc.). The WebDriverManager Server exposes a simple REST-like API to this aim. WebDriverManager Server sends the resolved driver as an HTTP attachment in the response. The endpoints provided by this API are the following (supposing that WebDriverManager is running the localhost in its default port, i.e., 4444):</p>
+<p>The WebDriverManager Server is based on HTTP and offers two types of services. First, it can resolve drivers (chromedriver, geckodriver, etc.). The WebDriverManager Server exposes a simple REST-like API to this aim. WebDriverManager Server sends the resolved driver as an HTTP attachment in the response. The endpoints provided by this API are the following (supposing that WebDriverManager is running the localhost in its default port, i.e., 4444):</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1914,7 +2228,7 @@ There is an <a href="https://bugs.chromium.org/p/chromedriver/issues/detail?id=3
 </ul>
 </div>
 <div class="paragraph">
-<p>Second, the WebDriverManager Server acts as a regular Selenium Server (i.e., a <em>hub</em> in the classical Selenium Grid architecture). This feature can be used to create remote <code>WebDriver</code> instances using the WebDriverManager Server (even for different language bindings than Java). The following example shows a Node.js test using Selenium WebDriver and WebDriverManager Server (notice that by default, the WebDriverManager Server URL does not require any path, i.e., <a href="http://localhost:4444/">http://localhost:4444/</a>):</p>
+<p>Second, the WebDriverManager Server acts as a regular Selenium Server (i.e., a <em>hub</em> in the classical Selenium Grid architecture). This feature can create remote <code>WebDriver</code> instances using the WebDriverManager Server (even for different language bindings than Java). The following example shows a Node.js test using Selenium WebDriver and WebDriverManager Server (notice that by default, the WebDriverManager Server URL does not require any path, i.e., <a href="http://localhost:4444/">http://localhost:4444/</a>):</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1990,13 +2304,13 @@ wdmServerTest();</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>To configure the WebDriverManager Agent, we need to specify the path of the WebDriverManager <a href="https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-5.1.1/webdrivermanager-5.1.1-fat.jar">fat-JAR</a> using the JVM flag <code>-javaagent:/path/to/webdrivermanager-5.1.1-fat.jar</code>. Alternatively, it can be done using Maven (see a complete project example <a href="https://github.com/bonigarcia/wdm-agent-example/">here</a>).</p>
+<p>To configure the WebDriverManager Agent, we need to specify the path of the WebDriverManager <a href="https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-5.2.0/webdrivermanager-5.2.0-fat.jar">fat-JAR</a> using the JVM flag <code>-javaagent:/path/to/webdrivermanager-5.2.0-fat.jar</code>. Alternatively, it can be done using Maven (see a complete project example <a href="https://github.com/bonigarcia/wdm-agent-example/">here</a>).</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="selenium-jupiter"><a class="anchor" href="#selenium-jupiter"></a>4.4. Selenium-Jupiter</h3>
 <div class="paragraph">
-<p>WebDriverManager is the heart of the project <a href="https://github.com/bonigarcia/selenium-jupiter">Selenium-Jupiter</a>, an open-source JUnit 5 extension for Selenium WebDriver. Selenium-Jupiter uses the programming and extension model provided by JUnit 5 (named <a href="https://junit.org/junit5/docs/current/user-guide/">Jupiter</a>) together with WebDriverManager to create tests with reduced boilerplate code. For instance, thanks to the Jupiter feature for parameter resolution, we can declare a type of the <code>WebDriver</code> hierarchy (e.g., <code>ChromeDriver</code>) as a test parameter. Internally, Selenium-Jupiter resolves its driver and creates the instance before tests, and then, the browser is gracefully closed at the end of the test. For example:</p>
+<p>WebDriverManager is the heart of the project <a href="https://github.com/bonigarcia/selenium-jupiter">Selenium-Jupiter</a>, an open-source JUnit 5 extension for Selenium WebDriver. Selenium-Jupiter uses the programming and extension model provided by JUnit 5 (named <a href="https://junit.org/junit5/docs/current/user-guide/">Jupiter</a>) together with WebDriverManager to create tests with reduced boilerplate code. For instance, thanks to the Jupiter feature for parameter resolution, we can declare a type of the <code>WebDriver</code> hierarchy (e.g., <code>ChromeDriver</code>) as a test parameter. Internally, Selenium-Jupiter resolves its driver and creates the instance before tests, and then the browser is gracefully closed at the end of the test. For example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2034,12 +2348,12 @@ wdmServerTest();</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">boni@ubuntu:~$ java -jar webdrivermanager-5.1.1-fat.jar resolveDriverFor chrome
+<pre class="CodeRay highlight"><code data-lang="shell">boni@ubuntu:~$ java -jar webdrivermanager-5.2.0-fat.jar resolveDriverFor chrome
 [INFO] Using WebDriverManager to resolve chrome
 [DEBUG] Detecting chrome version using online commands.properties
 [DEBUG] Running command on the shell: [google-chrome, --version]
 [DEBUG] Result: Google Chrome 92.0.4515.107
-[DEBUG] Latest version of chromedriver according to https://chromedriver.storage.googleapis.com/LATEST_RELEASE_92 is 92.0.4515.107
+[DEBUG] Latest version of chromedriver, according to https://chromedriver.storage.googleapis.com/LATEST_RELEASE_92 is 92.0.4515.107
 [INFO] Using chromedriver 92.0.4515.107 (resolved driver for Chrome 92)
 [INFO] Reading https://chromedriver.storage.googleapis.com/ to seek chromedriver
 [DEBUG] Driver to be downloaded chromedriver 92.0.4515.107
@@ -2066,7 +2380,7 @@ boni@ubuntu:~$ java -jar selenium-server-4.0.0-beta-4.jar standalone
 <p><a href="https://appium.io/">Appium</a> is a test automation framework for mobile applications. In the same way that Selenium WebDriver, Appium also speaks the W3C WebDriver protocol to drive web browsers on mobile devices. For this reason, the required driver must be present to control mobile browsers with Appium.</p>
 </div>
 <div class="paragraph">
-<p>Again, WebDriverManager can help in this task. The following snippet shows a Java method that creates a <code>WebDriver</code> object using the driver path for Chrome browser in an Android device:</p>
+<p>Again, WebDriverManager can help in this task. The following snippet shows a Java method that creates a <code>WebDriver</code> object using the driver path for the Chrome browser on an Android device:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2124,7 +2438,7 @@ boni@ubuntu:~$ java -jar selenium-server-4.0.0-beta-4.jar standalone
 <h2 id="advanced-configuration"><a class="anchor" href="#advanced-configuration"></a>6. Advanced Configuration</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>WebDriverManager provides different ways of configuration. First, by using its <em>Java API</em>. To that aim, each manager (e.g., <code>chromedriver()</code>, <code>firefoxdriver()</code>, etc., allows to concatenate different methods of this API to specify custom options or preferences. For example (the explanation of these methods and the other possibilities are explained in the tables at the end of this section):</p>
+<p>WebDriverManager provides different ways of configuration. First, by using its <em>Java API</em>. To that aim, each manager (e.g., <code>chromedriver()</code>, <code>firefoxdriver()</code>, etc., allows for concatenating different methods of this API to specify custom options or preferences. For example (the explanation of these methods and the other possibilities are explained in the tables at the end of this section):</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2141,13 +2455,13 @@ WebDriverManager.edgedriver().mac().setup();</code></pre>
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-In addition to the methods presented in this section, each manager provides a <code>config()</code> method that allows configuring all the possible parameters of WebDriverManager. In addition, WebDriverManager provides the metho <code>reset()</code> to restore to the default values the parameters of a given manager.
+In addition to the methods presented in this section, each manager provides a <code>config()</code> method that configures all the possible parameters of WebDriverManager. In addition, WebDriverManager provides the metho <code>reset()</code> to restore to the default values the parameters of a given manager.
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>The second alternative to tune WebDriverManager is using <em>Java system properties</em>.  In this method, each WebDriverManager API method has its equivalence of a unique <em>configuration key</em>. For instance, the API method <code>cachePath()</code> (used to specify the driver cache folder) is equivalent to the configuration key <code>wdm.cachePath</code>. These types of configuration keys can be passed when executing the tests, for example, using Maven:</p>
+<p>The second alternative to tune WebDriverManager is using <em>Java system properties</em>. In this method, each WebDriverManager API method has its equivalence of a unique <em>configuration key</em>. For instance, the API method <code>cachePath()</code> (used to specify the driver cache folder) is equivalent to the configuration key <code>wdm.cachePath</code>. These types of configuration keys can be passed when executing the tests, for example, using Maven:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2155,11 +2469,11 @@ In addition to the methods presented in this section, each manager provides a <c
 </div>
 </div>
 <div class="paragraph">
-<p>The third way to configure WebDriverManager is using <em>environmental variables</em>. The names for these variables are made from converting each configuration key name (e.g., <code>wdm.cachePath</code>) to uppercase and replacing the symbol <code>.</code> with <code>_</code> (e.g., <code>WDM_CACHEPATH</code>). These variables can be helpful to global setup parameters at the operating system level. Also, it allows specifying a custom setup when using WebDriverManager as a Docker container. For example:</p>
+<p>The third way to configure WebDriverManager is using <em>environmental variables</em>. The names for these variables are made by converting each configuration key name (e.g., <code>wdm.cachePath</code>) to uppercase and replacing the symbol <code>.</code> with <code>_</code> (e.g., <code>WDM_CACHEPATH</code>). These variables can be helpful to global setup parameters at the operating system level. Also, it allows specifying a custom setup when using WebDriverManager as a Docker container. For example:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -v ${PWD}:/wdm -e ARGS=&quot;resolveDriverFor chrome&quot; -e WDM_CHROMEVERSION=84 bonigarcia/webdrivermanager:5.1.1</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -v ${PWD}:/wdm -e ARGS=&quot;resolveDriverFor chrome&quot; -e WDM_CHROMEVERSION=84 bonigarcia/webdrivermanager:5.2.0</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -2616,7 +2930,7 @@ HTTP proxy. It can be also configured using the environment variable  <code>HTTP
 <div class="sectionbody">
 <h4 id="http-response-code-403" class="discrete">HTTP response code 403</h4>
 <div class="paragraph">
-<p>Some of the drivers (e.g., geckodriver or operadriver) are hosted on GitHub. When external clients (like WebDriverManager) makes many consecutive requests to GitHub, and due to its traffic rate limit, it eventually responds with an HTTP 403 error (<em>forbidden</em>), as follows:</p>
+<p>Some of the drivers (e.g., geckodriver or operadriver) are hosted on GitHub. When external clients (like WebDriverManager) make many consecutive requests to GitHub, and due to its traffic rate limit, it eventually responds with an HTTP 403 error (<em>forbidden</em>), as follows:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2639,7 +2953,7 @@ HTTP proxy. It can be also configured using the environment variable  <code>HTTP
 </div>
 <h4 id="testing-localhost" class="discrete">Testing localhost</h4>
 <div class="paragraph">
-<p>A typical case in web development is testing a web application deployed in the local host. In this case, and when using browsers in Docker containers, we need to know that the address <code>localhost</code> inside a Docker container is not the host&#8217;s address but the container address. To solve this problem, we can take different approaches. In Linux, we can use the gateway address for inter-container communication. This address is usually <code>172.17.0.1</code>, and can be discovered as follows:</p>
+<p>A typical case in web development is testing a web application deployed in the localhost. In this case, and when using browsers in Docker containers, we need to know that the address <code>localhost</code> inside a Docker container is not the host&#8217;s address but the container address. To solve this problem, we can take different approaches. In Linux, we can use the gateway address for inter-container communication. This address is usually <code>172.17.0.1</code>, and can be discovered as follows:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2655,7 +2969,7 @@ HTTP proxy. It can be also configured using the environment variable  <code>HTTP
 </div>
 <h4 id="chrome-92-94-in-docker" class="discrete">Chrome 92-94 in Docker</h4>
 <div class="paragraph">
-<p>There was an <a href="https://bugs.chromium.org/p/chromedriver/issues/detail?id=3857">issue</a> that affected Chrome 92 to 94 and Docker. The problem can be solved by using the argument <code>--disable-gpu</code> in Chrome and Edge. This argument is used by WebDriverManager 5 to avoid the issue. Nevertheless, some situations are still impossible to fix (e.g., when using <a href="https://hub.docker.com/r/bonigarcia/webdrivermanager">WebDriverManager in Docker</a> as CLI or Server) for Chrome 92 to 94 in Docker.</p>
+<p>An <a href="https://bugs.chromium.org/p/chromedriver/issues/detail?id=3857">issue</a> affected Chrome 92 to 94 and Docker. The problem can be solved by using the argument <code>--disable-gpu</code> in Chrome and Edge. This argument is used by WebDriverManager 5 to avoid the issue. Nevertheless, some situations are still impossible to fix (e.g., when using <a href="https://hub.docker.com/r/bonigarcia/webdrivermanager">WebDriverManager in Docker</a> as CLI or Server) for Chrome 92 to 94 in Docker.</p>
 </div>
 </div>
 </div>
@@ -2663,7 +2977,7 @@ HTTP proxy. It can be also configured using the environment variable  <code>HTTP
 <h2 id="community"><a class="anchor" href="#community"></a>8. Community</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>There are two ways to try to get community support related to WebDriverManager. First, questions about it can be discussed in <a href="https://stackoverflow.com/questions/tagged/webdrivermanager_java">StackOverflow</a>, using the tag <em>webdrivermanager_java</em>. In addition, comments, suggestions, and bug-reporting should be made using the <a href="https://github.com/bonigarcia/webdrivermanager/issues">GitHub issues</a>. Finally, if you think WebDriverManager can be enhanced, consider contributing to the project through a  <a href="https://github.com/bonigarcia/webdrivermanager/pulls">pull request</a>.</p>
+<p>There are two ways to try to get community support related to WebDriverManager. First, questions can be discussed in <a href="https://stackoverflow.com/questions/tagged/webdrivermanager_java">StackOverflow</a>, using the tag <em>webdrivermanager_java</em>. In addition, comments, suggestions, and bug-reporting should be made using the <a href="https://github.com/bonigarcia/webdrivermanager/issues">GitHub issues</a>. Finally, if you think WebDriverManager can be enhanced, consider contributing to the project through a  <a href="https://github.com/bonigarcia/webdrivermanager/pulls">pull request</a>.</p>
 </div>
 </div>
 </div>
@@ -2676,7 +2990,9 @@ HTTP proxy. It can be also configured using the environment variable  <code>HTTP
 <h3 id="backers" class="discrete">Backers</h3>
 <a href="https://opencollective.com/webdrivermanager" target="_blank"><img src="https://opencollective.com/webdrivermanager/backers.svg?width=890"></a>
 <h3 id="sponsors" class="discrete">Sponsors</h3>
-<a href="https://opencollective.com/webdrivermanager" target="_blank"><img src="https://opencollective.com/webdrivermanager/sponsor.svg?width=890"></a>
+<a href="https://opencollective.com/webdrivermanager/sponsor/0/website" target="_blank"><img src="https://opencollective.com/webdrivermanager/sponsor/0/avatar.svg" style="width: 65px; height: 65px; object-fit: none;"></a>
+<a href="https://opencollective.com/webdrivermanager/sponsor/1/website" target="_blank"><img src="https://opencollective.com/webdrivermanager/sponsor/1/avatar.svg" style="width: 65px; height: 65px; object-fit: none;"></a>
+<a href="https://opencollective.com/webdrivermanager/sponsor/2/website" target="_blank"><img src="https://opencollective.com/webdrivermanager/sponsor/2/avatar.svg"></a>
 </div>
 </div>
 <div class="sect1">
@@ -2736,8 +3052,8 @@ HTTP proxy. It can be also configured using the environment variable  <code>HTTP
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 5.1.1<br>
-Updated on 08-04-2022
+Version 5.2.0<br>
+Updated on 25-05-2022
 </div>
 </div>
 </body>
