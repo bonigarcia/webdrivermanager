@@ -36,7 +36,7 @@ class DockerGatherLogsChromeTest {
 
     static final Logger log = getLogger(lookup().lookupClass());
 
-    WebDriverManager wdm = WebDriverManager.edgedriver().browserInDocker()
+    WebDriverManager wdm = WebDriverManager.chromedriver().browserInDocker()
             .watch();
     WebDriver driver;
 
