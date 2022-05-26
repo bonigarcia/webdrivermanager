@@ -66,14 +66,18 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Scanner;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Function;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -94,9 +98,13 @@ import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.edge.EdgeOptions;
+import org.openqa.selenium.chromium.ChromiumOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.logging.LogEntries;
+import org.openqa.selenium.logging.LogEntry;
+import org.openqa.selenium.logging.LogType;
+import org.openqa.selenium.logging.LoggingPreferences;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.SessionId;
 import org.slf4j.Logger;
@@ -199,6 +207,7 @@ public abstract class WebDriverManager {
     protected boolean watchEnabled = false;
     protected boolean displayEnabled = false;
     protected boolean disableCsp = false;
+    protected boolean isHeadless = false;
     protected List<WebDriverBrowser> webDriverList;
 
     protected String downloadedDriverVersion;
@@ -1043,14 +1052,30 @@ public abstract class WebDriverManager {
 
     @SuppressWarnings("unchecked")
     public List<Map<String, Object>> getLogs(WebDriver driver) {
-        return (List<Map<String, Object>>) getPropertyFromWebDriverBrowser(
-                driver, WebDriverBrowser::readLogs);
+        List<Map<String, Object>> logs = new ArrayList<>();
+        if (isHeadless) {
+            LogEntries logEntries = driver.manage().logs().get(LogType.BROWSER);
+            SimpleDateFormat dateFormat = new SimpleDateFormat(
+                    "yyyy-MM-dd HH:mm:ss.SSS");
+            for (LogEntry logEntry : logEntries) {
+                Map<String, Object> entry = new HashMap<>();
+                entry.put("datetime",
+                        dateFormat.format(new Date(logEntry.getTimestamp())));
+                entry.put("wrapper", "LoggingPreferences");
+                entry.put("type", logEntry.getLevel());
+                entry.put("message", logEntry.getMessage());
+                logs.add(entry);
+            }
+
+        } else {
+            logs = (List<Map<String, Object>>) getPropertyFromWebDriverBrowser(
+                    driver, WebDriverBrowser::readLogs);
+        }
+        return logs;
     }
 
-    @SuppressWarnings("unchecked")
     public List<Map<String, Object>> getLogs() {
-        return (List<Map<String, Object>>) getPropertyFromFirstWebDriverBrowser(
-                WebDriverBrowser::readLogs);
+        return getLogs(webDriverList.get(0).getDriver());
     }
 
     public synchronized DockerService getDockerService() {
@@ -1689,15 +1714,23 @@ public abstract class WebDriverManager {
                 case CHROME:
                 case OPERA:
                 case CHROMIUM:
-                    ((ChromeOptions) caps)
-                            .addExtensions(extensionPath.toFile());
-                    capabilities = ((ChromeOptions) caps).addArguments(
-                            "--whitelisted-extension-id=" + BROWSER_WATCHER_ID);
-                    break;
                 case EDGE:
-                    ((EdgeOptions) caps).addExtensions(extensionPath.toFile());
-                    capabilities = ((EdgeOptions) caps).addArguments(
-                            "--whitelisted-extension-id=" + BROWSER_WATCHER_ID);
+                    isHeadless = ((ChromiumOptions<?>) caps).toString()
+                            .contains("--headless");
+                    if (isHeadless) {
+                        LoggingPreferences logs = new LoggingPreferences();
+                        logs.enable(LogType.BROWSER, Level.ALL);
+                        ((ChromiumOptions<?>) caps).setCapability(
+                                CapabilityType.LOGGING_PREFS, logs);
+                        capabilities = caps;
+
+                    } else {
+                        ((ChromiumOptions<?>) caps)
+                                .addExtensions(extensionPath.toFile());
+                        capabilities = ((ChromiumOptions<?>) caps)
+                                .addArguments("--whitelisted-extension-id="
+                                        + BROWSER_WATCHER_ID);
+                    }
                     break;
                 case FIREFOX:
                     log.trace(
@@ -1721,7 +1754,8 @@ public abstract class WebDriverManager {
             } else {
                 driver = createLocalWebDriver();
             }
-            if (watcher && managerType == FIREFOX) {
+            if (watcher && managerType == FIREFOX
+                    && driver instanceof FirefoxDriver) {
                 ((FirefoxDriver) driver).installExtension(extensionPath, true);
             }
 
