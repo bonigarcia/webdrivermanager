@@ -98,13 +98,14 @@ import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.chromium.ChromiumOptions;
+import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.logging.LogEntries;
 import org.openqa.selenium.logging.LogEntry;
 import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
-import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.SessionId;
 import org.slf4j.Logger;
@@ -1720,8 +1721,11 @@ public abstract class WebDriverManager {
                     if (isHeadless) {
                         LoggingPreferences logs = new LoggingPreferences();
                         logs.enable(LogType.BROWSER, Level.ALL);
-                        ((ChromiumOptions<?>) caps).setCapability(
-                                CapabilityType.LOGGING_PREFS, logs);
+                        String logCapName = managerType == EDGE
+                                ? EdgeOptions.LOGGING_PREFS
+                                : ChromeOptions.LOGGING_PREFS;
+                        ((ChromiumOptions<?>) caps).setCapability(logCapName,
+                                logs);
                         capabilities = caps;
 
                     } else {
