@@ -57,7 +57,7 @@ public class WebDriverCreator {
         WebDriver driver;
         if (capabilities != null) {
             driver = (WebDriver) browserClass
-                    .getDeclaredConstructor(Capabilities.class)
+                    .getDeclaredConstructor(capabilities.getClass())
                     .newInstance(capabilities);
         } else {
             driver = (WebDriver) browserClass.getDeclaredConstructor()
