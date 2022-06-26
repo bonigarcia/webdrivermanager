@@ -83,6 +83,8 @@ public class Config {
             "wdm.avoidReadReleaseFromRepository", Boolean.class);
     ConfigKey<Boolean> avoidTmpFolder = new ConfigKey<>("wdm.avoidTmpFolder",
             Boolean.class);
+    ConfigKey<Boolean> avoidShutdownHook = new ConfigKey<>(
+            "wdm.avoidShutdownHook", Boolean.class);
     ConfigKey<Integer> timeout = new ConfigKey<>("wdm.timeout", Integer.class);
     ConfigKey<Boolean> versionsPropertiesOnlineFirst = new ConfigKey<>(
             "wdm.versionsPropertiesOnlineFirst", Boolean.class);
@@ -537,6 +539,15 @@ public class Config {
 
     public Config setAvoidTmpFolder(boolean value) {
         this.avoidTmpFolder.setValue(value);
+        return this;
+    }
+
+    public boolean isAvoidShutdownHook() {
+        return resolve(avoidShutdownHook);
+    }
+
+    public Config setAvoidShutdownHook(boolean value) {
+        this.avoidShutdownHook.setValue(value);
         return this;
     }
 

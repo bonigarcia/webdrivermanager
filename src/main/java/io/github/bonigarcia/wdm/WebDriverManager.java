@@ -1803,7 +1803,7 @@ public abstract class WebDriverManager {
     }
 
     protected void addShutdownHookIfRequired() {
-        if (!shutdownHook) {
+        if (!shutdownHook && !config().isAvoidShutdownHook()) {
             Runtime.getRuntime()
                     .addShutdownHook(new Thread("wdm-shutdown-hook") {
                         @Override
