@@ -262,7 +262,7 @@ The following picture shows an example of these notifications:
 [[display-console-logs-example]]
 [.thumb]
 .Display logs example
-image::display-console-logs-example-v2.png[scaledwidth=100%]
+image::display-console-logs-example-v3.png[scaledwidth=100%]
 
 ==== Tab Recording
 BrowserWatcher allows recording a browser tab. This feature requires a page loaded in the current tab (in other words, it cannot record empty or configuration pages). Then, the recording is started using the method `startRecording()` and stopped with `stopRecording()`, for instance, as follows:
