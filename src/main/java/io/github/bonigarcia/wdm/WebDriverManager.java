@@ -513,6 +513,11 @@ public abstract class WebDriverManager {
         return this;
     }
 
+    public WebDriverManager avoidShutdownHook() {
+        config().setAvoidShutdownHook(true);
+        return this;
+    }
+
     public WebDriverManager enableVnc() {
         config().setDockerEnabledVnc(true);
         return this;
