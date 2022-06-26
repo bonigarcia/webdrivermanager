@@ -1,5 +1,16 @@
 # Changelog
 
+## [5.2.1] - 2022-06-26
+
+### Added
+- Include fallback mechanism for gathering logs based on LoggingPreferences for Chrome/Edge headless
+- Include wdm.avoidShutdownHook config key and avoidShutdownHook() API method (issue #839)
+
+### Changed
+- Use capabilities getClass() method (required as of Selenium 4.3.0)
+- Bump to BrowserWatcher 1.2.0
+
+
 ## [5.2.0] - 2022-05-25
 
 ### Added
