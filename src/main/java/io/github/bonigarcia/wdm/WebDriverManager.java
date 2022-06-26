@@ -1716,25 +1716,7 @@ public abstract class WebDriverManager {
                 case OPERA:
                 case CHROMIUM:
                 case EDGE:
-                    isHeadless = ((ChromiumOptions<?>) caps).toString()
-                            .contains("--headless");
-                    if (isHeadless) {
-                        LoggingPreferences logs = new LoggingPreferences();
-                        logs.enable(LogType.BROWSER, Level.ALL);
-                        String logCapName = managerType == EDGE
-                                ? EdgeOptions.LOGGING_PREFS
-                                : ChromeOptions.LOGGING_PREFS;
-                        ((ChromiumOptions<?>) caps).setCapability(logCapName,
-                                logs);
-                        capabilities = caps;
-
-                    } else {
-                        ((ChromiumOptions<?>) caps)
-                                .addExtensions(extensionPath.toFile());
-                        capabilities = ((ChromiumOptions<?>) caps)
-                                .addArguments("--whitelisted-extension-id="
-                                        + BROWSER_WATCHER_ID);
-                    }
+                    initBrowserWatcherForChromium(extensionPath, caps);
                     break;
                 case FIREFOX:
                     log.trace(
@@ -1770,6 +1752,26 @@ public abstract class WebDriverManager {
         addShutdownHookIfRequired();
 
         return driver;
+    }
+
+    protected void initBrowserWatcherForChromium(Path extensionPath,
+            Capabilities caps) {
+        DriverManagerType managerType = getDriverManagerType();
+        isHeadless = ((ChromiumOptions<?>) caps).toString()
+                .contains("--headless");
+        if (isHeadless) {
+            LoggingPreferences logs = new LoggingPreferences();
+            logs.enable(LogType.BROWSER, Level.ALL);
+            String logCapName = managerType == EDGE ? EdgeOptions.LOGGING_PREFS
+                    : ChromeOptions.LOGGING_PREFS;
+            ((ChromiumOptions<?>) caps).setCapability(logCapName, logs);
+            capabilities = caps;
+
+        } else {
+            ((ChromiumOptions<?>) caps).addExtensions(extensionPath.toFile());
+            capabilities = ((ChromiumOptions<?>) caps).addArguments(
+                    "--whitelisted-extension-id=" + BROWSER_WATCHER_ID);
+        }
     }
 
     protected Path getBrowserWatcherAsPath() throws IOException {
