@@ -62,7 +62,7 @@ class DisplayLogsFirefoxTest {
 
         for (Map<String, Object> map : logMessages) {
             log.debug("[{}] [{}.{}] {}", map.get("datetime"),
-                    map.get("wrapper").toString().toUpperCase(),
+                    map.get("source").toString().toUpperCase(),
                     String.format("%1$-7s",
                             map.get("type").toString().toUpperCase()),
                     map.get("message"));

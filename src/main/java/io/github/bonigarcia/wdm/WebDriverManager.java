@@ -1067,7 +1067,7 @@ public abstract class WebDriverManager {
                 Map<String, Object> entry = new HashMap<>();
                 entry.put("datetime",
                         dateFormat.format(new Date(logEntry.getTimestamp())));
-                entry.put("wrapper", "LoggingPreferences");
+                entry.put("source", "LoggingPreferences");
                 entry.put("type", logEntry.getLevel());
                 entry.put("message", logEntry.getMessage());
                 logs.add(entry);
