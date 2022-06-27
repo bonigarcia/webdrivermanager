@@ -18,30 +18,25 @@ package io.github.bonigarcia.wdm.test.opera;
 
 import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROME;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assumptions.assumeThat;
-
-import java.nio.file.Path;
-import java.util.Optional;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
+@Disabled("Opera not available in CI")
 class OperaTest {
 
     WebDriver driver;
 
     @BeforeAll
     static void setupClass() {
-        WebDriverManager operadriver = WebDriverManager.operadriver();
-        Optional<Path> browserPath = operadriver.getBrowserPath();
-        assumeThat(browserPath.isPresent()).isTrue();
-        operadriver.exportParameter(CHROME).setup();
+        WebDriverManager.operadriver().exportParameter(CHROME).setup();
     }
 
     @BeforeEach
