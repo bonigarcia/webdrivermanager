@@ -33,20 +33,51 @@ class ChromeTest {
     WebDriver driver;
 
     @BeforeAll
-    static void setupClass() {
+    static void setupAll() {
         WebDriverManager.chromedriver().setup();
     }
 
     @BeforeEach
-    void setupTest() {
+    void setup() {
         driver = new ChromeDriver();
     }
 
     @AfterEach
     void teardown() {
-        if (driver != null) {
-            driver.quit();
-        }
+        driver.quit();
+    }
+
+    @Test
+    void test() {
+        // Your test logic here
+    }
+
+}
+```
+
+Alternatively, you can use the method `create()` to manage automatically the driver and instantiate the `WebDriver` object in a single line. For instance, as follows:
+
+```java
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
+
+class ChromeCreateTest {
+
+    WebDriver driver;
+
+    @BeforeEach
+    void setup() {
+        driver = WebDriverManager.chromedriver().create();
+    }
+
+    @AfterEach
+    void teardown() {
+        driver.quit();
     }
 
     @Test
@@ -78,7 +109,7 @@ class DockerChromeVncTest {
             .enableVnc().enableRecording();
 
     @BeforeEach
-    void setupTest() {
+    void setup() {
         driver = wdm.create();
     }
 
