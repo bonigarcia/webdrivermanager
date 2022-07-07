@@ -16,7 +16,6 @@
  */
 package io.github.bonigarcia.wdm.test.opera;
 
-import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROME;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.AfterEach;
@@ -36,7 +35,7 @@ class OperaTest {
 
     @BeforeAll
     static void setupClass() {
-        WebDriverManager.operadriver().exportParameter(CHROME).setup();
+        WebDriverManager.operadriver().setup();
     }
 
     @BeforeEach
