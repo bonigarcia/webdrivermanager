@@ -29,6 +29,7 @@ import org.openqa.selenium.opera.OperaOptions;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
+@SuppressWarnings("deprecation")
 @Disabled("Opera not available in CI")
 class OperaOptionsTest {
 
@@ -40,7 +41,6 @@ class OperaOptionsTest {
                 .setup();
     }
 
-    @SuppressWarnings("deprecation")
     @BeforeEach
     void setupTest() {
         OperaOptions operaOptions = new OperaOptions();
