@@ -288,7 +288,7 @@ public abstract class WebDriverManager {
                 String errorMessage = String.format(
                         "The browser name '%s' is not recognized", browserName);
                 log.trace(errorMessage);
-                throw new WebDriverManagerException(errorMessage);
+                throw new WebDriverManagerException(errorMessage, e);
             }
             break;
         }
