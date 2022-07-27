@@ -94,7 +94,7 @@ public class WebDriverCreator {
                     if (System.currentTimeMillis() > timeoutMs) {
                         throw new WebDriverManagerException(
                                 "Timeout of " + waitTimeoutSec
-                                        + " seconds creating WebDriver object");
+                                        + " seconds creating WebDriver object", e1);
                     }
                     Thread.sleep(TimeUnit.SECONDS.toMillis(POLL_TIME_SEC));
                 } catch (InterruptedException e2) {
