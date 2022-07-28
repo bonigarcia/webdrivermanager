@@ -307,7 +307,7 @@ public class DockerService {
                 } else {
                     try {
                         log.trace("Port {} is not bindable in container {}",
-                                exposed + dockerImage);
+                                exposed, dockerImage);
                         Thread.sleep(POLL_TIME_MSEC);
                     } catch (InterruptedException e) {
                         log.warn("Interrupted exception getting bind port", e);
