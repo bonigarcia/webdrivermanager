@@ -2015,8 +2015,8 @@ public abstract class WebDriverManager {
             wdm.quit();
 
         } catch (Exception e) {
-            log.error("Browser {} not available in Docker (valid browsers {})",
-                    browserName, validBrowsers);
+            log.error("Browser {} not available in Docker (valid browsers {}): {}",
+                    browserName, validBrowsers, e.getMessage());
         }
     }
 
