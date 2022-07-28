@@ -294,7 +294,9 @@ public class DockerService {
             log.trace("Port list {} -- Exposed port {} = {}", ports, exposed,
                     exposedPort);
 
-            if (ports.getBindings().isEmpty() || exposedPort.length == 0) {
+            if (ports.getBindings() == null || exposedPort == null
+                    || ports.getBindings().isEmpty()
+                    || exposedPort.length == 0) {
                 String dockerImage = dockerClient
                         .inspectContainerCmd(containerId).exec().getConfig()
                         .getImage();
