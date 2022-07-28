@@ -620,7 +620,7 @@ The remainder of this section describes all the possible Java methods in the Web
 |`cachePath(String)`|`wdm.cachePath`|`~/.cache/selenium`|Folder to store drivers locally
 |`resolutionCachePath(String)`|`wdm.resolutionCachePath`|`~/.cache/selenium`|Folder to store the resolution cache
 |`driverVersion(String)`|`wdm.chromeDriverVersion`, `wdm.operaDriverVersion`, `wdm.iExplorerDriverVersion`, `wdm.edgeDriverVersion`, `wdm.geckoDriverVersion`, `wdm.chromiumDriverVersion`|`""` (automatic driver version discovery through the <<resolution-algorithm,resolution algorithm>>)|Custom driver version
-|`browserVersion(String)`|`wdm.chromeVersion`, `wdm.operaVersion`, `wdm.edgeVersion`, `wdm.firefoxVersion`, `wdm.chromiumVersion`|`""` (automatic browser version detection using the https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/commands.properties[commands database])|Custom browser version (major)
+|`browserVersion(String)`|`wdm.chromeVersion`, `wdm.operaVersion`, `wdm.edgeVersion`, `wdm.firefoxVersion`, `wdm.chromiumVersion`, `wdm.safariVersion`|`""` (automatic browser version detection using the https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/commands.properties[commands database])|Custom browser version (major)
 |`forceDownload()`|`wdm.forceDownload=true`|`false` (drivers in cache are reused if available)|Force downloading driver (even if it is already in the cache)
 |`useBetaVersions()`|`wdm.useBetaVersions=true`|`false` (driver versions are skipped)|Allow the use beta versions (if possible)
 |`architecture(Architecture)`|`wdm.architecture`|`""` (automatic architecture discovery)|Force a given architecture for a driver

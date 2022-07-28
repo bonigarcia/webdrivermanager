@@ -177,6 +177,9 @@ public class Config {
     ConfigKey<Boolean> useChromiumDriverSnap = new ConfigKey<>(
             "wdm.useChromiumDriverSnap", Boolean.class);
 
+    ConfigKey<String> safariVersion = new ConfigKey<>("wdm.safariVersion",
+            String.class);
+
     ConfigKey<Integer> ttl = new ConfigKey<>("wdm.ttl", Integer.class);
     ConfigKey<Integer> ttlForBrowsers = new ConfigKey<>("wdm.ttlForBrowsers",
             Integer.class);
@@ -1000,6 +1003,15 @@ public class Config {
 
     public Config setChromiumDriverVersion(String value) {
         this.chromiumDriverVersion.setValue(value);
+        return this;
+    }
+
+    public String getSafariVersion() {
+        return resolve(safariVersion);
+    }
+
+    public Config setSafariVersion(String value) {
+        this.safariVersion.setValue(value);
         return this;
     }
 
