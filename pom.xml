@@ -59,7 +59,7 @@
 
     <name>WebDriverManager</name>
     <description>
-		Automated driver management and Docker builder for Selenium WebDriver
+		Automated driver management and other helper features for Selenium WebDriver in Java
 	</description>
     <url>https://bonigarcia.dev/webdrivermanager/</url>
 
