@@ -21,6 +21,7 @@ import static io.github.bonigarcia.wdm.config.Config.isNullOrEmpty;
 import static io.github.bonigarcia.wdm.docker.DockerHost.defaultAddress;
 import static io.github.bonigarcia.wdm.versions.Shell.runAndWait;
 import static java.lang.String.format;
+import static java.lang.System.currentTimeMillis;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Locale.ROOT;
@@ -33,6 +34,7 @@ import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -89,6 +91,7 @@ public class DockerService {
     private static final String RECORDING_EXT = ".mp4";
     private static final String SEPARATOR = "_";
     private static final String DATE_FORMAT = "yyyy.MM.dd_HH.mm.ss.SSS";
+    private static final int POLL_TIME_MSEC = 500;
 
     private Config config;
     private HttpClient httpClient;
@@ -242,8 +245,7 @@ public class DockerService {
             hostConfigBuilder.withExtraHosts(dockerContainer.getExtraHosts());
 
             containerId = containerConfigBuilder
-                    .withHostConfig(hostConfigBuilder)
-                    .exec().getId();
+                    .withHostConfig(hostConfigBuilder).exec().getId();
 
             dockerClient.startContainerCmd(containerId).exec();
         }
@@ -279,20 +281,44 @@ public class DockerService {
 
     public String getBindPort(String containerId, String exposed)
             throws DockerException {
-        Ports ports = dockerClient.inspectContainerCmd(containerId).exec()
-                .getNetworkSettings().getPorts();
-        Binding[] exposedPort = ports.getBindings()
-                .get(ExposedPort.parse(exposed));
-        log.trace("Port list {} -- Exposed port {} = {}", ports, exposed,
-                exposedPort);
-        if (ports.getBindings().isEmpty() || exposedPort.length == 0) {
-            String dockerImage = dockerClient.inspectContainerCmd(containerId)
-                    .exec().getConfig().getImage();
-            throw new WebDriverManagerException("Port " + exposed
-                    + " is not bindable in container " + dockerImage);
-        }
 
-        return exposedPort[0].getHostPortSpec();
+        String bindPort = null;
+        int waitTimeoutSec = config.getTimeout();
+        long timeoutMs = System.currentTimeMillis()
+                + Duration.ofSeconds(waitTimeoutSec).toMillis();
+        do {
+            Ports ports = dockerClient.inspectContainerCmd(containerId).exec()
+                    .getNetworkSettings().getPorts();
+            Binding[] exposedPort = ports.getBindings()
+                    .get(ExposedPort.parse(exposed));
+            log.trace("Port list {} -- Exposed port {} = {}", ports, exposed,
+                    exposedPort);
+
+            if (ports.getBindings().isEmpty() || exposedPort.length == 0) {
+                String dockerImage = dockerClient
+                        .inspectContainerCmd(containerId).exec().getConfig()
+                        .getImage();
+                if (currentTimeMillis() > timeoutMs) {
+                    throw new WebDriverManagerException("Timeout of "
+                            + waitTimeoutSec
+                            + " getting bind port in container " + dockerImage);
+                } else {
+                    try {
+                        log.trace("Port " + exposed
+                                + " is not bindable in container "
+                                + dockerImage);
+                        Thread.sleep(POLL_TIME_MSEC);
+                    } catch (InterruptedException e) {
+                        log.warn("Interrupted exception getting bind port", e);
+                        Thread.currentThread().interrupt();
+                    }
+                }
+            } else {
+                bindPort = exposedPort[0].getHostPortSpec();
+            }
+        } while (bindPort == null);
+
+        return bindPort;
     }
 
     public void pullImageIfNecessary(String cacheKey, String imageId,
@@ -537,6 +563,7 @@ public class DockerService {
     public DockerContainer startNoVncContainer(String dockerImage,
             String cacheKey, String browserVersion,
             DockerContainer browserContainer) {
+
         dockerImage = getPrefixedDockerImage(dockerImage);
         // pull image
         pullImageIfNecessary(cacheKey, dockerImage, browserVersion);
@@ -551,8 +578,8 @@ public class DockerService {
         envs.add("AUTOCONNECT=true");
         envs.add("VIEW_ONLY=" + config.isDockerViewOnly());
         envs.add("VNC_PASSWORD=" + config.getDockerVncPassword());
-        String vncAddress = browserContainer.getGateway();
-        String vncPort = browserContainer.getVncPort();
+        String vncAddress = browserContainer.getAddress();
+        String vncPort = String.valueOf(config.getDockerVncPort());
         envs.add("VNC_SERVER=" + vncAddress + ":" + vncPort);
 
         // network
@@ -638,7 +665,8 @@ public class DockerService {
         // builder
         DockerBuilder dockerBuilder = DockerContainer.dockerBuilder(dockerImage)
                 .exposedPorts(exposedPorts).network(network).mounts(mounts)
-                .binds(binds).shmSize(shmSize).envs(envs).extraHosts(extraHosts).sysadmin();
+                .binds(binds).shmSize(shmSize).envs(envs).extraHosts(extraHosts)
+                .sysadmin();
         if (androidEnabled) {
             dockerBuilder = dockerBuilder.privileged();
         }
@@ -667,7 +695,8 @@ public class DockerService {
             browserContainer.setVncPort(vncPort);
             String vncAddress = format("vnc://%s:%s/", getDefaultHost(),
                     vncPort);
-            log.debug("VNC server URL: {}", vncAddress);
+            log.debug("VNC server URL: {} (password: {})", vncAddress,
+                    config.getDockerVncPassword());
             browserContainer.setVncAddress(vncAddress);
         }
 
