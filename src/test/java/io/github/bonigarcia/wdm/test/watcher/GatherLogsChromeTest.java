@@ -57,10 +57,10 @@ class GatherLogsChromeTest {
         List<Map<String, Object>> logMessages = wdm.getLogs();
 
         for (Map<String, Object> map : logMessages) {
-            log.debug("[{}] [{}.{}] {}", map.get("datetime"),
-                    map.get("source").toString().toUpperCase(),
-                    String.format("%1$-7s",
-                            map.get("type").toString().toUpperCase()),
+            log.debug("[{}] [{}] {}", map.get("datetime"),
+                    String.format("%1$-14s",
+                            map.get("source").toString().toUpperCase() + "."
+                                    + map.get("type").toString().toUpperCase()),
                     map.get("message"));
         }
 
