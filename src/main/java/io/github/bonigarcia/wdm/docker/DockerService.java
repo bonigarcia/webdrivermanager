@@ -696,8 +696,7 @@ public class DockerService {
             browserContainer.setVncPort(vncPort);
             String vncAddress = format("vnc://%s:%s/", getDefaultHost(),
                     vncPort);
-            log.debug("VNC server URL: {} (password: {})", vncAddress,
-                    config.getDockerVncPassword());
+            log.debug("VNC server URL: {}", vncAddress);
             browserContainer.setVncAddress(vncAddress);
         }
 
