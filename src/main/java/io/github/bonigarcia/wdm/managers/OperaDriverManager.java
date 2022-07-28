@@ -177,9 +177,11 @@ public class OperaDriverManager extends WebDriverManager {
     @Override
     protected Capabilities getCapabilities() {
         ChromeOptions options = new ChromeOptions();
-        Optional<Path> browserPath = getBrowserPath();
-        if (browserPath.isPresent()) {
-            options.setBinary(browserPath.get().toFile());
+        if (!isUsingDocker()) {
+            Optional<Path> browserPath = getBrowserPath();
+            if (browserPath.isPresent()) {
+                options.setBinary(browserPath.get().toFile());
+            }
         }
         return options;
     }
