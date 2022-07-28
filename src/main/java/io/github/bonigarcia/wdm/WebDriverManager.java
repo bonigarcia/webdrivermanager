@@ -1751,8 +1751,7 @@ public abstract class WebDriverManager {
             }
 
         } catch (Exception e) {
-            log.error("There was an error creating WebDriver object for {}",
-                    managerType.getBrowserName(), e);
+            throw new WebDriverManagerException("There was an error creating WebDriver object for " + managerType.getBrowserName(), e);
         }
         addShutdownHookIfRequired();
 
@@ -1762,7 +1761,7 @@ public abstract class WebDriverManager {
     protected void initBrowserWatcherForChromium(Path extensionPath,
             Capabilities caps) {
         DriverManagerType managerType = getDriverManagerType();
-        isHeadless = ((ChromiumOptions<?>) caps).toString()
+        isHeadless = caps.toString()
                 .contains("--headless");
         if (isHeadless) {
             LoggingPreferences logs = new LoggingPreferences();
@@ -1780,7 +1779,7 @@ public abstract class WebDriverManager {
     }
 
     protected Path getBrowserWatcherAsPath() throws IOException {
-        Path extensionPath = null;
+        Path extensionPath;
         String extFilename = "/browserwatcher-%s%s.crx";
         String extModifier = "";
         if (displayEnabled && !disableCsp) {
