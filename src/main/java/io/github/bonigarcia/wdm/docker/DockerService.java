@@ -53,6 +53,7 @@ import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.Frame;
 import com.github.dockerjava.api.model.HostConfig;
 import com.github.dockerjava.api.model.Mount;
+import com.github.dockerjava.api.model.PortBinding;
 import com.github.dockerjava.api.model.Ports;
 import com.github.dockerjava.api.model.Ports.Binding;
 import com.github.dockerjava.api.model.PullResponseItem;
@@ -203,6 +204,8 @@ public class DockerService {
                 log.trace("Using exposed ports: {}", exposedPorts);
                 containerConfigBuilder.withExposedPorts(exposedPorts.stream()
                         .map(ExposedPort::parse).collect(Collectors.toList()));
+                hostConfigBuilder.withPortBindings(exposedPorts.stream()
+                        .map(PortBinding::parse).collect(Collectors.toList()));
                 hostConfigBuilder.withPublishAllPorts(true);
             }
             Optional<List<Bind>> binds = dockerContainer.getBinds();
