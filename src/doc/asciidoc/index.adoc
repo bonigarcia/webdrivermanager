@@ -15,11 +15,9 @@ Selenium WebDriver carries out the automation using the native support of each b
 image::selenium-webdriver-architecture.png[scaledwidth=100%]
 
 ifndef::backend-pdf[]
-ifndef::backend-epub3[]
 ++++
 include::carbon.html[]
 ++++
-endif::[]
 endif::[]
 
 From a practical point of view, we need to make a _driver management process_ to use Selenium WebDriver. This process consists on:
@@ -372,7 +370,7 @@ mvn exec:java -Dexec.args="runInDocker chrome"
 
 [source,shell,subs="attributes+"]
 ----
-docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -e ARGS="runInDocker chrome 91" bonigarcia/webdrivermanager:{project-version}
+docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -e ARGS="runInDocker chrome" bonigarcia/webdrivermanager:{project-version}
 ----
 
 WARNING: There is an https://bugs.chromium.org/p/chromedriver/issues/detail?id=3857[open issue] with Chrome 92+ and Docker at the time of this writing. For this reason, the previous Docker container command uses Chrome 91. For further information, see <<known-issues, known issues>>.
@@ -411,6 +409,8 @@ The WebDriverManager Server is based on HTTP and offers two types of services. F
 * http://localhost:4444/operadriver[http://localhost:4444/operadriver]: To resolve geckodriver.
 * http://localhost:4444/iedriver[http://localhost:4444/iedriver]: To resolve geckodriver.
 
+NOTE: You can parametrize these URLs using all the configuration keys available in WebDriverManager (see the <<advanced-configuration,advanced configuration>> section) as parameters, but removing the `wdm.` preffix. For instance, the URL for requesting the resolution of chromedriver for Chrome 100 would be http://localhost:4444/chromedriver?chromeVersion=100[http://localhost:4444/chromedriver?chromeVersion=100].
+
 Second, the WebDriverManager Server acts as a regular Selenium Server (i.e., a _hub_ in the classical Selenium Grid architecture). This feature can create remote `WebDriver` instances using the WebDriverManager Server (even for different language bindings than Java). The following example shows a Node.js test using Selenium WebDriver and WebDriverManager Server (notice that by default, the WebDriverManager Server URL does not require any path, i.e., http://localhost:4444/[http://localhost:4444/]):
 
 [source,javascript]
@@ -421,7 +421,7 @@ async function wdmServerTest() {
     var wdmServerUrl = "http://localhost:4444/";
     var capabilities = {
         browserName : "chrome",
-        version: "91.0"
+        version: "100"
     };
 
     try {
@@ -523,26 +523,25 @@ boni@ubuntu:~$ java -jar webdrivermanager-{project-version}-fat.jar resolveDrive
 [INFO] Using WebDriverManager to resolve chrome
 [DEBUG] Detecting chrome version using online commands.properties
 [DEBUG] Running command on the shell: [google-chrome, --version]
-[DEBUG] Result: Google Chrome 92.0.4515.107
-[DEBUG] Latest version of chromedriver, according to https://chromedriver.storage.googleapis.com/LATEST_RELEASE_92 is 92.0.4515.107
-[INFO] Using chromedriver 92.0.4515.107 (resolved driver for Chrome 92)
+[DEBUG] Result: Google Chrome 103.0.5060.134
+[DEBUG] Latest version of chromedriver according to https://chromedriver.storage.googleapis.com/LATEST_RELEASE_103 is 103.0.5060.134
+[INFO] Using chromedriver 103.0.5060.134 (resolved driver for Chrome 103)
 [INFO] Reading https://chromedriver.storage.googleapis.com/ to seek chromedriver
-[DEBUG] Driver to be downloaded chromedriver 92.0.4515.107
-[INFO] Downloading https://chromedriver.storage.googleapis.com/92.0.4515.107/chromedriver_linux64.zip
+[DEBUG] Driver to be downloaded chromedriver 103.0.5060.134
+[INFO] Downloading https://chromedriver.storage.googleapis.com/103.0.5060.134/chromedriver_linux64.zip
 [INFO] Extracting driver from compressed file chromedriver_linux64.zip
 [INFO] Driver location: /home/boni/chromedriver
 
-boni@ubuntu:~$ java -jar selenium-server-4.0.0-beta-4.jar standalone
-20:19:03.815 INFO [LoggingOptions.configureLogEncoding] - Using the system default encoding
-20:19:03.818 INFO [OpenTelemetryTracer.createTracer] - Using OpenTelemetry for tracing
-20:19:04.272 INFO [NodeOptions.getSessionFactories] - Detected 8 available processors
-20:19:04.284 INFO [NodeOptions.discoverDrivers] - Discovered 1 driver(s)
-20:19:04.296 INFO [NodeOptions.report] - Adding Chrome for {"browserName": "chrome","platformName": "LINUX"} 8 times
-20:19:04.310 INFO [Node.<init>] - Binding additional locator mechanisms: name, id
-20:19:04.322 INFO [LocalDistributor.add] - Added node 4651dc4d-3e07-43e7-b8d5-7368c95ea76d at http://172.17.0.1:4444.
-20:19:04.324 INFO [GridModel.setAvailability] - Switching node 4651dc4d-3e07-43e7-b8d5-7368c95ea76d (uri: http://172.17.0.1:4444) from DOWN to UP
-20:19:04.438 INFO [Standalone.execute] - Started Selenium Standalone 4.0.0-beta-4 (revision 29f46d02dd): http://172.17.0.1:4444
-
+boni@ubuntu:~$ java -jar selenium-server-4.3.0.jar standalone
+01:31:52.806 INFO [LoggingOptions.configureLogEncoding] - Using the system default encoding
+01:31:52.810 INFO [OpenTelemetryTracer.createTracer] - Using OpenTelemetry for tracing
+01:31:53.344 INFO [NodeOptions.getSessionFactories] - Detected 16 available processors
+01:31:53.359 INFO [NodeOptions.discoverDrivers] - Discovered 1 driver(s)
+01:31:53.382 INFO [NodeOptions.report] - Adding Chrome for {"browserName": "chrome"} 16 times
+01:31:53.417 INFO [Node.<init>] - Binding additional locator mechanisms: id, relative, name
+01:31:53.436 INFO [GridModel.setAvailability] - Switching Node 3804a261-5889-44c5-8cb1-d56162cf39ef (uri: http://172.18.0.1:4444) from DOWN to UP
+01:31:53.436 INFO [LocalDistributor.add] - Added node 3804a261-5889-44c5-8cb1-d56162cf39ef at http://172.18.0.1:4444. Health check every 120s
+01:31:53.554 INFO [Standalone.execute] - Started Selenium Standalone 4.3.0 (revision a4995e2c09*): http://172.18.0.1:4444
 ----
 
 === Appium
@@ -620,7 +619,7 @@ The remainder of this section describes all the possible Java methods in the Web
 |`cachePath(String)`|`wdm.cachePath`|`~/.cache/selenium`|Folder to store drivers locally
 |`resolutionCachePath(String)`|`wdm.resolutionCachePath`|`~/.cache/selenium`|Folder to store the resolution cache
 |`driverVersion(String)`|`wdm.chromeDriverVersion`, `wdm.operaDriverVersion`, `wdm.iExplorerDriverVersion`, `wdm.edgeDriverVersion`, `wdm.geckoDriverVersion`, `wdm.chromiumDriverVersion`|`""` (automatic driver version discovery through the <<resolution-algorithm,resolution algorithm>>)|Custom driver version
-|`browserVersion(String)`|`wdm.chromeVersion`, `wdm.operaVersion`, `wdm.edgeVersion`, `wdm.firefoxVersion`, `wdm.chromiumVersion`|`""` (automatic browser version detection using the https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/commands.properties[commands database])|Custom browser version (major)
+|`browserVersion(String)`|`wdm.chromeVersion`, `wdm.operaVersion`, `wdm.edgeVersion`, `wdm.firefoxVersion`, `wdm.chromiumVersion`, `wdm.safariVersion`|`""` (automatic browser version detection using the https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/commands.properties[commands database])|Custom browser version (major)
 |`forceDownload()`|`wdm.forceDownload=true`|`false` (drivers in cache are reused if available)|Force downloading driver (even if it is already in the cache)
 |`useBetaVersions()`|`wdm.useBetaVersions=true`|`false` (driver versions are skipped)|Allow the use beta versions (if possible)
 |`architecture(Architecture)`|`wdm.architecture`|`""` (automatic architecture discovery)|Force a given architecture for a driver
@@ -748,7 +747,6 @@ There are two ways to try to get community support related to WebDriverManager. 
 https://opencollective.com/webdrivermanager[WebDriverManager] is part of https://opencollective.com/bonigarcia[OpenCollective], an online funding platform for open and transparent communities. You can support the project by contributing as a backer (i.e., a personal https://opencollective.com/webdrivermanager/donate[donation] or https://opencollective.com/webdrivermanager/contribute/backer-8132/checkout[recurring contribution]) or as a https://opencollective.com/webdrivermanager/contribute/sponsor-8133/checkout[sponsor] (i.e., a recurring contribution by a company).
 
 ifndef::backend-pdf[]
-ifndef::backend-epub3[]
 [discrete]
 === Backers
 ++++
@@ -760,7 +758,6 @@ include::backers.html[]
 ++++
 include::sponsors.html[]
 ++++
-endif::[]
 endif::[]
 
 == Further Documentation
@@ -780,4 +777,4 @@ Or the following journal papers:
 * García, Boni, and Juan Carlos Dueñas. "https://www.rintonpress.com/journals/jweonline.html#v14n56[Web browsing automation for applications quality control]." _Journal of web engineering_ (2015): 474-502.
 
 == About
-WebDriverManager (Copyright © 2015-2022) is an open-source project created and maintained by https://bonigarcia.dev/[Boni García] (https://twitter.com/boni_gg[@boni_gg]), licensed under the terms of https://www.apache.org/licenses/LICENSE-2.0[Apache 2.0 License]. This documentation (also available in link:webdrivermanager.pdf[PDF] and link:webdrivermanager.epub[EPUB]) is released under the terms of https://creativecommons.org/licenses/by-nc-sa/2.0/[CC BY-NC-SA 2.0].
+WebDriverManager (Copyright © 2015-2022) is an open-source project created and maintained by https://bonigarcia.dev/[Boni García] (https://twitter.com/boni_gg[@boni_gg]), licensed under the terms of https://www.apache.org/licenses/LICENSE-2.0[Apache 2.0 License]. This documentation (also available in link:webdrivermanager.pdf[PDF]) is released under the terms of https://creativecommons.org/licenses/by-nc-sa/2.0/[CC BY-NC-SA 2.0].

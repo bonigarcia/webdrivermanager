@@ -775,7 +775,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <h1>WebDriverManager</h1>
 <div class="details">
 <span id="author" class="author">Boni García</span><br>
-<span id="revdate">Version 5.2.1</span>
+<span id="revdate">Version 5.2.2</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -971,7 +971,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
     <span class="tag">&lt;groupId&gt;</span>io.github.bonigarcia<span class="tag">&lt;/groupId&gt;</span>
     <span class="tag">&lt;artifactId&gt;</span>webdrivermanager<span class="tag">&lt;/artifactId&gt;</span>
-    <span class="tag">&lt;version&gt;</span>5.2.1<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;version&gt;</span>5.2.2<span class="tag">&lt;/version&gt;</span>
     <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
@@ -982,7 +982,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="json"><span class="error">d</span><span class="error">e</span><span class="error">p</span><span class="error">e</span><span class="error">n</span><span class="error">d</span><span class="error">e</span><span class="error">n</span><span class="error">c</span><span class="error">i</span><span class="error">e</span><span class="error">s</span> {
-    <span class="error">t</span><span class="error">e</span><span class="error">s</span><span class="error">t</span><span class="error">I</span><span class="error">m</span><span class="error">p</span><span class="error">l</span><span class="error">e</span><span class="error">m</span><span class="error">e</span><span class="error">n</span><span class="error">t</span><span class="error">a</span><span class="error">t</span><span class="error">i</span><span class="error">o</span><span class="error">n</span><span class="error">(</span><span class="string"><span class="delimiter">&quot;</span><span class="content">io.github.bonigarcia:webdrivermanager:5.2.1</span><span class="delimiter">&quot;</span></span><span class="error">)</span>
+    <span class="error">t</span><span class="error">e</span><span class="error">s</span><span class="error">t</span><span class="error">I</span><span class="error">m</span><span class="error">p</span><span class="error">l</span><span class="error">e</span><span class="error">m</span><span class="error">e</span><span class="error">n</span><span class="error">t</span><span class="error">a</span><span class="error">t</span><span class="error">i</span><span class="error">o</span><span class="error">n</span><span class="error">(</span><span class="string"><span class="delimiter">&quot;</span><span class="content">io.github.bonigarcia:webdrivermanager:5.2.2</span><span class="delimiter">&quot;</span></span><span class="error">)</span>
 }</code></pre>
 </div>
 </div>
@@ -1755,10 +1755,10 @@ Notice you will need hardware virtualization (hypervisor) or a virtual machine w
         <span class="predefined-type">List</span>&lt;<span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Object</span>&gt;&gt; logMessages = wdm.getLogs();
 
         <span class="keyword">for</span> (<span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Object</span>&gt; map : logMessages) {
-            log.debug(<span class="string"><span class="delimiter">&quot;</span><span class="content">[{}] [{}.{}] {}</span><span class="delimiter">&quot;</span></span>, map.get(<span class="string"><span class="delimiter">&quot;</span><span class="content">datetime</span><span class="delimiter">&quot;</span></span>),
-                    map.get(<span class="string"><span class="delimiter">&quot;</span><span class="content">source</span><span class="delimiter">&quot;</span></span>).toString().toUpperCase(),
-                    <span class="predefined-type">String</span>.format(<span class="string"><span class="delimiter">&quot;</span><span class="content">%1$-7s</span><span class="delimiter">&quot;</span></span>,
-                            map.get(<span class="string"><span class="delimiter">&quot;</span><span class="content">type</span><span class="delimiter">&quot;</span></span>).toString().toUpperCase()),
+            log.debug(<span class="string"><span class="delimiter">&quot;</span><span class="content">[{}] [{}] {}</span><span class="delimiter">&quot;</span></span>, map.get(<span class="string"><span class="delimiter">&quot;</span><span class="content">datetime</span><span class="delimiter">&quot;</span></span>),
+                    <span class="predefined-type">String</span>.format(<span class="string"><span class="delimiter">&quot;</span><span class="content">%1$-14s</span><span class="delimiter">&quot;</span></span>,
+                            map.get(<span class="string"><span class="delimiter">&quot;</span><span class="content">source</span><span class="delimiter">&quot;</span></span>).toString().toUpperCase() + <span class="string"><span class="delimiter">&quot;</span><span class="content">.</span><span class="delimiter">&quot;</span></span>
+                                    + map.get(<span class="string"><span class="delimiter">&quot;</span><span class="content">type</span><span class="delimiter">&quot;</span></span>).toString().toUpperCase()),
                     map.get(<span class="string"><span class="delimiter">&quot;</span><span class="content">message</span><span class="delimiter">&quot;</span></span>));
         }
 
@@ -1832,10 +1832,10 @@ When using Firefox, this feature requires at least Selenium WebDriver 4.1.2.
         <span class="predefined-type">List</span>&lt;<span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Object</span>&gt;&gt; logMessages = wdm.getLogs();
 
         <span class="keyword">for</span> (<span class="predefined-type">Map</span>&lt;<span class="predefined-type">String</span>, <span class="predefined-type">Object</span>&gt; map : logMessages) {
-            log.debug(<span class="string"><span class="delimiter">&quot;</span><span class="content">[{}] [{}.{}] {}</span><span class="delimiter">&quot;</span></span>, map.get(<span class="string"><span class="delimiter">&quot;</span><span class="content">datetime</span><span class="delimiter">&quot;</span></span>),
-                    map.get(<span class="string"><span class="delimiter">&quot;</span><span class="content">source</span><span class="delimiter">&quot;</span></span>).toString().toUpperCase(),
-                    <span class="predefined-type">String</span>.format(<span class="string"><span class="delimiter">&quot;</span><span class="content">%1$-7s</span><span class="delimiter">&quot;</span></span>,
-                            map.get(<span class="string"><span class="delimiter">&quot;</span><span class="content">type</span><span class="delimiter">&quot;</span></span>).toString().toUpperCase()),
+            log.debug(<span class="string"><span class="delimiter">&quot;</span><span class="content">[{}] [{}] {}</span><span class="delimiter">&quot;</span></span>, map.get(<span class="string"><span class="delimiter">&quot;</span><span class="content">datetime</span><span class="delimiter">&quot;</span></span>),
+                    <span class="predefined-type">String</span>.format(<span class="string"><span class="delimiter">&quot;</span><span class="content">%1$-14s</span><span class="delimiter">&quot;</span></span>,
+                            map.get(<span class="string"><span class="delimiter">&quot;</span><span class="content">source</span><span class="delimiter">&quot;</span></span>).toString().toUpperCase() + <span class="string"><span class="delimiter">&quot;</span><span class="content">.</span><span class="delimiter">&quot;</span></span>
+                                    + map.get(<span class="string"><span class="delimiter">&quot;</span><span class="content">type</span><span class="delimiter">&quot;</span></span>).toString().toUpperCase()),
                     map.get(<span class="string"><span class="delimiter">&quot;</span><span class="content">message</span><span class="delimiter">&quot;</span></span>));
         }
 
@@ -2026,10 +2026,10 @@ This feature is based on the API <a href="https://developer.chrome.com/docs/exte
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Using the WebDriverManager <em>fat-JAR</em> (i.e., WebDriverManager with all its dependencies in a single executable JAR file). This JAR file is generated from the source using the Maven command <code>mvn compile assembly:single</code>, and it is released on GitHub with every new version of WebDriverManager. You can download the latest of this fat-JAR from <a href="https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-5.2.1/webdrivermanager-5.2.1-fat.jar">here</a>. Once you get this file, you  need to use the following command in the shell (where <code>&lt;args&gt;</code> are the accepted arguments, explained below):</p>
+<p>Using the WebDriverManager <em>fat-JAR</em> (i.e., WebDriverManager with all its dependencies in a single executable JAR file). This JAR file is generated from the source using the Maven command <code>mvn compile assembly:single</code>, and it is released on GitHub with every new version of WebDriverManager. You can download the latest of this fat-JAR from <a href="https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-5.2.2/webdrivermanager-5.2.2-fat.jar">here</a>. Once you get this file, you  need to use the following command in the shell (where <code>&lt;args&gt;</code> are the accepted arguments, explained below):</p>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-5.2.1-fat.jar &lt;args&gt;</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-5.2.2-fat.jar &lt;args&gt;</code></pre>
 </div>
 </div>
 </li>
@@ -2045,7 +2045,7 @@ This feature is based on the API <a href="https://developer.chrome.com/docs/exte
 <p>Using the WebDriverManager Docker container. Each new release of WebDriverManager is pushed to <a href="https://hub.docker.com/r/bonigarcia/webdrivermanager">Docker Hub</a> as a container based on <a href="https://hub.docker.com/_/openjdk">OpenJDK</a> plus the WebDriverManager fat-JAR. The default command to run the WebDriverManager Docker container is described below.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -e ARGS=&quot;&lt;args&gt;&quot; bonigarcia/webdrivermanager:5.2.1</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -e ARGS=&quot;&lt;args&gt;&quot; bonigarcia/webdrivermanager:5.2.2</code></pre>
 </div>
 </div>
 </li>
@@ -2083,7 +2083,7 @@ This feature is based on the API <a href="https://developer.chrome.com/docs/exte
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-5.2.1-fat.jar resolveDriverFor chrome</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-5.2.2-fat.jar resolveDriverFor chrome</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -2107,7 +2107,7 @@ This feature is based on the API <a href="https://developer.chrome.com/docs/exte
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -v ${PWD}:/wdm -e ARGS=&quot;resolveDriverFor chrome&quot; bonigarcia/webdrivermanager:5.2.1</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -v ${PWD}:/wdm -e ARGS=&quot;resolveDriverFor chrome&quot; bonigarcia/webdrivermanager:5.2.2</code></pre>
 </div>
 </div>
 <h4 id="option-2-browsers-in-docker" class="discrete">Option 2: Browsers in Docker</h4>
@@ -2123,7 +2123,7 @@ This feature is based on the API <a href="https://developer.chrome.com/docs/exte
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-5.2.1-fat.jar runInDocker chrome</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-5.2.2-fat.jar runInDocker chrome</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -2147,7 +2147,7 @@ This feature is based on the API <a href="https://developer.chrome.com/docs/exte
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -e ARGS=&quot;runInDocker chrome 91&quot; bonigarcia/webdrivermanager:5.2.1</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -e ARGS=&quot;runInDocker chrome&quot; bonigarcia/webdrivermanager:5.2.2</code></pre>
 </div>
 </div>
 <div class="admonitionblock warning">
@@ -2175,7 +2175,7 @@ There is an <a href="https://bugs.chromium.org/p/chromedriver/issues/detail?id=3
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-5.2.1-fat.jar server</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-5.2.2-fat.jar server</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -2199,7 +2199,7 @@ There is an <a href="https://bugs.chromium.org/p/chromedriver/issues/detail?id=3
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -p 4444:4444 -v /var/run/docker.sock:/var/run/docker.sock bonigarcia/webdrivermanager:5.2.1</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -p 4444:4444 -v /var/run/docker.sock:/var/run/docker.sock bonigarcia/webdrivermanager:5.2.2</code></pre>
 </div>
 </div>
 </div>
@@ -2227,6 +2227,18 @@ There is an <a href="https://bugs.chromium.org/p/chromedriver/issues/detail?id=3
 </li>
 </ul>
 </div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+You can parametrize these URLs using all the configuration keys available in WebDriverManager (see the <a href="#advanced-configuration">advanced configuration</a> section) as parameters, but removing the <code>wdm.</code> preffix. For instance, the URL for requesting the resolution of chromedriver for Chrome 100 would be <a href="http://localhost:4444/chromedriver?chromeVersion=100">http://localhost:4444/chromedriver?chromeVersion=100</a>.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>Second, the WebDriverManager Server acts as a regular Selenium Server (i.e., a <em>hub</em> in the classical Selenium Grid architecture). This feature can create remote <code>WebDriver</code> instances using the WebDriverManager Server (even for different language bindings than Java). The following example shows a Node.js test using Selenium WebDriver and WebDriverManager Server (notice that by default, the WebDriverManager Server URL does not require any path, i.e., <a href="http://localhost:4444/">http://localhost:4444/</a>):</p>
 </div>
@@ -2238,7 +2250,7 @@ async <span class="keyword">function</span> <span class="function">wdmServerTest
     <span class="keyword">var</span> wdmServerUrl = <span class="string"><span class="delimiter">&quot;</span><span class="content">http://localhost:4444/</span><span class="delimiter">&quot;</span></span>;
     <span class="keyword">var</span> capabilities = {
         <span class="key">browserName</span> : <span class="string"><span class="delimiter">&quot;</span><span class="content">chrome</span><span class="delimiter">&quot;</span></span>,
-        <span class="key">version</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">91.0</span><span class="delimiter">&quot;</span></span>
+        <span class="key">version</span>: <span class="string"><span class="delimiter">&quot;</span><span class="content">100</span><span class="delimiter">&quot;</span></span>
     };
 
     <span class="keyword">try</span> {
@@ -2304,7 +2316,7 @@ wdmServerTest();</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>To configure the WebDriverManager Agent, we need to specify the path of the WebDriverManager <a href="https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-5.2.1/webdrivermanager-5.2.1-fat.jar">fat-JAR</a> using the JVM flag <code>-javaagent:/path/to/webdrivermanager-5.2.1-fat.jar</code>. Alternatively, it can be done using Maven (see a complete project example <a href="https://github.com/bonigarcia/wdm-agent-example/">here</a>).</p>
+<p>To configure the WebDriverManager Agent, we need to specify the path of the WebDriverManager <a href="https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-5.2.2/webdrivermanager-5.2.2-fat.jar">fat-JAR</a> using the JVM flag <code>-javaagent:/path/to/webdrivermanager-5.2.2-fat.jar</code>. Alternatively, it can be done using Maven (see a complete project example <a href="https://github.com/bonigarcia/wdm-agent-example/">here</a>).</p>
 </div>
 </div>
 <div class="sect2">
@@ -2348,29 +2360,29 @@ wdmServerTest();</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">boni@ubuntu:~$ java -jar webdrivermanager-5.2.1-fat.jar resolveDriverFor chrome
+<pre class="CodeRay highlight"><code data-lang="shell">boni@ubuntu:~$ java -jar webdrivermanager-5.2.2-fat.jar resolveDriverFor chrome
 [INFO] Using WebDriverManager to resolve chrome
 [DEBUG] Detecting chrome version using online commands.properties
 [DEBUG] Running command on the shell: [google-chrome, --version]
-[DEBUG] Result: Google Chrome 92.0.4515.107
-[DEBUG] Latest version of chromedriver, according to https://chromedriver.storage.googleapis.com/LATEST_RELEASE_92 is 92.0.4515.107
-[INFO] Using chromedriver 92.0.4515.107 (resolved driver for Chrome 92)
+[DEBUG] Result: Google Chrome 103.0.5060.134
+[DEBUG] Latest version of chromedriver according to https://chromedriver.storage.googleapis.com/LATEST_RELEASE_103 is 103.0.5060.134
+[INFO] Using chromedriver 103.0.5060.134 (resolved driver for Chrome 103)
 [INFO] Reading https://chromedriver.storage.googleapis.com/ to seek chromedriver
-[DEBUG] Driver to be downloaded chromedriver 92.0.4515.107
-[INFO] Downloading https://chromedriver.storage.googleapis.com/92.0.4515.107/chromedriver_linux64.zip
+[DEBUG] Driver to be downloaded chromedriver 103.0.5060.134
+[INFO] Downloading https://chromedriver.storage.googleapis.com/103.0.5060.134/chromedriver_linux64.zip
 [INFO] Extracting driver from compressed file chromedriver_linux64.zip
 [INFO] Driver location: /home/boni/chromedriver
 
-boni@ubuntu:~$ java -jar selenium-server-4.0.0-beta-4.jar standalone
-20:19:03.815 INFO [LoggingOptions.configureLogEncoding] - Using the system default encoding
-20:19:03.818 INFO [OpenTelemetryTracer.createTracer] - Using OpenTelemetry for tracing
-20:19:04.272 INFO [NodeOptions.getSessionFactories] - Detected 8 available processors
-20:19:04.284 INFO [NodeOptions.discoverDrivers] - Discovered 1 driver(s)
-20:19:04.296 INFO [NodeOptions.report] - Adding Chrome for {&quot;browserName&quot;: &quot;chrome&quot;,&quot;platformName&quot;: &quot;LINUX&quot;} 8 times
-20:19:04.310 INFO [Node.&lt;init&gt;] - Binding additional locator mechanisms: name, id
-20:19:04.322 INFO [LocalDistributor.add] - Added node 4651dc4d-3e07-43e7-b8d5-7368c95ea76d at http://172.17.0.1:4444.
-20:19:04.324 INFO [GridModel.setAvailability] - Switching node 4651dc4d-3e07-43e7-b8d5-7368c95ea76d (uri: http://172.17.0.1:4444) from DOWN to UP
-20:19:04.438 INFO [Standalone.execute] - Started Selenium Standalone 4.0.0-beta-4 (revision 29f46d02dd): http://172.17.0.1:4444</code></pre>
+boni@ubuntu:~$ java -jar selenium-server-4.3.0.jar standalone
+01:31:52.806 INFO [LoggingOptions.configureLogEncoding] - Using the system default encoding
+01:31:52.810 INFO [OpenTelemetryTracer.createTracer] - Using OpenTelemetry for tracing
+01:31:53.344 INFO [NodeOptions.getSessionFactories] - Detected 16 available processors
+01:31:53.359 INFO [NodeOptions.discoverDrivers] - Discovered 1 driver(s)
+01:31:53.382 INFO [NodeOptions.report] - Adding Chrome for {&quot;browserName&quot;: &quot;chrome&quot;} 16 times
+01:31:53.417 INFO [Node.&lt;init&gt;] - Binding additional locator mechanisms: id, relative, name
+01:31:53.436 INFO [GridModel.setAvailability] - Switching Node 3804a261-5889-44c5-8cb1-d56162cf39ef (uri: http://172.18.0.1:4444) from DOWN to UP
+01:31:53.436 INFO [LocalDistributor.add] - Added node 3804a261-5889-44c5-8cb1-d56162cf39ef at http://172.18.0.1:4444. Health check every 120s
+01:31:53.554 INFO [Standalone.execute] - Started Selenium Standalone 4.3.0 (revision a4995e2c09*): http://172.18.0.1:4444</code></pre>
 </div>
 </div>
 </div>
@@ -2473,7 +2485,7 @@ In addition to the methods presented in this section, each manager provides a <c
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -v ${PWD}:/wdm -e ARGS=&quot;resolveDriverFor chrome&quot; -e WDM_CHROMEVERSION=84 bonigarcia/webdrivermanager:5.2.1</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -v ${PWD}:/wdm -e ARGS=&quot;resolveDriverFor chrome&quot; -e WDM_CHROMEVERSION=84 bonigarcia/webdrivermanager:5.2.2</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -2528,7 +2540,7 @@ The preference order of these configuration alternatives is (in case of overlapp
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>browserVersion(String)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>wdm.chromeVersion</code>, <code>wdm.operaVersion</code>, <code>wdm.edgeVersion</code>, <code>wdm.firefoxVersion</code>, <code>wdm.chromiumVersion</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>wdm.chromeVersion</code>, <code>wdm.operaVersion</code>, <code>wdm.edgeVersion</code>, <code>wdm.firefoxVersion</code>, <code>wdm.chromiumVersion</code>, <code>wdm.safariVersion</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>""</code> (automatic browser version detection using the <a href="https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/commands.properties">commands database</a>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Custom browser version (major)</p></td>
 </tr>
@@ -3051,15 +3063,15 @@ HTTP proxy. It can be also configured using the environment variable  <code>HTTP
 <h2 id="about"><a class="anchor" href="#about"></a>11. About</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>WebDriverManager (Copyright © 2015-2022) is an open-source project created and maintained by <a href="https://bonigarcia.dev/">Boni García</a> (<a href="https://twitter.com/boni_gg">@boni_gg</a>), licensed under the terms of <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache 2.0 License</a>. This documentation (also available in <a href="webdrivermanager.pdf">PDF</a> and <a href="webdrivermanager.epub">EPUB</a>) is released under the terms of <a href="https://creativecommons.org/licenses/by-nc-sa/2.0/">CC BY-NC-SA 2.0</a>.</p>
+<p>WebDriverManager (Copyright © 2015-2022) is an open-source project created and maintained by <a href="https://bonigarcia.dev/">Boni García</a> (<a href="https://twitter.com/boni_gg">@boni_gg</a>), licensed under the terms of <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache 2.0 License</a>. This documentation (also available in <a href="webdrivermanager.pdf">PDF</a>) is released under the terms of <a href="https://creativecommons.org/licenses/by-nc-sa/2.0/">CC BY-NC-SA 2.0</a>.</p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 5.2.1<br>
-Updated on 26-06-2022
+Version 5.2.2<br>
+Updated on 28-07-2022
 </div>
 </div>
 </body>

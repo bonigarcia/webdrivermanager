@@ -1,5 +1,23 @@
 # Changelog
 
+## [5.2.2] - 2022-07-29
+
+### Added
+- Include wait for Docker bind port
+- Include config key for Safari version (for WebKit version)
+
+### Changed
+- Don't swallow exception root cause when creating a RemoteWebDriver (issue #873)
+- Method wdm.create() does not return null if failed to create a webdriver (issue #874)
+- Include port bindings in host config for docker containers
+
+### Fixed
+- Check opera binary brower path only if not using Docker
+
+### Removed
+- Documentation in EPUB format
+
+
 ## [5.2.1] - 2022-06-26
 
 ### Added

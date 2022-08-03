@@ -57,4 +57,14 @@ public class SafariDriverManager extends VoidDriverManager {
         return new SafariOptions();
     }
 
+    @Override
+    protected String getBrowserVersion() {
+        return config().getSafariVersion();
+    }
+
+    @Override
+    protected void setBrowserVersion(String browserVersion) {
+        config().setSafariVersion(browserVersion);
+    }
+
 }
