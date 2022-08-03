@@ -1,5 +1,11 @@
 # Changelog
 
+## [5.2.3] - 2022-08-03
+
+### Added
+- Use resolution cache also when latest driver is downloaded (for preventing 403 error for geckodriver)
+
+
 ## [5.2.2] - 2022-07-29
 
 ### Added
