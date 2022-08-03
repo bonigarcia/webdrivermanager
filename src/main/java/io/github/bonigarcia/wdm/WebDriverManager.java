@@ -1461,9 +1461,11 @@ public abstract class WebDriverManager {
             log.debug("Driver to be downloaded {} {}", shortDriverName,
                     resolvedDriverVersion);
 
-            storeInResolutionCache(
-                    getKeyForResolutionCache() + resolvedBrowserVersion,
-                    resolvedDriverVersion, resolvedBrowserVersion);
+            if (!isNullOrEmpty(resolvedBrowserVersion)) {
+                storeInResolutionCache(
+                        getKeyForResolutionCache() + resolvedBrowserVersion,
+                        resolvedDriverVersion, resolvedBrowserVersion);
+            }
 
             log.trace("Driver URLs after filtering for version: {}",
                     urlHandler.getCandidateUrls());
