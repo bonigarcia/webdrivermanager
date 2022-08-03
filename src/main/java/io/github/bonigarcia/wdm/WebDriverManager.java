@@ -210,6 +210,7 @@ public abstract class WebDriverManager {
     protected boolean disableCsp = false;
     protected boolean isHeadless = false;
     protected List<WebDriverBrowser> webDriverList;
+    protected String resolvedBrowserVersion;
 
     protected String downloadedDriverVersion;
     protected String downloadedDriverPath;
@@ -849,6 +850,7 @@ public abstract class WebDriverManager {
         watchEnabled = false;
         displayEnabled = false;
         capabilities = null;
+        resolvedBrowserVersion = null;
     }
 
     // ------------
@@ -1209,9 +1211,10 @@ public abstract class WebDriverManager {
         if (!optionalBrowserVersion.isPresent()) {
             optionalBrowserVersion = detectBrowserVersion();
         }
+
         if (optionalBrowserVersion.isPresent()) {
-            preferenceKey = getKeyForResolutionCache()
-                    + optionalBrowserVersion.get();
+            resolvedBrowserVersion = optionalBrowserVersion.get();
+            preferenceKey = getKeyForResolutionCache() + resolvedBrowserVersion;
             Optional<String> optionalDriverVersion = getValueFromResolutionCache(
                     preferenceKey);
 
@@ -1228,11 +1231,11 @@ public abstract class WebDriverManager {
                 log.info("Using {} {} (resolved driver for {} {})",
                         getDriverName(), driverVersion,
                         getDriverManagerType().getBrowserName(),
-                        optionalBrowserVersion.get());
+                        resolvedBrowserVersion);
 
                 if (config().getIgnoreVersions().contains(driverVersion)) {
                     String formerBrowserVersion = valueOf(
-                            parseInt(optionalBrowserVersion.get()) - 1);
+                            parseInt(resolvedBrowserVersion) - 1);
                     log.info(
                             "The driver {} {} is configured to be ignored ... trying again resolving driver for former version of {} (i.e. {})",
                             getDriverName(), driverVersion,
@@ -1241,10 +1244,8 @@ public abstract class WebDriverManager {
                     return resolveDriverVersion("");
                 }
 
-                if (!getVersionDetector().isSnap()) {
-                    storeInResolutionCache(preferenceKey, driverVersion,
-                            optionalBrowserVersion.get());
-                }
+                storeInResolutionCache(preferenceKey, driverVersion,
+                        resolvedBrowserVersion);
             }
         }
 
@@ -1289,6 +1290,9 @@ public abstract class WebDriverManager {
 
     protected void storeInResolutionCache(String preferenceKey,
             String resolvedDriverVersion, String resolvedBrowserVersion) {
+        if (getVersionDetector().isSnap()) {
+            return;
+        }
         if (useResolutionCache()) {
             getResolutionCache().putValueInResolutionCacheIfEmpty(
                     getKeyForResolutionCache(), resolvedBrowserVersion,
@@ -1450,12 +1454,17 @@ public abstract class WebDriverManager {
                 urlHandler.filterByVersion(driverVersion);
             }
 
-            if (urlHandler.getDriverVersion() == null) {
+            String resolvedDriverVersion = urlHandler.getDriverVersion();
+            if (resolvedDriverVersion == null) {
                 break;
             }
-
             log.debug("Driver to be downloaded {} {}", shortDriverName,
-                    urlHandler.getDriverVersion());
+                    resolvedDriverVersion);
+
+            storeInResolutionCache(
+                    getKeyForResolutionCache() + resolvedBrowserVersion,
+                    resolvedDriverVersion, resolvedBrowserVersion);
+
             log.trace("Driver URLs after filtering for version: {}",
                     urlHandler.getCandidateUrls());
             String os = config().getOs();
