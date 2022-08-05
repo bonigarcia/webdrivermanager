@@ -1966,7 +1966,7 @@ public abstract class WebDriverManager {
             String browserForDocker, int port) {
         log.error("The valid arguments for WebDriverManager CLI are:");
         log.error("1. For resolving drivers locally:");
-        log.error("\t{} browserName <driverVersion>", CLI_RESOLVER);
+        log.error("\t{} browserName <browserVersion>", CLI_RESOLVER);
         log.error("(where browserName is: {})", browserForResolving);
         log.error("");
         log.error(
@@ -1990,7 +1990,7 @@ public abstract class WebDriverManager {
                 wdm.operatingSystem(WIN);
             }
             if (args.length > 2) {
-                wdm.driverVersion(args[2]);
+                wdm.browserVersion(args[2]);
             }
             if (IS_OS_LINUX && wdm.getDockerService().isRunningInsideDocker()) {
                 wdm.avoidBrowserDetection();

@@ -311,7 +311,7 @@ WebDriverManager CLI can be used for three different purposes. We can see these 
 ----
 [ERROR] The valid arguments for WebDriverManager CLI are:
 [ERROR] 1. For resolving drivers locally:
-[ERROR]         resolveDriverFor browserName <driverVersion>
+[ERROR]         resolveDriverFor browserName <browserVersion>
 [ERROR] (where browserName is: chrome|edge|firefox|opera|chromium|iexplorer)
 [ERROR]
 [ERROR] 2. For running a browser in a Docker (and use it trough noVNC):
