@@ -261,9 +261,10 @@ public class Config {
             "wdm.dockerDefaultArgs", String.class);
     ConfigKey<Boolean> dockerLocalFallback = new ConfigKey<>(
             "wdm.dockerLocalFallback", Boolean.class);
-
     ConfigKey<String> dockerPrivateEndpoint = new ConfigKey<>(
             "wdm.dockerPrivateEndpoint", String.class);
+    ConfigKey<Boolean> dockerAvoidPulling = new ConfigKey<>(
+            "wdm.dockerAvoidPulling", Boolean.class);
 
     ConfigKey<String> remoteAddress = new ConfigKey<>("wdm.remoteAddress",
             String.class);
@@ -1474,6 +1475,15 @@ public class Config {
 
     public Config setDockerPrivateEndpoint(String value) {
         this.dockerPrivateEndpoint.setValue(value);
+        return this;
+    }
+
+    public boolean getDockerAvoidPulling() {
+        return resolve(dockerAvoidPulling);
+    }
+
+    public Config setDockerAvoidPulling(boolean value) {
+        this.dockerAvoidPulling.setValue(value);
         return this;
     }
 

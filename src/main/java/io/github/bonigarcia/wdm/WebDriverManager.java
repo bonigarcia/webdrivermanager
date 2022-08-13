@@ -509,6 +509,11 @@ public abstract class WebDriverManager {
         return this;
     }
 
+    public WebDriverManager dockerAvoidPulling() {
+        config().setDockerAvoidPulling(true);
+        return this;
+    }
+
     public WebDriverManager avoidDockerLocalFallback() {
         config().setDockerLocalFallback(false);
         return this;

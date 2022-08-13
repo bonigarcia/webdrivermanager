@@ -324,7 +324,8 @@ public class DockerService {
 
     public void pullImageIfNecessary(String cacheKey, String imageId,
             String imageVersion) throws DockerException {
-        if (!resolutionCache.checkKeyInResolutionCache(cacheKey)) {
+        if (!config.getDockerAvoidPulling()
+                && !resolutionCache.checkKeyInResolutionCache(cacheKey)) {
             try {
                 log.info(
                         "Pulling Docker image {} (this might take some time, but only the first time)",
