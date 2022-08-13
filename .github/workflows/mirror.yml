@@ -1,0 +1,28 @@
+name: mirror
+
+on:
+  schedule:
+    - cron:  '0 0 * * *'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+      with:
+        persist-credentials: false
+        fetch-depth: 0
+    - name: Read geckodriver info
+      run: |
+        cd docs/mirror
+        curl -H "Authorization: ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/mozilla/geckodriver/releases > geckodriver
+    - name: Commit files
+      run: |
+        git config --local user.email "boni.garcia@uc3m.es"
+        git config --local user.name "boni.garcia@uc3m"
+        git commit -m "Update geckodriver mirror" -a
+    - name: Push changes
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
