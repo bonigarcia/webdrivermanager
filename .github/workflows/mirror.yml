@@ -2,7 +2,7 @@ name: mirror
 
 on:
   schedule:
-    - cron:  '0 0 * * *'
+    - cron:  '0 */6 * * *'
 
 jobs:
   build:
@@ -12,16 +12,17 @@ jobs:
       with:
         persist-credentials: false
         fetch-depth: 0
-    - name: Read api.github.com
+    - name: Read api.github.com and filter response
       run: |
         cd docs/mirror
-        curl -H "Authorization: ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/mozilla/geckodriver/releases > geckodriver
-        curl -H "Authorization: ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/operasoftware/operachromiumdriver/releases > operadriver
-        curl -H "Authorization: ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/SeleniumHQ/selenium/releases > selenium
+        export JQ_FILTER="[.[] | {tag_name: .tag_name, assets: [.assets[] | {browser_download_url: .browser_download_url} ] } ]"
+        curl -H "Authorization: ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/mozilla/geckodriver/releases | jq "$JQ_FILTER" > geckodriver
+        curl -H "Authorization: ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/operasoftware/operachromiumdriver/releases | jq "$JQ_FILTER" > operadriver
+        curl -H "Authorization: ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/SeleniumHQ/selenium/releases | jq "$JQ_FILTER" > selenium
     - name: Commit files
       run: |
         git config --local user.email "boni.garcia@uc3m.es"
-        git commit -m "Update mirror (geckodriver, operadriver, iedriver)" -a
+        git commit -m "Update mirror info for geckodriver, operadriver, and iedriver" -a
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:

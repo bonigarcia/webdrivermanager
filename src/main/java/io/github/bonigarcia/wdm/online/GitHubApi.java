@@ -34,15 +34,10 @@ public class GitHubApi {
     @SerializedName("tag_name")
     private String tagName;
 
-    private String name;
     private List<LinkedTreeMap<String, Object>> assets;
 
     public String getTagName() {
         return tagName;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public List<LinkedTreeMap<String, Object>> getAssets() {
