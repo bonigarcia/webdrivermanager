@@ -12,15 +12,16 @@ jobs:
       with:
         persist-credentials: false
         fetch-depth: 0
-    - name: Read geckodriver info
+    - name: Read api.github.com
       run: |
         cd docs/mirror
         curl -H "Authorization: ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/mozilla/geckodriver/releases > geckodriver
+        curl -H "Authorization: ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/operasoftware/operachromiumdriver/releases > operadriver
+        curl -H "Authorization: ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/SeleniumHQ/selenium/releases > selenium
     - name: Commit files
       run: |
         git config --local user.email "boni.garcia@uc3m.es"
-        git config --local user.name "boni.garcia@uc3m"
-        git commit -m "Update geckodriver mirror" -a
+        git commit -m "Update mirror (geckodriver, operadriver, iedriver)" -a
     - name: Push changes
       uses: ad-m/github-push-action@master
       with:
