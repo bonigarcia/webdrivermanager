@@ -101,11 +101,12 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.chromium.ChromiumOptions;
 import org.openqa.selenium.edge.EdgeOptions;
-import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.HasExtensions;
 import org.openqa.selenium.logging.LogEntries;
 import org.openqa.selenium.logging.LogEntry;
 import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
+import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.SessionId;
 import org.slf4j.Logger;
@@ -1761,9 +1762,10 @@ public abstract class WebDriverManager {
             } else {
                 driver = createLocalWebDriver();
             }
-            if (watcher && managerType == FIREFOX
-                    && driver instanceof FirefoxDriver) {
-                ((FirefoxDriver) driver).installExtension(extensionPath, true);
+            if (watcher && managerType == FIREFOX) {
+                WebDriver augmentedDriver = new Augmenter().augment(driver);
+                ((HasExtensions) augmentedDriver)
+                        .installExtension(extensionPath, true);
             }
 
         } catch (Exception e) {
