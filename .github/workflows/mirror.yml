@@ -22,6 +22,7 @@ jobs:
     - name: Commit files
       run: |
         git config --local user.email "boni.garcia@uc3m.es"
+        git config --local user.name "Boni Garcia"
         git commit -m "Update mirror info for geckodriver, operadriver, and iedriver" -a
     - name: Push changes
       uses: ad-m/github-push-action@master
