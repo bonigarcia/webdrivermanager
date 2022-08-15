@@ -20,6 +20,7 @@ jobs:
         curl -H "Authorization: ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/operasoftware/operachromiumdriver/releases | jq "$JQ_FILTER" > operadriver
         curl -H "Authorization: ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/SeleniumHQ/selenium/releases | jq "$JQ_FILTER" > selenium
     - name: Commit files
+      id: git
       run: |
         export CHANGES=$(git status -s)
         if [ -n "$CHANGES" ]; then
@@ -27,10 +28,11 @@ jobs:
            git config --local user.name "Boni Garcia"
            git add *
            git commit -m "Update mirror info for geckodriver, operadriver, and iedriver" -a
+           echo "::set-output name=commit::true"
         fi
     - name: Push changes
       uses: ad-m/github-push-action@master
-      if: env.CHANGES != ''
+      if: steps.git.outputs.commit == 'true'
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: ${{ github.ref }}
