@@ -99,7 +99,7 @@ class PropertiesTest {
                 "https://chromedriver.storage.googleapis.com/%s/chromedriver_%s%s.zip");
 
         assertThat(config.getOperaDriverUrl()).isEqualTo(new URL(
-                "https://api.github.com/repos/operasoftware/operachromiumdriver/releases"));
+                "https://raw.githubusercontent.com/bonigarcia/webdrivermanager/master/docs/mirror/operadriver"));
         assertThat(config.getOperaDriverMirrorUrl()).isEqualTo(new URL(
                 "https://registry.npmmirror.com/-/binary/operadriver/"));
         assertThat(config.getOperaDriverExport())
@@ -113,7 +113,7 @@ class PropertiesTest {
                 "https://msedgewebdriverstorage.blob.core.windows.net/edgewebdriver/%s/edgedriver_%s%s.zip");
 
         assertThat(config.getIExplorerDriverUrl()).isEqualTo(new URL(
-                "https://api.github.com/repos/SeleniumHQ/selenium/releases"));
+                "https://raw.githubusercontent.com/bonigarcia/webdrivermanager/master/docs/mirror/selenium"));
         assertThat(config.getIExplorerDriverExport())
                 .isEqualTo("webdriver.ie.driver");
 
