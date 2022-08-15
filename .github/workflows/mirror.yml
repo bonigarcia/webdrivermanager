@@ -21,11 +21,15 @@ jobs:
         curl -H "Authorization: ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/SeleniumHQ/selenium/releases | jq "$JQ_FILTER" > selenium
     - name: Commit files
       run: |
-        git config --local user.email "boni.garcia@uc3m.es"
-        git config --local user.name "Boni Garcia"
-        git add *
-        git commit -m "Update mirror info for geckodriver, operadriver, and iedriver" -a
+        export CHANGES=$(git status -s)
+        if [ -n "$CHANGES" ]; then
+           git config --local user.email "boni.garcia@uc3m.es"
+           git config --local user.name "Boni Garcia"
+           git add *
+           git commit -m "Update mirror info for geckodriver, operadriver, and iedriver" -a
+        fi
     - name: Push changes
+      if: ${{ env.CHANGES != '' }}
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
