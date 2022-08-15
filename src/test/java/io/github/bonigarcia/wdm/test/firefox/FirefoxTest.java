@@ -26,6 +26,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxDriverLogLevel;
+import org.openqa.selenium.firefox.FirefoxOptions;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -43,7 +45,11 @@ class FirefoxTest {
 
     @BeforeEach
     void setupTest() {
-        driver = new FirefoxDriver();
+        FirefoxOptions options = new FirefoxOptions();
+        options.setLogLevel(FirefoxDriverLogLevel.TRACE);
+        options.addPreference("toolkit.asyncshutdown.log", true);
+
+        driver = new FirefoxDriver(options);
     }
 
     @AfterEach
