@@ -29,7 +29,6 @@ jobs:
            git commit -m "Update mirror info for geckodriver, operadriver, and iedriver" -a
         fi
     - name: Push changes
-      if: ${{ env.CHANGES != '' }}
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
