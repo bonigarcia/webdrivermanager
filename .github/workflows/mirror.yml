@@ -2,7 +2,7 @@ name: mirror
 
 on:
   schedule:
-    - cron:  '0 */6 * * *'
+    - cron:  '0 */12 * * *'
 
 jobs:
   build:
@@ -27,12 +27,12 @@ jobs:
            git config --local user.email "boni.garcia@uc3m.es"
            git config --local user.name "Boni Garcia"
            git add *
-           git commit -m "Update mirror info for geckodriver, operadriver, and iedriver" -a
+           git commit -m "Update mirror info" -a
            echo "::set-output name=commit::true"
         fi
     - name: Push changes
-      uses: ad-m/github-push-action@master
       if: steps.git.outputs.commit == 'true'
+      uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         branch: ${{ github.ref }}
