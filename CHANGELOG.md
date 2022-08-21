@@ -1,5 +1,16 @@
 # Changelog
 
+## [5.3.0] - 2022-08-21
+
+### Added
+- Include workflow to create mirror of geckodriver, operadriver, and selenium from api.github.com
+- Replace api.github.com URLs to mirrors on raw.githubusercontent.com (to avoid error 403 for good)
+
+### Changed
+- Install BrowserWatcher extension through augment (which allows remote Firefox, e.g., in Docker)
+- Use browser version as the second parameter of the CLI argument for resolving drivers
+
+
 ## [5.2.3] - 2022-08-03
 
 ### Added
@@ -18,7 +29,7 @@
 - Include port bindings in host config for docker containers
 
 ### Fixed
-- Check opera binary brower path only if not using Docker
+- Check opera binary browser path only if not using Docker
 
 ### Removed
 - Documentation in EPUB format
