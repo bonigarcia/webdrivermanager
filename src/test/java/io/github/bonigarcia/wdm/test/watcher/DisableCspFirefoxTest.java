@@ -28,8 +28,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.firefox.FirefoxDriverLogLevel;
-import org.openqa.selenium.firefox.FirefoxOptions;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -43,12 +41,7 @@ class DisableCspFirefoxTest {
 
     @BeforeEach
     void setup() {
-        FirefoxOptions options = new FirefoxOptions();
-        options.setLogLevel(FirefoxDriverLogLevel.TRACE);
-        options.addPreference("toolkit.asyncshutdown.log", true);
-
-        wdm = WebDriverManager.firefoxdriver().watch().disableCsp()
-                .capabilities(options);
+        wdm = WebDriverManager.firefoxdriver().watch().disableCsp();
         driver = wdm.create();
     }
 
