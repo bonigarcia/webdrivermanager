@@ -12,11 +12,11 @@ env:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
         java: [ 11 ]
+    runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout GitHub repo
       uses: actions/checkout@v2
@@ -26,7 +26,8 @@ jobs:
         distribution: 'temurin'
         java-version: ${{ matrix.java }}
     - name: Start Xvfb
-      run: Xvfb :99 &
+      if: matrix.os == 'ubuntu-latest'
+      run: Xvfb $DISPLAY &
     - name: Run tests on Linux
       if: matrix.os == 'ubuntu-latest'
       run: mvn -B test -Dtest=!Record*
