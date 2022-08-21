@@ -824,7 +824,7 @@
 - Improved driver version management
 
 
-## [1.2.0] - 2019-03-27
+## [1.2.0] - 2015-03-27
 ### Added
 - Thread safe download. Pull request thanks to Ivan Gracia (izanmail@gmail.com)
 
