@@ -36,12 +36,12 @@ class DisableCspFirefoxTest {
 
     static final Logger log = getLogger(lookup().lookupClass());
 
-    WebDriverManager wdm;
+    WebDriverManager wdm = WebDriverManager.firefoxdriver().watch()
+            .disableCsp();
     WebDriver driver;
 
     @BeforeEach
     void setup() {
-        wdm = WebDriverManager.firefoxdriver().watch().disableCsp();
         driver = wdm.create();
     }
 
