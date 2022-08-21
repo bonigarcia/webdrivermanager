@@ -722,6 +722,8 @@ io.github.bonigarcia.wdm.config.WebDriverManagerException: Error HTTP 403 execut
 
 To avoid this problem, WebDriverManager can make authenticated requests using a https://docs.github.com/en/github/authenticating-to-github/keeping-your-account-and-data-secure/creating-a-personal-access-token[personal access token]. See the <<advanced-configuration,advanced configuration>> section to discover how to set up this token in WebDriverManager.
 
+TIP: As of WebDriverManager 5.3.0, this issue should not happen anymore (even without a GitHub token). To avoid the 403 error, an automated job in GitHub Actions mirrors the GitHub API responses twice a day. This mirror is used internally by WebDriverManager instead of querying the GitHub API. 
+
 [discrete]
 ==== Testing localhost
 A typical case in web development is testing a web application deployed in the localhost. In this case, and when using browsers in Docker containers, we need to know that the address `localhost` inside a Docker container is not the host's address but the container address. To solve this problem, we can take different approaches. In Linux, we can use the gateway address for inter-container communication. This address is usually `172.17.0.1`, and can be discovered as follows:
