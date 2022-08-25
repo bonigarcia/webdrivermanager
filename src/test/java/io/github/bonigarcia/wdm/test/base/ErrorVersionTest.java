@@ -18,7 +18,5 @@ public class ErrorVersionTest {
         assertThat(driverPath).isNotNull();
         File driver = new File(driverPath);
         assertThat(driver).exists();
-
-        wdm.config().isAvoidFallback();
     }
 }
