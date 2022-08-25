@@ -20,7 +20,6 @@ import static java.lang.invoke.MethodHandles.lookup;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 
@@ -38,13 +37,13 @@ class ForceError403Test {
 
     static final int NUM = 40;
 
-    @Disabled
     @Test
     void test403() {
-        WebDriverManager wdm = WebDriverManager.firefoxdriver()
-                .avoidBrowserDetection().avoidResolutionCache();
         for (int i = 0; i < NUM; i++) {
-            log.debug("Forcing 403 error {}/{}", i + 1, NUM);
+            log.debug("Trying to force 403 error {}/{}", i + 1, NUM);
+            WebDriverManager wdm = WebDriverManager.firefoxdriver()
+                    .avoidBrowserDetection().avoidResolutionCache()
+                    .clearDriverCache();
             wdm.setup();
             assertThat(wdm.getDownloadedDriverPath()).isNotNull();
         }
