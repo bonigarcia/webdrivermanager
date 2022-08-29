@@ -144,9 +144,9 @@ Alternatively, you can acknowledge my work by buying me a coffee:
 ## About
 WebDriverManager (Copyright &copy; 2015-2022) is a project created and maintained by [Boni Garcia] and licensed under the terms of the [Apache 2.0 License].
 
-If you like my work, please consider nominating me for the [GitHub Stars program](https://stars.github.com/nominate/).
+If you like my work, please consider nominating me for the [GitHub Stars](https://stars.github.com/nominate/) program.
 
-<p><a href="https://stars.github.com/nominate/"> <img src="https://avatars.githubusercontent.com/u/61242156?s=200&v=4" width="100"/></a></p>
+<p align="center"><a href="https://stars.github.com/nominate/"> <img src="https://avatars.githubusercontent.com/u/61242156?s=200&v=4" width="100"/></a></p>
 
 [Logo]: https://bonigarcia.github.io/img/wdm.png
 [WebDriverManager]: https://bonigarcia.dev/webdrivermanager/
