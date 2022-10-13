@@ -124,7 +124,7 @@ public class WdmServer {
     }
 
     private void handleRequest(Context ctx) throws IOException {
-        String requestMethod = ctx.method();
+        String requestMethod = ctx.method().name();
         String requestPath = ctx.path();
         log.info("Request: {} {}", requestMethod, requestPath);
 
@@ -140,7 +140,7 @@ public class WdmServer {
     }
 
     private void seleniumServer(Context ctx) throws IOException {
-        String requestMethod = ctx.method();
+        String requestMethod = ctx.method().name();
         String requestPath = ctx.path().replace(path, "");
         String requestBody = ctx.body();
         log.trace("Body: {} ", requestBody);
@@ -257,7 +257,7 @@ public class WdmServer {
         String driverLength = String.valueOf(driver.length());
 
         // Response
-        ctx.res.setHeader("Content-Disposition",
+        ctx.res().setHeader("Content-Disposition",
                 "attachment; filename=\"" + driverName + "\"");
         ctx.result(openInputStream(driver));
         log.info("Server response: {} {} ({} bytes)", driverName, driverVersion,
