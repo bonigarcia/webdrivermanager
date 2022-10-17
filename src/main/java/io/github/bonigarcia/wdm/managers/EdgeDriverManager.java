@@ -34,6 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import io.github.bonigarcia.wdm.config.Config;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.edge.EdgeOptions;
 
@@ -179,11 +180,15 @@ public class EdgeDriverManager extends WebDriverManager {
 
     @Override
     protected Optional<URL> buildUrl(String driverVersion) {
+        return buildUrl(driverVersion, config());
+    }
+
+    Optional<URL> buildUrl(String driverVersion, Config config) {
         Optional<URL> optionalUrl = empty();
-        if (!config().isUseMirror()) {
-            String downloadUrlPattern = config().getEdgeDownloadUrlPattern();
-            OperatingSystem os = config().getOperatingSystem();
-            Architecture arch = config().getArchitecture();
+        if (!config.isUseMirror()) {
+            String downloadUrlPattern = config.getEdgeDownloadUrlPattern();
+            OperatingSystem os = config.getOperatingSystem();
+            Architecture arch = config.getArchitecture();
             String archLabel = os.isWin() ? arch.toString() : "64";
             String osName = arch != ARM64 ? os.getName() : "arm";
             String builtUrl = String.format(downloadUrlPattern, driverVersion,
