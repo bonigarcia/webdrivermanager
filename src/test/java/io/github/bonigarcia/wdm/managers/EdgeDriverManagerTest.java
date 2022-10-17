@@ -38,7 +38,7 @@ class EdgeDriverManagerTest {
     assertThat(edgeDriverManager.buildUrl(version, new DummyConfig(MAC, X64)))
       .hasValue(new URL("https://msedgewebdriverstorage.blob.core.windows.net/edgewebdriver/106.0.1370.47/edgedriver_mac64.zip"));
     assertThat(edgeDriverManager.buildUrl(version, new DummyConfig(MAC, ARM64)))
-      .hasValue(new URL("https://msedgewebdriverstorage.blob.core.windows.net/edgewebdriver/106.0.1370.47/edgedriver_arm64.zip")); // TODO incorrect URL! Should be edgedriver_mac64_m1.zip
+      .hasValue(new URL("https://msedgewebdriverstorage.blob.core.windows.net/edgewebdriver/106.0.1370.47/edgedriver_mac64_m1.zip"));
     assertThat(edgeDriverManager.buildUrl(version, new DummyConfig(MAC, DEFAULT)))
       .hasValue(new URL("https://msedgewebdriverstorage.blob.core.windows.net/edgewebdriver/106.0.1370.47/edgedriver_mac64.zip"));
   }
