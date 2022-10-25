@@ -30,6 +30,9 @@
         "browser_download_url": "https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.5.0/selenium-java-4.5.2.zip"
       },
       {
+        "browser_download_url": "https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.5.0/selenium-java-4.5.3.zip"
+      },
+      {
         "browser_download_url": "https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.5.0/selenium-server-4.5.0.jar"
       },
       {
@@ -46,6 +49,12 @@
       },
       {
         "browser_download_url": "https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.5.0/selenium-server-4.5.2.zip"
+      },
+      {
+        "browser_download_url": "https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.5.0/selenium-server-4.5.3.jar"
+      },
+      {
+        "browser_download_url": "https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.5.0/selenium-server-4.5.3.zip"
       }
     ]
   },
