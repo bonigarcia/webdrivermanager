@@ -1,5 +1,15 @@
 # Changelog
 
+## [5.3.1] - 2022-11-04
+
+### Changed
+- Support naming convention for chromedriver 106+ in macOS ARM64
+
+### Fixed
+- Fix support for edgedriver on macOS ARM64 (#897 #921)
+- Fix resolution geckodriver 0.32.0 (issue #923)
+
+
 ## [5.3.0] - 2022-08-21
 
 ### Added
