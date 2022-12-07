@@ -131,9 +131,11 @@ public class ChromeDriverManager extends WebDriverManager {
         if (!config().isUseMirror()) {
             String downloadUrlPattern = config().getChromeDownloadUrlPattern();
             OperatingSystem os = config().getOperatingSystem();
-            String arch = os.isWin() ? "32" : "64";
-            String builtUrl = String.format(downloadUrlPattern, driverVersion,
-                    os.getName(), arch);
+            Architecture arch = config().getArchitecture();
+            String archLabel = os.isWin() ? "32" : "64";
+            String builtUrl = os.isMac() && ARM64.equals(arch) ?
+                String.format(downloadUrlPattern, driverVersion, os.getName(), String.format("_arm%s",archLabel)) :
+                String.format(downloadUrlPattern, driverVersion, os.getName(), archLabel);
             log.debug("Using URL built from repository pattern: {}", builtUrl);
             try {
                 optionalUrl = Optional.of(new URL(builtUrl));
