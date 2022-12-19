@@ -30,21 +30,21 @@ jobs:
       run: Xvfb $DISPLAY &
     - name: Run tests on Linux
       if: matrix.os == 'ubuntu-latest'
-      uses: nick-invision/retry@v2.7.1
+      uses: nick-fields/retry@v2.8.2
       with:
         timeout_minutes: 30
         max_attempts: 3
         command: mvn -B test -Dtest=!Record*
     - name: Run tests on Mac
       if: matrix.os == 'macos-latest'
-      uses: nick-invision/retry@v2.7.1
+      uses: nick-fields/retry@v2.8.2
       with:
         timeout_minutes: 30
         max_attempts: 3
         command: mvn -B test -Dtest=!Docker*,!Record*
     - name: Run tests on Windows
       if: matrix.os == 'windows-latest'
-      uses: nick-invision/retry@v2.7.1
+      uses: nick-fields/retry@v2.8.2
       with:
         timeout_minutes: 30
         max_attempts: 3
@@ -61,7 +61,7 @@ jobs:
       uses: codecov/codecov-action@v1
     - name: Store recordings (only available in Windows)
       if: always() && matrix.os == 'windows-latest'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v3.1.1
       with:
         name: webm-files
         path: |
