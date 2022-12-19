@@ -275,8 +275,7 @@ public class WdmServer {
         String responseContent = null;
         BasicHttpClientConnectionManager connectionManager = new BasicHttpClientConnectionManager();
         connectionManager.setConnectionConfig(ConnectionConfig.custom()
-                .setConnectTimeout(config.getTimeout(), TimeUnit.SECONDS)
-                .build());
+                .setConnectTimeout(timeoutSec, TimeUnit.SECONDS).build());
 
         try (CloseableHttpClient closeableHttpClient = HttpClientBuilder
                 .create().setConnectionManager(connectionManager).build()) {
