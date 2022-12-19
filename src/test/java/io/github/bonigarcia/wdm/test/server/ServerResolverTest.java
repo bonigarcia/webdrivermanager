@@ -31,8 +31,9 @@ import java.util.stream.Stream;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.client5.http.protocol.HttpClientContext;
+import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.apache.hc.core5.http.Header;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -76,7 +77,8 @@ class ServerResolverTest {
 
             // Assert response
             log.debug("Request: GET {}", serverUrl);
-            try (CloseableHttpResponse response = client.execute(request)) {
+            try (ClassicHttpResponse response = client.executeOpen(null,
+                    request, HttpClientContext.create())) {
                 int responseCode = response.getCode();
                 log.debug("Response: {}", responseCode);
 

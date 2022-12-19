@@ -24,7 +24,6 @@ import static io.github.bonigarcia.wdm.WebDriverManager.operadriver;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.commons.io.FileUtils.openInputStream;
-import static org.apache.hc.client5.http.config.RequestConfig.custom;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
@@ -45,10 +44,12 @@ import org.apache.hc.client5.http.classic.methods.HttpDelete;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.classic.methods.HttpPost;
 import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase;
-import org.apache.hc.client5.http.config.RequestConfig;
+import org.apache.hc.client5.http.config.ConnectionConfig;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.client5.http.impl.io.BasicHttpClientConnectionManager;
+import org.apache.hc.client5.http.protocol.HttpClientContext;
+import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.apache.hc.core5.http.HttpEntity;
 import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.slf4j.Logger;
@@ -272,9 +273,13 @@ public class WdmServer {
     public String exchange(String url, String method, String json,
             int timeoutSec) throws IOException {
         String responseContent = null;
-        try (CloseableHttpClient closeableHttpClient = HttpClientBuilder
-                .create().build()) {
+        BasicHttpClientConnectionManager connectionManager = new BasicHttpClientConnectionManager();
+        connectionManager.setConnectionConfig(ConnectionConfig.custom()
+                .setConnectTimeout(config.getTimeout(), TimeUnit.SECONDS)
+                .build());
 
+        try (CloseableHttpClient closeableHttpClient = HttpClientBuilder
+                .create().setConnectionManager(connectionManager).build()) {
             HttpUriRequestBase request = null;
             switch (method) {
             case GET:
@@ -292,12 +297,8 @@ public class WdmServer {
                 break;
             }
 
-            RequestConfig requestConfig = custom()
-                    .setConnectTimeout(timeoutSec, TimeUnit.SECONDS).build();
-            request.setConfig(requestConfig);
-
-            try (CloseableHttpResponse response = closeableHttpClient
-                    .execute(request)) {
+            try (ClassicHttpResponse response = closeableHttpClient
+                    .executeOpen(null, request, HttpClientContext.create())) {
                 responseContent = IOUtils
                         .toString(response.getEntity().getContent(), UTF_8);
             }
