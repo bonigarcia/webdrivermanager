@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 
 import io.github.bonigarcia.wdm.config.DummyConfig;
 
-public class ChromeDriverManagerTest {
+class ChromeDriverManagerTest {
     private static final String VERSION = "108.0.5359.22";
     private final ChromeDriverManager chromeDriverManager = new ChromeDriverManager();
 
