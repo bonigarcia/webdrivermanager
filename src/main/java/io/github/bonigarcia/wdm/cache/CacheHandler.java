@@ -27,16 +27,14 @@ import static java.util.stream.Collectors.toList;
 import static org.apache.commons.io.FileUtils.listFiles;
 import static org.slf4j.LoggerFactory.getLogger;
 
+import io.github.bonigarcia.wdm.config.Architecture;
+import io.github.bonigarcia.wdm.config.Config;
+import io.github.bonigarcia.wdm.config.DriverManagerType;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import org.slf4j.Logger;
-
-import io.github.bonigarcia.wdm.config.Architecture;
-import io.github.bonigarcia.wdm.config.Config;
-import io.github.bonigarcia.wdm.config.DriverManagerType;
 
 /**
  * Logic for filtering driver cache.
@@ -47,8 +45,7 @@ import io.github.bonigarcia.wdm.config.DriverManagerType;
 public class CacheHandler {
 
     final Logger log = getLogger(lookup().lookupClass());
-
-    private Config config;
+    private final Config config;
 
     public CacheHandler(Config config) {
         this.config = config;

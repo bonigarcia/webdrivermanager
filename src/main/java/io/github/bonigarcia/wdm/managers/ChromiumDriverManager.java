@@ -63,9 +63,7 @@ public class ChromiumDriverManager extends ChromeDriverManager {
     protected Capabilities getCapabilities() {
         ChromeOptions options = new ChromeOptions();
         Optional<Path> browserPath = getBrowserPath();
-        if (browserPath.isPresent()) {
-            options.setBinary(browserPath.get().toFile());
-        }
+        browserPath.ifPresent(path -> options.setBinary(path.toFile()));
         return options;
     }
 

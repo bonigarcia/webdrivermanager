@@ -19,22 +19,18 @@ package io.github.bonigarcia.wdm.managers;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.IEXPLORER;
 import static java.util.Optional.empty;
 
-import java.io.IOException;
-import java.net.URL;
-import java.nio.file.Path;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import javax.xml.namespace.NamespaceContext;
-
-import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.ie.InternetExplorerOptions;
-
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
 import io.github.bonigarcia.wdm.config.WebDriverManagerException;
 import io.github.bonigarcia.wdm.versions.UrlComparator;
+import java.io.IOException;
+import java.net.URL;
+import java.nio.file.Path;
+import java.util.List;
+import java.util.Optional;
+import javax.xml.namespace.NamespaceContext;
+import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.ie.InternetExplorerOptions;
 
 /**
  * Manager for Internet Explorer.
@@ -96,7 +92,7 @@ public class InternetExplorerDriverManager extends WebDriverManager {
     @Override
     protected List<URL> getDriverUrls(String driverVersion) throws IOException {
         List<URL> driverUrls = getDriversFromGitHub(driverVersion);
-        Collections.sort(driverUrls, new UrlComparator());
+        driverUrls.sort(new UrlComparator());
         return driverUrls;
     }
 

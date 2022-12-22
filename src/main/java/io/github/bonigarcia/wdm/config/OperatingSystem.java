@@ -16,10 +16,10 @@
  */
 package io.github.bonigarcia.wdm.config;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Locale.ROOT;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -30,9 +30,9 @@ import java.util.stream.Stream;
  * @since 1.0.0
  */
 public enum OperatingSystem {
-    WIN(emptyList()), LINUX(emptyList()), MAC(asList("osx"));
+    WIN(emptyList()), LINUX(emptyList()), MAC(Collections.singletonList("osx"));
 
-    List<String> osLabels;
+    private final List<String> osLabels;
 
     OperatingSystem(List<String> osLabels) {
         this.osLabels = osLabels;
@@ -43,8 +43,7 @@ public enum OperatingSystem {
     }
 
     public boolean matchOs(String os) {
-        return osLabelsStream().anyMatch(os::contains)
-                || os.contains(getName());
+        return osLabelsStream().anyMatch(os::contains) || os.contains(getName());
     }
 
     public String getName() {
@@ -62,5 +61,4 @@ public enum OperatingSystem {
     public boolean isLinux() {
         return this == LINUX;
     }
-
 }
