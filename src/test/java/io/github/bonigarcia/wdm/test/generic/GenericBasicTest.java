@@ -14,38 +14,24 @@
  * limitations under the License.
  *
  */
-package io.github.bonigarcia.wdm.test.opera;
+package io.github.bonigarcia.wdm.test.generic;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.opera.OperaDriver;
-import org.openqa.selenium.opera.OperaOptions;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-@SuppressWarnings("deprecation")
-@Disabled("Opera not available in CI")
-class OperaOptionsTest {
+class GenericBasicTest {
 
     WebDriver driver;
 
-    @BeforeAll
-    static void setupClass() {
-        WebDriverManager.operadriver().exportParameter("webdriver.opera.driver")
-                .setup();
-    }
-
     @BeforeEach
-    void setupTest() {
-        OperaOptions operaOptions = new OperaOptions();
-        operaOptions.setExperimentalOption("w3c", true);
-        driver = new OperaDriver(operaOptions);
+    void setup() {
+        driver = WebDriverManager.getInstance().create();
     }
 
     @AfterEach
@@ -55,12 +41,8 @@ class OperaOptionsTest {
 
     @Test
     void test() {
-        // Exercise
         driver.get("https://bonigarcia.dev/selenium-webdriver-java/");
-        String title = driver.getTitle();
-
-        // Verify
-        assertThat(title).contains("Selenium WebDriver");
+        assertThat(driver.getTitle()).contains("Selenium WebDriver");
     }
 
 }

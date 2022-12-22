@@ -18,6 +18,7 @@ package io.github.bonigarcia.wdm.managers;
 
 import static io.github.bonigarcia.wdm.config.Architecture.ARM64;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.EDGE;
+import static io.github.bonigarcia.wdm.config.OperatingSystem.MAC;
 import static java.util.Locale.ROOT;
 import static java.util.Optional.empty;
 import static org.apache.commons.io.FileUtils.listFiles;
@@ -34,6 +35,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import io.github.bonigarcia.wdm.config.Config;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.edge.EdgeOptions;
 
@@ -179,15 +181,21 @@ public class EdgeDriverManager extends WebDriverManager {
 
     @Override
     protected Optional<URL> buildUrl(String driverVersion) {
+        return buildUrl(driverVersion, config());
+    }
+
+    Optional<URL> buildUrl(String driverVersion, Config config) {
         Optional<URL> optionalUrl = empty();
-        if (!config().isUseMirror()) {
-            String downloadUrlPattern = config().getEdgeDownloadUrlPattern();
-            OperatingSystem os = config().getOperatingSystem();
-            Architecture arch = config().getArchitecture();
+        if (!config.isUseMirror()) {
+            String downloadUrlPattern = config.getEdgeDownloadUrlPattern();
+            OperatingSystem os = config.getOperatingSystem();
+            Architecture arch = config.getArchitecture();
             String archLabel = os.isWin() ? arch.toString() : "64";
             String osName = arch != ARM64 ? os.getName() : "arm";
-            String builtUrl = String.format(downloadUrlPattern, driverVersion,
-                    osName, archLabel);
+            String builtUrl = os == MAC && arch == ARM64 ?
+              String.format(downloadUrlPattern, driverVersion, "mac", "64_m1") :
+              String.format(downloadUrlPattern, driverVersion, osName, archLabel);
+
             log.debug("Using URL built from repository pattern: {}", builtUrl);
             try {
                 optionalUrl = Optional.of(new URL(builtUrl));

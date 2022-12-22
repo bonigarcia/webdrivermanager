@@ -19,9 +19,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout GitHub repo
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3.2.0
     - name: Set up Java
-      uses: actions/setup-java@v2
+      uses: actions/setup-java@v3.9.0
       with:
         distribution: 'temurin'
         java-version: ${{ matrix.java }}
@@ -30,21 +30,21 @@ jobs:
       run: Xvfb $DISPLAY &
     - name: Run tests on Linux
       if: matrix.os == 'ubuntu-latest'
-      uses: nick-invision/retry@v2.7.1
+      uses: nick-fields/retry@v2.8.2
       with:
         timeout_minutes: 30
         max_attempts: 3
         command: mvn -B test -Dtest=!Record*
     - name: Run tests on Mac
       if: matrix.os == 'macos-latest'
-      uses: nick-invision/retry@v2.7.1
+      uses: nick-fields/retry@v2.8.2
       with:
         timeout_minutes: 30
         max_attempts: 3
         command: mvn -B test -Dtest=!Docker*,!Record*
     - name: Run tests on Windows
       if: matrix.os == 'windows-latest'
-      uses: nick-invision/retry@v2.7.1
+      uses: nick-fields/retry@v2.8.2
       with:
         timeout_minutes: 30
         max_attempts: 3
@@ -58,10 +58,10 @@ jobs:
         -Dsonar.projectKey=io.github.bonigarcia:webdrivermanager
     - name: Upload coverage to Codecov
       if: success() && matrix.os == 'ubuntu-latest' && matrix.java == '11' && !contains(github.ref, 'pull')
-      uses: codecov/codecov-action@v1
+      uses: codecov/codecov-action@v3.1.1
     - name: Store recordings (only available in Windows)
       if: always() && matrix.os == 'windows-latest'
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v3.1.1
       with:
         name: webm-files
         path: |

@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.hc.client5.http.classic.methods.HttpGet;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.slf4j.Logger;
 
 import com.google.gson.Gson;
@@ -73,7 +73,7 @@ public class DockerHubService {
                 log.trace("Sending request to {}", url);
                 HttpGet createHttpGet = client
                         .createHttpGet(new URL(url.toString()));
-                CloseableHttpResponse response = client.execute(createHttpGet);
+                ClassicHttpResponse response = client.execute(createHttpGet);
                 BufferedReader reader = new BufferedReader(
                         new InputStreamReader(
                                 response.getEntity().getContent()));

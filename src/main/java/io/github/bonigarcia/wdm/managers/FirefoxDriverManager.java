@@ -105,8 +105,10 @@ public class FirefoxDriverManager extends WebDriverManager {
 
     @Override
     protected String getCurrentVersion(URL url) {
-        String currentVersion = url.getFile().substring(
-                url.getFile().indexOf('-') + 1, url.getFile().lastIndexOf('-'));
+        int firstDash = url.getFile().indexOf(DASH);
+        int nextDash = url.getFile().indexOf(DASH, firstDash + 1);
+        String currentVersion = url.getFile().substring(firstDash + 1,
+                nextDash);
         if (currentVersion.startsWith("v")) {
             currentVersion = currentVersion.substring(1);
         }

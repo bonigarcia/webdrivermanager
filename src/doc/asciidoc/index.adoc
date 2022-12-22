@@ -769,8 +769,9 @@ There are other resources related to Selenium-Jupiter and automated testing you 
 * García, Boni. https://www.oreilly.com/library/view/hands-on-selenium-webdriver/9781098109998/[Hands-On Selenium WebDriver with Java]. _O'Reilly Media, Inc._, 2022.
 * García, Boni. https://www.amazon.com/Mastering-Software-Testing-JUnit-Comprehensive-ebook/dp/B076ZQCK5Q/[Mastering Software Testing with JUnit 5]. _Packt Publishing Ltd_, 2017.
 
-Or the following journal papers:
+Or the following papers:
 
+* Leotta, M., et al. "https://link.springer.com/chapter/10.1007/978-3-031-14179-9_3[An Empirical Study to Quantify the SetUp and Maintenance Benefits of Adopting WebDriverManager]." _15th International Conference on the Quality of Information and Communications Technology_ (QUATIC) 2022, Talavera de la Reina, Spain. September 2022.
 * García, Boni, et al. "https://www.sciencedirect.com/science/article/abs/pii/S0164121222000516[Selenium-Jupiter: A JUnit 5 extension for Selenium WebDriver]." _Journal of Systems and Software_ (2022): 111298.
 * García, Boni, et al. "https://link.springer.com/article/10.1007%2Fs10664-021-09975-3[Automated driver management for Selenium WebDriver]." _Empirical Software Engineering_ 26.5 (2021): 1-51.
 * García, Boni, et al. "https://www.mdpi.com/2079-9292/9/7/1067[A survey of the Selenium ecosystem]." _Electronics_ 9.7 (2020): 1067.

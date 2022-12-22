@@ -23,7 +23,6 @@ import static java.net.URLDecoder.decode;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Optional.empty;
 import static org.apache.hc.client5.http.auth.StandardAuthScheme.NTLM;
-import static org.apache.hc.client5.http.config.RequestConfig.custom;
 import static org.apache.hc.client5.http.cookie.StandardCookieSpec.STRICT;
 import static org.apache.hc.core5.http.HttpStatus.SC_BAD_REQUEST;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -54,19 +53,21 @@ import org.apache.hc.client5.http.auth.Credentials;
 import org.apache.hc.client5.http.auth.NTCredentials;
 import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.config.ConnectionConfig;
 import org.apache.hc.client5.http.config.RequestConfig;
 import org.apache.hc.client5.http.entity.DeflateInputStreamFactory;
 import org.apache.hc.client5.http.entity.GZIPInputStreamFactory;
 import org.apache.hc.client5.http.entity.InputStreamFactory;
 import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.protocol.HttpClientContext;
 import org.apache.hc.client5.http.socket.ConnectionSocketFactory;
 import org.apache.hc.client5.http.socket.PlainConnectionSocketFactory;
 import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
 import org.apache.hc.core5.http.ClassicHttpRequest;
+import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.apache.hc.core5.http.HttpHost;
 import org.apache.hc.core5.http.config.Registry;
 import org.apache.hc.core5.http.config.RegistryBuilder;
@@ -117,18 +118,24 @@ public class HttpClient implements Closeable {
                     .build();
             PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager(
                     socketFactoryRegistry);
-            
+            cm.setDefaultConnectionConfig(ConnectionConfig.custom()
+                    .setConnectTimeout(config.getTimeout(), TimeUnit.SECONDS)
+                    .build());
+
             // Add decompression handlers
             final LinkedHashMap<String, InputStreamFactory> contentDecoderMap = new LinkedHashMap<>();
             contentDecoderMap.put("br", new InputStreamFactory() {
                 @Override
-                public InputStream create(InputStream inStream) throws IOException {
+                public InputStream create(InputStream inStream)
+                        throws IOException {
                     return new BrotliInputStream(inStream);
                 }
             });
             contentDecoderMap.put("gzip", GZIPInputStreamFactory.getInstance());
-            contentDecoderMap.put("x-gzip", GZIPInputStreamFactory.getInstance());
-            contentDecoderMap.put("deflate", DeflateInputStreamFactory.getInstance());
+            contentDecoderMap.put("x-gzip",
+                    GZIPInputStreamFactory.getInstance());
+            contentDecoderMap.put("deflate",
+                    DeflateInputStreamFactory.getInstance());
             builder.setContentDecoderRegistry(contentDecoderMap);
 
             builder.setConnectionManager(cm);
@@ -146,16 +153,14 @@ public class HttpClient implements Closeable {
         httpGet.addHeader("cache-control", "max-age=0");
         httpGet.addHeader("connection", "keep-alive");
 
-        RequestConfig requestConfig = custom().setCookieSpec(STRICT)
-                .setConnectTimeout(config.getTimeout(), TimeUnit.SECONDS)
-                .build();
-        httpGet.setConfig(requestConfig);
+        httpGet.setConfig(RequestConfig.custom().setCookieSpec(STRICT).build());
         return httpGet;
     }
 
-    public CloseableHttpResponse execute(ClassicHttpRequest method)
+    public ClassicHttpResponse execute(ClassicHttpRequest method)
             throws IOException {
-        CloseableHttpResponse response = closeableHttpClient.execute(method);
+        ClassicHttpResponse response = closeableHttpClient.executeOpen(null,
+                method, HttpClientContext.create());
         int responseCode = response.getCode();
         if (responseCode >= SC_BAD_REQUEST) {
             String errorMessage;

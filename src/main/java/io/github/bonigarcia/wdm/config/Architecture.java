@@ -33,7 +33,7 @@ import java.util.stream.Stream;
  */
 public enum Architecture {
     DEFAULT(emptyList()), X32(asList("i686", "x86")), X64(emptyList()),
-    ARM64(asList("aarch64", "m1"));
+    ARM64(asList("aarch64", "m1", "arm64"));
 
     List<String> archLabels;
 

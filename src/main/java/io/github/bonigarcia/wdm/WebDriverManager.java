@@ -94,7 +94,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
@@ -159,6 +159,7 @@ public abstract class WebDriverManager {
     protected static final Logger log = getLogger(lookup().lookupClass());
 
     protected static final String SLASH = "/";
+    protected static final String DASH = "-";
     protected static final String LATEST_RELEASE = "LATEST_RELEASE";
     protected static final NamespaceContext S3_NAMESPACE_CONTEXT = new S3NamespaceContext();
     protected static final String IN_DOCKER = "-in-docker";
@@ -1557,7 +1558,7 @@ public abstract class WebDriverManager {
         logSeekRepo(driverUrl);
         List<URL> urls = new ArrayList<>();
         try {
-            try (CloseableHttpResponse response = getHttpClient()
+            try (ClassicHttpResponse response = getHttpClient()
                     .execute(getHttpClient().createHttpGet(driverUrl))) {
                 Document xml = loadXML(response.getEntity().getContent());
                 XPath xPath = newInstance().newXPath();
