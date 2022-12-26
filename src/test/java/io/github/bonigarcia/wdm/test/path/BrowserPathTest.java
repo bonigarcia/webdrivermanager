@@ -55,7 +55,8 @@ class BrowserPathTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "chrome", "chromium", "not-a-browser" })
+    @ValueSource(strings = { "chrome", "firefox", "edge", "opera", "chromium",
+        "not-a-browser" })
     void pathTest(String browser) {
         Optional<Path> detectedPath = versionDetector.getBrowserPath(browser);
         if (detectedPath.isPresent()) {
