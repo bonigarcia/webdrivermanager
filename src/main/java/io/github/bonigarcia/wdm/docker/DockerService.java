@@ -642,7 +642,7 @@ public class DockerService {
         // envs
         List<String> envs = new ArrayList<>();
         envs.add("TZ=" + config.getDockerTimezone());
-        envs.add("LANG=" + config.getDockerLang());
+        envs.add("LANGUAGE=" + config.getDockerLang());
         envs.add("SCREEN_RESOLUTION=" + config.getDockerScreenResolution());
         envs.addAll(config.getDockerEnvVariables());
 

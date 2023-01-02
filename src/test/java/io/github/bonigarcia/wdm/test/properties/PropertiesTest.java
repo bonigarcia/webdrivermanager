@@ -133,7 +133,7 @@ class PropertiesTest {
                 .isEqualTo("https://hub.docker.com/");
         assertThat(config.getDockerNetwork()).isEqualTo("bridge");
         assertThat(config.getDockerTimezone()).isEqualTo("Etc/UTC");
-        assertThat(config.getDockerLang()).isEmpty();
+        assertThat(config.getDockerLang()).isEqualTo("EN");
         assertThat(config.getDockerShmSize()).isEqualTo("256m");
         assertThat(config.getDockerTmpfsSize()).isEqualTo("128m");
         assertThat(config.getDockerTmpfsMount()).isEqualTo("/tmp");
