@@ -31,7 +31,7 @@ class GenericBasicTest {
 
     @BeforeEach
     void setup() {
-        driver = WebDriverManager.getInstance().create();
+        driver = WebDriverManager.getInstance().create(); // Local Chrome by default
     }
 
     @AfterEach
