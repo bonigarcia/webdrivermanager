@@ -1,5 +1,14 @@
 # Changelog
 
+## [5.3.2] - 2023-01-19
+
+### Fixed
+- Fix chrome image download on m1 (#953)
+
+### Removed
+- Remove default Docker lang (EN) due to a problem with Edge 108
+
+
 ## [5.3.1] - 2022-11-04
 
 ### Changed
