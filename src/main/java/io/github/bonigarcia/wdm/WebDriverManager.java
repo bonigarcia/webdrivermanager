@@ -1323,7 +1323,8 @@ public abstract class WebDriverManager {
         File parentFolder = archive.getParentFile();
         File[] ls = parentFolder.listFiles();
         for (File f : ls) {
-            if (getDriverName().contains(removeExtension(f.getName()))) {
+            if (f.getName().startsWith(getDriverName())
+                    && getDriverName().contains(removeExtension(f.getName()))) {
                 log.trace("Found driver in post-download: {}", f);
                 return singletonList(f);
             }
