@@ -31,7 +31,7 @@
         <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
         <exec-maven-plugin.version>3.1.0</exec-maven-plugin.version>
         <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
-        <maven-asciidoctor-plugin.version>2.2.2</maven-asciidoctor-plugin.version>
+        <maven-asciidoctor-plugin.version>2.2.3</maven-asciidoctor-plugin.version>
         <asciidoctorj-pdf.version>2.3.4</asciidoctorj-pdf.version>
         <maven-site.version>3.12.1</maven-site.version>
         <maven-project-info-reports.version>3.4.2</maven-project-info-reports.version>
