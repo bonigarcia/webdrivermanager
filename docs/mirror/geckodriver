@@ -1,5 +1,43 @@
 [
   {
+    "tag_name": "v0.33.0",
+    "assets": [
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-linux-aarch64.tar.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-linux-aarch64.tar.gz.asc"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-linux32.tar.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-linux32.tar.gz.asc"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-linux64.tar.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-linux64.tar.gz.asc"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-macos-aarch64.tar.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-macos.tar.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-win-aarch64.zip"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-win32.zip"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-win64.zip"
+      }
+    ]
+  },
+  {
     "tag_name": "v0.32.2",
     "assets": [
       {
@@ -717,23 +755,6 @@
       },
       {
         "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.11.0/geckodriver-v0.11.0-win64.zip"
-      }
-    ]
-  },
-  {
-    "tag_name": "v0.10.0",
-    "assets": [
-      {
-        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.10.0/geckodriver-v0.10.0-arm7hf.tar.gz"
-      },
-      {
-        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.10.0/geckodriver-v0.10.0-linux64.tar.gz"
-      },
-      {
-        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.10.0/geckodriver-v0.10.0-macos.tar.gz"
-      },
-      {
-        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.10.0/geckodriver-v0.10.0-win64.zip"
       }
     ]
   }
