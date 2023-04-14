@@ -38,7 +38,8 @@ class GatherLogsHeadlessChromeTest {
     static final Logger log = getLogger(lookup().lookupClass());
 
     WebDriverManager wdm = WebDriverManager.chromedriver()
-            .capabilities(new ChromeOptions().setHeadless(true)).watch();
+            .capabilities(new ChromeOptions().addArguments("--headless=new"))
+            .watch();
     WebDriver driver;
 
     @BeforeEach
