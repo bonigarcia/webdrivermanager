@@ -62,7 +62,7 @@ class MirrorTest {
     @Test
     void testMirrorOpera() throws Exception {
         WebDriverManager wdm = WebDriverManager.operadriver().useMirror()
-                .forceDownload();
+                .browserVersion("97").forceDownload();
         wdm.setup();
         File driver = new File(wdm.getDownloadedDriverPath());
         assertThat(driver).exists();
