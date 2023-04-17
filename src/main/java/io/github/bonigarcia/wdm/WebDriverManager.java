@@ -1794,9 +1794,14 @@ public abstract class WebDriverManager {
             capabilities = caps;
 
         } else {
+            // https://bugs.chromium.org/p/chromium/issues/detail?id=1433472
+            String allowExtensionFlag = resolvedBrowserVersion != null
+                    && Integer.parseInt(resolvedBrowserVersion) < 112
+                            ? "--whitelisted-extension-id="
+                            : "--allowlisted-extension-id=";
             ((ChromiumOptions<?>) caps).addExtensions(extensionPath.toFile());
-            capabilities = ((ChromiumOptions<?>) caps).addArguments(
-                    "--whitelisted-extension-id=" + BROWSER_WATCHER_ID);
+            capabilities = ((ChromiumOptions<?>) caps)
+                    .addArguments(allowExtensionFlag + BROWSER_WATCHER_ID);
         }
     }
 
