@@ -34,6 +34,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.Wait;
@@ -92,8 +93,10 @@ class ServerSeleniumTest {
 
         FirefoxOptions firefoxOptions = new FirefoxOptions();
 
+        EdgeOptions edgeOptions = new EdgeOptions();
+
         return Stream.of(Arguments.of(chromeOptions),
-                Arguments.of(firefoxOptions));
+                Arguments.of(firefoxOptions), Arguments.of(edgeOptions));
     }
 
 }

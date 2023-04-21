@@ -55,6 +55,7 @@ import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.slf4j.Logger;
 
 import com.google.gson.Gson;
+import com.google.gson.annotations.SerializedName;
 
 import io.github.bonigarcia.wdm.config.Config;
 import io.javalin.Javalin;
@@ -144,18 +145,22 @@ public class WdmServer {
         String requestMethod = ctx.method();
         String requestPath = ctx.path().replace(path, "");
         String requestBody = ctx.body();
-        log.trace("Body: {} ", requestBody);
+        log.debug("Body: {} ", requestBody);
         Session session = new Gson().fromJson(requestBody, Session.class);
         URL seleniumServerUrl;
 
         // POST /session
         boolean isSessionCreate = session != null
-                && session.getDesiredCapabilities() != null;
+                && session.getCapabilities() != null
+                && session.getCapabilities().getFirstMatch() != null;
         WebDriverManager wdm = null;
+
         if (isSessionCreate) {
-            String browserName = session.getDesiredCapabilities()
-                    .getBrowserName();
-            String version = session.getDesiredCapabilities().getVersion();
+
+            String browserName = session.getCapabilities().getFirstMatch()
+                    .get(0).getBrowserName();
+            String version = session.getCapabilities().getFirstMatch().get(0)
+                    .getVersion();
             wdm = WebDriverManager.getInstance(browserName).browserInDocker()
                     .browserVersion(version);
             wdm.create();
@@ -307,17 +312,25 @@ public class WdmServer {
     }
 
     static class Session {
-        DesiredCapabilities desiredCapabilities;
+        Capabilities capabilities;
 
-        public DesiredCapabilities getDesiredCapabilities() {
-            return desiredCapabilities;
+        public Capabilities getCapabilities() {
+            return capabilities;
         }
     }
 
-    static class DesiredCapabilities {
+    static class Capabilities {
+        List<FirstMatch> firstMatch;
+
+        public List<FirstMatch> getFirstMatch() {
+            return firstMatch;
+        }
+    }
+
+    static class FirstMatch {
         String browserName;
+
         String version;
-        String platform;
 
         public String getBrowserName() {
             return browserName;
@@ -327,9 +340,6 @@ public class WdmServer {
             return version;
         }
 
-        public String getPlatform() {
-            return platform;
-        }
     }
 
 }
