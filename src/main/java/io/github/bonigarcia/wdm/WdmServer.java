@@ -55,7 +55,6 @@ import org.apache.hc.core5.http.io.entity.StringEntity;
 import org.slf4j.Logger;
 
 import com.google.gson.Gson;
-import com.google.gson.annotations.SerializedName;
 
 import io.github.bonigarcia.wdm.config.Config;
 import io.javalin.Javalin;
