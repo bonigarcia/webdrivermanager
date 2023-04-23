@@ -185,7 +185,9 @@ public class Downloader {
                         copyInputStreamToFile(is, temporaryFile);
                         renameFile(temporaryFile, file);
                     }
-                    setFileExecutable(file);
+                    if (!file.getName().toLowerCase().contains("license")) {
+                        setFileExecutable(file);
+                    }
                 } else {
                     log.debug("{} already exists", file);
                 }
@@ -219,7 +221,8 @@ public class Downloader {
         }
 
         if (!target.getName().toLowerCase().contains(".exe")
-                && target.exists()) {
+                && target.exists() && target.getName().toLowerCase().contains("license")
+        ) {
             setFileExecutable(target);
         }
 
