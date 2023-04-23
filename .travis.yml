@@ -4,7 +4,7 @@ branches:
     - master
     - /^[0-9]+\.[0-9]+\.[0-9]+$/
 jdk:
-  - oraclejdk8
+  - openjdk11
 before_install:
   - if [ ! -z "$GPG_SECRET_KEYS" ]; then echo $GPG_SECRET_KEYS | base64 --decode | $GPG_EXECUTABLE --import; fi
   - if [ ! -z "$GPG_OWNERTRUST" ]; then echo $GPG_OWNERTRUST | base64 --decode | $GPG_EXECUTABLE --import-ownertrust; fi
@@ -16,11 +16,11 @@ deploy:
     on:
       repo: sbtqa/webdrivermanager
       branch: master
-      jdk: oraclejdk8
+      jdk: openjdk11
   - provider: script
     script: ".travis/deploy.sh"
     skip_cleanup: true
     on:
       repo: sbtqa/webdrivermanager
       tags: true
-      jdk: oraclejdk8
+      jdk: openjdk11
