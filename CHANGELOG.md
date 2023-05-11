@@ -1,5 +1,15 @@
 # Changelog
 
+## [5.3.3] - 2023-05-11
+
+### Added
+- Include extra condition to find driver in the extracted files (#983)
+
+### Fixed
+- Use --whitelisted-extension-id for Chromium 112+ (fixes BrowserWathcher)
+- Fix support for WebDriverManager server
+
+
 ## [5.3.2] - 2023-01-19
 
 ### Fixed
