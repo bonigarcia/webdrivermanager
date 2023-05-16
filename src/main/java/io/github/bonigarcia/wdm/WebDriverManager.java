@@ -541,6 +541,16 @@ public abstract class WebDriverManager {
         return this;
     }
 
+    public WebDriverManager enableTracing() {
+        config().setEnableTracing(true);
+        return this;
+    }
+
+    public WebDriverManager disableTracing() {
+        config().setEnableTracing(false);
+        return this;
+    }
+
     public WebDriverManager dockerRecordingPrefix(String prefix) {
         config().setDockerRecordingPrefix(prefix);
         return this;
