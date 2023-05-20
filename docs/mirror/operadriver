@@ -425,23 +425,6 @@
     ]
   },
   {
-    "tag_name": "v.85.0.4183.102",
-    "assets": [
-      {
-        "browser_download_url": "https://github.com/operasoftware/operachromiumdriver/releases/download/v.85.0.4183.102/operadriver_linux64.zip"
-      },
-      {
-        "browser_download_url": "https://github.com/operasoftware/operachromiumdriver/releases/download/v.85.0.4183.102/operadriver_mac64.zip"
-      },
-      {
-        "browser_download_url": "https://github.com/operasoftware/operachromiumdriver/releases/download/v.85.0.4183.102/operadriver_win32.zip"
-      },
-      {
-        "browser_download_url": "https://github.com/operasoftware/operachromiumdriver/releases/download/v.85.0.4183.102/operadriver_win64.zip"
-      }
-    ]
-  },
-  {
     "tag_name": "v.84.0.4147.89",
     "assets": [
       {
@@ -506,6 +489,23 @@
       },
       {
         "browser_download_url": "https://github.com/operasoftware/operachromiumdriver/releases/download/v.80.0.3987.100/operadriver_win64.zip"
+      }
+    ]
+  },
+  {
+    "tag_name": "v.79.0.3945.79",
+    "assets": [
+      {
+        "browser_download_url": "https://github.com/operasoftware/operachromiumdriver/releases/download/v.79.0.3945.79/operadriver_linux64.zip"
+      },
+      {
+        "browser_download_url": "https://github.com/operasoftware/operachromiumdriver/releases/download/v.79.0.3945.79/operadriver_mac64.zip"
+      },
+      {
+        "browser_download_url": "https://github.com/operasoftware/operachromiumdriver/releases/download/v.79.0.3945.79/operadriver_win32.zip"
+      },
+      {
+        "browser_download_url": "https://github.com/operasoftware/operachromiumdriver/releases/download/v.79.0.3945.79/operadriver_win64.zip"
       }
     ]
   }
