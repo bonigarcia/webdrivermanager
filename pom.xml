@@ -34,7 +34,7 @@
         <maven-asciidoctor-plugin.version>2.2.4</maven-asciidoctor-plugin.version>
         <asciidoctorj-pdf.version>2.3.7</asciidoctorj-pdf.version>
         <maven-site.version>3.12.1</maven-site.version>
-        <maven-project-info-reports.version>3.4.3</maven-project-info-reports.version>
+        <maven-project-info-reports.version>3.4.4</maven-project-info-reports.version>
         <maven-javadoc-plugin.version>3.5.0</maven-javadoc-plugin.version>
 
         <!-- Java version -->
