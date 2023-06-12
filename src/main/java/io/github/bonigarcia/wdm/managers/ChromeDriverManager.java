@@ -17,7 +17,9 @@
 package io.github.bonigarcia.wdm.managers;
 
 import static io.github.bonigarcia.wdm.config.Architecture.ARM64;
+import static io.github.bonigarcia.wdm.config.Architecture.X32;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROME;
+import static java.util.Locale.ROOT;
 import static java.util.Optional.empty;
 
 import java.io.IOException;
@@ -30,12 +32,12 @@ import java.util.Optional;
 
 import javax.xml.namespace.NamespaceContext;
 
-import io.github.bonigarcia.wdm.config.Architecture;
-import io.github.bonigarcia.wdm.config.Config;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import io.github.bonigarcia.wdm.config.Architecture;
+import io.github.bonigarcia.wdm.config.Config;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
 import io.github.bonigarcia.wdm.config.OperatingSystem;
 import io.github.bonigarcia.wdm.webdriver.OptionsWithArguments;
@@ -139,12 +141,18 @@ public class ChromeDriverManager extends WebDriverManager {
             String downloadUrlPattern = config.getChromeDownloadUrlPattern();
             OperatingSystem os = config.getOperatingSystem();
             Architecture arch = config.getArchitecture();
-            String archLabel = os.isWin() ? "32" : "64";
-            String builtUrl = os.isMac() && ARM64.equals(arch)
-                    ? String.format(downloadUrlPattern, driverVersion,
-                            os.getName(), String.format("_arm%s", archLabel))
-                    : String.format(downloadUrlPattern, driverVersion,
-                            os.getName(), archLabel);
+            String archLabel = os.isLinux() ? "64"
+                    : arch.toString().toLowerCase(ROOT);
+            if (os.isWin() && !X32.equals(arch)) {
+                archLabel = "64";
+            }
+            if (os.isMac() && !ARM64.equals(arch)) {
+                archLabel = "x64";
+            }
+            String separator = os.isMac() ? "-" : "";
+            String label = os.getName() + separator + archLabel;
+            String builtUrl = String.format(downloadUrlPattern, driverVersion,
+                    label, label);
             log.debug("Using URL built from repository pattern: {}", builtUrl);
             try {
                 optionalUrl = Optional.of(new URL(builtUrl));

@@ -57,6 +57,7 @@ import io.github.bonigarcia.wdm.config.Config;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
 import io.github.bonigarcia.wdm.config.OperatingSystem;
 import io.github.bonigarcia.wdm.config.WebDriverManagerException;
+import io.github.bonigarcia.wdm.versions.VersionDetector;
 
 /**
  * Downloader class.
@@ -99,9 +100,12 @@ public class Downloader {
         OperatingSystem os = config.getOperatingSystem();
         String architecture = config.getArchitecture().toString()
                 .toLowerCase(ROOT);
+        int majorDriverVersion = Integer
+                .parseInt(VersionDetector.getMajorVersion(driverVersion));
 
-        if (os.isWin() && (driverManagerType == CHROME
-                || driverManagerType == CHROMIUM)) {
+        if (os.isWin() && majorDriverVersion < 115
+                && (driverManagerType == CHROME
+                        || driverManagerType == CHROMIUM)) {
             log.trace(
                     "{} in Windows is only available for 32 bits architecture",
                     driverName);

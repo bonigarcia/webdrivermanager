@@ -282,7 +282,17 @@ public class VersionDetector {
             String parsedBrowserVersion = browserVersionOutput
                     .replaceAll(config.getBrowserVersionDetectionRegex(), "");
             log.trace("Detected browser version is {}", parsedBrowserVersion);
-            return Optional.of(getMajorVersion(parsedBrowserVersion));
+            String majorVersion = getMajorVersion(parsedBrowserVersion);
+
+            // As of Chrome/chromedriver 115+, the online metadata for version
+            // discovery is different. See:
+            // https://googlechromelabs.github.io/chrome-for-testing/
+            if (command.toLowerCase(ROOT).contains("chrome")
+                    && Integer.parseInt(majorVersion) >= 115) {
+                return Optional.of(parsedBrowserVersion);
+            }
+
+            return Optional.of(majorVersion);
         } else {
 
             return empty();
@@ -359,7 +369,7 @@ public class VersionDetector {
         return inputStream;
     }
 
-    protected String getMajorVersion(String version) {
+    public static String getMajorVersion(String version) {
         int i = version.indexOf('.');
         return i != -1 ? version.substring(0, i) : version;
     }

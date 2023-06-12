@@ -69,6 +69,7 @@ import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -1221,17 +1222,24 @@ public abstract class WebDriverManager {
 
         if (optionalBrowserVersion.isPresent()) {
             resolvedBrowserVersion = optionalBrowserVersion.get();
-            preferenceKey = getKeyForResolutionCache() + resolvedBrowserVersion;
-            Optional<String> optionalDriverVersion = getValueFromResolutionCache(
-                    preferenceKey);
+            Optional<String> optionalDriverVersion;
+            if (resolvedBrowserVersion.contains(".")) {
+                optionalDriverVersion = Optional.of(resolvedBrowserVersion);
 
-            if (!optionalDriverVersion.isPresent()) {
-                optionalDriverVersion = getDriverVersionFromRepository(
-                        optionalBrowserVersion);
-            }
-            if (!optionalDriverVersion.isPresent()) {
-                optionalDriverVersion = getVersionDetector()
-                        .getDriverVersionFromProperties(preferenceKey);
+            } else {
+                preferenceKey = getKeyForResolutionCache()
+                        + resolvedBrowserVersion;
+                optionalDriverVersion = getValueFromResolutionCache(
+                        preferenceKey);
+
+                if (!optionalDriverVersion.isPresent()) {
+                    optionalDriverVersion = getDriverVersionFromRepository(
+                            optionalBrowserVersion);
+                }
+                if (!optionalDriverVersion.isPresent()) {
+                    optionalDriverVersion = getVersionDetector()
+                            .getDriverVersionFromProperties(preferenceKey);
+                }
             }
             if (optionalDriverVersion.isPresent()) {
                 driverVersion = optionalDriverVersion.get();
@@ -1321,7 +1329,7 @@ public abstract class WebDriverManager {
 
     protected List<File> postDownload(File archive) {
         File parentFolder = archive.getParentFile();
-        File[] ls = parentFolder.listFiles();
+        Collection<File> ls = FileUtils.listFiles(parentFolder, null, true);
         for (File f : ls) {
             if (f.getName().startsWith(getDriverName())
                     && getDriverName().contains(removeExtension(f.getName()))) {
