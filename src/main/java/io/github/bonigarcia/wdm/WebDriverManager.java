@@ -35,7 +35,6 @@ import static java.lang.String.valueOf;
 import static java.lang.System.getenv;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.charset.Charset.defaultCharset;
-import static java.util.Collections.singletonList;
 import static java.util.Collections.sort;
 import static java.util.Locale.ROOT;
 import static java.util.Optional.empty;
@@ -1340,12 +1339,18 @@ public abstract class WebDriverManager {
     protected List<File> postDownload(File archive) {
         File parentFolder = archive.getParentFile();
         Collection<File> ls = FileUtils.listFiles(parentFolder, null, true);
+        List<File> listFiles = new ArrayList<>();
         for (File f : ls) {
             if (f.getName().startsWith(getDriverName())
                     && getDriverName().contains(removeExtension(f.getName()))) {
                 log.trace("Found driver in post-download: {}", f);
-                return singletonList(f);
+                listFiles.add(f);
+            } else {
+                f.delete();
             }
+        }
+        if (!listFiles.isEmpty()) {
+            return listFiles;
         }
         throw new WebDriverManagerException("Driver " + getDriverName()
                 + " not found (using temporal folder " + parentFolder + ")");
