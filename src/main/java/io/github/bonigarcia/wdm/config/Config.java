@@ -272,6 +272,9 @@ public class Config {
     ConfigKey<String> browserWatcherVersion = new ConfigKey<>(
             "wdm.browserWatcherVersion", String.class);
 
+    ConfigKey<Boolean> tracing = new ConfigKey<Boolean>(
+            "wdm.tracing", Boolean.class);
+
     private <T> T resolve(ConfigKey<T> configKey) {
         String name = configKey.getName();
         T tValue = configKey.getValue();
@@ -1496,4 +1499,12 @@ public class Config {
         return this;
     }
 
+    public Config setEnableTracing(boolean value) {
+        this.tracing.setValue(value);
+        return this;
+    }
+
+    public Boolean getEnableTracing() {
+        return resolve(tracing);
+    }
 }
