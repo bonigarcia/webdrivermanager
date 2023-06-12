@@ -32,7 +32,7 @@ class ChromeVersionTest extends VersionTestParent {
     @BeforeEach
     void setup() {
         driverClass = ChromeDriver.class;
-        specificVersions = new String[] { "2.10", "2.33" };
+        specificVersions = new String[] { "115.0.5790.24", "116.0.5817.0" };
     }
 
 }
