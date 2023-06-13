@@ -19,7 +19,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout GitHub repo
-      uses: actions/checkout@v3.2.0
+      uses: actions/checkout@v3
     - name: Set up Java
       uses: actions/setup-java@v3.9.0
       with:
