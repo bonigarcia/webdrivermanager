@@ -22,6 +22,7 @@ import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Locale.ROOT;
 import static java.util.Optional.empty;
+import static java.util.stream.Collectors.toList;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
@@ -47,7 +48,11 @@ import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.config.Config;
 import io.github.bonigarcia.wdm.config.OperatingSystem;
+import io.github.bonigarcia.wdm.online.GoodVersions;
+import io.github.bonigarcia.wdm.online.GoodVersions.Versions;
 import io.github.bonigarcia.wdm.online.HttpClient;
+import io.github.bonigarcia.wdm.online.LastGoodVersions;
+import io.github.bonigarcia.wdm.online.Parser;
 
 /**
  * Driver and browser version detector.
@@ -109,6 +114,41 @@ public class VersionDetector {
             Optional<String> driverVersion, URL driverUrl,
             Charset versionCharset, String driverName, String versionLabel,
             String latestLabel, Optional<String> optOsLabel) {
+
+        if (driverName.equalsIgnoreCase("chromedriver")) {
+            String cftUrl = null;
+            try {
+                if (driverVersion.isPresent()
+                        && Integer.parseInt(driverVersion.get()) >= 115) {
+                    // Parse JSON using GoodVersions
+                    cftUrl = config.getChromeGoodVersionsUrl();
+
+                    System.out.println(driverVersion);
+                    GoodVersions versions = Parser.parseJson(httpClient, cftUrl,
+                            GoodVersions.class);
+                    List<Versions> fileteredList = versions.versions.stream()
+                            .filter(v -> v.version
+                                    .startsWith(driverVersion.get()))
+                            .collect(toList());
+
+                    return Optional.of(fileteredList
+                            .get(fileteredList.size() - 1).version);
+                } else {
+                    // Parse JSON using LastGoodVersions
+                    cftUrl = config.getChromeLastGoodVersionsUrl();
+
+                    System.out.println(driverVersion);
+                    LastGoodVersions versions = Parser.parseJson(httpClient,
+                            cftUrl, LastGoodVersions.class);
+                    return Optional.of(versions.channels.stable.version);
+                }
+            } catch (Exception e) {
+                log.warn("Exception reading {} to get version of {} ({})",
+                        cftUrl, driverName, e.getMessage());
+            }
+
+        }
+
         String osLabel = optOsLabel.isPresent() ? optOsLabel.get() : "";
         String url = driverVersion.isPresent()
                 ? driverUrl + latestLabel + "_" + driverVersion.get() + osLabel
@@ -127,6 +167,7 @@ public class VersionDetector {
             log.debug("Latest version of {} according to {} is {}", driverName,
                     url, result.get());
         }
+
         return result;
     }
 
@@ -282,17 +323,8 @@ public class VersionDetector {
             String parsedBrowserVersion = browserVersionOutput
                     .replaceAll(config.getBrowserVersionDetectionRegex(), "");
             log.trace("Detected browser version is {}", parsedBrowserVersion);
-            String majorVersion = getMajorVersion(parsedBrowserVersion);
 
-            // As of Chrome/chromedriver 115+, the online metadata for version
-            // discovery is different. See:
-            // https://googlechromelabs.github.io/chrome-for-testing/
-            if (command.toLowerCase(ROOT).contains("chrome")
-                    && Integer.parseInt(majorVersion) >= 115) {
-                return Optional.of(parsedBrowserVersion);
-            }
-
-            return Optional.of(majorVersion);
+            return Optional.of(getMajorVersion(parsedBrowserVersion));
         } else {
 
             return empty();

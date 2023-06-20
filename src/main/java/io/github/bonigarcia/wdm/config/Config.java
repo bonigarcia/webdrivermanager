@@ -127,6 +127,10 @@ public class Config {
             "wdm.chromeDriverMirrorUrl", URL.class);
     ConfigKey<String> chromeDownloadUrlPattern = new ConfigKey<>(
             "wdm.chromeDownloadUrlPattern", String.class);
+    ConfigKey<String> chromeGoodVersionsUrl = new ConfigKey<>(
+            "wdm.chromeGoodVersionsUrl", String.class);
+    ConfigKey<String> chromeLastGoodVersionsUrl = new ConfigKey<>(
+            "wdm.chromeLastGoodVersionsUrl", String.class);
 
     ConfigKey<String> edgeDriverVersion = new ConfigKey<>(
             "wdm.edgeDriverVersion", String.class);
@@ -787,6 +791,24 @@ public class Config {
 
     public Config setChromeDownloadUrlPattern(String value) {
         this.chromeDownloadUrlPattern.setValue(value);
+        return this;
+    }
+
+    public String getChromeGoodVersionsUrl() {
+        return resolve(chromeGoodVersionsUrl);
+    }
+
+    public Config setChromeGoodVersionsUrl(String value) {
+        this.chromeGoodVersionsUrl.setValue(value);
+        return this;
+    }
+
+    public String getChromeLastGoodVersionsUrl() {
+        return resolve(chromeLastGoodVersionsUrl);
+    }
+
+    public Config setChromeLastGoodVersionsUrl(String value) {
+        this.chromeLastGoodVersionsUrl.setValue(value);
         return this;
     }
 

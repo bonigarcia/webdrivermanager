@@ -1200,25 +1200,17 @@ public abstract class WebDriverManager {
 
         if (optionalBrowserVersion.isPresent()) {
             resolvedBrowserVersion = optionalBrowserVersion.get();
-            Optional<String> optionalDriverVersion;
-            // TODO restore this
-            if (resolvedBrowserVersion.contains(".")) {
-                optionalDriverVersion = Optional.of(resolvedBrowserVersion);
+            preferenceKey = getKeyForResolutionCache() + resolvedBrowserVersion;
+            Optional<String> optionalDriverVersion = getValueFromResolutionCache(
+                    preferenceKey);
 
-            } else {
-                preferenceKey = getKeyForResolutionCache()
-                        + resolvedBrowserVersion;
-                optionalDriverVersion = getValueFromResolutionCache(
-                        preferenceKey);
-
-                if (!optionalDriverVersion.isPresent()) {
-                    optionalDriverVersion = getDriverVersionFromRepository(
-                            optionalBrowserVersion);
-                }
-                if (!optionalDriverVersion.isPresent()) {
-                    optionalDriverVersion = getVersionDetector()
-                            .getDriverVersionFromProperties(preferenceKey);
-                }
+            if (!optionalDriverVersion.isPresent()) {
+                optionalDriverVersion = getDriverVersionFromRepository(
+                        optionalBrowserVersion);
+            }
+            if (!optionalDriverVersion.isPresent()) {
+                optionalDriverVersion = getVersionDetector()
+                        .getDriverVersionFromProperties(preferenceKey);
             }
             if (optionalDriverVersion.isPresent()) {
                 driverVersion = optionalDriverVersion.get();
