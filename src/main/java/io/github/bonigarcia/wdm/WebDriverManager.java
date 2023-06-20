@@ -1345,8 +1345,8 @@ public abstract class WebDriverManager {
                     && getDriverName().contains(removeExtension(f.getName()))) {
                 log.trace("Found driver in post-download: {}", f);
                 listFiles.add(f);
-            } else {
-                f.delete();
+            } else if (!f.delete()) {
+                log.trace("Exception deleting temporal file {}", f);
             }
         }
         if (!listFiles.isEmpty()) {
