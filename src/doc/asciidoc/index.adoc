@@ -773,6 +773,7 @@ There are other resources related to Selenium-Jupiter and automated testing you 
 Or the following papers:
 
 * García, Boni, et al. "https://www.sciencedirect.com/science/article/pii/S0164121223001188[Enhancing Web Applications Observability through Instrumented Automated Browsers]." _Journal of Systems and Software_ (2023): 111723.
+* Leotta, M., et al. "https://ieeexplore.ieee.org/document/10132210[Challenges of End-to-End Testing with Selenium WebDriver and How to Face Them: A Survey]". In the 16th _IEEE Conference on Software Testing, Verification and Validation_ (ICST), 2023, Dublin, Ireland. April 2023.
 * Leotta, M., et al. "https://link.springer.com/chapter/10.1007/978-3-031-14179-9_3[An Empirical Study to Quantify the SetUp and Maintenance Benefits of Adopting WebDriverManager]." _15th International Conference on the Quality of Information and Communications Technology_ (QUATIC) 2022, Talavera de la Reina, Spain. September 2022.
 * García, Boni, et al. "https://www.sciencedirect.com/science/article/abs/pii/S0164121222000516[Selenium-Jupiter: A JUnit 5 extension for Selenium WebDriver]." _Journal of Systems and Software_ (2022): 111298.
 * García, Boni, et al. "https://link.springer.com/article/10.1007%2Fs10664-021-09975-3[Automated driver management for Selenium WebDriver]." _Empirical Software Engineering_ 26.5 (2021): 1-51.
