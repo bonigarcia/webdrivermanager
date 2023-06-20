@@ -86,7 +86,7 @@ public class WebDriverCreator {
                 log.trace("Requesting {} (the response code is {})", remoteUrl,
                         responseCode);
 
-                if (config.getEnableTracing()) {
+                if (config.isEnableTracing()) {
                     webdriver = new RemoteWebDriver(url, capabilities);
                 } else {
                     webdriver = new RemoteWebDriver(url, capabilities, false);
