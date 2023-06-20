@@ -29,6 +29,7 @@ import static io.github.bonigarcia.wdm.config.DriverManagerType.OPERA;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.LINUX;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.MAC;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.WIN;
+import static io.github.bonigarcia.wdm.online.Downloader.deleteFile;
 import static io.github.bonigarcia.wdm.versions.Shell.runAndWait;
 import static java.lang.Integer.parseInt;
 import static java.lang.String.valueOf;
@@ -1200,6 +1201,7 @@ public abstract class WebDriverManager {
         if (optionalBrowserVersion.isPresent()) {
             resolvedBrowserVersion = optionalBrowserVersion.get();
             Optional<String> optionalDriverVersion;
+            // TODO restore this
             if (resolvedBrowserVersion.contains(".")) {
                 optionalDriverVersion = Optional.of(resolvedBrowserVersion);
 
@@ -1313,8 +1315,8 @@ public abstract class WebDriverManager {
                     && getDriverName().contains(removeExtension(f.getName()))) {
                 log.trace("Found driver in post-download: {}", f);
                 listFiles.add(f);
-            } else if (!f.delete()) {
-                log.trace("Exception deleting temporal file {}", f);
+            } else {
+                deleteFile(f);
             }
         }
         if (!listFiles.isEmpty()) {

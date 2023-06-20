@@ -72,7 +72,7 @@ class PropertiesTest {
         assertThat(config.isAvoidFallback()).isFalse();
         assertThat(config.isAvoidReadReleaseFromRepository()).isFalse();
         assertThat(config.isAvoidTmpFolder()).isFalse();
-        assertThat(config.isEnableTracing()).isTrue();
+        assertThat(config.getEnableTracing()).isTrue();
 
         assertThat(config.isClearResolutionCache()).isFalse();
         assertThat(config.isClearDriverCache()).isFalse();

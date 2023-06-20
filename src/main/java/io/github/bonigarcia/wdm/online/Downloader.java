@@ -67,7 +67,7 @@ import io.github.bonigarcia.wdm.versions.VersionDetector;
  */
 public class Downloader {
 
-    final Logger log = getLogger(lookup().lookupClass());
+    static final Logger log = getLogger(lookup().lookupClass());
 
     HttpClient httpClient;
     Config config;
@@ -326,7 +326,7 @@ public class Downloader {
         }
     }
 
-    protected void deleteFile(File file) {
+    public static void deleteFile(File file) {
         log.trace("Deleting file {}", file);
         try {
             delete(file.toPath());

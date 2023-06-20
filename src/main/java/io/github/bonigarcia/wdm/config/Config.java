@@ -1415,7 +1415,7 @@ public class Config {
         return this;
     }
 
-    public Boolean isEnableTracing() {
+    public boolean getEnableTracing() {
         return resolve(tracing);
     }
 }
