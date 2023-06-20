@@ -123,7 +123,6 @@ public class VersionDetector {
                     // Parse JSON using GoodVersions
                     cftUrl = config.getChromeGoodVersionsUrl();
 
-                    System.out.println(driverVersion);
                     GoodVersions versions = Parser.parseJson(httpClient, cftUrl,
                             GoodVersions.class);
                     List<Versions> fileteredList = versions.versions.stream()
@@ -137,9 +136,9 @@ public class VersionDetector {
                     // Parse JSON using LastGoodVersions
                     cftUrl = config.getChromeLastGoodVersionsUrl();
 
-                    System.out.println(driverVersion);
                     LastGoodVersions versions = Parser.parseJson(httpClient,
                             cftUrl, LastGoodVersions.class);
+
                     return Optional.of(versions.channels.stable.version);
                 }
             } catch (Exception e) {

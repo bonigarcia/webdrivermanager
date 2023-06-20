@@ -40,6 +40,10 @@ public class Parser {
 
     static final Logger log = getLogger(lookup().lookupClass());
 
+    private Parser() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static <T> T parseJson(HttpClient client, String url, Class<T> klass)
             throws IOException {
         HttpGet get = client.createHttpGet(new URL(url));
