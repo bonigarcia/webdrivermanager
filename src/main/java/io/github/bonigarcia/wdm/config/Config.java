@@ -272,8 +272,7 @@ public class Config {
     ConfigKey<String> browserWatcherVersion = new ConfigKey<>(
             "wdm.browserWatcherVersion", String.class);
 
-    ConfigKey<Boolean> tracing = new ConfigKey<Boolean>(
-            "wdm.tracing", Boolean.class);
+    ConfigKey<Boolean> tracing = new ConfigKey<>("wdm.tracing", Boolean.class);
 
     private <T> T resolve(ConfigKey<T> configKey) {
         String name = configKey.getName();
