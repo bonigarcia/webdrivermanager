@@ -545,14 +545,6 @@ public class DockerService {
         return browserVersion.toLowerCase(ROOT).contains(LATEST_MINUS);
     }
 
-    /**
-     * @deprecated Replaced by {@link #isBrowserVersionLatestMinus(String)}
-     */
-    @Deprecated
-    public boolean isBrowserVersionLatesMinus(String browserVersion) {
-        return isBrowserVersionLatestMinus(browserVersion);
-    }
-
     private String getPrefixedDockerImage(String dockerImage) {
         String newDockerImage = dockerImage;
         String prefix = config.getDockerPrivateEndpoint();

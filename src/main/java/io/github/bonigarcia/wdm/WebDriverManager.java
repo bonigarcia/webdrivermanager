@@ -556,14 +556,6 @@ public abstract class WebDriverManager {
         return this;
     }
 
-    /**
-     * @deprecated Replaced by {@link #dockerRecordingPrefix(String)}
-     */
-    @Deprecated
-    public WebDriverManager recordingPrefix(String prefix) {
-        return dockerRecordingPrefix(prefix);
-    }
-
     public WebDriverManager dockerRecordingOutput(String path) {
         return dockerRecordingOutput(Paths.get(path));
     }
@@ -571,22 +563,6 @@ public abstract class WebDriverManager {
     public WebDriverManager dockerRecordingOutput(Path path) {
         config().setDockerRecordingOutput(path);
         return this;
-    }
-
-    /**
-     * @deprecated Replaced by {@link #dockerRecordingOutput(String)}
-     */
-    @Deprecated
-    public WebDriverManager recordingOutput(String path) {
-        return dockerRecordingOutput(Paths.get(path));
-    }
-
-    /**
-     * @deprecated Replaced by {@link #dockerRecordingOutput(String)}
-     */
-    @Deprecated
-    public WebDriverManager recordingOutput(Path path) {
-        return dockerRecordingOutput(path);
     }
 
     public WebDriverManager dockerPrivateEndpoint(String endpoint) {
@@ -632,14 +608,6 @@ public abstract class WebDriverManager {
     public WebDriverManager dockerCustomImage(String dockerImage) {
         config().setDockerCustomImage(dockerImage);
         return this;
-    }
-
-    /**
-     * @deprecated Replaced by {@link #dockerCustomImage(String)}
-     */
-    @Deprecated
-    public WebDriverManager dockerImage(String dockerImage) {
-        return dockerCustomImage(dockerImage);
     }
 
     public WebDriverManager driverVersion(String driverVersion) {

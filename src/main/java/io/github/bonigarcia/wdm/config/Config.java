@@ -517,14 +517,6 @@ public class Config {
         return resolve(avoidResolutionCache);
     }
 
-    /**
-     * @deprecated Replaced by {@link #isAvoidResolutionCache()}
-     */
-    @Deprecated
-    public boolean isAvoidingResolutionCache() {
-        return isAvoidResolutionCache();
-    }
-
     public Config setAvoidResolutionCache(boolean value) {
         this.avoidResolutionCache.setValue(value);
         return this;
@@ -570,14 +562,6 @@ public class Config {
         return resolve(versionsPropertiesOnlineFirst);
     }
 
-    /**
-     * @deprecated Replaced by {@link #isVersionsPropertiesOnlineFirst()}
-     */
-    @Deprecated
-    public boolean getVersionsPropertiesOnlineFirst() {
-        return isVersionsPropertiesOnlineFirst();
-    }
-
     public Config setVersionsPropertiesOnlineFirst(boolean value) {
         this.versionsPropertiesOnlineFirst.setValue(value);
         return this;
@@ -585,14 +569,6 @@ public class Config {
 
     public boolean isCommandsPropertiesOnlineFirst() {
         return resolve(commandsPropertiesOnlineFirst);
-    }
-
-    /**
-     * @deprecated Replaced by {@link #isCommandsPropertiesOnlineFirst()}
-     */
-    @Deprecated
-    public boolean getCommandsPropertiesOnlineFirst() {
-        return isCommandsPropertiesOnlineFirst();
     }
 
     public Config setCommandsPropertiesOnlineFirst(boolean value) {
@@ -622,14 +598,6 @@ public class Config {
         return resolve(clearResolutionCache);
     }
 
-    /**
-     * @deprecated Replaced by {@link #isClearResolutionCache()}
-     */
-    @Deprecated
-    public boolean getClearingResolutionCache() {
-        return isClearResolutionCache();
-    }
-
     public Config setClearResolutionCache(Boolean value) {
         this.clearResolutionCache.setValue(value);
         return this;
@@ -637,14 +605,6 @@ public class Config {
 
     public boolean isClearDriverCache() {
         return resolve(clearDriverCache);
-    }
-
-    /**
-     * @deprecated Replaced by {@link #isClearDriverCache()}
-     */
-    @Deprecated
-    public boolean getClearingDriverCache() {
-        return isClearDriverCache();
     }
 
     public Config setClearDriverCache(Boolean value) {
@@ -938,14 +898,6 @@ public class Config {
         return this;
     }
 
-    /**
-     * @deprecated Replaced by {@link #setIExplorerDriverExport(String)}
-     */
-    @Deprecated
-    public Config setInternetExplorerDriverExport(String value) {
-        return setIExplorerDriverExport(value);
-    }
-
     public URL getIExplorerDriverUrl() {
         return resolve(iExplorerDriverUrl);
     }
@@ -1186,37 +1138,13 @@ public class Config {
         return resolve(dockerEnableVnc);
     }
 
-    /**
-     * @deprecated Replaced by {@link #isDockerEnabledVnc()}
-     */
-    @Deprecated
-    public boolean isEnabledDockerVnc() {
-        return isDockerEnabledVnc();
-    }
-
     public Config setDockerEnabledVnc(boolean value) {
         this.dockerEnableVnc.setValue(value);
         return this;
     }
 
-    /**
-     * @deprecated Replaced by {@link #setDockerEnabledVnc(boolean)}
-     */
-    @Deprecated
-    public Config setDockerEnableVnc(boolean value) {
-        return setDockerEnabledVnc(value);
-    }
-
     public boolean isDockerViewOnly() {
         return resolve(dockerViewOnly);
-    }
-
-    /**
-     * @deprecated Replaced by {@link #isDockerViewOnly()}
-     */
-    @Deprecated
-    public boolean getDockerViewOnly() {
-        return isDockerViewOnly();
     }
 
     public Config setDockerViewOnly(boolean value) {
@@ -1228,25 +1156,9 @@ public class Config {
         return resolve(dockerEnableRecording);
     }
 
-    /**
-     * @deprecated Replaced by {@link #isDockerEnabledRecording()}
-     */
-    @Deprecated
-    public boolean isEnabledDockerRecording() {
-        return isDockerEnabledRecording();
-    }
-
     public Config setDockerEnabledRecording(boolean value) {
         this.dockerEnableRecording.setValue(value);
         return this;
-    }
-
-    /**
-     * @deprecated Replaced by {@link #setDockerEnabledRecording(boolean)}
-     */
-    @Deprecated
-    public Config setDockerEnableRecording(boolean value) {
-        return setDockerEnabledRecording(value);
     }
 
     public String getDockerScreenResolution() {
