@@ -1,5 +1,18 @@
 # Changelog
 
+## [5.4.0] - 2023-06-21
+
+### Changed
+- Bump to Java 11 (required in Selenium as of September 30, 2023). See https://www.selenium.dev/blog/2023/java-8-support/
+
+### Added
+- Use Chrome for Testing (CfT) JSON endpoints for version discovering as of chromedriver 115. See https://chromedriver.chromium.org/downloads
+- Create config option to enable/disable tracing for RemoteWebDriver (#1043)
+
+### Removed
+- Remove all deprecated methods in WebDriverManager API
+
+
 ## [5.3.3] - 2023-05-11
 
 ### Added
