@@ -542,11 +542,6 @@ public abstract class WebDriverManager {
         return this;
     }
 
-    public WebDriverManager enableTracing() {
-        config().setEnableTracing(true);
-        return this;
-    }
-
     public WebDriverManager disableTracing() {
         config().setEnableTracing(false);
         return this;

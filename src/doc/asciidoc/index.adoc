@@ -660,7 +660,7 @@ HTTP proxy. It can be also configured using the environment variable  `HTTPS_PRO
 |`clearResolutionCache()`|`wdm.clearResolutionCache` `=true`|`false` (not cleaning resolution cache)|Clean resolution cache
 |`ttl(int)`|`wdm.ttl`|`86400` (i.e., 1 day)|TTL in seconds in which the resolved driver versions are valid in the resolution cache.
 |`ttlBrowsers(int)`|`wdm.ttlForBrowsers`|`3600` (i.e., 1 hour)|TTL value in seconds in which the browser versions are valid in the resolution cache (also used for dockerized browsers).
-|`enableTracing` `disableTracing`|`wdm.tracing=false`|`true` (RemoteWebDriver tracing enabled by default)|Disable OpenTelemetry tracing for RemoteWebDriver
+|`disableTracing()`|`wdm.tracing=false`|`true` (`RemoteWebDriver` tracing enabled by default)|Disable OpenTelemetry tracing for `RemoteWebDriver`
 |=======
 
 [[docker_config]]
