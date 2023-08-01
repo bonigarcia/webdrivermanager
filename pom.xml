@@ -16,7 +16,7 @@
 
         <!-- provided -->
         <selenium.version>4.11.0</selenium.version>
-        <javalin.version>5.6.1</javalin.version>
+        <javalin.version>5.6.2</javalin.version>
 
         <!-- test -->
         <logback.version>1.4.8</logback.version>
