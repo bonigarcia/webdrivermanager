@@ -6,9 +6,6 @@
         "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-linux-aarch64.tar.gz"
       },
       {
-        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-linux-aarch64.tar.gz.asc"
-      },
-      {
         "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.33.0/geckodriver-v0.33.0-linux32.tar.gz"
       },
       {
