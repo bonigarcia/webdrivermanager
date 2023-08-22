@@ -744,6 +744,61 @@ When the host is Mac OS or Windows, we can use the DNS name `host.docker.interna
 ==== Chrome 92-94 in Docker
 An https://bugs.chromium.org/p/chromedriver/issues/detail?id=3857[issue] affected Chrome 92 to 94 and Docker. The problem can be solved by using the argument `--disable-gpu` in Chrome and Edge. This argument is used by WebDriverManager 5 to avoid the issue. Nevertheless, some situations are still impossible to fix (e.g., when using https://hub.docker.com/r/bonigarcia/webdrivermanager[WebDriverManager in Docker] as CLI or Server) for Chrome 92 to 94 in Docker.
 
+
+[discrete]
+==== Support for chromedriver 115+
+The chromedriver team has stopped publishing the chromedriver releases and metadata using their traditional https://chromedriver.chromium.org/downloads[chromedriver download repository] with chromedriver 114. This way, as of **chromedriver 115**, the chromedriver releases can only be discovered programmatically using the  https://github.com/GoogleChromeLabs/chrome-for-testing#json-api-endpoints[Chrome for Testing (CfT) JSON endpoints]. 
+
+This change is very relevant for WebDriverManager, since, as of Chrome 115 and 116, chromedriver cannot be managed automatically by WebDriverManager using the traditional way. Therefore, for older versions of WebDriverManager, this situation led to errors like the following:
+
+[source]
+----
+io.github.bonigarcia.wdm.online.HttpClient: Error HTTP 404 executing https://chromedriver.storage.googleapis.com/LATEST_RELEASE_116
+----
+
+[source]
+----
+org.openqa.selenium.SessionNotCreatedException: Could not start a new session. Response code 500. Message: session not created: This version of ChromeDriver only supports Chrome version 114
+----
+
+WebDriverManager 5.4+ implements the support for the CfT endpoints. Therefore, the solution to this problem is to bump WebDriverManager to the **latest version** ({project-version} currently).
+
+Notice that as of WebDriverManager 5.4, **Java 11** is required. This requirement is mandatory since WebDriverManager is connected to Selenium, and the Selenium team announced that https://www.selenium.dev/blog/2023/java-8-support/[as of September 2023, the minimum Java version will be Java 11].
+
+
+== Troubleshooting
+
+For getting the WebDriverManager logs, you need to include a Logback configuration file (for example, like https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/resources/logback-test.xml[this]) in your project classpath. The name of this file should be `src/test/resources/logback-test.xml` (if you want logs only for your tests) or `src/test/resources/logback.xml` (if you want logs for both tests and application code). Then, you need to set the level to `DEBUG` or `TRACE`, e.g.:
+
+```
+<logger name="io.github.bonigarcia" level="TRACE" />
+```
+
+After that, when running a test, your should see something like this:
+
+```
+2021-12-03 11:54:24 [main] DEBUG i.g.b.wdm.cache.ResolutionCache.checkValidity(156) -- Removing resolution chrome=96 from cache (expired on Thu Nov 25 15:43:32 CET 2021)
+2021-12-03 11:54:24 [main] TRACE i.g.b.wdm.versions.VersionDetector.getVersionsInputStream(315) -- Reading online commands.properties to find out driver version
+2021-12-03 11:54:24 [main] DEBUG i.g.b.wdm.versions.VersionDetector.getBrowserVersionFromTheShell(205) -- Detecting chrome version using online commands.properties
+2021-12-03 11:54:24 [main] DEBUG i.g.bonigarcia.wdm.versions.Shell.runAndWaitArray(65) -- Running command on the shell: [cmd.exe, /C, wmic, datafile, where, name="%PROGRAMFILES(X86):\=\\%\\Google\\Chrome\\Application\\chrome.exe", get, Version, /value]
+2021-12-03 11:54:24 [main] DEBUG i.g.bonigarcia.wdm.versions.Shell.runAndWaitArray(69) -- Result: Version=96.0.4664.45
+2021-12-03 11:54:24 [main] TRACE i.g.b.wdm.versions.VersionDetector.getBrowserVersionUsingCommand(284) -- Detected browser version is 96.0.4664.45
+2021-12-03 11:54:24 [main] DEBUG i.g.b.wdm.cache.ResolutionCache.checkValidity(156) -- Removing resolution chrome96=96.0.4664.45 from cache (expired on Thu Nov 25 18:45:50 CET 2021)
+2021-12-03 11:54:25 [main] DEBUG i.g.b.wdm.versions.VersionDetector.getDriverVersionFromRepository(127) -- Latest version of chromedriver according to https://chromedriver.storage.googleapis.com/LATEST_RELEASE_96 is 96.0.4664.45
+2021-12-03 11:54:25 [main] INFO  i.g.bonigarcia.wdm.WebDriverManager.resolveDriverVersion(1012) -- Using chromedriver 96.0.4664.45 (resolved driver for Chrome 96)
+2021-12-03 11:54:25 [main] DEBUG i.g.b.wdm.cache.ResolutionCache.putValueInResolutionCacheIfEmpty(119) -- Storing resolution chrome=96 in cache (valid until 12:54:25 03/12/2021 CET)
+2021-12-03 11:54:25 [main] DEBUG i.g.b.wdm.cache.ResolutionCache.putValueInResolutionCacheIfEmpty(119) -- Storing resolution chrome96=96.0.4664.45 in cache (valid until 11:54:25 04/12/2021 CET)
+2021-12-03 11:54:25 [main] TRACE i.g.b.wdm.cache.CacheHandler.getDriverFromCache(83) -- Checking if chromedriver exists in cache
+2021-12-03 11:54:25 [main] TRACE i.g.b.wdm.cache.CacheHandler.filterCacheBy(68) -- Filter cache by chromedriver -- input list [C:\Users\boni\.cache\selenium\chromedriver\win32\81.0.4044.138\chromedriver.exe, C:\Users\boni\.cache\selenium\chromedriver\win32\83.0.4103.39\chromedriver.exe, C:\Users\boni\.cache\selenium\chromedriver\win32\95.0.4638.69\chromedriver.exe, C:\Users\boni\.cache\selenium\chromedriver\win32\96.0.4664.45\chromedriver.exe, C:\Users\boni\.cache\selenium\geckodriver\win64\0.30.0\geckodriver.exe, C:\Users\boni\.cache\selenium\msedgedriver\win64\95.0.1020.53\msedgedriver.exe, C:\Users\boni\.cache\selenium\msedgedriver\win64\96.0.1054.29\msedgedriver.exe, C:\Users\boni\.cache\selenium\msedgedriver\win64\96.0.1054.34\msedgedriver.exe, C:\Users\boni\.cache\selenium\operadriver\win64\94.0.4606.61\operadriver.exe, C:\Users\boni\.cache\selenium\operadriver\win64\95.0.4638.54\operadriver.exe, C:\Users\boni\.cache\selenium\resolution.properties] -- output list [C:\Users\boni\.cache\selenium\chromedriver\win32\81.0.4044.138\chromedriver.exe, C:\Users\boni\.cache\selenium\chromedriver\win32\83.0.4103.39\chromedriver.exe, C:\Users\boni\.cache\selenium\chromedriver\win32\95.0.4638.69\chromedriver.exe, C:\Users\boni\.cache\selenium\chromedriver\win32\96.0.4664.45\chromedriver.exe] 
+2021-12-03 11:54:25 [main] TRACE i.g.b.wdm.cache.CacheHandler.filterCacheBy(68) -- Filter cache by 96.0.4664.45 -- input list [C:\Users\boni\.cache\selenium\chromedriver\win32\81.0.4044.138\chromedriver.exe, C:\Users\boni\.cache\selenium\chromedriver\win32\83.0.4103.39\chromedriver.exe, C:\Users\boni\.cache\selenium\chromedriver\win32\95.0.4638.69\chromedriver.exe, C:\Users\boni\.cache\selenium\chromedriver\win32\96.0.4664.45\chromedriver.exe] -- output list [C:\Users\boni\.cache\selenium\chromedriver\win32\96.0.4664.45\chromedriver.exe] 
+2021-12-03 11:54:25 [main] TRACE i.g.b.wdm.cache.CacheHandler.filterCacheBy(68) -- Filter cache by WIN -- input list [C:\Users\boni\.cache\selenium\chromedriver\win32\96.0.4664.45\chromedriver.exe] -- output list [C:\Users\boni\.cache\selenium\chromedriver\win32\96.0.4664.45\chromedriver.exe] 
+2021-12-03 11:54:25 [main] DEBUG i.g.bonigarcia.wdm.WebDriverManager.manage(968) -- Driver chromedriver 96.0.4664.45 found in cache
+2021-12-03 11:54:25 [main] INFO  i.g.bonigarcia.wdm.WebDriverManager.exportDriver(1067) -- Exporting webdriver.chrome.driver as C:\Users\boni\.cache\selenium\chromedriver\win32\96.0.4664.45\chromedriver.exe
+```
+
+For further info about logging with SLF4J and Logback you can see the following https://www.stubbornjava.com/posts/logging-in-java-with-slf4j-and-logback[tutorial].
+
+
 == Community
 There are two ways to try to get community support related to WebDriverManager. First, questions can be discussed in https://stackoverflow.com/questions/tagged/webdrivermanager_java[StackOverflow], using the tag _webdrivermanager_java_. In addition, comments, suggestions, and bug-reporting should be made using the https://github.com/bonigarcia/webdrivermanager/issues[GitHub issues]. Finally, if you think WebDriverManager can be enhanced, consider contributing to the project through a  https://github.com/bonigarcia/webdrivermanager/pulls[pull request].
 

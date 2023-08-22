@@ -824,10 +824,11 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <li><a href="#examples">5. Examples</a></li>
 <li><a href="#advanced-configuration">6. Advanced Configuration</a></li>
 <li><a href="#known-issues">7. Known Issues</a></li>
-<li><a href="#community">8. Community</a></li>
-<li><a href="#support">9. Support</a></li>
-<li><a href="#further-documentation">10. Further Documentation</a></li>
-<li><a href="#about">11. About</a></li>
+<li><a href="#troubleshooting">8. Troubleshooting</a></li>
+<li><a href="#community">9. Community</a></li>
+<li><a href="#support">10. Support</a></li>
+<li><a href="#further-documentation">11. Further Documentation</a></li>
+<li><a href="#about">12. About</a></li>
 </ul>
 </div>
 </div>
@@ -3011,10 +3012,73 @@ As of WebDriverManager 5.3.0, this issue should not happen anymore (even without
 <div class="paragraph">
 <p>An <a href="https://bugs.chromium.org/p/chromedriver/issues/detail?id=3857">issue</a> affected Chrome 92 to 94 and Docker. The problem can be solved by using the argument <code>--disable-gpu</code> in Chrome and Edge. This argument is used by WebDriverManager 5 to avoid the issue. Nevertheless, some situations are still impossible to fix (e.g., when using <a href="https://hub.docker.com/r/bonigarcia/webdrivermanager">WebDriverManager in Docker</a> as CLI or Server) for Chrome 92 to 94 in Docker.</p>
 </div>
+<h4 id="support-for-chromedriver-115" class="discrete">Support for chromedriver 115+</h4>
+<div class="paragraph">
+<p>The chromedriver team has stopped publishing the chromedriver releases and metadata using their traditional <a href="https://chromedriver.chromium.org/downloads">chromedriver download repository</a> with chromedriver 114. This way, as of <strong>chromedriver 115</strong>, the chromedriver releases can only be discovered programmatically using the  <a href="https://github.com/GoogleChromeLabs/chrome-for-testing#json-api-endpoints">Chrome for Testing (CfT) JSON endpoints</a>.</p>
+</div>
+<div class="paragraph">
+<p>This change is very relevant for WebDriverManager, since, as of Chrome 115 and 116, chromedriver cannot be managed automatically by WebDriverManager using the traditional way. Therefore, for older versions of WebDriverManager, this situation led to errors like the following:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>io.github.bonigarcia.wdm.online.HttpClient: Error HTTP 404 executing https://chromedriver.storage.googleapis.com/LATEST_RELEASE_116</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>org.openqa.selenium.SessionNotCreatedException: Could not start a new session. Response code 500. Message: session not created: This version of ChromeDriver only supports Chrome version 114</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>WebDriverManager 5.4+ implements the support for the CfT endpoints. Therefore, the solution to this problem is to bump WebDriverManager to the <strong>latest version</strong> (5.4.1 currently).</p>
+</div>
+<div class="paragraph">
+<p>Notice that as of WebDriverManager 5.4, <strong>Java 11</strong> is required. This requirement is mandatory since WebDriverManager is connected to Selenium, and the Selenium team announced that <a href="https://www.selenium.dev/blog/2023/java-8-support/">as of September 2023, the minimum Java version will be Java 11</a>.</p>
+</div>
 </div>
 </div>
 <div class="sect1">
-<h2 id="community"><a class="anchor" href="#community"></a>8. Community</h2>
+<h2 id="troubleshooting"><a class="anchor" href="#troubleshooting"></a>8. Troubleshooting</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>For getting the WebDriverManager logs, you need to include a Logback configuration file (for example, like <a href="https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/resources/logback-test.xml">this</a>) in your project classpath. The name of this file should be <code>src/test/resources/logback-test.xml</code> (if you want logs only for your tests) or <code>src/test/resources/logback.xml</code> (if you want logs for both tests and application code). Then, you need to set the level to <code>DEBUG</code> or <code>TRACE</code>, e.g.:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>&lt;logger name=&quot;io.github.bonigarcia&quot; level=&quot;TRACE&quot; /&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>After that, when running a test, your should see something like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code>2021-12-03 11:54:24 [main] DEBUG i.g.b.wdm.cache.ResolutionCache.checkValidity(156) -- Removing resolution chrome=96 from cache (expired on Thu Nov 25 15:43:32 CET 2021)
+2021-12-03 11:54:24 [main] TRACE i.g.b.wdm.versions.VersionDetector.getVersionsInputStream(315) -- Reading online commands.properties to find out driver version
+2021-12-03 11:54:24 [main] DEBUG i.g.b.wdm.versions.VersionDetector.getBrowserVersionFromTheShell(205) -- Detecting chrome version using online commands.properties
+2021-12-03 11:54:24 [main] DEBUG i.g.bonigarcia.wdm.versions.Shell.runAndWaitArray(65) -- Running command on the shell: [cmd.exe, /C, wmic, datafile, where, name=&quot;%PROGRAMFILES(X86):\=\\%\\Google\\Chrome\\Application\\chrome.exe&quot;, get, Version, /value]
+2021-12-03 11:54:24 [main] DEBUG i.g.bonigarcia.wdm.versions.Shell.runAndWaitArray(69) -- Result: Version=96.0.4664.45
+2021-12-03 11:54:24 [main] TRACE i.g.b.wdm.versions.VersionDetector.getBrowserVersionUsingCommand(284) -- Detected browser version is 96.0.4664.45
+2021-12-03 11:54:24 [main] DEBUG i.g.b.wdm.cache.ResolutionCache.checkValidity(156) -- Removing resolution chrome96=96.0.4664.45 from cache (expired on Thu Nov 25 18:45:50 CET 2021)
+2021-12-03 11:54:25 [main] DEBUG i.g.b.wdm.versions.VersionDetector.getDriverVersionFromRepository(127) -- Latest version of chromedriver according to https://chromedriver.storage.googleapis.com/LATEST_RELEASE_96 is 96.0.4664.45
+2021-12-03 11:54:25 [main] INFO  i.g.bonigarcia.wdm.WebDriverManager.resolveDriverVersion(1012) -- Using chromedriver 96.0.4664.45 (resolved driver for Chrome 96)
+2021-12-03 11:54:25 [main] DEBUG i.g.b.wdm.cache.ResolutionCache.putValueInResolutionCacheIfEmpty(119) -- Storing resolution chrome=96 in cache (valid until 12:54:25 03/12/2021 CET)
+2021-12-03 11:54:25 [main] DEBUG i.g.b.wdm.cache.ResolutionCache.putValueInResolutionCacheIfEmpty(119) -- Storing resolution chrome96=96.0.4664.45 in cache (valid until 11:54:25 04/12/2021 CET)
+2021-12-03 11:54:25 [main] TRACE i.g.b.wdm.cache.CacheHandler.getDriverFromCache(83) -- Checking if chromedriver exists in cache
+2021-12-03 11:54:25 [main] TRACE i.g.b.wdm.cache.CacheHandler.filterCacheBy(68) -- Filter cache by chromedriver -- input list [C:\Users\boni\.cache\selenium\chromedriver\win32\81.0.4044.138\chromedriver.exe, C:\Users\boni\.cache\selenium\chromedriver\win32\83.0.4103.39\chromedriver.exe, C:\Users\boni\.cache\selenium\chromedriver\win32\95.0.4638.69\chromedriver.exe, C:\Users\boni\.cache\selenium\chromedriver\win32\96.0.4664.45\chromedriver.exe, C:\Users\boni\.cache\selenium\geckodriver\win64\0.30.0\geckodriver.exe, C:\Users\boni\.cache\selenium\msedgedriver\win64\95.0.1020.53\msedgedriver.exe, C:\Users\boni\.cache\selenium\msedgedriver\win64\96.0.1054.29\msedgedriver.exe, C:\Users\boni\.cache\selenium\msedgedriver\win64\96.0.1054.34\msedgedriver.exe, C:\Users\boni\.cache\selenium\operadriver\win64\94.0.4606.61\operadriver.exe, C:\Users\boni\.cache\selenium\operadriver\win64\95.0.4638.54\operadriver.exe, C:\Users\boni\.cache\selenium\resolution.properties] -- output list [C:\Users\boni\.cache\selenium\chromedriver\win32\81.0.4044.138\chromedriver.exe, C:\Users\boni\.cache\selenium\chromedriver\win32\83.0.4103.39\chromedriver.exe, C:\Users\boni\.cache\selenium\chromedriver\win32\95.0.4638.69\chromedriver.exe, C:\Users\boni\.cache\selenium\chromedriver\win32\96.0.4664.45\chromedriver.exe]
+2021-12-03 11:54:25 [main] TRACE i.g.b.wdm.cache.CacheHandler.filterCacheBy(68) -- Filter cache by 96.0.4664.45 -- input list [C:\Users\boni\.cache\selenium\chromedriver\win32\81.0.4044.138\chromedriver.exe, C:\Users\boni\.cache\selenium\chromedriver\win32\83.0.4103.39\chromedriver.exe, C:\Users\boni\.cache\selenium\chromedriver\win32\95.0.4638.69\chromedriver.exe, C:\Users\boni\.cache\selenium\chromedriver\win32\96.0.4664.45\chromedriver.exe] -- output list [C:\Users\boni\.cache\selenium\chromedriver\win32\96.0.4664.45\chromedriver.exe]
+2021-12-03 11:54:25 [main] TRACE i.g.b.wdm.cache.CacheHandler.filterCacheBy(68) -- Filter cache by WIN -- input list [C:\Users\boni\.cache\selenium\chromedriver\win32\96.0.4664.45\chromedriver.exe] -- output list [C:\Users\boni\.cache\selenium\chromedriver\win32\96.0.4664.45\chromedriver.exe]
+2021-12-03 11:54:25 [main] DEBUG i.g.bonigarcia.wdm.WebDriverManager.manage(968) -- Driver chromedriver 96.0.4664.45 found in cache
+2021-12-03 11:54:25 [main] INFO  i.g.bonigarcia.wdm.WebDriverManager.exportDriver(1067) -- Exporting webdriver.chrome.driver as C:\Users\boni\.cache\selenium\chromedriver\win32\96.0.4664.45\chromedriver.exe</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>For further info about logging with SLF4J and Logback you can see the following <a href="https://www.stubbornjava.com/posts/logging-in-java-with-slf4j-and-logback">tutorial</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="community"><a class="anchor" href="#community"></a>9. Community</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>There are two ways to try to get community support related to WebDriverManager. First, questions can be discussed in <a href="https://stackoverflow.com/questions/tagged/webdrivermanager_java">StackOverflow</a>, using the tag <em>webdrivermanager_java</em>. In addition, comments, suggestions, and bug-reporting should be made using the <a href="https://github.com/bonigarcia/webdrivermanager/issues">GitHub issues</a>. Finally, if you think WebDriverManager can be enhanced, consider contributing to the project through a  <a href="https://github.com/bonigarcia/webdrivermanager/pulls">pull request</a>.</p>
@@ -3022,7 +3086,7 @@ As of WebDriverManager 5.3.0, this issue should not happen anymore (even without
 </div>
 </div>
 <div class="sect1">
-<h2 id="support"><a class="anchor" href="#support"></a>9. Support</h2>
+<h2 id="support"><a class="anchor" href="#support"></a>10. Support</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p><a href="https://opencollective.com/webdrivermanager">WebDriverManager</a> is part of <a href="https://opencollective.com/bonigarcia">OpenCollective</a>, an online funding platform for open and transparent communities. You can support the project by contributing as a backer (i.e., a personal <a href="https://opencollective.com/webdrivermanager/donate">donation</a> or <a href="https://opencollective.com/webdrivermanager/contribute/backer-8132/checkout">recurring contribution</a>) or as a <a href="https://opencollective.com/webdrivermanager/contribute/sponsor-8133/checkout">sponsor</a> (i.e., a recurring contribution by a company).</p>
@@ -3037,7 +3101,7 @@ As of WebDriverManager 5.3.0, this issue should not happen anymore (even without
 </div>
 </div>
 <div class="sect1">
-<h2 id="further-documentation"><a class="anchor" href="#further-documentation"></a>10. Further Documentation</h2>
+<h2 id="further-documentation"><a class="anchor" href="#further-documentation"></a>11. Further Documentation</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>There are other resources related to Selenium-Jupiter and automated testing you can find helpful. For instance, the following books:</p>
@@ -3092,7 +3156,7 @@ As of WebDriverManager 5.3.0, this issue should not happen anymore (even without
 </div>
 </div>
 <div class="sect1">
-<h2 id="about"><a class="anchor" href="#about"></a>11. About</h2>
+<h2 id="about"><a class="anchor" href="#about"></a>12. About</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>WebDriverManager (Copyright © 2015-2023) is an open-source project created and maintained by <a href="https://bonigarcia.dev/">Boni García</a> (<a href="https://twitter.com/boni_gg">@boni_gg</a>), licensed under the terms of <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache 2.0 License</a>. This documentation (also available in <a href="webdrivermanager.pdf">PDF</a>) is released under the terms of <a href="https://creativecommons.org/licenses/by-nc-sa/2.0/">CC BY-NC-SA 2.0</a>.</p>
@@ -3103,7 +3167,7 @@ As of WebDriverManager 5.3.0, this issue should not happen anymore (even without
 <div id="footer">
 <div id="footer-text">
 Version 5.4.1<br>
-Updated on 19-07-2023
+Updated on 22-08-2023
 </div>
 </div>
 </body>
