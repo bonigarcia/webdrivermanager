@@ -1,5 +1,11 @@
 # Changelog
 
+## [5.5.0] - 2023-08-22
+
+### Changed
+- Downgrade to Java 8
+
+
 ## [5.4.1] - 2023-07-19
 
 ### Fixed

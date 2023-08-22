@@ -768,8 +768,6 @@ WebDriverManager 5.4+ implements the support for the CfT endpoints. Therefore, t
 WebDriverManager.chromedriver().clearDriverCache().setup();
 ----
 
-Notice that as of WebDriverManager 5.4, **Java 11** is required. This requirement is mandatory since WebDriverManager is connected to Selenium, and the Selenium team announced that https://www.selenium.dev/blog/2023/java-8-support/[as of September 2023, the minimum Java version will be Java 11].
-
 
 == Troubleshooting
 
