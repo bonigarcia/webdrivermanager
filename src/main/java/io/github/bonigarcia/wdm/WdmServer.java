@@ -21,7 +21,6 @@ import static io.github.bonigarcia.wdm.WebDriverManager.edgedriver;
 import static io.github.bonigarcia.wdm.WebDriverManager.firefoxdriver;
 import static io.github.bonigarcia.wdm.WebDriverManager.iedriver;
 import static io.github.bonigarcia.wdm.WebDriverManager.operadriver;
-import static io.javalin.http.HandlerType.DELETE;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.apache.commons.io.FileUtils.openInputStream;
@@ -61,7 +60,6 @@ import io.github.bonigarcia.wdm.config.Config;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 import io.javalin.http.Handler;
-import io.javalin.http.HandlerType;
 
 /**
  * WebDriverManager server.
@@ -72,6 +70,9 @@ import io.javalin.http.HandlerType;
 public class WdmServer {
 
     private static final String SESSION = "/session";
+    private static final String GET = "GET";
+    private static final String DELETE = "DELETE";
+    private static final String POST = "POST";
     private static final String SESSIONID = "\"sessionId\":";
 
     static final Logger log = getLogger(lookup().lookupClass());
@@ -124,7 +125,7 @@ public class WdmServer {
     }
 
     private void handleRequest(Context ctx) throws IOException {
-        HandlerType requestMethod = ctx.method();
+        String requestMethod = ctx.method();
         String requestPath = ctx.path();
         log.info("Request: {} {}", requestMethod, requestPath);
 
@@ -140,7 +141,7 @@ public class WdmServer {
     }
 
     private void seleniumServer(Context ctx) throws IOException {
-        HandlerType requestMethod = ctx.method();
+        String requestMethod = ctx.method();
         String requestPath = ctx.path().replace(path, "");
         String requestBody = ctx.body();
         log.debug("Body: {} ", requestBody);
@@ -184,7 +185,8 @@ public class WdmServer {
         }
 
         // DELETE /session/sessionId
-        if (requestMethod == DELETE && requestPath.startsWith(SESSION + "/")) {
+        if (requestMethod.equalsIgnoreCase(DELETE)
+                && requestPath.startsWith(SESSION + "/")) {
             String sessionIdFromPath = getSessionIdFromPath(requestPath);
             wdmMap.get(sessionIdFromPath).quit();
             wdmMap.remove(sessionIdFromPath);
@@ -260,7 +262,7 @@ public class WdmServer {
         String driverLength = String.valueOf(driver.length());
 
         // Response
-        ctx.res().setHeader("Content-Disposition",
+        ctx.res.setHeader("Content-Disposition",
                 "attachment; filename=\"" + driverName + "\"");
         ctx.result(openInputStream(driver));
         log.info("Server response: {} {} ({} bytes)", driverName, driverVersion,
@@ -272,7 +274,7 @@ public class WdmServer {
         }
     }
 
-    public String exchange(String url, HandlerType method, String json,
+    public String exchange(String url, String method, String json,
             int timeoutSec) throws IOException {
         String responseContent = null;
         BasicHttpClientConnectionManager connectionManager = new BasicHttpClientConnectionManager();
