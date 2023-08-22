@@ -3030,7 +3030,12 @@ As of WebDriverManager 5.3.0, this issue should not happen anymore (even without
 </div>
 </div>
 <div class="paragraph">
-<p>WebDriverManager 5.4+ implements the support for the CfT endpoints. Therefore, the solution to this problem is to bump WebDriverManager to the <strong>latest version</strong> (5.4.1 currently).</p>
+<p>WebDriverManager 5.4+ implements the support for the CfT endpoints. Therefore, the solution to this problem is to bump WebDriverManager to the <strong>latest version</strong> (5.4.1 currently). Also, to ensure that the wrong version has not been cached in the <strong>resolution cache</strong>, you can refresh completely the cache folder (at least once) as follows:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="CodeRay highlight"><code data-lang="java">WebDriverManager.chromedriver().clearDriverCache().setup();</code></pre>
+</div>
 </div>
 <div class="paragraph">
 <p>Notice that as of WebDriverManager 5.4, <strong>Java 11</strong> is required. This requirement is mandatory since WebDriverManager is connected to Selenium, and the Selenium team announced that <a href="https://www.selenium.dev/blog/2023/java-8-support/">as of September 2023, the minimum Java version will be Java 11</a>.</p>

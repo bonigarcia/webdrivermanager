@@ -761,7 +761,12 @@ io.github.bonigarcia.wdm.online.HttpClient: Error HTTP 404 executing https://chr
 org.openqa.selenium.SessionNotCreatedException: Could not start a new session. Response code 500. Message: session not created: This version of ChromeDriver only supports Chrome version 114
 ----
 
-WebDriverManager 5.4+ implements the support for the CfT endpoints. Therefore, the solution to this problem is to bump WebDriverManager to the **latest version** ({project-version} currently).
+WebDriverManager 5.4+ implements the support for the CfT endpoints. Therefore, the solution to this problem is to bump WebDriverManager to the **latest version** ({project-version} currently). Also, to ensure that the wrong version has not been cached in the *resolution cache*, you can refresh completely the cache folder (at least once) as follows:
+
+[source,java]
+----
+WebDriverManager.chromedriver().clearDriverCache().setup();
+----
 
 Notice that as of WebDriverManager 5.4, **Java 11** is required. This requirement is mandatory since WebDriverManager is connected to Selenium, and the Selenium team announced that https://www.selenium.dev/blog/2023/java-8-support/[as of September 2023, the minimum Java version will be Java 11].
 
