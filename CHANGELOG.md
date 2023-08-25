@@ -1,5 +1,11 @@
 # Changelog
 
+## [5.5.1] - 2023-08-25
+
+### Added
+- Use default CfT URL when some problem requesting the CfT endpoints happens
+
+
 ## [5.5.0] - 2023-08-22
 
 ### Changed
