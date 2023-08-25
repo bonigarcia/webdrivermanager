@@ -221,7 +221,7 @@ public abstract class WebDriverManager {
 
     protected WebDriverManager() {
         Optional<String> wdVersion = getWdmVersion(getClass());
-        if (wdVersion.equals(wdVersion)) {
+        if (wdVersion.isPresent()) {
             log.debug("Using WebDriverManager {}", wdVersion.get());
         }
         config = new Config();
