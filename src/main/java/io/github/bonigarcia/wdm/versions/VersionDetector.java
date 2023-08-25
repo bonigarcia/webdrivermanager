@@ -30,6 +30,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -67,6 +68,7 @@ public class VersionDetector {
     static final String VERSIONS_PROPERTIES = "versions.properties";
     static final String COMMANDS_PROPERTIES = "commands.properties";
     static final String FILE_PROTOCOL = "file";
+    static final String CFT_URL = "https://googlechromelabs.github.io/chrome-for-testing/";
 
     final Logger log = getLogger(lookup().lookupClass());
 
@@ -142,10 +144,16 @@ public class VersionDetector {
                     return Optional.of(versions.channels.stable.version);
                 }
             } catch (Exception e) {
-                log.warn("Exception reading {} to get version of {} ({})",
+                log.warn(
+                        "Exception reading CfT URL ('{}') to get version of {} ({})",
                         cftUrl, driverName, e.getMessage());
+                try {
+                    driverUrl = new URL(CFT_URL);
+                } catch (MalformedURLException e1) {
+                    log.error("Exception creating CfT URL {}: {}", CFT_URL,
+                            e.getMessage());
+                }
             }
-
         }
 
         String osLabel = optOsLabel.isPresent() ? optOsLabel.get() : "";
