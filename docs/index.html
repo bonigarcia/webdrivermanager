@@ -775,12 +775,16 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <h1>WebDriverManager</h1>
 <div class="details">
 <span id="author" class="author">Boni García</span><br>
-<span id="revdate">Version 5.5.0</span>
+<span id="revdate">Version 5.5.1</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
 <ul class="sectlevel1">
-<li><a href="#motivation">1. Motivation</a></li>
+<li><a href="#motivation">1. Motivation</a>
+<ul class="sectlevel2">
+<li><a href="#webdrivermanager-and-selenium-manager">1.1. WebDriverManager and Selenium Manager</a></li>
+</ul>
+</li>
 <li><a href="#setup">2. Setup</a></li>
 <li><a href="#features">3. Features</a>
 <ul class="sectlevel2">
@@ -959,6 +963,24 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 </div>
 </div>
 </div>
+<div class="sect2">
+<h3 id="webdrivermanager-and-selenium-manager"><a class="anchor" href="#webdrivermanager-and-selenium-manager"></a>1.1. WebDriverManager and Selenium Manager</h3>
+<div class="paragraph">
+<p>Maybe you have heard (and if not, you should) about <a href="https://www.selenium.dev/documentation/selenium_manager/">Selenium Manager</a>. Selenium Manager is the official driver manager of the Selenium project, and it is shipped out of the box with every Selenium release. You might have some doubts about this:</p>
+</div>
+<div class="paragraph">
+<p><em>Is Selenium Manager a replacement for WebDriverManger?</em> For the use case of automated driver management, yes. In other words, if you use WebDriverManager only for driver management, you can safely switch to Selenium Manager.</p>
+</div>
+<div class="paragraph">
+<p><em>What are the differences between WebDriverManager and Selenium Manager?</em> Both projects provide automated driver management (for chromedriver, geckodriver, etc.). But, WebDriverManager provides several features not available in Selenium Manager (e.g., self-managed browsers in Docker containers or custom monitoring features). On the other side, Selenium Manager provides automated browser management (e.g., based on <a href="https://googlechromelabs.github.io/chrome-for-testing/">Chrome for Testing</a>).</p>
+</div>
+<div class="paragraph">
+<p><em>Then, should I move to Selenium Manager?</em> It depends. If you use some custom feature of WebDriverManager, you can continue using it. If you use WebDriverManager only for automated management, you can switch to Selenium Manager. However, if you cannot bump to Java 11 (which is the <a href="https://www.selenium.dev/blog/2023/java-8-support/">minimum Java version for the latest versions of Selenium by September 2023</a>), WebDriverManager can still be your library for driver management, since WebDriverManager will continue supporting Java 8 (at least for some time more).</p>
+</div>
+<div class="paragraph">
+<p><em>Will the WebDriverManger development stop?</em> WebDriverManger might still be helpful, so its development and maintenance continue.</p>
+</div>
+</div>
 </div>
 </div>
 <div class="sect1">
@@ -972,7 +994,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
     <span class="tag">&lt;groupId&gt;</span>io.github.bonigarcia<span class="tag">&lt;/groupId&gt;</span>
     <span class="tag">&lt;artifactId&gt;</span>webdrivermanager<span class="tag">&lt;/artifactId&gt;</span>
-    <span class="tag">&lt;version&gt;</span>5.5.0<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;version&gt;</span>5.5.1<span class="tag">&lt;/version&gt;</span>
     <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
@@ -983,7 +1005,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="json"><span class="error">d</span><span class="error">e</span><span class="error">p</span><span class="error">e</span><span class="error">n</span><span class="error">d</span><span class="error">e</span><span class="error">n</span><span class="error">c</span><span class="error">i</span><span class="error">e</span><span class="error">s</span> {
-    <span class="error">t</span><span class="error">e</span><span class="error">s</span><span class="error">t</span><span class="error">I</span><span class="error">m</span><span class="error">p</span><span class="error">l</span><span class="error">e</span><span class="error">m</span><span class="error">e</span><span class="error">n</span><span class="error">t</span><span class="error">a</span><span class="error">t</span><span class="error">i</span><span class="error">o</span><span class="error">n</span><span class="error">(</span><span class="string"><span class="delimiter">&quot;</span><span class="content">io.github.bonigarcia:webdrivermanager:5.5.0</span><span class="delimiter">&quot;</span></span><span class="error">)</span>
+    <span class="error">t</span><span class="error">e</span><span class="error">s</span><span class="error">t</span><span class="error">I</span><span class="error">m</span><span class="error">p</span><span class="error">l</span><span class="error">e</span><span class="error">m</span><span class="error">e</span><span class="error">n</span><span class="error">t</span><span class="error">a</span><span class="error">t</span><span class="error">i</span><span class="error">o</span><span class="error">n</span><span class="error">(</span><span class="string"><span class="delimiter">&quot;</span><span class="content">io.github.bonigarcia:webdrivermanager:5.5.1</span><span class="delimiter">&quot;</span></span><span class="error">)</span>
 }</code></pre>
 </div>
 </div>
@@ -2025,10 +2047,10 @@ This feature is based on the API <a href="https://developer.chrome.com/docs/exte
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Using the WebDriverManager <em>fat-JAR</em> (i.e., WebDriverManager with all its dependencies in a single executable JAR file). This JAR file is generated from the source using the Maven command <code>mvn compile assembly:single</code>, and it is released on GitHub with every new version of WebDriverManager. You can download the latest of this fat-JAR from <a href="https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-5.5.0/webdrivermanager-5.5.0-fat.jar">here</a>. Once you get this file, you  need to use the following command in the shell (where <code>&lt;args&gt;</code> are the accepted arguments, explained below):</p>
+<p>Using the WebDriverManager <em>fat-JAR</em> (i.e., WebDriverManager with all its dependencies in a single executable JAR file). This JAR file is generated from the source using the Maven command <code>mvn compile assembly:single</code>, and it is released on GitHub with every new version of WebDriverManager. You can download the latest of this fat-JAR from <a href="https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-5.5.1/webdrivermanager-5.5.1-fat.jar">here</a>. Once you get this file, you  need to use the following command in the shell (where <code>&lt;args&gt;</code> are the accepted arguments, explained below):</p>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-5.5.0-fat.jar &lt;args&gt;</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-5.5.1-fat.jar &lt;args&gt;</code></pre>
 </div>
 </div>
 </li>
@@ -2044,7 +2066,7 @@ This feature is based on the API <a href="https://developer.chrome.com/docs/exte
 <p>Using the WebDriverManager Docker container. Each new release of WebDriverManager is pushed to <a href="https://hub.docker.com/r/bonigarcia/webdrivermanager">Docker Hub</a> as a container based on <a href="https://hub.docker.com/_/openjdk">OpenJDK</a> plus the WebDriverManager fat-JAR. The default command to run the WebDriverManager Docker container is described below.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -e ARGS=&quot;&lt;args&gt;&quot; bonigarcia/webdrivermanager:5.5.0</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -e ARGS=&quot;&lt;args&gt;&quot; bonigarcia/webdrivermanager:5.5.1</code></pre>
 </div>
 </div>
 </li>
@@ -2082,7 +2104,7 @@ This feature is based on the API <a href="https://developer.chrome.com/docs/exte
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-5.5.0-fat.jar resolveDriverFor chrome</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-5.5.1-fat.jar resolveDriverFor chrome</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -2106,7 +2128,7 @@ This feature is based on the API <a href="https://developer.chrome.com/docs/exte
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -v ${PWD}:/wdm -e ARGS=&quot;resolveDriverFor chrome&quot; bonigarcia/webdrivermanager:5.5.0</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -v ${PWD}:/wdm -e ARGS=&quot;resolveDriverFor chrome&quot; bonigarcia/webdrivermanager:5.5.1</code></pre>
 </div>
 </div>
 <h4 id="option-2-browsers-in-docker" class="discrete">Option 2: Browsers in Docker</h4>
@@ -2122,7 +2144,7 @@ This feature is based on the API <a href="https://developer.chrome.com/docs/exte
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-5.5.0-fat.jar runInDocker chrome</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-5.5.1-fat.jar runInDocker chrome</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -2146,7 +2168,7 @@ This feature is based on the API <a href="https://developer.chrome.com/docs/exte
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -e ARGS=&quot;runInDocker chrome&quot; bonigarcia/webdrivermanager:5.5.0</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -e ARGS=&quot;runInDocker chrome&quot; bonigarcia/webdrivermanager:5.5.1</code></pre>
 </div>
 </div>
 <div class="admonitionblock warning">
@@ -2174,7 +2196,7 @@ There is an <a href="https://bugs.chromium.org/p/chromedriver/issues/detail?id=3
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-5.5.0-fat.jar server</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-5.5.1-fat.jar server</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -2198,7 +2220,7 @@ There is an <a href="https://bugs.chromium.org/p/chromedriver/issues/detail?id=3
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -p 4444:4444 -v /var/run/docker.sock:/var/run/docker.sock bonigarcia/webdrivermanager:5.5.0</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -p 4444:4444 -v /var/run/docker.sock:/var/run/docker.sock bonigarcia/webdrivermanager:5.5.1</code></pre>
 </div>
 </div>
 </div>
@@ -2315,7 +2337,7 @@ wdmServerTest();</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>To configure the WebDriverManager Agent, we need to specify the path of the WebDriverManager <a href="https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-5.5.0/webdrivermanager-5.5.0-fat.jar">fat-JAR</a> using the JVM flag <code>-javaagent:/path/to/webdrivermanager-5.5.0-fat.jar</code>. Alternatively, it can be done using Maven (see a complete project example <a href="https://github.com/bonigarcia/wdm-agent-example/">here</a>).</p>
+<p>To configure the WebDriverManager Agent, we need to specify the path of the WebDriverManager <a href="https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-5.5.1/webdrivermanager-5.5.1-fat.jar">fat-JAR</a> using the JVM flag <code>-javaagent:/path/to/webdrivermanager-5.5.1-fat.jar</code>. Alternatively, it can be done using Maven (see a complete project example <a href="https://github.com/bonigarcia/wdm-agent-example/">here</a>).</p>
 </div>
 </div>
 <div class="sect2">
@@ -2359,7 +2381,7 @@ wdmServerTest();</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">boni@ubuntu:~$ java -jar webdrivermanager-5.5.0-fat.jar resolveDriverFor chrome
+<pre class="CodeRay highlight"><code data-lang="shell">boni@ubuntu:~$ java -jar webdrivermanager-5.5.1-fat.jar resolveDriverFor chrome
 [INFO] Using WebDriverManager to resolve chrome
 [DEBUG] Detecting chrome version using online commands.properties
 [DEBUG] Running command on the shell: [google-chrome, --version]
@@ -2484,7 +2506,7 @@ In addition to the methods presented in this section, each manager provides a <c
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -v ${PWD}:/wdm -e ARGS=&quot;resolveDriverFor chrome&quot; -e WDM_CHROMEVERSION=84 bonigarcia/webdrivermanager:5.5.0</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -v ${PWD}:/wdm -e ARGS=&quot;resolveDriverFor chrome&quot; -e WDM_CHROMEVERSION=84 bonigarcia/webdrivermanager:5.5.1</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -3030,7 +3052,7 @@ As of WebDriverManager 5.3.0, this issue should not happen anymore (even without
 </div>
 </div>
 <div class="paragraph">
-<p>WebDriverManager 5.4+ implements the support for the CfT endpoints. Therefore, the solution to this problem is to bump WebDriverManager to the <strong>latest version</strong> (5.5.0 currently). Also, to ensure that the wrong version has not been cached in the <strong>resolution cache</strong>, you can refresh completely the cache folder (at least once) as follows:</p>
+<p>WebDriverManager 5.4+ implements the support for the CfT endpoints. Therefore, the solution to this problem is to bump WebDriverManager to the <strong>latest version</strong> (5.5.1 currently). Also, to ensure that the wrong version has not been cached in the <strong>resolution cache</strong>, you can refresh completely the cache folder (at least once) as follows:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3043,7 +3065,7 @@ As of WebDriverManager 5.3.0, this issue should not happen anymore (even without
 <h2 id="troubleshooting"><a class="anchor" href="#troubleshooting"></a>8. Troubleshooting</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>For getting the WebDriverManager logs, you need to include a Logback configuration file (for example, like <a href="https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/resources/logback-test.xml">this</a>) in your project classpath. The name of this file should be <code>src/test/resources/logback-test.xml</code> (if you want logs only for your tests) or <code>src/test/resources/logback.xml</code> (if you want logs for both tests and application code). Then, you need to set the level to <code>DEBUG</code> or <code>TRACE</code>, e.g.:</p>
+<p>For getting the WebDriverManager logs, you need to include a Logback configuration file (for example, like <a href="https://github.com/bonigarcia/webdrivermanager-basic/blob/master/src/main/resources/logback.xml">this</a>) in your project classpath. Then, you need to set the level to <code>DEBUG</code>, or <code>TRACE</code> for finer details, e.g.:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3055,23 +3077,43 @@ As of WebDriverManager 5.3.0, this issue should not happen anymore (even without
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code>2021-12-03 11:54:24 [main] DEBUG i.g.b.wdm.cache.ResolutionCache.checkValidity(156) -- Removing resolution chrome=96 from cache (expired on Thu Nov 25 15:43:32 CET 2021)
-2021-12-03 11:54:24 [main] TRACE i.g.b.wdm.versions.VersionDetector.getVersionsInputStream(315) -- Reading online commands.properties to find out driver version
-2021-12-03 11:54:24 [main] DEBUG i.g.b.wdm.versions.VersionDetector.getBrowserVersionFromTheShell(205) -- Detecting chrome version using online commands.properties
-2021-12-03 11:54:24 [main] DEBUG i.g.bonigarcia.wdm.versions.Shell.runAndWaitArray(65) -- Running command on the shell: [cmd.exe, /C, wmic, datafile, where, name=&quot;%PROGRAMFILES(X86):\=\\%\\Google\\Chrome\\Application\\chrome.exe&quot;, get, Version, /value]
-2021-12-03 11:54:24 [main] DEBUG i.g.bonigarcia.wdm.versions.Shell.runAndWaitArray(69) -- Result: Version=96.0.4664.45
-2021-12-03 11:54:24 [main] TRACE i.g.b.wdm.versions.VersionDetector.getBrowserVersionUsingCommand(284) -- Detected browser version is 96.0.4664.45
-2021-12-03 11:54:24 [main] DEBUG i.g.b.wdm.cache.ResolutionCache.checkValidity(156) -- Removing resolution chrome96=96.0.4664.45 from cache (expired on Thu Nov 25 18:45:50 CET 2021)
-2021-12-03 11:54:25 [main] DEBUG i.g.b.wdm.versions.VersionDetector.getDriverVersionFromRepository(127) -- Latest version of chromedriver according to https://chromedriver.storage.googleapis.com/LATEST_RELEASE_96 is 96.0.4664.45
-2021-12-03 11:54:25 [main] INFO  i.g.bonigarcia.wdm.WebDriverManager.resolveDriverVersion(1012) -- Using chromedriver 96.0.4664.45 (resolved driver for Chrome 96)
-2021-12-03 11:54:25 [main] DEBUG i.g.b.wdm.cache.ResolutionCache.putValueInResolutionCacheIfEmpty(119) -- Storing resolution chrome=96 in cache (valid until 12:54:25 03/12/2021 CET)
-2021-12-03 11:54:25 [main] DEBUG i.g.b.wdm.cache.ResolutionCache.putValueInResolutionCacheIfEmpty(119) -- Storing resolution chrome96=96.0.4664.45 in cache (valid until 11:54:25 04/12/2021 CET)
-2021-12-03 11:54:25 [main] TRACE i.g.b.wdm.cache.CacheHandler.getDriverFromCache(83) -- Checking if chromedriver exists in cache
-2021-12-03 11:54:25 [main] TRACE i.g.b.wdm.cache.CacheHandler.filterCacheBy(68) -- Filter cache by chromedriver -- input list [C:\Users\boni\.cache\selenium\chromedriver\win32\81.0.4044.138\chromedriver.exe, C:\Users\boni\.cache\selenium\chromedriver\win32\83.0.4103.39\chromedriver.exe, C:\Users\boni\.cache\selenium\chromedriver\win32\95.0.4638.69\chromedriver.exe, C:\Users\boni\.cache\selenium\chromedriver\win32\96.0.4664.45\chromedriver.exe, C:\Users\boni\.cache\selenium\geckodriver\win64\0.30.0\geckodriver.exe, C:\Users\boni\.cache\selenium\msedgedriver\win64\95.0.1020.53\msedgedriver.exe, C:\Users\boni\.cache\selenium\msedgedriver\win64\96.0.1054.29\msedgedriver.exe, C:\Users\boni\.cache\selenium\msedgedriver\win64\96.0.1054.34\msedgedriver.exe, C:\Users\boni\.cache\selenium\operadriver\win64\94.0.4606.61\operadriver.exe, C:\Users\boni\.cache\selenium\operadriver\win64\95.0.4638.54\operadriver.exe, C:\Users\boni\.cache\selenium\resolution.properties] -- output list [C:\Users\boni\.cache\selenium\chromedriver\win32\81.0.4044.138\chromedriver.exe, C:\Users\boni\.cache\selenium\chromedriver\win32\83.0.4103.39\chromedriver.exe, C:\Users\boni\.cache\selenium\chromedriver\win32\95.0.4638.69\chromedriver.exe, C:\Users\boni\.cache\selenium\chromedriver\win32\96.0.4664.45\chromedriver.exe]
-2021-12-03 11:54:25 [main] TRACE i.g.b.wdm.cache.CacheHandler.filterCacheBy(68) -- Filter cache by 96.0.4664.45 -- input list [C:\Users\boni\.cache\selenium\chromedriver\win32\81.0.4044.138\chromedriver.exe, C:\Users\boni\.cache\selenium\chromedriver\win32\83.0.4103.39\chromedriver.exe, C:\Users\boni\.cache\selenium\chromedriver\win32\95.0.4638.69\chromedriver.exe, C:\Users\boni\.cache\selenium\chromedriver\win32\96.0.4664.45\chromedriver.exe] -- output list [C:\Users\boni\.cache\selenium\chromedriver\win32\96.0.4664.45\chromedriver.exe]
-2021-12-03 11:54:25 [main] TRACE i.g.b.wdm.cache.CacheHandler.filterCacheBy(68) -- Filter cache by WIN -- input list [C:\Users\boni\.cache\selenium\chromedriver\win32\96.0.4664.45\chromedriver.exe] -- output list [C:\Users\boni\.cache\selenium\chromedriver\win32\96.0.4664.45\chromedriver.exe]
-2021-12-03 11:54:25 [main] DEBUG i.g.bonigarcia.wdm.WebDriverManager.manage(968) -- Driver chromedriver 96.0.4664.45 found in cache
-2021-12-03 11:54:25 [main] INFO  i.g.bonigarcia.wdm.WebDriverManager.exportDriver(1067) -- Exporting webdriver.chrome.driver as C:\Users\boni\.cache\selenium\chromedriver\win32\96.0.4664.45\chromedriver.exe</code></pre>
+<pre class="CodeRay highlight"><code>2023-08-25 13:10:11 [main] DEBUG  i.g.bonigarcia.wdm.WebDriverManager.&lt;init&gt;(227) - Using WebDriverManager {project-version}
+2023-08-25 13:10:12 [main] TRACE i.g.b.wdm.versions.VersionDetector.getVersionsInputStream(364) - Reading online commands.properties to find out driver version
+2023-08-25 13:10:12 [main] DEBUG i.g.b.wdm.versions.VersionDetector.getBrowserVersionFromTheShell(253) - Detecting chrome version using online commands.properties
+2023-08-25 13:10:12 [main] DEBUG i.g.bonigarcia.wdm.versions.Shell.runAndWaitArray(65) - Running command on the shell: [cmd.exe, /C, wmic, datafile, where, name=&quot;%PROGRAMFILES:\=\\%\\Google\\Chrome\\Application\\chrome.exe&quot;, get, Version, /value]
+2023-08-25 13:10:12 [main] DEBUG i.g.bonigarcia.wdm.versions.Shell.runAndWaitArray(69) - Result: Version=116.0.5845.110
+2023-08-25 13:10:12 [main] TRACE i.g.b.wdm.versions.VersionDetector.getBrowserVersionUsingCommand(332) - Detected browser version is 116.0.5845.110
+2023-08-25 13:10:12 [main] INFO  i.g.bonigarcia.wdm.WebDriverManager.resolveDriverVersion(1280) - Using chromedriver 116.0.5845.96 (resolved driver for Chrome 116)
+2023-08-25 13:10:12 [main] DEBUG i.g.b.wdm.cache.ResolutionCache.putValueInResolutionCacheIfEmpty(119) - Storing resolution chrome=116 in cache (valid until 14:10:12 25/08/2023 CEST)
+2023-08-25 13:10:12 [main] DEBUG i.g.b.wdm.cache.ResolutionCache.putValueInResolutionCacheIfEmpty(119) - Storing resolution chrome116=116.0.5845.96 in cache (valid until 13:10:12 26/08/2023 CEST)
+2023-08-25 13:10:12 [main] TRACE i.g.b.wdm.cache.CacheHandler.getDriverFromCache(83) - Checking if chromedriver exists in cache
+2023-08-25 13:10:12 [main] TRACE i.g.b.wdm.cache.CacheHandler.filterCacheBy(68) - Filter cache by chromedriver -- input list [C:\Users\boni\.cache\selenium\resolution.properties] -- output list []
+2023-08-25 13:10:12 [main] TRACE i.g.b.wdm.cache.CacheHandler.filterCacheBy(68) - Filter cache by 116.0.5845.96 -- input list [] -- output list []
+2023-08-25 13:10:12 [main] TRACE i.g.b.wdm.cache.CacheHandler.filterCacheBy(68) - Filter cache by WIN -- input list [] -- output list []
+2023-08-25 13:10:12 [main] TRACE i.g.b.wdm.cache.CacheHandler.getDriverFromCache(105) - Avoid filtering for architecture 64 with chromedriver in Windows
+2023-08-25 13:10:12 [main] TRACE i.g.b.wdm.cache.CacheHandler.getDriverFromCache(119) - chromedriver not found in cache
+2023-08-25 13:10:12 [main] INFO  i.g.bonigarcia.wdm.WebDriverManager.logSeekRepo(1631) - Reading https://chromedriver.storage.googleapis.com/ to seek chromedriver
+2023-08-25 13:10:12 [main] DEBUG i.g.bonigarcia.wdm.WebDriverManager.createUrlHandler(1516) - Driver to be downloaded chromedriver 116.0.5845.96
+2023-08-25 13:10:12 [main] TRACE i.g.bonigarcia.wdm.WebDriverManager.createUrlHandler(1525) - Driver URLs after filtering for version: []
+2023-08-25 13:10:12 [main] TRACE i.g.bonigarcia.wdm.online.UrlHandler.filterByOs(141) - URLs before filtering by OS (WIN): []
+2023-08-25 13:10:12 [main] TRACE i.g.bonigarcia.wdm.online.UrlHandler.filterByOs(145) - URLs after filtering by OS (WIN): []
+2023-08-25 13:10:12 [main] TRACE i.g.bonigarcia.wdm.online.UrlHandler.filterByArch(151) - URLs before filtering by architecture (64): []
+2023-08-25 13:10:12 [main] TRACE i.g.bonigarcia.wdm.online.UrlHandler.filterByArch(160) - URLs after filtering by architecture (64): []
+2023-08-25 13:10:12 [main] TRACE i.g.bonigarcia.wdm.online.UrlHandler.filterByBeta(127) - URLs before filtering by beta versions: []
+2023-08-25 13:10:12 [main] TRACE i.g.bonigarcia.wdm.online.UrlHandler.filterByBeta(134) - URLs after filtering by beta versions: []
+2023-08-25 13:10:12 [main] DEBUG i.g.bonigarcia.wdm.WebDriverManager.buildUrl(156) - Using URL built from repository pattern: https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/116.0.5845.96/win64/chromedriver-win64.zip
+2023-08-25 13:10:12 [main] TRACE i.g.bonigarcia.wdm.online.Downloader.getTarget(123) - Target file for URL https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/116.0.5845.96/win64/chromedriver-win64.zip driver version 116.0.5845.96 = C:\Users\boni\.cache\selenium\chromedriver\win64\116.0.5845.96/chromedriver-win64.zip
+2023-08-25 13:10:12 [main] INFO  i.g.bonigarcia.wdm.online.Downloader.downloadAndExtract(131) - Downloading https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/116.0.5845.96/win64/chromedriver-win64.zip
+2023-08-25 13:10:12 [main] TRACE i.g.bonigarcia.wdm.online.Downloader.downloadAndExtract(137) - Target folder C:\Users\boni\.cache\selenium\chromedriver\win64\116.0.5845.96 ... using temporal file C:\Users\boni\AppData\Local\Temp\15824197595769158441\chromedriver-win64.zip
+2023-08-25 13:10:13 [main] INFO  i.g.bonigarcia.wdm.online.Downloader.extract(192) - Extracting driver from compressed file chromedriver-win64.zip
+2023-08-25 13:10:13 [main] TRACE i.g.bonigarcia.wdm.online.Downloader.unZip(220) - Unzipping chromedriver-win64/LICENSE.chromedriver (size: 215994 KB, compressed size: 35448 KB)
+2023-08-25 13:10:13 [main] TRACE i.g.bonigarcia.wdm.online.Downloader.unZip(220) - Unzipping chromedriver-win64/chromedriver.exe (size: 14312960 KB, compressed size: 7094251 KB)
+2023-08-25 13:10:13 [main] TRACE i.g.bonigarcia.wdm.online.Downloader.deleteFile(330) - Deleting file C:\Users\boni\AppData\Local\Temp\15824197595769158441\chromedriver-win64.zip
+2023-08-25 13:10:13 [main] TRACE i.g.bonigarcia.wdm.WebDriverManager.postDownload(1371) - Found driver in post-download: C:\Users\boni\AppData\Local\Temp\15824197595769158441\chromedriver-win64\chromedriver.exe
+2023-08-25 13:10:13 [main] TRACE i.g.bonigarcia.wdm.online.Downloader.deleteFile(330) - Deleting file C:\Users\boni\AppData\Local\Temp\15824197595769158441\chromedriver-win64\LICENSE.chromedriver
+2023-08-25 13:10:13 [main] TRACE i.g.bonigarcia.wdm.online.Downloader.deleteFolder(340) - Deleting folder C:\Users\boni\AppData\Local\Temp\15824197595769158441
+2023-08-25 13:10:13 [main] TRACE i.g.bonigarcia.wdm.online.Downloader.downloadAndExtract(163) - Driver after extraction C:\Users\boni\.cache\selenium\chromedriver\win64\116.0.5845.96\chromedriver.exe
+2023-08-25 13:10:13 [main] INFO  i.g.bonigarcia.wdm.WebDriverManager.exportDriver(1333) - Exporting webdriver.chrome.driver as C:\Users\boni\.cache\selenium\chromedriver\win64\116.0.5845.96\chromedriver.exe</code></pre>
 </div>
 </div>
 <div class="paragraph">
@@ -3168,8 +3210,8 @@ As of WebDriverManager 5.3.0, this issue should not happen anymore (even without
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 5.5.0<br>
-Updated on 22-08-2023
+Version 5.5.1<br>
+Updated on 25-08-2023
 </div>
 </div>
 </body>
