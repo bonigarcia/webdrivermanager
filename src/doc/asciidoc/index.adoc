@@ -44,15 +44,13 @@ https://github.com/bonigarcia/webdrivermanager[WebDriverManager] is an open-sour
 === WebDriverManager and Selenium Manager
 Maybe you have heard (and if not, you should) about https://www.selenium.dev/documentation/selenium_manager/[Selenium Manager]. Selenium Manager is the official driver manager of the Selenium project, and it is shipped out of the box with every Selenium release. You might have some doubts about this:
 
-*Is Selenium Manager a replacement for WebDriverManger?* For the use case of automated driver management, yes. In other words, if you use WebDriverManager only for driver management, you can safely switch to Selenium Manager.
+_Is Selenium Manager a replacement for WebDriverManger?_ For the use case of automated driver management, yes. In other words, if you use WebDriverManager only for driver management, you can safely switch to Selenium Manager.
 
-* What are the differences between WebDriverManager and Selenium Manager?* Both projects provide automated driver management (for chromedriver, geckodriver, etc.). But, WebDriverManager provides several features not available in Selenium Manager (e.g., self-managed browsers in Docker containers or custom monitoring features). On the other side, Selenium Manager provides automated browser management (e.g., based on https://googlechromelabs.github.io/chrome-for-testing/[Chrome for Testing]).
+_What are the differences between WebDriverManager and Selenium Manager?_ Both projects provide automated driver management (for chromedriver, geckodriver, etc.). But, WebDriverManager provides several features not available in Selenium Manager (e.g., self-managed browsers in Docker containers or custom monitoring features). On the other side, Selenium Manager provides automated browser management (e.g., based on https://googlechromelabs.github.io/chrome-for-testing/[Chrome for Testing]).
 
-* Then, should I move to Selenium Manager? It depends. If you use some custom feature of WebDriverManager, you can continue using it. If you use WebDriverManager only for automated management, you can switch to Selenium Manager. Moreover, if you cannot bump to Java 11 (which is the https://www.selenium.dev/blog/2023/java-8-support/[minimum Java version for the latest versions of Selenium by September 2023]), WebDriverManager can still be the library for driver management, since WebDriverManager will continue supporting Java 8 (at least for some time more).
+_Then, should I move to Selenium Manager?_ It depends. If you use some custom feature of WebDriverManager, you can continue using it. If you use WebDriverManager only for automated management, you can switch to Selenium Manager. However, if you cannot bump to Java 11 (which is the https://www.selenium.dev/blog/2023/java-8-support/[minimum Java version for the latest versions of Selenium by September 2023]), WebDriverManager can still be your library for driver management, since WebDriverManager will continue supporting Java 8 (at least for some time more).
 
-* Will the WebDriverManger development stop? Not yet.
-
-
+_Will the WebDriverManger development stop?_ WebDriverManger might still be helpful, so its development and maintenance continue.
 
 
 == Setup
@@ -795,7 +793,7 @@ For getting the WebDriverManager logs, you need to include a Logback configurati
 After that, when running a test, your should see something like this:
 
 ```
-2023-08-25 13:10:11 [main] INFO  i.g.bonigarcia.wdm.WebDriverManager.<init>(227) - Using WebDriverManager {project-version}
+2023-08-25 13:10:11 [main] DEBUG  i.g.bonigarcia.wdm.WebDriverManager.<init>(227) - Using WebDriverManager {project-version}
 2023-08-25 13:10:12 [main] TRACE i.g.b.wdm.versions.VersionDetector.getVersionsInputStream(364) - Reading online commands.properties to find out driver version
 2023-08-25 13:10:12 [main] DEBUG i.g.b.wdm.versions.VersionDetector.getBrowserVersionFromTheShell(253) - Detecting chrome version using online commands.properties
 2023-08-25 13:10:12 [main] DEBUG i.g.bonigarcia.wdm.versions.Shell.runAndWaitArray(65) - Running command on the shell: [cmd.exe, /C, wmic, datafile, where, name="%PROGRAMFILES:\=\\%\\Google\\Chrome\\Application\\chrome.exe", get, Version, /value]
