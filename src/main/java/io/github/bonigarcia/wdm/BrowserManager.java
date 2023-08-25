@@ -533,7 +533,6 @@ public abstract class BrowserManager {
         log.info("Crawling driver list from {}", driverUrl);
 
         String driverStr = driverUrl.toString().toLowerCase();
-        String driverUrlContent = driverUrl.getPath().toLowerCase();
         int timeout = (int) SECONDS.toMillis(getInt("wdm.timeout"));
 
         WdmHttpClient.Response response = httpClient
@@ -541,7 +540,6 @@ public abstract class BrowserManager {
         List<URL> listUlrs = new ArrayList<>();
         try (InputStream in = response.getContent()) {
             JsonElement result = JsonParser.parseReader(new InputStreamReader(in));
-            JsonArray versions = result.getAsJsonObject().getAsJsonArray("versions");
 
 
             listUlrs.addAll(parserFunction.apply(result));
