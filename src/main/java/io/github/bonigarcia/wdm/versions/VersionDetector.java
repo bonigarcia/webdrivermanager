@@ -479,7 +479,7 @@ public class VersionDetector {
         }
 
         try (InputStream is = clazz.getResourceAsStream(
-                "/META-INF/maven/io.github.bonigarcia/webdrivermanger/pom.properties")) {
+                "/META-INF/maven/io.github.bonigarcia/webdrivermanager/pom.properties")) {
             if (is != null) {
                 Properties p = new Properties();
                 p.load(is);
