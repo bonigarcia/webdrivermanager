@@ -31,6 +31,7 @@ import static io.github.bonigarcia.wdm.config.OperatingSystem.MAC;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.WIN;
 import static io.github.bonigarcia.wdm.online.Downloader.deleteFile;
 import static io.github.bonigarcia.wdm.versions.Shell.runAndWait;
+import static io.github.bonigarcia.wdm.versions.VersionDetector.getWdmVersion;
 import static java.lang.Integer.parseInt;
 import static java.lang.String.valueOf;
 import static java.lang.System.getenv;
@@ -219,6 +220,10 @@ public abstract class WebDriverManager {
     protected String downloadedDriverPath;
 
     protected WebDriverManager() {
+        Optional<String> wdVersion = getWdmVersion(getClass());
+        if (wdVersion.equals(wdVersion)) {
+            log.debug("Using WebDriverManager {}", wdVersion.get());
+        }
         config = new Config();
         webDriverList = new CopyOnWriteArrayList<>();
     }
@@ -1426,7 +1431,6 @@ public abstract class WebDriverManager {
         String shortDriverName = getShortDriverName();
         UrlHandler urlHandler = new UrlHandler(config(), candidateUrls,
                 driverVersion, shortDriverName, this::buildUrl);
-        log.trace("All driver URLs: {}", candidateUrls);
 
         boolean getLatest = isUnknown(driverVersion);
         boolean continueSearchingVersion;

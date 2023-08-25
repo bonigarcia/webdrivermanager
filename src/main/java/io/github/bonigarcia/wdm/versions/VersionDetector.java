@@ -44,8 +44,13 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.xpath.XPathConstants;
+import javax.xml.xpath.XPathFactory;
+
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
+import org.w3c.dom.Document;
 
 import io.github.bonigarcia.wdm.config.Config;
 import io.github.bonigarcia.wdm.config.OperatingSystem;
@@ -436,6 +441,67 @@ public class VersionDetector {
 
     public boolean isSnap() {
         return isSnap;
+    }
+
+    public static final Optional<String> getWdmVersion(Class<?> clazz) {
+        try {
+            String className = clazz.getName();
+            String classfileName = "/" + className.replace('.', '/') + ".class";
+            URL classfileResource = clazz.getResource(classfileName);
+            if (classfileResource != null) {
+                Path absolutePackagePath = Paths.get(classfileResource.toURI())
+                        .getParent();
+                int packagePathSegments = className.length()
+                        - className.replace(".", "").length();
+                Path path = absolutePackagePath;
+                for (int i = 0, segmentsToRemove = packagePathSegments
+                        + 2; i < segmentsToRemove; i++) {
+                    path = path.getParent();
+                }
+                Path pom = path.resolve("pom.xml");
+                try (InputStream is = Files.newInputStream(pom)) {
+                    Document doc = DocumentBuilderFactory.newInstance()
+                            .newDocumentBuilder().parse(is);
+                    doc.getDocumentElement().normalize();
+                    String version = (String) XPathFactory.newInstance()
+                            .newXPath().compile("/project/version")
+                            .evaluate(doc, XPathConstants.STRING);
+                    if (version != null) {
+                        version = version.trim();
+                        if (!version.isEmpty()) {
+                            return Optional.of(version);
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            // Ignore
+        }
+
+        try (InputStream is = clazz.getResourceAsStream(
+                "/META-INF/maven/io.github.bonigarcia/webdrivermanger/pom.properties")) {
+            if (is != null) {
+                Properties p = new Properties();
+                p.load(is);
+                String version = p.getProperty("version", "").trim();
+                if (!version.isEmpty()) {
+                    return Optional.of(version);
+                }
+            }
+        } catch (Exception e) {
+            // Ignore
+        }
+
+        String version = null;
+        Package pkg = clazz.getPackage();
+        if (pkg != null) {
+            version = pkg.getImplementationVersion();
+            if (version == null) {
+                version = pkg.getSpecificationVersion();
+            }
+        }
+        version = version == null ? "" : version.trim();
+        return version.isEmpty() ? Optional.empty() : Optional.of(version);
     }
 
 }
