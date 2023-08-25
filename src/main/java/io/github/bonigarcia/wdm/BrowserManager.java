@@ -16,8 +16,7 @@
  */
 package io.github.bonigarcia.wdm;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
 import com.google.gson.internal.LinkedTreeMap;
 import org.apache.commons.codec.binary.Base64;
 import org.jsoup.Jsoup;
@@ -35,6 +34,7 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.*;
+import java.util.function.Function;
 
 import static io.github.bonigarcia.wdm.Architecture.X32;
 import static io.github.bonigarcia.wdm.Architecture.X64;
@@ -527,6 +527,26 @@ public abstract class BrowserManager {
             }
             return urlList;
         }
+    }
+
+    protected List<URL> getDriversFromJson(URL driverUrl, Function<JsonElement, List<URL>> parserFunction) throws IOException {
+        log.info("Crawling driver list from {}", driverUrl);
+
+        String driverStr = driverUrl.toString().toLowerCase();
+        String driverUrlContent = driverUrl.getPath().toLowerCase();
+        int timeout = (int) SECONDS.toMillis(getInt("wdm.timeout"));
+
+        WdmHttpClient.Response response = httpClient
+                .execute(new WdmHttpClient.Get(driverStr, timeout));
+        List<URL> listUlrs = new ArrayList<>();
+        try (InputStream in = response.getContent()) {
+            JsonElement result = JsonParser.parseReader(new InputStreamReader(in));
+            JsonArray versions = result.getAsJsonObject().getAsJsonArray("versions");
+
+
+            listUlrs.addAll(parserFunction.apply(result));
+        }
+        return listUlrs;
     }
 
     protected List<URL> getDriversFromNexus(URL driverUrl) throws IOException {

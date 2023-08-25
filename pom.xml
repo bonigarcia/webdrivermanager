@@ -34,8 +34,8 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
-    <maven.compiler.target>1.7</maven.compiler.target>
-    <maven.compiler.source>1.7</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
 
     <maven.compiler.argument.target>${maven.compiler.target}</maven.compiler.argument.target>
     <maven.compiler.argument.source>${maven.compiler.source}</maven.compiler.argument.source>
@@ -47,7 +47,7 @@
     <maven.gpg.plugin.version>1.5</maven.gpg.plugin.version>
   </properties>
 
-  <name>WebDriverManager</name>
+    <name>WebDriverManager</name>
   <description>
     Automatic Selenium WebDriver binaries management in runtime for Java
   </description>

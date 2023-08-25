@@ -16,12 +16,25 @@
  */
 package io.github.bonigarcia.wdm;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import org.slf4j.Logger;
+
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static io.github.bonigarcia.wdm.WdmConfig.getString;
+import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.asList;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Manager for Chrome.
@@ -30,6 +43,7 @@ import static java.util.Arrays.asList;
  * @since 1.0.0
  */
 public class ChromeDriverManager extends BrowserManager {
+    final Logger log = getLogger(lookup().lookupClass());
 
     public static synchronized BrowserManager getInstance() {
         if (instance == null
@@ -43,7 +57,7 @@ public class ChromeDriverManager extends BrowserManager {
     public ChromeDriverManager() {
         exportParameter = getString("wdm.chromeDriverExport");
         driverVersionKey = "wdm.chromeDriverVersion";
-        driverUrlKey = "wdm.chromeDriverUrl";
+        driverUrlKey = Integer.parseInt(driverVersionKey.split("\\.")[0]) < 115 ? "wdm.chromeDriverUrl.legacy" : "wdm.chromeDriverUrl";
         driverName = asList("chromedriver");
     }
 
@@ -55,8 +69,31 @@ public class ChromeDriverManager extends BrowserManager {
             urls = getDriversFromMirror(driverUrl);
         } else if (isUsingNexus()) {
             urls = getDriversFromNexus(driverUrl);
-        } else {
+        } else if (Integer.parseInt(driverVersionKey.split("\\.")[0]) < 115 ) {
             urls = getDriversFromXml(driverUrl);
+        } else {
+            Function<JsonElement, List<URL>> parser = jsonElement -> {
+                JsonArray versions = jsonElement.getAsJsonObject().getAsJsonArray("versions");
+                List<URL> urlList = new ArrayList<>();
+                List<JsonElement> drivers = versions.asList().stream()
+                        .filter(version -> version.getAsJsonObject().getAsJsonObject("downloads").has("chromedriver"))
+                        .collect(Collectors.toList());
+               List<JsonArray> downloads = drivers.stream().map(driver
+                        ->driver.getAsJsonObject().getAsJsonObject("downloads").getAsJsonArray("chromedriver")).collect(Collectors.toList());
+
+               downloads.forEach(downloadList->{
+                   downloadList.forEach(download-> {
+                       try {
+                           urlList.add(new URL(download.getAsJsonObject().get("url").getAsString()));
+                       } catch (MalformedURLException e) {
+                           log.error(e.getMessage());
+                       }
+                   });
+               });
+               return urlList;
+            };
+
+            urls = getDriversFromJson(driverUrl, parser);
         }
         return urls;
     }
