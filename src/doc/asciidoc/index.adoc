@@ -40,6 +40,21 @@ System.setProperty("webdriver.ie.driver", "C:/path/to/IEDriverServer.exe");
 https://github.com/bonigarcia/webdrivermanager[WebDriverManager] is an open-source Java library that carries out the management (i.e., download, setup, and maintenance) of the drivers required by Selenium WebDriver (e.g., chromedriver, geckodriver, msedgedriver, etc.) in a fully automated manner. In addition, as of version 5, WebDriverManager provides other relevant features, such as the capability to <<browser-finder,discover browsers>> installed in the local system, <<webdriver-builder,building WebDriver objects>> (such as `ChromeDriver`, `FirefoxDriver`, `EdgeDriver`, etc.), running <<browsers-in-docker,browsers in Docker containers>> seamlessly, and <<browsers-monitoring,monitoring capabilities>>.
 ****
 
+
+=== WebDriverManager and Selenium Manager
+Maybe you have heard (and if not, you should) about https://www.selenium.dev/documentation/selenium_manager/[Selenium Manager]. Selenium Manager is the official driver manager of the Selenium project, and it is shipped out of the box with every Selenium release. You might have some doubts about this:
+
+*Is Selenium Manager a replacement for WebDriverManger?* For the use case of automated driver management, yes. In other words, if you use WebDriverManager only for driver management, you can safely switch to Selenium Manager.
+
+* What are the differences between WebDriverManager and Selenium Manager?* Both projects provide automated driver management (for chromedriver, geckodriver, etc.). But, WebDriverManager provides several features not available in Selenium Manager (e.g., self-managed browsers in Docker containers or custom monitoring features). On the other side, Selenium Manager provides automated browser management (e.g., based on https://googlechromelabs.github.io/chrome-for-testing/[Chrome for Testing]).
+
+* Then, should I move to Selenium Manager? It depends. If you use some custom feature of WebDriverManager, you can continue using it. If you use WebDriverManager only for automated management, you can switch to Selenium Manager. Moreover, if you cannot bump to Java 11 (which is the https://www.selenium.dev/blog/2023/java-8-support/[minimum Java version for the latest versions of Selenium by September 2023]), WebDriverManager can still be the library for driver management, since WebDriverManager will continue supporting Java 8 (at least for some time more).
+
+* Will the WebDriverManger development stop? Not yet.
+
+
+
+
 == Setup
 WebDriverManager is primarily used as a Java dependency (although <<other-usages,other usages>> are also possible). We typically use a _build tool_ (such as https://maven.apache.org/[Maven] or https://gradle.org/[Gradle]) to resolve the WebDriverManager dependency. In Maven, it can be done as follows (notice that it is declared using the `test` scope, since it is typically used in tests classes):
 
@@ -771,7 +786,7 @@ WebDriverManager.chromedriver().clearDriverCache().setup();
 
 == Troubleshooting
 
-For getting the WebDriverManager logs, you need to include a Logback configuration file (for example, like https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/resources/logback-test.xml[this]) in your project classpath. The name of this file should be `src/test/resources/logback-test.xml` (if you want logs only for your tests) or `src/test/resources/logback.xml` (if you want logs for both tests and application code). Then, you need to set the level to `DEBUG` or `TRACE`, e.g.:
+For getting the WebDriverManager logs, you need to include a Logback configuration file (for example, like https://github.com/bonigarcia/webdrivermanager-basic/blob/master/src/main/resources/logback.xml[this]) in your project classpath. Then, you need to set the level to `DEBUG`, or `TRACE` for finer details, e.g.:
 
 ```
 <logger name="io.github.bonigarcia" level="TRACE" />
@@ -780,23 +795,44 @@ For getting the WebDriverManager logs, you need to include a Logback configurati
 After that, when running a test, your should see something like this:
 
 ```
-2021-12-03 11:54:24 [main] DEBUG i.g.b.wdm.cache.ResolutionCache.checkValidity(156) -- Removing resolution chrome=96 from cache (expired on Thu Nov 25 15:43:32 CET 2021)
-2021-12-03 11:54:24 [main] TRACE i.g.b.wdm.versions.VersionDetector.getVersionsInputStream(315) -- Reading online commands.properties to find out driver version
-2021-12-03 11:54:24 [main] DEBUG i.g.b.wdm.versions.VersionDetector.getBrowserVersionFromTheShell(205) -- Detecting chrome version using online commands.properties
-2021-12-03 11:54:24 [main] DEBUG i.g.bonigarcia.wdm.versions.Shell.runAndWaitArray(65) -- Running command on the shell: [cmd.exe, /C, wmic, datafile, where, name="%PROGRAMFILES(X86):\=\\%\\Google\\Chrome\\Application\\chrome.exe", get, Version, /value]
-2021-12-03 11:54:24 [main] DEBUG i.g.bonigarcia.wdm.versions.Shell.runAndWaitArray(69) -- Result: Version=96.0.4664.45
-2021-12-03 11:54:24 [main] TRACE i.g.b.wdm.versions.VersionDetector.getBrowserVersionUsingCommand(284) -- Detected browser version is 96.0.4664.45
-2021-12-03 11:54:24 [main] DEBUG i.g.b.wdm.cache.ResolutionCache.checkValidity(156) -- Removing resolution chrome96=96.0.4664.45 from cache (expired on Thu Nov 25 18:45:50 CET 2021)
-2021-12-03 11:54:25 [main] DEBUG i.g.b.wdm.versions.VersionDetector.getDriverVersionFromRepository(127) -- Latest version of chromedriver according to https://chromedriver.storage.googleapis.com/LATEST_RELEASE_96 is 96.0.4664.45
-2021-12-03 11:54:25 [main] INFO  i.g.bonigarcia.wdm.WebDriverManager.resolveDriverVersion(1012) -- Using chromedriver 96.0.4664.45 (resolved driver for Chrome 96)
-2021-12-03 11:54:25 [main] DEBUG i.g.b.wdm.cache.ResolutionCache.putValueInResolutionCacheIfEmpty(119) -- Storing resolution chrome=96 in cache (valid until 12:54:25 03/12/2021 CET)
-2021-12-03 11:54:25 [main] DEBUG i.g.b.wdm.cache.ResolutionCache.putValueInResolutionCacheIfEmpty(119) -- Storing resolution chrome96=96.0.4664.45 in cache (valid until 11:54:25 04/12/2021 CET)
-2021-12-03 11:54:25 [main] TRACE i.g.b.wdm.cache.CacheHandler.getDriverFromCache(83) -- Checking if chromedriver exists in cache
-2021-12-03 11:54:25 [main] TRACE i.g.b.wdm.cache.CacheHandler.filterCacheBy(68) -- Filter cache by chromedriver -- input list [C:\Users\boni\.cache\selenium\chromedriver\win32\81.0.4044.138\chromedriver.exe, C:\Users\boni\.cache\selenium\chromedriver\win32\83.0.4103.39\chromedriver.exe, C:\Users\boni\.cache\selenium\chromedriver\win32\95.0.4638.69\chromedriver.exe, C:\Users\boni\.cache\selenium\chromedriver\win32\96.0.4664.45\chromedriver.exe, C:\Users\boni\.cache\selenium\geckodriver\win64\0.30.0\geckodriver.exe, C:\Users\boni\.cache\selenium\msedgedriver\win64\95.0.1020.53\msedgedriver.exe, C:\Users\boni\.cache\selenium\msedgedriver\win64\96.0.1054.29\msedgedriver.exe, C:\Users\boni\.cache\selenium\msedgedriver\win64\96.0.1054.34\msedgedriver.exe, C:\Users\boni\.cache\selenium\operadriver\win64\94.0.4606.61\operadriver.exe, C:\Users\boni\.cache\selenium\operadriver\win64\95.0.4638.54\operadriver.exe, C:\Users\boni\.cache\selenium\resolution.properties] -- output list [C:\Users\boni\.cache\selenium\chromedriver\win32\81.0.4044.138\chromedriver.exe, C:\Users\boni\.cache\selenium\chromedriver\win32\83.0.4103.39\chromedriver.exe, C:\Users\boni\.cache\selenium\chromedriver\win32\95.0.4638.69\chromedriver.exe, C:\Users\boni\.cache\selenium\chromedriver\win32\96.0.4664.45\chromedriver.exe] 
-2021-12-03 11:54:25 [main] TRACE i.g.b.wdm.cache.CacheHandler.filterCacheBy(68) -- Filter cache by 96.0.4664.45 -- input list [C:\Users\boni\.cache\selenium\chromedriver\win32\81.0.4044.138\chromedriver.exe, C:\Users\boni\.cache\selenium\chromedriver\win32\83.0.4103.39\chromedriver.exe, C:\Users\boni\.cache\selenium\chromedriver\win32\95.0.4638.69\chromedriver.exe, C:\Users\boni\.cache\selenium\chromedriver\win32\96.0.4664.45\chromedriver.exe] -- output list [C:\Users\boni\.cache\selenium\chromedriver\win32\96.0.4664.45\chromedriver.exe] 
-2021-12-03 11:54:25 [main] TRACE i.g.b.wdm.cache.CacheHandler.filterCacheBy(68) -- Filter cache by WIN -- input list [C:\Users\boni\.cache\selenium\chromedriver\win32\96.0.4664.45\chromedriver.exe] -- output list [C:\Users\boni\.cache\selenium\chromedriver\win32\96.0.4664.45\chromedriver.exe] 
-2021-12-03 11:54:25 [main] DEBUG i.g.bonigarcia.wdm.WebDriverManager.manage(968) -- Driver chromedriver 96.0.4664.45 found in cache
-2021-12-03 11:54:25 [main] INFO  i.g.bonigarcia.wdm.WebDriverManager.exportDriver(1067) -- Exporting webdriver.chrome.driver as C:\Users\boni\.cache\selenium\chromedriver\win32\96.0.4664.45\chromedriver.exe
+2023-08-25 13:10:11 [main] INFO  i.g.bonigarcia.wdm.WebDriverManager.<init>(227) - Using WebDriverManager {project-version}
+2023-08-25 13:10:12 [main] TRACE i.g.b.wdm.versions.VersionDetector.getVersionsInputStream(364) - Reading online commands.properties to find out driver version
+2023-08-25 13:10:12 [main] DEBUG i.g.b.wdm.versions.VersionDetector.getBrowserVersionFromTheShell(253) - Detecting chrome version using online commands.properties
+2023-08-25 13:10:12 [main] DEBUG i.g.bonigarcia.wdm.versions.Shell.runAndWaitArray(65) - Running command on the shell: [cmd.exe, /C, wmic, datafile, where, name="%PROGRAMFILES:\=\\%\\Google\\Chrome\\Application\\chrome.exe", get, Version, /value]
+2023-08-25 13:10:12 [main] DEBUG i.g.bonigarcia.wdm.versions.Shell.runAndWaitArray(69) - Result: Version=116.0.5845.110
+2023-08-25 13:10:12 [main] TRACE i.g.b.wdm.versions.VersionDetector.getBrowserVersionUsingCommand(332) - Detected browser version is 116.0.5845.110
+2023-08-25 13:10:12 [main] INFO  i.g.bonigarcia.wdm.WebDriverManager.resolveDriverVersion(1280) - Using chromedriver 116.0.5845.96 (resolved driver for Chrome 116)
+2023-08-25 13:10:12 [main] DEBUG i.g.b.wdm.cache.ResolutionCache.putValueInResolutionCacheIfEmpty(119) - Storing resolution chrome=116 in cache (valid until 14:10:12 25/08/2023 CEST)
+2023-08-25 13:10:12 [main] DEBUG i.g.b.wdm.cache.ResolutionCache.putValueInResolutionCacheIfEmpty(119) - Storing resolution chrome116=116.0.5845.96 in cache (valid until 13:10:12 26/08/2023 CEST)
+2023-08-25 13:10:12 [main] TRACE i.g.b.wdm.cache.CacheHandler.getDriverFromCache(83) - Checking if chromedriver exists in cache
+2023-08-25 13:10:12 [main] TRACE i.g.b.wdm.cache.CacheHandler.filterCacheBy(68) - Filter cache by chromedriver -- input list [C:\Users\boni\.cache\selenium\resolution.properties] -- output list [] 
+2023-08-25 13:10:12 [main] TRACE i.g.b.wdm.cache.CacheHandler.filterCacheBy(68) - Filter cache by 116.0.5845.96 -- input list [] -- output list [] 
+2023-08-25 13:10:12 [main] TRACE i.g.b.wdm.cache.CacheHandler.filterCacheBy(68) - Filter cache by WIN -- input list [] -- output list [] 
+2023-08-25 13:10:12 [main] TRACE i.g.b.wdm.cache.CacheHandler.getDriverFromCache(105) - Avoid filtering for architecture 64 with chromedriver in Windows
+2023-08-25 13:10:12 [main] TRACE i.g.b.wdm.cache.CacheHandler.getDriverFromCache(119) - chromedriver not found in cache
+2023-08-25 13:10:12 [main] INFO  i.g.bonigarcia.wdm.WebDriverManager.logSeekRepo(1631) - Reading https://chromedriver.storage.googleapis.com/ to seek chromedriver
+2023-08-25 13:10:12 [main] DEBUG i.g.bonigarcia.wdm.WebDriverManager.createUrlHandler(1516) - Driver to be downloaded chromedriver 116.0.5845.96
+2023-08-25 13:10:12 [main] TRACE i.g.bonigarcia.wdm.WebDriverManager.createUrlHandler(1525) - Driver URLs after filtering for version: []
+2023-08-25 13:10:12 [main] TRACE i.g.bonigarcia.wdm.online.UrlHandler.filterByOs(141) - URLs before filtering by OS (WIN): []
+2023-08-25 13:10:12 [main] TRACE i.g.bonigarcia.wdm.online.UrlHandler.filterByOs(145) - URLs after filtering by OS (WIN): []
+2023-08-25 13:10:12 [main] TRACE i.g.bonigarcia.wdm.online.UrlHandler.filterByArch(151) - URLs before filtering by architecture (64): []
+2023-08-25 13:10:12 [main] TRACE i.g.bonigarcia.wdm.online.UrlHandler.filterByArch(160) - URLs after filtering by architecture (64): []
+2023-08-25 13:10:12 [main] TRACE i.g.bonigarcia.wdm.online.UrlHandler.filterByBeta(127) - URLs before filtering by beta versions: []
+2023-08-25 13:10:12 [main] TRACE i.g.bonigarcia.wdm.online.UrlHandler.filterByBeta(134) - URLs after filtering by beta versions: []
+2023-08-25 13:10:12 [main] DEBUG i.g.bonigarcia.wdm.WebDriverManager.buildUrl(156) - Using URL built from repository pattern: https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/116.0.5845.96/win64/chromedriver-win64.zip
+2023-08-25 13:10:12 [main] TRACE i.g.bonigarcia.wdm.online.Downloader.getTarget(123) - Target file for URL https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/116.0.5845.96/win64/chromedriver-win64.zip driver version 116.0.5845.96 = C:\Users\boni\.cache\selenium\chromedriver\win64\116.0.5845.96/chromedriver-win64.zip
+2023-08-25 13:10:12 [main] INFO  i.g.bonigarcia.wdm.online.Downloader.downloadAndExtract(131) - Downloading https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/116.0.5845.96/win64/chromedriver-win64.zip
+2023-08-25 13:10:12 [main] TRACE i.g.bonigarcia.wdm.online.Downloader.downloadAndExtract(137) - Target folder C:\Users\boni\.cache\selenium\chromedriver\win64\116.0.5845.96 ... using temporal file C:\Users\boni\AppData\Local\Temp\15824197595769158441\chromedriver-win64.zip
+2023-08-25 13:10:13 [main] INFO  i.g.bonigarcia.wdm.online.Downloader.extract(192) - Extracting driver from compressed file chromedriver-win64.zip
+2023-08-25 13:10:13 [main] TRACE i.g.bonigarcia.wdm.online.Downloader.unZip(220) - Unzipping chromedriver-win64/LICENSE.chromedriver (size: 215994 KB, compressed size: 35448 KB)
+2023-08-25 13:10:13 [main] TRACE i.g.bonigarcia.wdm.online.Downloader.unZip(220) - Unzipping chromedriver-win64/chromedriver.exe (size: 14312960 KB, compressed size: 7094251 KB)
+2023-08-25 13:10:13 [main] TRACE i.g.bonigarcia.wdm.online.Downloader.deleteFile(330) - Deleting file C:\Users\boni\AppData\Local\Temp\15824197595769158441\chromedriver-win64.zip
+2023-08-25 13:10:13 [main] TRACE i.g.bonigarcia.wdm.WebDriverManager.postDownload(1371) - Found driver in post-download: C:\Users\boni\AppData\Local\Temp\15824197595769158441\chromedriver-win64\chromedriver.exe
+2023-08-25 13:10:13 [main] TRACE i.g.bonigarcia.wdm.online.Downloader.deleteFile(330) - Deleting file C:\Users\boni\AppData\Local\Temp\15824197595769158441\chromedriver-win64\LICENSE.chromedriver
+2023-08-25 13:10:13 [main] TRACE i.g.bonigarcia.wdm.online.Downloader.deleteFolder(340) - Deleting folder C:\Users\boni\AppData\Local\Temp\15824197595769158441
+2023-08-25 13:10:13 [main] TRACE i.g.bonigarcia.wdm.online.Downloader.downloadAndExtract(163) - Driver after extraction C:\Users\boni\.cache\selenium\chromedriver\win64\116.0.5845.96\chromedriver.exe
+2023-08-25 13:10:13 [main] INFO  i.g.bonigarcia.wdm.WebDriverManager.exportDriver(1333) - Exporting webdriver.chrome.driver as C:\Users\boni\.cache\selenium\chromedriver\win64\116.0.5845.96\chromedriver.exe
+
 ```
 
 For further info about logging with SLF4J and Logback you can see the following https://www.stubbornjava.com/posts/logging-in-java-with-slf4j-and-logback[tutorial].
