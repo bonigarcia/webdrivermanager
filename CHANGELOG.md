@@ -1,5 +1,11 @@
 # Changelog
 
+## [5.5.2] - 2023-08-25
+
+### Fixed
+- Bug-fix reading wdm version
+
+
 ## [5.5.1] - 2023-08-25
 
 ### Added
