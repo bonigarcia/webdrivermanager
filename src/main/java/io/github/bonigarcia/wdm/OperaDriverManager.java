@@ -74,7 +74,7 @@ public class OperaDriverManager extends BrowserManager {
     }
 
     @Override
-    protected File postDownload(File archive) {
+    protected File postDownload(File archive) throws IOException{
         log.trace("Post processing for Opera: {}", archive);
 
         File extractFolder = archive.getParentFile().listFiles()[0];

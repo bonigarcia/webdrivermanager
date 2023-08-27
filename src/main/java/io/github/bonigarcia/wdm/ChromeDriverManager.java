@@ -18,18 +18,15 @@ package io.github.bonigarcia.wdm;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static io.github.bonigarcia.wdm.WdmConfig.getString;
 import static java.lang.invoke.MethodHandles.lookup;
@@ -57,7 +54,10 @@ public class ChromeDriverManager extends BrowserManager {
     public ChromeDriverManager() {
         exportParameter = getString("wdm.chromeDriverExport");
         driverVersionKey = "wdm.chromeDriverVersion";
-        driverUrlKey = Integer.parseInt(driverVersionKey.split("\\.")[0]) < 115 ? "wdm.chromeDriverUrl.legacy" : "wdm.chromeDriverUrl";
+        String driverVersion = getDriverVersion();
+        driverUrlKey =
+                driverVersion.equals("LATEST") || Integer.parseInt(driverVersionKey.split("\\.")[0]) > 114
+                ? "wdm.chromeDriverUrl" : "wdm.chromeDriverUrl.legacy";
         driverName = asList("chromedriver");
     }
 
@@ -69,7 +69,7 @@ public class ChromeDriverManager extends BrowserManager {
             urls = getDriversFromMirror(driverUrl);
         } else if (isUsingNexus()) {
             urls = getDriversFromNexus(driverUrl);
-        } else if (Integer.parseInt(driverVersionKey.split("\\.")[0]) < 115 ) {
+        } else if (driverUrlKey.equals("wdm.chromeDriverUrl.legacy")) {
             urls = getDriversFromXml(driverUrl);
         } else {
             Function<JsonElement, List<URL>> parser = jsonElement -> {
@@ -104,8 +104,10 @@ public class ChromeDriverManager extends BrowserManager {
             int i = url.getFile().lastIndexOf(SLASH);
             int j = url.getFile().substring(0, i).lastIndexOf(SLASH) + 1;
             return url.getFile().substring(j, i);
-        } else {
+        } else if(driverUrlKey.equals("wdm.chromeDriverUrl.legacy")){
             return super.getCurrentVersion(url, driverName);
+        } else {
+            return url.getFile().split("/")[4];
         }
     }
 

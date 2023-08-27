@@ -47,10 +47,12 @@ import static java.lang.Integer.valueOf;
 import static java.lang.System.getProperty;
 import static java.lang.System.getenv;
 import static java.lang.invoke.MethodHandles.lookup;
+import java.nio.file.Files;
 import static java.util.Arrays.sort;
 import static java.util.Collections.reverse;
 import static java.util.Collections.reverseOrder;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import java.util.stream.Collectors;
 import static javax.xml.xpath.XPathConstants.NODESET;
 import static javax.xml.xpath.XPathFactory.newInstance;
 import static org.apache.commons.io.FileUtils.listFiles;
@@ -112,9 +114,11 @@ public abstract class BrowserManager {
         return target;
     }
 
-    protected File postDownload(File archive) {
+    protected File postDownload(File archive) throws IOException {
         File target = archive;
-        File[] ls = archive.getParentFile().listFiles();
+        List<File> ls = Files.find(archive.getParentFile().toPath(),
+           Integer.MAX_VALUE,
+           (filePath, fileAttr) -> fileAttr.isRegularFile()).map(path->path.toFile()).collect(Collectors.toList());
         for (File f : ls) {
             if (isExecutable(f)) {
                 target = f;
@@ -186,7 +190,7 @@ public abstract class BrowserManager {
                 }
 
                 downloadCandidateUrls(candidateUrls);
-            }
+                }
 
         } catch (Exception e) {
             handleException(e, arch, version);

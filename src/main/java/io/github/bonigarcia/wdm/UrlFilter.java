@@ -27,6 +27,7 @@ import java.util.List;
 import static java.io.File.separator;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.copyOf;
+import org.apache.commons.lang3.StringUtils;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
@@ -74,7 +75,11 @@ public class UrlFilter {
                     log.debug("URL doesn't contain any architecture symbols. No filtering will be done.");
                     continue;
                 }
-                if (!fileName.contains(arch.toString() + ".") && !fileName.contains(arch.toString() + "_")) {
+                if(
+                !StringUtils.containsIgnoreCase(fileName, arch.toString() + ".")
+                        && !StringUtils.containsIgnoreCase(fileName, arch.toString() + "_")
+                        && !StringUtils.containsIgnoreCase(fileName, "-" + arch.toString()))
+                {
                     out.remove(url);
                 }
             }
