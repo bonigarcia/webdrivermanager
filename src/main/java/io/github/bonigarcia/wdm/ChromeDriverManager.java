@@ -57,7 +57,7 @@ public class ChromeDriverManager extends BrowserManager {
         String driverVersion = getDriverVersion();
         driverUrlKey =
                 driverVersion.equals("LATEST") || Integer.parseInt(driverVersionKey.split("\\.")[0]) > 114
-                ? "wdm.chromeDriverUrl" : "wdm.chromeDriverUrl.legacy";
+                        ? "wdm.chromeDriverUrl" : "wdm.chromeDriverUrl.legacy";
         driverName = asList("chromedriver");
     }
 
@@ -76,21 +76,23 @@ public class ChromeDriverManager extends BrowserManager {
                 JsonArray versions = jsonElement.getAsJsonObject().getAsJsonArray("versions");
                 List<URL> urlList = new ArrayList<>();
                 List<JsonElement> drivers = versions.asList().stream()
-                        .filter(version -> version.getAsJsonObject().getAsJsonObject("downloads").has("chromedriver"))
+                        .filter(version -> version.getAsJsonObject().getAsJsonObject("downloads")
+                                .has("chromedriver"))
                         .collect(Collectors.toList());
-               List<JsonArray> downloads = drivers.stream().map(driver
-                        ->driver.getAsJsonObject().getAsJsonObject("downloads").getAsJsonArray("chromedriver")).collect(Collectors.toList());
+                List<JsonArray> downloads = drivers.stream().map(driver
+                        -> driver.getAsJsonObject().getAsJsonObject("downloads")
+                        .getAsJsonArray("chromedriver")).collect(Collectors.toList());
 
-               downloads.forEach(downloadList->{
-                   downloadList.forEach(download-> {
-                       try {
-                           urlList.add(new URL(download.getAsJsonObject().get("url").getAsString()));
-                       } catch (MalformedURLException e) {
-                           log.error(e.getMessage());
-                       }
-                   });
-               });
-               return urlList;
+                downloads.forEach(downloadList -> {
+                    downloadList.forEach(download -> {
+                        try {
+                            urlList.add(new URL(download.getAsJsonObject().get("url").getAsString()));
+                        } catch (MalformedURLException e) {
+                            log.error(e.getMessage());
+                        }
+                    });
+                });
+                return urlList;
             };
 
             urls = getDriversFromJson(driverUrl, parser);
@@ -104,7 +106,7 @@ public class ChromeDriverManager extends BrowserManager {
             int i = url.getFile().lastIndexOf(SLASH);
             int j = url.getFile().substring(0, i).lastIndexOf(SLASH) + 1;
             return url.getFile().substring(j, i);
-        } else if(driverUrlKey.equals("wdm.chromeDriverUrl.legacy")){
+        } else if (driverUrlKey.equals("wdm.chromeDriverUrl.legacy")) {
             return super.getCurrentVersion(url, driverName);
         } else {
             return url.getFile().split("/")[4];

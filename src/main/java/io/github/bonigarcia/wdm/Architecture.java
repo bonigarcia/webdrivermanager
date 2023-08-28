@@ -24,11 +24,4 @@ package io.github.bonigarcia.wdm;
  */
 public enum Architecture {
     DEFAULT, X32, X64, arm64;
-
-//    @Override
-//    public String toString() {
-//        return this.name().contains("X") ? this.name().replace("X", "")
-//                : this.name();
-//    }
-
 }
