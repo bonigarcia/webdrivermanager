@@ -18,6 +18,7 @@ package io.github.bonigarcia.wdm;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -29,6 +30,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static io.github.bonigarcia.wdm.WdmConfig.getString;
+import static io.github.bonigarcia.wdm.WdmConfig.getUrl;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Arrays.asList;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -111,6 +113,31 @@ public class ChromeDriverManager extends BrowserManager {
         } else {
             return url.getFile().split("/")[4];
         }
+    }
+
+        @Override
+    protected List<URL> getLatest(List<URL> list, List<String> match) {
+        log.trace("Checking the latest stable version of {} with URL list {}", match,
+                list);
+        URL chromeChannels = getUrl("wdm.chromedriverUrl.channels");
+            Function<JsonElement, List<URL>> stableParser = jsonElement -> {
+                JsonObject channels = jsonElement.getAsJsonObject().getAsJsonObject("channels");
+            String stableVersion = channels.getAsJsonObject("Stable").getAsJsonPrimitive("version").getAsString();
+
+                return list.stream().filter(url -> url.toString().contains(stableVersion)).collect(Collectors.toList());
+            };
+
+                List<URL> out = new ArrayList<>();
+            try {
+                out.addAll(getDriversFromJson(chromeChannels, stableParser));
+            } catch (IOException e) {
+                log.error("Cannot determine latest version for {}", match);
+                return out;
+            }
+            versionToDownload = getCurrentVersion(out.get(0), "chromedriver");
+
+        log.info("Latest version of {} is {}", match, versionToDownload);
+        return out;
     }
 
     @Override
