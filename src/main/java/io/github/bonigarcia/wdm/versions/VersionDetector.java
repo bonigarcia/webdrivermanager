@@ -89,7 +89,7 @@ public class VersionDetector {
     }
 
     public Optional<String> getDriverVersionFromProperties(String key) {
-        // Chromium values are the same than Chrome
+        // Chromium values are the same as Chrome
         if (key.contains("chromium")) {
             key = key.replace("chromium", "chrome");
         }
@@ -127,18 +127,18 @@ public class VersionDetector {
             try {
                 if (driverVersion.isPresent()
                         && Integer.parseInt(driverVersion.get()) >= 115) {
-                    // Parse JSON using GoodVersions
-                    cftUrl = config.getChromeGoodVersionsUrl();
+                    // Parse JSON using LatestVersions
+                    cftUrl = config.getChromeLatestVersionsUrl();
 
                     GoodVersions versions = Parser.parseJson(httpClient, cftUrl,
                             GoodVersions.class);
-                    List<Versions> fileteredList = versions.versions.stream()
+                    List<Versions> filteredList = versions.versions.stream()
                             .filter(v -> v.version
                                     .startsWith(driverVersion.get()))
                             .collect(toList());
 
-                    return Optional.of(fileteredList
-                            .get(fileteredList.size() - 1).version);
+                    return Optional.of(filteredList
+                            .get(filteredList.size() - 1).version);
                 } else if (!driverVersion.isPresent()) {
                     // Parse JSON using LastGoodVersions
                     cftUrl = config.getChromeLastGoodVersionsUrl();
@@ -161,7 +161,7 @@ public class VersionDetector {
             }
         }
 
-        String osLabel = optOsLabel.isPresent() ? optOsLabel.get() : "";
+        String osLabel = optOsLabel.orElse("");
         String url = driverVersion.isPresent()
                 ? driverUrl + latestLabel + "_" + driverVersion.get() + osLabel
                 : driverUrl + versionLabel;

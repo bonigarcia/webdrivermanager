@@ -131,6 +131,8 @@ public class Config {
             "wdm.chromeGoodVersionsUrl", String.class);
     ConfigKey<String> chromeLastGoodVersionsUrl = new ConfigKey<>(
             "wdm.chromeLastGoodVersionsUrl", String.class);
+    ConfigKey<String> chromeLatestVersionsUrl = new ConfigKey<>(
+            "wdm.chromeLatestVersionsUrl", String.class);
 
     ConfigKey<String> edgeDriverVersion = new ConfigKey<>(
             "wdm.edgeDriverVersion", String.class);
@@ -809,6 +811,15 @@ public class Config {
 
     public Config setChromeLastGoodVersionsUrl(String value) {
         this.chromeLastGoodVersionsUrl.setValue(value);
+        return this;
+    }
+
+    public String getChromeLatestVersionsUrl() {
+        return resolve(chromeLatestVersionsUrl);
+    }
+
+    public Config setChromeLatestVersionsUrl(String value) {
+        this.chromeLatestVersionsUrl.setValue(value);
         return this;
     }
 
