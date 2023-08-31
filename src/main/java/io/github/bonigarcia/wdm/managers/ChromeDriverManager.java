@@ -18,6 +18,7 @@ package io.github.bonigarcia.wdm.managers;
 
 import static io.github.bonigarcia.wdm.config.Architecture.ARM64;
 import static io.github.bonigarcia.wdm.config.Architecture.X32;
+import static io.github.bonigarcia.wdm.config.Config.isNullOrEmpty;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROME;
 import static java.util.Locale.ROOT;
 import static java.util.Optional.empty;
@@ -29,10 +30,12 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.xml.namespace.NamespaceContext;
 
 import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -40,6 +43,9 @@ import io.github.bonigarcia.wdm.config.Architecture;
 import io.github.bonigarcia.wdm.config.Config;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
 import io.github.bonigarcia.wdm.config.OperatingSystem;
+import io.github.bonigarcia.wdm.online.LastGoodVersions;
+import io.github.bonigarcia.wdm.online.Parser;
+import io.github.bonigarcia.wdm.versions.VersionDetector;
 import io.github.bonigarcia.wdm.webdriver.OptionsWithArguments;
 
 /**
@@ -49,6 +55,8 @@ import io.github.bonigarcia.wdm.webdriver.OptionsWithArguments;
  * @since 1.0.0
  */
 public class ChromeDriverManager extends WebDriverManager {
+
+    public static final int MIN_CHROMEDRIVER_IN_CFT = 115;
 
     @Override
     public DriverManagerType getDriverManagerType() {
@@ -105,8 +113,25 @@ public class ChromeDriverManager extends WebDriverManager {
         if (isUseMirror()) {
             return getDriversFromMirror(getMirrorUrl().get(), driverVersion);
         } else {
-            return getDriversFromXml(getDriverUrl(), "//s3:Contents/s3:Key",
-                    getS3NamespaceContext());
+            if (!isNullOrEmpty(driverVersion)
+                    && Integer.parseInt(VersionDetector.getMajorVersion(
+                            driverVersion)) >= MIN_CHROMEDRIVER_IN_CFT) {
+                String cftUrl = config.getChromeLastGoodVersionsUrl();
+                LastGoodVersions versions = Parser.parseJson(httpClient, cftUrl,
+                        LastGoodVersions.class);
+                return versions.channels.stable.downloads.chromedriver.stream()
+                        .map(platformUrl -> {
+                            try {
+                                return new URL(platformUrl.url);
+                            } catch (MalformedURLException e) {
+                                throw new WebDriverException(
+                                        "Incorrect CfT URL " + platformUrl.url);
+                            }
+                        }).collect(Collectors.toList());
+            } else {
+                return getDriversFromXml(getDriverUrl(), "//s3:Contents/s3:Key",
+                        getS3NamespaceContext());
+            }
         }
     }
 

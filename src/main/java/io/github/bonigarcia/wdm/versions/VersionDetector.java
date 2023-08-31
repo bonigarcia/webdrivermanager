@@ -17,6 +17,7 @@
 package io.github.bonigarcia.wdm.versions;
 
 import static io.github.bonigarcia.wdm.config.Config.isNullOrEmpty;
+import static io.github.bonigarcia.wdm.managers.ChromeDriverManager.MIN_CHROMEDRIVER_IN_CFT;
 import static io.github.bonigarcia.wdm.versions.Shell.runAndWait;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -125,8 +126,8 @@ public class VersionDetector {
         if (driverName.equalsIgnoreCase("chromedriver")) {
             String cftUrl = null;
             try {
-                if (driverVersion.isPresent()
-                        && Integer.parseInt(driverVersion.get()) >= 115) {
+                if (driverVersion.isPresent() && Integer.parseInt(
+                        driverVersion.get()) >= MIN_CHROMEDRIVER_IN_CFT) {
                     // Parse JSON using GoodVersions
                     cftUrl = config.getChromeGoodVersionsUrl();
 
