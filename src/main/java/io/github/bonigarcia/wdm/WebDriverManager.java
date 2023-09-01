@@ -1568,7 +1568,7 @@ public abstract class WebDriverManager {
         log.info("Reading {} to seek {}", driverUrl, getDriverName());
     }
 
-    protected Document loadXML(InputStream inputStream)
+    public static Document loadXML(InputStream inputStream)
             throws SAXException, IOException, ParserConfigurationException {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setNamespaceAware(true);

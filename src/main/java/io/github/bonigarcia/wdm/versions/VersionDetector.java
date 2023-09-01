@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm.versions;
 
+import static io.github.bonigarcia.wdm.WebDriverManager.loadXML;
 import static io.github.bonigarcia.wdm.config.Config.isNullOrEmpty;
 import static io.github.bonigarcia.wdm.managers.ChromeDriverManager.MIN_CHROMEDRIVER_IN_CFT;
 import static io.github.bonigarcia.wdm.versions.Shell.runAndWait;
@@ -45,7 +46,6 @@ import java.util.Optional;
 import java.util.Properties;
 import java.util.stream.Collectors;
 
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
@@ -461,8 +461,7 @@ public class VersionDetector {
                 }
                 Path pom = path.resolve("pom.xml");
                 try (InputStream is = Files.newInputStream(pom)) {
-                    Document doc = DocumentBuilderFactory.newInstance()
-                            .newDocumentBuilder().parse(is);
+                    Document doc = loadXML(is);
                     doc.getDocumentElement().normalize();
                     String version = (String) XPathFactory.newInstance()
                             .newXPath().compile("/project/version")
