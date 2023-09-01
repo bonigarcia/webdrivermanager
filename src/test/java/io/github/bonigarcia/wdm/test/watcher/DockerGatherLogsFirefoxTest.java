@@ -37,7 +37,7 @@ class DockerGatherLogsFirefoxTest {
     static final Logger log = getLogger(lookup().lookupClass());
 
     WebDriverManager wdm = WebDriverManager.firefoxdriver().browserInDocker()
-            .watch();
+            .browserVersion("115").watch();
     WebDriver driver;
 
     @BeforeEach
