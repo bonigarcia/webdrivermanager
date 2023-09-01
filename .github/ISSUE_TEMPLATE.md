@@ -1,6 +1,6 @@
 <!-- Before opening an issue, please consider the following: -->
 
-<!-- 1. Ensure you are using the LATEST verison of WebDriverManager. Old versions might have some bugs already fixed in the current stable version. -->
+<!-- 1. Ensure you are using the LATEST version of WebDriverManager. Old versions might have some bugs already fixed in the current stable version. -->
 
 <!-- 2. The WebDriverManager documentation contains a section about "known issues". Please check out this page just in case your problem is already known: https://bonigarcia.dev/webdrivermanager/#known-issues -->
 
