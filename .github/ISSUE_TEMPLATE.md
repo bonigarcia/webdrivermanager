@@ -16,12 +16,8 @@
 **Operating system and architecture**: <!-- Fill your operating system (Ubuntu 16.04, Windows 10, OSX Yosemite, etc.) and architecture (32, 64 bits) here. -->
 
 **Selenium version**: <!-- Fill the Selenium version here (e.g., 4.12.0). -->
-```
-```
 
 **WebDriverManager version**: <!-- Fill the WebDriverManager version here. Notice that the latest version of WebDriverManager is always recommended. If you are using an old version, please update it before creating this issue. -->
-```
-```
 
 **WebDriverManager call**: <!-- Copy here your code in which you are using WebDriverManager, e.g. WebDriverManager.chromedriver().setup(); -->
 ```
