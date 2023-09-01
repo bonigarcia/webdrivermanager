@@ -781,6 +781,21 @@ WebDriverManager 5.4+ implements the support for the CfT endpoints. Therefore, t
 WebDriverManager.chromedriver().clearDriverCache().setup();
 ----
 
+[discrete]
+==== Connectivity issues
+WebDriverManager must request remote endpoints (like the Chrome for Testing (CfT) endpoints) and download drivers from online repositories. When this operation is done in a corporate environment with a proxy or firewall, it might lead to connectivity problems like the following:
+
+```
+Error HTTP 403 executing https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/116.0.5845.96/win64/chromedriver-win64.zip
+```
+
+If this is your case, consider the following:
+
+* Use the proxy capabilities of WebDriverManager to set up your proxy, e.g.:
+```
+WebDriverManager.chromedriver().proxy("myproxy:port").setup();
+```
+* Review your network setup to enable the remote requests and downloads required by WebDriverManager.
 
 == Troubleshooting
 

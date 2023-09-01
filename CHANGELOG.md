@@ -1,5 +1,14 @@
 # Changelog
 
+## [5.5.3] - 2023-09-01
+
+### Fixed
+- Fix meta-inf path to find wdm version in jar distribution
+
+### Changed
+- Get driver URL list from CfT endpoints for chromedriver 115+
+
+
 ## [5.5.2] - 2023-08-25
 
 ### Fixed
