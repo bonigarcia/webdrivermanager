@@ -714,8 +714,7 @@ HTTP proxy. It can be also configured using the environment variable  `HTTPS_PRO
 |=======
 
 == Known Issues
-[discrete]
-==== HTTP response code 403
+=== HTTP response code 403
 Some of the drivers (e.g., geckodriver or operadriver) are hosted on GitHub. When external clients (like WebDriverManager) make many consecutive requests to GitHub, and due to its traffic rate limit, it eventually responds with an HTTP 403 error (_forbidden_), as follows:
 
 [source]
@@ -738,8 +737,7 @@ To avoid this problem, WebDriverManager can make authenticated requests using a 
 
 TIP: As of WebDriverManager 5.3.0, this issue should not happen anymore (even without a GitHub token). To avoid the 403 error, an automated job in GitHub Actions mirrors the GitHub API responses twice a day. This mirror is used internally by WebDriverManager instead of querying the GitHub API. 
 
-[discrete]
-==== Testing localhost
+=== Testing localhost in Docker
 A typical case in web development is testing a web application deployed in the localhost. In this case, and when using browsers in Docker containers, we need to know that the address `localhost` inside a Docker container is not the host's address but the container address. To solve this problem, we can take different approaches. In Linux, we can use the gateway address for inter-container communication. This address is usually `172.17.0.1`, and can be discovered as follows:
 
 [source,shell]
@@ -753,13 +751,11 @@ $ ip addr show docker0
 
 When the host is Mac OS or Windows, we can use the DNS name `host.docker.internal`, which will be resolved to the internal IP address used by the host.
 
-[discrete]
-==== Chrome 92-94 in Docker
+=== Chrome 92-94 in Docker
 An https://bugs.chromium.org/p/chromedriver/issues/detail?id=3857[issue] affected Chrome 92 to 94 and Docker. The problem can be solved by using the argument `--disable-gpu` in Chrome and Edge. This argument is used by WebDriverManager 5 to avoid the issue. Nevertheless, some situations are still impossible to fix (e.g., when using https://hub.docker.com/r/bonigarcia/webdrivermanager[WebDriverManager in Docker] as CLI or Server) for Chrome 92 to 94 in Docker.
 
 
-[discrete]
-==== Support for chromedriver 115+
+=== Support for chromedriver 115+
 The chromedriver team has stopped publishing the chromedriver releases and metadata using their traditional https://chromedriver.chromium.org/downloads[chromedriver download repository] with chromedriver 114. This way, as of **chromedriver 115**, the chromedriver releases can only be discovered programmatically using the  https://github.com/GoogleChromeLabs/chrome-for-testing#json-api-endpoints[Chrome for Testing (CfT) JSON endpoints]. 
 
 This change is very relevant for WebDriverManager, since, as of Chrome 115 and 116, chromedriver cannot be managed automatically by WebDriverManager using the traditional way. Therefore, for older versions of WebDriverManager, this situation led to errors like the following:
@@ -781,8 +777,7 @@ WebDriverManager 5.4+ implements the support for the CfT endpoints. Therefore, t
 WebDriverManager.chromedriver().clearDriverCache().setup();
 ----
 
-[discrete]
-==== Connectivity issues
+=== Connectivity issues
 WebDriverManager must request remote endpoints (like the Chrome for Testing (CfT) endpoints) and download drivers from online repositories. When this operation is done in a corporate environment with a proxy or firewall, it might lead to connectivity problems like the following:
 
 ```

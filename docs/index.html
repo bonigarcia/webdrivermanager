@@ -827,7 +827,15 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 </li>
 <li><a href="#examples">5. Examples</a></li>
 <li><a href="#advanced-configuration">6. Advanced Configuration</a></li>
-<li><a href="#known-issues">7. Known Issues</a></li>
+<li><a href="#known-issues">7. Known Issues</a>
+<ul class="sectlevel2">
+<li><a href="#http-response-code-403">7.1. HTTP response code 403</a></li>
+<li><a href="#testing-localhost-in-docker">7.2. Testing localhost in Docker</a></li>
+<li><a href="#chrome-92-94-in-docker">7.3. Chrome 92-94 in Docker</a></li>
+<li><a href="#support-for-chromedriver-115">7.4. Support for chromedriver 115+</a></li>
+<li><a href="#connectivity-issues">7.5. Connectivity issues</a></li>
+</ul>
+</li>
 <li><a href="#troubleshooting">8. Troubleshooting</a></li>
 <li><a href="#community">9. Community</a></li>
 <li><a href="#support">10. Support</a></li>
@@ -2979,7 +2987,8 @@ HTTP proxy. It can be also configured using the environment variable  <code>HTTP
 <div class="sect1">
 <h2 id="known-issues"><a class="anchor" href="#known-issues"></a>7. Known Issues</h2>
 <div class="sectionbody">
-<h4 id="http-response-code-403" class="discrete">HTTP response code 403</h4>
+<div class="sect2">
+<h3 id="http-response-code-403"><a class="anchor" href="#http-response-code-403"></a>7.1. HTTP response code 403</h3>
 <div class="paragraph">
 <p>Some of the drivers (e.g., geckodriver or operadriver) are hosted on GitHub. When external clients (like WebDriverManager) make many consecutive requests to GitHub, and due to its traffic rate limit, it eventually responds with an HTTP 403 error (<em>forbidden</em>), as follows:</p>
 </div>
@@ -3014,7 +3023,9 @@ As of WebDriverManager 5.3.0, this issue should not happen anymore (even without
 </tr>
 </table>
 </div>
-<h4 id="testing-localhost" class="discrete">Testing localhost</h4>
+</div>
+<div class="sect2">
+<h3 id="testing-localhost-in-docker"><a class="anchor" href="#testing-localhost-in-docker"></a>7.2. Testing localhost in Docker</h3>
 <div class="paragraph">
 <p>A typical case in web development is testing a web application deployed in the localhost. In this case, and when using browsers in Docker containers, we need to know that the address <code>localhost</code> inside a Docker container is not the host&#8217;s address but the container address. To solve this problem, we can take different approaches. In Linux, we can use the gateway address for inter-container communication. This address is usually <code>172.17.0.1</code>, and can be discovered as follows:</p>
 </div>
@@ -3030,11 +3041,15 @@ As of WebDriverManager 5.3.0, this issue should not happen anymore (even without
 <div class="paragraph">
 <p>When the host is Mac OS or Windows, we can use the DNS name <code>host.docker.internal</code>, which will be resolved to the internal IP address used by the host.</p>
 </div>
-<h4 id="chrome-92-94-in-docker" class="discrete">Chrome 92-94 in Docker</h4>
+</div>
+<div class="sect2">
+<h3 id="chrome-92-94-in-docker"><a class="anchor" href="#chrome-92-94-in-docker"></a>7.3. Chrome 92-94 in Docker</h3>
 <div class="paragraph">
 <p>An <a href="https://bugs.chromium.org/p/chromedriver/issues/detail?id=3857">issue</a> affected Chrome 92 to 94 and Docker. The problem can be solved by using the argument <code>--disable-gpu</code> in Chrome and Edge. This argument is used by WebDriverManager 5 to avoid the issue. Nevertheless, some situations are still impossible to fix (e.g., when using <a href="https://hub.docker.com/r/bonigarcia/webdrivermanager">WebDriverManager in Docker</a> as CLI or Server) for Chrome 92 to 94 in Docker.</p>
 </div>
-<h4 id="support-for-chromedriver-115" class="discrete">Support for chromedriver 115+</h4>
+</div>
+<div class="sect2">
+<h3 id="support-for-chromedriver-115"><a class="anchor" href="#support-for-chromedriver-115"></a>7.4. Support for chromedriver 115+</h3>
 <div class="paragraph">
 <p>The chromedriver team has stopped publishing the chromedriver releases and metadata using their traditional <a href="https://chromedriver.chromium.org/downloads">chromedriver download repository</a> with chromedriver 114. This way, as of <strong>chromedriver 115</strong>, the chromedriver releases can only be discovered programmatically using the  <a href="https://github.com/GoogleChromeLabs/chrome-for-testing#json-api-endpoints">Chrome for Testing (CfT) JSON endpoints</a>.</p>
 </div>
@@ -3059,7 +3074,9 @@ As of WebDriverManager 5.3.0, this issue should not happen anymore (even without
 <pre class="CodeRay highlight"><code data-lang="java">WebDriverManager.chromedriver().clearDriverCache().setup();</code></pre>
 </div>
 </div>
-<h4 id="connectivity-issues" class="discrete">Connectivity issues</h4>
+</div>
+<div class="sect2">
+<h3 id="connectivity-issues"><a class="anchor" href="#connectivity-issues"></a>7.5. Connectivity issues</h3>
 <div class="paragraph">
 <p>WebDriverManager must request remote endpoints (like the Chrome for Testing (CfT) endpoints) and download drivers from online repositories. When this operation is done in a corporate environment with a proxy or firewall, it might lead to connectivity problems like the following:</p>
 </div>
@@ -3089,6 +3106,7 @@ As of WebDriverManager 5.3.0, this issue should not happen anymore (even without
 <p>Review your network setup to enable the remote requests and downloads required by WebDriverManager.</p>
 </li>
 </ul>
+</div>
 </div>
 </div>
 </div>
