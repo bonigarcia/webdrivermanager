@@ -12,6 +12,7 @@
         <docker-java.version>3.3.3</docker-java.version>
         <brotli.version>0.1.2</brotli.version>
         <commons-lang3.version>3.13.0</commons-lang3.version>
+        <commons-compress.version>1.24.0</commons-compress.version>
         <httpclient5.version>5.2.1</httpclient5.version>
 
         <!-- provided -->
@@ -124,6 +125,11 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>${commons-lang3.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-compress</artifactId>
+            <version>${commons-compress.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.httpcomponents.client5</groupId>
