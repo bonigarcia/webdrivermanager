@@ -62,6 +62,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -1255,9 +1256,17 @@ public abstract class WebDriverManager {
         if (driverVersion.startsWith(".")) {
             driverVersion = driverVersion.substring(1);
         }
-        UrlHandler urlHandler = createUrlHandler(driverVersion);
-        URL url = urlHandler.getCandidateUrl();
-        downloadedDriverVersion = urlHandler.getDriverVersion();
+
+        URL url;
+        if (config.isAvoidExternalConnections()) {
+            url = URI.create(config.getChromeDownloadUrlPattern()).toURL();
+            downloadedDriverVersion = driverVersion;
+        } else {
+            UrlHandler urlHandler = createUrlHandler(driverVersion);
+            url = urlHandler.getCandidateUrl();
+            downloadedDriverVersion = urlHandler.getDriverVersion();
+        }
+
         return downloader.download(url, downloadedDriverVersion,
                 getDriverName(), getDriverManagerType());
     }
