@@ -85,6 +85,8 @@ public class Config {
             Boolean.class);
     ConfigKey<Boolean> avoidShutdownHook = new ConfigKey<>(
             "wdm.avoidShutdownHook", Boolean.class);
+    ConfigKey<Boolean> avoidExternalConnections = new ConfigKey<>(
+            "wdm.avoidExternalConnections", Boolean.class);
     ConfigKey<Integer> timeout = new ConfigKey<>("wdm.timeout", Integer.class);
     ConfigKey<Boolean> versionsPropertiesOnlineFirst = new ConfigKey<>(
             "wdm.versionsPropertiesOnlineFirst", Boolean.class);
@@ -550,6 +552,15 @@ public class Config {
 
     public Config setAvoidShutdownHook(boolean value) {
         this.avoidShutdownHook.setValue(value);
+        return this;
+    }
+
+    public boolean isAvoidExternalConnections() {
+        return resolve(avoidExternalConnections);
+    }
+
+    public Config setAvoidExternalConnections(boolean value) {
+        this.avoidExternalConnections.setValue(value);
         return this;
     }
 
