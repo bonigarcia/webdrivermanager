@@ -54,19 +54,21 @@ class WebDriverManagerTest {
 
     @DisplayName("download")
     @ParameterizedTest(name = "with driver version {0} should download version {1}")
-    @ValueSource(strings = {"123", ".123"})
+    @ValueSource(strings = { "123", ".123" })
     void download(String driverVersion) throws IOException {
         String chromeDownloadUrlPattern = "https://chromeDownloadUrlPattern";
         String expected = "expected";
         String cleanDriverVersion = "123";
 
         when(config.isAvoidExternalConnections()).thenReturn(true);
-        when(config.getChromeDownloadUrlPattern()).thenReturn(chromeDownloadUrlPattern);
+        when(config.getChromeDownloadUrlPattern())
+                .thenReturn(chromeDownloadUrlPattern);
 
         when(URI.create(chromeDownloadUrlPattern)).thenReturn(uri);
         when(uri.toURL()).thenReturn(url);
 
-        when(downloader.download(url, cleanDriverVersion, "", null)).thenReturn(expected);
+        when(downloader.download(url, cleanDriverVersion, "", null))
+                .thenReturn(expected);
 
         assertEquals(expected, webDriverManager.download(driverVersion));
     }
