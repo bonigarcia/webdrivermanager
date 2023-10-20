@@ -20,6 +20,7 @@ import static io.github.bonigarcia.wdm.config.Architecture.ARM64;
 import static io.github.bonigarcia.wdm.config.Architecture.X32;
 import static io.github.bonigarcia.wdm.config.Config.isNullOrEmpty;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROME;
+import static java.util.Collections.emptyList;
 import static java.util.Locale.ROOT;
 import static java.util.Optional.empty;
 
@@ -129,8 +130,7 @@ public class ChromeDriverManager extends WebDriverManager {
                             }
                         }).collect(Collectors.toList());
             } else {
-                return getDriversFromXml(getDriverUrl(), "//s3:Contents/s3:Key",
-                        getS3NamespaceContext());
+                return emptyList();
             }
         }
     }
@@ -162,7 +162,7 @@ public class ChromeDriverManager extends WebDriverManager {
 
     Optional<URL> buildUrl(String driverVersion, Config config) {
         Optional<URL> optionalUrl = empty();
-        if (!config.isUseMirror()) {
+        if (!config.isUseMirror() && !isNullOrEmpty(driverVersion)) {
             String downloadUrlPattern = config.getChromeDownloadUrlPattern();
             OperatingSystem os = config.getOperatingSystem();
             Architecture arch = config.getArchitecture();

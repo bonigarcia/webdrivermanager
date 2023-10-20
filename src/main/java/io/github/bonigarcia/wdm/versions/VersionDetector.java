@@ -159,6 +159,9 @@ public class VersionDetector {
                     log.error("Exception creating CfT URL {}: {}", CFT_URL,
                             e.getMessage());
                 }
+                if (!driverVersion.isPresent()) {
+                    versionLabel += "_STABLE";
+                }
             }
         }
 
@@ -415,8 +418,12 @@ public class VersionDetector {
     }
 
     public static String getMajorVersion(String version) {
-        int i = version.indexOf('.');
-        return i != -1 ? version.substring(0, i) : version;
+        if (version != null) {
+            int i = version.indexOf('.');
+            return i != -1 ? version.substring(0, i) : version;
+        } else {
+            return "0";
+        }
     }
 
     protected File findFileLocation(String filename) {
