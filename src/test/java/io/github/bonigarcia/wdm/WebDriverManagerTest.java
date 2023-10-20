@@ -6,6 +6,7 @@ import io.github.bonigarcia.wdm.online.Downloader;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -50,6 +51,14 @@ class WebDriverManagerTest {
     @AfterEach
     public void afterEach() {
         uriMockedStatic.close();
+    }
+
+    @Test
+    @DisplayName("avoidExternalConnections() should fluently set to true the corresponding config parameter")
+    void avoidExternalConnections() {
+        when(config.setAvoidExternalConnections(true)).thenReturn(config);
+
+        assertEquals(webDriverManager, webDriverManager.avoidExternalConnections());
     }
 
     @DisplayName("download")
