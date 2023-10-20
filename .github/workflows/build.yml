@@ -25,6 +25,7 @@ jobs:
       with:
         distribution: 'temurin'
         java-version: ${{ matrix.java }}
+        cache: 'maven'
     - name: Start Xvfb
       if: matrix.os == 'ubuntu-latest'
       run: Xvfb $DISPLAY &
