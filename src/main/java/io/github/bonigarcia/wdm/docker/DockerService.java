@@ -670,7 +670,10 @@ public class DockerService {
 
         String containerId = startContainer(browserContainer);
         browserContainer.setContainerId(containerId);
-        String browserHost = getHost(containerId, network);
+        String gateway = getGateway(containerId, network);
+        browserContainer.setGateway(gateway);
+        String browserHost = isHost(network) ? gateway
+                : getHost(containerId, network);
         String browserPort = isHost(network) ? dockerBrowserPort
                 : getBindPort(containerId, dockerBrowserPort + "/tcp");
         String browserUrlFormat = "http://%s:%s/";
@@ -680,8 +683,6 @@ public class DockerService {
 
         String browserUrl = format(browserUrlFormat, browserHost, browserPort);
         browserContainer.setContainerUrl(browserUrl);
-        String gateway = getGateway(containerId, network);
-        browserContainer.setGateway(gateway);
         String address = getAddress(containerId, network);
         browserContainer.setAddress(address);
         log.trace("Browser remote URL {}", browserUrl);
@@ -725,7 +726,7 @@ public class DockerService {
 
         // envs
         List<String> envs = new ArrayList<>();
-        String browserAddress = isHost(network) ? DockerHost.DEFAULT_ADDRESS
+        String browserAddress = isHost(network) ? browserContainer.getGateway()
                 : browserContainer.getAddress();
         envs.add("BROWSER_CONTAINER_NAME=" + browserAddress);
         Path recordingPath = getRecordingPath(browserContainer);
