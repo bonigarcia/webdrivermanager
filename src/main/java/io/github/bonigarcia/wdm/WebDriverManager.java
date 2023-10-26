@@ -539,6 +539,11 @@ public abstract class WebDriverManager {
         return this;
     }
 
+    public WebDriverManager avoidExternalConnections() {
+        config().setAvoidExternalConnections(true);
+        return this;
+    }
+
     public WebDriverManager enableVnc() {
         config().setDockerEnabledVnc(true);
         return this;
