@@ -86,6 +86,7 @@ public class DockerService {
     final Logger log = getLogger(lookup().lookupClass());
 
     public static final String NETWORK_HOST = "host";
+    private static final String DEFAULT_GATEWAY = "172.17.0.1";
     private static final String BETA = "beta";
     private static final String DEV = "dev";
     private static final String LATEST_MINUS = "latest-";
@@ -141,7 +142,7 @@ public class DockerService {
 
     public String getHost(String containerId, String network) {
         String host = getDefaultHost();
-        if (IS_OS_LINUX && isRunningInsideDocker()) {
+        if (IS_OS_LINUX && isRunningInsideDocker() || isHost(network)) {
             host = getGateway(containerId, network);
             log.debug(
                     "WebDriverManager running inside a Docker container. Using gateway address: {}",
@@ -163,8 +164,12 @@ public class DockerService {
     }
 
     public String getGateway(String containerId, String network) {
-        return dockerClient.inspectContainerCmd(containerId).exec()
+        String gateway = dockerClient.inspectContainerCmd(containerId).exec()
                 .getNetworkSettings().getNetworks().get(network).getGateway();
+        if (isNullOrEmpty(gateway)) {
+            return DEFAULT_GATEWAY;
+        }
+        return gateway;
     }
 
     public String getAddress(String containerId, String network) {
@@ -672,8 +677,7 @@ public class DockerService {
         browserContainer.setContainerId(containerId);
         String gateway = getGateway(containerId, network);
         browserContainer.setGateway(gateway);
-        String browserHost = isHost(network) ? gateway
-                : getHost(containerId, network);
+        String browserHost = getHost(containerId, network);
         String browserPort = isHost(network) ? dockerBrowserPort
                 : getBindPort(containerId, dockerBrowserPort + "/tcp");
         String browserUrlFormat = "http://%s:%s/";
