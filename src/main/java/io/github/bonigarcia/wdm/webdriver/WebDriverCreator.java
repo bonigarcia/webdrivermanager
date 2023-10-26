@@ -93,13 +93,13 @@ public class WebDriverCreator {
                 }
             } catch (Exception e1) {
                 try {
-                    e1.printStackTrace();
                     log.trace("{} creating WebDriver object ({})",
                             e1.getClass().getSimpleName(), e1.getMessage());
                     if (System.currentTimeMillis() > timeoutMs) {
                         throw new WebDriverManagerException(
                                 "Timeout of " + waitTimeoutSec
-                                        + " seconds creating WebDriver object", e1);
+                                        + " seconds creating WebDriver object",
+                                e1);
                     }
                     Thread.sleep(TimeUnit.SECONDS.toMillis(POLL_TIME_SEC));
                 } catch (InterruptedException e2) {
