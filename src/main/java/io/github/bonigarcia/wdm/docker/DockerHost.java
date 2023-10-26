@@ -37,7 +37,7 @@ import org.slf4j.Logger;
 
 public class DockerHost {
 
-    final static Logger log = getLogger(lookup().lookupClass());
+    static final Logger log = getLogger(lookup().lookupClass());
 
     public static final String DEFAULT_ADDRESS = "localhost";
     private static final int DEFAULT_PORT = 2375;
