@@ -35,7 +35,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 class LocalPropertiesTest {
 
     WebDriverManager wdm = WebDriverManager.chromedriver()
-            .clearResolutionCache().avoidReadReleaseFromRepository();
+            .clearResolutionCache();
 
     @Test
     void testCustomUrl() throws MalformedURLException {
