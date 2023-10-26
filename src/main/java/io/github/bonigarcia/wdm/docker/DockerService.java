@@ -142,7 +142,7 @@ public class DockerService {
 
     public String getHost(String containerId, String network) {
         String host = getDefaultHost();
-        if (IS_OS_LINUX && isRunningInsideDocker() || isHost(network)) {
+        if (IS_OS_LINUX && isRunningInsideDocker()) {
             host = getGateway(containerId, network);
             log.debug(
                     "WebDriverManager running inside a Docker container. Using gateway address: {}",
