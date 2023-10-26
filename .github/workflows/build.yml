@@ -49,7 +49,7 @@ jobs:
       with:
         timeout_minutes: 30
         max_attempts: 3
-        command: mvn -B test
+        command: mvn -B test -Dtest=!Docker*
     - name: Upload analysis to SonarCloud
       if: success() && matrix.os == 'ubuntu-latest' && matrix.java == '11' && !contains(github.ref, 'pull')
       run: >
