@@ -43,8 +43,7 @@ class ForceDownloadTest {
             EdgeDriver.class })
     void testForceDownload(Class<? extends WebDriver> driverClass) {
         WebDriverManager wdm = WebDriverManager.getInstance(driverClass);
-        wdm.forceDownload().avoidBrowserDetection()
-                .avoidReadReleaseFromRepository().timeout(20).setup();
+        wdm.forceDownload().avoidBrowserDetection().timeout(20).setup();
         assertThat(wdm.getDownloadedDriverPath()).isNotNull();
     }
 
