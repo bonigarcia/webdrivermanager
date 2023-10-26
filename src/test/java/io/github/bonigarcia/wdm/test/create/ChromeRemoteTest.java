@@ -38,13 +38,13 @@ class ChromeRemoteTest {
         WebDriverManager.chromedriver().setup();
 
         // Start Selenium Grid in standalone mode
-        Main.main(new String[] { "standalone", "--port", "4444" });
+        Main.main(new String[] { "standalone", "--port", "4445" });
     }
 
     @BeforeEach
     void setupTest() {
         driver = WebDriverManager.chromedriver()
-                .remoteAddress("http://localhost:4444/wd/hub").create();
+                .remoteAddress("http://localhost:4445/wd/hub").create();
     }
 
     @AfterEach

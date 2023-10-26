@@ -33,7 +33,7 @@ import java.util.regex.Pattern;
 
 public class DockerHost {
 
-    public static final String DEFAULT_ADDRESS = "127.0.0.1";
+    public static final String DEFAULT_ADDRESS = "localhost";
     private static final int DEFAULT_PORT = 2375;
     private static final String DEFAULT_UNIX_ENDPOINT = "unix:///var/run/docker.sock";
     private static final String DEFAULT_WINDOWS_ENDPOINT = "npipe:////./pipe/docker_engine";
