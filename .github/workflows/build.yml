@@ -42,14 +42,14 @@ jobs:
       with:
         timeout_minutes: 30
         max_attempts: 3
-        command: mvn -B test -Dtest=!Docker*,!Record*
+        command: mvn -B test -Dtest=!Record*
     - name: Run tests on Windows
       if: matrix.os == 'windows-latest'
       uses: nick-fields/retry@v2.9.0
       with:
         timeout_minutes: 30
         max_attempts: 3
-        command: mvn -B test -Dtest=!Docker*
+        command: mvn -B test
     - name: Upload analysis to SonarCloud
       if: success() && matrix.os == 'ubuntu-latest' && matrix.java == '11' && !contains(github.ref, 'pull')
       run: >
