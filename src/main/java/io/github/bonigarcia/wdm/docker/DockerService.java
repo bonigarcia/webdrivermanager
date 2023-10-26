@@ -85,6 +85,7 @@ public class DockerService {
 
     final Logger log = getLogger(lookup().lookupClass());
 
+    public static final String NETWORK_HOST = "host";
     private static final String BETA = "beta";
     private static final String DEV = "dev";
     private static final String LATEST_MINUS = "latest-";
@@ -591,7 +592,8 @@ public class DockerService {
 
         noVncContainer.setContainerId(containerId);
         String noVncHost = getDefaultHost();
-        String noVncPort = getBindPort(containerId, dockerNoVncPort + "/tcp");
+        String noVncPort = isHost(network) ? dockerNoVncPort
+                : getBindPort(containerId, dockerNoVncPort + "/tcp");
         String noVncUrlFormat = "http://%s:%s/";
         String noVncUrl = format(noVncUrlFormat, noVncHost, noVncPort);
         noVncContainer.setContainerUrl(noVncUrl);
@@ -669,8 +671,8 @@ public class DockerService {
         String containerId = startContainer(browserContainer);
         browserContainer.setContainerId(containerId);
         String browserHost = getHost(containerId, network);
-        String browserPort = getBindPort(containerId,
-                dockerBrowserPort + "/tcp");
+        String browserPort = isHost(network) ? dockerBrowserPort
+                : getBindPort(containerId, dockerBrowserPort + "/tcp");
         String browserUrlFormat = "http://%s:%s/";
         if (dockerImage.contains("firefox") || androidEnabled) {
             browserUrlFormat += "wd/hub";
@@ -685,7 +687,8 @@ public class DockerService {
         log.trace("Browser remote URL {}", browserUrl);
 
         if (config.isDockerEnabledVnc()) {
-            String vncPort = getBindPort(containerId, dockerVncPort + "/tcp");
+            String vncPort = isHost(network) ? dockerVncPort
+                    : getBindPort(containerId, dockerVncPort + "/tcp");
             browserContainer.setVncPort(vncPort);
             String vncAddress = format("vnc://%s:%s/", getDefaultHost(),
                     vncPort);
@@ -694,6 +697,10 @@ public class DockerService {
         }
 
         return browserContainer;
+    }
+
+    private boolean isHost(String dockerNetwork) {
+        return dockerNetwork.equalsIgnoreCase(NETWORK_HOST);
     }
 
     private boolean isChromeAllowedOrigins(String dockerImage,
@@ -713,16 +720,18 @@ public class DockerService {
         // pull image
         pullImageIfNecessary(cacheKey, dockerImage, recorderVersion);
 
+        // network
+        String network = config.getDockerNetwork();
+
         // envs
         List<String> envs = new ArrayList<>();
-        envs.add("BROWSER_CONTAINER_NAME=" + browserContainer.getAddress());
+        String browserAddress = isHost(network) ? DockerHost.DEFAULT_ADDRESS
+                : browserContainer.getAddress();
+        envs.add("BROWSER_CONTAINER_NAME=" + browserAddress);
         Path recordingPath = getRecordingPath(browserContainer);
         envs.add("FILE_NAME=" + recordingPath.getFileName().toString());
         envs.add("VIDEO_SIZE=" + config.getDockerVideoSize());
         envs.add("FRAME_RATE=" + config.getDockerRecordingFrameRate());
-
-        // network
-        String network = config.getDockerNetwork();
 
         // extra hosts
         List<String> extraHosts = config.getDockerExtraHosts();

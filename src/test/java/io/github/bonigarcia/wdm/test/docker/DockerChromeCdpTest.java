@@ -18,37 +18,46 @@ package io.github.bonigarcia.wdm.test.docker;
 
 import static io.github.bonigarcia.wdm.WebDriverManager.isDockerAvailable;
 import static java.lang.invoke.MethodHandles.lookup;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assumptions.assumeThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.Duration;
+import java.util.Base64;
+import java.util.Optional;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.JavascriptException;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.devtools.DevTools;
 import org.openqa.selenium.devtools.HasDevTools;
-import org.openqa.selenium.devtools.events.ConsoleEvent;
+import org.openqa.selenium.devtools.v117.dom.model.Rect;
+import org.openqa.selenium.devtools.v117.page.Page;
+import org.openqa.selenium.devtools.v117.page.Page.GetLayoutMetricsResponse;
+import org.openqa.selenium.devtools.v117.page.model.Viewport;
 import org.openqa.selenium.remote.Augmenter;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-@Disabled
 class DockerChromeCdpTest {
 
     static final Logger log = getLogger(lookup().lookupClass());
 
     WebDriver driver;
     DevTools devTools;
-    WebDriverManager wdm = WebDriverManager.chromedriver().browserInDocker();
+    WebDriverManager wdm = WebDriverManager.chromedriver().browserInDocker()
+            .dockerNetworkHost();
 
     @BeforeEach
-    void setupTest() {
+    void setupTest() throws Exception {
         assumeThat(isDockerAvailable()).isTrue();
         driver = new Augmenter().augment(wdm.create());
         devTools = ((HasDevTools) driver).getDevTools();
@@ -63,24 +72,25 @@ class DockerChromeCdpTest {
 
     @Test
     void test() throws Exception {
-        CompletableFuture<ConsoleEvent> futureEvents = new CompletableFuture<>();
-        devTools.getDomains().events()
-                .addConsoleListener(futureEvents::complete);
-
-        CompletableFuture<JavascriptException> futureJsExc = new CompletableFuture<>();
-        devTools.getDomains().events()
-                .addJavascriptExceptionListener(futureJsExc::complete);
-
         driver.get(
-                "https://bonigarcia.dev/selenium-webdriver-java/console-logs.html");
+                "https://bonigarcia.dev/selenium-webdriver-java/long-page.html");
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.presenceOfNestedElementsLocatedBy(
+                By.className("container"), By.tagName("p")));
 
-        ConsoleEvent consoleEvent = futureEvents.get(5, TimeUnit.SECONDS);
-        log.debug("ConsoleEvent: {} {} {}", consoleEvent.getTimestamp(),
-                consoleEvent.getType(), consoleEvent.getMessages());
+        GetLayoutMetricsResponse metrics = devTools
+                .send(Page.getLayoutMetrics());
+        Rect contentSize = metrics.getContentSize();
+        String screenshotBase64 = devTools
+                .send(Page.captureScreenshot(Optional.empty(), Optional.empty(),
+                        Optional.of(new Viewport(0, 0, contentSize.getWidth(),
+                                contentSize.getHeight(), 1)),
+                        Optional.empty(), Optional.of(true),
+                        Optional.of(false)));
+        Path destination = Paths.get("fullpage-screenshot.png");
+        Files.write(destination, Base64.getDecoder().decode(screenshotBase64));
 
-        JavascriptException jsException = futureJsExc.get(5, TimeUnit.SECONDS);
-        log.debug("JavascriptException: {} {}", jsException.getMessage(),
-                jsException.getSystemInformation());
+        assertThat(destination).exists();
     }
 
 }

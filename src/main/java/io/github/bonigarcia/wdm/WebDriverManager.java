@@ -29,6 +29,7 @@ import static io.github.bonigarcia.wdm.config.DriverManagerType.OPERA;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.LINUX;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.MAC;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.WIN;
+import static io.github.bonigarcia.wdm.docker.DockerService.NETWORK_HOST;
 import static io.github.bonigarcia.wdm.online.Downloader.deleteFile;
 import static io.github.bonigarcia.wdm.versions.Shell.runAndWait;
 import static io.github.bonigarcia.wdm.versions.VersionDetector.getWdmVersion;
@@ -470,6 +471,11 @@ public abstract class WebDriverManager {
 
     public WebDriverManager dockerNetwork(String network) {
         config().setDockerNetwork(network);
+        return this;
+    }
+
+    public WebDriverManager dockerNetworkHost() {
+        config().setDockerNetwork(NETWORK_HOST);
         return this;
     }
 
