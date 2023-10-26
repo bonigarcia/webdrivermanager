@@ -35,9 +35,7 @@ jobs:
       with:
         timeout_minutes: 30
         max_attempts: 3
-        command: |
-          fuser -k 4444/tcp
-          mvn -B test -Dtest=!Record*
+        command: mvn -B test -Dtest=!Record*
     - name: Run tests on Mac
       if: matrix.os == 'macos-latest'
       uses: nick-fields/retry@v2.9.0
