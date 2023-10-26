@@ -59,6 +59,8 @@ public class ChromeDriverManager extends WebDriverManager {
 
     public static final int MIN_CHROMEDRIVER_IN_CFT = 115;
 
+    private static final String CHROMEDRIVER_DOWNLOAD_OLD_PATTERN = "https://chromedriver.storage.googleapis.com/%s/chromedriver_%s%s.zip";
+
     @Override
     public DriverManagerType getDriverManagerType() {
         return CHROME;
@@ -176,8 +178,16 @@ public class ChromeDriverManager extends WebDriverManager {
             }
             String separator = os.isMac() ? "-" : "";
             String label = os.getName() + separator + archLabel;
+
             String builtUrl = String.format(downloadUrlPattern, driverVersion,
                     label, label);
+            if (!isNullOrEmpty(driverVersion)
+                    && Integer.parseInt(VersionDetector.getMajorVersion(
+                            driverVersion)) < MIN_CHROMEDRIVER_IN_CFT) {
+                archLabel = os.isWin() ? "32" : "64";
+                builtUrl = String.format(CHROMEDRIVER_DOWNLOAD_OLD_PATTERN,
+                        driverVersion, os.getName(), archLabel);
+            }
             log.debug("Using URL built from repository pattern: {}", builtUrl);
             try {
                 optionalUrl = Optional.of(new URL(builtUrl));
