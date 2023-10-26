@@ -58,7 +58,8 @@ class WebDriverManagerTest {
     void avoidExternalConnections() {
         when(config.setAvoidExternalConnections(true)).thenReturn(config);
 
-        assertEquals(webDriverManager, webDriverManager.avoidExternalConnections());
+        assertEquals(webDriverManager,
+                webDriverManager.avoidExternalConnections());
     }
 
     @DisplayName("download")
