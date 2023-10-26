@@ -17,12 +17,17 @@
 package io.github.bonigarcia.wdm.docker;
 
 import static io.github.bonigarcia.wdm.config.Config.isNullOrEmpty;
+import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Locale.ROOT;
+import static org.slf4j.LoggerFactory.getLogger;
 
+import java.net.InetAddress;
 import java.net.URI;
 import java.nio.file.Paths;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import org.slf4j.Logger;
 
 /**
  * It represents a dockerd endpoint (a codified DOCKER_HOST).
@@ -32,6 +37,8 @@ import java.util.regex.Pattern;
  */
 
 public class DockerHost {
+
+    final static Logger log = getLogger(lookup().lookupClass());
 
     public static final String DEFAULT_ADDRESS = "localhost";
     private static final int DEFAULT_PORT = 2375;
@@ -140,7 +147,15 @@ public class DockerHost {
     }
 
     public static String defaultAddress() {
-        return DEFAULT_ADDRESS;
+        try {
+            InetAddress localHost = InetAddress.getLocalHost();
+            return localHost.getHostAddress();
+        } catch (Exception e) {
+            log.debug("Exception reading localhost address ({}), using default",
+                    e.getMessage());
+            return DEFAULT_ADDRESS;
+        }
+
     }
 
     public static int defaultPort() {
