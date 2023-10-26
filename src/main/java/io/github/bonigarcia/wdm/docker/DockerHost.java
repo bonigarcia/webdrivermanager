@@ -21,7 +21,6 @@ import static java.lang.invoke.MethodHandles.lookup;
 import static java.util.Locale.ROOT;
 import static org.slf4j.LoggerFactory.getLogger;
 
-import java.net.InetAddress;
 import java.net.URI;
 import java.nio.file.Paths;
 import java.util.regex.Matcher;
@@ -147,15 +146,7 @@ public class DockerHost {
     }
 
     public static String defaultAddress() {
-        try {
-            InetAddress localHost = InetAddress.getLocalHost();
-            return localHost.getHostAddress();
-        } catch (Exception e) {
-            log.debug("Exception reading localhost address ({}), using default",
-                    e.getMessage());
-            return DEFAULT_ADDRESS;
-        }
-
+        return DEFAULT_ADDRESS;
     }
 
     public static int defaultPort() {

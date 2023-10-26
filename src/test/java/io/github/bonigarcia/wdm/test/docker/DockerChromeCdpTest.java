@@ -66,8 +66,12 @@ class DockerChromeCdpTest {
 
     @AfterEach
     void teardown() {
-        devTools.close();
-        wdm.quit();
+        if (devTools != null) {
+            devTools.close();
+        }
+        if (wdm != null) {
+            wdm.quit();
+        }
     }
 
     @Test
