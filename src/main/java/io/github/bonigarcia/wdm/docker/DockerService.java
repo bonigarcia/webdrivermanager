@@ -677,7 +677,8 @@ public class DockerService {
         browserContainer.setContainerId(containerId);
         String gateway = getGateway(containerId, network);
         browserContainer.setGateway(gateway);
-        String browserHost = getHost(containerId, network);
+        String browserHost = isHost(network) ? "host.docker.internal"
+                : getHost(containerId, network);
         String browserPort = isHost(network) ? dockerBrowserPort
                 : getBindPort(containerId, dockerBrowserPort + "/tcp");
         String browserUrlFormat = "http://%s:%s/";
