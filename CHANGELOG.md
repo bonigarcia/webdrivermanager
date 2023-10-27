@@ -1,5 +1,18 @@
 # Changelog
 
+## [5.6.0] - 2023-10-27
+
+### Added
+- Enable CDP support in browsers in Docker using host as Docker network
+
+### Fixed
+- Use same number of exposed ports when using host as Docker network
+- Unable to use chromeDownloadUrlPattern (#1141)
+
+### Changed
+- Avoid fallback to old chromedriver repo if CfT fails (#1137)
+
+
 ## [5.5.3] - 2023-09-01
 
 ### Fixed
