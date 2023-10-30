@@ -20,7 +20,6 @@ import static java.lang.invoke.MethodHandles.lookup;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.lang.reflect.InvocationTargetException;
-import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
@@ -79,12 +78,17 @@ public class WebDriverCreator {
         do {
             try {
                 URL url = new URL(remoteUrl);
-                HttpURLConnection huc = (HttpURLConnection) url
-                        .openConnection();
-                huc.connect();
-                int responseCode = huc.getResponseCode();
-                log.trace("Requesting {} (the response code is {})", remoteUrl,
-                        responseCode);
+
+                // TODO: Remove this wait
+                log.debug("Waiting 10 seconds for {}", remoteUrl);
+                Thread.sleep(10000);
+
+//                HttpURLConnection huc = (HttpURLConnection) url
+//                        .openConnection();
+//                huc.connect();
+//                int responseCode = huc.getResponseCode();
+//                log.debug("Requesting {} (the response code is {})", remoteUrl,
+//                        responseCode);
 
                 if (config.getEnableTracing()) {
                     webdriver = new RemoteWebDriver(url, capabilities);
@@ -93,7 +97,7 @@ public class WebDriverCreator {
                 }
             } catch (Exception e1) {
                 try {
-                    log.trace("{} creating WebDriver object ({})",
+                    log.debug("{} creating WebDriver object ({})",
                             e1.getClass().getSimpleName(), e1.getMessage());
                     if (System.currentTimeMillis() > timeoutMs) {
                         throw new WebDriverManagerException(
