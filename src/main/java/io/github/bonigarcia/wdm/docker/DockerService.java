@@ -209,14 +209,11 @@ public class DockerService {
                 hostConfigBuilder.withNetworkMode(network.get());
             }
             List<String> exposedPorts = dockerContainer.getExposedPorts();
-            if (!exposedPorts.isEmpty()) {
-                log.trace("Using exposed ports: {}", exposedPorts);
-                containerConfigBuilder.withExposedPorts(exposedPorts.stream()
-                        .map(ExposedPort::parse).collect(Collectors.toList()));
-                hostConfigBuilder.withPortBindings(exposedPorts.stream()
-                        .map(PortBinding::parse).collect(Collectors.toList()));
-                hostConfigBuilder.withPublishAllPorts(true);
-            }
+            log.trace("Using exposed ports: {}", exposedPorts);
+            containerConfigBuilder.withExposedPorts(exposedPorts.stream()
+                    .map(ExposedPort::parse).collect(Collectors.toList()));
+            hostConfigBuilder.withPortBindings(exposedPorts.stream()
+                    .map(PortBinding::parse).collect(Collectors.toList()));
             Optional<List<Bind>> binds = dockerContainer.getBinds();
             if (binds.isPresent()) {
                 log.trace("Using binds: {}", binds.get());
@@ -568,10 +565,15 @@ public class DockerService {
         // pull image
         pullImageIfNecessary(cacheKey, dockerImage, browserVersion);
 
+        // network
+        String network = config.getDockerNetwork();
+
         // exposed ports
         List<String> exposedPorts = new ArrayList<>();
         String dockerNoVncPort = String.valueOf(config.getDockerNoVncPort());
-        exposedPorts.add(dockerNoVncPort);
+        if (!isHost(network)) {
+            exposedPorts.add(dockerNoVncPort);
+        }
 
         // envs
         List<String> envs = new ArrayList<>();
@@ -582,21 +584,14 @@ public class DockerService {
         String vncPort = String.valueOf(config.getDockerVncPort());
         envs.add("VNC_SERVER=" + vncAddress + ":" + vncPort);
 
-        // network
-        String network = config.getDockerNetwork();
-
         // extra hosts
         List<String> extraHosts = config.getDockerExtraHosts();
 
         // builder
-        DockerBuilder noVncContainerBuilder = DockerContainer
+        DockerContainer noVncContainer = DockerContainer
                 .dockerBuilder(dockerImage).network(network)
-                .extraHosts(extraHosts).envs(envs);
-        if (!isHost(network)) {
-            noVncContainerBuilder = noVncContainerBuilder
-                    .exposedPorts(exposedPorts);
-        }
-        DockerContainer noVncContainer = noVncContainerBuilder.build();
+                .exposedPorts(exposedPorts).extraHosts(extraHosts).envs(envs)
+                .build();
 
         String containerId = startContainer(noVncContainer);
 
@@ -643,6 +638,9 @@ public class DockerService {
             binds.addAll(volumeList);
         }
 
+        // network
+        String network = config.getDockerNetwork();
+
         // envs
         List<String> envs = new ArrayList<>();
         envs.add("TZ=" + config.getDockerTimezone());
@@ -653,7 +651,9 @@ public class DockerService {
         String dockerVncPort = String.valueOf(config.getDockerVncPort());
         if (config.isDockerEnabledVnc()) {
             envs.add("ENABLE_VNC=true");
-            exposedPorts.add(dockerVncPort);
+            if (!isHost(network)) {
+                exposedPorts.add(dockerVncPort);
+            }
         }
         if (androidEnabled) {
             envs.add("QTWEBENGINE_DISABLE_SANDBOX=1");
@@ -662,21 +662,16 @@ public class DockerService {
             envs.add("DRIVER_ARGS=--whitelisted-ips= --allowed-origins=*");
         }
 
-        // network
-        String network = config.getDockerNetwork();
-
         // extra hosts
         List<String> extraHosts = config.getDockerExtraHosts();
 
         // builder
         DockerBuilder dockerBuilder = DockerContainer.dockerBuilder(dockerImage)
-                .network(network).mounts(mounts).binds(binds).shmSize(shmSize)
-                .envs(envs).extraHosts(extraHosts).sysadmin();
+                .network(network).exposedPorts(exposedPorts).mounts(mounts)
+                .binds(binds).shmSize(shmSize).envs(envs).extraHosts(extraHosts)
+                .sysadmin();
         if (androidEnabled) {
             dockerBuilder = dockerBuilder.privileged();
-        }
-        if (!isHost(network)) {
-            dockerBuilder = dockerBuilder.exposedPorts(exposedPorts);
         }
         DockerContainer browserContainer = dockerBuilder.build();
 
