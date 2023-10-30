@@ -589,9 +589,14 @@ public class DockerService {
         List<String> extraHosts = config.getDockerExtraHosts();
 
         // builder
-        DockerContainer noVncContainer = DockerContainer
-                .dockerBuilder(dockerImage).exposedPorts(exposedPorts)
-                .network(network).extraHosts(extraHosts).envs(envs).build();
+        DockerBuilder noVncContainerBuilder = DockerContainer
+                .dockerBuilder(dockerImage).network(network)
+                .extraHosts(extraHosts).envs(envs);
+        if (isHost(network)) {
+            noVncContainerBuilder = noVncContainerBuilder
+                    .exposedPorts(exposedPorts);
+        }
+        DockerContainer noVncContainer = noVncContainerBuilder.build();
 
         String containerId = startContainer(noVncContainer);
 
@@ -665,11 +670,13 @@ public class DockerService {
 
         // builder
         DockerBuilder dockerBuilder = DockerContainer.dockerBuilder(dockerImage)
-                .exposedPorts(exposedPorts).network(network).mounts(mounts)
-                .binds(binds).shmSize(shmSize).envs(envs).extraHosts(extraHosts)
-                .sysadmin();
+                .network(network).mounts(mounts).binds(binds).shmSize(shmSize)
+                .envs(envs).extraHosts(extraHosts).sysadmin();
         if (androidEnabled) {
             dockerBuilder = dockerBuilder.privileged();
+        }
+        if (isHost(network)) {
+            dockerBuilder = dockerBuilder.exposedPorts(exposedPorts);
         }
         DockerContainer browserContainer = dockerBuilder.build();
 
@@ -730,8 +737,7 @@ public class DockerService {
 
         // envs
         List<String> envs = new ArrayList<>();
-        String browserAddress = isHost(network) ? browserContainer.getGateway()
-                : browserContainer.getAddress();
+        String browserAddress = browserContainer.getAddress();
         envs.add("BROWSER_CONTAINER_NAME=" + browserAddress);
         Path recordingPath = getRecordingPath(browserContainer);
         envs.add("FILE_NAME=" + recordingPath.getFileName().toString());
