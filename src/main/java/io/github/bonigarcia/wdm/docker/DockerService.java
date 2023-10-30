@@ -592,7 +592,7 @@ public class DockerService {
         DockerBuilder noVncContainerBuilder = DockerContainer
                 .dockerBuilder(dockerImage).network(network)
                 .extraHosts(extraHosts).envs(envs);
-        if (isHost(network)) {
+        if (!isHost(network)) {
             noVncContainerBuilder = noVncContainerBuilder
                     .exposedPorts(exposedPorts);
         }
@@ -675,7 +675,7 @@ public class DockerService {
         if (androidEnabled) {
             dockerBuilder = dockerBuilder.privileged();
         }
-        if (isHost(network)) {
+        if (!isHost(network)) {
             dockerBuilder = dockerBuilder.exposedPorts(exposedPorts);
         }
         DockerContainer browserContainer = dockerBuilder.build();
