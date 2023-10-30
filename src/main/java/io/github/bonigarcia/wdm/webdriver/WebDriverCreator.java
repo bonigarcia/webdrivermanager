@@ -20,6 +20,7 @@ import static java.lang.invoke.MethodHandles.lookup;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.lang.reflect.InvocationTargetException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
@@ -76,18 +77,16 @@ public class WebDriverCreator {
         log.debug("Creating WebDriver object for {} at {} with {}", browserName,
                 remoteUrl, capabilities);
         do {
+            HttpURLConnection huc = null;
             try {
-                // TODO: Remove this wait
-                log.debug("Waiting 10 seconds for {}", remoteUrl);
-                Thread.sleep(10000);
-
                 URL url = new URL(remoteUrl);
-//                HttpURLConnection huc = (HttpURLConnection) url
-//                        .openConnection();
-//                huc.connect();
-//                int responseCode = huc.getResponseCode();
-//                log.debug("Requesting {} (the response code is {})", remoteUrl,
-//                        responseCode);
+                huc = (HttpURLConnection) url.openConnection();
+                huc.connect();
+                int responseCode = huc.getResponseCode();
+                log.debug("Requesting {} (the response code is {})", remoteUrl,
+                        responseCode);
+                log.debug("Response content: {}", huc.getContent());
+                huc.disconnect();
 
                 if (config.getEnableTracing()) {
                     webdriver = new RemoteWebDriver(url, capabilities);
@@ -95,7 +94,11 @@ public class WebDriverCreator {
                     webdriver = new RemoteWebDriver(url, capabilities, false);
                 }
             } catch (Exception e1) {
+                e1.printStackTrace();
                 try {
+                    if (huc != null) {
+                        huc.disconnect();
+                    }
                     log.debug("{} creating WebDriver object ({})",
                             e1.getClass().getSimpleName(), e1.getMessage());
                     if (System.currentTimeMillis() > timeoutMs) {
@@ -104,6 +107,7 @@ public class WebDriverCreator {
                                         + " seconds creating WebDriver object",
                                 e1);
                     }
+                    log.debug("Waiting fort {} seconds", POLL_TIME_SEC);
                     Thread.sleep(TimeUnit.SECONDS.toMillis(POLL_TIME_SEC));
                 } catch (InterruptedException e2) {
                     log.warn("Interrupted exception creating WebDriver object",
