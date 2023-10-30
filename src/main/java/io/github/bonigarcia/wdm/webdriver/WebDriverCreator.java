@@ -77,12 +77,11 @@ public class WebDriverCreator {
                 remoteUrl, capabilities);
         do {
             try {
-                URL url = new URL(remoteUrl);
-
                 // TODO: Remove this wait
                 log.debug("Waiting 10 seconds for {}", remoteUrl);
                 Thread.sleep(10000);
 
+                URL url = new URL(remoteUrl);
 //                HttpURLConnection huc = (HttpURLConnection) url
 //                        .openConnection();
 //                huc.connect();
