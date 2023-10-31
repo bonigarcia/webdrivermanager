@@ -43,7 +43,6 @@ import org.slf4j.Logger;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.async.ResultCallback.Adapter;
 import com.github.dockerjava.api.command.CreateContainerCmd;
-import com.github.dockerjava.api.model.Capability;
 import com.github.dockerjava.api.model.HostConfig;
 import com.github.dockerjava.api.model.PullResponseItem;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
@@ -90,7 +89,6 @@ class DockerManualTest {
         HostConfig hostConfigBuilder = new HostConfig();
         try (CreateContainerCmd containerConfigBuilder = dockerClient
                 .createContainerCmd(imageId)) {
-            hostConfigBuilder.withCapAdd(Capability.SYS_ADMIN);
             hostConfigBuilder.withNetworkMode("host");
 
             containerId = containerConfigBuilder
