@@ -75,7 +75,7 @@ class DockerManualTest {
                 .build();
         ApacheDockerHttpClient dockerHttpClient = new Builder()
                 .dockerHost(dockerClientConfig.getDockerHost()).build();
-        dockerClient = DockerClientBuilder.getInstance(dockerClientConfig)
+        dockerClient = DockerClientBuilder.getInstance()
                 .withDockerHttpClient(dockerHttpClient).build();
 
         // Pull image
@@ -97,7 +97,9 @@ class DockerManualTest {
             dockerClient.startContainerCmd(containerId).exec();
 
             // Manual wait
-            Thread.sleep(5000);
+            System.out.println("Manual wait");
+            Thread.sleep(60000);
+            System.out.println("End wait");
         }
     }
 
@@ -144,7 +146,7 @@ class DockerManualTest {
     void teardownClass() throws Exception {
         // Stop container
         log.debug("Stop container");
-        dockerClient.stopContainerCmd(containerId).withTimeout(5).exec();
+        dockerClient.stopContainerCmd(containerId).withTimeout(10).exec();
     }
 
 }
