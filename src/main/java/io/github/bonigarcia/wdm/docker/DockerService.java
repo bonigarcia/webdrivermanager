@@ -612,11 +612,16 @@ public class DockerService {
         // pull image
         pullImageIfNecessary(cacheKey, dockerImage, browserVersion);
 
+        // network
+        String network = config.getDockerNetwork();
+
         // exposed ports
-        List<String> exposedPorts = new ArrayList<>();
         String dockerBrowserPort = String
                 .valueOf(config.getDockerBrowserPort());
-        exposedPorts.add(dockerBrowserPort);
+        List<String> exposedPorts = new ArrayList<>();
+        if (!isHost(network)) {
+            exposedPorts.add(dockerBrowserPort);
+        }
 
         // shmSize
         long shmSize = config.getDockerMemSizeBytes(config.getDockerShmSize());
@@ -637,9 +642,6 @@ public class DockerService {
             log.trace("Using custom volumes: {}", volumeList);
             binds.addAll(volumeList);
         }
-
-        // network
-        String network = config.getDockerNetwork();
 
         // envs
         List<String> envs = new ArrayList<>();
