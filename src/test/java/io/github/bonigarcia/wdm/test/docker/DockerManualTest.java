@@ -67,7 +67,10 @@ class DockerManualTest {
 
     String imageId = "selenoid/vnc:chrome_118.0";
 //    String imageId = "selenium/standalone-chrome:latest";
-    String remoteUrl = "http://localhost:4444/";
+    String dockerHost = "localhost";
+    int dockerPort = 4444;
+    String remoteUrl = String.format("http://%s:%s/", dockerHost,
+            dockerPort + 1);
 
     @BeforeAll
     void setupClass() throws Exception {
@@ -95,10 +98,10 @@ class DockerManualTest {
                 .createContainerCmd(imageId)) {
             hostConfigBuilder.withNetworkMode("host");
 
-            int port = 4444;
-            ExposedPort exposedPort = new ExposedPort(port,
+            ExposedPort exposedPort = new ExposedPort(dockerPort,
                     InternetProtocol.TCP);
-            Binding binding = new Binding("localhost", String.valueOf(port));
+            Binding binding = new Binding(dockerHost,
+                    String.valueOf(dockerPort + 1));
             PortBinding portBinding = new PortBinding(binding, exposedPort);
 
             containerConfigBuilder.withExposedPorts(exposedPort);
@@ -112,7 +115,6 @@ class DockerManualTest {
             // Manual wait
             System.out.println("Manual wait");
             Thread.sleep(5000);
-            System.out.println("End wait");
         }
     }
 
@@ -159,7 +161,8 @@ class DockerManualTest {
     void teardownClass() throws Exception {
         // Stop container
         log.debug("Stop container");
-        dockerClient.stopContainerCmd(containerId).withTimeout(10).exec();
+        dockerClient.killContainerCmd(containerId).exec();
+        dockerClient.removeContainerCmd(containerId).withForce(true).exec();
     }
 
 }
