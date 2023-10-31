@@ -1493,9 +1493,7 @@ public abstract class WebDriverManager {
             }
 
             // Filter by architecture
-            if (!isEdgeArm64 || !isMac) {
-                urlHandler.filterByArch(architecture);
-            }
+            urlHandler.filterByArch(architecture);
 
             // Rest of filters
             urlHandler.filterByIgnoredVersions(config().getIgnoreVersions());
