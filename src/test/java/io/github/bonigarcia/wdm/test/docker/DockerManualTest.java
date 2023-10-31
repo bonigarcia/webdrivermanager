@@ -63,10 +63,10 @@ class DockerManualTest {
     DockerClient dockerClient;
     String containerId;
 
-    // String imageId = "selenoid/vnc:chrome_118.0";
-    String imageId = "selenium/standalone-chrome:latest";
-    // String remoteUrl = "http://localhost:4444/";
-    String remoteUrl = "http://localhost:4444/wd/hub";
+    String imageId = "selenoid/vnc:chrome_118.0";
+//    String imageId = "selenium/standalone-chrome:latest";
+    String remoteUrl = "http://localhost:4444/";
+//    String remoteUrl = "http://localhost:4444/wd/hub";
 
     @BeforeAll
     void setupClass() throws Exception {
@@ -111,7 +111,7 @@ class DockerManualTest {
             dockerClient.startContainerCmd(containerId).exec();
 
             // Manual wait
-            Thread.sleep(5000);
+            Thread.sleep(10000);
         }
     }
 
