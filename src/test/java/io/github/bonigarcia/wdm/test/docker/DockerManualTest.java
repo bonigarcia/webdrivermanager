@@ -69,8 +69,7 @@ class DockerManualTest {
 //    String imageId = "selenium/standalone-chrome:latest";
     String dockerHost = "localhost";
     int dockerPort = 4444;
-    String remoteUrl = String.format("http://%s:%s/", dockerHost,
-            dockerPort + 1);
+    String remoteUrl = String.format("http://%s:%s/", dockerHost, dockerPort);
 
     @BeforeAll
     void setupClass() throws Exception {
@@ -96,12 +95,12 @@ class DockerManualTest {
         HostConfig hostConfigBuilder = new HostConfig();
         try (CreateContainerCmd containerConfigBuilder = dockerClient
                 .createContainerCmd(imageId)) {
-            hostConfigBuilder.withNetworkMode("host");
+//            hostConfigBuilder.withNetworkMode("host");
 
             ExposedPort exposedPort = new ExposedPort(dockerPort,
                     InternetProtocol.TCP);
             Binding binding = new Binding(dockerHost,
-                    String.valueOf(dockerPort + 1));
+                    String.valueOf(dockerPort));
             PortBinding portBinding = new PortBinding(binding, exposedPort);
 
             containerConfigBuilder.withExposedPorts(exposedPort);
