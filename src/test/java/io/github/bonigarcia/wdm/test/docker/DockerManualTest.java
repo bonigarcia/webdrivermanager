@@ -43,7 +43,11 @@ import org.slf4j.Logger;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.async.ResultCallback.Adapter;
 import com.github.dockerjava.api.command.CreateContainerCmd;
+import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.HostConfig;
+import com.github.dockerjava.api.model.InternetProtocol;
+import com.github.dockerjava.api.model.PortBinding;
+import com.github.dockerjava.api.model.Ports.Binding;
 import com.github.dockerjava.api.model.PullResponseItem;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientBuilder;
@@ -91,6 +95,15 @@ class DockerManualTest {
                 .createContainerCmd(imageId)) {
             hostConfigBuilder.withNetworkMode("host");
 
+            int port = 4444;
+            ExposedPort exposedPort = new ExposedPort(port,
+                    InternetProtocol.TCP);
+            Binding binding = new Binding("localhost", String.valueOf(port));
+            PortBinding portBinding = new PortBinding(binding, exposedPort);
+
+            containerConfigBuilder.withExposedPorts(exposedPort);
+            hostConfigBuilder.withPortBindings(portBinding);
+
             containerId = containerConfigBuilder
                     .withHostConfig(hostConfigBuilder).exec().getId();
 
@@ -98,7 +111,7 @@ class DockerManualTest {
 
             // Manual wait
             System.out.println("Manual wait");
-            Thread.sleep(60000);
+            Thread.sleep(5000);
             System.out.println("End wait");
         }
     }
