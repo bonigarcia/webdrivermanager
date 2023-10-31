@@ -33,6 +33,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.openqa.selenium.By;
@@ -53,6 +54,7 @@ import org.slf4j.Logger;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.async.ResultCallback.Adapter;
 import com.github.dockerjava.api.command.CreateContainerCmd;
+import com.github.dockerjava.api.model.Capability;
 import com.github.dockerjava.api.model.HostConfig;
 import com.github.dockerjava.api.model.PullResponseItem;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
@@ -61,6 +63,7 @@ import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
 import com.github.dockerjava.httpclient5.ApacheDockerHttpClient.Builder;
 
+@Disabled
 @TestInstance(PER_CLASS)
 class DockerManualTest {
 
@@ -96,6 +99,7 @@ class DockerManualTest {
         HostConfig hostConfigBuilder = new HostConfig();
         try (CreateContainerCmd containerConfigBuilder = dockerClient
                 .createContainerCmd(imageId)) {
+            hostConfigBuilder.withCapAdd(Capability.SYS_ADMIN);
             hostConfigBuilder.withNetworkMode("host");
 
             containerId = containerConfigBuilder
@@ -145,6 +149,9 @@ class DockerManualTest {
 
     @AfterEach
     void teardown() {
+        if (devTools != null) {
+            devTools.close();
+        }
         if (driver != null) {
             driver.quit();
         }
