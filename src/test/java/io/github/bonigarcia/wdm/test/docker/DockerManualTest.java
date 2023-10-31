@@ -27,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -67,7 +68,7 @@ class DockerManualTest {
     // String remoteUrl = "http://localhost:4444/";
     String remoteUrl = "http://localhost:4444/wd/hub";
 
-//    @BeforeAll
+    @BeforeAll
     void setupClass() throws Exception {
         // Docker client
         log.debug("Docker client");
@@ -109,8 +110,8 @@ class DockerManualTest {
 
             dockerClient.startContainerCmd(containerId).exec();
 
-            // Manual wait of 1 minute
-            Thread.sleep(60000);
+            // Manual wait
+            Thread.sleep(5000);
         }
     }
 
