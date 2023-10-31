@@ -21,7 +21,6 @@ import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -66,7 +65,6 @@ class DockerManualTest {
     String imageId = "selenoid/vnc:chrome_118.0";
 //    String imageId = "selenium/standalone-chrome:latest";
     String remoteUrl = "http://localhost:4444/";
-//    String remoteUrl = "http://localhost:4444/wd/hub";
 
     @BeforeAll
     void setupClass() throws Exception {
@@ -94,16 +92,6 @@ class DockerManualTest {
                 .createContainerCmd(imageId)) {
             hostConfigBuilder.withCapAdd(Capability.SYS_ADMIN);
             hostConfigBuilder.withNetworkMode("host");
-            hostConfigBuilder.withDns(new ArrayList<>());
-            hostConfigBuilder.withDnsOptions(new ArrayList<>());
-            hostConfigBuilder.withDnsSearch(new ArrayList<>());
-            hostConfigBuilder.withPortBindings(new ArrayList<>());
-            hostConfigBuilder.withBlkioWeightDevice(new ArrayList<>());
-            hostConfigBuilder.withBlkioDeviceReadBps(new ArrayList<>());
-            hostConfigBuilder.withBlkioDeviceWriteBps(new ArrayList<>());
-            hostConfigBuilder.withBlkioDeviceReadIOps(new ArrayList<>());
-            hostConfigBuilder.withBlkioDeviceWriteIOps(new ArrayList<>());
-            hostConfigBuilder.withDevices(new ArrayList<>());
 
             containerId = containerConfigBuilder
                     .withHostConfig(hostConfigBuilder).exec().getId();
@@ -111,7 +99,7 @@ class DockerManualTest {
             dockerClient.startContainerCmd(containerId).exec();
 
             // Manual wait
-            Thread.sleep(10000);
+            Thread.sleep(5000);
         }
     }
 
