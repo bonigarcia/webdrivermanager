@@ -105,6 +105,9 @@ class DockerManualTest {
                     .withHostConfig(hostConfigBuilder).exec().getId();
 
             dockerClient.startContainerCmd(containerId).exec();
+
+            // Manual wait of 1 minute
+            Thread.sleep(60000);
         }
     }
 
