@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -89,6 +90,11 @@ class DockerManualTest {
                 .createContainerCmd(imageId)) {
             hostConfigBuilder.withCapAdd(Capability.SYS_ADMIN);
             hostConfigBuilder.withNetworkMode("host");
+            hostConfigBuilder.withDns(new ArrayList<>());
+            hostConfigBuilder.withDnsOptions(new ArrayList<>());
+            hostConfigBuilder.withDnsSearch(new ArrayList<>());
+            hostConfigBuilder.withPortBindings(new ArrayList<>());
+
             containerId = containerConfigBuilder
                     .withHostConfig(hostConfigBuilder).exec().getId();
 
