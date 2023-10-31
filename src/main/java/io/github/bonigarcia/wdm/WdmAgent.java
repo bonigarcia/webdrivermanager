@@ -43,7 +43,7 @@ public class WdmAgent {
 
     static final Logger log = getLogger(lookup().lookupClass());
 
-    private WdmAgent() {
+    public WdmAgent() {
         throw new IllegalStateException(
                 "WebDriverManager agent is used for static instrumentation");
     }
