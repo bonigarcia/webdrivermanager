@@ -27,7 +27,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -63,7 +62,12 @@ class DockerManualTest {
     DockerClient dockerClient;
     String containerId;
 
-    @BeforeAll
+    // String imageId = "selenoid/vnc:chrome_118.0";
+    String imageId = "selenium/standalone-chrome:latest";
+    // String remoteUrl = "http://localhost:4444/";
+    String remoteUrl = "http://localhost:4444/wd/hub";
+
+//    @BeforeAll
     void setupClass() throws Exception {
         // Docker client
         log.debug("Docker client");
@@ -78,7 +82,6 @@ class DockerManualTest {
 
         // Pull image
         log.debug("Pull image");
-        String imageId = "selenoid/vnc:chrome_118.0";
         dockerClient.pullImageCmd(imageId)
                 .exec(new Adapter<PullResponseItem>() {
                 }).awaitCompletion();
@@ -114,8 +117,8 @@ class DockerManualTest {
     @BeforeEach
     void setupTest() throws Exception {
         ChromeOptions options = new ChromeOptions();
-        WebDriver remoteDriver = new RemoteWebDriver(
-                new URL("http://localhost:4444/"), options);
+        WebDriver remoteDriver = new RemoteWebDriver(new URL(remoteUrl),
+                options);
 
         driver = new Augmenter().augment(remoteDriver);
         devTools = ((HasDevTools) driver).getDevTools();
