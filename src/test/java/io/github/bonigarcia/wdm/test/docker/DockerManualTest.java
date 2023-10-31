@@ -17,12 +17,17 @@
 package io.github.bonigarcia.wdm.test.docker;
 
 import static java.lang.invoke.MethodHandles.lookup;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.net.URL;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.Duration;
+import java.util.Base64;
+import java.util.Optional;
 
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -30,24 +35,25 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import org.openqa.selenium.JavascriptException;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.devtools.DevTools;
 import org.openqa.selenium.devtools.HasDevTools;
-import org.openqa.selenium.devtools.events.ConsoleEvent;
+import org.openqa.selenium.devtools.v117.dom.model.Rect;
+import org.openqa.selenium.devtools.v117.page.Page;
+import org.openqa.selenium.devtools.v117.page.Page.GetLayoutMetricsResponse;
+import org.openqa.selenium.devtools.v117.page.model.Viewport;
 import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.async.ResultCallback.Adapter;
 import com.github.dockerjava.api.command.CreateContainerCmd;
-import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.HostConfig;
-import com.github.dockerjava.api.model.InternetProtocol;
-import com.github.dockerjava.api.model.PortBinding;
-import com.github.dockerjava.api.model.Ports.Binding;
 import com.github.dockerjava.api.model.PullResponseItem;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientBuilder;
@@ -64,12 +70,7 @@ class DockerManualTest {
     DevTools devTools;
     DockerClient dockerClient;
     String containerId;
-
     String imageId = "selenoid/vnc:chrome_118.0";
-//    String imageId = "selenium/standalone-chrome:latest";
-    String dockerHost = "localhost";
-    int dockerPort = 4444;
-    String remoteUrl = String.format("http://%s:%s/", dockerHost, dockerPort);
 
     @BeforeAll
     void setupClass() throws Exception {
@@ -95,16 +96,7 @@ class DockerManualTest {
         HostConfig hostConfigBuilder = new HostConfig();
         try (CreateContainerCmd containerConfigBuilder = dockerClient
                 .createContainerCmd(imageId)) {
-//            hostConfigBuilder.withNetworkMode("host");
-
-            ExposedPort exposedPort = new ExposedPort(dockerPort,
-                    InternetProtocol.TCP);
-            Binding binding = new Binding(dockerHost,
-                    String.valueOf(dockerPort));
-            PortBinding portBinding = new PortBinding(binding, exposedPort);
-
-            containerConfigBuilder.withExposedPorts(exposedPort);
-            hostConfigBuilder.withPortBindings(portBinding);
+            hostConfigBuilder.withNetworkMode("host");
 
             containerId = containerConfigBuilder
                     .withHostConfig(hostConfigBuilder).exec().getId();
@@ -112,16 +104,16 @@ class DockerManualTest {
             dockerClient.startContainerCmd(containerId).exec();
 
             // Manual wait
-            System.out.println("Manual wait");
-            Thread.sleep(5000);
+            log.debug("Manual wait for container");
+            Thread.sleep(10000);
         }
     }
 
     @BeforeEach
     void setupTest() throws Exception {
         ChromeOptions options = new ChromeOptions();
-        WebDriver remoteDriver = new RemoteWebDriver(new URL(remoteUrl),
-                options);
+        WebDriver remoteDriver = new RemoteWebDriver(
+                new URL("http://localhost:4444/"), options);
 
         driver = new Augmenter().augment(remoteDriver);
         devTools = ((HasDevTools) driver).getDevTools();
@@ -130,30 +122,32 @@ class DockerManualTest {
 
     @Test
     void test() throws Exception {
-        CompletableFuture<ConsoleEvent> futureEvents = new CompletableFuture<>();
-        devTools.getDomains().events()
-                .addConsoleListener(futureEvents::complete);
-
-        CompletableFuture<JavascriptException> futureJsExc = new CompletableFuture<>();
-        devTools.getDomains().events()
-                .addJavascriptExceptionListener(futureJsExc::complete);
-
         driver.get(
-                "https://bonigarcia.dev/selenium-webdriver-java/console-logs.html");
+                "https://bonigarcia.dev/selenium-webdriver-java/long-page.html");
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait.until(ExpectedConditions.presenceOfNestedElementsLocatedBy(
+                By.className("container"), By.tagName("p")));
 
-        ConsoleEvent consoleEvent = futureEvents.get(5, TimeUnit.SECONDS);
-        log.debug("ConsoleEvent: {} {} {}", consoleEvent.getTimestamp(),
-                consoleEvent.getType(), consoleEvent.getMessages());
+        GetLayoutMetricsResponse metrics = devTools
+                .send(Page.getLayoutMetrics());
+        Rect contentSize = metrics.getContentSize();
+        String screenshotBase64 = devTools
+                .send(Page.captureScreenshot(Optional.empty(), Optional.empty(),
+                        Optional.of(new Viewport(0, 0, contentSize.getWidth(),
+                                contentSize.getHeight(), 1)),
+                        Optional.empty(), Optional.of(true),
+                        Optional.of(false)));
+        Path destination = Paths.get("fullpage-screenshot.png");
+        Files.write(destination, Base64.getDecoder().decode(screenshotBase64));
 
-        JavascriptException jsException = futureJsExc.get(5, TimeUnit.SECONDS);
-        log.debug("JavascriptException: {} {}", jsException.getMessage(),
-                jsException.getSystemInformation());
+        assertThat(destination).exists();
     }
 
     @AfterEach
     void teardown() {
-        devTools.close();
-        driver.quit();
+        if (driver != null) {
+            driver.quit();
+        }
     }
 
     @AfterAll
