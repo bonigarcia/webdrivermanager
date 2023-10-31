@@ -94,6 +94,12 @@ class DockerManualTest {
             hostConfigBuilder.withDnsOptions(new ArrayList<>());
             hostConfigBuilder.withDnsSearch(new ArrayList<>());
             hostConfigBuilder.withPortBindings(new ArrayList<>());
+            hostConfigBuilder.withBlkioWeightDevice(new ArrayList<>());
+            hostConfigBuilder.withBlkioDeviceReadBps(new ArrayList<>());
+            hostConfigBuilder.withBlkioDeviceWriteBps(new ArrayList<>());
+            hostConfigBuilder.withBlkioDeviceReadIOps(new ArrayList<>());
+            hostConfigBuilder.withBlkioDeviceWriteIOps(new ArrayList<>());
+            hostConfigBuilder.withDevices(new ArrayList<>());
 
             containerId = containerConfigBuilder
                     .withHostConfig(hostConfigBuilder).exec().getId();
