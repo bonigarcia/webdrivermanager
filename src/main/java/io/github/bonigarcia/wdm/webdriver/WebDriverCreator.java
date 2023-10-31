@@ -83,10 +83,8 @@ public class WebDriverCreator {
                 huc = (HttpURLConnection) url.openConnection();
                 huc.connect();
                 int responseCode = huc.getResponseCode();
-                log.debug("Requesting {} (the response code is {})", remoteUrl,
+                log.trace("Requesting {} (the response code is {})", remoteUrl,
                         responseCode);
-                log.debug("Response content: {}", huc.getContent());
-                huc.disconnect();
 
                 if (config.getEnableTracing()) {
                     webdriver = new RemoteWebDriver(url, capabilities);
@@ -94,12 +92,8 @@ public class WebDriverCreator {
                     webdriver = new RemoteWebDriver(url, capabilities, false);
                 }
             } catch (Exception e1) {
-                e1.printStackTrace();
                 try {
-                    if (huc != null) {
-                        huc.disconnect();
-                    }
-                    log.debug("{} creating WebDriver object ({})",
+                    log.trace("{} creating WebDriver object ({})",
                             e1.getClass().getSimpleName(), e1.getMessage());
                     if (System.currentTimeMillis() > timeoutMs) {
                         throw new WebDriverManagerException(
