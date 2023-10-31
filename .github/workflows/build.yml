@@ -35,7 +35,7 @@ jobs:
       with:
         timeout_minutes: 30
         max_attempts: 1
-        command: mvn -B test -Dtest=DockerChromeCdpTest
+        command: mvn -B test -Dtest=DockerManualTest
     - name: Run tests on Mac
       if: matrix.os == 'macos-latest'
       uses: nick-fields/retry@v2.9.0
