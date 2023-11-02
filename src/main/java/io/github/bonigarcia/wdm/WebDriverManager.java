@@ -1269,8 +1269,9 @@ public abstract class WebDriverManager {
         }
 
         URL url;
-        if (config.isAvoidExternalConnections()) {
-            url = URI.create(config.getChromeDownloadUrlPattern()).toURL();
+        Optional<URL> optionalURL = buildUrl(driverVersion);
+        if (config.isAvoidExternalConnections() && optionalURL.isPresent()) {
+            url = optionalURL.get();
             downloadedDriverVersion = driverVersion;
         } else {
             UrlHandler urlHandler = createUrlHandler(driverVersion);
