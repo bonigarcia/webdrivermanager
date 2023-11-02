@@ -77,10 +77,10 @@ public class WebDriverCreator {
         log.debug("Creating WebDriver object for {} at {} with {}", browserName,
                 remoteUrl, capabilities);
         do {
-            HttpURLConnection huc = null;
             try {
                 URL url = new URL(remoteUrl);
-                huc = (HttpURLConnection) url.openConnection();
+                HttpURLConnection huc = (HttpURLConnection) url
+                        .openConnection();
                 huc.connect();
                 int responseCode = huc.getResponseCode();
                 log.trace("Requesting {} (the response code is {})", remoteUrl,
@@ -101,7 +101,6 @@ public class WebDriverCreator {
                                         + " seconds creating WebDriver object",
                                 e1);
                     }
-                    log.debug("Waiting fort {} seconds", POLL_TIME_SEC);
                     Thread.sleep(TimeUnit.SECONDS.toMillis(POLL_TIME_SEC));
                 } catch (InterruptedException e2) {
                     log.warn("Interrupted exception creating WebDriver object",
