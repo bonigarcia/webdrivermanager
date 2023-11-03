@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.6.1] - 2023-11-02
+
+### Fixed
+- Leveraging buildUrl method with avoidExternalConnections to replace place holders in the provided URL (#1158)
+- Filter by architecture also in Edge ARM64 (#1155)
+
+
 ## [5.6.0] - 2023-10-27
 
 ### Added
