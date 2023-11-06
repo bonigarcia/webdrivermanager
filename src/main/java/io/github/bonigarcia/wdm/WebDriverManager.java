@@ -164,6 +164,7 @@ public abstract class WebDriverManager {
     protected static final String SLASH = "/";
     protected static final String DASH = "-";
     protected static final String LATEST_RELEASE = "LATEST_RELEASE";
+    protected static final String CFT_LABEL = "chrome-for-testing";
     protected static final NamespaceContext S3_NAMESPACE_CONTEXT = new S3NamespaceContext();
     protected static final String IN_DOCKER = "-in-docker";
     protected static final String CLI_SERVER = "server";
@@ -1387,6 +1388,10 @@ public abstract class WebDriverManager {
             int i = url.getFile().lastIndexOf(SLASH);
             int j = url.getFile().substring(0, i).lastIndexOf(SLASH) + 1;
             return url.getFile().substring(j, i);
+        } else if (url.getFile().contains(CFT_LABEL)) {
+            int i = url.getFile().indexOf(CFT_LABEL) + CFT_LABEL.length();
+            int j = url.getFile().indexOf(SLASH, i + 1);
+            return url.getFile().substring(i + 1, j);
         } else {
             String currentVersion = "";
             String pattern = "/([^/]*?)/[^/]*?" + getShortDriverName();

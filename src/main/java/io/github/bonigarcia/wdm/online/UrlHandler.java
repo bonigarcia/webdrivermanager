@@ -93,7 +93,7 @@ public class UrlHandler {
                 candidateUrls);
         List<URL> out = new ArrayList<>();
         List<URL> copyOfList = new ArrayList<>(candidateUrls);
-        String foundFriverVersion = null;
+        String foundDriverVersion = null;
 
         for (URL url : copyOfList) {
             try {
@@ -101,14 +101,14 @@ public class UrlHandler {
                     continue;
                 }
                 String currentVersion = getCurrentVersion.apply(url);
-                if (isNullOrEmpty(foundFriverVersion)) {
-                    foundFriverVersion = currentVersion;
+                if (isNullOrEmpty(foundDriverVersion)) {
+                    foundDriverVersion = currentVersion;
                 }
-                if (versionCompare(currentVersion, foundFriverVersion) > 0) {
-                    foundFriverVersion = currentVersion;
+                if (versionCompare(currentVersion, foundDriverVersion) > 0) {
+                    foundDriverVersion = currentVersion;
                     out.clear();
                 }
-                if (url.getFile().contains(foundFriverVersion)) {
+                if (url.getFile().contains(foundDriverVersion)) {
                     out.add(url);
                 }
             } catch (Exception e) {
@@ -118,7 +118,7 @@ public class UrlHandler {
             }
         }
 
-        this.driverVersion = foundFriverVersion;
+        this.driverVersion = foundDriverVersion;
         this.candidateUrls = out;
     }
 
