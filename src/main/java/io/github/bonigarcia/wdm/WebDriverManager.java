@@ -1384,19 +1384,20 @@ public abstract class WebDriverManager {
     }
 
     protected String getCurrentVersion(URL url) {
+        String urlFile = url.getFile();
         if (isUseMirror()) {
-            int i = url.getFile().lastIndexOf(SLASH);
-            int j = url.getFile().substring(0, i).lastIndexOf(SLASH) + 1;
-            return url.getFile().substring(j, i);
-        } else if (url.getFile().contains(CFT_LABEL)) {
-            int i = url.getFile().indexOf(CFT_LABEL) + CFT_LABEL.length();
-            int j = url.getFile().indexOf(SLASH, i + 1);
-            return url.getFile().substring(i + 1, j);
+            int i = urlFile.lastIndexOf(SLASH);
+            int j = urlFile.substring(0, i).lastIndexOf(SLASH) + 1;
+            return urlFile.substring(j, i);
+        } else if (urlFile.contains(CFT_LABEL)) {
+            int i = urlFile.indexOf(CFT_LABEL) + CFT_LABEL.length() + 1;
+            int j = urlFile.indexOf(SLASH, i);
+            return urlFile.substring(i, j);
         } else {
             String currentVersion = "";
             String pattern = "/([^/]*?)/[^/]*?" + getShortDriverName();
             Matcher matcher = compile(pattern, CASE_INSENSITIVE)
-                    .matcher(url.getFile());
+                    .matcher(urlFile);
             boolean find = matcher.find();
             if (find) {
                 currentVersion = matcher.group(1);
