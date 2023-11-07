@@ -1,5 +1,11 @@
 # Changelog
 
+## [5.6.2] - 2023-11-07
+
+### Fixed
+- Fix logic to find driver version from CfT URL (#1160)
+
+
 ## [5.6.1] - 2023-11-02
 
 ### Fixed
