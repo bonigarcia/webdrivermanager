@@ -33,6 +33,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -185,35 +186,52 @@ public class UrlHandler {
 
     public String getDistroName() throws IOException {
         String out = "";
-        final String key = "UBUNTU_CODENAME";
+        File[] fileList = getFileList();
+
+        for (File file : fileList) {
+            if (file.isDirectory()) {
+                continue;
+            }
+            out = readDistroNameFromFile(file);
+        }
+
+        return out;
+    }
+
+
+    private File[] getFileList() {
         File dir = new File(separator + "etc");
         File[] fileList = new File[0];
+
         if (dir.exists()) {
             fileList = dir.listFiles(
                     (path, filename) -> filename.endsWith("-release"));
         }
+
         File fileVersion = new File(separator + "proc", "version");
         if (fileVersion.exists()) {
-            fileList = copyOf(fileList, fileList.length + 1);
+            fileList = Arrays.copyOf(fileList, fileList.length + 1);
             fileList[fileList.length - 1] = fileVersion;
         }
-        for (File f : fileList) {
-            if (f.isDirectory()) {
-                continue;
-            }
-            try (BufferedReader myReader = new BufferedReader(
-                    new FileReader(f))) {
-                String strLine = null;
-                while ((strLine = myReader.readLine()) != null) {
-                    if (strLine.contains(key)) {
-                        int beginIndex = key.length();
-                        out = strLine.substring(beginIndex + 1);
-                    }
+
+        return fileList;
+    }
+
+
+    private String readDistroNameFromFile(File file) throws IOException {
+        String key = "UBUNTU_CODENAME";
+        try (BufferedReader myReader = new BufferedReader(new FileReader(file))) {
+            String strLine = null;
+            while ((strLine = myReader.readLine()) != null) {
+                if (strLine.contains(key)) {
+                    int beginIndex = key.length();
+                    return strLine.substring(beginIndex + 1);
                 }
             }
         }
-        return out;
+        return "";
     }
+
 
     public void resetList(List<URL> newCandidateUrls) {
         candidateUrls = newCandidateUrls.stream()

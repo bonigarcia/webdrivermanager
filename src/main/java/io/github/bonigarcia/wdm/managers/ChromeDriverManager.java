@@ -157,39 +157,40 @@ public class ChromeDriverManager extends WebDriverManager {
 
     Optional<URL> buildUrl(String driverVersion, Config config) {
         Optional<URL> optionalUrl = empty();
-        if (!config.isUseMirror() && !isNullOrEmpty(driverVersion)) {
-            String downloadUrlPattern = config.getChromeDownloadUrlPattern();
-            OperatingSystem os = config.getOperatingSystem();
-            Architecture arch = config.getArchitecture();
-            String archLabel = os.isLinux() ? "64"
-                    : arch.toString().toLowerCase(ROOT);
-            if (os.isWin() && !X32.equals(arch)) {
-                archLabel = "64";
-            }
-            if (os.isMac() && !ARM64.equals(arch)) {
-                archLabel = "x64";
-            }
-            String separator = os.isMac() ? "-" : "";
-            String label = os.getName() + separator + archLabel;
 
-            String builtUrl = String.format(downloadUrlPattern, driverVersion,
-                    label, label);
-            if (!isNullOrEmpty(driverVersion)
-                    && Integer.parseInt(VersionDetector.getMajorVersion(
-                            driverVersion)) < MIN_CHROMEDRIVER_IN_CFT) {
-                archLabel = os.isWin() ? "32" : "64";
-                builtUrl = String.format(CHROMEDRIVER_DOWNLOAD_OLD_PATTERN,
-                        driverVersion, os.getName(), archLabel);
-            }
-            log.debug("Using URL built from repository pattern: {}", builtUrl);
+
+        if (!config.isUseMirror() && !isNullOrEmpty(driverVersion)) {
+            String downloadUrl = buildDownloadUrl(driverVersion, config);
+            log.debug("Using URL built from repository pattern: {}", downloadUrl);
             try {
-                optionalUrl = Optional.of(new URL(builtUrl));
+                optionalUrl = Optional.of(new URL(downloadUrl));
             } catch (MalformedURLException e) {
-                log.warn("Error building URL from pattern {} {}", builtUrl,
-                        e.getMessage());
+                log.warn("Error building URL from pattern {} {}", downloadUrl, e.getMessage());
             }
         }
         return optionalUrl;
+    }
+
+    private String buildDownloadUrl(String driverVersion, Config config) {
+        String downloadUrlPattern = config.getChromeDownloadUrlPattern();
+        OperatingSystem os = config.getOperatingSystem();
+        Architecture arch = config.getArchitecture();
+        String archLabel = os.isLinux() ? "64" : arch.toString().toLowerCase(ROOT);
+        if (os.isWin() && !X32.equals(arch)) {
+            archLabel = "64";
+        }
+        if (os.isMac() && !ARM64.equals(arch)) {
+            archLabel = "x64";
+        }
+        String separator = os.isMac() ? "-" : "";
+        String label = os.getName() + separator + archLabel;
+        String builtUrl = String.format(downloadUrlPattern, driverVersion, label, label);
+        if (!isNullOrEmpty(driverVersion)
+                && Integer.parseInt(VersionDetector.getMajorVersion(driverVersion)) < MIN_CHROMEDRIVER_IN_CFT) {
+            archLabel = os.isWin() ? "32" : "64";
+            builtUrl = String.format(CHROMEDRIVER_DOWNLOAD_OLD_PATTERN, driverVersion, os.getName(), archLabel);
+        }
+        return builtUrl;
     }
 
     @Override
