@@ -172,20 +172,20 @@ public class ChromeDriverManager extends WebDriverManager {
             String separator = os.isMac() ? "-" : "";
             String label = os.getName() + separator + archLabel;
 
-            String builtUrl = String.format(downloadUrlPattern, driverVersion,
+            String downloadUrl = String.format(downloadUrlPattern, driverVersion,
                     label, label);
             if (!isNullOrEmpty(driverVersion)
                     && Integer.parseInt(VersionDetector.getMajorVersion(
                             driverVersion)) < MIN_CHROMEDRIVER_IN_CFT) {
                 archLabel = os.isWin() ? "32" : "64";
-                builtUrl = String.format(CHROMEDRIVER_DOWNLOAD_OLD_PATTERN,
+                downloadUrl = String.format(CHROMEDRIVER_DOWNLOAD_OLD_PATTERN,
                         driverVersion, os.getName(), archLabel);
             }
-            log.debug("Using URL built from repository pattern: {}", builtUrl);
+            log.debug("Using URL built from repository pattern: {}", downloadUrl);
             try {
-                optionalUrl = Optional.of(new URL(builtUrl));
+                optionalUrl = Optional.of(new URL(downloadUrl));
             } catch (MalformedURLException e) {
-                log.warn("Error building URL from pattern {} {}", builtUrl,
+                log.warn("Error building URL from pattern {} {}", downloadUrl,
                         e.getMessage());
             }
         }
