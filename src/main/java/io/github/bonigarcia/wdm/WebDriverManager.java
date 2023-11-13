@@ -94,6 +94,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
 
+import io.github.bonigarcia.wdm.versions.VersionUtil;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -881,7 +882,7 @@ public abstract class WebDriverManager {
             }
             log.trace("Driver version list before sorting {}",
                     driverVersionList);
-            sort(driverVersionList, new VersionComparator());
+            sort(driverVersionList, new VersionComparator(new VersionUtil()));
 
             return driverVersionList;
         } catch (IOException e) {
