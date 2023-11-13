@@ -33,28 +33,17 @@ import org.slf4j.Logger;
  */
 public class VersionComparator implements Comparator<String> {
 
-    final Logger log = getLogger(lookup().lookupClass());
+
+    private final VersionUtil versionUtil;
+
+
+    public VersionComparator(VersionUtil versionUtil) {
+        this.versionUtil = versionUtil;
+    }
+
 
     @Override
     public int compare(String v1, String v2) {
-        String[] v1split = v1.split("\\.");
-        String[] v2split = v2.split("\\.");
-        int length = max(v1split.length, v2split.length);
-        for (int i = 0; i < length; i++) {
-            try {
-                int v1Part = i < v1split.length ? parseInt(v1split[i]) : 0;
-                int v2Part = i < v2split.length ? parseInt(v2split[i]) : 0;
-                if (v1Part < v2Part) {
-                    return -1;
-                }
-                if (v1Part > v2Part) {
-                    return 1;
-                }
-            } catch (Exception e) {
-                log.trace("Exception comparing {} with {} ({})", v1, v2,
-                        e.getMessage());
-            }
-        }
-        return 0;
+        return versionUtil.compare(v1, v2);
     }
 }

@@ -50,6 +50,11 @@ public class Parser {
         InputStream content = client.execute(get).getEntity().getContent();
         try (BufferedReader reader = new BufferedReader(
                 new InputStreamReader(content))) {
+            return new JsonParser().parse(reader, klass);
+        }
+    }
+    private static class JsonParser {
+        public <T> T parse(BufferedReader reader, Class<T> klass) {
             return new GsonBuilder().create().fromJson(reader, klass);
         }
     }

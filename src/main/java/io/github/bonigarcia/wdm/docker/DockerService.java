@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import io.github.bonigarcia.wdm.versions.VersionUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
@@ -406,7 +407,7 @@ public class DockerService {
         String latestVersion = null;
 
         if (!resolutionCache.checkKeyInResolutionCache(cacheKey, false)) {
-            VersionComparator versionComparator = new VersionComparator();
+            VersionComparator versionComparator = new VersionComparator(new VersionUtil());
             List<String> browserList = null;
             DockerHubService dockerHubService = new DockerHubService(config,
                     httpClient);
@@ -713,7 +714,7 @@ public class DockerService {
         if (dockerImage.contains("chrome")) {
             browserVersion = browserVersion
                     .replaceAll(config.getBrowserVersionDetectionRegex(), "");
-            return new VersionComparator().compare(browserVersion, "95") >= 0;
+            return new VersionComparator(new VersionUtil()).compare(browserVersion, "95") >= 0;
         }
         return false;
     }
