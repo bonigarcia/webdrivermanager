@@ -33,11 +33,11 @@ import io.github.bonigarcia.wdm.config.WebDriverManagerException;
 class ParserTest {
 
     @Test
-    public void testBrokenJSON() throws IOException {
-
+    void testBrokenJSON() throws IOException {
+        HttpClient client = new HttpClient(new Config());
         try {
             // known HTML endpoint
-            parseJson(new HttpClient(new Config()), "https://www.example.com/",
+            parseJson(client, "https://www.example.com/",
                     LastGoodVersions.class);
             fail("should have barfed");
         } catch (WebDriverManagerException e) {
@@ -46,7 +46,6 @@ class ParserTest {
                     e.getMessage());
             assertSame(e.getCause().getClass(), JsonSyntaxException.class);
         }
-
     }
 
 }
