@@ -26,13 +26,13 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.stream.Collectors;
 
-import com.google.common.io.Files;
-import com.google.gson.JsonSyntaxException;
-import io.github.bonigarcia.wdm.config.WebDriverManagerException;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.slf4j.Logger;
 
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
+
+import io.github.bonigarcia.wdm.config.WebDriverManagerException;
 
 /**
  * JSON parser for online endpoints.
@@ -58,7 +58,9 @@ public class Parser {
             try {
                 return new GsonBuilder().create().fromJson(lines, klass);
             } catch (JsonSyntaxException cause) {
-                throw new WebDriverManagerException("Bad JSON. First 100 chars " + lines.substring(0, 100), cause);
+                throw new WebDriverManagerException(
+                        "Bad JSON. First 100 chars " + lines.substring(0, 100),
+                        cause);
             }
         }
     }

@@ -281,7 +281,7 @@ public class Downloader {
         try (FileInputStream fis = new FileInputStream(tarGzFile);
                 GZIPInputStream gis = new GZIPInputStream(fis);
                 TarArchiveInputStream taris = new TarArchiveInputStream(gis);) {
-            while ((entry = taris.getNextTarEntry()) != null) {
+            while ((entry = taris.getNextEntry()) != null) {
                 StringBuilder entryFileName = new StringBuilder();
                 entryFileName.append(destDir).append(File.separator)
                         .append(entry.getName());
