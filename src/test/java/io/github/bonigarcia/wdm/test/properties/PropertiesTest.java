@@ -162,7 +162,8 @@ class PropertiesTest {
                 .isEqualTo("selenoid/video-recorder:7.1");
         assertThat(config.getDockerNoVncImage())
                 .isEqualTo("bonigarcia/novnc:1.1.0");
-        assertThat(config.getDockerDefaultArgs()).isEqualTo("--disable-gpu");
+        assertThat(config.getDockerDefaultArgs())
+                .isEqualTo("--disable-gpu,--no-sandbox");
         assertThat(config.isDockerLocalFallback()).isTrue();
     }
 
