@@ -163,7 +163,7 @@ class PropertiesTest {
         assertThat(config.getDockerNoVncImage())
                 .isEqualTo("bonigarcia/novnc:1.1.0");
         assertThat(config.getDockerDefaultArgs())
-                .isEqualTo("--disable-gpu,--no-sandbox");
+                .isEqualTo("--disable-gpu");
         assertThat(config.isDockerLocalFallback()).isTrue();
     }
 
