@@ -47,7 +47,8 @@ class DockerSeveralBrowsersDifferentVersionsTest {
     @BeforeEach
     void setupTest() {
         driver1 = wdm.create();
-        driver2 = wdm.browserVersion("beta").create();
+        driver2 = wdm.browserVersion("beta")
+                .dockerDefaultArgs("--disable-gpu,--no-sandbox").create();
     }
 
     @AfterEach

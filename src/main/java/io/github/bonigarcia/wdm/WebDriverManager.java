@@ -464,6 +464,11 @@ public abstract class WebDriverManager {
                         + " is not available in Docker Android");
     }
 
+    public WebDriverManager dockerDefaultArgs(String defaultArgs) {
+        config().setDockerDefaultArgs(defaultArgs);
+        return this;
+    }
+
     public WebDriverManager dockerDaemonUrl(String daemonUrl) {
         config().setDockerDaemonUrl(daemonUrl);
         return this;
