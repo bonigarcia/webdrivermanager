@@ -22,7 +22,6 @@ import static java.lang.invoke.MethodHandles.lookup;
 import static java.net.URLDecoder.decode;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Optional.empty;
-import static org.apache.hc.client5.http.auth.StandardAuthScheme.NTLM;
 import static org.apache.hc.client5.http.cookie.StandardCookieSpec.STRICT;
 import static org.apache.hc.core5.http.HttpStatus.SC_BAD_REQUEST;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -31,16 +30,13 @@ import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
 import java.net.Proxy;
 import java.net.URL;
-import java.net.UnknownHostException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.StringTokenizer;
 import java.util.concurrent.TimeUnit;
@@ -50,7 +46,6 @@ import javax.net.ssl.SSLContext;
 
 import org.apache.hc.client5.http.auth.AuthScope;
 import org.apache.hc.client5.http.auth.Credentials;
-import org.apache.hc.client5.http.auth.NTCredentials;
 import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.config.ConnectionConfig;
@@ -276,23 +271,12 @@ public class HttpClient implements Closeable {
             return empty();
         }
 
-        String ntlmUsername = username;
-        String ntlmDomain = null;
-
-        int index = username.indexOf('\\');
-        if (index > 0) {
-            ntlmDomain = username.substring(0, index);
-            ntlmUsername = username.substring(index + 1);
-        }
-
         BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
-
-        AuthScope authScope = new AuthScope(proxyHost, null, NTLM);
+        AuthScope authScope = new AuthScope(proxyHost);
         char[] passwd = (password == null) ? new char[0]
                 : password.toCharArray();
 
-        Credentials creds = new NTCredentials(ntlmUsername, passwd,
-                getWorkstation(), ntlmDomain);
+        Credentials creds = new UsernamePasswordCredentials(username, passwd);
         credentialsProvider.setCredentials(authScope, creds);
 
         authScope = new AuthScope(proxyHost.getHostName(), proxyHost.getPort());
@@ -300,25 +284,6 @@ public class HttpClient implements Closeable {
         credentialsProvider.setCredentials(authScope, creds);
 
         return Optional.of(credentialsProvider);
-    }
-
-    private String getWorkstation() {
-        Map<String, String> env = getenv();
-
-        if (env.containsKey("COMPUTERNAME")) {
-            // Windows
-            return env.get("COMPUTERNAME");
-        } else if (env.containsKey("HOSTNAME")) {
-            // Unix/Linux/MacOS
-            return env.get("HOSTNAME");
-        } else {
-            // From DNS
-            try {
-                return InetAddress.getLocalHost().getHostName();
-            } catch (UnknownHostException ex) {
-                return null;
-            }
-        }
     }
 
     @Override
