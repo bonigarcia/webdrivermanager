@@ -126,7 +126,7 @@ public class DockerService {
 
     private DockerClient getDockerClient(String dockerHost) {
         DefaultDockerClientConfig.Builder dockerClientConfigBuilder = DefaultDockerClientConfig
-                .createDefaultConfigBuilder().withDockerTlsVerify(false);
+                .createDefaultConfigBuilder();
         if (!isNullOrEmpty(dockerHost)) {
             dockerClientConfigBuilder.withDockerHost(dockerHost);
         }
