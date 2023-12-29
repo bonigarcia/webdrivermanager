@@ -464,6 +464,11 @@ public abstract class WebDriverManager {
                         + " is not available in Docker Android");
     }
 
+    public WebDriverManager dockerEnvVariables(String... defaultEnvs) {
+        config().setDockerEnvVariables(defaultEnvs);
+        return this;
+    }
+
     public WebDriverManager dockerDefaultArgs(String defaultArgs) {
         config().setDockerDefaultArgs(defaultArgs);
         return this;
