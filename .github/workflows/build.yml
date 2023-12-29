@@ -22,7 +22,7 @@ jobs:
     - name: Checkout GitHub repo
       uses: actions/checkout@v4
       with:
-        ref: 41a0f252
+        ref: 41a0f25244ab41abda2f1f05ae2595eeff29ae4a
     - name: Set up Java
       uses: actions/setup-java@v4.0.0
       with:
