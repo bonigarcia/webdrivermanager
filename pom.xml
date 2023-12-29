@@ -13,7 +13,6 @@
         <brotli.version>0.1.2</brotli.version>
         <commons-lang3.version>3.14.0</commons-lang3.version>
         <commons-compress.version>1.25.0</commons-compress.version>
-        <httpclient5.version>5.2.1</httpclient5.version>
 
         <!-- provided -->
         <selenium.version>4.16.1</selenium.version>
@@ -131,11 +130,6 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-compress</artifactId>
             <version>${commons-compress.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents.client5</groupId>
-            <artifactId>httpclient5</artifactId>
-            <version>${httpclient5.version}</version>
         </dependency>
 
         <dependency>
