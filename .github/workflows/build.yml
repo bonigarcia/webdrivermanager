@@ -21,8 +21,6 @@ jobs:
     steps:
     - name: Checkout GitHub repo
       uses: actions/checkout@v4
-      with:
-        ref: d2a60a967b79f1328035032c305d7491dccf0f19
     - name: Set up Java
       uses: actions/setup-java@v4.0.0
       with:
