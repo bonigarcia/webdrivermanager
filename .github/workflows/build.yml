@@ -22,7 +22,7 @@ jobs:
     - name: Checkout GitHub repo
       uses: actions/checkout@v4
       with:
-        ref: master/225a80a1
+        ref: webdrivermanager-5.6.2
     - name: Set up Java
       uses: actions/setup-java@v4.0.0
       with:
