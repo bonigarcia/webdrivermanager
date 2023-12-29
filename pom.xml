@@ -15,7 +15,7 @@
         <brotli.version>0.1.2</brotli.version>
         <commons-lang3.version>3.14.0</commons-lang3.version>
         <commons-compress.version>1.25.0</commons-compress.version>
-        <httpclient5.version>5.3</httpclient5.version>
+        <httpclient5.version>5.2.1</httpclient5.version>
 
         <!-- provided -->
         <selenium.version>4.16.1</selenium.version>
@@ -118,12 +118,6 @@
             <groupId>com.github.docker-java</groupId>
             <artifactId>docker-java-transport-httpclient5</artifactId>
             <version>${docker-java.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.httpcomponents.client5</groupId>
-                    <artifactId>httpclient5</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.brotli</groupId>
