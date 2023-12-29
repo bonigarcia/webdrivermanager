@@ -1,5 +1,15 @@
 # Changelog
 
+## [5.6.3] - 2023-12-30
+
+### Added
+- Include method to set Docker default arguments in wdm API
+- Expose dockerEnvVariables method in wdm API
+
+### Changed
+- Change NTCredentials (deprecated) by UsernamePasswordCredentials in HTTP client
+
+
 ## [5.6.2] - 2023-11-07
 
 ### Fixed
