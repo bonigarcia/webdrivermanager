@@ -40,8 +40,7 @@ class EdgeReadVersionTest {
 
     @Test
     void edgeVersionsTest() {
-        String[] expectedVersions = { "75.0.139.20", "76.0.183.0", "77.0.237.0",
-                "78.0.277.0", "79.0.313.0", "80.0.361.111" };
+        String[] expectedVersions = { "119.0.2151.97", "122.0.2343.0" };
         List<String> driverVersions = WebDriverManager.edgedriver()
                 .getDriverVersions();
 
