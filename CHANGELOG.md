@@ -1,5 +1,11 @@
 # Changelog
 
+## [5.6.4] - 2024-02-19
+
+### Fixed
+- Update Chrome download URL pattern (#1222)
+
+
 ## [5.6.3] - 2023-12-30
 
 ### Added
