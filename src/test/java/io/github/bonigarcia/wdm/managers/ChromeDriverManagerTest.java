@@ -40,19 +40,19 @@ class ChromeDriverManagerTest {
     void chromeVersionOnLinux() throws MalformedURLException {
         assertThat(chromeDriverManager.buildUrl(VERSION, new DummyConfig(LINUX,
                 X32))).hasValue(new URL(String.format(
-                        "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/%s/linux64/chromedriver-linux64.zip",
+                        "https://storage.googleapis.com/chrome-for-testing-public/%s/linux64/chromedriver-linux64.zip",
                         VERSION)));
         assertThat(chromeDriverManager.buildUrl(VERSION, new DummyConfig(LINUX,
                 X64))).hasValue(new URL(String.format(
-                        "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/%s/linux64/chromedriver-linux64.zip",
+                        "https://storage.googleapis.com/chrome-for-testing-public/%s/linux64/chromedriver-linux64.zip",
                         VERSION)));
         assertThat(chromeDriverManager.buildUrl(VERSION, new DummyConfig(LINUX,
                 ARM64))).hasValue(new URL(String.format(
-                        "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/%s/linux64/chromedriver-linux64.zip",
+                        "https://storage.googleapis.com/chrome-for-testing-public/%s/linux64/chromedriver-linux64.zip",
                         VERSION)));
         assertThat(chromeDriverManager.buildUrl(VERSION, new DummyConfig(LINUX,
                 DEFAULT))).hasValue(new URL(String.format(
-                        "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/%s/linux64/chromedriver-linux64.zip",
+                        "https://storage.googleapis.com/chrome-for-testing-public/%s/linux64/chromedriver-linux64.zip",
                         VERSION)));
     }
 
@@ -60,19 +60,19 @@ class ChromeDriverManagerTest {
     void chromeVersionOnMac() throws MalformedURLException {
         assertThat(chromeDriverManager.buildUrl(VERSION, new DummyConfig(MAC,
                 X32))).hasValue(new URL(String.format(
-                        "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/%s/mac-x64/chromedriver-mac-x64.zip",
+                        "https://storage.googleapis.com/chrome-for-testing-public/%s/mac-x64/chromedriver-mac-x64.zip",
                         VERSION)));
         assertThat(chromeDriverManager.buildUrl(VERSION, new DummyConfig(MAC,
                 X64))).hasValue(new URL(String.format(
-                        "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/%s/mac-x64/chromedriver-mac-x64.zip",
+                        "https://storage.googleapis.com/chrome-for-testing-public/%s/mac-x64/chromedriver-mac-x64.zip",
                         VERSION)));
         assertThat(chromeDriverManager.buildUrl(VERSION, new DummyConfig(MAC,
                 ARM64))).hasValue(new URL(String.format(
-                        "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/%s/mac-arm64/chromedriver-mac-arm64.zip",
+                        "https://storage.googleapis.com/chrome-for-testing-public/%s/mac-arm64/chromedriver-mac-arm64.zip",
                         VERSION)));
         assertThat(chromeDriverManager.buildUrl(VERSION, new DummyConfig(MAC,
                 DEFAULT))).hasValue(new URL(String.format(
-                        "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/%s/mac-x64/chromedriver-mac-x64.zip",
+                        "https://storage.googleapis.com/chrome-for-testing-public/%s/mac-x64/chromedriver-mac-x64.zip",
                         VERSION)));
     }
 
@@ -80,19 +80,19 @@ class ChromeDriverManagerTest {
     void chromeVersionOnWindows() throws MalformedURLException {
         assertThat(chromeDriverManager.buildUrl(VERSION, new DummyConfig(WIN,
                 X32))).hasValue(new URL(String.format(
-                        "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/%s/win32/chromedriver-win32.zip",
+                        "https://storage.googleapis.com/chrome-for-testing-public/%s/win32/chromedriver-win32.zip",
                         VERSION)));
         assertThat(chromeDriverManager.buildUrl(VERSION, new DummyConfig(WIN,
                 X64))).hasValue(new URL(String.format(
-                        "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/%s/win64/chromedriver-win64.zip",
+                        "https://storage.googleapis.com/chrome-for-testing-public/%s/win64/chromedriver-win64.zip",
                         VERSION)));
         assertThat(chromeDriverManager.buildUrl(VERSION, new DummyConfig(WIN,
                 DEFAULT))).hasValue(new URL(String.format(
-                        "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/%s/win64/chromedriver-win64.zip",
+                        "https://storage.googleapis.com/chrome-for-testing-public/%s/win64/chromedriver-win64.zip",
                         VERSION)));
         assertThat(chromeDriverManager.buildUrl(VERSION, new DummyConfig(WIN,
                 ARM64))).hasValue(new URL(String.format(
-                        "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/%s/win64/chromedriver-win64.zip",
+                        "https://storage.googleapis.com/chrome-for-testing-public/%s/win64/chromedriver-win64.zip",
                         VERSION)));
     }
 }
