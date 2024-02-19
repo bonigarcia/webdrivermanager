@@ -97,7 +97,7 @@ class PropertiesTest {
         assertThat(config.getChromeDriverExport())
                 .isEqualTo("webdriver.chrome.driver");
         assertThat(config.getChromeDownloadUrlPattern()).isEqualTo(
-                "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/%s/%s/chromedriver-%s.zip");
+                "https://storage.googleapis.com/chrome-for-testing-public/%s/%s/chromedriver-%s.zip");
 
         assertThat(config.getOperaDriverUrl()).isEqualTo(new URL(
                 "https://raw.githubusercontent.com/bonigarcia/webdrivermanager/master/docs/mirror/operadriver"));
