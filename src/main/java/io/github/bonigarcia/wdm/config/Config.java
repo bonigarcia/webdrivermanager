@@ -155,6 +155,8 @@ public class Config {
             URL.class);
     ConfigKey<URL> firefoxDriverMirrorUrl = new ConfigKey<>(
             "wdm.geckoDriverMirrorUrl", URL.class);
+    ConfigKey<URL> firefoxDriverGoodVersionsUrl = new ConfigKey<>(
+            "wdm.geckoDriverGoodVersionsUrl", URL.class);
 
     ConfigKey<String> iExplorerDriverVersion = new ConfigKey<>(
             "wdm.iExplorerDriverVersion", String.class);
@@ -910,6 +912,15 @@ public class Config {
 
     public Config setFirefoxDriverMirrorUrl(URL value) {
         this.firefoxDriverMirrorUrl.setValue(value);
+        return this;
+    }
+
+    public URL getFirefoxDriverGoodVersionsUrl() {
+        return resolve(firefoxDriverGoodVersionsUrl);
+    }
+
+    public Config setFirefoxDriverGoodVersionsUrl(URL value) {
+        this.firefoxDriverGoodVersionsUrl.setValue(value);
         return this;
     }
 

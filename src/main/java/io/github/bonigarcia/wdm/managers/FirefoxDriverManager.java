@@ -18,6 +18,7 @@ package io.github.bonigarcia.wdm.managers;
 
 import static io.github.bonigarcia.wdm.config.DriverManagerType.FIREFOX;
 import static java.util.Optional.empty;
+import static java.util.stream.Collectors.toList;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,6 +31,9 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
+import io.github.bonigarcia.wdm.online.GeckodriverSupport;
+import io.github.bonigarcia.wdm.online.GeckodriverSupport.GeckodriverRelease;
+import io.github.bonigarcia.wdm.online.Parser;
 import io.github.bonigarcia.wdm.versions.Shell;
 
 /**
@@ -104,6 +108,16 @@ public class FirefoxDriverManager extends WebDriverManager {
     }
 
     @Override
+    protected Optional<String> getLatestDriverVersionFromRepository() {
+        if (config().isUseBetaVersions()
+                || config().isAvoidReadReleaseFromRepository()) {
+            return empty();
+        } else {
+            return getDriverVersionFromRepository(empty());
+        }
+    }
+
+    @Override
     protected String getCurrentVersion(URL url) {
         int firstDash = url.getFile().indexOf(DASH);
         int nextDash = url.getFile().indexOf(DASH, firstDash + 1);
@@ -118,6 +132,28 @@ public class FirefoxDriverManager extends WebDriverManager {
     @Override
     protected Optional<String> getDriverVersionFromRepository(
             Optional<String> driverVersion) {
+        URL firefoxDriverUrl = config.getFirefoxDriverGoodVersionsUrl();
+        try {
+            log.debug("Reading {} to discover geckodriver version",
+                    firefoxDriverUrl);
+            GeckodriverSupport versions = Parser.parseJson(httpClient,
+                    firefoxDriverUrl.toString(), GeckodriverSupport.class);
+            int majorBrowserVersion = Integer.parseInt(resolvedBrowserVersion);
+            List<GeckodriverRelease> fileteredList = versions.geckodriverReleases
+                    .stream()
+                    .filter(r -> majorBrowserVersion >= r.minFirefoxVersion
+                            && (r.maxFirefoxVersion == null
+                                    || (r.maxFirefoxVersion != null
+                                            && majorBrowserVersion <= r.maxFirefoxVersion)))
+                    .collect(toList());
+
+            if (!fileteredList.isEmpty()) {
+                return Optional.of(fileteredList.get(0).geckodriverVersion);
+            }
+        } catch (Exception e) {
+            log.warn("Exception getting geckodriver version from {}",
+                    firefoxDriverUrl, e);
+        }
         return empty();
     }
 

@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2021 Boni Garcia (https://bonigarcia.github.io/)
+ * (C) Copyright 2024 Boni Garcia (https://bonigarcia.github.io/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,24 +25,22 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import io.github.bonigarcia.wdm.config.OperatingSystem;
 
-class Firefox90Test {
+class FirefoxMajorBrowserVersionTest {
 
     @ParameterizedTest
     @MethodSource("data")
-    void test(OperatingSystem os, String driverVersion) {
+    void test(String browserVersion, String driverVersion) {
         WebDriverManager wdm = WebDriverManager.firefoxdriver()
-                .operatingSystem(os).browserVersion("90").avoidResolutionCache()
-                .useLocalVersionsPropertiesFirst();
+                .browserVersion(browserVersion).avoidResolutionCache();
         wdm.setup();
         assertThat(wdm.getDownloadedDriverVersion()).isEqualTo(driverVersion);
     }
 
     static Stream<Arguments> data() {
-        return Stream.of(Arguments.of(OperatingSystem.MAC, "0.29.0"),
-                Arguments.of(OperatingSystem.LINUX, "0.29.1"),
-                Arguments.of(OperatingSystem.WIN, "0.29.0"));
+        return Stream.of(Arguments.of("101", "0.31.0"),
+                Arguments.of("91", "0.31.0"), Arguments.of("90", "0.30.0"),
+                Arguments.of("62", "0.29.1"), Arguments.of("53", "0.18.0"));
     }
 
 }

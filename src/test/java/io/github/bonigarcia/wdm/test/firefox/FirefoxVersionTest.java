@@ -16,10 +16,7 @@
  */
 package io.github.bonigarcia.wdm.test.firefox;
 
-import static org.junit.jupiter.api.condition.OS.LINUX;
-
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.openqa.selenium.firefox.FirefoxDriver;
 
 import io.github.bonigarcia.wdm.test.base.VersionTestParent;
@@ -30,7 +27,6 @@ import io.github.bonigarcia.wdm.test.base.VersionTestParent;
  * @author Boni Garcia
  * @since 1.5.0
  */
-@EnabledOnOs(LINUX)
 class FirefoxVersionTest extends VersionTestParent {
 
     @BeforeEach
