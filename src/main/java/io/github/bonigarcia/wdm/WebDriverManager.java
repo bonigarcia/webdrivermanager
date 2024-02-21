@@ -164,7 +164,7 @@ public abstract class WebDriverManager {
     protected static final String SLASH = "/";
     protected static final String DASH = "-";
     protected static final String LATEST_RELEASE = "LATEST_RELEASE";
-    protected static final String CFT_LABEL = "chrome-for-testing";
+    protected static final String CFT_LABEL = "chrome-for-testing-public";
     protected static final NamespaceContext S3_NAMESPACE_CONTEXT = new S3NamespaceContext();
     protected static final String IN_DOCKER = "-in-docker";
     protected static final String CLI_SERVER = "server";
