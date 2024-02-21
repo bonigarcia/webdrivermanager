@@ -1,5 +1,22 @@
 # Changelog
 
+## [5.7.0] - 2024-02-21
+
+### Fixed
+- Fix CFT label used to get chromedriver version from the URLs (#1226)
+
+### Changed
+- Calculate operadriver version using major Opera version plus 14
+
+### Added
+- Use online geckodriver-support.json to discover geckodriver versions (https://raw.githubusercontent.com/SeleniumHQ/selenium/trunk/common/geckodriver/geckodriver-support.json)
+
+### Removed
+- Remove logic for using local or online versions.properties
+- Remove wdm.versionsPropertiesOnlineFirst and wdm.versionsPropertiesUrl and associated logic
+- Remove wdm.avoidReadReleaseFromRepository configuration key and associated logic
+
+
 ## [5.6.4] - 2024-02-19
 
 ### Fixed
