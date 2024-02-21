@@ -105,8 +105,7 @@ public class OperaDriverManager extends WebDriverManager {
 
     @Override
     protected Optional<String> getLatestDriverVersionFromRepository() {
-        if (config().isUseBetaVersions()
-                || config().isAvoidReadReleaseFromRepository()) {
+        if (config().isUseBetaVersions()) {
             return empty();
         } else {
             return getDriverVersionFromRepository(empty());

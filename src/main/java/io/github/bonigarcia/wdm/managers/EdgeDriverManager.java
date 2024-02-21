@@ -144,8 +144,7 @@ public class EdgeDriverManager extends WebDriverManager {
 
     @Override
     protected Optional<String> getLatestDriverVersionFromRepository() {
-        if (config().isUseBetaVersions()
-                || config().isAvoidReadReleaseFromRepository()) {
+        if (config().isUseBetaVersions()) {
             return empty();
         } else {
             return getDriverVersionFromRepository(empty());
@@ -192,9 +191,11 @@ public class EdgeDriverManager extends WebDriverManager {
             Architecture arch = config.getArchitecture();
             String archLabel = os.isWin() ? arch.toString() : "64";
             String osName = arch != ARM64 ? os.getName() : "arm";
-            String builtUrl = os == MAC && arch == ARM64 ?
-              String.format(downloadUrlPattern, driverVersion, "mac", "64_m1") :
-              String.format(downloadUrlPattern, driverVersion, osName, archLabel);
+            String builtUrl = os == MAC && arch == ARM64
+                    ? String.format(downloadUrlPattern, driverVersion, "mac",
+                            "64_m1")
+                    : String.format(downloadUrlPattern, driverVersion, osName,
+                            archLabel);
 
             log.debug("Using URL built from repository pattern: {}", builtUrl);
             try {

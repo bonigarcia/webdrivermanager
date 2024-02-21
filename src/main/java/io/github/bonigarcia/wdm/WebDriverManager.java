@@ -20,7 +20,6 @@ import static io.github.bonigarcia.wdm.config.Architecture.ARM64;
 import static io.github.bonigarcia.wdm.config.Architecture.X32;
 import static io.github.bonigarcia.wdm.config.Architecture.X64;
 import static io.github.bonigarcia.wdm.config.Config.isNullOrEmpty;
-import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROME;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROMIUM;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.EDGE;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.FIREFOX;
@@ -777,11 +776,6 @@ public abstract class WebDriverManager {
         return this;
     }
 
-    public WebDriverManager avoidReadReleaseFromRepository() {
-        config().setAvoidReadReleaseFromRepository(true);
-        return this;
-    }
-
     public WebDriverManager avoidTmpFolder() {
         config().setAvoidTmpFolder(true);
         return this;
@@ -1411,18 +1405,7 @@ public abstract class WebDriverManager {
                 driverVersionStr, e.getMessage());
         if (retryCount == 0 && !config().isAvoidFallback()) {
             retryCount++;
-            if (getDriverManagerType() == EDGE
-                    || getDriverManagerType() == CHROME) {
-                config().setAvoidReadReleaseFromRepository(true);
-                clearResolutionCache();
-                log.warn(
-                        "{} ... trying again avoiding reading release from repository",
-                        errorMessage);
-                manage("");
-            } else {
-                retryCount++;
-                fallback(e, errorMessage);
-            }
+            fallback(e, errorMessage);
 
         } else if (retryCount == 1 && !config().isAvoidFallback()) {
             fallback(e, errorMessage);
@@ -1690,11 +1673,10 @@ public abstract class WebDriverManager {
 
     protected Optional<String> getDriverVersionFromRepository(
             Optional<String> driverVersion) {
-        return config().isAvoidReadReleaseFromRepository() ? empty()
-                : getVersionDetector().getDriverVersionFromRepository(
-                        driverVersion, getDriverUrl(), getVersionCharset(),
-                        getDriverName(), getLatestVersionLabel(),
-                        LATEST_RELEASE, getOsLabel());
+        return getVersionDetector().getDriverVersionFromRepository(
+                driverVersion, getDriverUrl(), getVersionCharset(),
+                getDriverName(), getLatestVersionLabel(), LATEST_RELEASE,
+                getOsLabel());
     }
 
     protected URL getDriverUrlCkeckingMirror(URL url) {

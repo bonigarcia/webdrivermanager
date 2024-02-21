@@ -79,8 +79,6 @@ public class Config {
             Boolean.class);
     ConfigKey<Boolean> avoidResolutionCache = new ConfigKey<>(
             "wdm.avoidResolutionCache", Boolean.class);
-    ConfigKey<Boolean> avoidReadReleaseFromRepository = new ConfigKey<>(
-            "wdm.avoidReadReleaseFromRepository", Boolean.class);
     ConfigKey<Boolean> avoidTmpFolder = new ConfigKey<>("wdm.avoidTmpFolder",
             Boolean.class);
     ConfigKey<Boolean> avoidShutdownHook = new ConfigKey<>(
@@ -523,15 +521,6 @@ public class Config {
 
     public Config setAvoidResolutionCache(boolean value) {
         this.avoidResolutionCache.setValue(value);
-        return this;
-    }
-
-    public boolean isAvoidReadReleaseFromRepository() {
-        return resolve(avoidReadReleaseFromRepository);
-    }
-
-    public Config setAvoidReadReleaseFromRepository(boolean value) {
-        this.avoidReadReleaseFromRepository.setValue(value);
         return this;
     }
 
