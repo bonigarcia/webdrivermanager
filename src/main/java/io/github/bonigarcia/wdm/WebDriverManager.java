@@ -808,18 +808,8 @@ public abstract class WebDriverManager {
         return this;
     }
 
-    public WebDriverManager useLocalVersionsPropertiesFirst() {
-        config().setVersionsPropertiesOnlineFirst(false);
-        return this;
-    }
-
     public WebDriverManager useLocalCommandsPropertiesFirst() {
         config().setCommandsPropertiesOnlineFirst(false);
-        return this;
-    }
-
-    public WebDriverManager versionsPropertiesUrl(URL url) {
-        config().setVersionsPropertiesUrl(url);
         return this;
     }
 
@@ -1229,10 +1219,6 @@ public abstract class WebDriverManager {
             if (!optionalDriverVersion.isPresent()) {
                 optionalDriverVersion = getDriverVersionFromRepository(
                         optionalBrowserVersion);
-            }
-            if (!optionalDriverVersion.isPresent()) {
-                optionalDriverVersion = getVersionDetector()
-                        .getDriverVersionFromProperties(preferenceKey);
             }
             if (optionalDriverVersion.isPresent()) {
                 driverVersion = optionalDriverVersion.get();

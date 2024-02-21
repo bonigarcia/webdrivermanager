@@ -88,12 +88,8 @@ public class Config {
     ConfigKey<Boolean> avoidExternalConnections = new ConfigKey<>(
             "wdm.avoidExternalConnections", Boolean.class);
     ConfigKey<Integer> timeout = new ConfigKey<>("wdm.timeout", Integer.class);
-    ConfigKey<Boolean> versionsPropertiesOnlineFirst = new ConfigKey<>(
-            "wdm.versionsPropertiesOnlineFirst", Boolean.class);
     ConfigKey<Boolean> commandsPropertiesOnlineFirst = new ConfigKey<>(
             "wdm.commandsPropertiesOnlineFirst", Boolean.class);
-    ConfigKey<URL> versionsPropertiesUrl = new ConfigKey<>(
-            "wdm.versionsPropertiesUrl", URL.class);
     ConfigKey<URL> commandsPropertiesUrl = new ConfigKey<>(
             "wdm.commandsPropertiesUrl", URL.class);
     ConfigKey<Boolean> clearResolutionCache = new ConfigKey<>(
@@ -575,30 +571,12 @@ public class Config {
         return this;
     }
 
-    public boolean isVersionsPropertiesOnlineFirst() {
-        return resolve(versionsPropertiesOnlineFirst);
-    }
-
-    public Config setVersionsPropertiesOnlineFirst(boolean value) {
-        this.versionsPropertiesOnlineFirst.setValue(value);
-        return this;
-    }
-
     public boolean isCommandsPropertiesOnlineFirst() {
         return resolve(commandsPropertiesOnlineFirst);
     }
 
     public Config setCommandsPropertiesOnlineFirst(boolean value) {
         this.commandsPropertiesOnlineFirst.setValue(value);
-        return this;
-    }
-
-    public URL getVersionsPropertiesUrl() {
-        return resolve(versionsPropertiesUrl);
-    }
-
-    public Config setVersionsPropertiesUrl(URL value) {
-        this.versionsPropertiesUrl.setValue(value);
         return this;
     }
 

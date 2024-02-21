@@ -71,7 +71,6 @@ public class VersionDetector {
 
     static final String ONLINE = "online";
     static final String LOCAL = "local";
-    static final String VERSIONS_PROPERTIES = "versions.properties";
     static final String COMMANDS_PROPERTIES = "commands.properties";
     static final String FILE_PROTOCOL = "file";
     static final String CFT_URL = "https://googlechromelabs.github.io/chrome-for-testing/";
@@ -87,29 +86,6 @@ public class VersionDetector {
         this.config = config;
         this.httpClient = httpClient;
         propertiesMap = new HashMap<>();
-    }
-
-    public Optional<String> getDriverVersionFromProperties(String key) {
-        // Chromium values are the same than Chrome
-        if (key.contains("chromium")) {
-            key = key.replace("chromium", "chrome");
-        }
-
-        boolean online = config.isVersionsPropertiesOnlineFirst();
-        String propertiesName = VERSIONS_PROPERTIES;
-        String onlineMessage = online ? ONLINE : LOCAL;
-        log.debug("Getting driver version for {} from {} {}", key,
-                onlineMessage, propertiesName);
-        String value = getValueFromProperties(
-                getProperties(propertiesName, online), key);
-        if (value == null) {
-            String notOnlineMessage = online ? LOCAL : ONLINE;
-            log.debug("Driver for {} not found in {} properties (using {} {})",
-                    key, onlineMessage, notOnlineMessage, propertiesName);
-            propertiesMap.remove(propertiesName);
-            value = getProperties(propertiesName, !online).getProperty(key);
-        }
-        return value == null ? empty() : Optional.of(value);
     }
 
     public String getValueFromProperties(Properties properties, String key) {
@@ -400,9 +376,7 @@ public class VersionDetector {
 
     protected InputStream getOnlineInputStream(String propertiesName)
             throws IOException {
-        URL propertiesUrl = propertiesName.equals(VERSIONS_PROPERTIES)
-                ? config.getVersionsPropertiesUrl()
-                : config.getCommandsPropertiesUrl();
+        URL propertiesUrl = config.getCommandsPropertiesUrl();
 
         InputStream inputStream;
         if (propertiesUrl.getProtocol().equalsIgnoreCase(FILE_PROTOCOL)) {

@@ -40,20 +40,16 @@ class LocalPropertiesTest {
     @Test
     void testCustomUrl() throws MalformedURLException {
         File dot = new File(".");
-        URL versionsPropertiesUrl = new URL("file://" + dot.getAbsolutePath()
-                + "/src/main/resources/versions.properties");
         URL commandsPropertiesUrl = new URL("file://" + dot.getAbsolutePath()
                 + "/src/main/resources/commands.properties");
-        wdm.versionsPropertiesUrl(versionsPropertiesUrl)
-                .commandsPropertiesUrl(commandsPropertiesUrl).setup();
+        wdm.commandsPropertiesUrl(commandsPropertiesUrl).setup();
 
         assertDriverPath();
     }
 
     @Test
     void testLocalFirst() {
-        wdm.useLocalCommandsPropertiesFirst().useLocalVersionsPropertiesFirst()
-                .setup();
+        wdm.useLocalCommandsPropertiesFirst().setup();
 
         assertDriverPath();
     }
