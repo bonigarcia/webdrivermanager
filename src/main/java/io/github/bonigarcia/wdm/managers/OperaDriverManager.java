@@ -19,11 +19,13 @@ package io.github.bonigarcia.wdm.managers;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.OPERA;
 import static java.util.Collections.singletonList;
 import static java.util.Optional.empty;
+import static java.util.stream.Collectors.toList;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,6 +35,8 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
 import io.github.bonigarcia.wdm.config.WebDriverManagerException;
+import io.github.bonigarcia.wdm.online.GitHubApi;
+import io.github.bonigarcia.wdm.online.Parser;
 
 /**
  * Manager for Opera.
@@ -41,6 +45,13 @@ import io.github.bonigarcia.wdm.config.WebDriverManagerException;
  * @since 1.0.0
  */
 public class OperaDriverManager extends WebDriverManager {
+
+    protected static final String TAG_NAME_PREFIX = "v.";
+
+    // This value is calculated since the Opera major versions are 14 below the
+    // corresponding operadriver version. For example: Opera 107 -> operadriver
+    // 121.0.6167.140, Opera 106 -> operadriver 120.0.6099.200, etc.
+    protected static final int RELATION_OPERA_OPERADRIVER = 14;
 
     @Override
     public DriverManagerType getDriverManagerType() {
@@ -93,6 +104,16 @@ public class OperaDriverManager extends WebDriverManager {
     }
 
     @Override
+    protected Optional<String> getLatestDriverVersionFromRepository() {
+        if (config().isUseBetaVersions()
+                || config().isAvoidReadReleaseFromRepository()) {
+            return empty();
+        } else {
+            return getDriverVersionFromRepository(empty());
+        }
+    }
+
+    @Override
     protected String getCurrentVersion(URL url) {
         String currentVersion;
         if (config().isUseMirror()) {
@@ -117,7 +138,7 @@ public class OperaDriverManager extends WebDriverManager {
             String versionPath = driverVersion;
             if (!driverVersion.isEmpty()) {
                 versionPath = driverVersion.startsWith("0") ? "v" + versionPath
-                        : "v." + versionPath;
+                        : TAG_NAME_PREFIX + versionPath;
             }
             return getDriversFromMirror(getMirrorUrl().get(), versionPath);
         } else {
@@ -171,6 +192,29 @@ public class OperaDriverManager extends WebDriverManager {
     @Override
     protected Optional<String> getDriverVersionFromRepository(
             Optional<String> driverVersion) {
+        URL operaDriverUrl = config.getOperaDriverUrl();
+        try {
+            log.debug("Reading {} to discover operadriver version",
+                    operaDriverUrl);
+            GitHubApi[] versions = Parser.parseJson(httpClient,
+                    operaDriverUrl.toString(), GitHubApi[].class);
+
+            int majorBrowserVersion = Integer.parseInt(resolvedBrowserVersion);
+            int majorDriverVersion = majorBrowserVersion
+                    + RELATION_OPERA_OPERADRIVER;
+            List<GitHubApi> fileteredList = Arrays.stream(versions)
+                    .filter(r -> r.getTagName()
+                            .startsWith(TAG_NAME_PREFIX + majorDriverVersion))
+                    .collect(toList());
+
+            if (!fileteredList.isEmpty()) {
+                return Optional.of(fileteredList.get(0).getTagName()
+                        .replace(TAG_NAME_PREFIX, ""));
+            }
+        } catch (Exception e) {
+            log.warn("Exception getting operadriver version from {}",
+                    operaDriverUrl, e);
+        }
         return empty();
     }
 
