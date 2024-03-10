@@ -137,7 +137,6 @@ public class FirefoxDriverManager extends WebDriverManager {
                     firefoxDriverUrl);
             GeckodriverSupport versions = Parser.parseJson(httpClient,
                     firefoxDriverUrl.toString(), GeckodriverSupport.class);
-            resolvedBrowserVersion = null;
             if (resolvedBrowserVersion != null) {
                 int majorBrowserVersion = Integer
                         .parseInt(resolvedBrowserVersion);
