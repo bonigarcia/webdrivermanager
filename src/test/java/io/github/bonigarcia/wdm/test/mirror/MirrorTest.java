@@ -42,7 +42,8 @@ class MirrorTest {
     void testMirrorChrome() throws Exception {
         WebDriverManager wdm = WebDriverManager.chromedriver()
                 .browserVersion("100").avoidBrowserDetection()
-                .clearResolutionCache().useMirror().forceDownload();
+                .avoidResolutionCache().clearResolutionCache().useMirror()
+                .forceDownload();
         wdm.config().setChromeDriverMirrorUrl(new URL(
                 "https://registry.npmmirror.com/-/binary/chromedriver/"));
         wdm.setup();
