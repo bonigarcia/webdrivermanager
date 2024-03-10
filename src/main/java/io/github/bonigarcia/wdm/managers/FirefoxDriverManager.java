@@ -137,17 +137,21 @@ public class FirefoxDriverManager extends WebDriverManager {
                     firefoxDriverUrl);
             GeckodriverSupport versions = Parser.parseJson(httpClient,
                     firefoxDriverUrl.toString(), GeckodriverSupport.class);
-            int majorBrowserVersion = Integer.parseInt(resolvedBrowserVersion);
-            List<GeckodriverRelease> fileteredList = versions.geckodriverReleases
-                    .stream()
-                    .filter(r -> majorBrowserVersion >= r.minFirefoxVersion
-                            && (r.maxFirefoxVersion == null
-                                    || (r.maxFirefoxVersion != null
-                                            && majorBrowserVersion <= r.maxFirefoxVersion)))
-                    .collect(toList());
+            resolvedBrowserVersion = null;
+            if (resolvedBrowserVersion != null) {
+                int majorBrowserVersion = Integer
+                        .parseInt(resolvedBrowserVersion);
+                List<GeckodriverRelease> fileteredList = versions.geckodriverReleases
+                        .stream()
+                        .filter(r -> majorBrowserVersion >= r.minFirefoxVersion
+                                && (r.maxFirefoxVersion == null
+                                        || (r.maxFirefoxVersion != null
+                                                && majorBrowserVersion <= r.maxFirefoxVersion)))
+                        .collect(toList());
 
-            if (!fileteredList.isEmpty()) {
-                return Optional.of(fileteredList.get(0).geckodriverVersion);
+                if (!fileteredList.isEmpty()) {
+                    return Optional.of(fileteredList.get(0).geckodriverVersion);
+                }
             }
         } catch (Exception e) {
             log.warn("Exception getting geckodriver version from {}",
