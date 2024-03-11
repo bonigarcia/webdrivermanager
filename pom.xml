@@ -12,7 +12,7 @@
         <docker-java.version>3.3.6</docker-java.version>
         <brotli.version>0.1.2</brotli.version>
         <commons-lang3.version>3.14.0</commons-lang3.version>
-        <commons-compress.version>1.26.0</commons-compress.version>
+        <commons-compress.version>1.26.1</commons-compress.version>
         <httpclient5.version>5.2.1</httpclient5.version>
 
         <!-- provided -->
