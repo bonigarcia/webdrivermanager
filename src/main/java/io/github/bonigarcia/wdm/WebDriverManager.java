@@ -1882,7 +1882,7 @@ public abstract class WebDriverManager {
         WebDriverBrowser driverBrowser = new WebDriverBrowser();
         driverBrowser.addDockerContainer(browserContainer);
         driverBrowser.setSeleniumServerUrl(seleniumServerUrl);
-        log.trace("The Selenium Serverl URL is {}", seleniumServerUrl);
+        log.trace("The Selenium Server URL is {}", seleniumServerUrl);
         driverBrowser.setBrowserContainerId(browserContainer.getContainerId());
         webDriverList.add(driverBrowser);
 
