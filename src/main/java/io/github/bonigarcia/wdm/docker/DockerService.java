@@ -151,11 +151,15 @@ public class DockerService {
         return host;
     }
 
-    public boolean isRunningInsideDocker() {
-        String[] commandArray = new String[] { "bash", "-c",
-                "cat /proc/self/cgroup | grep docker" };
+    private boolean isCommandResultPresent(String command) {
+        String[] commandArray = new String[] { "bash", "-c", command };
         String commandOutput = runAndWait(false, commandArray);
         return !isNullOrEmpty(commandOutput);
+    }
+
+    public boolean isRunningInsideDocker(){
+        return isCommandResultPresent("cat /proc/self/cgroup | grep docker") ||
+                isCommandResultPresent("cat /proc/self/mountinfo | grep docker/containers");
     }
 
     public String getDefaultHost() {
