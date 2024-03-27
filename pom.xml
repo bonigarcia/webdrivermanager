@@ -30,7 +30,7 @@
         <maven-release-plugin.version>3.0.1</maven-release-plugin.version>
         <maven-surefire-plugin.version>3.2.5</maven-surefire-plugin.version>
         <jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
-        <maven-gpg-plugin.version>3.2.1</maven-gpg-plugin.version>
+        <maven-gpg-plugin.version>3.2.2</maven-gpg-plugin.version>
         <exec-maven-plugin.version>3.2.0</exec-maven-plugin.version>
         <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
         <maven-asciidoctor-plugin.version>3.0.0</maven-asciidoctor-plugin.version>
