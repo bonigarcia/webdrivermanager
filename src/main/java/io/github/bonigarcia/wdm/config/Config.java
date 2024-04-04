@@ -121,6 +121,8 @@ public class Config {
             URL.class);
     ConfigKey<URL> chromeDriverMirrorUrl = new ConfigKey<>(
             "wdm.chromeDriverMirrorUrl", URL.class);
+    ConfigKey<URL> chromeDriverCfTMirrorUrl = new ConfigKey<>(
+            "wdm.chromeDriverCfTMirrorUrl", URL.class);
     ConfigKey<String> chromeDownloadUrlPattern = new ConfigKey<>(
             "wdm.chromeDownloadUrlPattern", String.class);
     ConfigKey<String> chromeGoodVersionsUrl = new ConfigKey<>(
@@ -762,6 +764,15 @@ public class Config {
 
     public Config setChromeDriverMirrorUrl(URL value) {
         this.chromeDriverMirrorUrl.setValue(value);
+        return this;
+    }
+
+    public URL getChromeDriverCfTMirrorUrl() {
+        return resolve(chromeDriverCfTMirrorUrl);
+    }
+
+    public Config setChromeDriverCfTMirrorUrl(URL value) {
+        this.chromeDriverCfTMirrorUrl.setValue(value);
         return this;
     }
 

@@ -56,8 +56,6 @@ import io.github.bonigarcia.wdm.webdriver.OptionsWithArguments;
  */
 public class ChromeDriverManager extends WebDriverManager {
 
-    public static final int MIN_CHROMEDRIVER_IN_CFT = 115;
-
     private static final String CHROMEDRIVER_DOWNLOAD_OLD_PATTERN = "https://chromedriver.storage.googleapis.com/%s/chromedriver_%s%s.zip";
 
     @Override
@@ -173,9 +171,7 @@ public class ChromeDriverManager extends WebDriverManager {
 
             String builtUrl = String.format(downloadUrlPattern, driverVersion,
                     label, label);
-            if (!isNullOrEmpty(driverVersion)
-                    && Integer.parseInt(VersionDetector.getMajorVersion(
-                            driverVersion)) < MIN_CHROMEDRIVER_IN_CFT) {
+            if (!VersionDetector.isCfT(driverVersion)) {
                 archLabel = os.isWin() ? "32" : "64";
                 builtUrl = String.format(CHROMEDRIVER_DOWNLOAD_OLD_PATTERN,
                         driverVersion, os.getName(), archLabel);

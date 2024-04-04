@@ -18,7 +18,6 @@ package io.github.bonigarcia.wdm.versions;
 
 import static io.github.bonigarcia.wdm.WebDriverManager.loadXML;
 import static io.github.bonigarcia.wdm.config.Config.isNullOrEmpty;
-import static io.github.bonigarcia.wdm.managers.ChromeDriverManager.MIN_CHROMEDRIVER_IN_CFT;
 import static io.github.bonigarcia.wdm.versions.Shell.runAndWait;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -74,6 +73,7 @@ public class VersionDetector {
     static final String COMMANDS_PROPERTIES = "commands.properties";
     static final String FILE_PROTOCOL = "file";
     static final String CFT_URL = "https://googlechromelabs.github.io/chrome-for-testing/";
+    static final int MIN_CHROMEDRIVER_IN_CFT = 115;
 
     final Logger log = getLogger(lookup().lookupClass());
 
@@ -102,8 +102,7 @@ public class VersionDetector {
         if (driverName.equalsIgnoreCase("chromedriver")) {
             String cftUrl = null;
             try {
-                if (driverVersion.isPresent() && Integer.parseInt(
-                        driverVersion.get()) >= MIN_CHROMEDRIVER_IN_CFT) {
+                if (driverVersion.isPresent() && isCfT(driverVersion.get())) {
                     // Parse JSON using GoodVersions
                     cftUrl = config.getChromeGoodVersionsUrl();
 
@@ -398,6 +397,11 @@ public class VersionDetector {
         } else {
             return "0";
         }
+    }
+
+    public static boolean isCfT(String driverVersion) {
+        return isNullOrEmpty(driverVersion) || Integer.parseInt(VersionDetector
+                .getMajorVersion(driverVersion)) >= MIN_CHROMEDRIVER_IN_CFT;
     }
 
     protected File findFileLocation(String filename) {

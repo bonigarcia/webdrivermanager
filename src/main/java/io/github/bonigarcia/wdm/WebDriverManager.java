@@ -20,6 +20,7 @@ import static io.github.bonigarcia.wdm.config.Architecture.ARM64;
 import static io.github.bonigarcia.wdm.config.Architecture.X32;
 import static io.github.bonigarcia.wdm.config.Architecture.X64;
 import static io.github.bonigarcia.wdm.config.Config.isNullOrEmpty;
+import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROME;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROMIUM;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.EDGE;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.FIREFOX;
@@ -1373,6 +1374,12 @@ public abstract class WebDriverManager {
         return getMirrorUrl().isPresent() && config().isUseMirror();
     }
 
+    protected boolean isChrome() {
+        DriverManagerType managerType = getDriverManagerType();
+        return managerType != null
+                && (managerType == CHROME || managerType == CHROMIUM);
+    }
+
     protected String getCurrentVersion(URL url) {
         String urlFile = url.getFile();
         if (isUseMirror()) {
@@ -1439,10 +1446,13 @@ public abstract class WebDriverManager {
 
         boolean getLatest = isUnknown(driverVersion);
         boolean continueSearchingVersion;
+        boolean isCfT = isChrome() && VersionDetector.isCfT(driverVersion);
 
         do {
             // Filter by driver name
-            urlHandler.filterByDriverName(shortDriverName);
+            if (!isCfT) {
+                urlHandler.filterByDriverName(shortDriverName);
+            }
 
             // Filter for latest or concrete driver version
             if (getLatest) {
@@ -1495,11 +1505,23 @@ public abstract class WebDriverManager {
                 candidateUrls = urlHandler.getCandidateUrls();
             }
         } while (continueSearchingVersion);
+
+        if (isCfT) {
+            List<URL> driversFromMirror = getMirrorUrls(
+                    urlHandler.getCandidateUrl(), "");
+            urlHandler.setCandidateUrls(driversFromMirror);
+            urlHandler.filterByDriverName(shortDriverName);
+        }
+
         return urlHandler;
     }
 
     protected List<URL> getDriversFromMirror(URL driverUrl,
             String driverVersion) throws IOException {
+        if (isChrome() && VersionDetector.isCfT(driverVersion)) {
+            driverUrl = config().getChromeDriverCfTMirrorUrl();
+            config().setChromeDriverCfTMirrorUrl(driverUrl);
+        }
         List<URL> urls = new ArrayList<>();
         if (isNullOrEmpty(driverVersion)) {
             List<URL> mirrorUrls = getMirrorUrls(driverUrl, "");

@@ -290,4 +290,8 @@ public class UrlHandler {
         return candidateUrls.iterator().next();
     }
 
+    public void setCandidateUrls(List<URL> candidateUrls) {
+        this.candidateUrls = candidateUrls;
+    }
+
 }

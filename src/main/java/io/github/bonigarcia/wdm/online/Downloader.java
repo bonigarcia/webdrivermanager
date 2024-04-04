@@ -19,7 +19,6 @@ package io.github.bonigarcia.wdm.online;
 import static io.github.bonigarcia.wdm.config.Architecture.ARM64;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROME;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROMIUM;
-import static io.github.bonigarcia.wdm.managers.ChromeDriverManager.MIN_CHROMEDRIVER_IN_CFT;
 import static java.io.File.separator;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.file.Files.createTempDirectory;
@@ -101,10 +100,7 @@ public class Downloader {
         OperatingSystem os = config.getOperatingSystem();
         String architecture = config.getArchitecture().toString()
                 .toLowerCase(ROOT);
-        int majorDriverVersion = Integer
-                .parseInt(VersionDetector.getMajorVersion(driverVersion));
-
-        if (os.isWin() && majorDriverVersion < MIN_CHROMEDRIVER_IN_CFT
+        if (os.isWin() && !VersionDetector.isCfT(driverVersion)
                 && (driverManagerType == CHROME
                         || driverManagerType == CHROMIUM)) {
             log.trace(

@@ -20,7 +20,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import java.io.File;
-import java.net.URL;
 import java.util.List;
 
 import org.junit.jupiter.api.Disabled;
@@ -39,20 +38,26 @@ import io.github.bonigarcia.wdm.config.WebDriverManagerException;
 class MirrorTest {
 
     @Test
-    void testMirrorChrome() throws Exception {
+    void testMirrorChrome() {
         WebDriverManager wdm = WebDriverManager.chromedriver()
-                .browserVersion("100").avoidBrowserDetection()
-                .avoidResolutionCache().clearResolutionCache().useMirror()
-                .forceDownload();
-        wdm.config().setChromeDriverMirrorUrl(new URL(
-                "https://registry.npmmirror.com/-/binary/chromedriver/"));
+                .clearResolutionCache().useMirror().forceDownload();
         wdm.setup();
         File driver = new File(wdm.getDownloadedDriverPath());
         assertThat(driver).exists();
     }
 
     @Test
-    void testMirrorFirefox() throws Exception {
+    void testOldMirrorChrome() {
+        WebDriverManager wdm = WebDriverManager.chromedriver()
+                .browserVersion("100").clearResolutionCache().useMirror()
+                .forceDownload();
+        wdm.setup();
+        File driver = new File(wdm.getDownloadedDriverPath());
+        assertThat(driver).exists();
+    }
+
+    @Test
+    void testMirrorFirefox() {
         WebDriverManager wdm = WebDriverManager.firefoxdriver().useMirror()
                 .forceDownload();
         wdm.setup();
@@ -61,7 +66,7 @@ class MirrorTest {
     }
 
     @Test
-    void testMirrorOpera() throws Exception {
+    void testMirrorOpera() {
         WebDriverManager wdm = WebDriverManager.operadriver().useMirror()
                 .browserVersion("97").forceDownload();
         wdm.setup();
