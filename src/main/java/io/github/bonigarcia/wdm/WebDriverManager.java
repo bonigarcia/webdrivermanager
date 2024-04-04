@@ -1446,11 +1446,12 @@ public abstract class WebDriverManager {
 
         boolean getLatest = isUnknown(driverVersion);
         boolean continueSearchingVersion;
-        boolean isCfT = isChrome() && VersionDetector.isCfT(driverVersion);
+        boolean isMirrorCfT = isChrome() && isUseMirror()
+                && VersionDetector.isCfT(driverVersion);
 
         do {
             // Filter by driver name
-            if (!isCfT) {
+            if (!isMirrorCfT) {
                 urlHandler.filterByDriverName(shortDriverName);
             }
 
@@ -1506,7 +1507,7 @@ public abstract class WebDriverManager {
             }
         } while (continueSearchingVersion);
 
-        if (isCfT) {
+        if (isMirrorCfT) {
             List<URL> driversFromMirror = getMirrorUrls(
                     urlHandler.getCandidateUrl(), "");
             urlHandler.setCandidateUrls(driversFromMirror);
