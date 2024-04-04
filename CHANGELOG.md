@@ -1,5 +1,18 @@
 # Changelog
 
+
+## [5.8.0] - 2024-04-04
+
+### Fixed
+- Check resolved browser version in Firefox manager (#1240)
+
+### Changed
+- Updated how we check if Docker is running to work with the new cgroup v2 system (#1259)
+
+### Added
+- Support for chromedriver 115+ (CfT endpoints) for NPM mirror (#1264)
+
+
 ## [5.7.0] - 2024-02-21
 
 ### Fixed
