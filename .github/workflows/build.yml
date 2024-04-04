@@ -52,14 +52,14 @@ jobs:
         max_attempts: 3
         command: mvn -B test -Dtest=!Docker*
     - name: Upload analysis to SonarCloud
-      if: success() && matrix.os == 'ubuntu-latest' && !contains(github.ref, 'pull')
+      if: success() && matrix.os == 'ubuntu-latest' && matrix.java == '17' && !contains(github.ref, 'pull')
       run: >
         mvn -B sonar:sonar
         -Dsonar.host.url=https://sonarcloud.io
         -Dsonar.organization=bonigarcia-github
         -Dsonar.projectKey=io.github.bonigarcia:webdrivermanager
     - name: Upload coverage to Codecov
-      if: success() && matrix.os == 'ubuntu-latest' && !contains(github.ref, 'pull')
+      if: success() && matrix.os == 'ubuntu-latest' && matrix.java == '17' && !contains(github.ref, 'pull')
       uses: codecov/codecov-action@v4.2.0
     - name: Store recordings (only available in Windows)
       if: always() && matrix.os == 'windows-latest'
