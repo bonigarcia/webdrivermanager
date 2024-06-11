@@ -35,7 +35,7 @@ class EdgeVersionTest extends VersionTestParent {
     void setup() {
         driverClass = EdgeDriver.class;
         os = WIN;
-        specificVersions = new String[] { "91.0.864.41", "92.0.902.55" };
+        specificVersions = new String[] { "125.0.2535.92" };
     }
 
 }
