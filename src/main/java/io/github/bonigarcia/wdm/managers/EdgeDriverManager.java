@@ -190,6 +190,9 @@ public class EdgeDriverManager extends WebDriverManager {
             OperatingSystem os = config.getOperatingSystem();
             Architecture arch = config.getArchitecture();
             String archLabel = os.isWin() ? arch.toString() : "64";
+            if (arch == ARM64) {
+                archLabel = "64";
+            }
             String osName = arch != ARM64 ? os.getName() : "arm";
             String builtUrl = os == MAC && arch == ARM64
                     ? String.format(downloadUrlPattern, driverVersion, "mac",
