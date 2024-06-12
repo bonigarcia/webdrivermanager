@@ -38,7 +38,7 @@ jobs:
         max_attempts: 3
         command: mvn -B test -Dtest=!Record*
     - name: Run tests on Mac
-      if: matrix.os == 'macos-latest'
+      if: matrix.os == 'macos-13'
       uses: nick-fields/retry@v3.0.0
       with:
         timeout_minutes: 30
