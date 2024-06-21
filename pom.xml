@@ -19,7 +19,7 @@
         <jackson-databind.version>2.17.1</jackson-databind.version>
 
         <!-- provided -->
-        <selenium.version>4.21.0</selenium.version>
+        <selenium.version>4.22.0</selenium.version>
         <javalin.version>4.6.8</javalin.version>
 
         <!-- test -->
