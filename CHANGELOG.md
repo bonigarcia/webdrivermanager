@@ -1,5 +1,16 @@
 # Changelog
 
+## [5.9.0] - 2024-06-24
+
+### Fixed
+- Fix architecture label to build URL for Edge ARM64
+
+### Changed
+- Force to use jackson-databind 2.17.1
+
+### Removed
+- Exclude org.bouncycastle:bcpkix-jdk18on from docker-java
+
 
 ## [5.8.0] - 2024-04-04
 
