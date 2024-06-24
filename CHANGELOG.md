@@ -1,5 +1,11 @@
 # Changelog
 
+## [5.9.1] - 2024-06-24
+
+### Removed
+- Remove using jackson-databind 2.17.1
+
+
 ## [5.9.0] - 2024-06-24
 
 ### Fixed
