@@ -63,7 +63,7 @@ jobs:
       uses: codecov/codecov-action@v4.5.0
     - name: Store recordings (only available in Windows)
       if: always() && matrix.os == 'windows-latest'
-      uses: actions/upload-artifact@v4.3.3
+      uses: actions/upload-artifact@v4.3.4
       with:
         name: webm-files
         path: |
