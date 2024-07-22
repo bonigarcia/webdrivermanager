@@ -1583,6 +1583,20 @@ public abstract class WebDriverManager {
                     urls.add(new URL(driverUrl.toURI().resolve(".")
                             + e.getChildNodes().item(0).getNodeValue()));
                 }
+                
+                NodeList nextMarkerNodes = (NodeList) xPath.evaluate("/EnumerationResults/NextMarker",
+                        xml.getDocumentElement(), NODESET);
+                if (nextMarkerNodes.getLength() > 0) {
+                    Element e = (Element) nextMarkerNodes.item(0);
+                    if (e.hasChildNodes()) {
+                        String marker = e.getFirstChild().getNodeValue();
+                        if (StringUtils.isNotEmpty(marker)) {
+                            urls.addAll(getDriversFromXml(new URIBuilder(driverUrl.toURI())
+                                    .setParameter("marker", marker).build().toURL(), xpath, namespaceContext));
+                        }
+                    }
+                }
+                
             }
         } catch (Exception e) {
             throw new WebDriverManagerException(e);
