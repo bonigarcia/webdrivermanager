@@ -231,38 +231,38 @@ public class VersionDetector {
 
     public Optional<String> getBrowserVersionFromTheShell(String browserName) {
         Optional<String> browserVersionUsingProperties = empty();
-//        String browserVersionDetectionCommand = config
-//                .getBrowserVersionDetectionCommand();
-//        if (!isNullOrEmpty(browserVersionDetectionCommand)) {
-//            browserVersionUsingProperties = getBrowserVersionUsingCommand(
-//                    browserVersionDetectionCommand);
-//        }
-//        if (browserVersionUsingProperties.isPresent()) {
-//            return browserVersionUsingProperties;
-//        }
-//
-//        boolean online = config.isCommandsPropertiesOnlineFirst();
-//        String propertiesName = COMMANDS_PROPERTIES;
-//        Properties commandsProperties = getProperties(propertiesName, online);
-//
-//        String onlineMessage = online ? ONLINE : LOCAL;
-//        log.debug("Detecting {} version using {} {}", browserName,
-//                onlineMessage, propertiesName);
-//
-//        browserVersionUsingProperties = getBrowserVersionUsingProperties(
-//                browserName, commandsProperties);
-//
-//        if (!browserVersionUsingProperties.isPresent()) {
-//            String notOnlineMessage = online ? LOCAL : ONLINE;
-//            log.debug(
-//                    "Browser version for {} not detected using {} properties (using {} {})",
-//                    browserName, onlineMessage, notOnlineMessage,
-//                    propertiesName);
-//
-//            commandsProperties = getProperties(propertiesName, !online);
-//            browserVersionUsingProperties = getBrowserVersionUsingProperties(
-//                    browserName, commandsProperties);
-//        }
+        String browserVersionDetectionCommand = config
+                .getBrowserVersionDetectionCommand();
+        if (!isNullOrEmpty(browserVersionDetectionCommand)) {
+            browserVersionUsingProperties = getBrowserVersionUsingCommand(
+                    browserVersionDetectionCommand);
+        }
+        if (browserVersionUsingProperties.isPresent()) {
+            return browserVersionUsingProperties;
+        }
+
+        boolean online = config.isCommandsPropertiesOnlineFirst();
+        String propertiesName = COMMANDS_PROPERTIES;
+        Properties commandsProperties = getProperties(propertiesName, online);
+
+        String onlineMessage = online ? ONLINE : LOCAL;
+        log.debug("Detecting {} version using {} {}", browserName,
+                onlineMessage, propertiesName);
+
+        browserVersionUsingProperties = getBrowserVersionUsingProperties(
+                browserName, commandsProperties);
+
+        if (!browserVersionUsingProperties.isPresent()) {
+            String notOnlineMessage = online ? LOCAL : ONLINE;
+            log.debug(
+                    "Browser version for {} not detected using {} properties (using {} {})",
+                    browserName, onlineMessage, notOnlineMessage,
+                    propertiesName);
+
+            commandsProperties = getProperties(propertiesName, !online);
+            browserVersionUsingProperties = getBrowserVersionUsingProperties(
+                    browserName, commandsProperties);
+        }
 
         return browserVersionUsingProperties;
     }
