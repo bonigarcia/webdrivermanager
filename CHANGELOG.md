@@ -1,5 +1,11 @@
 # Changelog
 
+## [5.9.2] - 2024-07-25
+
+### Fixed
+- HTTP 404 when downloading microsoft edgedriver in macOS or Linux (#1320)
+
+
 ## [5.9.1] - 2024-06-24
 
 ### Removed
