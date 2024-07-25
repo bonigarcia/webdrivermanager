@@ -141,14 +141,17 @@ public class VersionDetector {
         }
 
         Optional<String> result = Optional.empty();
-        String url = driverUrl + versionLabel;
-        if (!driverVersion.isPresent()) {
+        String osLabel = optOsLabel.isPresent() ? optOsLabel.get() : "";
+        String url = driverVersion.isPresent()
+                ? driverUrl + latestLabel + "_" + driverVersion.get() + osLabel
+                : driverUrl + versionLabel;
+        if (!driverVersion.isPresent()
+                && driverName.equalsIgnoreCase("msedgedriver")) {
             result = readUrlContent(url, driverName, versionCharset);
-        }
-        if (result.isPresent()) {
-            String osLabel = optOsLabel.isPresent() ? optOsLabel.get() : "";
-            url = driverUrl + latestLabel + "_" + getMajorVersion(result.get())
-                    + osLabel;
+            if (result.isPresent()) {
+                url = driverUrl + latestLabel + "_"
+                        + getMajorVersion(result.get()) + osLabel;
+            }
         }
         result = readUrlContent(url, driverName, versionCharset);
         if (result.isPresent()) {
