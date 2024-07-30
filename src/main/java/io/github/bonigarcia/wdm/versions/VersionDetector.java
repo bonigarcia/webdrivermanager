@@ -140,7 +140,7 @@ public class VersionDetector {
             }
         }
 
-        Optional<String> result = Optional.empty();
+        Optional<String> result;
         String osLabel = optOsLabel.isPresent() ? optOsLabel.get() : "";
         String url = driverVersion.isPresent()
                 ? driverUrl + latestLabel + "_" + driverVersion.get() + osLabel
