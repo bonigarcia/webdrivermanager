@@ -98,6 +98,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.core5.http.ClassicHttpResponse;
+import org.apache.hc.core5.net.URIBuilder;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
@@ -1583,6 +1584,20 @@ public abstract class WebDriverManager {
                     urls.add(new URL(driverUrl.toURI().resolve(".")
                             + e.getChildNodes().item(0).getNodeValue()));
                 }
+                
+                NodeList nextMarkerNodes = (NodeList) xPath.evaluate("/EnumerationResults/NextMarker",
+                        xml.getDocumentElement(), NODESET);
+                if (nextMarkerNodes.getLength() > 0) {
+                    Element e = (Element) nextMarkerNodes.item(0);
+                    if (e.hasChildNodes()) {
+                        String marker = e.getFirstChild().getNodeValue();
+                        if (StringUtils.isNotEmpty(marker)) {
+                            urls.addAll(getDriversFromXml(new URIBuilder(driverUrl.toURI())
+                                    .setParameter("marker", marker).build().toURL(), xpath, namespaceContext));
+                        }
+                    }
+                }
+                
             }
         } catch (Exception e) {
             throw new WebDriverManagerException(e);
