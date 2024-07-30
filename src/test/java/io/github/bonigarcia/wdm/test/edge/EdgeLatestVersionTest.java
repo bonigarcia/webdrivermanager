@@ -54,12 +54,13 @@ class EdgeLatestVersionTest {
         URL driverUrl = new URL("https://msedgedriver.azureedge.net/");
         Charset versionCharset = UTF_16;
         String driverName = "msedgedriver";
-        String versionLabel = "LATEST_STABLE";
+        String stableLabel = "LATEST_STABLE";
+        String releaseLabel = "LATEST_RELEASE";
         Optional<String> osLabel = Optional.empty();
 
         Optional<String> driverVersionFromRepository = versionDetector
                 .getDriverVersionFromRepository(driverVersion, driverUrl,
-                        versionCharset, driverName, versionLabel, versionLabel,
+                        versionCharset, driverName, stableLabel, releaseLabel,
                         osLabel);
         assertThat(driverVersionFromRepository).isPresent();
         String edgeVersion = driverVersionFromRepository.get();

@@ -3,7 +3,7 @@
 
     <groupId>io.github.bonigarcia</groupId>
     <artifactId>webdrivermanager</artifactId>
-    <version>5.9.2-SNAPSHOT</version>
+    <version>5.9.3-SNAPSHOT</version>
 
     <properties>
         <!-- compile -->
@@ -37,7 +37,7 @@
         <asciidoctorj-pdf.version>2.3.17</asciidoctorj-pdf.version>
         <maven-site.version>3.12.1</maven-site.version>
         <maven-project-info-reports.version>3.6.2</maven-project-info-reports.version>
-        <maven-javadoc-plugin.version>3.7.0</maven-javadoc-plugin.version>
+        <maven-javadoc-plugin.version>3.8.0</maven-javadoc-plugin.version>
 
         <!-- Java version -->
         <java.version>8</java.version>

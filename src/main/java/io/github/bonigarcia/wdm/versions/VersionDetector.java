@@ -140,10 +140,30 @@ public class VersionDetector {
             }
         }
 
+        Optional<String> result = Optional.empty();
         String osLabel = optOsLabel.isPresent() ? optOsLabel.get() : "";
         String url = driverVersion.isPresent()
                 ? driverUrl + latestLabel + "_" + driverVersion.get() + osLabel
                 : driverUrl + versionLabel;
+        if (!driverVersion.isPresent()
+                && driverName.equalsIgnoreCase("msedgedriver")) {
+            result = readUrlContent(url, driverName, versionCharset);
+            if (result.isPresent()) {
+                url = driverUrl + latestLabel + "_"
+                        + getMajorVersion(result.get()) + osLabel;
+            }
+        }
+        result = readUrlContent(url, driverName, versionCharset);
+        if (result.isPresent()) {
+            log.debug("Latest version of {} according to {} is {}", driverName,
+                    url, result.get());
+        }
+
+        return result;
+    }
+
+    public Optional<String> readUrlContent(String url, String driverName,
+            Charset versionCharset) {
         Optional<String> result = Optional.empty();
         try (InputStream response = httpClient
                 .execute(httpClient.createHttpGet(new URL(url))).getEntity()
@@ -154,11 +174,6 @@ public class VersionDetector {
             log.warn("Exception reading {} to get latest version of {} ({})",
                     url, driverName, e.getMessage());
         }
-        if (result.isPresent()) {
-            log.debug("Latest version of {} according to {} is {}", driverName,
-                    url, result.get());
-        }
-
         return result;
     }
 
