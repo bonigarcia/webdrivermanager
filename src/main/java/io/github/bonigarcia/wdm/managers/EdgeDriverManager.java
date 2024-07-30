@@ -21,6 +21,8 @@ import static io.github.bonigarcia.wdm.config.DriverManagerType.EDGE;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.MAC;
 import static java.util.Locale.ROOT;
 import static java.util.Optional.empty;
+import static javax.xml.xpath.XPathConstants.NODESET;
+import static javax.xml.xpath.XPathFactory.newInstance;
 import static org.apache.commons.io.FileUtils.listFiles;
 
 import java.io.File;
@@ -35,14 +37,24 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
-import io.github.bonigarcia.wdm.config.Config;
+import javax.xml.namespace.NamespaceContext;
+import javax.xml.xpath.XPath;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.hc.core5.http.ClassicHttpResponse;
+import org.apache.hc.core5.net.URIBuilder;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.edge.EdgeOptions;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.Architecture;
+import io.github.bonigarcia.wdm.config.Config;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
 import io.github.bonigarcia.wdm.config.OperatingSystem;
+import io.github.bonigarcia.wdm.config.WebDriverManagerException;
 import io.github.bonigarcia.wdm.webdriver.OptionsWithArguments;
 
 /**
@@ -54,6 +66,7 @@ import io.github.bonigarcia.wdm.webdriver.OptionsWithArguments;
 public class EdgeDriverManager extends WebDriverManager {
 
     protected static final String LATEST_STABLE = "LATEST_STABLE";
+    protected static final String STORAGE_QUERY = "?restype=container&comp=list";
 
     @Override
     public DriverManagerType getDriverManagerType() {
@@ -112,8 +125,7 @@ public class EdgeDriverManager extends WebDriverManager {
 
     @Override
     protected List<URL> getDriverUrls(String driverVersion) throws IOException {
-        return getDriversFromXml(
-                new URL(getDriverUrl() + "?restype=container&comp=list"),
+        return getDriversFromXml(new URL(getDriverUrl() + STORAGE_QUERY),
                 "//Blob/Name", empty());
     }
 
@@ -234,6 +246,58 @@ public class EdgeDriverManager extends WebDriverManager {
     public WebDriverManager exportParameter(String exportParameter) {
         config().setEdgeDriverExport(exportParameter);
         return this;
+    }
+
+    protected List<URL> getDriversFromXml(URL driverUrl, String xpath,
+            Optional<NamespaceContext> namespaceContext) throws IOException {
+        logSeekRepo(driverUrl);
+        List<URL> urls = new ArrayList<>();
+        try {
+            try (ClassicHttpResponse response = getHttpClient()
+                    .execute(getHttpClient().createHttpGet(driverUrl))) {
+                Document xml = loadXML(response.getEntity().getContent());
+                XPath xPath = newInstance().newXPath();
+                if (namespaceContext.isPresent()) {
+                    xPath.setNamespaceContext(namespaceContext.get());
+                }
+                NodeList nodes = (NodeList) xPath.evaluate(xpath,
+                        xml.getDocumentElement(), NODESET);
+                for (int i = 0; i < nodes.getLength(); ++i) {
+                    Element e = (Element) nodes.item(i);
+                    urls.add(new URL(driverUrl.toURI().resolve(".")
+                            + e.getChildNodes().item(0).getNodeValue()));
+                }
+
+                NodeList nextMarkerNodes = (NodeList) xPath.evaluate(
+                        "/EnumerationResults/NextMarker",
+                        xml.getDocumentElement(), NODESET);
+                if (nextMarkerNodes.getLength() > 0) {
+                    NodeList enumerationResults = (NodeList) xPath.evaluate(
+                            "/EnumerationResults", xml.getDocumentElement(),
+                            NODESET);
+                    String containerName = enumerationResults.item(0)
+                            .getAttributes().getNamedItem("ContainerName")
+                            .getNodeValue();
+                    Element e = (Element) nextMarkerNodes.item(0);
+                    if (e.hasChildNodes()) {
+                        String marker = e.getFirstChild().getNodeValue();
+                        if (StringUtils.isNotEmpty(marker)) {
+                            urls.addAll(getDriversFromXml(
+                                    new URIBuilder(
+                                            containerName + STORAGE_QUERY)
+                                                    .setParameter("marker",
+                                                            marker)
+                                                    .build().toURL(),
+                                    xpath, namespaceContext));
+                        }
+                    }
+                }
+
+            }
+        } catch (Exception e) {
+            throw new WebDriverManagerException(e);
+        }
+        return urls;
     }
 
 }

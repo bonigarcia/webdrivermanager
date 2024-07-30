@@ -43,8 +43,6 @@ import static java.util.Locale.ROOT;
 import static java.util.Optional.empty;
 import static java.util.regex.Pattern.CASE_INSENSITIVE;
 import static java.util.regex.Pattern.compile;
-import static javax.xml.xpath.XPathConstants.NODESET;
-import static javax.xml.xpath.XPathFactory.newInstance;
 import static org.apache.commons.io.FileUtils.cleanDirectory;
 import static org.apache.commons.io.FilenameUtils.removeExtension;
 import static org.apache.commons.io.FilenameUtils.separatorsToUnix;
@@ -91,14 +89,11 @@ import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
-import org.apache.hc.core5.http.ClassicHttpResponse;
-import org.apache.hc.core5.net.URIBuilder;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
@@ -115,8 +110,6 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.SessionId;
 import org.slf4j.Logger;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -1563,46 +1556,6 @@ public abstract class WebDriverManager {
 
     protected Optional<NamespaceContext> getS3NamespaceContext() {
         return Optional.of(S3_NAMESPACE_CONTEXT);
-    }
-
-    protected List<URL> getDriversFromXml(URL driverUrl, String xpath,
-            Optional<NamespaceContext> namespaceContext) throws IOException {
-        logSeekRepo(driverUrl);
-        List<URL> urls = new ArrayList<>();
-        try {
-            try (ClassicHttpResponse response = getHttpClient()
-                    .execute(getHttpClient().createHttpGet(driverUrl))) {
-                Document xml = loadXML(response.getEntity().getContent());
-                XPath xPath = newInstance().newXPath();
-                if (namespaceContext.isPresent()) {
-                    xPath.setNamespaceContext(namespaceContext.get());
-                }
-                NodeList nodes = (NodeList) xPath.evaluate(xpath,
-                        xml.getDocumentElement(), NODESET);
-                for (int i = 0; i < nodes.getLength(); ++i) {
-                    Element e = (Element) nodes.item(i);
-                    urls.add(new URL(driverUrl.toURI().resolve(".")
-                            + e.getChildNodes().item(0).getNodeValue()));
-                }
-                
-                NodeList nextMarkerNodes = (NodeList) xPath.evaluate("/EnumerationResults/NextMarker",
-                        xml.getDocumentElement(), NODESET);
-                if (nextMarkerNodes.getLength() > 0) {
-                    Element e = (Element) nextMarkerNodes.item(0);
-                    if (e.hasChildNodes()) {
-                        String marker = e.getFirstChild().getNodeValue();
-                        if (StringUtils.isNotEmpty(marker)) {
-                            urls.addAll(getDriversFromXml(new URIBuilder(driverUrl.toURI())
-                                    .setParameter("marker", marker).build().toURL(), xpath, namespaceContext));
-                        }
-                    }
-                }
-                
-            }
-        } catch (Exception e) {
-            throw new WebDriverManagerException(e);
-        }
-        return urls;
     }
 
     protected void logSeekRepo(URL driverUrl) {
