@@ -50,7 +50,7 @@ public class Shell {
     }
 
     public static String runAndWait(boolean logCommand, String... command) {
-        return runAndWaitArray(logCommand, new File("."), command);
+        return runAndWaitArray(logCommand, new File(""), command);
     }
 
     public static String runAndWait(boolean logCommand, File folder,
