@@ -31,17 +31,16 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
+import io.github.bonigarcia.wdm.config.Config;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.edge.EdgeOptions;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import io.github.bonigarcia.wdm.config.Architecture;
-import io.github.bonigarcia.wdm.config.Config;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
 import io.github.bonigarcia.wdm.config.OperatingSystem;
 import io.github.bonigarcia.wdm.webdriver.OptionsWithArguments;
@@ -113,7 +112,9 @@ public class EdgeDriverManager extends WebDriverManager {
 
     @Override
     protected List<URL> getDriverUrls(String driverVersion) throws IOException {
-        return Collections.emptyList();
+        return getDriversFromXml(
+                new URL(getDriverUrl() + "?restype=container&comp=list"),
+                "//Blob/Name", empty());
     }
 
     @Override
