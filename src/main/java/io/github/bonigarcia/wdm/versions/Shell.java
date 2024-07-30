@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm.versions;
 
+import static io.github.bonigarcia.wdm.config.Config.isNullOrEmpty;
 import static java.lang.String.join;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -50,7 +51,11 @@ public class Shell {
     }
 
     public static String runAndWait(boolean logCommand, String... command) {
-        return runAndWaitArray(logCommand, new File("."), command);
+        String userDir = System.getProperty("user.dir");
+        if (isNullOrEmpty(userDir)) {
+            userDir = ".";
+        }
+        return runAndWaitArray(logCommand, new File(userDir), command);
     }
 
     public static String runAndWait(boolean logCommand, File folder,
