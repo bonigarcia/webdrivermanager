@@ -12,12 +12,25 @@ jobs:
     steps:
       - name: Dependabot metadata
         id: metadata
-        uses: dependabot/fetch-metadata@v2.2.0
+        uses: dependabot/fetch-metadata@v1.1.1
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       - name: Enable auto-merge for Dependabot PRs
         run: |
-          gh pr merge "$PR_URL" --auto --squash --body="Co-authored-by: Boni Garcia <boni.garcia@uc3m.es>"
+          max_retries=10
+          retry_count=0
+          sleep_duration=1
+          while ! gh pr merge "$PR_URL" --auto --squash --body="Co-authored-by: Boni Garcia <boni.garcia@uc3m.es>"; do
+              retry_count=$((retry_count+1))
+              if [ $retry_count -ge $max_retries ]; then
+                  echo "Command failed after $retry_count attempts."
+                  exit 1
+              fi
+              echo "Command failed. Retrying in $sleep_duration seconds..."
+              sleep $sleep_duration
+              sleep_duration=$((sleep_duration * 2)) # Exponential backoff
+          done
+          echo "Command succeeded after $retry_count attempts."
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
