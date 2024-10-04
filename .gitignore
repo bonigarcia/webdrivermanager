@@ -9,3 +9,4 @@ phantomjsdriver.log
 *.pem
 *.mp4
 .DS_Store
+bin/
