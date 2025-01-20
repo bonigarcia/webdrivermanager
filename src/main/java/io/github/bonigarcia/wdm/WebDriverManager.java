@@ -1798,6 +1798,7 @@ public abstract class WebDriverManager {
                         config().getBrowserWatcherVersion()));
         extensionPath = Files.createTempFile("", ".crx");
         File extensionFile = extensionPath.toFile();
+        extensionFile.deleteOnExit();
         FileUtils.copyInputStreamToFile(extensionInputStream, extensionFile);
         return extensionPath;
     }
