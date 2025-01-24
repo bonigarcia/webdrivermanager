@@ -26,10 +26,19 @@
         "browser_download_url": "https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.28.0/selenium-java-4.28.0.zip"
       },
       {
+        "browser_download_url": "https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.28.0/selenium-java-4.28.1.zip"
+      },
+      {
         "browser_download_url": "https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.28.0/selenium-server-4.28.0.jar"
       },
       {
         "browser_download_url": "https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.28.0/selenium-server-4.28.0.zip"
+      },
+      {
+        "browser_download_url": "https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.28.0/selenium-server-4.28.1.jar"
+      },
+      {
+        "browser_download_url": "https://github.com/SeleniumHQ/selenium/releases/download/selenium-4.28.0/selenium-server-4.28.1.zip"
       }
     ]
   },
