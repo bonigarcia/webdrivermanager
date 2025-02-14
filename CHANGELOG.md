@@ -1,5 +1,14 @@
 # Changelog
 
+## [5.9.3] - 2025-02-14
+
+### Fixed
+- Delete temporary .crx files on JVM exit (#1415)
+
+### Changed
+- Support reading msedgedriver storage bucket listing XML as of version 125.0 (#1323)
+
+
 ## [5.9.2] - 2024-07-25
 
 ### Fixed
