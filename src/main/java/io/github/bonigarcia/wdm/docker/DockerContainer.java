@@ -40,6 +40,7 @@ public class DockerContainer {
     private List<String> exposedPorts;
     private List<String> extraHosts;
     private String imageId;
+    private Optional<String> containerName;
     private Optional<List<Bind>> binds;
     private Optional<List<String>> envs;
     private Optional<String> network;
@@ -61,9 +62,13 @@ public class DockerContainer {
 
     private DockerContainer(DockerBuilder builder) {
         this.imageId = builder.imageId;
+        this.containerName = builder.containerName != null
+                ? of(builder.containerName)
+                : empty();
         this.exposedPorts = builder.exposedPorts != null ? builder.exposedPorts
                 : new ArrayList<>();
-        this.extraHosts = builder.extraHosts != null ? builder.extraHosts : new ArrayList<>();
+        this.extraHosts = builder.extraHosts != null ? builder.extraHosts
+                : new ArrayList<>();
         this.binds = builder.binds != null ? of(builder.binds) : empty();
         this.envs = builder.envs != null ? of(builder.envs) : empty();
         this.network = builder.network != null ? of(builder.network) : empty();
@@ -97,7 +102,8 @@ public class DockerContainer {
     }
 
     public String[] getExtraHosts() {
-        return Arrays.copyOf(extraHosts.toArray(), extraHosts.size(), String[].class);
+        return Arrays.copyOf(extraHosts.toArray(), extraHosts.size(),
+                String[].class);
     }
 
     public Optional<String> getNetwork() {
@@ -122,6 +128,14 @@ public class DockerContainer {
 
     public void setContainerId(String containerId) {
         this.containerId = containerId;
+    }
+
+    public Optional<String> getContainerName() {
+        return containerName;
+    }
+
+    public void setContainerName(Optional<String> containerName) {
+        this.containerName = containerName;
     }
 
     public String getContainerUrl() {
@@ -202,6 +216,7 @@ public class DockerContainer {
 
     public static class DockerBuilder {
         private String imageId;
+        private String containerName;
         private List<Bind> binds;
         private List<String> envs;
         private List<String> cmd;
@@ -216,6 +231,11 @@ public class DockerContainer {
 
         public DockerBuilder(String imageId) {
             this.imageId = imageId;
+        }
+
+        public DockerBuilder containerName(String name) {
+            this.containerName = name;
+            return this;
         }
 
         public DockerBuilder exposedPorts(List<String> ports) {

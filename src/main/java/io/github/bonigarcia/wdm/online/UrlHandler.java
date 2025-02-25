@@ -17,6 +17,7 @@
 package io.github.bonigarcia.wdm.online;
 
 import static io.github.bonigarcia.wdm.config.Config.isNullOrEmpty;
+import static io.github.bonigarcia.wdm.versions.VersionDetector.parseVersion;
 import static java.io.File.separator;
 import static java.lang.Integer.signum;
 import static java.lang.Integer.valueOf;
@@ -228,9 +229,8 @@ public class UrlHandler {
     }
 
     public Integer versionCompare(String str1, String str2) {
-        String versionRegex = config.getBrowserVersionDetectionRegex();
-        String[] vals1 = str1.replaceAll(versionRegex, "").split("\\.");
-        String[] vals2 = str2.replaceAll(versionRegex, "").split("\\.");
+        String[] vals1 = parseVersion(str1).split("\\.");
+        String[] vals2 = parseVersion(str2).split("\\.");
 
         if (vals1[0].equals("")) {
             vals1[0] = "0";

@@ -18,7 +18,6 @@ package io.github.bonigarcia.wdm.test.docker;
 
 //tag::snippet-in-doc[]
 import static io.github.bonigarcia.wdm.WebDriverManager.isDockerAvailable;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assumptions.assumeThat;
 
@@ -34,7 +33,6 @@ class DockerChromeBetaTest {
     WebDriver driver;
 
     WebDriverManager wdm = WebDriverManager.chromedriver().browserInDocker()
-            .dockerDefaultArgs("--disable-gpu,--no-sandbox")
             .browserVersion("beta");
 
     @BeforeEach

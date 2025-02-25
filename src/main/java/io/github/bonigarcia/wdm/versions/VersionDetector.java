@@ -74,6 +74,7 @@ public class VersionDetector {
     static final String FILE_PROTOCOL = "file";
     static final String CFT_URL = "https://googlechromelabs.github.io/chrome-for-testing/";
     static final int MIN_CHROMEDRIVER_IN_CFT = 115;
+    static final String VERSION_DETECTION_REGEX = "[^\\d^\\.]";
 
     final Logger log = getLogger(lookup().lookupClass());
 
@@ -326,8 +327,7 @@ public class VersionDetector {
                 isSnap = true;
             }
 
-            String parsedBrowserVersion = browserVersionOutput
-                    .replaceAll(config.getBrowserVersionDetectionRegex(), "");
+            String parsedBrowserVersion = parseVersion(browserVersionOutput);
             log.trace("Detected browser version is {}", parsedBrowserVersion);
 
             return Optional.of(getMajorVersion(parsedBrowserVersion));
@@ -442,6 +442,10 @@ public class VersionDetector {
 
     public boolean isSnap() {
         return isSnap;
+    }
+
+    public static String parseVersion(String version) {
+        return version.replaceAll(VERSION_DETECTION_REGEX, "");
     }
 
     public static final Optional<String> getWdmVersion(Class<?> clazz) {

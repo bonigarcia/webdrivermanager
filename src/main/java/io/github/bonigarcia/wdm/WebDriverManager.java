@@ -20,6 +20,7 @@ import static io.github.bonigarcia.wdm.config.Architecture.ARM64;
 import static io.github.bonigarcia.wdm.config.Architecture.X32;
 import static io.github.bonigarcia.wdm.config.Architecture.X64;
 import static io.github.bonigarcia.wdm.config.Config.isNullOrEmpty;
+import static io.github.bonigarcia.wdm.config.Config.isUnknown;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROME;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROMIUM;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.EDGE;
@@ -29,6 +30,8 @@ import static io.github.bonigarcia.wdm.config.DriverManagerType.OPERA;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.LINUX;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.MAC;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.WIN;
+import static io.github.bonigarcia.wdm.docker.DockerService.CACHE_KEY_CUSTOM;
+import static io.github.bonigarcia.wdm.docker.DockerService.CACHE_KEY_LABEL;
 import static io.github.bonigarcia.wdm.docker.DockerService.NETWORK_HOST;
 import static io.github.bonigarcia.wdm.online.Downloader.deleteFile;
 import static io.github.bonigarcia.wdm.versions.Shell.runAndWait;
@@ -155,6 +158,7 @@ public abstract class WebDriverManager {
 
     protected static final Logger log = getLogger(lookup().lookupClass());
 
+    public static final String LATEST = "latest";
     protected static final String SLASH = "/";
     protected static final String DASH = "-";
     protected static final String LATEST_RELEASE = "LATEST_RELEASE";
@@ -204,7 +208,6 @@ public abstract class WebDriverManager {
     protected Capabilities capabilities;
     protected boolean shutdownHook = false;
     protected boolean dockerEnabled = false;
-    protected boolean androidEnabled = false;
     protected boolean watchEnabled = false;
     protected boolean displayEnabled = false;
     protected boolean disableCsp = false;
@@ -452,12 +455,6 @@ public abstract class WebDriverManager {
         return dockerEnabled && getDockerService().getDockerClient() != null;
     }
 
-    public WebDriverManager browserInDockerAndroid() {
-        throw new WebDriverManagerException(
-                getDriverManagerType().getBrowserName()
-                        + " is not available in Docker Android");
-    }
-
     public WebDriverManager dockerEnvVariables(String... defaultEnvs) {
         config().setDockerEnvVariables(defaultEnvs);
         return this;
@@ -520,11 +517,6 @@ public abstract class WebDriverManager {
 
     public WebDriverManager dockerScreenResolution(String screenResolution) {
         config().setDockerScreenResolution(screenResolution);
-        return this;
-    }
-
-    public WebDriverManager dockerRecordingFrameRate(int frameRate) {
-        config().setDockerRecordingFrameRate(frameRate);
         return this;
     }
 
@@ -823,17 +815,11 @@ public abstract class WebDriverManager {
         return this;
     }
 
-    public WebDriverManager browserVersionDetectionRegex(String regex) {
-        config().setBrowserVersionDetectionRegex(regex);
-        return this;
-    }
-
     public void reset() {
         config().reset();
         retryCount = 0;
         shutdownHook = false;
         dockerEnabled = false;
-        androidEnabled = false;
         watchEnabled = false;
         displayEnabled = false;
         capabilities = null;
@@ -1075,8 +1061,7 @@ public abstract class WebDriverManager {
 
     public synchronized DockerService getDockerService() {
         if (dockerService == null) {
-            dockerService = new DockerService(config(), getHttpClient(),
-                    getResolutionCache());
+            dockerService = new DockerService(config(), getResolutionCache());
         }
         return dockerService;
     }
@@ -1357,11 +1342,6 @@ public abstract class WebDriverManager {
 
     protected boolean useResolutionCache() {
         return !config().isAvoidResolutionCache();
-    }
-
-    protected boolean isUnknown(String driverVersion) {
-        return isNullOrEmpty(driverVersion)
-                || driverVersion.equalsIgnoreCase("latest");
     }
 
     protected boolean isUseMirror() {
@@ -1831,11 +1811,8 @@ public abstract class WebDriverManager {
 
     protected WebDriver createDockerWebDriver() {
         String browserName = getKeyForResolutionCache();
-        if (androidEnabled) {
-            browserName += "-mobile";
-        }
         String browserVersion = getBrowserVersion();
-        String browserCacheKey = browserName + "-container-";
+        String browserCacheKey = browserName + CACHE_KEY_LABEL;
 
         String dockerCustomImage = config().getDockerCustomImage();
         String browserImage;
@@ -1843,17 +1820,16 @@ public abstract class WebDriverManager {
             browserImage = dockerCustomImage;
             browserVersion = getDockerService()
                     .getVersionFromImage(browserImage);
-            browserCacheKey += "custom";
+            browserCacheKey += CACHE_KEY_CUSTOM;
 
         } else {
             if (isUnknown(browserVersion) || getDockerService()
                     .isBrowserVersionLatestMinus(browserVersion)) {
-                browserCacheKey += isNullOrEmpty(browserVersion) ? "latest"
+                browserCacheKey += isNullOrEmpty(browserVersion) ? LATEST
                         : browserVersion;
-                browserVersion = getDockerService()
-                        .getImageVersionFromDockerHub(getDriverManagerType(),
-                                browserCacheKey, browserName, browserVersion,
-                                androidEnabled);
+                browserVersion = getDockerService().getDockerImageVersion(
+                        getDriverManagerType(), browserCacheKey, browserName,
+                        browserVersion);
             } else {
                 if (!getDockerService().isBrowserVersionWildCard(browserVersion)
                         && !browserVersion.contains(".")) {
@@ -1862,12 +1838,12 @@ public abstract class WebDriverManager {
                 browserCacheKey += browserVersion;
             }
             browserImage = getDockerService().getDockerImage(browserName,
-                    browserVersion, androidEnabled);
+                    browserVersion);
         }
 
         DockerContainer browserContainer = getDockerService()
                 .startBrowserContainer(browserImage, browserCacheKey,
-                        browserVersion, androidEnabled);
+                        browserVersion);
         browserContainer.setBrowserName(browserName);
         String seleniumServerUrl = browserContainer.getContainerUrl();
 
@@ -1945,7 +1921,7 @@ public abstract class WebDriverManager {
             throws IllegalAccessException, IllegalArgumentException,
             InvocationTargetException, NoSuchMethodException,
             SecurityException {
-        if (isUsingDocker() && !androidEnabled) {
+        if (isUsingDocker()) {
             Method addArgumentsMethod = options.getClass()
                     .getMethod("addArguments", List.class);
             List<String> defaultArgs = Arrays
@@ -1998,13 +1974,8 @@ public abstract class WebDriverManager {
         String browserName = args[1];
         log.info("Using WebDriverManager to run {} in Docker", browserName);
         try {
-            WebDriverManager wdm;
-            if (browserName.equalsIgnoreCase("chrome-mobile")) {
-                wdm = WebDriverManager.chromedriver().browserInDockerAndroid();
-            } else {
-                wdm = WebDriverManager.getInstance(browserName)
-                        .browserInDocker();
-            }
+            WebDriverManager wdm = WebDriverManager.getInstance(browserName)
+                    .browserInDocker();
             if (args.length > 2) {
                 wdm.browserVersion(args[2]);
             }
@@ -2032,7 +2003,7 @@ public abstract class WebDriverManager {
 
     public static void main(String[] args) {
         String browserForResolving = "chrome|edge|firefox|opera|chromium|iexplorer";
-        String browserForNoVnc = "chrome|edge|firefox|opera|safari|chrome-mobile";
+        String browserForNoVnc = "chrome|edge|firefox|chromium";
         int port = new Config().getServerPort();
         int numArgs = args.length;
         if (numArgs <= 0) {

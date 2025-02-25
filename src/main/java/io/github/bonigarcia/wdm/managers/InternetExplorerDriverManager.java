@@ -17,6 +17,7 @@
 package io.github.bonigarcia.wdm.managers;
 
 import static io.github.bonigarcia.wdm.config.DriverManagerType.IEXPLORER;
+import static io.github.bonigarcia.wdm.versions.VersionDetector.parseVersion;
 import static java.util.Optional.empty;
 
 import java.io.IOException;
@@ -131,8 +132,7 @@ public class InternetExplorerDriverManager extends WebDriverManager {
     @Override
     protected String getCurrentVersion(URL url) {
         String currentVersion = super.getCurrentVersion(url);
-        String versionRegex = config().getBrowserVersionDetectionRegex();
-        return currentVersion.replaceAll(versionRegex, "");
+        return parseVersion(currentVersion);
     }
 
     @Override

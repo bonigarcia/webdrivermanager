@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm.config;
 
+import static io.github.bonigarcia.wdm.WebDriverManager.LATEST;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.LINUX;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.MAC;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.WIN;
@@ -189,8 +190,6 @@ public class Config {
             Integer.class);
     ConfigKey<String> resolutionCache = new ConfigKey<>("wdm.resolutionCache",
             String.class);
-    ConfigKey<String> browserVersionDetectionRegex = new ConfigKey<>(
-            "wdm.browserVersionDetectionRegex", String.class);
     ConfigKey<String> browserVersionDetectionCommand = new ConfigKey<>(
             "wdm.browserVersionDetectionCommand", String.class);
 
@@ -241,14 +240,8 @@ public class Config {
             "wdm.dockerRecordingOutput", Path.class);
     ConfigKey<String> dockerRecordingPrefix = new ConfigKey<>(
             "wdm.dockerRecordingPrefix", String.class);
-    ConfigKey<String> dockerBrowserSelenoidImageFormat = new ConfigKey<>(
-            "wdm.dockerBrowserSelenoidImageFormat", String.class);
-    ConfigKey<String> dockerBrowserTwilioImageFormat = new ConfigKey<>(
-            "wdm.dockerBrowserTwilioImageFormat", String.class);
-    ConfigKey<String> dockerBrowserAerokubeImageFormat = new ConfigKey<>(
-            "wdm.dockerBrowserAerokubeImageFormat", String.class);
-    ConfigKey<String> dockerBrowserMobileImageFormat = new ConfigKey<>(
-            "wdm.dockerBrowserMobileImageFormat", String.class);
+    ConfigKey<String> dockerBrowserImageFormat = new ConfigKey<>(
+            "wdm.dockerBrowserImageFormat", String.class);
     ConfigKey<String> dockerRecordingImage = new ConfigKey<>(
             "wdm.dockerRecordingImage", String.class);
     ConfigKey<String> dockerNoVncImage = new ConfigKey<>("wdm.dockerNoVncImage",
@@ -386,6 +379,10 @@ public class Config {
 
     public static boolean isNullOrEmpty(String string) {
         return string == null || string.isEmpty();
+    }
+
+    public static boolean isUnknown(String version) {
+        return isNullOrEmpty(version) || version.equalsIgnoreCase(LATEST);
     }
 
     public boolean isExecutable(File file) {
@@ -710,15 +707,6 @@ public class Config {
 
     public Config setResolutionCache(String value) {
         this.resolutionCache.setValue(value);
-        return this;
-    }
-
-    public String getBrowserVersionDetectionRegex() {
-        return resolve(browserVersionDetectionRegex);
-    }
-
-    public Config setBrowserVersionDetectionRegex(String value) {
-        this.browserVersionDetectionRegex.setValue(value);
         return this;
     }
 
@@ -1268,39 +1256,12 @@ public class Config {
         return this;
     }
 
-    public String getDockerBrowserSelenoidImageFormat() {
-        return resolve(dockerBrowserSelenoidImageFormat);
+    public String getDockerBrowserImageFormat() {
+        return resolve(dockerBrowserImageFormat);
     }
 
-    public Config setDockerBrowserSelenoidImageFormat(String value) {
-        this.dockerBrowserSelenoidImageFormat.setValue(value);
-        return this;
-    }
-
-    public String getDockerBrowserTwilioImageFormat() {
-        return resolve(dockerBrowserTwilioImageFormat);
-    }
-
-    public Config setDockerBrowserTwilioImageFormat(String value) {
-        this.dockerBrowserTwilioImageFormat.setValue(value);
-        return this;
-    }
-
-    public String getDockerBrowserAerokubeImageFormat() {
-        return resolve(dockerBrowserAerokubeImageFormat);
-    }
-
-    public Config setDockerBrowserAerokubeImageFormat(String value) {
-        this.dockerBrowserAerokubeImageFormat.setValue(value);
-        return this;
-    }
-
-    public String getDockerBrowserMobileImageFormat() {
-        return resolve(dockerBrowserMobileImageFormat);
-    }
-
-    public Config setDockerBrowserMobileImageFormat(String value) {
-        this.dockerBrowserMobileImageFormat.setValue(value);
+    public Config setDockerBrowserImageFormat(String value) {
+        this.dockerBrowserImageFormat.setValue(value);
         return this;
     }
 

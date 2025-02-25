@@ -29,7 +29,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 class DockerChromeVersionsTest {
 
     @ParameterizedTest
-    @ValueSource(strings = { "", "91", "91.0", "latest", "latest-1",
+    @ValueSource(strings = { "", "133", "133.0", "latest", "latest-1",
             "latest-2" })
     void test(String browserVersion) {
         WebDriverManager wdm = WebDriverManager.chromedriver()

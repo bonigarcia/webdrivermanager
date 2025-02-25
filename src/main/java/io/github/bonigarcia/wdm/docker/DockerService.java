@@ -16,16 +16,18 @@
  */
 package io.github.bonigarcia.wdm.docker;
 
+import static io.github.bonigarcia.wdm.WebDriverManager.LATEST;
 import static io.github.bonigarcia.wdm.WebDriverManager.isDockerAvailable;
 import static io.github.bonigarcia.wdm.config.Config.isNullOrEmpty;
 import static io.github.bonigarcia.wdm.docker.DockerHost.defaultAddress;
 import static io.github.bonigarcia.wdm.versions.Shell.runAndWait;
+import static io.github.bonigarcia.wdm.versions.VersionDetector.getMajorVersion;
+import static io.github.bonigarcia.wdm.versions.VersionDetector.parseVersion;
 import static java.lang.String.format;
 import static java.lang.System.currentTimeMillis;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Locale.ROOT;
-import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.SystemUtils.IS_OS_LINUX;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -40,14 +42,22 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.async.ResultCallback.Adapter;
+import com.github.dockerjava.api.command.AsyncDockerCmd;
 import com.github.dockerjava.api.command.CreateContainerCmd;
+import com.github.dockerjava.api.command.CreateContainerResponse;
+import com.github.dockerjava.api.command.CreateNetworkResponse;
+import com.github.dockerjava.api.command.ExecStartCmd;
+import com.github.dockerjava.api.command.InspectContainerResponse;
+import com.github.dockerjava.api.command.LogContainerCmd;
 import com.github.dockerjava.api.exception.DockerException;
 import com.github.dockerjava.api.model.Bind;
 import com.github.dockerjava.api.model.Capability;
@@ -55,6 +65,7 @@ import com.github.dockerjava.api.model.ExposedPort;
 import com.github.dockerjava.api.model.Frame;
 import com.github.dockerjava.api.model.HostConfig;
 import com.github.dockerjava.api.model.Mount;
+import com.github.dockerjava.api.model.Network;
 import com.github.dockerjava.api.model.PortBinding;
 import com.github.dockerjava.api.model.Ports;
 import com.github.dockerjava.api.model.Ports.Binding;
@@ -71,8 +82,6 @@ import io.github.bonigarcia.wdm.config.Config;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
 import io.github.bonigarcia.wdm.config.WebDriverManagerException;
 import io.github.bonigarcia.wdm.docker.DockerContainer.DockerBuilder;
-import io.github.bonigarcia.wdm.docker.DockerHubTags.DockerHubTag;
-import io.github.bonigarcia.wdm.online.HttpClient;
 import io.github.bonigarcia.wdm.versions.VersionComparator;
 
 /**
@@ -86,25 +95,25 @@ public class DockerService {
     final Logger log = getLogger(lookup().lookupClass());
 
     public static final String NETWORK_HOST = "host";
+    public static final String NETWORK_DRIVER = "bridge";
+    public static final String CACHE_KEY_LABEL = "-container-";
+    public static final String CACHE_KEY_CUSTOM = "custom";
     private static final String DEFAULT_GATEWAY = "172.17.0.1";
     private static final String BETA = "beta";
     private static final String DEV = "dev";
-    private static final String LATEST_MINUS = "latest-";
+    private static final String LATEST_MINUS = LATEST + "-";
     private static final String RECORDING_EXT = ".mp4";
     private static final String SEPARATOR = "_";
     private static final String DATE_FORMAT = "yyyy.MM.dd_HH.mm.ss.SSS";
     private static final int POLL_TIME_MSEC = 500;
 
     private Config config;
-    private HttpClient httpClient;
     private DockerClient dockerClient;
     private ResolutionCache resolutionCache;
     private URI dockerHostUri;
 
-    public DockerService(Config config, HttpClient httpClient,
-            ResolutionCache resolutionCache) {
+    public DockerService(Config config, ResolutionCache resolutionCache) {
         this.config = config;
-        this.httpClient = httpClient;
         this.resolutionCache = resolutionCache;
 
         if (config.isDockerLocalFallback() && !isRunningInsideDocker()
@@ -157,9 +166,10 @@ public class DockerService {
         return !isNullOrEmpty(commandOutput);
     }
 
-    public boolean isRunningInsideDocker(){
-        return isCommandResultPresent("cat /proc/self/cgroup | grep docker") ||
-                isCommandResultPresent("cat /proc/self/mountinfo | grep docker/containers");
+    public boolean isRunningInsideDocker() {
+        return isCommandResultPresent("cat /proc/self/cgroup | grep docker")
+                || isCommandResultPresent(
+                        "cat /proc/self/mountinfo | grep docker/containers");
     }
 
     public String getDefaultHost() {
@@ -190,6 +200,11 @@ public class DockerService {
 
         try (CreateContainerCmd containerConfigBuilder = dockerClient
                 .createContainerCmd(imageId)) {
+            Optional<String> containerName = dockerContainer.getContainerName();
+            if (containerName.isPresent()) {
+                log.trace("Using container name: {}", containerName.get());
+                containerConfigBuilder.withName(containerName.get());
+            }
 
             boolean privileged = dockerContainer.isPrivileged();
             if (privileged) {
@@ -209,8 +224,10 @@ public class DockerService {
 
             Optional<String> network = dockerContainer.getNetwork();
             if (network.isPresent()) {
-                log.trace("Using network: {}", network.get());
-                hostConfigBuilder.withNetworkMode(network.get());
+                String dockerNetwork = network.get();
+                createDockerNetworkIfNotExists(dockerNetwork);
+                log.trace("Using network: {}", dockerNetwork);
+                hostConfigBuilder.withNetworkMode(dockerNetwork);
             }
             List<String> exposedPorts = dockerContainer.getExposedPorts();
             if (!exposedPorts.isEmpty()) {
@@ -263,6 +280,27 @@ public class DockerService {
         return containerId;
     }
 
+    public String getContainerName(String containerId) {
+        InspectContainerResponse containerInfo = dockerClient
+                .inspectContainerCmd(containerId).exec();
+        return containerInfo.getName().replaceAll("/", "");
+    }
+
+    public void createDockerNetworkIfNotExists(String networkName) {
+        List<Network> networks = dockerClient.listNetworksCmd().exec();
+        boolean networkExists = networks.stream()
+                .anyMatch(network -> network.getName().equals(networkName));
+        if (networkExists) {
+            log.trace("Docker network {} already exits", networkName);
+        } else {
+            CreateNetworkResponse networkResponse = dockerClient
+                    .createNetworkCmd().withName(networkName)
+                    .withDriver(NETWORK_DRIVER).exec();
+            log.trace("Docker network {} created with id {}", networkName,
+                    networkResponse.getId());
+        }
+    }
+
     public String execCommandInContainer(String containerId,
             String... command) {
         String commandStr = Arrays.toString(command);
@@ -270,9 +308,14 @@ public class DockerService {
                 containerId);
         String execId = dockerClient.execCreateCmd(containerId).withCmd(command)
                 .withAttachStdout(true).withAttachStderr(true).exec().getId();
+        ExecStartCmd execStartCmd = dockerClient.execStartCmd(execId);
+        return getOutputFromCmd(execStartCmd);
+    }
+
+    public String getOutputFromCmd(AsyncDockerCmd<?, Frame> execStartCmd) {
         final StringBuilder output = new StringBuilder();
         try {
-            dockerClient.execStartCmd(execId).exec(new Adapter<Frame>() {
+            execStartCmd.exec(new Adapter<Frame>() {
                 @Override
                 public void onNext(Frame object) {
                     output.append(new String(object.getPayload(), UTF_8));
@@ -280,13 +323,11 @@ public class DockerService {
                 }
             }).awaitCompletion();
         } catch (InterruptedException e) {
-            log.error("Exception execution command {} on container {}",
-                    commandStr, containerId, e);
+            log.error("Exception executing command on container {}",
+                    e.getMessage());
             Thread.currentThread().interrupt();
         }
-        log.trace("Result of command {} in container {}: {}", commandStr,
-                containerId, output);
-        return output.toString();
+        return output.toString().trim();
     }
 
     public String getBindPort(String containerId, String exposed)
@@ -404,94 +445,82 @@ public class DockerService {
         dockerClient = getDockerClient(dockerHost);
     }
 
-    public String getImageVersionFromDockerHub(
+    public String getDockerImageVersion(DriverManagerType driverManagerType,
+            String cacheKey, String browserName, String browserVersion) {
+        String latestVersion = LATEST;
+
+        int minusIndex = getMinusIndex(browserVersion);
+        if (minusIndex != 0) {
+            if (!resolutionCache.checkKeyInResolutionCache(cacheKey, false)) {
+                String dockerImage = getDockerImage(browserName, latestVersion);
+                String cacheKeyLatest = getCacheKey(browserName, latestVersion);
+                String browserVersionFromContainer = getBrowserVersionFromContainer(
+                        driverManagerType, cacheKeyLatest, latestVersion,
+                        dockerImage);
+                int majorBrowserVersion = Integer
+                        .parseInt(getMajorVersion(browserVersionFromContainer));
+                latestVersion = String.valueOf(majorBrowserVersion - minusIndex)
+                        + ".0";
+                if (!resolutionCache.checkKeyInResolutionCache(cacheKey,
+                        false)) {
+                    dockerImage = getDockerImage(browserName, latestVersion);
+                    pullImageIfNecessary(cacheKey, dockerImage, latestVersion);
+                }
+            } else {
+                latestVersion = resolutionCache
+                        .getValueFromResolutionCache(cacheKey);
+            }
+        }
+
+        return latestVersion;
+    }
+
+    public static String getCacheKey(String browserName,
+            String browserVersion) {
+        return browserName + CACHE_KEY_LABEL + browserVersion;
+    }
+
+    public String getBrowserVersionFromContainer(
             DriverManagerType driverManagerType, String cacheKey,
-            String browserName, String browserVersion, boolean androidEnabled) {
-        String latestVersion = null;
+            String browserVersion, String dockerImage) {
+        String browserVersionFromContainer = LATEST;
+        try {
+            pullImageIfNecessary(cacheKey, dockerImage, browserVersion);
 
-        if (!resolutionCache.checkKeyInResolutionCache(cacheKey, false)) {
-            VersionComparator versionComparator = new VersionComparator();
-            List<String> browserList = null;
-            DockerHubService dockerHubService = new DockerHubService(config,
-                    httpClient);
-            List<DockerHubTag> dockerHubTags;
-            String tagPreffix = browserName + SEPARATOR;
-            int minusIndex = getMinusIndex(browserVersion);
-
-            String dockerBrowserImageFormat = config
-                    .getDockerBrowserSelenoidImageFormat();
+            List<String> cmd = new ArrayList<>();
             switch (driverManagerType) {
             case CHROME:
+                cmd.add("google-chrome");
+                break;
             case FIREFOX:
-                if (androidEnabled) {
-                    dockerBrowserImageFormat = String.format(
-                            config.getDockerBrowserMobileImageFormat(),
-                            browserName, "");
-                }
-                dockerHubTags = dockerHubService
-                        .listTags(dockerBrowserImageFormat);
-
-                if (androidEnabled) {
-                    browserList = dockerHubTags.stream()
-                            .map(DockerHubTag::getName)
-                            .sorted(versionComparator::compare)
-                            .collect(toList());
-                } else {
-                    browserList = dockerHubTags.stream()
-                            .filter(p -> p.getName().startsWith(tagPreffix))
-                            .map(p -> p.getName().replace(tagPreffix, ""))
-                            .sorted(versionComparator::compare)
-                            .collect(toList());
-                }
-                latestVersion = browserList
-                        .get(browserList.size() - 1 - minusIndex);
+                cmd.add("firefox");
                 break;
-
-            case OPERA:
-                dockerHubTags = dockerHubService
-                        .listTags(dockerBrowserImageFormat);
-                browserList = dockerHubTags.stream()
-                        .filter(p -> p.getName().startsWith(tagPreffix))
-                        .map(p -> p.getName().replace(tagPreffix, ""))
-                        .sorted(versionComparator::compare).skip(1)
-                        .collect(toList());
-                latestVersion = browserList
-                        .get(browserList.size() - 1 - minusIndex);
-                break;
-
             case EDGE:
-            case SAFARI:
-                String dockerBrowserAerokubeImageFormat = String.format(
-                        config.getDockerBrowserAerokubeImageFormat(),
-                        browserName, "");
-                dockerHubTags = dockerHubService
-                        .listTags(dockerBrowserAerokubeImageFormat);
-                browserList = dockerHubTags.stream().map(DockerHubTag::getName)
-                        .sorted(versionComparator::compare).collect(toList());
-                latestVersion = browserList
-                        .get(browserList.size() - 1 - minusIndex);
+                cmd.add("microsoft-edge");
                 break;
-
             default:
                 throw new WebDriverManagerException(
                         driverManagerType.getBrowserName()
                                 + " is not available as Docker container");
             }
-            if (minusIndex == 0) {
-                log.debug("The latest version of {} in Docker Hub is {}",
-                        driverManagerType.getBrowserName(), latestVersion);
-            } else {
-                log.debug("The version-{} of {} in Docker Hub is {}",
-                        minusIndex, driverManagerType.getBrowserName(),
-                        latestVersion);
-            }
+            cmd.add("--version");
+            CreateContainerResponse container = dockerClient
+                    .createContainerCmd(dockerImage).withCmd(cmd)
+                    .withHostConfig(
+                            HostConfig.newHostConfig().withAutoRemove(true))
+                    .exec();
+            dockerClient.startContainerCmd(container.getId()).exec();
+            LogContainerCmd logContainerCmd = dockerClient
+                    .logContainerCmd(container.getId()).withStdOut(true)
+                    .withFollowStream(true);
+            browserVersionFromContainer = parseVersion(
+                    getOutputFromCmd(logContainerCmd));
 
-        } else {
-            latestVersion = resolutionCache
-                    .getValueFromResolutionCache(cacheKey);
+        } catch (Exception e) {
+            log.warn("Exception discovering browser version from container: {}",
+                    e.getMessage());
         }
-
-        return latestVersion;
+        return browserVersionFromContainer;
     }
 
     public int getMinusIndex(String browserVersion) {
@@ -504,41 +533,16 @@ public class DockerService {
         return minusIndex;
     }
 
-    public String getDockerImage(String browserName, String browserVersion,
-            boolean androidEnabled) {
-        String dockerImageFormat;
-        String dockerImage;
-        switch (browserName) {
-        case "edge":
-        case "safari":
-            dockerImageFormat = config.getDockerBrowserAerokubeImageFormat();
-            dockerImage = String.format(dockerImageFormat, browserName,
-                    browserVersion);
-            break;
-
-        default:
-            dockerImageFormat = getDockerImageFormat(browserVersion,
-                    androidEnabled);
-            dockerImage = String.format(dockerImageFormat, browserName,
-                    browserVersion);
-            break;
-        }
-
+    public String getDockerImage(String browserName, String browserVersion) {
+        String dockerImageFormat = getDockerImageFormat();
+        String dockerImage = String.format(dockerImageFormat, browserName,
+                browserVersion);
         log.trace("Docker image: {}", dockerImage);
         return dockerImage;
     }
 
-    public String getDockerImageFormat(String browserVersion,
-            boolean androidEnabled) {
-        String dockerImageFormat;
-        if (isBrowserVersionBetaOrDev(browserVersion)) {
-            dockerImageFormat = config.getDockerBrowserTwilioImageFormat();
-        } else if (androidEnabled) {
-            dockerImageFormat = config.getDockerBrowserMobileImageFormat();
-        } else {
-            dockerImageFormat = config.getDockerBrowserSelenoidImageFormat();
-        }
-        return dockerImageFormat;
+    public String getDockerImageFormat() {
+        return config.getDockerBrowserImageFormat();
     }
 
     public boolean isBrowserVersionWildCard(String browserVersion) {
@@ -611,7 +615,7 @@ public class DockerService {
     }
 
     public DockerContainer startBrowserContainer(String dockerImage,
-            String cacheKey, String browserVersion, boolean androidEnabled) {
+            String cacheKey, String browserVersion) {
         dockerImage = getPrefixedDockerImage(dockerImage);
         // pull image
         pullImageIfNecessary(cacheKey, dockerImage, browserVersion);
@@ -654,9 +658,6 @@ public class DockerService {
             envs.add("ENABLE_VNC=true");
             exposedPorts.add(dockerVncPort);
         }
-        if (androidEnabled) {
-            envs.add("QTWEBENGINE_DISABLE_SANDBOX=1");
-        }
         if (isChromeAllowedOrigins(dockerImage, browserVersion)) {
             envs.add("DRIVER_ARGS=--whitelisted-ips= --allowed-origins=*");
         }
@@ -668,24 +669,25 @@ public class DockerService {
         List<String> extraHosts = config.getDockerExtraHosts();
 
         // builder
+        String containerName = "selenium_"
+                + RandomStringUtils.secure().nextAlphabetic(8);
         DockerBuilder dockerBuilder = DockerContainer.dockerBuilder(dockerImage)
                 .exposedPorts(exposedPorts).network(network).mounts(mounts)
                 .binds(binds).shmSize(shmSize).envs(envs).extraHosts(extraHosts)
-                .sysadmin();
-        if (androidEnabled) {
-            dockerBuilder = dockerBuilder.privileged();
-        }
+                .sysadmin().containerName(containerName);
         DockerContainer browserContainer = dockerBuilder.build();
 
         String containerId = startContainer(browserContainer);
         browserContainer.setContainerId(containerId);
+        browserContainer.setContainerName(Optional.of(containerName));
+
         String gateway = getGateway(containerId, network);
         browserContainer.setGateway(gateway);
         String browserHost = getHost(containerId, network);
         String browserPort = isHost(network) ? dockerBrowserPort
                 : getBindPort(containerId, dockerBrowserPort + "/tcp");
         String browserUrlFormat = "http://%s:%s/";
-        if (dockerImage.contains("firefox") || androidEnabled) {
+        if (dockerImage.contains("firefox")) {
             browserUrlFormat += "wd/hub";
         }
 
@@ -715,9 +717,8 @@ public class DockerService {
     private boolean isChromeAllowedOrigins(String dockerImage,
             String browserVersion) {
         if (dockerImage.contains("chrome")) {
-            browserVersion = browserVersion
-                    .replaceAll(config.getBrowserVersionDetectionRegex(), "");
-            return new VersionComparator().compare(browserVersion, "95") >= 0;
+            String parsedVersion = parseVersion(browserVersion);
+            return new VersionComparator().compare(parsedVersion, "95") >= 0;
         }
         return false;
     }
@@ -726,6 +727,7 @@ public class DockerService {
             String cacheKey, String recorderVersion,
             DockerContainer browserContainer) {
         dockerImage = getPrefixedDockerImage(dockerImage);
+
         // pull image
         pullImageIfNecessary(cacheKey, dockerImage, recorderVersion);
 
@@ -734,21 +736,32 @@ public class DockerService {
 
         // envs
         List<String> envs = new ArrayList<>();
-        String browserAddress = isHost(network) ? browserContainer.getGateway()
-                : browserContainer.getAddress();
-        envs.add("BROWSER_CONTAINER_NAME=" + browserAddress);
+        Optional<String> containerName = browserContainer.getContainerName();
+        if (containerName.isPresent()) {
+            envs.add("DISPLAY_CONTAINER_NAME=" + containerName.get());
+        }
         Path recordingPath = getRecordingPath(browserContainer);
         envs.add("FILE_NAME=" + recordingPath.getFileName().toString());
-        envs.add("VIDEO_SIZE=" + config.getDockerVideoSize());
-        envs.add("FRAME_RATE=" + config.getDockerRecordingFrameRate());
+
+        String dockerVideoSize = config.getDockerScreenResolution();
+        // Check if docker video size match the pattern 1280x1080x24
+        if (Pattern.compile("\\d+x\\d+x\\d+").matcher(dockerVideoSize)
+                .matches()) {
+            String[] dockerVideoSizeSplit = dockerVideoSize.split("x");
+            envs.add("SE_SCREEN_WIDTH=" + dockerVideoSizeSplit[0]);
+            envs.add("SE_SCREEN_HEIGHT=" + dockerVideoSizeSplit[1]);
+            envs.add("SE_SCREEN_DEPTH=" + dockerVideoSizeSplit[2]);
+        }
+        envs.add("SE_FRAME_RATE=" + config.getDockerRecordingFrameRate());
 
         // extra hosts
         List<String> extraHosts = config.getDockerExtraHosts();
 
         // binds
         List<String> binds = new ArrayList<>();
+        // binds.add("C:/Users/boni/Downloads/video:/videos");
         binds.add(recordingPath.toAbsolutePath().getParent().toString()
-                + ":/data");
+                + ":/videos");
         String dockerVolumes = config.getDockerVolumes();
         if (!isNullOrEmpty(dockerVolumes)) {
             List<String> volumeList = Arrays.asList(dockerVolumes.split(","));

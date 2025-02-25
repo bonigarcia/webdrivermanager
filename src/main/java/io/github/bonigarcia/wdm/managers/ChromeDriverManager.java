@@ -206,13 +206,6 @@ public class ChromeDriverManager extends WebDriverManager {
     }
 
     @Override
-    public WebDriverManager browserInDockerAndroid() {
-        this.dockerEnabled = true;
-        this.androidEnabled = true;
-        return this;
-    }
-
-    @Override
     public WebDriverManager exportParameter(String exportParameter) {
         config().setChromeDriverExport(exportParameter);
         return this;
