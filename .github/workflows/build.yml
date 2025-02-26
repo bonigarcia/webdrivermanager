@@ -39,7 +39,10 @@ jobs:
       with:
         timeout_minutes: 30
         max_attempts: 2
-        command: sudo chown 1200:1201 $WDM_DOCKERRECORDINGOUTPUT && mvn -B test -Dtest=!Record*
+        command: |
+          mkdir $WDM_DOCKERRECORDINGOUTPUT
+          sudo chown 1200:1201 $WDM_DOCKERRECORDINGOUTPUT
+          mvn -B test -Dtest=!Record*
     - name: Install browsers in Mac
       if: matrix.os == 'macos-latest'
       run: |
