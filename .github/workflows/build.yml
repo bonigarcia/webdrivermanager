@@ -33,7 +33,8 @@ jobs:
         Xvfb $DISPLAY &
     - name: Run tests on Linux
       if: matrix.os == 'ubuntu-latest'
-      env: WDM_DOCKERRECORDINGOUTPUT=/tmp/video
+      env:
+        WDM_DOCKERRECORDINGOUTPUT: /tmp/video
       uses: nick-fields/retry@v3.0.2
       with:
         timeout_minutes: 30
