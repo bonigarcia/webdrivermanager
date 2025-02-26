@@ -39,13 +39,9 @@ jobs:
         command: mvn -B test -Dtest=!Record*
     - name: Install Firefox in macOS
       if: matrix.os == 'macos-latest'
-      run: brew install --cask firefox
-    - name: Check Firefox version in macOS 1
-      if: matrix.os == 'macos-latest'
-      run: /Applications/Firefox.app/Contents/MacOS/firefox --version
-    - name: Check Firefox version in macOS 2
-      if: matrix.os == 'macos-latest'
-      run: find /Applications -name "firefox"
+      run: |
+        brew install --cask firefox
+        /Applications/Firefox.app/Contents/MacOS/firefox --version
     - name: Run tests on Mac
       if: matrix.os == 'macos-latest'
       uses: nick-fields/retry@v3.0.2
