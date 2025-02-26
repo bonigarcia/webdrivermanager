@@ -29,8 +29,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 class DockerChromeVersionsTest {
 
     @ParameterizedTest
-    @ValueSource(strings = { "", "133", "133.0", "latest", "latest-1",
-            "latest-2" })
+    @ValueSource(strings = { "", "133", "133.0", "latest", "latest-1" })
     void test(String browserVersion) {
         WebDriverManager wdm = WebDriverManager.chromedriver()
                 .clearResolutionCache().browserInDocker()

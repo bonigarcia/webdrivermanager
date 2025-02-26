@@ -87,9 +87,6 @@ class ServerSeleniumTest {
 
     static Stream<Arguments> data() {
         ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.addArguments("--no-sandbox");
-        chromeOptions.addArguments("--disable-gpu");
-        chromeOptions.addArguments("--disable-dev-shm-usage");
 
         FirefoxOptions firefoxOptions = new FirefoxOptions();
 
