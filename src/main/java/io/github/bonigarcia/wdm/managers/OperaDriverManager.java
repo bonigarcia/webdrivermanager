@@ -198,18 +198,22 @@ public class OperaDriverManager extends WebDriverManager {
             GitHubApi[] versions = Parser.parseJson(httpClient,
                     operaDriverUrl.toString(), GitHubApi[].class);
 
-            int majorBrowserVersion = Integer.parseInt(resolvedBrowserVersion);
-            int majorDriverVersion = majorBrowserVersion
-                    + RELATION_OPERA_OPERADRIVER;
-            List<GitHubApi> fileteredList = Arrays.stream(versions)
-                    .filter(r -> r.getTagName()
-                            .startsWith(TAG_NAME_PREFIX + majorDriverVersion))
-                    .collect(toList());
+            if (resolvedBrowserVersion != null) {
+                int majorBrowserVersion = Integer
+                        .parseInt(resolvedBrowserVersion);
+                int majorDriverVersion = majorBrowserVersion
+                        + RELATION_OPERA_OPERADRIVER;
+                List<GitHubApi> fileteredList = Arrays.stream(versions)
+                        .filter(r -> r.getTagName().startsWith(
+                                TAG_NAME_PREFIX + majorDriverVersion))
+                        .collect(toList());
 
-            if (!fileteredList.isEmpty()) {
-                return Optional.of(fileteredList.get(0).getTagName()
-                        .replace(TAG_NAME_PREFIX, ""));
+                if (!fileteredList.isEmpty()) {
+                    return Optional.of(fileteredList.get(0).getTagName()
+                            .replace(TAG_NAME_PREFIX, ""));
+                }
             }
+
         } catch (Exception e) {
             log.warn("Exception getting operadriver version from {}",
                     operaDriverUrl, e);
