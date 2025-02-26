@@ -37,10 +37,7 @@ jobs:
         timeout_minutes: 30
         max_attempts: 2
         command: mvn -B test -Dtest=!Record*
-    - name: Check Firefox version in macOS (1)
-      if: matrix.os == 'macos-latest'
-      run: /Applications/Firefox.app/Contents/MacOS/firefox --version
-    - name: Check Firefox version in macOS (2)
+    - name: Check Firefox version in macOS
       if: matrix.os == 'macos-latest'
       run: find /Applications -name "firefox"
     - name: Run tests on Mac
