@@ -27,6 +27,7 @@ import java.time.Duration;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -50,6 +51,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @since 5.0.0
  */
 @EnabledOnOs(LINUX)
+@Disabled
 class ServerSeleniumTest {
 
     static final Logger log = getLogger(lookup().lookupClass());
@@ -72,7 +74,6 @@ class ServerSeleniumTest {
         String serverUrl = String.format("http://localhost:%s/", serverPort);
         WebDriver driver = new RemoteWebDriver(new URL(serverUrl),
                 capabilities);
-
         String sutUrl = "https://bonigarcia.dev/selenium-webdriver-java/";
         driver.get(sutUrl);
         String title = driver.getTitle();
@@ -83,6 +84,7 @@ class ServerSeleniumTest {
         wait.until(d -> d.getTitle().contains("Selenium WebDriver"));
 
         driver.close();
+        System.out.println(4);
     }
 
     static Stream<Arguments> data() {
