@@ -37,11 +37,13 @@ jobs:
         timeout_minutes: 30
         max_attempts: 2
         command: mvn -B test -Dtest=!Record*
-    - name: Install Firefox in macOS
+    - name: Install browsers in macOS
       if: matrix.os == 'macos-latest'
       run: |
         brew install --cask firefox
         /Applications/Firefox.app/Contents/MacOS/firefox --version
+        brew install --cask microsoft-edge
+        /Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge -version
     - name: Run tests on Mac
       if: matrix.os == 'macos-latest'
       uses: nick-fields/retry@v3.0.2
