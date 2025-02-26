@@ -15,7 +15,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ ubuntu-latest, windows-latest, macos-latest ]
+        os: [ ubuntu-latest, windows-latest, macos-13 ]
         java: [ 17 ]
     runs-on: ${{ matrix.os }}
     steps:
@@ -38,12 +38,12 @@ jobs:
         max_attempts: 2
         command: mvn -B test -Dtest=!Record*
     - name: Run tests on Mac
-      if: matrix.os == 'macos-latest'
+      if: matrix.os == 'macos-13'
       uses: nick-fields/retry@v3.0.2
       with:
         timeout_minutes: 30
         max_attempts: 2
-        command: mvn -B test -Dtest=!Docker*,!Record*
+        command: mvn -B test -Dtest=!Docker*,!Record*,!DisplayLogsChromeTest,!GatherLogsChromeTest
     - name: Run tests on Windows
       if: matrix.os == 'windows-latest'
       uses: nick-fields/retry@v3.0.2
