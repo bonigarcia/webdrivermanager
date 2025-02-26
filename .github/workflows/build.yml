@@ -37,7 +37,7 @@ jobs:
         timeout_minutes: 30
         max_attempts: 2
         command: mvn -B test -Dtest=!Record*
-    - name: Install browsers in macOS
+    - name: Install browsers in Mac
       if: matrix.os == 'macos-latest'
       run: |
         brew install --cask firefox

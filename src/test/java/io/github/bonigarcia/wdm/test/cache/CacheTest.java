@@ -16,7 +16,7 @@
  */
 package io.github.bonigarcia.wdm.test.cache;
 
-import static io.github.bonigarcia.wdm.config.Architecture.DEFAULT;
+import static io.github.bonigarcia.wdm.config.Architecture.X64;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROME;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.FIREFOX;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.LINUX;
@@ -57,7 +57,7 @@ class CacheTest {
 
         WebDriverManager wdm = WebDriverManager.getInstance(driverManagerType)
                 .avoidResolutionCache().forceDownload().operatingSystem(os)
-                .driverVersion(driverVersion);
+                .driverVersion(driverVersion).architecture(arch);
         wdm.setup();
 
         CacheHandler cacheHandler = new CacheHandler(new Config());
@@ -70,9 +70,9 @@ class CacheTest {
 
     static Stream<Arguments> cacheProvider() {
         return Stream.of(
-                Arguments.of(CHROME, "chromedriver", "91.0.4472.101", DEFAULT,
+                Arguments.of(CHROME, "chromedriver", "133.0.6943.98", X64,
                         LINUX),
-                Arguments.of(FIREFOX, "geckodriver", "0.29.0", DEFAULT, LINUX));
+                Arguments.of(FIREFOX, "geckodriver", "0.36.0", X64, LINUX));
     }
 
 }
