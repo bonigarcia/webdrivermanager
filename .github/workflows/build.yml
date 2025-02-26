@@ -29,14 +29,16 @@ jobs:
         cache: 'maven'
     - name: Start Xvfb
       if: matrix.os == 'ubuntu-latest'
-      run: Xvfb $DISPLAY &
+      run: |
+        Xvfb $DISPLAY &
     - name: Run tests on Linux
       if: matrix.os == 'ubuntu-latest'
+      env: WDM_DOCKERRECORDINGOUTPUT=/tmp/video
       uses: nick-fields/retry@v3.0.2
       with:
         timeout_minutes: 30
         max_attempts: 2
-        command: mvn -B test -Dtest=!Record*
+        command: sudo chown 1200:1201 $WDM_DOCKERRECORDINGOUTPUT && mvn -B test -Dtest=!Record*
     - name: Install browsers in Mac
       if: matrix.os == 'macos-latest'
       run: |
