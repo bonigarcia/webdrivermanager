@@ -42,7 +42,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.RandomStringUtils;
@@ -737,21 +736,12 @@ public class DockerService {
         List<String> envs = new ArrayList<>();
         Optional<String> containerName = browserContainer.getContainerName();
         if (containerName.isPresent()) {
-            envs.add("DISPLAY_CONTAINER_NAME=" + containerName.get());
+            envs.add("BROWSER_CONTAINER_NAME=" + containerName.get());
         }
         Path recordingPath = getRecordingPath(browserContainer);
         envs.add("FILE_NAME=" + recordingPath.getFileName().toString());
-
-        String dockerVideoSize = config.getDockerScreenResolution();
-        // Check if docker video size match the pattern 1280x1080x24
-        if (Pattern.compile("\\d+x\\d+x\\d+").matcher(dockerVideoSize)
-                .matches()) {
-            String[] dockerVideoSizeSplit = dockerVideoSize.split("x");
-            envs.add("SE_SCREEN_WIDTH=" + dockerVideoSizeSplit[0]);
-            envs.add("SE_SCREEN_HEIGHT=" + dockerVideoSizeSplit[1]);
-            envs.add("SE_SCREEN_DEPTH=" + dockerVideoSizeSplit[2]);
-        }
-        envs.add("SE_FRAME_RATE=" + config.getDockerRecordingFrameRate());
+        envs.add("VIDEO_SIZE=" + config.getDockerVideoSize());
+        envs.add("FRAME_RATE=" + config.getDockerRecordingFrameRate());
 
         // extra hosts
         List<String> extraHosts = config.getDockerExtraHosts();
@@ -759,7 +749,7 @@ public class DockerService {
         // binds
         List<String> binds = new ArrayList<>();
         binds.add(recordingPath.toAbsolutePath().getParent().toString()
-                + ":/videos");
+                + ":/data");
         String dockerVolumes = config.getDockerVolumes();
         if (!isNullOrEmpty(dockerVolumes)) {
             List<String> volumeList = Arrays.asList(dockerVolumes.split(","));
