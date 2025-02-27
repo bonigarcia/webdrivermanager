@@ -158,11 +158,6 @@ public class ChromeDriverManager extends WebDriverManager {
             String downloadUrlPattern = config.getChromeDownloadUrlPattern();
             OperatingSystem os = config.getOperatingSystem();
             Architecture arch = config.getArchitecture();
-            if (ARM64.equals(arch) && !os.isMac()) {
-                config().setAvoidFallback(true);
-                throw new WebDriverException(getDriverName()
-                        + " is not available for ARM64 in " + os);
-            }
             String archLabel = os.isLinux() ? "64"
                     : arch.toString().toLowerCase(ROOT);
             if (os.isWin() && !X32.equals(arch)) {

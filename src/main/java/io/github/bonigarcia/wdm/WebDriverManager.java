@@ -1381,8 +1381,9 @@ public abstract class WebDriverManager {
 
     protected void handleException(Exception e, String driverVersion) {
         String driverVersionStr = getDriverVersionLabel(driverVersion);
-        String errorMessage = String.format("There was an error managing %s %s",
-                getDriverName(), driverVersionStr);
+        String errorMessage = String.format(
+                "There was an error managing %s %s (%s)", getDriverName(),
+                driverVersionStr, e.getMessage());
         if (retryCount == 0 && !config().isAvoidFallback()) {
             retryCount++;
             fallback(e, errorMessage);
