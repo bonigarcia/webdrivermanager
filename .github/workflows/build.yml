@@ -35,14 +35,10 @@ jobs:
       if: matrix.os == 'ubuntu-latest'
       env:
         WDM_DOCKERRECORDINGOUTPUT: /tmp/video
-      uses: nick-fields/retry@v3.0.2
-      with:
-        timeout_minutes: 30
-        max_attempts: 2
-        command: |
-          mkdir $WDM_DOCKERRECORDINGOUTPUT
-          sudo chown 1200:1201 $WDM_DOCKERRECORDINGOUTPUT
-          mvn -B test -Dtest=!Record*
+      run: |
+        mkdir $WDM_DOCKERRECORDINGOUTPUT
+        sudo chown 1200:1201 $WDM_DOCKERRECORDINGOUTPUT
+        mvn -B test -Dtest=!Record*
     - name: Install browsers in Mac
       if: matrix.os == 'macos-latest'
       run: |
@@ -52,18 +48,12 @@ jobs:
         "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge" -version
     - name: Run tests on Mac
       if: matrix.os == 'macos-latest'
-      uses: nick-fields/retry@v3.0.2
-      with:
-        timeout_minutes: 30
-        max_attempts: 2
-        command: mvn -B test -Dtest=!Docker*,!Record*,!DisplayLogsChromeTest,!GatherLogsChromeTest
+      run: |
+        mvn -B test -Dtest=!Docker*,!Record*,!DisplayLogsChromeTest,!GatherLogsChromeTest
     - name: Run tests on Windows
       if: matrix.os == 'windows-latest'
-      uses: nick-fields/retry@v3.0.2
-      with:
-        timeout_minutes: 30
-        max_attempts: 2
-        command: mvn -B test -Dtest=!Docker*
+      run: |
+        mvn -B test -Dtest=!Docker*
     - name: Upload analysis to SonarCloud
       if: success() && matrix.os == 'ubuntu-latest' && matrix.java == '17' && !contains(github.ref, 'pull')
       run: >
