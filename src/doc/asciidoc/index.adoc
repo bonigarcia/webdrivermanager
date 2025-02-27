@@ -680,7 +680,7 @@ HTTP proxy. It can be also configured using the environment variable  `HTTPS_PRO
 |`dockerTimezone(String)`|`wdm.dockerTimezone`|`Etc/UTC`|https://en.wikipedia.org/wiki/List_of_tz_database_time_zones[Timezone] of the browser container
 |`dockerNetwork(String)`|`wdm.dockerNetwork`|`bridge`|Docker network name
 |`dockerLang(String)`|`wdm.dockerLang`|`EN`|https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes[Language] of the browser container
-|`dockerShmSize(String)`|`wdm.dockerShmSize`|`256m`|Docker https://docs.docker.com/engine/reference/run/[shared memory] in bytes. Unit is optional and can be `b` (bytes), `k` (kilobytes), `m` (megabytes), or `g` (gigabytes)
+|`dockerShmSize(String)`|`wdm.dockerShmSize`|`512m`|Docker https://docs.docker.com/engine/reference/run/[shared memory] in bytes. Unit is optional and can be `b` (bytes), `k` (kilobytes), `m` (megabytes), or `g` (gigabytes)
 |`dockerTmpfsSize(String)`|`wdm.dockerTmpfsSize`|`128m`|Docker in-memory filesystem (https://docs.docker.com/engine/reference/run/#tmpfs-mount-tmpfs-filesystems[tmpfs]). Units follows the same approach than the shared memory
 |`dockerTmpfsMount(String)`|`wdm.dockerTmpfsMount`|`/tmp`|Mount point for in-memory filesystem
 |`dockerStopTimeoutSec(Integer)`|`wdm.dockerStopTimeoutSec`|`5`|Max time to kill a container (in seconds) after stopping it
