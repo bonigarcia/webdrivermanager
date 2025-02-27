@@ -164,6 +164,7 @@ public class WdmServer {
                     .browserVersion(version);
             wdm.create();
             seleniumServerUrl = wdm.getDockerSeleniumServerUrl();
+            wdm.getWebDriver().quit();
         } else {
             String sessionIdFromPath = getSessionIdFromPath(requestPath);
             seleniumServerUrl = sessionMap.get(sessionIdFromPath);
@@ -197,7 +198,7 @@ public class WdmServer {
     private String getSessionIdFromResponse(String response) {
         response = response.substring(
                 response.indexOf(SESSIONID) + SESSIONID.length() + 1);
-        response = response.substring(0, response.indexOf("\""));
+        response = response.substring(1, response.indexOf(",") - 1);
         return response;
     }
 
@@ -279,6 +280,7 @@ public class WdmServer {
         String responseContent = null;
         BasicHttpClientConnectionManager connectionManager = new BasicHttpClientConnectionManager();
         connectionManager.setConnectionConfig(ConnectionConfig.custom()
+                .setSocketTimeout(timeoutSec, TimeUnit.SECONDS)
                 .setConnectTimeout(timeoutSec, TimeUnit.SECONDS).build());
 
         try (CloseableHttpClient closeableHttpClient = HttpClientBuilder

@@ -27,7 +27,6 @@ import java.time.Duration;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.condition.EnabledOnOs;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -51,7 +50,6 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @since 5.0.0
  */
 @EnabledOnOs(LINUX)
-@Disabled
 class ServerSeleniumTest {
 
     static final Logger log = getLogger(lookup().lookupClass());
