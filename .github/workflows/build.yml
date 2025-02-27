@@ -27,6 +27,7 @@ jobs:
         distribution: 'temurin'
         java-version: ${{ matrix.java }}
         cache: 'maven'
+        cache-key: 'maven-${{ matrix.os }}-${{ hashFiles('pom.xml') }}'
     - name: Start Xvfb
       if: matrix.os == 'ubuntu-latest'
       run: |
