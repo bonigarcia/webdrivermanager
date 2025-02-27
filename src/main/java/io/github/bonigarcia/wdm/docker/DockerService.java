@@ -54,9 +54,9 @@ import com.github.dockerjava.api.async.ResultCallback.Adapter;
 import com.github.dockerjava.api.command.AsyncDockerCmd;
 import com.github.dockerjava.api.command.CreateContainerCmd;
 import com.github.dockerjava.api.command.CreateContainerResponse;
+import com.github.dockerjava.api.command.CreateNetworkCmd;
 import com.github.dockerjava.api.command.CreateNetworkResponse;
 import com.github.dockerjava.api.command.ExecStartCmd;
-import com.github.dockerjava.api.command.InspectContainerResponse;
 import com.github.dockerjava.api.command.LogContainerCmd;
 import com.github.dockerjava.api.exception.DockerException;
 import com.github.dockerjava.api.model.Bind;
@@ -280,12 +280,6 @@ public class DockerService {
         return containerId;
     }
 
-    public String getContainerName(String containerId) {
-        InspectContainerResponse containerInfo = dockerClient
-                .inspectContainerCmd(containerId).exec();
-        return containerInfo.getName().replaceAll("/", "");
-    }
-
     public void createDockerNetworkIfNotExists(String networkName) {
         List<Network> networks = dockerClient.listNetworksCmd().exec();
         boolean networkExists = networks.stream()
@@ -293,11 +287,14 @@ public class DockerService {
         if (networkExists) {
             log.trace("Docker network {} already exits", networkName);
         } else {
-            CreateNetworkResponse networkResponse = dockerClient
-                    .createNetworkCmd().withName(networkName)
-                    .withDriver(NETWORK_DRIVER).exec();
-            log.trace("Docker network {} created with id {}", networkName,
-                    networkResponse.getId());
+            try (CreateNetworkCmd networkCmd = dockerClient
+                    .createNetworkCmd()) {
+                CreateNetworkResponse networkResponse = networkCmd
+                        .withName(networkName).withDriver(NETWORK_DRIVER)
+                        .exec();
+                log.trace("Docker network {} created with id {}", networkName,
+                        networkResponse.getId());
+            }
         }
     }
 
@@ -504,17 +501,19 @@ public class DockerService {
                                 + " is not available as Docker container");
             }
             cmd.add("--version");
-            CreateContainerResponse container = dockerClient
-                    .createContainerCmd(dockerImage).withCmd(cmd)
-                    .withHostConfig(
-                            HostConfig.newHostConfig().withAutoRemove(true))
-                    .exec();
-            dockerClient.startContainerCmd(container.getId()).exec();
-            LogContainerCmd logContainerCmd = dockerClient
-                    .logContainerCmd(container.getId()).withStdOut(true)
-                    .withFollowStream(true);
-            browserVersionFromContainer = parseVersion(
-                    getOutputFromCmd(logContainerCmd));
+            try (CreateContainerCmd containerCmd = dockerClient
+                    .createContainerCmd(dockerImage)) {
+                CreateContainerResponse container = containerCmd.withCmd(cmd)
+                        .withHostConfig(
+                                HostConfig.newHostConfig().withAutoRemove(true))
+                        .exec();
+                dockerClient.startContainerCmd(container.getId()).exec();
+                LogContainerCmd logContainerCmd = dockerClient
+                        .logContainerCmd(container.getId()).withStdOut(true)
+                        .withFollowStream(true);
+                browserVersionFromContainer = parseVersion(
+                        getOutputFromCmd(logContainerCmd));
+            }
 
         } catch (Exception e) {
             log.warn("Exception discovering browser version from container: {}",
@@ -759,7 +758,6 @@ public class DockerService {
 
         // binds
         List<String> binds = new ArrayList<>();
-        // binds.add("C:/Users/boni/Downloads/video:/videos");
         binds.add(recordingPath.toAbsolutePath().getParent().toString()
                 + ":/videos");
         String dockerVolumes = config.getDockerVolumes();
