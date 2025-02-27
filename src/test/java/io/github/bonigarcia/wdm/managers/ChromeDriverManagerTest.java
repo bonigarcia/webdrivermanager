@@ -24,18 +24,16 @@ import static io.github.bonigarcia.wdm.config.OperatingSystem.LINUX;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.MAC;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.WIN;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.WebDriverException;
 
 import io.github.bonigarcia.wdm.config.DummyConfig;
 
 class ChromeDriverManagerTest {
-    private static final String VERSION = "133.0.6943.141";
+    private static final String VERSION = "115.0.5790.24";
     private final ChromeDriverManager chromeDriverManager = new ChromeDriverManager();
 
     @Test
@@ -48,8 +46,10 @@ class ChromeDriverManagerTest {
                 X64))).hasValue(new URL(String.format(
                         "https://storage.googleapis.com/chrome-for-testing-public/%s/linux64/chromedriver-linux64.zip",
                         VERSION)));
-        assertThrows(WebDriverException.class, () -> chromeDriverManager
-                .buildUrl(VERSION, new DummyConfig(LINUX, ARM64)));
+        assertThat(chromeDriverManager.buildUrl(VERSION, new DummyConfig(LINUX,
+                ARM64))).hasValue(new URL(String.format(
+                        "https://storage.googleapis.com/chrome-for-testing-public/%s/linux64/chromedriver-linux64.zip",
+                        VERSION)));
         assertThat(chromeDriverManager.buildUrl(VERSION, new DummyConfig(LINUX,
                 DEFAULT))).hasValue(new URL(String.format(
                         "https://storage.googleapis.com/chrome-for-testing-public/%s/linux64/chromedriver-linux64.zip",
@@ -90,7 +90,9 @@ class ChromeDriverManagerTest {
                 DEFAULT))).hasValue(new URL(String.format(
                         "https://storage.googleapis.com/chrome-for-testing-public/%s/win64/chromedriver-win64.zip",
                         VERSION)));
-        assertThrows(WebDriverException.class, () -> chromeDriverManager
-                .buildUrl(VERSION, new DummyConfig(WIN, ARM64)));
+        assertThat(chromeDriverManager.buildUrl(VERSION, new DummyConfig(WIN,
+                ARM64))).hasValue(new URL(String.format(
+                        "https://storage.googleapis.com/chrome-for-testing-public/%s/win64/chromedriver-win64.zip",
+                        VERSION)));
     }
 }
