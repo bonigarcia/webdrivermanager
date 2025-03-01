@@ -19,6 +19,7 @@ package io.github.bonigarcia.wdm;
 import static io.github.bonigarcia.wdm.config.Architecture.ARM64;
 import static io.github.bonigarcia.wdm.config.Architecture.X32;
 import static io.github.bonigarcia.wdm.config.Architecture.X64;
+import static io.github.bonigarcia.wdm.config.Config.LATEST;
 import static io.github.bonigarcia.wdm.config.Config.isNullOrEmpty;
 import static io.github.bonigarcia.wdm.config.Config.isUnknown;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROME;
@@ -158,7 +159,6 @@ public abstract class WebDriverManager {
 
     protected static final Logger log = getLogger(lookup().lookupClass());
 
-    public static final String LATEST = "latest";
     protected static final String SLASH = "/";
     protected static final String DASH = "-";
     protected static final String LATEST_RELEASE = "LATEST_RELEASE";

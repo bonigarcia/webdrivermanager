@@ -16,7 +16,6 @@
  */
 package io.github.bonigarcia.wdm.config;
 
-import static io.github.bonigarcia.wdm.WebDriverManager.LATEST;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.LINUX;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.MAC;
 import static io.github.bonigarcia.wdm.config.OperatingSystem.WIN;
@@ -53,6 +52,8 @@ public class Config {
 
     final Logger log = getLogger(lookup().lookupClass());
 
+    public static final String LATEST = "latest";
+    public static final String EXE = ".exe";
     static final String HOME = "~";
     static final String PWD = ".";
     static final String SCREEN_RESOLUTION_SEPARATOR = "x";
@@ -387,7 +388,7 @@ public class Config {
 
     public boolean isExecutable(File file) {
         return resolve(os).equalsIgnoreCase("win")
-                ? file.getName().toLowerCase(ROOT).endsWith(".exe")
+                ? file.getName().toLowerCase(ROOT).endsWith(EXE)
                 : file.canExecute();
     }
 

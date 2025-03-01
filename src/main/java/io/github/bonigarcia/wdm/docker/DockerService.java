@@ -16,8 +16,8 @@
  */
 package io.github.bonigarcia.wdm.docker;
 
-import static io.github.bonigarcia.wdm.WebDriverManager.LATEST;
 import static io.github.bonigarcia.wdm.WebDriverManager.isDockerAvailable;
+import static io.github.bonigarcia.wdm.config.Config.LATEST;
 import static io.github.bonigarcia.wdm.config.Config.isNullOrEmpty;
 import static io.github.bonigarcia.wdm.docker.DockerHost.defaultAddress;
 import static io.github.bonigarcia.wdm.versions.Shell.runAndWait;

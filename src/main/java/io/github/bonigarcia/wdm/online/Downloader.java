@@ -17,6 +17,7 @@
 package io.github.bonigarcia.wdm.online;
 
 import static io.github.bonigarcia.wdm.config.Architecture.ARM64;
+import static io.github.bonigarcia.wdm.config.Config.EXE;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROME;
 import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROMIUM;
 import static java.io.File.separator;
@@ -263,7 +264,7 @@ public class Downloader {
             }
         }
 
-        if (!target.getName().toLowerCase(ROOT).contains(".exe")
+        if (!target.getName().toLowerCase(ROOT).contains(EXE)
                 && target.exists()) {
             setFileExecutable(target);
         }
