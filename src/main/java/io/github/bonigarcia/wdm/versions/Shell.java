@@ -77,7 +77,7 @@ public class Shell {
             Process process = new ProcessBuilder(command).directory(folder)
                     .redirectErrorStream(false).start();
             process.waitFor();
-            output = IOUtils.toString(process.getInputStream(), UTF_8);
+            output = IOUtils.toString(process.getInputStream(), UTF_8.name());
         } catch (Exception e) {
             if (log.isDebugEnabled()) {
                 log.debug(

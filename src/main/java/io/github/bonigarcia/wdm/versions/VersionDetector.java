@@ -169,7 +169,8 @@ public class VersionDetector {
         try (InputStream response = httpClient
                 .execute(httpClient.createHttpGet(new URL(url))).getEntity()
                 .getContent()) {
-            result = Optional.of(IOUtils.toString(response, versionCharset)
+            result = Optional.of(IOUtils.toString(response,
+                    (versionCharset != null ? versionCharset : Charset.defaultCharset()).name())
                     .replace("\r\n", ""));
         } catch (Exception e) {
             log.warn("Exception reading {} to get latest version of {} ({})",
@@ -347,7 +348,7 @@ public class VersionDetector {
                     propertiesName, online)) {
                 properties = new Properties();
                 properties.load(new StringReader(IOUtils
-                        .toString(inputStream, UTF_8).replace("\\", "\\\\")));
+                        .toString(inputStream, UTF_8.name()).replace("\\", "\\\\")));
                 propertiesMap.put(propertiesName, properties);
             } catch (Exception e) {
                 throw new IllegalStateException("Cannot read " + propertiesName,
