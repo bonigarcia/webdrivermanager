@@ -305,7 +305,7 @@ public class WdmServer {
             try (ClassicHttpResponse response = closeableHttpClient
                     .executeOpen(null, request, HttpClientContext.create())) {
                 responseContent = IOUtils
-                        .toString(response.getEntity().getContent(), UTF_8);
+                        .toString(response.getEntity().getContent(), UTF_8.name());
             }
         }
 
