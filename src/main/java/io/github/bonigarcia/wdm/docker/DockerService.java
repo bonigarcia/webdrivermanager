@@ -42,9 +42,9 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
@@ -668,7 +668,7 @@ public class DockerService {
 
         // builder
         String containerName = "selenium_"
-                + RandomStringUtils.secure().nextAlphabetic(8);
+                + UUID.randomUUID().toString().substring(0, 6);
         DockerBuilder dockerBuilder = DockerContainer.dockerBuilder(dockerImage)
                 .exposedPorts(exposedPorts).network(network).mounts(mounts)
                 .binds(binds).shmSize(shmSize).envs(envs).extraHosts(extraHosts)
