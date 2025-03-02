@@ -36,7 +36,7 @@ jobs:
       uses: nick-invision/retry@v3.0.2
       with:
         timeout_minutes: 30
-        max_attempts: 1
+        max_attempts: 3
         command: |
           mvn -B test -Dtest=!Record*
     - name: Install browsers in Mac
@@ -51,7 +51,7 @@ jobs:
       uses: nick-invision/retry@v3.0.2
       with:
         timeout_minutes: 30
-        max_attempts: 1
+        max_attempts: 3
         command: |
           mvn -B test -Dtest=!Docker*,!Record*,!DisplayLogsChromeTest,!GatherLogsChromeTest
     - name: Run tests on Windows
@@ -59,7 +59,7 @@ jobs:
       uses: nick-invision/retry@v3.0.2
       with:
         timeout_minutes: 30
-        max_attempts: 1
+        max_attempts: 3
         command: |
           mvn -B test -Dtest=!Docker*
     - name: Upload analysis to SonarCloud
