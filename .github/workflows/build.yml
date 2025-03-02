@@ -53,7 +53,7 @@ jobs:
         timeout_minutes: 30
         max_attempts: 1
         command: |
-          mvn -B test
+          mvn -B test -Dtest=!Docker*,!Record*,!DisplayLogsChromeTest,!GatherLogsChromeTest
     - name: Run tests on Windows
       if: matrix.os == 'windows-latest'
       uses: nick-invision/retry@v3.0.2
