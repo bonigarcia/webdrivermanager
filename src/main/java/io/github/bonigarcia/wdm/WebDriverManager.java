@@ -773,6 +773,11 @@ public abstract class WebDriverManager {
         return this;
     }
 
+    public WebDriverManager avoidUseGeckoDriverSnap() {
+        config().setUseGeckoDriverSnap(false);
+        return this;
+    }
+
     public WebDriverManager ttl(int seconds) {
         config().setTtl(seconds);
         return this;
@@ -1129,21 +1134,24 @@ public abstract class WebDriverManager {
     // ------------
 
     protected void manage(String driverVersion) {
+        if (config().getOperatingSystem().isLinux()
+                && getDriverManagerType() == FIREFOX
+                && config.isUseGeckoDriverSnap()) {
+            if (checkSnap(config().getGeckoDriverSnapPath())) {
+                return;
+            }
+        }
+
         try (HttpClient wdmHttpClient = getHttpClient()) {
             if (isUnknown(driverVersion)) {
                 driverVersion = resolveDriverVersion(driverVersion);
             }
+
             if (getVersionDetector().isSnap()
                     && config().isUseChromiumDriverSnap()) {
-                String chromiumDriverSnapPath = config()
-                        .getChromiumDriverSnapPath();
-                File snapChromiumDriverPath = new File(chromiumDriverSnapPath);
-                boolean existsSnap = snapChromiumDriverPath.exists();
-                if (existsSnap) {
-                    log.debug("Found {} snap", getDriverManagerType());
-                    exportDriver(chromiumDriverSnapPath);
+                if (checkSnap(config().getChromiumDriverSnapPath())) {
+                    return;
                 }
-                return;
             }
 
             Optional<String> driverInCache = empty();
@@ -1168,6 +1176,16 @@ public abstract class WebDriverManager {
         } catch (Exception e) {
             handleException(e, driverVersion);
         }
+    }
+
+    protected boolean checkSnap(String driverSnapPath) {
+        File snapDriverPath = new File(driverSnapPath);
+        boolean existsSnap = snapDriverPath.exists();
+        if (existsSnap) {
+            log.debug("Found {} snap", getDriverManagerType());
+            exportDriver(driverSnapPath);
+        }
+        return existsSnap;
     }
 
     protected String resolveDriverVersion(String driverVersion) {

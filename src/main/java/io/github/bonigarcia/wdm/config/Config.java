@@ -155,6 +155,10 @@ public class Config {
             "wdm.geckoDriverMirrorUrl", URL.class);
     ConfigKey<URL> firefoxDriverGoodVersionsUrl = new ConfigKey<>(
             "wdm.geckoDriverGoodVersionsUrl", URL.class);
+    ConfigKey<String> geckoDriverSnapPath = new ConfigKey<>(
+            "wdm.geckoDriverSnapPath", String.class);
+    ConfigKey<Boolean> useGeckoDriverSnap = new ConfigKey<>(
+            "wdm.useGeckoDriverSnap", Boolean.class);
 
     ConfigKey<String> iExplorerDriverVersion = new ConfigKey<>(
             "wdm.iExplorerDriverVersion", String.class);
@@ -888,6 +892,24 @@ public class Config {
 
     public Config setFirefoxDriverGoodVersionsUrl(URL value) {
         this.firefoxDriverGoodVersionsUrl.setValue(value);
+        return this;
+    }
+
+    public String getGeckoDriverSnapPath() {
+        return resolve(geckoDriverSnapPath);
+    }
+
+    public Config setGeckoDriverSnapPath(String value) {
+        this.geckoDriverSnapPath.setValue(value);
+        return this;
+    }
+
+    public boolean isUseGeckoDriverSnap() {
+        return resolve(useGeckoDriverSnap);
+    }
+
+    public Config setUseGeckoDriverSnap(boolean value) {
+        this.useGeckoDriverSnap.setValue(value);
         return this;
     }
 
