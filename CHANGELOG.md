@@ -22,7 +22,7 @@
 
 ### Removed
 - Remove Docker support through Aerokube images (archived)
-- Remove support for Opera, Safari (WebKit), and Chromn Mobile in Docker
+- Remove support for Opera, Safari (WebKit), and Chrome Mobile in Docker
 - Remove Docker support through Twilio images (already provided by docker-selenium)
 - Remove browser version discovery in Windows through WMIC (deprecated)
 
