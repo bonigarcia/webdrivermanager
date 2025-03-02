@@ -1136,10 +1136,9 @@ public abstract class WebDriverManager {
     protected void manage(String driverVersion) {
         if (config().getOperatingSystem().isLinux()
                 && getDriverManagerType() == FIREFOX
-                && config.isUseGeckoDriverSnap()) {
-            if (checkSnap(config().getGeckoDriverSnapPath())) {
-                return;
-            }
+                && config.isUseGeckoDriverSnap()
+                && checkSnap(config().getGeckoDriverSnapPath())) {
+            return;
         }
 
         try (HttpClient wdmHttpClient = getHttpClient()) {
@@ -1148,10 +1147,9 @@ public abstract class WebDriverManager {
             }
 
             if (getVersionDetector().isSnap()
-                    && config().isUseChromiumDriverSnap()) {
-                if (checkSnap(config().getChromiumDriverSnapPath())) {
-                    return;
-                }
+                    && config().isUseChromiumDriverSnap()
+                    && checkSnap(config().getChromiumDriverSnapPath())) {
+                return;
             }
 
             Optional<String> driverInCache = empty();
