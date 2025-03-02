@@ -63,6 +63,7 @@ class ChromiumTest {
     void setupTest() {
         ChromeOptions options = new ChromeOptions();
         options.setBinary(browserPath.get().toFile());
+        options.addArguments("--no-sandbox");
         driver = new ChromeDriver(options);
     }
 
