@@ -18,7 +18,6 @@ package io.github.bonigarcia.wdm.test.chromium;
 
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.assertj.core.api.Assumptions.assumeThat;
-import static org.openqa.selenium.net.PortProber.findFreePort;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.nio.file.Path;
@@ -28,7 +27,6 @@ import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -45,7 +43,6 @@ import io.github.bonigarcia.wdm.WebDriverManager;
  * @author Boni Garcia
  * @since 3.8.0
  */
-@Disabled
 class ChromiumTest {
 
     final Logger log = getLogger(lookup().lookupClass());
@@ -66,10 +63,6 @@ class ChromiumTest {
     void setupTest() {
         ChromeOptions options = new ChromeOptions();
         options.setBinary(browserPath.get().toFile());
-        options.addArguments("--no-sandbox");
-        options.addArguments("--disable-gpu");
-        options.addArguments("--disable-dev-shm-usage");
-        options.addArguments("--remote-debugging-port=" + findFreePort());
         driver = new ChromeDriver(options);
     }
 
