@@ -48,10 +48,10 @@ public class OperaDriverManager extends WebDriverManager {
 
     protected static final String TAG_NAME_PREFIX = "v.";
 
-    // This value is calculated since the Opera major versions are 14 below the
-    // corresponding operadriver version. For example: Opera 107 -> operadriver
-    // 121.0.6167.140, Opera 106 -> operadriver 120.0.6099.200, etc.
-    protected static final int RELATION_OPERA_OPERADRIVER = 14;
+    // This value is calculated since the Opera major versions is related
+    // with the corresponding operadriver version. For example:
+    // Opera 117 -> operadriver 132.0.6834.209
+    protected static final int RELATION_OPERA_OPERADRIVER = 15;
 
     @Override
     public DriverManagerType getDriverManagerType() {
