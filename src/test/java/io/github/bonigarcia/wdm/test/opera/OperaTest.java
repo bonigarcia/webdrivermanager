@@ -18,6 +18,9 @@ package io.github.bonigarcia.wdm.test.opera;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.nio.file.Path;
+import java.util.Optional;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +28,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
@@ -40,7 +44,13 @@ class OperaTest {
 
     @BeforeEach
     void setupTest() {
-        driver = new ChromeDriver();
+        ChromeOptions options = new ChromeOptions();
+        Optional<Path> browserPath = WebDriverManager.operadriver()
+                .getBrowserPath();
+        if (browserPath.isPresent()) {
+            options.setBinary(browserPath.get().toFile());
+        }
+        driver = new ChromeDriver(options);
     }
 
     @AfterEach
