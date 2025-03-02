@@ -18,6 +18,12 @@ package io.github.bonigarcia.wdm.managers;
 
 import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROMIUM;
 
+import java.nio.file.Path;
+import java.util.Optional;
+
+import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.chrome.ChromeOptions;
+
 import io.github.bonigarcia.wdm.config.DriverManagerType;
 
 /**
@@ -51,6 +57,18 @@ public class ChromiumDriverManager extends ChromeDriverManager {
     @Override
     protected void setBrowserVersion(String browserVersion) {
         config().setChromiumVersion(browserVersion);
+    }
+
+    @Override
+    protected Capabilities getCapabilities() {
+        ChromeOptions options = new ChromeOptions();
+        if (!isUsingDocker()) {
+            Optional<Path> browserPath = getBrowserPath();
+            if (browserPath.isPresent()) {
+                options.setBinary(browserPath.get().toFile());
+            }
+        }
+        return options;
     }
 
 }
