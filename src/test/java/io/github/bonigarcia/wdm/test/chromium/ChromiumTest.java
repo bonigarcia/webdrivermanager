@@ -83,13 +83,6 @@ class ChromiumTest {
         String title = driver.getTitle();
         log.debug("The title of {} is {}", sutUrl, title);
 
-        try {
-            Thread.sleep(30000);
-        } catch (InterruptedException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
         Wait<WebDriver> wait = new WebDriverWait(driver,
                 Duration.ofSeconds(30));
         wait.until(d -> d.getTitle().contains("Selenium WebDriver"));
