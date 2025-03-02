@@ -77,6 +77,7 @@ import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
 import com.github.dockerjava.httpclient5.ApacheDockerHttpClient.Builder;
 
 import io.github.bonigarcia.wdm.cache.ResolutionCache;
+import io.github.bonigarcia.wdm.config.Architecture;
 import io.github.bonigarcia.wdm.config.Config;
 import io.github.bonigarcia.wdm.config.DriverManagerType;
 import io.github.bonigarcia.wdm.config.WebDriverManagerException;
@@ -97,6 +98,8 @@ public class DockerService {
     public static final String NETWORK_DRIVER = "bridge";
     public static final String CACHE_KEY_LABEL = "-container-";
     public static final String CACHE_KEY_CUSTOM = "custom";
+    private static final String SELENIUM_IMAGE_LABEL = "selenium";
+    private static final String SELENIARM_IMAGE_LABEL = "seleniarm";
     private static final String DEFAULT_GATEWAY = "172.17.0.1";
     private static final String BETA = "beta";
     private static final String DEV = "dev";
@@ -533,8 +536,11 @@ public class DockerService {
 
     public String getDockerImage(String browserName, String browserVersion) {
         String dockerImageFormat = getDockerImageFormat();
-        String dockerImage = String.format(dockerImageFormat, browserName,
-                browserVersion);
+        String imageLabel = config.getArchitecture() == Architecture.ARM64
+                ? SELENIARM_IMAGE_LABEL
+                : SELENIUM_IMAGE_LABEL;
+        String dockerImage = String.format(dockerImageFormat, imageLabel,
+                browserName, browserVersion);
         log.trace("Docker image: {}", dockerImage);
         return dockerImage;
     }
