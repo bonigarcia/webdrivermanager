@@ -181,21 +181,19 @@ include::../../test/java/io/github/bonigarcia/wdm/test/docker/DockerChromeTest.j
 
 NOTE: When using browsers in Docker containers, the call to the method `quit()` of the WebDriverManager API allows the disposal of the browser container(s).
 
-The used Docker images by WebDriverManager have been created and maintained by https://aerokube.com/selenoid/[Aerokube] (you can check the available versions on the https://aerokube.com/images/latest/[browser images] page). Therefore, the available browsers to be executed as Docker containers in WebDriverManager are Chrome (like the previous example), https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerFirefoxTest.java[Firefox], https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerEdgeTest.java[Edge], https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerOperaTest.java[Opera], and https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerSafariTest.java[Safari].
+As of version 6, WebDriverManager uses the official Docker browser images created and maintained by the Selenium project, i.e., https://github.com/SeleniumHQ/docker-selenium[docker-selenium]. Therefore, the available browsers to be executed as Docker containers in WebDriverManager are Chrome (like the previous example), https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerFirefoxTest.java[Firefox], https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerEdgeTest.java[Edge], and https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerChromiumTest.java[Chromium].
 
-NOTE: The case of Safari is particular since a real Safari browser can only be executed under a Mac OS machine. This way, the _Safari_ Docker containers use the https://webkit.org/[WebKit engine]. This engine is the same used in browser containers, and therefore, from a functional point of view, both browsers (a real Safari and this Docker image) should behave in the same way.
-
-WARNING: Notice you will need hardware virtualization (hypervisor) or a virtual machine with nested virtualization support to run Chrome Mobile images.
+NOTE: Some _dockerized_ browsers (e.g., Chromium and Edge) are supported in ARM64 architecture. See the https://github.com/SeleniumHQ/docker-selenium[docker-selenium] README for further information.
 
 ==== Browser Versions
 A significant aspect of the browser containers presented so far is that WebDriverManager connects to Docker Hub to discover the latest available release when the browser version is not specified (like the examples explained before). This way, the _dockerized_ browsers of tests handled by WebDriverManager are auto-maintained, in the sense that these tests use the latest version available without any additional effort.
 
-Nevertheless, we can force a given browser version in Docker using the method `browserVersion()` of the WebDriverManager API. This method accepts a `String` parameter specifying the version. This version can be fixed (e.g., `91.0`), and it also accepts the following wildcards:
+Nevertheless, we can force a given browser version in Docker using the method `browserVersion()` of the WebDriverManager API. This method accepts a `String` parameter specifying the version. This version can be fixed (e.g., `132.0`), and it also accepts the following wildcards:
 
 * `"latest"` : To specify the latest version explicitly (default option).
 * `"latest-N"` : Where `N` is an integer value to be subtracted from the current stable version. For example, if we specify `latest-1` (i.e., _latest version minus one_), the previous version to the stable release will be used (see an example https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerChromeVersionsTest.java[here]).
-* `"beta"`: To use the beta version. This version is only available for Chrome and Firefox, thanks to the Docker images maintained by https://hub.docker.com/r/twilio/selenoid/[Twilio] (a fork of the Aerokube images for the beta and development versions of Chrome and Firefox).
-* `"dev"`: To use the development version (again, for Chrome and Firefox).
+* `"beta"`: To use the beta version.
+* `"dev"`: To use the development version.
 
 The following example shows a test using Chrome beta in Docker (see a similar example using Firefox dev https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerFirefoxDevTest.java[here]).
 
@@ -249,7 +247,7 @@ A manager instance can be used to create more than one `WebDriver` object. For t
 As of version 5.2.0, WebDriverManager provides seamless integration with https://bonigarcia.dev/browserwatcher/[BrowserWatcher]. BrowserWatcher is a browser extension designed to monitor different aspects of web browsers such as Chrome, Firefox, or Edge. This section summarizes the features of BrowserWatcher integrated into WebDriverManager.
 
 ==== Console Log Gathering
-Gathering the browser console might help find the cause of failed Selenium tests. This feature is implemented in some drivers like chromedriver, but it is not yet implemented in geckodriver (and therefore, it is not possible to gather the Firefox console). BrowserWatcher provides a cross-browser mechanism based on JavaScript to implement this feature. WebDriverManager incorporates this feature for browsers controlled with Selenium WebDriver created through the WebDriverManager method `create()` and decorated with `watch()`. Internally,  BrowserWatcher is installed as a browser extension and starts gathering browser logs during the session time. At some point, we need to invoke the WebDriverManager method `getLogs()` to get the collected logs from the Java logic. The following test shows a basic example of this feature.
+Gathering the browser console might help find the cause of failed Selenium tests. BrowserWatcher provides a cross-browser mechanism based on JavaScript to implement this feature. WebDriverManager incorporates this feature for browsers controlled with Selenium WebDriver created through the WebDriverManager method `create()` and decorated with `watch()`. Internally,  BrowserWatcher is installed as a browser extension and starts gathering browser logs during the session time. At some point, we need to invoke the WebDriverManager method `getLogs()` to get the collected logs from the Java logic. The following test shows a basic example of this feature.
 
 [source,java]
 ----
@@ -327,7 +325,7 @@ WebDriverManager CLI can be used for three different purposes. We can see these 
 [ERROR]
 [ERROR] 2. For running a browser in a Docker (and use it trough noVNC):
 [ERROR]         runInDocker browserName <browserVersion>
-[ERROR] (where browserName is: chrome|edge|firefox|opera|safari|chrome-mobile)
+[ERROR] (where browserName is: chrome|edge|firefox|chromium)
 [ERROR]
 [ERROR] 3. For starting WebDriverManager Server:
 [ERROR]         server <port>
@@ -383,8 +381,6 @@ mvn exec:java -Dexec.args="runInDocker chrome"
 ----
 docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -e ARGS="runInDocker chrome" bonigarcia/webdrivermanager:{project-version}
 ----
-
-WARNING: There is an https://bugs.chromium.org/p/chromedriver/issues/detail?id=3857[open issue] with Chrome 92+ and Docker at the time of this writing. For this reason, the previous Docker container command uses Chrome 91. For further information, see <<known-issues, known issues>>.
 
 [discrete]
 ==== Option 3: Server
@@ -871,6 +867,9 @@ There are other resources related to Selenium-Jupiter and automated testing you 
 
 Or the following papers:
 
+* Leotta, M., et al., "https://www.sciencedirect.com/science/article/pii/S0950584924002003[A family of experiments to quantify the benefits of adopting WebDriverManager and Selenium-Jupiter]." _Information and Software Technology_ 178 (2025): 107595.
+* García, Boni, et al. "https://link.springer.com/chapter/10.1007/978-3-031-70245-7_10[Exploring Browser Automation: A Comparative Study of Selenium, Cypress, Puppeteer, and Playwright]." _International Conference on the Quality of Information and Communications Technology_. Springer Nature Switzerland, 2024.
+* Leotta, M., et al. "https://dl.acm.org/doi/10.1145/3661167.3661192[AI-generated test scripts for web E2E testing with ChatGPT and Copilot: a preliminary study]." Proceedings of the _28th International Conference on Evaluation and Assessment in Software Engineering_. 2024.
 * García, Boni, et al. "https://www.sciencedirect.com/science/article/pii/S0164121223001188[Enhancing Web Applications Observability through Instrumented Automated Browsers]." _Journal of Systems and Software_ (2023): 111723.
 * Leotta, M., et al. "https://ieeexplore.ieee.org/document/10132210[Challenges of End-to-End Testing with Selenium WebDriver and How to Face Them: A Survey]". In the 16th _IEEE Conference on Software Testing, Verification and Validation_ (ICST), 2023, Dublin, Ireland. April 2023.
 * Leotta, M., et al. "https://link.springer.com/chapter/10.1007/978-3-031-14179-9_3[An Empirical Study to Quantify the SetUp and Maintenance Benefits of Adopting WebDriverManager]." _15th International Conference on the Quality of Information and Communications Technology_ (QUATIC) 2022, Talavera de la Reina, Spain. September 2022.
@@ -883,4 +882,4 @@ Or the following papers:
 * García, Boni, and Juan Carlos Dueñas. "https://www.rintonpress.com/journals/jweonline.html#v14n56[Web browsing automation for applications quality control]." _Journal of web engineering_ (2015): 474-502.
 
 == About
-WebDriverManager (Copyright © 2015-2024) is an open-source project created and maintained by https://bonigarcia.dev/[Boni García] (https://twitter.com/boni_gg[@boni_gg]), licensed under the terms of https://www.apache.org/licenses/LICENSE-2.0[Apache 2.0 License]. This documentation (also available in link:webdrivermanager.pdf[PDF]) is released under the terms of https://creativecommons.org/licenses/by-nc-sa/2.0/[CC BY-NC-SA 2.0].
+WebDriverManager (Copyright © 2015-2025) is an open-source project created and maintained by https://bonigarcia.dev/[Boni García] (https://twitter.com/boni_gg[@boni_gg]), licensed under the terms of https://www.apache.org/licenses/LICENSE-2.0[Apache 2.0 License]. This documentation (also available in link:webdrivermanager.pdf[PDF]) is released under the terms of https://creativecommons.org/licenses/by-nc-sa/2.0/[CC BY-NC-SA 2.0].

@@ -1,5 +1,32 @@
 # Changelog
 
+## [6.0.0] - TBD
+
+### Added
+- Use docker-selenium images for Docker support
+- Support ARM64 Docker images (seleniarm)
+- Use PowerShell commands to discover browser versions in Windows
+- Support for geckodriver snap in Linux
+
+### Fixed
+- Fix required options in Chromium manager
+- Fix relation between Opera major version and operadriver
+
+### Changed
+- Change default Docker ssh size to 512m
+- Change default Docker recording resolution to 1920x1080
+- Bump to bonigarcia/novnc:1.2.0
+- Improve commands for browser version discovery in Linux
+- Specify different version for Java tests (11) and main code (8) in pom.xml
+- Update operadriver browser version check
+
+### Removed
+- Remove Docker support through Aerokube images (archived)
+- Remove support for Opera, Safari (WebKit), and Chromn Mobile in Docker
+- Remove Docker support through Twilio images (already provided by docker-selenium)
+- Remove browser version discovery in Windows through WMIC (deprecated)
+
+
 ## [5.9.3] - 2025-02-14
 
 ### Fixed
