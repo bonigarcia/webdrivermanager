@@ -149,7 +149,7 @@ Alternatively, you can acknowledge my work by buying me a coffee:
 <p><a href="https://www.buymeacoffee.com/bonigarcia"> <img align="left" src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="50" width="210"/></a></p><br><br>
 
 ## About
-WebDriverManager (Copyright &copy; 2015-2024) is a project created and maintained by [Boni Garcia] and licensed under the terms of the [Apache 2.0 License].
+WebDriverManager (Copyright &copy; 2015-2025) is a project created and maintained by [Boni Garcia] and licensed under the terms of the [Apache 2.0 License].
 
 [Logo]: https://bonigarcia.github.io/img/wdm.png
 [WebDriverManager]: https://bonigarcia.dev/webdrivermanager/
