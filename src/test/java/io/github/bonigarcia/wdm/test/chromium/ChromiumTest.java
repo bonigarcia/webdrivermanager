@@ -18,6 +18,7 @@ package io.github.bonigarcia.wdm.test.chromium;
 
 import static java.lang.invoke.MethodHandles.lookup;
 import static org.assertj.core.api.Assumptions.assumeThat;
+import static org.openqa.selenium.net.PortProber.findFreePort;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.nio.file.Path;
@@ -64,6 +65,9 @@ class ChromiumTest {
         ChromeOptions options = new ChromeOptions();
         options.setBinary(browserPath.get().toFile());
         options.addArguments("--no-sandbox");
+        options.addArguments("--disable-gpu");
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--remote-debugging-port=" + findFreePort());
         driver = new ChromeDriver(options);
     }
 
@@ -78,6 +82,13 @@ class ChromiumTest {
         driver.get(sutUrl);
         String title = driver.getTitle();
         log.debug("The title of {} is {}", sutUrl, title);
+
+        try {
+            Thread.sleep(30000);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
         Wait<WebDriver> wait = new WebDriverWait(driver,
                 Duration.ofSeconds(30));
