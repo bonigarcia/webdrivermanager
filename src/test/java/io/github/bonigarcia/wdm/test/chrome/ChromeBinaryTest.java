@@ -48,7 +48,9 @@ class ChromeBinaryTest {
 
     @AfterEach
     void teardown() {
-        driver.quit();
+        if (driver != null) {
+            driver.quit();
+        }
     }
 
     @Test
