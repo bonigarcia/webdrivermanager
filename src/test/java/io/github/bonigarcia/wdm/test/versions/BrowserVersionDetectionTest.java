@@ -57,7 +57,7 @@ class BrowserVersionDetectionTest {
     @ValueSource(strings = { "chrome", "firefox", "edge", "opera", "chromium" })
     void commandsTest(String browser) {
         Optional<String> detectedVersion = versionDetector
-                .getBrowserVersionFromTheShell(browser);
+                .getBrowserVersionFromTheShell(browser, "");
         if (detectedVersion.isPresent()) {
             log.debug("The detected version of {} is {}", browser,
                     detectedVersion.get());

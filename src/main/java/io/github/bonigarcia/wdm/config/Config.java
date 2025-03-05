@@ -131,6 +131,8 @@ public class Config {
             "wdm.chromeGoodVersionsUrl", String.class);
     ConfigKey<String> chromeLastGoodVersionsUrl = new ConfigKey<>(
             "wdm.chromeLastGoodVersionsUrl", String.class);
+    ConfigKey<String> chromeBinary = new ConfigKey<>("wdm.chromeBinary",
+            String.class);
 
     ConfigKey<String> edgeDriverVersion = new ConfigKey<>(
             "wdm.edgeDriverVersion", String.class);
@@ -142,6 +144,8 @@ public class Config {
             URL.class);
     ConfigKey<String> edgeDownloadUrlPattern = new ConfigKey<>(
             "wdm.edgeDownloadUrlPattern", String.class);
+    ConfigKey<String> edgeBinary = new ConfigKey<>("wdm.edgeBinary",
+            String.class);
 
     ConfigKey<String> geckoDriverVersion = new ConfigKey<>(
             "wdm.geckoDriverVersion", String.class);
@@ -159,6 +163,8 @@ public class Config {
             "wdm.geckoDriverSnapPath", String.class);
     ConfigKey<Boolean> useGeckoDriverSnap = new ConfigKey<>(
             "wdm.useGeckoDriverSnap", Boolean.class);
+    ConfigKey<String> firefoxBinary = new ConfigKey<>("wdm.firefoxBinary",
+            String.class);
 
     ConfigKey<String> iExplorerDriverVersion = new ConfigKey<>(
             "wdm.iExplorerDriverVersion", String.class);
@@ -177,6 +183,8 @@ public class Config {
             URL.class);
     ConfigKey<URL> operaDriverMirrorUrl = new ConfigKey<>(
             "wdm.operaDriverMirrorUrl", URL.class);
+    ConfigKey<String> operaBinary = new ConfigKey<>("wdm.operaBinary",
+            String.class);
 
     ConfigKey<String> chromiumDriverVersion = new ConfigKey<>(
             "wdm.chromiumDriverVersion", String.class);
@@ -186,6 +194,8 @@ public class Config {
             "wdm.chromiumDriverSnapPath", String.class);
     ConfigKey<Boolean> useChromiumDriverSnap = new ConfigKey<>(
             "wdm.useChromiumDriverSnap", Boolean.class);
+    ConfigKey<String> chromiumBinary = new ConfigKey<>("wdm.chromiumBinary",
+            String.class);
 
     ConfigKey<String> safariVersion = new ConfigKey<>("wdm.safariVersion",
             String.class);
@@ -796,6 +806,15 @@ public class Config {
         return this;
     }
 
+    public String getChromeBinary() {
+        return resolve(chromeBinary);
+    }
+
+    public Config setChromeBinary(String value) {
+        this.chromeBinary.setValue(value);
+        return this;
+    }
+
     public String getEdgeDriverVersion() {
         return resolve(edgeDriverVersion);
     }
@@ -838,6 +857,15 @@ public class Config {
 
     public Config setEdgeDownloadUrlPattern(String value) {
         this.edgeDownloadUrlPattern.setValue(value);
+        return this;
+    }
+
+    public String getEdgeBinary() {
+        return resolve(edgeBinary);
+    }
+
+    public Config setEdgeBinary(String value) {
+        this.edgeBinary.setValue(value);
         return this;
     }
 
@@ -913,6 +941,15 @@ public class Config {
         return this;
     }
 
+    public String getFirefoxBinary() {
+        return resolve(firefoxBinary);
+    }
+
+    public Config setFirefoxBinary(String value) {
+        this.firefoxBinary.setValue(value);
+        return this;
+    }
+
     public String getIExplorerDriverVersion() {
         return resolve(iExplorerDriverVersion);
     }
@@ -985,12 +1022,30 @@ public class Config {
         return this;
     }
 
+    public String getOperaBinary() {
+        return resolve(operaBinary);
+    }
+
+    public Config setOperaBinary(String value) {
+        this.operaBinary.setValue(value);
+        return this;
+    }
+
     public String getChromiumDriverVersion() {
         return resolve(chromiumDriverVersion);
     }
 
     public Config setChromiumDriverVersion(String value) {
         this.chromiumDriverVersion.setValue(value);
+        return this;
+    }
+
+    public String getChromiumBinary() {
+        return resolve(chromiumBinary);
+    }
+
+    public Config setChromiumBinary(String value) {
+        this.chromiumBinary.setValue(value);
         return this;
     }
 

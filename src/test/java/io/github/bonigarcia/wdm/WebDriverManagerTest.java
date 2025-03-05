@@ -108,6 +108,16 @@ class WebDriverManagerTest {
         }
 
         @Override
+        protected String getBrowserBinary() {
+            return null;
+        }
+
+        @Override
+        protected void setBrowserBinary(String browserBinary) {
+
+        }
+
+        @Override
         protected void setDriverUrl(URL url) {
 
         }

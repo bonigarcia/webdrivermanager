@@ -86,6 +86,16 @@ public class VoidDriverManager extends WebDriverManager {
     }
 
     @Override
+    protected String getBrowserBinary() {
+        return "";
+    }
+
+    @Override
+    protected void setBrowserBinary(String browserBinary) {
+        // Nothing required
+    }
+
+    @Override
     protected Optional<String> getDriverVersionFromRepository(
             Optional<String> driverVersion) {
         return empty();

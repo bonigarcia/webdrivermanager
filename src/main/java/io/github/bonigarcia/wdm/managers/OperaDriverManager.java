@@ -84,6 +84,16 @@ public class OperaDriverManager extends WebDriverManager {
     }
 
     @Override
+    protected String getBrowserBinary() {
+        return config().getOperaBinary();
+    }
+
+    @Override
+    protected void setBrowserBinary(String browserBinary) {
+        config().setOperaBinary(browserBinary);
+    }
+
+    @Override
     protected URL getDriverUrl() {
         return getDriverUrlCkeckingMirror(config().getOperaDriverUrl());
     }

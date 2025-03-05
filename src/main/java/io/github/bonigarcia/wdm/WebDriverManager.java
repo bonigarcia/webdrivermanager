@@ -183,6 +183,10 @@ public abstract class WebDriverManager {
 
     protected abstract void setBrowserVersion(String browserVersion);
 
+    protected abstract String getBrowserBinary();
+
+    protected abstract void setBrowserBinary(String browserBinary);
+
     protected abstract void setDriverUrl(URL url);
 
     protected abstract URL getDriverUrl();
@@ -626,6 +630,11 @@ public abstract class WebDriverManager {
 
     public WebDriverManager browserVersion(String browserVersion) {
         setBrowserVersion(browserVersion);
+        return this;
+    }
+
+    public WebDriverManager browserBinary(String browserBinary) {
+        setBrowserBinary(browserBinary);
         return this;
     }
 
@@ -1327,7 +1336,8 @@ public abstract class WebDriverManager {
 
     protected Optional<String> getBrowserVersionFromTheShell() {
         return getVersionDetector().getBrowserVersionFromTheShell(
-                getDriverManagerType().getBrowserNameLowerCase());
+                getDriverManagerType().getBrowserNameLowerCase(),
+                getBrowserBinary());
     }
 
     protected Optional<String> detectBrowserVersion() {

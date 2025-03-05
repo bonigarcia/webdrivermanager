@@ -75,6 +75,16 @@ public class FirefoxDriverManager extends WebDriverManager {
     }
 
     @Override
+    protected String getBrowserBinary() {
+        return config().getFirefoxBinary();
+    }
+
+    @Override
+    protected void setBrowserBinary(String browserBinary) {
+        config().setFirefoxBinary(browserBinary);
+    }
+
+    @Override
     protected URL getDriverUrl() {
         return getDriverUrlCkeckingMirror(config().getFirefoxDriverUrl());
     }

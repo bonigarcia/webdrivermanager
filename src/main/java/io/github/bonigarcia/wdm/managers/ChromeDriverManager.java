@@ -89,6 +89,16 @@ public class ChromeDriverManager extends WebDriverManager {
     }
 
     @Override
+    protected String getBrowserBinary() {
+        return config().getChromeBinary();
+    }
+
+    @Override
+    protected void setBrowserBinary(String browserBinary) {
+        config().setChromeBinary(browserBinary);
+    }
+
+    @Override
     protected URL getDriverUrl() {
         return getDriverUrlCkeckingMirror(config().getChromeDriverUrl());
     }

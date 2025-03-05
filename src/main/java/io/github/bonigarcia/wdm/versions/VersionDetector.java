@@ -19,6 +19,7 @@ package io.github.bonigarcia.wdm.versions;
 import static io.github.bonigarcia.wdm.WebDriverManager.loadXML;
 import static io.github.bonigarcia.wdm.config.Config.EXE;
 import static io.github.bonigarcia.wdm.config.Config.isNullOrEmpty;
+import static io.github.bonigarcia.wdm.config.OperatingSystem.WIN;
 import static io.github.bonigarcia.wdm.versions.Shell.runAndWait;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -243,7 +244,8 @@ public class VersionDetector {
         return empty();
     }
 
-    public Optional<String> getBrowserVersionFromTheShell(String browserName) {
+    public Optional<String> getBrowserVersionFromTheShell(String browserName,
+            String browserBinary) {
         Optional<String> browserVersionUsingProperties = empty();
         String browserVersionDetectionCommand = config
                 .getBrowserVersionDetectionCommand();
@@ -264,7 +266,7 @@ public class VersionDetector {
                 onlineMessage, propertiesName);
 
         browserVersionUsingProperties = getBrowserVersionUsingProperties(
-                browserName, commandsProperties);
+                browserName, browserBinary, commandsProperties);
 
         if (!browserVersionUsingProperties.isPresent()) {
             String notOnlineMessage = online ? LOCAL : ONLINE;
@@ -275,16 +277,32 @@ public class VersionDetector {
 
             commandsProperties = getProperties(propertiesName, !online);
             browserVersionUsingProperties = getBrowserVersionUsingProperties(
-                    browserName, commandsProperties);
+                    browserName, browserBinary, commandsProperties);
         }
 
         return browserVersionUsingProperties;
     }
 
     protected Optional<String> getBrowserVersionUsingProperties(
-            String browserName, Properties commandsProperties) {
+            String browserName, String browserBinary,
+            Properties commandsProperties) {
         List<String> commandsPerOs = getCommandsList(browserName,
                 commandsProperties);
+
+        if (!isNullOrEmpty(browserBinary)) {
+            String commandKey = commandsPerOs.get(0);
+            String command = commandsProperties.get(commandKey).toString();
+            OperatingSystem operatingSystem = config.getOperatingSystem();
+            if (operatingSystem == WIN) {
+                command = command.replaceAll("\"[^\"]*\"",
+                        "\"" + browserBinary.replace("\\", "\\\\") + "\"");
+            } else {
+                command = browserBinary
+                        + command.substring(command.lastIndexOf(" "));
+            }
+
+            return getBrowserVersionUsingCommand(command);
+        }
 
         for (String commandKey : commandsPerOs) {
             String command = commandsProperties.get(commandKey).toString();

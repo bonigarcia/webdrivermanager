@@ -1,5 +1,5 @@
 /*
- * (C) Copyright 2020 Boni Garcia (https://bonigarcia.github.io/)
+ * (C) Copyright 2025 Boni Garcia (https://bonigarcia.github.io/)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
  */
 package io.github.bonigarcia.wdm.test.chrome;
 
+//tag::snippet-in-doc[]
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assumptions.assumeThat;
 
@@ -27,17 +28,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-/**
- * Test with Google Chrome beta.
- *
- * @author Boni Garcia
- * @since 4.2.1
- */
-class ChromeBetaTest {
+class ChromeBinaryTest {
 
     static String chromeBetaBinary = "/usr/bin/google-chrome-beta";
     static File chromeBetaFile = new File(chromeBetaBinary);
@@ -47,16 +41,12 @@ class ChromeBetaTest {
     @BeforeAll
     static void setupClass() {
         assumeThat(chromeBetaFile).exists();
-        WebDriverManager.chromedriver()
-                .browserVersionDetectionCommand(chromeBetaBinary + " --version")
-                .setup();
+        WebDriverManager.chromedriver().browserBinary(chromeBetaBinary).setup();
     }
 
     @BeforeEach
     void setupTest() {
-        ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.setBinary(chromeBetaBinary);
-        driver = new ChromeDriver(chromeOptions);
+        driver = new ChromeDriver();
     }
 
     @AfterEach
@@ -66,8 +56,13 @@ class ChromeBetaTest {
 
     @Test
     void test() {
+        // Exercise
         driver.get("https://bonigarcia.dev/selenium-webdriver-java/");
-        assertThat(driver.getTitle()).contains("Selenium WebDriver");
+        String title = driver.getTitle();
+
+        // Verify
+        assertThat(title).contains("Selenium WebDriver");
     }
 
 }
+//end::snippet-in-doc[]

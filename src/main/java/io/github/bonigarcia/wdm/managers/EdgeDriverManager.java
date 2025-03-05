@@ -104,6 +104,16 @@ public class EdgeDriverManager extends WebDriverManager {
     }
 
     @Override
+    protected String getBrowserBinary() {
+        return config().getEdgeBinary();
+    }
+
+    @Override
+    protected void setBrowserBinary(String browserBinary) {
+        config().setEdgeBinary(browserBinary);
+    }
+
+    @Override
     protected URL getDriverUrl() {
         return config().getEdgeDriverUrl();
     }

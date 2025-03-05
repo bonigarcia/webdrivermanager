@@ -75,6 +75,16 @@ public class InternetExplorerDriverManager extends WebDriverManager {
     }
 
     @Override
+    protected String getBrowserBinary() {
+        return "";
+    }
+
+    @Override
+    protected void setBrowserBinary(String browserBinary) {
+        // Nothing required
+    }
+
+    @Override
     protected URL getDriverUrl() {
         return config().getIExplorerDriverUrl();
     }
