@@ -23,11 +23,10 @@ import static org.assertj.core.api.Assumptions.assumeThat;
 import java.io.File;
 
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
@@ -38,15 +37,13 @@ class ChromeBinaryTest {
 
     WebDriver driver;
 
-    @BeforeAll
-    static void setupClass() {
-        assumeThat(chromeBetaFile).exists();
-        WebDriverManager.chromedriver().browserBinary(chromeBetaBinary).setup();
-    }
-
     @BeforeEach
     void setupTest() {
-        driver = new ChromeDriver();
+        assumeThat(chromeBetaFile).exists();
+        ChromeOptions options = new ChromeOptions();
+        options.setBinary(chromeBetaFile);
+        driver = WebDriverManager.chromedriver().capabilities(options)
+                .browserBinary(chromeBetaBinary).create();
     }
 
     @AfterEach
