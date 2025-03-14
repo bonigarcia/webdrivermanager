@@ -7,13 +7,14 @@
 - Support ARM64 Docker images (seleniarm)
 - Use PowerShell commands to discover browser versions in Windows
 - Support for geckodriver snap in Linux
+- Include browserBinary() method in WebDriverManager API
 
 ### Fixed
 - Fix required options in Chromium manager
 - Fix relation between Opera major version and operadriver
 
 ### Changed
-- Change default Docker ssh size to 512m
+- Change default Docker shm size to 512m
 - Change default Docker recording resolution to 1920x1080
 - Bump to bonigarcia/novnc:1.2.0
 - Improve commands for browser version discovery in Linux

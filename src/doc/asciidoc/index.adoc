@@ -105,7 +105,7 @@ TIP: Although not mandatory, it is highly recommended to use a logger library to
 ==== Resolution Algorithm
 WebDriverManager executes a _resolution algorithm_ when calling to `setup()` in a given manager. You can find all its internal details in the paper https://link.springer.com/article/10.1007/s10664-021-09975-3[Automated driver management for Selenium WebDriver], published in the Springer Journal of Empirical Software Engineering in 2021. The most relevant parts of this algorithm are the following:
 
-1. WebDriverManager tries to find the browser version. To this aim, WebDriverManager uses internally a knowledge database called https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/commands.properties[commands database]. This database is a collection of shell commands used to discover the version of a given browser in the different operating systems (e.g., `google-chrome --version` for Chrome in Linux).
+1. WebDriverManager tries to find the browser version. To this aim, WebDriverManager uses internally a knowledge database called https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/commands.properties[commands database]. This database is a collection of shell commands used to discover the version of a given browser in the different operating systems (e.g., `google-chrome --version` for Chrome in Linux). As of WebDriverManager 6.0.0, you can specify the browser binary path (using the method `browserBinary()` ) that WebDriverManager will use for browser version discovery.
 2. Using the browser version, WebDriverManager tries to find the proper driver version. This process is different for each browser. For chromedriver, the https://github.com/GoogleChromeLabs/chrome-for-testing[Chrome for Testing (CfT) endpoints] are used. For geckodriver, the https://raw.githubusercontent.com/SeleniumHQ/selenium/trunk/common/geckodriver/geckodriver-support.json[Firefox mapping maintained by the Selenium project] (which is based on the https://firefox-source-docs.mozilla.org/testing/geckodriver/Support.html[official geckodriver support]). For msedgedriver, the https://msedgedriver.azureedge.net/[Edge metadata] is used.
 3. Once the driver version is discovered, WebDriverManager downloads this driver to a local cache (located at `~/.cache/selenium` by default). These drivers are reused in subsequent calls.
 4. Finally, WebDriverManager exports the driver path using Java system properties (e.g., `webdriver.chrome.driver` in the case of the Chrome manager).
@@ -627,6 +627,7 @@ The remainder of this section describes all the possible Java methods in the Web
 |`resolutionCachePath(String)`|`wdm.resolutionCachePath`|`~/.cache/selenium`|Folder to store the resolution cache
 |`driverVersion(String)`|`wdm.chromeDriverVersion`, `wdm.operaDriverVersion`, `wdm.iExplorerDriverVersion`, `wdm.edgeDriverVersion`, `wdm.geckoDriverVersion`, `wdm.chromiumDriverVersion`|`""` (automatic driver version discovery through the <<resolution-algorithm,resolution algorithm>>)|Custom driver version
 |`browserVersion(String)`|`wdm.chromeVersion`, `wdm.operaVersion`, `wdm.edgeVersion`, `wdm.firefoxVersion`, `wdm.chromiumVersion`, `wdm.safariVersion`|`""` (automatic browser version detection using the https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/commands.properties[commands database])|Custom browser version (major)
+|`browserBinary(String)`|`wdm.chromeBinary`, `wdm.operaBinary`, `wdm.edgeBinary`, `wdm.firefoxBinary`, `wdm.chromiumBinary`|`""` (automatic browser version detection using the default browser locations as specified in the https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/commands.properties[commands database])|Custom browser binary path
 |`forceDownload()`|`wdm.forceDownload=true`|`false` (drivers in cache are reused if available)|Force downloading driver (even if it is already in the cache)
 |`useBetaVersions()`|`wdm.useBetaVersions=true`|`false` (driver versions are skipped)|Allow the use beta versions (if possible)
 |`architecture(Architecture)`|`wdm.architecture`|`""` (automatic architecture discovery)|Force a given architecture for a driver
@@ -860,7 +861,7 @@ include::sponsors.html[]
 endif::[]
 
 == Further Documentation
-There are other resources related to Selenium-Jupiter and automated testing you can find helpful. For instance, the following books:
+There are other resources related to WebDriverManager and automated testing you can find helpful. For instance, the following books:
 
 * García, Boni. https://www.oreilly.com/library/view/hands-on-selenium-webdriver/9781098109998/[Hands-On Selenium WebDriver with Java]. _O'Reilly Media, Inc._, 2022.
 * García, Boni. https://www.amazon.com/Mastering-Software-Testing-JUnit-Comprehensive-ebook/dp/B076ZQCK5Q/[Mastering Software Testing with JUnit 5]. _Packt Publishing Ltd_, 2017.
