@@ -775,7 +775,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <h1>WebDriverManager</h1>
 <div class="details">
 <span id="author" class="author">Boni García</span><br>
-<span id="revdate">Version 5.9.3</span>
+<span id="revdate">Version 6.0.0</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -1002,7 +1002,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
     <span class="tag">&lt;groupId&gt;</span>io.github.bonigarcia<span class="tag">&lt;/groupId&gt;</span>
     <span class="tag">&lt;artifactId&gt;</span>webdrivermanager<span class="tag">&lt;/artifactId&gt;</span>
-    <span class="tag">&lt;version&gt;</span>5.9.3<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;version&gt;</span>6.0.0<span class="tag">&lt;/version&gt;</span>
     <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
@@ -1013,7 +1013,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="json"><span class="error">d</span><span class="error">e</span><span class="error">p</span><span class="error">e</span><span class="error">n</span><span class="error">d</span><span class="error">e</span><span class="error">n</span><span class="error">c</span><span class="error">i</span><span class="error">e</span><span class="error">s</span> {
-    <span class="error">t</span><span class="error">e</span><span class="error">s</span><span class="error">t</span><span class="error">I</span><span class="error">m</span><span class="error">p</span><span class="error">l</span><span class="error">e</span><span class="error">m</span><span class="error">e</span><span class="error">n</span><span class="error">t</span><span class="error">a</span><span class="error">t</span><span class="error">i</span><span class="error">o</span><span class="error">n</span><span class="error">(</span><span class="string"><span class="delimiter">&quot;</span><span class="content">io.github.bonigarcia:webdrivermanager:5.9.3</span><span class="delimiter">&quot;</span></span><span class="error">)</span>
+    <span class="error">t</span><span class="error">e</span><span class="error">s</span><span class="error">t</span><span class="error">I</span><span class="error">m</span><span class="error">p</span><span class="error">l</span><span class="error">e</span><span class="error">m</span><span class="error">e</span><span class="error">n</span><span class="error">t</span><span class="error">a</span><span class="error">t</span><span class="error">i</span><span class="error">o</span><span class="error">n</span><span class="error">(</span><span class="string"><span class="delimiter">&quot;</span><span class="content">io.github.bonigarcia:webdrivermanager:6.0.0</span><span class="delimiter">&quot;</span></span><span class="error">)</span>
 }</code></pre>
 </div>
 </div>
@@ -1111,7 +1111,7 @@ Although not mandatory, it is highly recommended to use a logger library to trac
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>WebDriverManager tries to find the browser version. To this aim, WebDriverManager uses internally a knowledge database called <a href="https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/commands.properties">commands database</a>. This database is a collection of shell commands used to discover the version of a given browser in the different operating systems (e.g., <code>google-chrome --version</code> for Chrome in Linux).</p>
+<p>WebDriverManager tries to find the browser version. To this aim, WebDriverManager uses internally a knowledge database called <a href="https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/commands.properties">commands database</a>. This database is a collection of shell commands used to discover the version of a given browser in the different operating systems (e.g., <code>google-chrome --version</code> for Chrome in Linux). As of WebDriverManager 6.0.0, you can specify the browser binary path (using the method <code>browserBinary()</code> ) that WebDriverManager will use for browser version discovery.</p>
 </li>
 <li>
 <p>Using the browser version, WebDriverManager tries to find the proper driver version. This process is different for each browser. For chromedriver, the <a href="https://github.com/GoogleChromeLabs/chrome-for-testing">Chrome for Testing (CfT) endpoints</a> are used. For geckodriver, the <a href="https://raw.githubusercontent.com/SeleniumHQ/selenium/trunk/common/geckodriver/geckodriver-support.json">Firefox mapping maintained by the Selenium project</a> (which is based on the <a href="https://firefox-source-docs.mozilla.org/testing/geckodriver/Support.html">official geckodriver support</a>). For msedgedriver, the <a href="https://msedgedriver.azureedge.net/">Edge metadata</a> is used.</p>
@@ -1467,7 +1467,7 @@ When using browsers in Docker containers, the call to the method <code>quit()</c
 </table>
 </div>
 <div class="paragraph">
-<p>The used Docker images by WebDriverManager have been created and maintained by <a href="https://aerokube.com/selenoid/">Aerokube</a> (you can check the available versions on the <a href="https://aerokube.com/images/latest/">browser images</a> page). Therefore, the available browsers to be executed as Docker containers in WebDriverManager are Chrome (like the previous example), <a href="https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerFirefoxTest.java">Firefox</a>, <a href="https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerEdgeTest.java">Edge</a>, <a href="https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerOperaTest.java">Opera</a>, and <a href="https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerSafariTest.java">Safari</a>.</p>
+<p>As of version 6, WebDriverManager uses the official Docker browser images created and maintained by the Selenium project, i.e., <a href="https://github.com/SeleniumHQ/docker-selenium">docker-selenium</a>. Therefore, the available browsers to be executed as Docker containers in WebDriverManager are Chrome (like the previous example), <a href="https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerFirefoxTest.java">Firefox</a>, <a href="https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerEdgeTest.java">Edge</a>, and <a href="https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerChromiumTest.java">Chromium</a>.</p>
 </div>
 <div class="admonitionblock note">
 <table>
@@ -1476,22 +1476,7 @@ When using browsers in Docker containers, the call to the method <code>quit()</c
 <i class="fa icon-note" title="Note"></i>
 </td>
 <td class="content">
-The case of Safari is particular since a real Safari browser can only be executed under a Mac OS machine. This way, the <em>Safari</em> Docker containers use the <a href="https://webkit.org/">WebKit engine</a>. This engine is the same used in browser containers, and therefore, from a functional point of view, both browsers (a real Safari and this Docker image) should behave in the same way.
-</td>
-</tr>
-</table>
-</div>
-<div class="paragraph">
-<p>In addition to these browsers, there is one more alternative: Chrome Mobile (i.e., Chrome on an Android device). To use this browser, you need to invoke the method <code>browserInDockerAndroid()</code> of a Chrome manager, just like in this <a href="https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerChromeMobileTest.java">example</a>.</p>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-Notice you will need hardware virtualization (hypervisor) or a virtual machine with nested virtualization support to run Chrome Mobile images.
+Some <em>dockerized</em> browsers (e.g., Chromium and Edge) are supported in ARM64 architecture. See the <a href="https://github.com/SeleniumHQ/docker-selenium">docker-selenium</a> README for further information.
 </td>
 </tr>
 </table>
@@ -1502,7 +1487,7 @@ Notice you will need hardware virtualization (hypervisor) or a virtual machine w
 <p>A significant aspect of the browser containers presented so far is that WebDriverManager connects to Docker Hub to discover the latest available release when the browser version is not specified (like the examples explained before). This way, the <em>dockerized</em> browsers of tests handled by WebDriverManager are auto-maintained, in the sense that these tests use the latest version available without any additional effort.</p>
 </div>
 <div class="paragraph">
-<p>Nevertheless, we can force a given browser version in Docker using the method <code>browserVersion()</code> of the WebDriverManager API. This method accepts a <code>String</code> parameter specifying the version. This version can be fixed (e.g., <code>91.0</code>), and it also accepts the following wildcards:</p>
+<p>Nevertheless, we can force a given browser version in Docker using the method <code>browserVersion()</code> of the WebDriverManager API. This method accepts a <code>String</code> parameter specifying the version. This version can be fixed (e.g., <code>132.0</code>), and it also accepts the following wildcards:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1513,10 +1498,10 @@ Notice you will need hardware virtualization (hypervisor) or a virtual machine w
 <p><code>"latest-N"</code> : Where <code>N</code> is an integer value to be subtracted from the current stable version. For example, if we specify <code>latest-1</code> (i.e., <em>latest version minus one</em>), the previous version to the stable release will be used (see an example <a href="https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerChromeVersionsTest.java">here</a>).</p>
 </li>
 <li>
-<p><code>"beta"</code>: To use the beta version. This version is only available for Chrome and Firefox, thanks to the Docker images maintained by <a href="https://hub.docker.com/r/twilio/selenoid/">Twilio</a> (a fork of the Aerokube images for the beta and development versions of Chrome and Firefox).</p>
+<p><code>"beta"</code>: To use the beta version.</p>
 </li>
 <li>
-<p><code>"dev"</code>: To use the development version (again, for Chrome and Firefox).</p>
+<p><code>"dev"</code>: To use the development version.</p>
 </li>
 </ul>
 </div>
@@ -1526,7 +1511,6 @@ Notice you will need hardware virtualization (hypervisor) or a virtual machine w
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="java"><span class="keyword">import</span> <span class="include">static</span> <span class="include">io.github.bonigarcia.wdm.WebDriverManager.isDockerAvailable</span>;
-
 <span class="keyword">import</span> <span class="include">static</span> <span class="include">org.assertj.core.api.Assertions.assertThat</span>;
 <span class="keyword">import</span> <span class="include">static</span> <span class="include">org.assertj.core.api.Assumptions.assumeThat</span>;
 
@@ -1542,7 +1526,6 @@ Notice you will need hardware virtualization (hypervisor) or a virtual machine w
     WebDriver driver;
 
     WebDriverManager wdm = WebDriverManager.chromedriver().browserInDocker()
-            .dockerDefaultArgs(<span class="string"><span class="delimiter">&quot;</span><span class="content">--disable-gpu,--no-sandbox</span><span class="delimiter">&quot;</span></span>)
             .browserVersion(<span class="string"><span class="delimiter">&quot;</span><span class="content">beta</span><span class="delimiter">&quot;</span></span>);
 
     <span class="annotation">@BeforeEach</span>
@@ -1743,7 +1726,7 @@ Notice you will need hardware virtualization (hypervisor) or a virtual machine w
 <div class="sect3">
 <h4 id="console-log-gathering"><a class="anchor" href="#console-log-gathering"></a>3.5.1. Console Log Gathering</h4>
 <div class="paragraph">
-<p>Gathering the browser console might help find the cause of failed Selenium tests. This feature is implemented in some drivers like chromedriver, but it is not yet implemented in geckodriver (and therefore, it is not possible to gather the Firefox console). BrowserWatcher provides a cross-browser mechanism based on JavaScript to implement this feature. WebDriverManager incorporates this feature for browsers controlled with Selenium WebDriver created through the WebDriverManager method <code>create()</code> and decorated with <code>watch()</code>. Internally,  BrowserWatcher is installed as a browser extension and starts gathering browser logs during the session time. At some point, we need to invoke the WebDriverManager method <code>getLogs()</code> to get the collected logs from the Java logic. The following test shows a basic example of this feature.</p>
+<p>Gathering the browser console might help find the cause of failed Selenium tests. BrowserWatcher provides a cross-browser mechanism based on JavaScript to implement this feature. WebDriverManager incorporates this feature for browsers controlled with Selenium WebDriver created through the WebDriverManager method <code>create()</code> and decorated with <code>watch()</code>. Internally,  BrowserWatcher is installed as a browser extension and starts gathering browser logs during the session time. At some point, we need to invoke the WebDriverManager method <code>getLogs()</code> to get the collected logs from the Java logic. The following test shows a basic example of this feature.</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -2056,10 +2039,10 @@ This feature is based on the API <a href="https://developer.chrome.com/docs/exte
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Using the WebDriverManager <em>fat-JAR</em> (i.e., WebDriverManager with all its dependencies in a single executable JAR file). This JAR file is generated from the source using the Maven command <code>mvn compile assembly:single</code>, and it is released on GitHub with every new version of WebDriverManager. You can download the latest of this fat-JAR from <a href="https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-5.9.3/webdrivermanager-5.9.3-fat.jar">here</a>. Once you get this file, you  need to use the following command in the shell (where <code>&lt;args&gt;</code> are the accepted arguments, explained below):</p>
+<p>Using the WebDriverManager <em>fat-JAR</em> (i.e., WebDriverManager with all its dependencies in a single executable JAR file). This JAR file is generated from the source using the Maven command <code>mvn compile assembly:single</code>, and it is released on GitHub with every new version of WebDriverManager. You can download the latest of this fat-JAR from <a href="https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-6.0.0/webdrivermanager-6.0.0-fat.jar">here</a>. Once you get this file, you  need to use the following command in the shell (where <code>&lt;args&gt;</code> are the accepted arguments, explained below):</p>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-5.9.3-fat.jar &lt;args&gt;</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-6.0.0-fat.jar &lt;args&gt;</code></pre>
 </div>
 </div>
 </li>
@@ -2075,7 +2058,7 @@ This feature is based on the API <a href="https://developer.chrome.com/docs/exte
 <p>Using the WebDriverManager Docker container. Each new release of WebDriverManager is pushed to <a href="https://hub.docker.com/r/bonigarcia/webdrivermanager">Docker Hub</a> as a container based on <a href="https://hub.docker.com/_/openjdk">OpenJDK</a> plus the WebDriverManager fat-JAR. The default command to run the WebDriverManager Docker container is described below.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -e ARGS=&quot;&lt;args&gt;&quot; bonigarcia/webdrivermanager:5.9.3</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -e ARGS=&quot;&lt;args&gt;&quot; bonigarcia/webdrivermanager:6.0.0</code></pre>
 </div>
 </div>
 </li>
@@ -2093,7 +2076,7 @@ This feature is based on the API <a href="https://developer.chrome.com/docs/exte
 [ERROR]
 [ERROR] 2. For running a browser in a Docker (and use it trough noVNC):
 [ERROR]         runInDocker browserName &lt;browserVersion&gt;
-[ERROR] (where browserName is: chrome|edge|firefox|opera|safari|chrome-mobile)
+[ERROR] (where browserName is: chrome|edge|firefox|chromium)
 [ERROR]
 [ERROR] 3. For starting WebDriverManager Server:
 [ERROR]         server &lt;port&gt;
@@ -2113,7 +2096,7 @@ This feature is based on the API <a href="https://developer.chrome.com/docs/exte
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-5.9.3-fat.jar resolveDriverFor chrome</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-6.0.0-fat.jar resolveDriverFor chrome</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -2137,7 +2120,7 @@ This feature is based on the API <a href="https://developer.chrome.com/docs/exte
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -v ${PWD}:/wdm -e ARGS=&quot;resolveDriverFor chrome&quot; bonigarcia/webdrivermanager:5.9.3</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -v ${PWD}:/wdm -e ARGS=&quot;resolveDriverFor chrome&quot; bonigarcia/webdrivermanager:6.0.0</code></pre>
 </div>
 </div>
 <h4 id="option-2-browsers-in-docker" class="discrete">Option 2: Browsers in Docker</h4>
@@ -2153,7 +2136,7 @@ This feature is based on the API <a href="https://developer.chrome.com/docs/exte
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-5.9.3-fat.jar runInDocker chrome</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-6.0.0-fat.jar runInDocker chrome</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -2177,20 +2160,8 @@ This feature is based on the API <a href="https://developer.chrome.com/docs/exte
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -e ARGS=&quot;runInDocker chrome&quot; bonigarcia/webdrivermanager:5.9.3</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -e ARGS=&quot;runInDocker chrome&quot; bonigarcia/webdrivermanager:6.0.0</code></pre>
 </div>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-There is an <a href="https://bugs.chromium.org/p/chromedriver/issues/detail?id=3857">open issue</a> with Chrome 92+ and Docker at the time of this writing. For this reason, the previous Docker container command uses Chrome 91. For further information, see <a href="#known-issues">known issues</a>.
-</td>
-</tr>
-</table>
 </div>
 <h4 id="option-3-server" class="discrete">Option 3: Server</h4>
 <div class="paragraph">
@@ -2205,7 +2176,7 @@ There is an <a href="https://bugs.chromium.org/p/chromedriver/issues/detail?id=3
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-5.9.3-fat.jar server</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-6.0.0-fat.jar server</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -2229,7 +2200,7 @@ There is an <a href="https://bugs.chromium.org/p/chromedriver/issues/detail?id=3
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -p 4444:4444 -v /var/run/docker.sock:/var/run/docker.sock bonigarcia/webdrivermanager:5.9.3</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -p 4444:4444 -v /var/run/docker.sock:/var/run/docker.sock bonigarcia/webdrivermanager:6.0.0</code></pre>
 </div>
 </div>
 </div>
@@ -2346,7 +2317,7 @@ wdmServerTest();</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>To configure the WebDriverManager Agent, we need to specify the path of the WebDriverManager <a href="https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-5.9.3/webdrivermanager-5.9.3-fat.jar">fat-JAR</a> using the JVM flag <code>-javaagent:/path/to/webdrivermanager-5.9.3-fat.jar</code>. Alternatively, it can be done using Maven (see a complete project example <a href="https://github.com/bonigarcia/wdm-agent-example/">here</a>).</p>
+<p>To configure the WebDriverManager Agent, we need to specify the path of the WebDriverManager <a href="https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-6.0.0/webdrivermanager-6.0.0-fat.jar">fat-JAR</a> using the JVM flag <code>-javaagent:/path/to/webdrivermanager-6.0.0-fat.jar</code>. Alternatively, it can be done using Maven (see a complete project example <a href="https://github.com/bonigarcia/wdm-agent-example/">here</a>).</p>
 </div>
 </div>
 <div class="sect2">
@@ -2390,7 +2361,7 @@ wdmServerTest();</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">boni@ubuntu:~$ java -jar webdrivermanager-5.9.3-fat.jar resolveDriverFor chrome
+<pre class="CodeRay highlight"><code data-lang="shell">boni@ubuntu:~$ java -jar webdrivermanager-6.0.0-fat.jar resolveDriverFor chrome
 [INFO] Using WebDriverManager to resolve chrome
 [DEBUG] Detecting chrome version using online commands.properties
 [DEBUG] Running command on the shell: [google-chrome, --version]
@@ -2515,7 +2486,7 @@ In addition to the methods presented in this section, each manager provides a <c
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -v ${PWD}:/wdm -e ARGS=&quot;resolveDriverFor chrome&quot; -e WDM_CHROMEVERSION=84 bonigarcia/webdrivermanager:5.9.3</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -v ${PWD}:/wdm -e ARGS=&quot;resolveDriverFor chrome&quot; -e WDM_CHROMEVERSION=84 bonigarcia/webdrivermanager:6.0.0</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -2573,6 +2544,12 @@ The preference order of these configuration alternatives is (in case of overlapp
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>wdm.chromeVersion</code>, <code>wdm.operaVersion</code>, <code>wdm.edgeVersion</code>, <code>wdm.firefoxVersion</code>, <code>wdm.chromiumVersion</code>, <code>wdm.safariVersion</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>""</code> (automatic browser version detection using the <a href="https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/commands.properties">commands database</a>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Custom browser version (major)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>browserBinary(String)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>wdm.chromeBinary</code>, <code>wdm.operaBinary</code>, <code>wdm.edgeBinary</code>, <code>wdm.firefoxBinary</code>, <code>wdm.chromiumBinary</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>""</code> (automatic browser version detection using the default browser locations as specified in the <a href="https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/commands.properties">commands database</a>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Custom browser binary path</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>forceDownload()</code></p></td>
@@ -2746,12 +2723,6 @@ HTTP proxy. It can be also configured using the environment variable  <code>HTTP
 <td class="tableblock halign-left valign-top"><p class="tableblock">Custom browser version detection command (see example <a href="https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/chrome/ChromeBetaTest.java">here</a>)</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>browserVersionDetection</code> <code>Regex(String)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>wdm.browserVersion</code> <code>DetectionRegex</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>[^\\d\^\\.]</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Regular expression used to extract the browser version from the shell</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>useLocalCommandsProperties</code> <code>First()</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>wdm.commandsProperties</code> <code>OnlineFirst=true</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code> (the online <a href="https://github.com/bonigarcia/webdrivermanager/blob/master/src/main/resources/versions.properties">commands database</a> is used in the <a href="#resolution-algorithm">resolution algorithm</a>)</p></td>
@@ -2839,7 +2810,7 @@ HTTP proxy. It can be also configured using the environment variable  <code>HTTP
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>dockerShmSize(String)</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>wdm.dockerShmSize</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>256m</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>512m</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Docker <a href="https://docs.docker.com/engine/reference/run/">shared memory</a> in bytes. Unit is optional and can be <code>b</code> (bytes), <code>k</code> (kilobytes), <code>m</code> (megabytes), or <code>g</code> (gigabytes)</p></td>
 </tr>
 <tr>
@@ -2879,16 +2850,16 @@ HTTP proxy. It can be also configured using the environment variable  <code>HTTP
 <td class="tableblock halign-left valign-top"><p class="tableblock">Enable the <a href="#recordings">recordings</a> of the browser session in Docker</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dockerScreenResolution(String)</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>wdm.dockerScreenResolution</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1280x1080x24</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Screen resolution of the browser desktop session in format <code>&lt;width&gt;x&lt;height&gt;x&lt;colors-depth&gt;</code></p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>dockerRecordingFrameRate(int)</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>wdm.dockerRecordingFrameRate</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>12</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>15</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Frame rate for recordings</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>dockerScreenResolution(String)</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>wdm.dockerScreenResolution</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>1920x1080x24</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Screen resolution of the browser desktop session in format <code>&lt;width&gt;x&lt;height&gt;x&lt;colors-depth&gt;</code></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>dockerRecordingOutput(String)</code> <code>dockerRecordingOutput(Path)</code></p></td>
@@ -3068,7 +3039,7 @@ As of WebDriverManager 5.3.0, this issue should not happen anymore (even without
 </div>
 </div>
 <div class="paragraph">
-<p>WebDriverManager 5.4+ implements the support for the CfT endpoints. Therefore, the solution to this problem is to bump WebDriverManager to the <strong>latest version</strong> (5.9.3 currently). Also, to ensure that the wrong version has not been cached in the <strong>resolution cache</strong>, you can refresh completely the cache folder (at least once) as follows:</p>
+<p>WebDriverManager 5.4+ implements the support for the CfT endpoints. Therefore, the solution to this problem is to bump WebDriverManager to the <strong>latest version</strong> (6.0.0 currently). Also, to ensure that the wrong version has not been cached in the <strong>resolution cache</strong>, you can refresh completely the cache folder (at least once) as follows:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3198,7 +3169,7 @@ As of WebDriverManager 5.3.0, this issue should not happen anymore (even without
 <h2 id="further-documentation"><a class="anchor" href="#further-documentation"></a>11. Further Documentation</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>There are other resources related to Selenium-Jupiter and automated testing you can find helpful. For instance, the following books:</p>
+<p>There are other resources related to WebDriverManager and automated testing you can find helpful. For instance, the following books:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -3215,6 +3186,15 @@ As of WebDriverManager 5.3.0, this issue should not happen anymore (even without
 </div>
 <div class="ulist">
 <ul>
+<li>
+<p>Leotta, M., et al., "<a href="https://www.sciencedirect.com/science/article/pii/S0950584924002003">A family of experiments to quantify the benefits of adopting WebDriverManager and Selenium-Jupiter</a>." <em>Information and Software Technology</em> 178 (2025): 107595.</p>
+</li>
+<li>
+<p>García, Boni, et al. "<a href="https://link.springer.com/chapter/10.1007/978-3-031-70245-7_10">Exploring Browser Automation: A Comparative Study of Selenium, Cypress, Puppeteer, and Playwright</a>." <em>International Conference on the Quality of Information and Communications Technology</em>. Springer Nature Switzerland, 2024.</p>
+</li>
+<li>
+<p>Leotta, M., et al. "<a href="https://dl.acm.org/doi/10.1145/3661167.3661192">AI-generated test scripts for web E2E testing with ChatGPT and Copilot: a preliminary study</a>." Proceedings of the <em>28th International Conference on Evaluation and Assessment in Software Engineering</em>. 2024.</p>
+</li>
 <li>
 <p>García, Boni, et al. "<a href="https://www.sciencedirect.com/science/article/pii/S0164121223001188">Enhancing Web Applications Observability through Instrumented Automated Browsers</a>." <em>Journal of Systems and Software</em> (2023): 111723.</p>
 </li>
@@ -3253,15 +3233,15 @@ As of WebDriverManager 5.3.0, this issue should not happen anymore (even without
 <h2 id="about"><a class="anchor" href="#about"></a>12. About</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>WebDriverManager (Copyright © 2015-2024) is an open-source project created and maintained by <a href="https://bonigarcia.dev/">Boni García</a> (<a href="https://twitter.com/boni_gg">@boni_gg</a>), licensed under the terms of <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache 2.0 License</a>. This documentation (also available in <a href="webdrivermanager.pdf">PDF</a>) is released under the terms of <a href="https://creativecommons.org/licenses/by-nc-sa/2.0/">CC BY-NC-SA 2.0</a>.</p>
+<p>WebDriverManager (Copyright © 2015-2025) is an open-source project created and maintained by <a href="https://bonigarcia.dev/">Boni García</a> (<a href="https://twitter.com/boni_gg">@boni_gg</a>), licensed under the terms of <a href="https://www.apache.org/licenses/LICENSE-2.0">Apache 2.0 License</a>. This documentation (also available in <a href="webdrivermanager.pdf">PDF</a>) is released under the terms of <a href="https://creativecommons.org/licenses/by-nc-sa/2.0/">CC BY-NC-SA 2.0</a>.</p>
 </div>
 </div>
 </div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 5.9.3<br>
-Updated on 14-02-2025
+Version 6.0.0<br>
+Updated on 19-03-2025
 </div>
 </div>
 </body>
