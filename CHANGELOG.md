@@ -1,5 +1,11 @@
 # Changelog
 
+## [6.0.1] - TBD
+
+### Fixed
+- Use seleniarm images only for Chromium and Firefox in ARM64 machines
+
+
 ## [6.0.0] - 2025-03-19
 
 ### Added
