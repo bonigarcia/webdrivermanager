@@ -19,6 +19,8 @@ package io.github.bonigarcia.wdm.docker;
 import static io.github.bonigarcia.wdm.WebDriverManager.isDockerAvailable;
 import static io.github.bonigarcia.wdm.config.Config.LATEST;
 import static io.github.bonigarcia.wdm.config.Config.isNullOrEmpty;
+import static io.github.bonigarcia.wdm.config.DriverManagerType.CHROMIUM;
+import static io.github.bonigarcia.wdm.config.DriverManagerType.FIREFOX;
 import static io.github.bonigarcia.wdm.docker.DockerHost.defaultAddress;
 import static io.github.bonigarcia.wdm.versions.Shell.runAndWait;
 import static io.github.bonigarcia.wdm.versions.VersionDetector.getMajorVersion;
@@ -451,7 +453,8 @@ public class DockerService {
         int minusIndex = getMinusIndex(browserVersion);
         if (minusIndex != 0) {
             if (!resolutionCache.checkKeyInResolutionCache(cacheKey, false)) {
-                String dockerImage = getDockerImage(browserName, latestVersion);
+                String dockerImage = getDockerImage(driverManagerType,
+                        browserName, latestVersion);
                 String cacheKeyLatest = getCacheKey(browserName, latestVersion);
                 String browserVersionFromContainer = getBrowserVersionFromContainer(
                         driverManagerType, cacheKeyLatest, latestVersion,
@@ -462,7 +465,8 @@ public class DockerService {
                         + ".0";
                 if (!resolutionCache.checkKeyInResolutionCache(cacheKey,
                         false)) {
-                    dockerImage = getDockerImage(browserName, latestVersion);
+                    dockerImage = getDockerImage(driverManagerType, browserName,
+                            latestVersion);
                     pullImageIfNecessary(cacheKey, dockerImage, latestVersion);
                 }
             } else {
@@ -534,11 +538,15 @@ public class DockerService {
         return minusIndex;
     }
 
-    public String getDockerImage(String browserName, String browserVersion) {
+    public String getDockerImage(DriverManagerType driverManagerType,
+            String browserName, String browserVersion) {
         String dockerImageFormat = getDockerImageFormat();
-        String imageLabel = config.getArchitecture() == Architecture.ARM64
-                ? SELENIARM_IMAGE_LABEL
-                : SELENIUM_IMAGE_LABEL;
+        String imageLabel = SELENIUM_IMAGE_LABEL;
+        if (config.getArchitecture() == Architecture.ARM64
+                && (driverManagerType == CHROMIUM
+                        || driverManagerType == FIREFOX)) {
+            imageLabel = SELENIARM_IMAGE_LABEL;
+        }
         String dockerImage = String.format(dockerImageFormat, imageLabel,
                 browserName, browserVersion);
         log.trace("Docker image: {}", dockerImage);

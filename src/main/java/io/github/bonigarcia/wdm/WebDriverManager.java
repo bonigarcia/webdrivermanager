@@ -1863,8 +1863,8 @@ public abstract class WebDriverManager {
                 }
                 browserCacheKey += browserVersion;
             }
-            browserImage = getDockerService().getDockerImage(browserName,
-                    browserVersion);
+            browserImage = getDockerService().getDockerImage(
+                    getDriverManagerType(), browserName, browserVersion);
         }
 
         DockerContainer browserContainer = getDockerService()
