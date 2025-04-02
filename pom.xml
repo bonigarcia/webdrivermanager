@@ -13,7 +13,7 @@
         <brotli.version>0.1.2</brotli.version>
         <commons-lang3.version>3.17.0</commons-lang3.version>
         <commons-compress.version>1.27.1</commons-compress.version>
-        <httpclient5.version>5.2.1</httpclient5.version>
+        <httpclient5.version>5.4.3</httpclient5.version>
 
         <!-- provided -->
         <selenium.version>4.30.0</selenium.version>
