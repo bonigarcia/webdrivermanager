@@ -1,9 +1,12 @@
 # Changelog
 
-## [6.0.1] - TBD
+## [6.0.1] - 2025-04-02
 
 ### Fixed
 - Use seleniarm images only for Chromium and Firefox in ARM64 machines
+
+### Changed
+- Bump to docker-java 3.5.0 and httpclient5 5.4.3 (#916 and #1439)
 
 
 ## [6.0.0] - 2025-03-19
