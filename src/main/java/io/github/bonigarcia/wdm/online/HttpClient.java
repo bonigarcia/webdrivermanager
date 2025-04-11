@@ -57,15 +57,12 @@ import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
 import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManager;
+import org.apache.hc.client5.http.impl.io.PoolingHttpClientConnectionManagerBuilder;
 import org.apache.hc.client5.http.protocol.HttpClientContext;
-import org.apache.hc.client5.http.socket.ConnectionSocketFactory;
-import org.apache.hc.client5.http.socket.PlainConnectionSocketFactory;
-import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
+import org.apache.hc.client5.http.ssl.DefaultClientTlsStrategy;
 import org.apache.hc.core5.http.ClassicHttpRequest;
 import org.apache.hc.core5.http.ClassicHttpResponse;
 import org.apache.hc.core5.http.HttpHost;
-import org.apache.hc.core5.http.config.Registry;
-import org.apache.hc.core5.http.config.RegistryBuilder;
 import org.apache.hc.core5.ssl.SSLContexts;
 import org.apache.hc.core5.ssl.TrustStrategy;
 import org.brotli.dec.BrotliInputStream;
@@ -105,14 +102,11 @@ public class HttpClient implements Closeable {
                             return true;
                         }
                     }).build();
-            SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(
+
+            DefaultClientTlsStrategy dcts = new DefaultClientTlsStrategy(
                     sslContext, allHostsValid);
-            Registry<ConnectionSocketFactory> socketFactoryRegistry = RegistryBuilder
-                    .<ConnectionSocketFactory>create().register("https", sslsf)
-                    .register("http", new PlainConnectionSocketFactory())
-                    .build();
-            PoolingHttpClientConnectionManager cm = new PoolingHttpClientConnectionManager(
-                    socketFactoryRegistry);
+            PoolingHttpClientConnectionManager cm = PoolingHttpClientConnectionManagerBuilder
+                    .create().setTlsSocketStrategy(dcts).build();
             cm.setDefaultConnectionConfig(ConnectionConfig.custom()
                     .setConnectTimeout(config.getTimeout(), TimeUnit.SECONDS)
                     .build());
