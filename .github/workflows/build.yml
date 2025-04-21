@@ -47,7 +47,7 @@ jobs:
         command: |
           mvn -B test
     - name: Run tests on Windows and macOS
-      if: matrix.os != 'macos-latest'
+      if: matrix.os != 'ubuntu-latest'
       uses: nick-invision/retry@v3.0.2
       with:
         timeout_minutes: 30
