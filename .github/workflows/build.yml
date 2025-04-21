@@ -41,10 +41,19 @@ jobs:
     - name: Install Podman with QEMU in macOS
       if: matrix.os == 'macos-latest'
       run: |
+        # Install dependencies
         brew install podman qemu
+        # Configure Podman to use QEMU
+        cat <<EOF > ~/.config/containers/containers.conf
+        [engine]
+        machine_provider = "qemu"
+        EOF
+        # Initialize and start VM
         podman machine init --cpus 2 --memory 2048 --disk-size 20 --now
         podman system connection default podman-machine-default-root
+        # Set up Docker alias
         sudo ln -sf $(which podman) /usr/local/bin/docker
+        # Test Docker
         docker --version
     - name: Set up Docker in macOS
       if: matrix.os == 'macos-latest'
