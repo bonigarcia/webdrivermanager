@@ -42,8 +42,7 @@ public class Recording {
 
     public static String getRecordingNameForDocker(String browserName,
             String sessionId) {
-        return getRecordingNameForDocker(browserName, sessionId)
-                + DOCKER_RECORDING_EXT;
+        return getRecordingName(browserName, sessionId) + DOCKER_RECORDING_EXT;
     }
 
 }
