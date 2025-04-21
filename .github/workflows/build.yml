@@ -41,17 +41,10 @@ jobs:
     - name: Install Podman with QEMU in macOS
       if: matrix.os == 'macos-latest'
       run: |
-        # Install dependencies
-        brew install podman qemu
-        # Force QEMU usage (bypass vfkit)
-        export CONTAINERS_MACHINE_PROVIDER=qemu
-        # Initialize and start VM
-        podman machine init --cpus 2 --memory 2048 --now
-        podman system connection default podman-machine-default-root
-        # Set up Docker compatibility
-        echo "alias docker=podman" >> ~/.bashrc
-        source ~/.bashrc
-        # Test Docker
+        brew install --cask podman-desktop
+        /Applications/Podman\ Desktop.app/Contents/Resources/podman-desktop podman machine start
+        echo 'export PATH="$PATH:/Applications/Podman Desktop.app/Contents/Resources/podman-desktop/bin"' >> $GITHUB_ENV
+        ln -s /Applications/Podman\ Desktop.app/Contents/Resources/podman-desktop/bin/podman /usr/local/bin/docker
         docker --version
     - name: Set up Docker in macOS
       if: matrix.os == 'macos-latest'
