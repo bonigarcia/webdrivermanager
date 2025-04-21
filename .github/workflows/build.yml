@@ -38,13 +38,13 @@ jobs:
         /Applications/Firefox.app/Contents/MacOS/firefox --version
         brew install --cask microsoft-edge
         "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge" -version
-    - name: Install Podman (Docker-compatible) in macOS
+    - name: Install Podman with QEMU in macOS
       if: matrix.os == 'macos-latest'
       run: |
-        brew install podman
-        podman machine init
-        podman machine start
-        ln -s /usr/bin/podman /usr/bin/docker
+        brew install podman qemu
+        podman machine init --cpus 2 --memory 2048 --disk-size 20 --now
+        podman system connection default podman-machine-default-root
+        sudo ln -sf $(which podman) /usr/local/bin/docker
         docker --version
     - name: Set up Docker in macOS
       if: matrix.os == 'macos-latest'
