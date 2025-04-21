@@ -38,6 +38,8 @@ jobs:
         /Applications/Firefox.app/Contents/MacOS/firefox --version
         brew install --cask microsoft-edge
         "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge" -version
+    - name: Test Docker
+      run: docker run --rm hello-world
     - name: Run tests on Linux
       if: matrix.os == 'ubuntu-latest'
       uses: nick-invision/retry@v3.0.2
