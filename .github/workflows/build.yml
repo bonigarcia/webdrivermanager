@@ -38,19 +38,6 @@ jobs:
         /Applications/Firefox.app/Contents/MacOS/firefox --version
         brew install --cask microsoft-edge
         "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge" -version
-    - name: Install Podman with QEMU in macOS
-      if: matrix.os == 'macos-latest'
-      run: |
-        brew install --cask podman-desktop
-        /Applications/Podman\ Desktop.app/Contents/Resources/podman-desktop podman machine start
-        echo 'export PATH="$PATH:/Applications/Podman Desktop.app/Contents/Resources/podman-desktop/bin"' >> $GITHUB_ENV
-        ln -s /Applications/Podman\ Desktop.app/Contents/Resources/podman-desktop/bin/podman /usr/local/bin/docker
-        docker --version
-    - name: Set up Docker in macOS
-      if: matrix.os == 'macos-latest'
-      uses: docker/setup-buildx-action@v3
-    - name: Test Docker
-      run: docker run --rm hello-world
     - name: Run tests on Linux
       if: matrix.os == 'ubuntu-latest'
       uses: nick-invision/retry@v3.0.2
@@ -59,16 +46,8 @@ jobs:
         max_attempts: 3
         command: |
           mvn -B test
-    - name: Run tests on macOS
-      if: matrix.os == 'macos-latest'
-      uses: nick-invision/retry@v3.0.2
-      with:
-        timeout_minutes: 30
-        max_attempts: 3
-        command: |
-          mvn -B test -Dtest=!Docker*
-    - name: Run tests on Windows
-      if: matrix.os == 'windows-latest'
+    - name: Run tests on Windows and macOS
+      if: matrix.os != 'macos-latest'
       uses: nick-invision/retry@v3.0.2
       with:
         timeout_minutes: 30
@@ -76,14 +55,14 @@ jobs:
         command: |
           mvn -B test -Dtest=!Docker*
     - name: Upload analysis to SonarCloud
-      if: success() && matrix.os == 'ubuntu-latest' && matrix.java == '17' && !contains(github.ref, 'pull')
+      if: success() && matrix.os == 'ubuntu-latest' && !contains(github.ref, 'pull')
       run: >
         mvn -B sonar:sonar
         -Dsonar.host.url=https://sonarcloud.io
         -Dsonar.organization=bonigarcia-github
         -Dsonar.projectKey=io.github.bonigarcia:webdrivermanager
     - name: Upload coverage to Codecov
-      if: success() && matrix.os == 'ubuntu-latest' && matrix.java == '17' && !contains(github.ref, 'pull')
+      if: success() && matrix.os == 'ubuntu-latest' && !contains(github.ref, 'pull')
       uses: codecov/codecov-action@v5.4.2
     - name: Store recordings on Linux
       if: always() && matrix.os == 'ubuntu-latest'
