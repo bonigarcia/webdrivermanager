@@ -31,6 +31,13 @@ jobs:
       if: matrix.os == 'ubuntu-latest'
       run: |
         Xvfb $DISPLAY &
+    - name: Install browsers in macOS
+      if: matrix.os == 'macos-latest'
+      run: |
+        brew install --cask firefox
+        /Applications/Firefox.app/Contents/MacOS/firefox --version
+        brew install --cask microsoft-edge
+        "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge" -version
     - name: Run tests on Linux
       if: matrix.os == 'ubuntu-latest'
       uses: nick-invision/retry@v3.0.2
@@ -38,22 +45,15 @@ jobs:
         timeout_minutes: 30
         max_attempts: 3
         command: |
-          mvn -B test -Dtest=!Record*
-    - name: Install browsers in Mac
-      if: matrix.os == 'macos-latest'
-      run: |
-        brew install --cask firefox
-        /Applications/Firefox.app/Contents/MacOS/firefox --version
-        brew install --cask microsoft-edge
-        "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge" -version
-    - name: Run tests on Mac
+          mvn -B test
+    - name: Run tests on macOS
       if: matrix.os == 'macos-latest'
       uses: nick-invision/retry@v3.0.2
       with:
         timeout_minutes: 30
         max_attempts: 3
         command: |
-          mvn -B test -Dtest=!Docker*,!Record*,!DisplayLogsChromeTest,!GatherLogsChromeTest
+          mvn -B test -Dtest=!Docker*
     - name: Run tests on Windows
       if: matrix.os == 'windows-latest'
       uses: nick-invision/retry@v3.0.2
@@ -72,10 +72,24 @@ jobs:
     - name: Upload coverage to Codecov
       if: success() && matrix.os == 'ubuntu-latest' && matrix.java == '17' && !contains(github.ref, 'pull')
       uses: codecov/codecov-action@v5.4.2
-    - name: Store recordings (only available in Windows)
+    - name: Store recordings on Linux
+      if: always() && matrix.os == 'ubuntu-latest'
+      uses: actions/upload-artifact@v4.6.2
+      with:
+        name: linux-recordings
+        path: |
+          /home/runner/Downloads/*.webm
+    - name: Store recordings on Windows
       if: always() && matrix.os == 'windows-latest'
       uses: actions/upload-artifact@v4.6.2
       with:
-        name: webm-files
+        name: win-recordings
         path: |
           C:\Users\runneradmin\Downloads\*.webm
+    - name: Store recordings on macOS
+      if: always() && matrix.os == 'macos-latest'
+      uses: actions/upload-artifact@v4.6.2
+      with:
+        name: macos-recordings
+        path: |
+          /Users/runner/Downloads/*.webm

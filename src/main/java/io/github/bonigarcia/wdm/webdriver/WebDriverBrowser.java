@@ -162,12 +162,12 @@ public class WebDriverBrowser {
     public void startRecording(String recordingName) {
         ((JavascriptExecutor) driver).executeScript(
                 "window.postMessage({ type: \"startRecording\", name: \""
-                        + recordingName + "\" });");
+                        + recordingName + "\" }, \"*\");");
     }
 
     public void stopRecording() {
         ((JavascriptExecutor) driver).executeScript(
-                "window.postMessage({ type: \"stopRecording\" } );");
+                "window.postMessage({ type: \"stopRecording\" }, \"*\");");
     }
 
 }
