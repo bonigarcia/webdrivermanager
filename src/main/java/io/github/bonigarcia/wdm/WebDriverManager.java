@@ -170,7 +170,6 @@ public abstract class WebDriverManager {
     protected static final String CLI_RESOLVER = "resolveDriverFor";
     protected static final String CLI_DOCKER = "runInDocker";
     protected static final String BROWSER_WATCHER_ID = "kbnnckbeejhjlljpgelfponodpecfapp";
-    protected static final String BROWSER_WATCHER_ERROR = "This feature is not available in BrowserWatcher ";
 
     protected abstract List<URL> getDriverUrls(String driverVersion)
             throws IOException;
@@ -609,7 +608,8 @@ public abstract class WebDriverManager {
 
     protected void checkBrowserWatcherVersion() {
         if (getDriverManagerType() != FIREFOX) {
-            log.warn(BROWSER_WATCHER_ERROR + getBrowserWatcherVersion());
+            log.warn("This feature is not available in BrowserWatcher {}",
+                    getBrowserWatcherVersion());
         }
     }
 

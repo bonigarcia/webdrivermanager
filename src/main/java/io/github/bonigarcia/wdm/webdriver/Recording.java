@@ -32,6 +32,10 @@ public class Recording {
     private static final String SEPARATOR = "_";
     private static final String DATE_FORMAT = "yyyy.MM.dd_HH.mm.ss.SSS";
 
+    private Recording() {
+        throw new IllegalStateException("Utility class");
+    }
+
     public static String getRecordingName(String browserName,
             String sessionId) {
         Date now = new Date();

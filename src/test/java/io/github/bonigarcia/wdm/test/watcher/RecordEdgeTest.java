@@ -54,7 +54,7 @@ class RecordEdgeTest {
     }
 
     @Test
-    void test() throws InterruptedException {
+    void test() {
         driver.get(
                 "https://bonigarcia.dev/selenium-webdriver-java/slow-calculator.html");
 

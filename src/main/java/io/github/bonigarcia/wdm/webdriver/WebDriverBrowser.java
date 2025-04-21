@@ -51,9 +51,9 @@ public class WebDriverBrowser {
 
     final Logger log = getLogger(lookup().lookupClass());
 
-    final String DEFAULT_DOWNLOADS_FOLDER = "Downloads";
-    final String LINUX_ENV_DOWNLOAD_DIR = "XDG_DOWNLOAD_DIR";
-    final String USER_HOME_PROPERTY = "user.home";
+    static final String DEFAULT_DOWNLOADS_FOLDER = "Downloads";
+    static final String LINUX_ENV_DOWNLOAD_DIR = "XDG_DOWNLOAD_DIR";
+    static final String USER_HOME_PROPERTY = "user.home";
     static final int RECORDING_TIMEOUT_SEC = 5;
     static final int POLL_TIME_MSEC = 500;
 
@@ -178,9 +178,8 @@ public class WebDriverBrowser {
     }
 
     public void startRecording() {
-        String recordingName = Recording.getRecordingName(browserName,
-                ((RemoteWebDriver) driver).getSessionId().toString());
-        startRecording(recordingName);
+        startRecording(Recording.getRecordingName(browserName,
+                ((RemoteWebDriver) driver).getSessionId().toString()));
     }
 
     public void startRecording(String recordingName) {
