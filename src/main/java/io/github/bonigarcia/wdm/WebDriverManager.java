@@ -170,6 +170,7 @@ public abstract class WebDriverManager {
     protected static final String CLI_RESOLVER = "resolveDriverFor";
     protected static final String CLI_DOCKER = "runInDocker";
     protected static final String BROWSER_WATCHER_ID = "kbnnckbeejhjlljpgelfponodpecfapp";
+    protected static final String BROWSER_WATCHER_ERROR = "This feature is not available in BrowserWatcher ";
 
     protected abstract List<URL> getDriverUrls(String driverVersion)
             throws IOException;
@@ -595,13 +596,21 @@ public abstract class WebDriverManager {
     }
 
     public WebDriverManager watchAndDisplay() {
+        checkBrowserWatcherVersion();
         displayEnabled = true;
         return this;
     }
 
     public WebDriverManager disableCsp() {
+        checkBrowserWatcherVersion();
         disableCsp = true;
         return this;
+    }
+
+    protected void checkBrowserWatcherVersion() {
+        if (getDriverManagerType() != FIREFOX) {
+            log.warn(BROWSER_WATCHER_ERROR + getBrowserWatcherVersion());
+        }
     }
 
     public WebDriverManager capabilities(Capabilities capabilities) {
@@ -1049,7 +1058,10 @@ public abstract class WebDriverManager {
     @SuppressWarnings("unchecked")
     public List<Map<String, Object>> getLogs(WebDriver driver) {
         List<Map<String, Object>> logs = new ArrayList<>();
-        if (isHeadless) {
+        if (getDriverManagerType() == FIREFOX) {
+            logs = (List<Map<String, Object>>) getPropertyFromWebDriverBrowser(
+                    driver, WebDriverBrowser::readLogs);
+        } else {
             LogEntries logEntries = driver.manage().logs().get(LogType.BROWSER);
             SimpleDateFormat dateFormat = new SimpleDateFormat(
                     "yyyy-MM-dd HH:mm:ss.SSS");
@@ -1062,10 +1074,6 @@ public abstract class WebDriverManager {
                 entry.put("message", logEntry.getMessage());
                 logs.add(entry);
             }
-
-        } else {
-            logs = (List<Map<String, Object>>) getPropertyFromWebDriverBrowser(
-                    driver, WebDriverBrowser::readLogs);
         }
         return logs;
     }
@@ -1575,7 +1583,8 @@ public abstract class WebDriverManager {
         factory.setNamespaceAware(true);
 
         factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-        factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+        factory.setFeature(
+                "http://apache.org/xml/features/disallow-doctype-decl", true);
         factory.setExpandEntityReferences(false);
 
         DocumentBuilder builder = factory.newDocumentBuilder();
@@ -1773,46 +1782,53 @@ public abstract class WebDriverManager {
     protected void initBrowserWatcherForChromium(Path extensionPath,
             Capabilities caps) {
         DriverManagerType managerType = getDriverManagerType();
-        isHeadless = caps.toString().contains("--headless");
-        if (isHeadless) {
-            LoggingPreferences logs = new LoggingPreferences();
-            logs.enable(LogType.BROWSER, Level.ALL);
-            String logCapName = managerType == EDGE ? EdgeOptions.LOGGING_PREFS
-                    : ChromeOptions.LOGGING_PREFS;
-            ((ChromiumOptions<?>) caps).setCapability(logCapName, logs);
-            capabilities = caps;
+        LoggingPreferences logs = new LoggingPreferences();
+        logs.enable(LogType.BROWSER, Level.ALL);
+        String logCapName = managerType == EDGE ? EdgeOptions.LOGGING_PREFS
+                : ChromeOptions.LOGGING_PREFS;
+        ((ChromiumOptions<?>) caps).setCapability(logCapName, logs);
 
-        } else {
-            // https://bugs.chromium.org/p/chromium/issues/detail?id=1433472
-            String allowExtensionFlag = resolvedBrowserVersion != null
-                    && Integer.parseInt(resolvedBrowserVersion) < 112
-                            ? "--whitelisted-extension-id="
-                            : "--allowlisted-extension-id=";
-            ((ChromiumOptions<?>) caps).addExtensions(extensionPath.toFile());
-            capabilities = ((ChromiumOptions<?>) caps)
-                    .addArguments(allowExtensionFlag + BROWSER_WATCHER_ID);
-        }
+        // https://bugs.chromium.org/p/chromium/issues/detail?id=1433472
+        String allowExtensionFlag = resolvedBrowserVersion != null
+                && Integer.parseInt(resolvedBrowserVersion) < 112
+                        ? "--whitelisted-extension-id="
+                        : "--allowlisted-extension-id=";
+        ((ChromiumOptions<?>) caps).addExtensions(extensionPath.toFile());
+        capabilities = ((ChromiumOptions<?>) caps)
+                .addArguments(allowExtensionFlag + BROWSER_WATCHER_ID);
     }
 
     protected Path getBrowserWatcherAsPath() throws IOException {
         Path extensionPath;
         String extFilename = "/browserwatcher-%s%s.crx";
         String extModifier = "";
-        if (displayEnabled && !disableCsp) {
-            extModifier = "display-";
-        } else if (!displayEnabled && disableCsp) {
-            extModifier = "csp-";
-        } else if (displayEnabled && disableCsp) {
-            extModifier = "display-csp-";
+        if (getDriverManagerType() == FIREFOX) {
+            if (displayEnabled && !disableCsp) {
+                extModifier = "display-";
+            } else if (!displayEnabled && disableCsp) {
+                extModifier = "csp-";
+            } else if (displayEnabled && disableCsp) {
+                extModifier = "display-csp-";
+            }
         }
         InputStream extensionInputStream = Config.class
                 .getResourceAsStream(String.format(extFilename, extModifier,
-                        config().getBrowserWatcherVersion()));
+                        getBrowserWatcherVersion()));
         extensionPath = Files.createTempFile("", ".crx");
         File extensionFile = extensionPath.toFile();
         extensionFile.deleteOnExit();
         FileUtils.copyInputStreamToFile(extensionInputStream, extensionFile);
         return extensionPath;
+    }
+
+    protected String getBrowserWatcherVersion() {
+        String browserWatcherVersion;
+        if (getDriverManagerType() == FIREFOX) {
+            browserWatcherVersion = "1.2.0"; // MV2
+        } else {
+            browserWatcherVersion = config().getBrowserWatcherVersion(); // MV3
+        }
+        return browserWatcherVersion;
     }
 
     protected Capabilities getMergedCapabilities() {
