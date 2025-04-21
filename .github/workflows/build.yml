@@ -41,9 +41,10 @@ jobs:
     - name: Install Docker CLI and Colima (Docker-compatible runtime) in macOS
       if: matrix.os == 'macos-latest'
       run: |
-        brew install docker colima
-        colima start --cpu 2 --memory 4 --disk 20
+        brew install docker colima qemu
+        colima start --vm-type=qemu --cpu 2 --memory 4 --disk 20
         export DOCKER_HOST="unix://${HOME}/.colima/default/docker.sock"
+        docker --version
     - name: Set up Docker in macOS
       if: matrix.os == 'macos-latest'
       uses: docker/setup-buildx-action@v3
