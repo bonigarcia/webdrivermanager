@@ -1,5 +1,22 @@
 # Changelog
 
+## [6.1.0] - 2025-04-21
+
+### Added
+- Wait for extension recording (WEBM) in the Downloads folder
+- Include getRecordingPath() method in  WebDriverManager API
+
+### Changed
+- Update deprecate methods in httpclient5 to create http-client
+- Use LoggingPreferences for log gathering in Chromium-based browsers
+
+### Fixed
+- Add BrowserWatcher 2.0.0 (MV3), which fixes video recording
+
+### Removed
+- Remove console log displaying and disabling CSP in Chromium-based browsers (not supported in MV2)
+
+
 ## [6.0.1] - 2025-04-02
 
 ### Fixed
