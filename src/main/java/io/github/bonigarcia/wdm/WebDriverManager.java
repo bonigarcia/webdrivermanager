@@ -1055,6 +1055,19 @@ public abstract class WebDriverManager {
         webDriverList.get(0).stopRecording();
     }
 
+    public Path getRecordingPath() {
+        return webDriverList.get(0).getRecordingPath();
+    }
+
+    public Path getRecordingPath(WebDriver driver) {
+        Optional<WebDriverBrowser> webDriverBrowser = findWebDriverBrowser(
+                driver);
+        if (webDriverBrowser.isPresent()) {
+            return webDriverBrowser.get().getRecordingPath();
+        }
+        return null;
+    }
+
     @SuppressWarnings("unchecked")
     public List<Map<String, Object>> getLogs(WebDriver driver) {
         List<Map<String, Object>> logs = new ArrayList<>();
@@ -1757,7 +1770,9 @@ public abstract class WebDriverManager {
                         .orElse(getCapabilities());
                 driver = getWebDriverCreator()
                         .createRemoteWebDriver(remoteAddress, caps);
-                webDriverList.add(new WebDriverBrowser(driver));
+                webDriverList.add(new WebDriverBrowser(driver,
+                        getDriverManagerType().getBrowserNameLowerCase(),
+                        config().getOperatingSystem()));
 
             } else {
                 driver = createLocalWebDriver();
@@ -1895,7 +1910,9 @@ public abstract class WebDriverManager {
         browserContainer.setBrowserName(browserName);
         String seleniumServerUrl = browserContainer.getContainerUrl();
 
-        WebDriverBrowser driverBrowser = new WebDriverBrowser();
+        WebDriverBrowser driverBrowser = new WebDriverBrowser(
+                getDriverManagerType().getBrowserNameLowerCase(),
+                config().getOperatingSystem());
         driverBrowser.addDockerContainer(browserContainer);
         driverBrowser.setSeleniumServerUrl(seleniumServerUrl);
         log.trace("The Selenium Server URL is {}", seleniumServerUrl);
@@ -1956,7 +1973,10 @@ public abstract class WebDriverManager {
                     : Class.forName(managerType.browserClass());
             driver = getWebDriverCreator().createLocalWebDriver(browserClass,
                     capabilities);
-            webDriverList.add(new WebDriverBrowser(driver));
+
+            webDriverList.add(new WebDriverBrowser(driver,
+                    getDriverManagerType().getBrowserNameLowerCase(),
+                    config().getOperatingSystem()));
         }
         return driver;
     }

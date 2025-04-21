@@ -37,11 +37,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.SimpleDateFormat;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -85,6 +83,7 @@ import io.github.bonigarcia.wdm.config.DriverManagerType;
 import io.github.bonigarcia.wdm.config.WebDriverManagerException;
 import io.github.bonigarcia.wdm.docker.DockerContainer.DockerBuilder;
 import io.github.bonigarcia.wdm.versions.VersionComparator;
+import io.github.bonigarcia.wdm.webdriver.Recording;
 
 /**
  * Docker Service.
@@ -106,9 +105,6 @@ public class DockerService {
     private static final String BETA = "beta";
     private static final String DEV = "dev";
     private static final String LATEST_MINUS = LATEST + "-";
-    private static final String RECORDING_EXT = ".mp4";
-    private static final String SEPARATOR = "_";
-    private static final String DATE_FORMAT = "yyyy.MM.dd_HH.mm.ss.SSS";
     private static final int POLL_TIME_MSEC = 500;
 
     private Config config;
@@ -788,15 +784,12 @@ public class DockerService {
         Path dockerRecordingPath = config.getDockerRecordingOutput();
 
         if (dockerRecordingPath.toString().toLowerCase(ROOT)
-                .endsWith(RECORDING_EXT)) {
+                .endsWith(Recording.DOCKER_RECORDING_EXT)) {
             recordingPath = dockerRecordingPath;
         } else {
-            String sessionId = browserContainer.getSessionId();
-            Date now = new Date();
-            SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
-            String recordingFileName = browserContainer.getBrowserName()
-                    + SEPARATOR + dateFormat.format(now) + SEPARATOR + sessionId
-                    + RECORDING_EXT;
+            String recordingFileName = Recording.getRecordingNameForDocker(
+                    browserContainer.getBrowserName(),
+                    browserContainer.getSessionId());
             String prefix = config.getDockerRecordingPrefix();
             if (!isNullOrEmpty(prefix)) {
                 recordingFileName = prefix + recordingFileName;
