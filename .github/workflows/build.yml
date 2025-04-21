@@ -38,12 +38,11 @@ jobs:
         /Applications/Firefox.app/Contents/MacOS/firefox --version
         brew install --cask microsoft-edge
         "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge" -version
-    - name: Install Docker CLI and Colima (Docker-compatible runtime) in macOS
+    - name: Install Orbstack (Docker-compatible) in macOS
       if: matrix.os == 'macos-latest'
       run: |
-        brew install docker colima qemu
-        colima start --vm-type=qemu --cpu 2 --memory 4 --disk 20
-        export DOCKER_HOST="unix://${HOME}/.colima/default/docker.sock"
+        brew install orbstack
+        orb start
         docker --version
     - name: Set up Docker in macOS
       if: matrix.os == 'macos-latest'
