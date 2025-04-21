@@ -38,6 +38,9 @@ jobs:
         /Applications/Firefox.app/Contents/MacOS/firefox --version
         brew install --cask microsoft-edge
         "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge" -version
+    - name: Install Docker in Windows and macOS
+      if: matrix.os != 'ubuntu-latest'
+      uses: docker/setup-buildx-action@v3
     - name: Test Docker
       run: docker run --rm hello-world
     - name: Run tests on Linux
