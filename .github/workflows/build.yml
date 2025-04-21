@@ -40,6 +40,15 @@ jobs:
         "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge" -version
     - name: Install Docker in macOS
       if: matrix.os == 'macos-latest'
+      run: |
+        brew install docker
+        sudo mkdir -p /etc/docker
+        echo '{"experimental": true}' | sudo tee /etc/docker/daemon.json
+        sudo brew services start docker
+        sleep 10  # Wait for Docker to start
+        docker --version
+    - name: Set up Docker in macOS
+      if: matrix.os == 'macos-latest'
       uses: docker/setup-buildx-action@v3
     - name: Test Docker
       run: docker run --rm hello-world
