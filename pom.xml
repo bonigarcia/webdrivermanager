@@ -19,7 +19,7 @@
         <jna-platform.version>5.17.0</jna-platform.version>
 
         <!-- provided -->
-        <selenium.version>4.32.0</selenium.version>
+        <selenium.version>4.33.0</selenium.version>
         <javalin.version>4.6.8</javalin.version>
 
         <!-- test -->
