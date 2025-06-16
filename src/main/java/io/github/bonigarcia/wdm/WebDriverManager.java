@@ -1809,8 +1809,9 @@ public abstract class WebDriverManager {
                         ? "--whitelisted-extension-id="
                         : "--allowlisted-extension-id=";
         ((ChromiumOptions<?>) caps).addExtensions(extensionPath.toFile());
-        capabilities = ((ChromiumOptions<?>) caps)
-                .addArguments(allowExtensionFlag + BROWSER_WATCHER_ID);
+        capabilities = ((ChromiumOptions<?>) caps).addArguments(
+                allowExtensionFlag + BROWSER_WATCHER_ID,
+                "--disable-features=DisableLoadExtensionCommandLineSwitch");
     }
 
     protected Path getBrowserWatcherAsPath() throws IOException {
