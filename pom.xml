@@ -3,7 +3,7 @@
 
     <groupId>io.github.bonigarcia</groupId>
     <artifactId>webdrivermanager</artifactId>
-    <version>6.1.1</version>
+    <version>6.1.2-SNAPSHOT</version>
 
     <properties>
         <!-- compile -->
@@ -88,7 +88,7 @@
         <developerConnection>
             scm:git:git@github.com:bonigarcia/webdrivermanager.git</developerConnection>
         <url>https://github.com/bonigarcia/webdrivermanager</url>
-        <tag>webdrivermanager-6.1.1</tag>
+        <tag>webdrivermanager-5.0.0</tag>
     </scm>
 
     <dependencies>
