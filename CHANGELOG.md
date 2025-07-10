@@ -5,6 +5,9 @@
 ### Fixed
 - Include --disable-features=DisableLoadExtensionCommandLineSwitch to load BrowserWatcher
 
+### Changed
+- Update configuration to publish artifacts in Maven Central
+
 
 ## [6.1.0] - 2025-04-21
 
