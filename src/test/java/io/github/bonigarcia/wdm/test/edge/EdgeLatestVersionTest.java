@@ -51,7 +51,7 @@ class EdgeLatestVersionTest {
         VersionDetector versionDetector = new VersionDetector(config,
                 httpClient);
         Optional<String> driverVersion = Optional.empty();
-        URL driverUrl = new URL("https://msedgedriver.azureedge.net/");
+        URL driverUrl = new URL("https://msedgedriver.microsoft.com/");
         Charset versionCharset = UTF_16;
         String driverName = "msedgedriver";
         String stableLabel = "LATEST_STABLE";
