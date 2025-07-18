@@ -21,6 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -38,23 +39,46 @@ class BrowserVersionTest {
     final Logger log = getLogger(lookup().lookupClass());
 
     @Test
+    void testChromeLatestVersion() {
+        WebDriverManager wdm = WebDriverManager.chromedriver();
+        wdm.setup();
+        assertBrowserVersion(wdm, Optional.empty());
+    }
+
+    @Test
     void testChromeVersion() {
         WebDriverManager wdm = WebDriverManager.chromedriver();
-        wdm.browserVersion("91").avoidResolutionCache().setup();
+        String browserVersion = "91";
+        wdm.browserVersion(browserVersion).avoidResolutionCache().setup();
         assertDriver(wdm);
+        assertBrowserVersion(wdm, Optional.of(browserVersion));
     }
 
     @Test
     void testFirefoxVersion() {
         WebDriverManager wdm = WebDriverManager.firefoxdriver();
-        wdm.browserVersion("90").avoidResolutionCache().setup();
+        String browserVersion = "90";
+        wdm.browserVersion(browserVersion).avoidResolutionCache().setup();
         assertDriver(wdm);
+        assertBrowserVersion(wdm, Optional.of(browserVersion));
     }
 
     private void assertDriver(WebDriverManager wdm) {
         File driver = new File(wdm.getDownloadedDriverPath());
         log.debug("Driver path {}", driver);
         assertThat(driver).exists();
+    }
+
+    private void assertBrowserVersion(WebDriverManager wdm,
+            Optional<String> expectedBrowserVersion) {
+        String resolvedBrowserVersion = wdm.getResolvedBrowserVersion();
+        log.debug("Resolved browser version {}", resolvedBrowserVersion);
+        assertThat(resolvedBrowserVersion).isNotNull();
+
+        if (expectedBrowserVersion.isPresent()) {
+            assertThat(expectedBrowserVersion.get())
+                    .isEqualTo(resolvedBrowserVersion);
+        }
     }
 
 }

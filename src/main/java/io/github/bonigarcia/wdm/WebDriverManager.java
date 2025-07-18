@@ -860,6 +860,10 @@ public abstract class WebDriverManager {
         return downloadedDriverVersion;
     }
 
+    public String getResolvedBrowserVersion() {
+        return resolvedBrowserVersion;
+    }
+
     public List<String> getDriverVersions() {
         List<String> driverVersionList = new ArrayList<>();
         try {

@@ -131,7 +131,8 @@ include::../../test/java/io/github/bonigarcia/wdm/test/generic/GenericTest.java[
 The driver management provided by WebDriverManager can be tuned in many different ways. For example, the WebDriverManager API allows configuring the driver (or browser) version to be resolved, the location of the cache path, the operating system, the architecture, the proxy settings (for the network connection), the TTL, or cleaning the driver and resolution cache, among many other attributes. See the <<advanced-configuration,advanced configuration>> settings for specific details about it. In addition, there are several WebDriverManager API methods specific to driver management, namely:
 
 * `getDownloadedDriverPath()`: Used to find out the path of the resolved driver in the current instance of WebDriverManager.
-* `getDownloadedDriverVersion()`: Use to find out the version of the driver resolved in the current instance of WebDriverManager.
+* `getDownloadedDriverVersion()`: Used to find out the version of the driver resolved in the current instance of WebDriverManager.
+* `getResolvedBrowserVersion()`: Used to find out the major browser version discovered in the current instance of WebDriverManager.
 * `getDriverVersions()`: Used to find the list of available driver versions in a given manager.
 * `getDriverManagerType()`: Used to get the driver manager type (and `enum`) of a given manager.
 
