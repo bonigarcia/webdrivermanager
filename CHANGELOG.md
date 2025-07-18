@@ -1,5 +1,14 @@
 # Changelog
 
+## [6.2.0] - 2025-07-18
+
+### Added
+- Include getResolvedBrowserVersion() in the WebDriverManager API (#1474)
+
+### Fixed
+- Fix Edge driver url (#1489)
+
+
 ## [6.1.1] - 2025-07-09
 
 ### Fixed
