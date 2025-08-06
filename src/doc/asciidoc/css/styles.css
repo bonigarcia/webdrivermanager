@@ -301,7 +301,7 @@ p a > code:hover { color: #444444; }
 #header:after, #content:after, #footnotes:after, #footer:after { clear: both; }
 
 #header { margin-bottom: 2.5em; }
-#header > h1 { color: #616366; font-family:'Publica Play Regular'; font-weight: normal; border-bottom: 1px solid #dddddd; margin-bottom: -28px; padding-bottom: 32px; padding-top: 10px; background: url('./img/wdm.png') no-repeat left 9.25em top 0em;}
+#header > h1 { color: #616366; font-weight: normal; border-bottom: 1px solid #dddddd; margin-bottom: -28px; padding-bottom: 32px; padding-top: 10px; background: url('./img/wdm.png') no-repeat left 9.25em top 0em;}
 #header span { color: #616366; }
 #header #revnumber { text-transform: capitalize; }
 #header br { display: none; }
@@ -652,10 +652,3 @@ table.tableblock.grid-all { -webkit-border-radius: 0; border-radius: 0; -webkit-
 #footer { background-image: url('./img/footer-bg.jpg'); padding: 25px 0; }
 
 #footer-text { color: #fff; text-shadow: 1px 1px 1px #333; font-size: 80%; text-align: center; }
-
-@font-face {
-    font-family: 'Publica Play Regular';
-    font-style: normal;
-    font-weight: normal;
-    src: url('./css/FaceType-PublicaPlay-Regular.woff') format('woff');
-}
