@@ -25,7 +25,7 @@
         <junit.version>5.13.4</junit.version>
         <assertj.version>3.27.4</assertj.version>
         <mockserver.version>5.15.0</mockserver.version>
-        <mockito-junit-jupiter.version>5.18.0</mockito-junit-jupiter.version>
+        <mockito-junit-jupiter.version>5.19.0</mockito-junit-jupiter.version>
 
         <!-- plugins -->
         <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
