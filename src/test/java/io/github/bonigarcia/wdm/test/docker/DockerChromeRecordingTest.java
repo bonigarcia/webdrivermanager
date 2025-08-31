@@ -63,6 +63,10 @@ class DockerChromeRecordingTest {
         // Verify recoding file
         Path recordingPath = wdm.getDockerRecordingPath();
         assertThat(recordingPath).exists();
+
+        // Get recording as base64
+        String recordingBase64 = wdm.getRecordingBase64();
+        assertThat(recordingBase64).isNotEmpty();
     }
 
 }

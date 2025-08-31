@@ -49,4 +49,10 @@ public class Recording {
         return getRecordingName(browserName, sessionId) + DOCKER_RECORDING_EXT;
     }
 
+    public static String getRecordingNameForBrowserWatcher(String browserName,
+            String sessionId) {
+        return getRecordingName(browserName, sessionId)
+                + EXTENSION_RECORDING_EXT;
+    }
+
 }

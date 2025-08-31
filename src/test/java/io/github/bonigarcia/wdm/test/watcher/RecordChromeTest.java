@@ -72,10 +72,14 @@ class RecordChromeTest {
 
         wdm.stopRecording();
 
+        // Get recording as path
         Path recordingPath = wdm.getRecordingPath();
         assertThat(recordingPath).exists();
-
         log.debug("Recording available at {}", recordingPath);
+
+        // Get recording as base64
+        String recordingBase64 = wdm.getRecordingBase64();
+        assertThat(recordingBase64).isNotEmpty();
     }
 
 }

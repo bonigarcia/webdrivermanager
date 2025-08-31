@@ -24,9 +24,8 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.time.Duration;
-import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 
@@ -34,9 +33,6 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.slf4j.Logger;
-
-import com.sun.jna.platform.win32.KnownFolders;
-import com.sun.jna.platform.win32.Shell32Util;
 
 import io.github.bonigarcia.wdm.config.OperatingSystem;
 import io.github.bonigarcia.wdm.docker.DockerContainer;
@@ -49,13 +45,7 @@ import io.github.bonigarcia.wdm.docker.DockerContainer;
  */
 public class WebDriverBrowser {
 
-    final Logger log = getLogger(lookup().lookupClass());
-
-    static final String DEFAULT_DOWNLOADS_FOLDER = "Downloads";
-    static final String LINUX_ENV_DOWNLOAD_DIR = "XDG_DOWNLOAD_DIR";
-    static final String USER_HOME_PROPERTY = "user.home";
-    static final int RECORDING_TIMEOUT_SEC = 5;
-    static final int POLL_TIME_MSEC = 500;
+    static final Logger log = getLogger(lookup().lookupClass());
 
     WebDriver driver;
     String recordingName;
@@ -66,6 +56,7 @@ public class WebDriverBrowser {
     String noVncUrl;
     String vncUrl;
     String seleniumServerUrl;
+    String recordingBase64;
     Path recordingPath;
     int identityHash;
 
@@ -148,6 +139,16 @@ public class WebDriverBrowser {
     }
 
     public Path getRecordingPath() {
+        if (recordingBase64 != null && recordingPath == null) {
+            try {
+                byte[] videoBytes = Base64.getDecoder().decode(recordingBase64);
+                Path path = Paths.get(recordingName);
+                Files.write(path, videoBytes);
+                setRecordingPath(path);
+            } catch (Exception e) {
+                log.warn("Exception stopping recording", e);
+            }
+        }
         return recordingPath;
     }
 
@@ -178,7 +179,7 @@ public class WebDriverBrowser {
     }
 
     public void startRecording() {
-        startRecording(Recording.getRecordingName(browserName,
+        startRecording(Recording.getRecordingNameForBrowserWatcher(browserName,
                 ((RemoteWebDriver) driver).getSessionId().toString()));
     }
 
@@ -190,65 +191,52 @@ public class WebDriverBrowser {
     }
 
     public void stopRecording() {
-        ((JavascriptExecutor) driver).executeScript(
-                "window.postMessage({ type: \"stopRecording\" }, \"*\");");
-        waitForRecording();
-    }
+        String script = "var callback = arguments[0];"
+                + "function handler(event) {"
+                + "    if (event.data.type === \"stopRecordingResponse\") {"
+                + "        window.removeEventListener(\"message\", handler);"
+                + "        callback(event.data.result);" + "    }" + "}"
+                + "window.addEventListener(\"message\", handler);"
+                + "window.postMessage({ type: \"stopRecordingBase64\" }, \"*\");";
 
-    public Path getDownloadsFolderPath() {
-        Path downloadsPath;
-        if (os.isWin()) {
-            downloadsPath = Paths.get(Shell32Util
-                    .getKnownFolderPath(KnownFolders.FOLDERID_Downloads));
-        } else if (os.isMac()) {
-            downloadsPath = Paths.get(System.getProperty(USER_HOME_PROPERTY),
-                    DEFAULT_DOWNLOADS_FOLDER);
-        } else {
-            String xdgDownloadDir = System.getenv(LINUX_ENV_DOWNLOAD_DIR);
-            if (xdgDownloadDir != null && !xdgDownloadDir.isEmpty()) {
-                downloadsPath = Paths.get(xdgDownloadDir);
-            } else {
-                downloadsPath = Paths.get(
-                        System.getProperty(USER_HOME_PROPERTY),
-                        DEFAULT_DOWNLOADS_FOLDER);
-            }
-        }
-        return downloadsPath;
-    }
+        @SuppressWarnings("unchecked")
+        java.util.Map<String, Object> result = (java.util.Map<String, Object>) ((JavascriptExecutor) driver)
+                .executeAsyncScript(script);
 
-    public boolean waitForRecording() {
-        Path downloadsPath = getDownloadsFolderPath();
-        Path filePath = Paths.get(downloadsPath.toString(), getRecordingName());
-        Instant start = Instant.now();
-        Duration timeout = Duration.ofSeconds(RECORDING_TIMEOUT_SEC);
-        log.trace("Waiting for recording at {}", filePath);
-
-        while (true) {
-            if (Files.exists(filePath)) {
-                log.debug("Recording found at {}", filePath);
-                setRecordingPath(filePath);
-                return true;
-            }
-            if (Duration.between(start, Instant.now()).compareTo(timeout) > 0) {
-                log.warn(
-                        "Timeout of {} seconds reached, recording {} not found",
-                        RECORDING_TIMEOUT_SEC, filePath);
-                return false;
-            }
-            try {
-                Thread.sleep(POLL_TIME_MSEC);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
+        setRecordingName((String) result.get("name"));
+        setRecordingBase64((String) result.get("base64"));
     }
 
     public String getRecordingName() {
-        return recordingName + Recording.EXTENSION_RECORDING_EXT;
+        return recordingName;
     }
 
     public void setRecordingName(String recordingName) {
         this.recordingName = recordingName;
+    }
+
+    public String getRecordingBase64() {
+        String recordingBase64 = path2Base64(recordingPath);
+        if (recordingBase64 != null) {
+            setRecordingBase64(recordingBase64);
+        }
+        return recordingBase64;
+    }
+
+    public void setRecordingBase64(String recordingBase64) {
+        this.recordingBase64 = recordingBase64;
+    }
+
+    public static String path2Base64(Path filePath) {
+        try {
+            if (filePath != null) {
+                byte[] fileBytes = Files.readAllBytes(filePath);
+                return Base64.getEncoder().encodeToString(fileBytes);
+            }
+        } catch (Exception e) {
+            log.warn("Exception converting {} to Base64", filePath, e);
+        }
+        return null;
     }
 
 }

@@ -947,6 +947,7 @@ public abstract class WebDriverManager {
                 getDockerService().stopAndRemoveContainer(recorderContainer);
                 dockerContainerList.remove(0);
             }
+
         }
     }
 
@@ -1068,6 +1069,19 @@ public abstract class WebDriverManager {
                 driver);
         if (webDriverBrowser.isPresent()) {
             return webDriverBrowser.get().getRecordingPath();
+        }
+        return null;
+    }
+
+    public String getRecordingBase64() {
+        return webDriverList.get(0).getRecordingBase64();
+    }
+
+    public String getRecordingPath64(WebDriver driver) {
+        Optional<WebDriverBrowser> webDriverBrowser = findWebDriverBrowser(
+                driver);
+        if (webDriverBrowser.isPresent()) {
+            return webDriverBrowser.get().getRecordingBase64();
         }
         return null;
     }
