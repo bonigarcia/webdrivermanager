@@ -76,8 +76,7 @@ class BrowserVersionTest {
         assertThat(resolvedBrowserVersion).isNotNull();
 
         if (expectedBrowserVersion.isPresent()) {
-            assertThat(expectedBrowserVersion.get())
-                    .isEqualTo(resolvedBrowserVersion);
+            assertThat(expectedBrowserVersion).contains(resolvedBrowserVersion);
         }
     }
 
