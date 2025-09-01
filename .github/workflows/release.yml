@@ -68,7 +68,6 @@ jobs:
         git add docs
         git commit -m "Update docs for release ${{ inputs.release_version }}" -a
     - name: Push changes
-      if: steps.git.outputs.commit == 'true'
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
