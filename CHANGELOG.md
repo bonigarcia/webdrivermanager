@@ -1,5 +1,11 @@
 # Changelog
 
+## [6.3.1] - 2025-09-01
+
+### Fixed
+- Check webdriver list before accesing recording in base64
+
+
 ## [6.3.0] - 2025-09-01
 
 ### Added
