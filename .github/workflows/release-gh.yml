@@ -1,0 +1,33 @@
+name: release_gh
+on:
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: 'Release version'
+        required: true
+
+jobs:
+  release_gh:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout GitHub repo
+      uses: actions/checkout@v5
+    - name: Set up Java
+      uses: actions/setup-java@v5.0.0
+      with:
+        distribution: 'temurin'
+        java-version: 17
+        cache: 'maven'
+    - name: Generate fat jar
+      run: |
+        mvn versions:set -DnewVersion=${{ inputs.release_version }}
+        mvn compile assembly:single
+    - name: Make release in GitHub
+      uses: softprops/action-gh-release@v2
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        tag_name: webdrivermanager-${{ inputs.release_version }}
+        draft: false
+        prerelease: false
+        files: |
+          target/webdrivermanager-${{ inputs.release_version }}-fat.jar
