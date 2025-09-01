@@ -1074,7 +1074,11 @@ public abstract class WebDriverManager {
     }
 
     public String getRecordingBase64() {
-        return webDriverList.get(0).getRecordingBase64();
+        String recording = null;
+        if (!webDriverList.isEmpty()) {
+            recording = webDriverList.get(0).getRecordingBase64();
+        }
+        return recording;
     }
 
     public String getRecordingPath64(WebDriver driver) {
