@@ -20,7 +20,6 @@ jobs:
         cache: 'maven'
     - name: Configure Git
       run: |
-        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
         git config user.name "Boni Garcia"
         git config user.email "boni.garcia@uc3m.es"
     - name: Make release
@@ -30,7 +29,8 @@ jobs:
         MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
       run: |
         mvn --batch-mode clean release:clean release:prepare release:perform \
-            -DreleaseVersion=${{ inputs.release_version }} -Darguments="-DskipTests" \
+            -Dscm.url=https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git \
+            -DreleaseVersion=${{ inputs.release_version }} -Darguments="-DskipTests"
     - name: Generate fat jar
       run: |
         mvn compile assembly:single
