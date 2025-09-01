@@ -1,0 +1,58 @@
+name: release
+on:
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: 'Release version'
+        required: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout GitHub repo
+      uses: actions/checkout@v5
+    - name: Set up Java
+      uses: actions/setup-java@v5.0.0
+      with:
+        distribution: 'temurin'
+        java-version: 17
+        cache: 'maven'
+    - name: Configure Git
+      run: |
+        git config user.name "Boni Garcia"
+        git config user.email "boni.garcia@uc3m.es"
+    - name: Make release
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
+        MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+      run: |
+        mvn --batch-mode clean release:clean release:prepare release:perform \
+            -DreleaseVersion=${{ inputs.release_version }} -Darguments="-DskipTests" \
+    - name: Generate fat jar
+      run: |
+        mvn compile assembly:single
+    - name: Upload fat jar as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: fat-jar
+        path: target/*fat*.jar
+    - name: Update doc
+      run: |
+        mvn site -Ddoc.version=${{ inputs.release_version }}
+    - name: Commit files
+      id: git
+      run: |
+        export CHANGES=$(git status -s)
+        if [ -n "$CHANGES" ]; then
+           git add *
+           git commit -m "Update docs for release ${{ inputs.release_version }}" -a
+           echo "::set-output name=commit::true"
+        fi
+    - name: Push changes
+      if: steps.git.outputs.commit == 'true'
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}
