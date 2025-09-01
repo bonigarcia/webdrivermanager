@@ -20,6 +20,7 @@ jobs:
         cache: 'maven'
     - name: Configure Git
       run: |
+        git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
         git config user.name "Boni Garcia"
         git config user.email "boni.garcia@uc3m.es"
     - name: Make release
