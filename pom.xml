@@ -63,6 +63,9 @@
         <wdm.mainClass>io.github.bonigarcia.wdm.WebDriverManager</wdm.mainClass>
         <wdm.agentClass>io.github.bonigarcia.wdm.WdmAgent</wdm.agentClass>
         <wdm.manifest>src/main/resources/META-INF/MANIFEST.MF</wdm.manifest>
+
+        <!-- doc version -->
+        <doc.version>${project.version}</doc.version>
     </properties>
 
     <name>WebDriverManager</name>
@@ -345,7 +348,7 @@
                     <attributes>
                         <endpoint-url>https://bonigarcia.dev</endpoint-url>
                         <sourcedir>${project.build.sourceDirectory}</sourcedir>
-                        <project-version>${project.version}</project-version>
+                        <project-version>${doc.version}</project-version>
                     </attributes>
                     <outputDirectory>${basedir}/docs</outputDirectory>
                 </configuration>
@@ -398,7 +401,7 @@
                                 <icons>font</icons>
                                 <sectnums />
                                 <lang>en</lang>
-                                <revnumber>${project.version}</revnumber>
+                                <revnumber>${doc.version}</revnumber>
                                 <revdate>${maven.build.timestamp}</revdate>
                             </attributes>
                         </configuration>
