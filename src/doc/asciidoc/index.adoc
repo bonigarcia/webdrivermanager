@@ -276,7 +276,7 @@ image::display-console-logs-example-v3.png[scaledwidth=100%]
 WARNING: This feature is not available for BrowserWatcher 2.x (i.e., based on manifest v3 -MV3-). Therefore, this feature is currently only available for Firefox.
 
 ==== Video Recording
-BrowserWatcher (MV3) allows recording the current browser tab (i.e., the browser viewport). This feature requires a page loaded in the current tab (in other words, it cannot record empty or configuration pages). Then, the recording is started using the method `startRecording()` and stopped with `stopRecording()`. After stopping, the video recording will be automatically downloaded by the browser, and the recording (a webm file) will be stored in the downloads folder. You can discover the path of this recording using the method `getRecordingPath()`. The following test illustrates this feature:
+BrowserWatcher (MV3) allows recording the current browser tab (i.e., the browser viewport). This feature requires a page loaded in the current tab (in other words, it cannot record empty or configuration pages). Then, the recording is started using the method `startRecording()` and stopped with `stopRecording()`. After stopping, the video recording will be automatically downloaded by the browser, and the recording (a webm file) will be stored in the downloads folder. You can discover the path of this recording using the method `getRecordingPath()`. Alternatively, you can get the recording in Base 64 using the method `getRecordingBase64()`. The following test illustrates this feature:
 
 
 [source,java]
