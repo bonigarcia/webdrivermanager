@@ -38,8 +38,8 @@ jobs:
           <servers>
             <server>
               <id>central</id>
-              <username>${{ secrets.OSSRH_USERNAME }}</username>
-              <password>${{ secrets.OSSRH_PASSWORD }}</password>
+              <username>${{ secrets.MAVEN_USERNAME }}</username>
+              <password>${{ secrets.MAVEN_PASSWORD }}</password>
             </server>
           </servers>
         </settings>
@@ -47,8 +47,6 @@ jobs:
     - name: Make release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
-        MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
         MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
       run: |
         mvn --batch-mode clean release:clean release:prepare release:perform \
