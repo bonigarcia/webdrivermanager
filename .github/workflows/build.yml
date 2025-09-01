@@ -64,9 +64,24 @@ jobs:
     - name: Upload coverage to Codecov
       if: success() && matrix.os == 'ubuntu-latest' && !contains(github.ref, 'pull')
       uses: codecov/codecov-action@v5.5.0
-    - name: Store recordings
+    - name: Store recordings on Linux
+      if: always() && matrix.os == 'ubuntu-latest'
       uses: actions/upload-artifact@v4.6.2
       with:
-        name: webm-recordings
+        name: linux-recordings
         path: |
-          *.webm
+          /home/runner/Downloads/*.webm
+    - name: Store recordings on Windows
+      if: always() && matrix.os == 'windows-latest'
+      uses: actions/upload-artifact@v4.6.2
+      with:
+        name: win-recordings
+        path: |
+          C:\Users\runneradmin\Downloads\*.webm
+    - name: Store recordings on macOS
+      if: always() && matrix.os == 'macos-latest'
+      uses: actions/upload-artifact@v4.6.2
+      with:
+        name: macos-recordings
+        path: |
+          /Users/runner/Downloads/*.webm
