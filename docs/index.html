@@ -768,7 +768,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <h1>WebDriverManager</h1>
 <div class="details">
 <span id="author" class="author">Boni García</span><br>
-<span id="revdate">Version 6.2.0</span>
+<span id="revdate">Version 6.3.0</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -995,7 +995,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <pre class="CodeRay highlight"><code data-lang="xml"><span class="tag">&lt;dependency&gt;</span>
     <span class="tag">&lt;groupId&gt;</span>io.github.bonigarcia<span class="tag">&lt;/groupId&gt;</span>
     <span class="tag">&lt;artifactId&gt;</span>webdrivermanager<span class="tag">&lt;/artifactId&gt;</span>
-    <span class="tag">&lt;version&gt;</span>6.2.0<span class="tag">&lt;/version&gt;</span>
+    <span class="tag">&lt;version&gt;</span>6.3.0<span class="tag">&lt;/version&gt;</span>
     <span class="tag">&lt;scope&gt;</span>test<span class="tag">&lt;/scope&gt;</span>
 <span class="tag">&lt;/dependency&gt;</span></code></pre>
 </div>
@@ -1006,7 +1006,7 @@ table.CodeRay td.code{padding:0 0 0 .75em}
 <div class="listingblock">
 <div class="content">
 <pre class="CodeRay highlight"><code data-lang="json"><span class="error">d</span><span class="error">e</span><span class="error">p</span><span class="error">e</span><span class="error">n</span><span class="error">d</span><span class="error">e</span><span class="error">n</span><span class="error">c</span><span class="error">i</span><span class="error">e</span><span class="error">s</span> {
-    <span class="error">t</span><span class="error">e</span><span class="error">s</span><span class="error">t</span><span class="error">I</span><span class="error">m</span><span class="error">p</span><span class="error">l</span><span class="error">e</span><span class="error">m</span><span class="error">e</span><span class="error">n</span><span class="error">t</span><span class="error">a</span><span class="error">t</span><span class="error">i</span><span class="error">o</span><span class="error">n</span><span class="error">(</span><span class="string"><span class="delimiter">&quot;</span><span class="content">io.github.bonigarcia:webdrivermanager:6.2.0</span><span class="delimiter">&quot;</span></span><span class="error">)</span>
+    <span class="error">t</span><span class="error">e</span><span class="error">s</span><span class="error">t</span><span class="error">I</span><span class="error">m</span><span class="error">p</span><span class="error">l</span><span class="error">e</span><span class="error">m</span><span class="error">e</span><span class="error">n</span><span class="error">t</span><span class="error">a</span><span class="error">t</span><span class="error">i</span><span class="error">o</span><span class="error">n</span><span class="error">(</span><span class="string"><span class="delimiter">&quot;</span><span class="content">io.github.bonigarcia:webdrivermanager:6.3.0</span><span class="delimiter">&quot;</span></span><span class="error">)</span>
 }</code></pre>
 </div>
 </div>
@@ -1670,6 +1670,10 @@ Some <em>dockerized</em> browsers (e.g., Chromium and Edge) are supported in ARM
         <span class="comment">// Verify recoding file</span>
         Path recordingPath = wdm.getDockerRecordingPath();
         assertThat(recordingPath).exists();
+
+        <span class="comment">// Get recording as base64</span>
+        <span class="predefined-type">String</span> recordingBase64 = wdm.getRecordingBase64();
+        assertThat(recordingBase64).isNotEmpty();
     }
 
 }</code></pre>
@@ -1879,7 +1883,7 @@ This feature is not available for BrowserWatcher 2.x (i.e., based on manifest v3
 <div class="sect3">
 <h4 id="video-recording-2"><a class="anchor" href="#video-recording-2"></a>3.5.3. Video Recording</h4>
 <div class="paragraph">
-<p>BrowserWatcher (MV3) allows recording the current browser tab (i.e., the browser viewport). This feature requires a page loaded in the current tab (in other words, it cannot record empty or configuration pages). Then, the recording is started using the method <code>startRecording()</code> and stopped with <code>stopRecording()</code>. After stopping, the video recording will be automatically downloaded by the browser, and the recording (a webm file) will be stored in the downloads folder. You can discover the path of this recording using the method <code>getRecordingPath()</code>. The following test illustrates this feature:</p>
+<p>BrowserWatcher (MV3) allows recording the current browser tab (i.e., the browser viewport). This feature requires a page loaded in the current tab (in other words, it cannot record empty or configuration pages). Then, the recording is started using the method <code>startRecording()</code> and stopped with <code>stopRecording()</code>. After stopping, the video recording will be automatically downloaded by the browser, and the recording (a webm file) will be stored in the downloads folder. You can discover the path of this recording using the method <code>getRecordingPath()</code>. Alternatively, you can get the recording in Base 64 using the method <code>getRecordingBase64()</code>. The following test illustrates this feature:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -1938,10 +1942,14 @@ This feature is not available for BrowserWatcher 2.x (i.e., based on manifest v3
 
         wdm.stopRecording();
 
+        <span class="comment">// Get recording as path</span>
         Path recordingPath = wdm.getRecordingPath();
         assertThat(recordingPath).exists();
-
         log.debug(<span class="string"><span class="delimiter">&quot;</span><span class="content">Recording available at {}</span><span class="delimiter">&quot;</span></span>, recordingPath);
+
+        <span class="comment">// Get recording as base64</span>
+        <span class="predefined-type">String</span> recordingBase64 = wdm.getRecordingBase64();
+        assertThat(recordingBase64).isNotEmpty();
     }
 
 }</code></pre>
@@ -2040,10 +2048,10 @@ This feature is currently only available for Firefox.
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>Using the WebDriverManager <em>fat-JAR</em> (i.e., WebDriverManager with all its dependencies in a single executable JAR file). This JAR file is generated from the source using the Maven command <code>mvn compile assembly:single</code>, and it is released on GitHub with every new version of WebDriverManager. You can download the latest of this fat-JAR from <a href="https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-6.2.0/webdrivermanager-6.2.0-fat.jar">here</a>. Once you get this file, you  need to use the following command in the shell (where <code>&lt;args&gt;</code> are the accepted arguments, explained below):</p>
+<p>Using the WebDriverManager <em>fat-JAR</em> (i.e., WebDriverManager with all its dependencies in a single executable JAR file). This JAR file is generated from the source using the Maven command <code>mvn compile assembly:single</code>, and it is released on GitHub with every new version of WebDriverManager. You can download the latest of this fat-JAR from <a href="https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-6.3.0/webdrivermanager-6.3.0-fat.jar">here</a>. Once you get this file, you  need to use the following command in the shell (where <code>&lt;args&gt;</code> are the accepted arguments, explained below):</p>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-6.2.0-fat.jar &lt;args&gt;</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-6.3.0-fat.jar &lt;args&gt;</code></pre>
 </div>
 </div>
 </li>
@@ -2059,7 +2067,7 @@ This feature is currently only available for Firefox.
 <p>Using the WebDriverManager Docker container. Each new release of WebDriverManager is pushed to <a href="https://hub.docker.com/r/bonigarcia/webdrivermanager">Docker Hub</a> as a container based on <a href="https://hub.docker.com/_/openjdk">OpenJDK</a> plus the WebDriverManager fat-JAR. The default command to run the WebDriverManager Docker container is described below.</p>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -e ARGS=&quot;&lt;args&gt;&quot; bonigarcia/webdrivermanager:6.2.0</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -e ARGS=&quot;&lt;args&gt;&quot; bonigarcia/webdrivermanager:6.3.0</code></pre>
 </div>
 </div>
 </li>
@@ -2097,7 +2105,7 @@ This feature is currently only available for Firefox.
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-6.2.0-fat.jar resolveDriverFor chrome</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-6.3.0-fat.jar resolveDriverFor chrome</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -2121,7 +2129,7 @@ This feature is currently only available for Firefox.
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -v ${PWD}:/wdm -e ARGS=&quot;resolveDriverFor chrome&quot; bonigarcia/webdrivermanager:6.2.0</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -v ${PWD}:/wdm -e ARGS=&quot;resolveDriverFor chrome&quot; bonigarcia/webdrivermanager:6.3.0</code></pre>
 </div>
 </div>
 <h4 id="option-2-browsers-in-docker" class="discrete">Option 2: Browsers in Docker</h4>
@@ -2137,7 +2145,7 @@ This feature is currently only available for Firefox.
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-6.2.0-fat.jar runInDocker chrome</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-6.3.0-fat.jar runInDocker chrome</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -2161,7 +2169,7 @@ This feature is currently only available for Firefox.
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -e ARGS=&quot;runInDocker chrome&quot; bonigarcia/webdrivermanager:6.2.0</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -it -v /var/run/docker.sock:/var/run/docker.sock -e ARGS=&quot;runInDocker chrome&quot; bonigarcia/webdrivermanager:6.3.0</code></pre>
 </div>
 </div>
 <h4 id="option-3-server" class="discrete">Option 3: Server</h4>
@@ -2177,7 +2185,7 @@ This feature is currently only available for Firefox.
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-6.2.0-fat.jar server</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">java -jar webdrivermanager-6.3.0-fat.jar server</code></pre>
 </div>
 </div>
 <div class="ulist">
@@ -2201,7 +2209,7 @@ This feature is currently only available for Firefox.
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -p 4444:4444 -v /var/run/docker.sock:/var/run/docker.sock bonigarcia/webdrivermanager:6.2.0</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -p 4444:4444 -v /var/run/docker.sock:/var/run/docker.sock bonigarcia/webdrivermanager:6.3.0</code></pre>
 </div>
 </div>
 </div>
@@ -2318,7 +2326,7 @@ wdmServerTest();</code></pre>
 </div>
 </div>
 <div class="paragraph">
-<p>To configure the WebDriverManager Agent, we need to specify the path of the WebDriverManager <a href="https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-6.2.0/webdrivermanager-6.2.0-fat.jar">fat-JAR</a> using the JVM flag <code>-javaagent:/path/to/webdrivermanager-6.2.0-fat.jar</code>. Alternatively, it can be done using Maven (see a complete project example <a href="https://github.com/bonigarcia/wdm-agent-example/">here</a>).</p>
+<p>To configure the WebDriverManager Agent, we need to specify the path of the WebDriverManager <a href="https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-6.3.0/webdrivermanager-6.3.0-fat.jar">fat-JAR</a> using the JVM flag <code>-javaagent:/path/to/webdrivermanager-6.3.0-fat.jar</code>. Alternatively, it can be done using Maven (see a complete project example <a href="https://github.com/bonigarcia/wdm-agent-example/">here</a>).</p>
 </div>
 </div>
 <div class="sect2">
@@ -2362,7 +2370,7 @@ wdmServerTest();</code></pre>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">boni@ubuntu:~$ java -jar webdrivermanager-6.2.0-fat.jar resolveDriverFor chrome
+<pre class="CodeRay highlight"><code data-lang="shell">boni@ubuntu:~$ java -jar webdrivermanager-6.3.0-fat.jar resolveDriverFor chrome
 [INFO] Using WebDriverManager to resolve chrome
 [DEBUG] Detecting chrome version using online commands.properties
 [DEBUG] Running command on the shell: [google-chrome, --version]
@@ -2487,7 +2495,7 @@ In addition to the methods presented in this section, each manager provides a <c
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -v ${PWD}:/wdm -e ARGS=&quot;resolveDriverFor chrome&quot; -e WDM_CHROMEVERSION=84 bonigarcia/webdrivermanager:6.2.0</code></pre>
+<pre class="CodeRay highlight"><code data-lang="shell">docker run --rm -v ${PWD}:/wdm -e ARGS=&quot;resolveDriverFor chrome&quot; -e WDM_CHROMEVERSION=84 bonigarcia/webdrivermanager:6.3.0</code></pre>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -3040,7 +3048,7 @@ As of WebDriverManager 5.3.0, this issue should not happen anymore (even without
 </div>
 </div>
 <div class="paragraph">
-<p>WebDriverManager 5.4+ implements the support for the CfT endpoints. Therefore, the solution to this problem is to bump WebDriverManager to the <strong>latest version</strong> (6.2.0 currently). Also, to ensure that the wrong version has not been cached in the <strong>resolution cache</strong>, you can refresh completely the cache folder (at least once) as follows:</p>
+<p>WebDriverManager 5.4+ implements the support for the CfT endpoints. Therefore, the solution to this problem is to bump WebDriverManager to the <strong>latest version</strong> (6.3.0 currently). Also, to ensure that the wrong version has not been cached in the <strong>resolution cache</strong>, you can refresh completely the cache folder (at least once) as follows:</p>
 </div>
 <div class="listingblock">
 <div class="content">
@@ -3241,8 +3249,8 @@ As of WebDriverManager 5.3.0, this issue should not happen anymore (even without
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 6.2.0<br>
-Updated on 18-07-2025
+Version 6.3.0<br>
+Updated on 01-09-2025
 </div>
 </div>
 </body>
