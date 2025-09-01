@@ -216,9 +216,9 @@ public class WebDriverBrowser {
     }
 
     public String getRecordingBase64() {
-        String recordingBase64 = path2Base64(recordingPath);
-        if (recordingBase64 != null) {
-            setRecordingBase64(recordingBase64);
+        String recording = path2Base64(recordingPath);
+        if (recording != null) {
+            setRecordingBase64(recording);
         }
         return recordingBase64;
     }
