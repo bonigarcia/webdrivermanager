@@ -1,0 +1,44 @@
+name: release_docker
+on:
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: 'Release version'
+        required: true
+
+jobs:
+  release_docker:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout GitHub repo
+      uses: actions/checkout@v5
+    - name: Set up Java
+      uses: actions/setup-java@v5.0.0
+      with:
+        distribution: 'temurin'
+        java-version: 17
+        cache: 'maven'
+    - name: Configure Git
+      run: |
+        git config user.name "Boni Garcia"
+        git config user.email "boni.garcia@uc3m.es"
+    - name: Generate fat jar
+      run: |
+        mvn versions:set -DnewVersion=${{ inputs.release_version }}
+        mvn compile assembly:single
+        mv target/*fat*.jar docker
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    - name: Log in to DockerHub
+      uses: docker/login-action@v3
+      with:
+        username: bonigarcia
+        password: ${{ secrets.DOCKERHUB_PASSWORD }}
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./docker
+        push: true
+        tags: bonigarcia/webdrivermanager:${{ inputs.release_version }}
+        build-args: |
+          VERSION=${{ inputs.release_version }}
