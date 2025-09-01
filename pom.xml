@@ -95,7 +95,6 @@
         <developerConnection>
             scm:git:git@github.com:bonigarcia/webdrivermanager.git</developerConnection>
         <url>https://github.com/bonigarcia/webdrivermanager</url>
-        <tag>webdrivermanager-5.0.0</tag>
     </scm>
 
     <dependencies>
