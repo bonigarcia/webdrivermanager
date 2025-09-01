@@ -51,11 +51,13 @@ jobs:
       run: |
         mvn --batch-mode clean release:clean release:prepare release:perform \
             -DreleaseVersion=${{ inputs.release_version }} \
+            -DautoVersionSubmodules=true \
             -Dscm.url=https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git \
             -Dscm.developerConnection=https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git \
             -Darguments="-DskipTests -Dgpg.executable=gpg"
     - name: Generate fat jar
       run: |
+        mvn versions:set -DnewVersion=${{ inputs.release_version }}
         mvn compile assembly:single
     - name: Upload fat jar as artifact
       uses: actions/upload-artifact@v4
