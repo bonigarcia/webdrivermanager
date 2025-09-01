@@ -59,11 +59,27 @@ jobs:
       run: |
         mvn versions:set -DnewVersion=${{ inputs.release_version }}
         mvn compile assembly:single
+        mv target/*fat*.jar docker
     - name: Upload fat jar as artifact
       uses: actions/upload-artifact@v4
       with:
         name: fat-jar
-        path: target/*fat*.jar
+        path: docker/*fat*.jar
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+    - name: Log in to DockerHub
+      uses: docker/login-action@v3
+      with:
+        username: bonigarcia
+        password: ${{ secrets.DOCKERHUB_PASSWORD }}
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v5
+      with:
+        context: ./docker
+        push: true
+        tags: bonigarcia/webdrivermanager:${{ inputs.release_version }}
+        build-args: |
+          VERSION=${{ inputs.release_version }}
     - name: Update doc
       run: |
         mvn site -Ddoc.version=${{ inputs.release_version }}
