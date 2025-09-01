@@ -1,5 +1,15 @@
 # Changelog
 
+## [6.3.0] - 2025-09-01
+
+### Added
+- Include getRecordingBase64() in the WebDriverManager API
+- Include workflows to release WebDriverManager in Maven Central and doc in GH Pages
+
+### Changed
+- Bump to BrowserWatcher 2.1.0
+
+
 ## [6.2.0] - 2025-07-18
 
 ### Added
