@@ -25,22 +25,21 @@ jobs:
     - name: Import GPG key
       run: |
         echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --batch --import
-        echo "allow-loopback-pinentry" >> ~/.gnupg/gpg.conf
-      shell: bash
-    - name: Configure GPG agent for Maven
-      run: |
-        echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
+        mkdir -p ~/.gnupg
+        echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
+        gpgconf --kill gpg-agent || true
     - name: Make release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         MAVEN_USERNAME: ${{ secrets.MAVEN_USERNAME }}
         MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+        MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
       run: |
         mvn --batch-mode clean release:clean release:prepare release:perform \
             -DreleaseVersion=${{ inputs.release_version }} \
             -Dscm.url=https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git \
             -Dscm.developerConnection=https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git \
-            -Darguments="-DskipTests -Dgpg.executable=gpg -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }}"
+            -Darguments="-DskipTests -Dgpg.executable=gpg"
     - name: Generate fat jar
       run: |
         mvn compile assembly:single
