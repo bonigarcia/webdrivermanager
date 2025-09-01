@@ -40,8 +40,7 @@ jobs:
             -DreleaseVersion=${{ inputs.release_version }} \
             -Dscm.url=https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git \
             -Dscm.developerConnection=https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git \
-            -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }} -Dgpg.executable=gpg \
-            -Darguments="-DskipTests"
+            -Darguments="-DskipTests -Dgpg.executable=gpg -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }}"
     - name: Generate fat jar
       run: |
         mvn compile assembly:single
