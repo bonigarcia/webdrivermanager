@@ -44,7 +44,7 @@ jobs:
           </servers>
         </settings>
         EOF
-    - name: Make release
+    - name: Make release in Maven Central
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         MAVEN_GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
@@ -55,16 +55,20 @@ jobs:
             -Dscm.url=https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git \
             -Dscm.developerConnection=https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git \
             -Darguments="-DskipTests -Dgpg.executable=gpg"
-    - name: Generate fat jar
+    - name: Generate fat JAR
       run: |
         mvn versions:set -DnewVersion=${{ inputs.release_version }}
         mvn compile assembly:single
         mv target/*fat*.jar docker
-    - name: Upload fat jar as artifact
-      uses: actions/upload-artifact@v4
+    - name: Make release in GitHub
+      uses: softprops/action-gh-release@v2
       with:
-        name: fat-jar
-        path: docker/*fat*.jar
+        token: ${{ secrets.GITHUB_TOKEN }}
+        tag_name: webdrivermanager-${{ inputs.release_version }}
+        draft: false
+        prerelease: false
+        files: |
+          docker/webdrivermanager-${{ inputs.release_version }}-fat.jar
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
     - name: Log in to DockerHub
