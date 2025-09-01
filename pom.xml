@@ -91,9 +91,9 @@
     </licenses>
 
     <scm>
-        <connection>scm:git:git://github.com/bonigarcia/webdrivermanager.git</connection>
+        <connection>scm:git:https://github.com/bonigarcia/webdrivermanager.git</connection>
         <developerConnection>
-            scm:git:git@github.com:bonigarcia/webdrivermanager.git</developerConnection>
+            scm:git:https://github.com/bonigarcia/webdrivermanager.git</developerConnection>
         <url>https://github.com/bonigarcia/webdrivermanager</url>
     </scm>
 
