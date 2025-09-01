@@ -28,6 +28,22 @@ jobs:
         mkdir -p ~/.gnupg
         echo "allow-loopback-pinentry" >> ~/.gnupg/gpg-agent.conf
         gpgconf --kill gpg-agent || true
+    - name: Configure Maven settings
+      run: |
+        mkdir -p ~/.m2
+        cat > ~/.m2/settings.xml <<EOF
+        <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
+          <servers>
+            <server>
+              <id>central</id>
+              <username>${{ secrets.OSSRH_USERNAME }}</username>
+              <password>${{ secrets.OSSRH_PASSWORD }}</password>
+            </server>
+          </servers>
+        </settings>
+        EOF
     - name: Make release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
