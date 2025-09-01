@@ -1,0 +1,35 @@
+name: release_doc
+on:
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: 'Release version'
+        required: true
+
+jobs:
+  release_doc:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout GitHub repo
+      uses: actions/checkout@v5
+    - name: Set up Java
+      uses: actions/setup-java@v5.0.0
+      with:
+        distribution: 'temurin'
+        java-version: 17
+        cache: 'maven'
+    - name: Configure Git
+      run: |
+        git config user.name "Boni Garcia"
+        git config user.email "boni.garcia@uc3m.es"
+    - name: Update doc
+      run: |
+        mvn site -Ddoc.version=${{ inputs.release_version }}
+        git add docs
+        git commit -m "Update docs for release ${{ inputs.release_version }}" -a
+    - name: Push changes
+      if: steps.git.outputs.commit == 'true'
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: ${{ github.ref }}

@@ -65,15 +65,8 @@ jobs:
     - name: Update doc
       run: |
         mvn site -Ddoc.version=${{ inputs.release_version }}
-    - name: Commit files
-      id: git
-      run: |
-        export CHANGES=$(git status -s)
-        if [ -n "$CHANGES" ]; then
-           git add *
-           git commit -m "Update docs for release ${{ inputs.release_version }}" -a
-           echo "::set-output name=commit::true"
-        fi
+        git add docs
+        git commit -m "Update docs for release ${{ inputs.release_version }}" -a
     - name: Push changes
       if: steps.git.outputs.commit == 'true'
       uses: ad-m/github-push-action@master
