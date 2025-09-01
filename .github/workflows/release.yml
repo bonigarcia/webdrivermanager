@@ -22,6 +22,14 @@ jobs:
       run: |
         git config user.name "Boni Garcia"
         git config user.email "boni.garcia@uc3m.es"
+    - name: Import GPG key
+      run: |
+        echo "${{ secrets.GPG_PRIVATE_KEY }}" | gpg --batch --import
+        echo "allow-loopback-pinentry" >> ~/.gnupg/gpg.conf
+      shell: bash
+    - name: Configure GPG agent for Maven
+      run: |
+        echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
     - name: Make release
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -32,6 +40,7 @@ jobs:
             -DreleaseVersion=${{ inputs.release_version }} \
             -Dscm.url=https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git \
             -Dscm.developerConnection=https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git \
+            -Dgpg.passphrase=${{ secrets.GPG_PASSPHRASE }} -Dgpg.executable=gpg \
             -Darguments="-DskipTests"
     - name: Generate fat jar
       run: |
