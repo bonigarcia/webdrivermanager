@@ -63,7 +63,7 @@ jobs:
         -Dsonar.projectKey=io.github.bonigarcia:webdrivermanager
     - name: Upload coverage to Codecov
       if: success() && matrix.os == 'ubuntu-latest' && !contains(github.ref, 'pull')
-      uses: codecov/codecov-action@v5.5.0
+      uses: codecov/codecov-action@v5.5.1
     - name: Store recordings on Linux
       if: always() && matrix.os == 'ubuntu-latest'
       uses: actions/upload-artifact@v4.6.2
