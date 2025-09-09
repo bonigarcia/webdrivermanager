@@ -29,6 +29,8 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 
+import io.github.bonigarcia.wdm.config.WebDriverManagerException;
+
 /**
  * Command line executor.
  *
@@ -88,7 +90,7 @@ public class Shell {
             process.waitFor();
             if (!process.waitFor(timeoutSeconds, TimeUnit.SECONDS)) {
                 process.destroyForcibly();
-                throw new RuntimeException(
+                throw new WebDriverManagerException(
                         "Command timed out: " + String.join(" ", command));
             }
 
