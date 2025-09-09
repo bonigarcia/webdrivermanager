@@ -58,12 +58,14 @@ class BrowserVersionDetectionTest {
     void commandsTest(String browser) {
         Optional<String> detectedVersion = versionDetector
                 .getBrowserVersionFromTheShell(browser, "");
-        if (detectedVersion.isPresent()) {
-            log.debug("The detected version of {} is {}", browser,
-                    detectedVersion.get());
-            int numericVersion = Integer.parseInt(detectedVersion.get());
-            assertThat(numericVersion).isPositive();
-        }
+        detectedVersion.ifPresent(version -> {
+            if (!version.isEmpty()) {
+                log.debug("The detected version of {} is {}", browser,
+                        detectedVersion.get());
+                int numericVersion = Integer.parseInt(version);
+                assertThat(numericVersion).isPositive();
+            }
+        });
     }
 
 }

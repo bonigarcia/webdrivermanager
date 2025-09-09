@@ -71,7 +71,7 @@ public class Shell {
         }
         String result = runAndWaitNoLog(timeoutSeconds, folder, command);
         if (logCommand) {
-            log.debug("Result: {}", result);
+            log.trace("Result: {}", result);
         }
         return result;
     }
