@@ -181,7 +181,8 @@ public class FirefoxDriverManager extends WebDriverManager {
             // https://firefox-source-docs.mozilla.org/testing/geckodriver/Notarization.html
             log.debug(
                     "Bypass notarization requirement for geckodriver on Mac OS");
-            Shell.runAndWait("xattr", "-r", "-d", "com.apple.quarantine",
+            Shell.runAndWait(config.getTimeout(), "xattr", "-r", "-d",
+                    "com.apple.quarantine",
                     fileList.iterator().next().toString());
         }
         return fileList;

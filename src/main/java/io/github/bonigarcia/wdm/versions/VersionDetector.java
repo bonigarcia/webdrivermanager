@@ -229,7 +229,7 @@ public class VersionDetector {
                 } else {
                     String[] commandArray = new String[] { "bash", "-c",
                             "type -p " + firstCommand };
-                    pathStr = runAndWait(commandArray);
+                    pathStr = runAndWait(config.getTimeout(), commandArray);
                 }
                 break;
             }
@@ -357,9 +357,10 @@ public class VersionDetector {
         String output;
         if (isWmic) {
             File wmicLocation = findFileLocation(WMIC + EXE);
-            output = runAndWait(wmicLocation, commandArray);
+            output = runAndWait(config.getTimeout(), wmicLocation,
+                    commandArray);
         } else {
-            output = runAndWait(commandArray);
+            output = runAndWait(config.getTimeout(), commandArray);
         }
 
         return output;

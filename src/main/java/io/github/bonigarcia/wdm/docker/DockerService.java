@@ -162,7 +162,7 @@ public class DockerService {
 
     private boolean isCommandResultPresent(String command) {
         String[] commandArray = new String[] { "bash", "-c", command };
-        String commandOutput = runAndWait(false, commandArray);
+        String commandOutput = runAndWait(config.getTimeout(), false, commandArray);
         return !isNullOrEmpty(commandOutput);
     }
 

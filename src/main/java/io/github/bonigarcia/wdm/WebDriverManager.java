@@ -387,7 +387,7 @@ public abstract class WebDriverManager {
     }
 
     public static boolean isDockerAvailable() {
-        String dockerInfo = runAndWait(false, "docker", "info");
+        String dockerInfo = runAndWait(30, false, "docker", "info");
         return !isNullOrEmpty(dockerInfo) && !dockerInfo.contains("error")
                 && dockerInfo.contains("linux");
     }

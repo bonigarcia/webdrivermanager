@@ -22,7 +22,9 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.File;
+import java.io.InputStream;
 import java.util.Arrays;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
@@ -41,43 +43,55 @@ public class Shell {
         throw new IllegalStateException("Utility class");
     }
 
-    public static String runAndWait(String... command) {
-        return runAndWait(true, command);
+    public static String runAndWait(int timeoutSeconds, String... command) {
+        return runAndWait(timeoutSeconds, true, command);
     }
 
-    public static String runAndWait(File folder, String... command) {
-        return runAndWaitArray(true, folder, command);
-    }
-
-    public static String runAndWait(boolean logCommand, String... command) {
-        return runAndWaitArray(logCommand, new File("."), command);
-    }
-
-    public static String runAndWait(boolean logCommand, File folder,
+    public static String runAndWait(int timeoutSeconds, File folder,
             String... command) {
-        return runAndWaitArray(logCommand, folder, command);
+        return runAndWaitArray(timeoutSeconds, true, folder, command);
     }
 
-    public static String runAndWaitArray(boolean logCommand, File folder,
-            String[] command) {
+    public static String runAndWait(int timeoutSeconds, boolean logCommand,
+            String... command) {
+        return runAndWaitArray(timeoutSeconds, logCommand, new File("."),
+                command);
+    }
+
+    public static String runAndWait(int timeoutSeconds, boolean logCommand,
+            File folder, String... command) {
+        return runAndWaitArray(timeoutSeconds, logCommand, folder, command);
+    }
+
+    public static String runAndWaitArray(int timeoutSeconds, boolean logCommand,
+            File folder, String[] command) {
         String commandStr = Arrays.toString(command);
         if (logCommand) {
             log.debug("Running command on the shell: {}", commandStr);
         }
-        String result = runAndWaitNoLog(folder, command);
+        String result = runAndWaitNoLog(timeoutSeconds, folder, command);
         if (logCommand) {
             log.debug("Result: {}", result);
         }
         return result;
     }
 
-    public static String runAndWaitNoLog(File folder, String... command) {
-        String output = "";
+    public static String runAndWaitNoLog(int timeoutSeconds, File folder,
+            String... command) {
+        StringBuilder output = new StringBuilder();
         try {
             Process process = new ProcessBuilder(command).directory(folder)
-                    .redirectErrorStream(false).start();
+                    .redirectErrorStream(true).start();
+            try (InputStream is = process.getInputStream()) {
+                output.append(IOUtils.toString(is, UTF_8));
+            }
             process.waitFor();
-            output = IOUtils.toString(process.getInputStream(), UTF_8.name());
+            if (!process.waitFor(timeoutSeconds, TimeUnit.SECONDS)) {
+                process.destroyForcibly();
+                throw new RuntimeException(
+                        "Command timed out: " + String.join(" ", command));
+            }
+
         } catch (Exception e) {
             if (log.isDebugEnabled()) {
                 log.debug(
@@ -85,7 +99,7 @@ public class Shell {
                         join(" ", command), e.getMessage());
             }
         }
-        return output.trim();
+        return output.toString().trim();
     }
 
 }
