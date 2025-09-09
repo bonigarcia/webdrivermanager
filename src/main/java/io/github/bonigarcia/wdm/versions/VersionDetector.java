@@ -233,10 +233,14 @@ public class VersionDetector {
                 }
                 break;
             }
-            Path path = Paths.get(pathStr);
-            if (!isNullOrEmpty(pathStr) && Files.exists(path)) {
-                log.debug("The path of {} is {}", browserName, pathStr);
-                return Optional.of(path);
+            try {
+                Path path = Paths.get(pathStr);
+                if (!isNullOrEmpty(pathStr) && Files.exists(path)) {
+                    log.debug("The path of {} is {}", browserName, pathStr);
+                    return Optional.of(path);
+                }
+            } catch (Exception e) {
+                log.trace("Invalid path {}", pathStr);
             }
         }
 
