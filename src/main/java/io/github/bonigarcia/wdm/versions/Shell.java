@@ -126,7 +126,7 @@ public class Shell {
         }
 
         public static StreamReader consumeStderr(Process process) {
-            return consume(process.getInputStream(), "stderr");
+            return consume(process.getErrorStream(), "stderr");
         }
 
         public void run() {
