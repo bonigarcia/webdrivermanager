@@ -24,9 +24,12 @@ import static org.slf4j.LoggerFactory.getLogger;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 
 import io.github.bonigarcia.wdm.config.WebDriverManagerException;
@@ -80,20 +83,17 @@ public class Shell {
 
     public static String runAndWaitNoLog(int timeoutSeconds, File folder,
             String... command) {
-        StringBuilder output = new StringBuilder();
         try {
             Process process = new ProcessBuilder(command).directory(folder)
-                    .redirectErrorStream(true).start();
-            try (InputStream is = process.getInputStream()) {
-                output.append(IOUtils.toString(is, UTF_8));
-            }
-            process.waitFor();
+                    .redirectErrorStream(false).start();
+            StreamReader.consumeStderr(process);
+            StreamReader stdout = StreamReader.consumeStdout(process);
             if (!process.waitFor(timeoutSeconds, TimeUnit.SECONDS)) {
                 process.destroyForcibly();
                 throw new WebDriverManagerException(
                         "Command timed out: " + String.join(" ", command));
             }
-
+            return stdout.getOutput().trim();
         } catch (Exception e) {
             if (log.isDebugEnabled()) {
                 log.debug(
@@ -101,7 +101,44 @@ public class Shell {
                         join(" ", command), e.getMessage());
             }
         }
-        return output.toString().trim();
+        return StringUtils.EMPTY;
     }
+    
+    private static class StreamReader implements Runnable {
+        private final CompletableFuture<String> output = new CompletableFuture<>();
+        private final InputStream is;
+        private static final AtomicInteger id = new AtomicInteger(0);
 
+        private StreamReader(InputStream is) {
+            this.is = is;
+        }
+
+        private static StreamReader consume(InputStream is, String streamName) {
+            StreamReader streamReader = new StreamReader(is);
+            Thread t = new Thread(streamReader, "streamReader-" + id.getAndIncrement() + "-" + streamName);
+            t.setDaemon(true);
+            t.start();
+            return streamReader;
+        }
+
+        public static StreamReader consumeStdout(Process process) {
+            return consume(process.getInputStream(), "stdout");
+        }
+
+        public static StreamReader consumeStderr(Process process) {
+            return consume(process.getErrorStream(), "stderr");
+        }
+
+        public void run() {
+            try {
+                output.complete(IOUtils.toString(is, UTF_8));
+            } catch (Exception e) {
+                output.completeExceptionally(e);
+            }
+        };
+
+        public String getOutput() throws Exception {
+            return output.get();
+        }
+    }
 }
