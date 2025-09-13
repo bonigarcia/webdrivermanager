@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -103,7 +104,7 @@ public class Shell {
         }
         return StringUtils.EMPTY;
     }
-    
+
     private static class StreamReader implements Runnable {
         private final CompletableFuture<String> output = new CompletableFuture<>();
         private final InputStream is;
@@ -115,7 +116,8 @@ public class Shell {
 
         private static StreamReader consume(InputStream is, String streamName) {
             StreamReader streamReader = new StreamReader(is);
-            Thread t = new Thread(streamReader, "streamReader-" + id.getAndIncrement() + "-" + streamName);
+            Thread t = new Thread(streamReader,
+                    "streamReader-" + id.getAndIncrement() + "-" + streamName);
             t.setDaemon(true);
             t.start();
             return streamReader;
@@ -135,9 +137,10 @@ public class Shell {
             } catch (Exception e) {
                 output.completeExceptionally(e);
             }
-        };
+        }
 
-        public String getOutput() throws Exception {
+        public String getOutput()
+                throws InterruptedException, ExecutionException {
             return output.get();
         }
     }
