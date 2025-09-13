@@ -1,5 +1,15 @@
 # Changelog
 
+## [6.3.2] - 2025-09-13
+
+### Fixed
+- Consume stdout/stderr asynchronously and add timeout for shell execution (#1469)
+- Fix logic to find msedgedriver from XML responses (#1510)
+
+### Changed
+- Changed log level for shell result to trace
+
+
 ## [6.3.1] - 2025-09-01
 
 ### Fixed
