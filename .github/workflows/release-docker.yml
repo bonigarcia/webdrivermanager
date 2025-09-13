@@ -27,6 +27,7 @@ jobs:
         mvn versions:set -DnewVersion=${{ inputs.release_version }}
         mvn compile assembly:single
         mv target/*fat*.jar docker
+        mvn versions:revert
     - name: Set up Docker Buildx
       uses: docker/setup-buildx-action@v3
     - name: Log in to DockerHub
