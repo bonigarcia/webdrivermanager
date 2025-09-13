@@ -282,12 +282,8 @@ public class EdgeDriverManager extends WebDriverManager {
                         "/EnumerationResults/NextMarker",
                         xml.getDocumentElement(), NODESET);
                 if (nextMarkerNodes.getLength() > 0) {
-                    NodeList enumerationResults = (NodeList) xPath.evaluate(
-                            "/EnumerationResults", xml.getDocumentElement(),
-                            NODESET);
-                    String containerName = enumerationResults.item(0)
-                            .getAttributes().getNamedItem("ContainerName")
-                            .getNodeValue();
+                    String containerName = String.format("%s://%s/",
+                            driverUrl.getProtocol(), driverUrl.getAuthority());
                     Element e = (Element) nextMarkerNodes.item(0);
                     if (e.hasChildNodes()) {
                         String marker = e.getFirstChild().getNodeValue();
