@@ -44,6 +44,11 @@ jobs:
           </servers>
         </settings>
         EOF
+    - name: Generate fat JAR
+      run: |
+        mvn versions:set -DnewVersion=${{ inputs.release_version }}
+        mvn compile assembly:single
+        mv target/*fat*.jar docker
     - name: Make release in Maven Central
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -55,11 +60,6 @@ jobs:
             -Dscm.url=https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git \
             -Dscm.developerConnection=https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git \
             -Darguments="-DskipTests -Dgpg.executable=gpg"
-    - name: Generate fat JAR
-      run: |
-        mvn versions:set -DnewVersion=${{ inputs.release_version }}
-        mvn compile assembly:single
-        mv target/*fat*.jar docker
     - name: Make release in GitHub
       uses: softprops/action-gh-release@v2
       with:
