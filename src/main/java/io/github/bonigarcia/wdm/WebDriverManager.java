@@ -1309,7 +1309,8 @@ public abstract class WebDriverManager {
 
         URL url;
         Optional<URL> optionalURL = buildUrl(driverVersion);
-        if (!config.isAvoidExternalConnections() && optionalURL.isPresent()) {
+        if (!config.isAvoidExternalConnections() && optionalURL.isPresent()
+                && config.getIgnoreVersions().isEmpty()) {
             url = optionalURL.get();
             downloadedDriverVersion = driverVersion;
         } else {
