@@ -11,35 +11,35 @@
         <gson.version>2.13.2</gson.version>
         <docker-java.version>3.6.0</docker-java.version>
         <brotli.version>0.1.2</brotli.version>
-        <commons-lang3.version>3.18.0</commons-lang3.version>
+        <commons-lang3.version>3.19.0</commons-lang3.version>
         <commons-compress.version>1.28.0</commons-compress.version>
         <httpclient5.version>5.4.3</httpclient5.version>
 
         <!-- provided -->
-        <selenium.version>4.35.0</selenium.version>
+        <selenium.version>4.36.0</selenium.version>
         <javalin.version>4.6.8</javalin.version>
 
         <!-- test -->
         <logback.version>1.5.18</logback.version>
-        <junit.version>5.13.4</junit.version>
-        <assertj.version>3.27.5</assertj.version>
+        <junit.version>6.0.0</junit.version>
+        <assertj.version>3.27.6</assertj.version>
         <mockserver.version>5.15.0</mockserver.version>
-        <mockito-junit-jupiter.version>5.19.0</mockito-junit-jupiter.version>
+        <mockito-junit-jupiter.version>5.20.0</mockito-junit-jupiter.version>
 
         <!-- plugins -->
         <maven-release-plugin.version>3.1.1</maven-release-plugin.version>
         <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
-        <jacoco-maven-plugin.version>0.8.13</jacoco-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
         <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
-        <exec-maven-plugin.version>3.5.1</exec-maven-plugin.version>
+        <exec-maven-plugin.version>3.6.1</exec-maven-plugin.version>
         <maven-jar-plugin.version>3.4.2</maven-jar-plugin.version>
         <maven-asciidoctor-plugin.version>3.2.0</maven-asciidoctor-plugin.version>
-        <asciidoctorj-pdf.version>2.3.19</asciidoctorj-pdf.version>
+        <asciidoctorj-pdf.version>2.3.20</asciidoctorj-pdf.version>
         <maven-site.version>3.21.0</maven-site.version>
         <maven-project-info-reports.version>3.9.0</maven-project-info-reports.version>
-        <maven-javadoc-plugin.version>3.11.3</maven-javadoc-plugin.version>
+        <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
         <maven-compiler-plugin.version>3.14.1</maven-compiler-plugin.version>
-        <central-publishing-maven-plugin.version>0.8.0</central-publishing-maven-plugin.version>
+        <central-publishing-maven-plugin.version>0.9.0</central-publishing-maven-plugin.version>
         <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
         <maven-jxr-plugin.version>3.6.0</maven-jxr-plugin.version>
 
