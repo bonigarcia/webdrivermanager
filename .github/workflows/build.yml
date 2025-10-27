@@ -66,21 +66,21 @@ jobs:
       uses: codecov/codecov-action@v5.5.1
     - name: Store recordings on Linux
       if: always() && matrix.os == 'ubuntu-latest'
-      uses: actions/upload-artifact@v4.6.2
+      uses: actions/upload-artifact@v5.0.0
       with:
         name: linux-recordings
         path: |
           *.webm
     - name: Store recordings on Windows
       if: always() && matrix.os == 'windows-latest'
-      uses: actions/upload-artifact@v4.6.2
+      uses: actions/upload-artifact@v5.0.0
       with:
         name: win-recordings
         path: |
           *.webm
     - name: Store recordings on macOS
       if: always() && matrix.os == 'macos-latest'
-      uses: actions/upload-artifact@v4.6.2
+      uses: actions/upload-artifact@v5.0.0
       with:
         name: macos-recordings
         path: |
