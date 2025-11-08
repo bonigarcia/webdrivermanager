@@ -45,7 +45,7 @@
 
         <!-- Java version -->
         <java.version>8</java.version>
-        <java-test.version>11</java-test.version>
+        <java-test.version>17</java-test.version>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <maven.compiler.source>${java.version}</maven.compiler.source>
 
