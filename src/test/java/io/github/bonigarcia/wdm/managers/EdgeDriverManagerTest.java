@@ -39,41 +39,41 @@ class EdgeDriverManagerTest {
     void edgeVersionOnLinux() throws MalformedURLException {
         assertThat(edgeDriverManager.buildUrl(version,
                 new DummyConfig(LINUX, X32))).hasValue(new URL(
-                        "https://msedgewebdriverstorage.blob.core.windows.net/edgewebdriver/106.0.1370.47/edgedriver_linux64.zip"));
+                        "https://msedgedriver.microsoft.com/106.0.1370.47/edgedriver_linux64.zip"));
         assertThat(edgeDriverManager.buildUrl(version,
                 new DummyConfig(LINUX, X64))).hasValue(new URL(
-                        "https://msedgewebdriverstorage.blob.core.windows.net/edgewebdriver/106.0.1370.47/edgedriver_linux64.zip"));
+                        "https://msedgedriver.microsoft.com/106.0.1370.47/edgedriver_linux64.zip"));
         assertThat(edgeDriverManager.buildUrl(version,
                 new DummyConfig(LINUX, ARM64))).hasValue(new URL(
-                        "https://msedgewebdriverstorage.blob.core.windows.net/edgewebdriver/106.0.1370.47/edgedriver_arm64.zip"));
+                        "https://msedgedriver.microsoft.com/106.0.1370.47/edgedriver_arm64.zip"));
         assertThat(edgeDriverManager.buildUrl(version,
                 new DummyConfig(LINUX, DEFAULT))).hasValue(new URL(
-                        "https://msedgewebdriverstorage.blob.core.windows.net/edgewebdriver/106.0.1370.47/edgedriver_linux64.zip"));
+                        "https://msedgedriver.microsoft.com/106.0.1370.47/edgedriver_linux64.zip"));
     }
 
     @Test
     void edgeVersionOnMac() throws MalformedURLException {
         assertThat(edgeDriverManager.buildUrl(version,
                 new DummyConfig(MAC, X32))).hasValue(new URL(
-                        "https://msedgewebdriverstorage.blob.core.windows.net/edgewebdriver/106.0.1370.47/edgedriver_mac64.zip"));
+                        "https://msedgedriver.microsoft.com/106.0.1370.47/edgedriver_mac64.zip"));
         assertThat(edgeDriverManager.buildUrl(version,
                 new DummyConfig(MAC, X64))).hasValue(new URL(
-                        "https://msedgewebdriverstorage.blob.core.windows.net/edgewebdriver/106.0.1370.47/edgedriver_mac64.zip"));
+                        "https://msedgedriver.microsoft.com/106.0.1370.47/edgedriver_mac64.zip"));
         assertThat(edgeDriverManager.buildUrl(version,
                 new DummyConfig(MAC, ARM64))).hasValue(new URL(
-                        "https://msedgewebdriverstorage.blob.core.windows.net/edgewebdriver/106.0.1370.47/edgedriver_mac64_m1.zip"));
+                        "https://msedgedriver.microsoft.com/106.0.1370.47/edgedriver_mac64_m1.zip"));
         assertThat(edgeDriverManager.buildUrl(version,
                 new DummyConfig(MAC, DEFAULT))).hasValue(new URL(
-                        "https://msedgewebdriverstorage.blob.core.windows.net/edgewebdriver/106.0.1370.47/edgedriver_mac64.zip"));
+                        "https://msedgedriver.microsoft.com/106.0.1370.47/edgedriver_mac64.zip"));
     }
 
     @Test
     void edgeVersionOnWindows() throws MalformedURLException {
         assertThat(edgeDriverManager.buildUrl(version,
                 new DummyConfig(WIN, X32))).hasValue(new URL(
-                        "https://msedgewebdriverstorage.blob.core.windows.net/edgewebdriver/106.0.1370.47/edgedriver_win32.zip"));
+                        "https://msedgedriver.microsoft.com/106.0.1370.47/edgedriver_win32.zip"));
         assertThat(edgeDriverManager.buildUrl(version,
                 new DummyConfig(WIN, X64))).hasValue(new URL(
-                        "https://msedgewebdriverstorage.blob.core.windows.net/edgewebdriver/106.0.1370.47/edgedriver_win64.zip"));
+                        "https://msedgedriver.microsoft.com/106.0.1370.47/edgedriver_win64.zip"));
     }
 }
