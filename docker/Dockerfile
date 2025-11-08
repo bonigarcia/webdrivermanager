@@ -1,4 +1,4 @@
-FROM openjdk:11-jdk-slim
+FROM eclipse-temurin:17-jre-jammy
 
 ARG VERSION
 
