@@ -1,5 +1,11 @@
 # Changelog
 
+## [6.3.3] - 2025-11-08
+
+### Changed
+- Use https://msedgedriver.microsoft.com/ for downloading msedgedriver (#1535)
+
+
 ## [6.3.2] - 2025-09-13
 
 ### Fixed
