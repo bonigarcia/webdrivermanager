@@ -11,7 +11,7 @@
         <gson.version>2.13.2</gson.version>
         <docker-java.version>3.7.0</docker-java.version>
         <brotli.version>0.1.2</brotli.version>
-        <commons-lang3.version>3.19.0</commons-lang3.version>
+        <commons-lang3.version>3.20.0</commons-lang3.version>
         <commons-compress.version>1.28.0</commons-compress.version>
         <httpclient5.version>5.4.3</httpclient5.version>
 
