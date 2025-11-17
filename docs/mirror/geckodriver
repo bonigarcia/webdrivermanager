@@ -799,5 +799,250 @@
         "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.13.0/geckodriver-v0.13.0-win64.zip"
       }
     ]
+  },
+  {
+    "tag_name": "v0.12.0",
+    "assets": [
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.12.0/geckodriver-v0.12.0-arm7hf.tar.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.12.0/geckodriver-v0.12.0-linux32.tar.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.12.0/geckodriver-v0.12.0-linux64.tar.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.12.0/geckodriver-v0.12.0-macos.tar.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.12.0/geckodriver-v0.12.0-win32.zip"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.12.0/geckodriver-v0.12.0-win64.zip"
+      }
+    ]
+  },
+  {
+    "tag_name": "v0.11.1",
+    "assets": [
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.11.1/geckodriver-v0.11.1-arm7hf.tar.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.11.1/geckodriver-v0.11.1-linux32.tar.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.11.1/geckodriver-v0.11.1-linux64.tar.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.11.1/geckodriver-v0.11.1-macos.tar.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.11.1/geckodriver-v0.11.1-win32.zip"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.11.1/geckodriver-v0.11.1-win64.zip"
+      }
+    ]
+  },
+  {
+    "tag_name": "v0.11.0",
+    "assets": [
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.11.0/geckodriver-v0.11.0-arm7hf.tar.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.11.0/geckodriver-v0.11.0-linux32.tar.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.11.0/geckodriver-v0.11.0-linux64.tar.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.11.0/geckodriver-v0.11.0-macos.tar.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.11.0/geckodriver-v0.11.0-win32.zip"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.11.0/geckodriver-v0.11.0-win64.zip"
+      }
+    ]
+  },
+  {
+    "tag_name": "v0.10.0",
+    "assets": [
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.10.0/geckodriver-v0.10.0-arm7hf.tar.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.10.0/geckodriver-v0.10.0-linux64.tar.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.10.0/geckodriver-v0.10.0-macos.tar.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.10.0/geckodriver-v0.10.0-win64.zip"
+      }
+    ]
+  },
+  {
+    "tag_name": "v0.9.0",
+    "assets": [
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.9.0/geckodriver-v0.9.0-arm7hf.tar.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.9.0/geckodriver-v0.9.0-linux64.tar.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.9.0/geckodriver-v0.9.0-mac.tar.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.9.0/geckodriver-v0.9.0-win64.zip"
+      }
+    ]
+  },
+  {
+    "tag_name": "v0.8.0",
+    "assets": [
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.8.0/geckodriver-0.8.0-linux64.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.8.0/geckodriver-0.8.0-OSX.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.8.0/geckodriver-v0.8.0-win32.zip"
+      }
+    ]
+  },
+  {
+    "tag_name": "v0.7.1",
+    "assets": [
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.7.1/wires-0.7.1-linux64.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.7.1/wires-0.7.1-OSX.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.7.1/wires-v0.7.1-win32.zip"
+      }
+    ]
+  },
+  {
+    "tag_name": "v0.6.2",
+    "assets": [
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.6.2/wires-0.6.2-linux64.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.6.2/wires-0.6.2-OSX.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.6.2/wires-0.6.2-win.zip"
+      }
+    ]
+  },
+  {
+    "tag_name": "v0.6.0",
+    "assets": [
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.6.0/wires-0.6.0-linux.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.6.0/wires-0.6.0-osx.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.6.0/wires-0.6.0-win.zip"
+      }
+    ]
+  },
+  {
+    "tag_name": "v0.5.0",
+    "assets": [
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.5.0/wires-0.5.0-linux64.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.5.0/wires-0.5.0-osx.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.5.0/wires-v0.5.0-win.zip"
+      }
+    ]
+  },
+  {
+    "tag_name": "v0.4.2",
+    "assets": [
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.4.2/wires-0.4.2-linux64.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.4.2/wires-0.4.2-osx.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.4.2/wires-0.4.2-win.zip"
+      }
+    ]
+  },
+  {
+    "tag_name": "v0.4.1",
+    "assets": [
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.4.1/wires-0.4.1-osx.gz"
+      }
+    ]
+  },
+  {
+    "tag_name": "v0.4.0",
+    "assets": [
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.4.0/wires-0.4.0-linux64.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.4.0/wires-0.4.0-osx.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.4.0/wires-0.4.0-win.zip"
+      }
+    ]
+  },
+  {
+    "tag_name": "0.3.0",
+    "assets": [
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/0.3.0/wires-0.3.0-linux64.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/0.3.0/wires-0.3.0-osx.tar.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/0.3.0/wires-0.3.0-windows.zip"
+      }
+    ]
+  },
+  {
+    "tag_name": "v0.2.0",
+    "assets": [
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.2.0/wires-0.2.0-linux64.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.2.0/wires-0.2.0-osx.gz"
+      }
+    ]
+  },
+  {
+    "tag_name": "v0.1.0",
+    "assets": [
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.1.0/wires-0.1.0-linux64.gz"
+      },
+      {
+        "browser_download_url": "https://github.com/mozilla/geckodriver/releases/download/v0.1.0/wires-0.1.0-osx.gz"
+      }
+    ]
   }
 ]
