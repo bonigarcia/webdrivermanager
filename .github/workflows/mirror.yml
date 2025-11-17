@@ -15,11 +15,41 @@ jobs:
         fetch-depth: 0
     - name: Read api.github.com and filter response
       run: |
+        set -euo pipefail
         cd docs/mirror
-        export JQ_FILTER="[.[] | {tag_name: .tag_name, assets: [.assets[] | {browser_download_url: .browser_download_url} ] } ]"
-        curl -H "Authorization: ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/mozilla/geckodriver/releases | jq "$JQ_FILTER" > geckodriver
-        curl -H "Authorization: ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/operasoftware/operachromiumdriver/releases | jq "$JQ_FILTER" > operadriver
-        curl -H "Authorization: ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/repos/SeleniumHQ/selenium/releases | jq "$JQ_FILTER" > selenium
+        TOKEN="${{ secrets.GITHUB_TOKEN }}"
+        # Function to fetch ALL releases for a repo using pagination
+        fetch_releases () {
+          local repo="$1"   # e.g. "mozilla/geckodriver"
+          local outfile="$2" # e.g. "geckodriver"
+          local page=1
+          local tmpfile
+          tmpfile="$(mktemp)"
+          # Empty the tmp file
+          : > "$tmpfile"
+          while true; do
+            echo "Fetching $repo page $page..."
+            # Get one page of releases (up to 100 per page)
+            resp=$(curl -fsSL \
+              -H "Authorization: Bearer $TOKEN" \
+              "https://api.github.com/repos/$repo/releases?per_page=100&page=${page}")
+            # Stop when the page is empty: []
+            if [ "$(echo "$resp" | jq 'length')" -eq 0 ]; then
+              break
+            fi
+            # Transform each release on this page and append as separate JSON objects
+            echo "$resp" \
+              | jq '.[] | {tag_name: .tag_name, assets: [.assets[] | {browser_download_url: .browser_download_url}]}' \
+              >> "$tmpfile"
+            page=$((page+1))
+          done
+          # Combine all objects into one JSON array
+          jq -s '.' "$tmpfile" > "$outfile"
+          rm "$tmpfile"
+        }
+        fetch_releases "mozilla/geckodriver" geckodriver
+        fetch_releases "operasoftware/operachromiumdriver" operadriver
+        fetch_releases "SeleniumHQ/selenium" selenium
     - name: Commit files
       id: git
       run: |
