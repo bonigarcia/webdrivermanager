@@ -1,5 +1,22 @@
 [
   {
+    "tag_name": "v.140.0.7339.249",
+    "assets": [
+      {
+        "browser_download_url": "https://github.com/operasoftware/operachromiumdriver/releases/download/v.140.0.7339.249/operadriver_linux64.zip"
+      },
+      {
+        "browser_download_url": "https://github.com/operasoftware/operachromiumdriver/releases/download/v.140.0.7339.249/operadriver_mac64.zip"
+      },
+      {
+        "browser_download_url": "https://github.com/operasoftware/operachromiumdriver/releases/download/v.140.0.7339.249/operadriver_win32.zip"
+      },
+      {
+        "browser_download_url": "https://github.com/operasoftware/operachromiumdriver/releases/download/v.140.0.7339.249/operadriver_win64.zip"
+      }
+    ]
+  },
+  {
     "tag_name": "v.139.0.7258.156",
     "assets": [
       {
