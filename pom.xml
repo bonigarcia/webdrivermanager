@@ -27,7 +27,7 @@
         <mockito-junit-jupiter.version>5.20.0</mockito-junit-jupiter.version>
 
         <!-- plugins -->
-        <maven-release-plugin.version>3.2.0</maven-release-plugin.version>
+        <maven-release-plugin.version>3.3.0</maven-release-plugin.version>
         <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
         <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
         <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
