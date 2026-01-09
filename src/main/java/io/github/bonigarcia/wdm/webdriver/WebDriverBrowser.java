@@ -59,11 +59,13 @@ public class WebDriverBrowser {
     String recordingBase64;
     Path recordingPath;
     int identityHash;
+    boolean isRecording;
 
     public WebDriverBrowser(String browserName, OperatingSystem os) {
         this.browserName = browserName;
         this.os = os;
         this.dockerContainerList = new ArrayList<>();
+        this.isRecording = false;
     }
 
     public WebDriverBrowser(WebDriver driver, String browserName,
@@ -184,6 +186,7 @@ public class WebDriverBrowser {
     }
 
     public void startRecording(String recordingName) {
+        isRecording = true;
         setRecordingName(recordingName);
         ((JavascriptExecutor) driver).executeScript(
                 "window.postMessage({ type: \"startRecording\", name: \""
@@ -191,20 +194,23 @@ public class WebDriverBrowser {
     }
 
     public void stopRecording() {
-        String script = "var callback = arguments[0];"
-                + "function handler(event) {"
-                + "    if (event.data.type === \"stopRecordingResponse\") {"
-                + "        window.removeEventListener(\"message\", handler);"
-                + "        callback(event.data.result);" + "    }" + "}"
-                + "window.addEventListener(\"message\", handler);"
-                + "window.postMessage({ type: \"stopRecordingBase64\" }, \"*\");";
+        if (isRecording) {
+            String script = "var callback = arguments[0];"
+                    + "function handler(event) {"
+                    + "    if (event.data.type === \"stopRecordingResponse\") {"
+                    + "        window.removeEventListener(\"message\", handler);"
+                    + "        callback(event.data.result);" + "    }" + "}"
+                    + "window.addEventListener(\"message\", handler);"
+                    + "window.postMessage({ type: \"stopRecordingBase64\" }, \"*\");";
 
-        @SuppressWarnings("unchecked")
-        java.util.Map<String, Object> result = (java.util.Map<String, Object>) ((JavascriptExecutor) driver)
-                .executeAsyncScript(script);
+            @SuppressWarnings("unchecked")
+            java.util.Map<String, Object> result = (java.util.Map<String, Object>) ((JavascriptExecutor) driver)
+                    .executeAsyncScript(script);
 
-        setRecordingName((String) result.get("name"));
-        setRecordingBase64((String) result.get("base64"));
+            setRecordingName((String) result.get("name"));
+            setRecordingBase64((String) result.get("base64"));
+        }
+        isRecording = false;
     }
 
     public String getRecordingName() {
