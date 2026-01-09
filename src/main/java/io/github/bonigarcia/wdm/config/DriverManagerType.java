@@ -80,7 +80,7 @@ public enum DriverManagerType {
             displayName = displayName.substring(0, iComma);
         }
         return DriverManagerType.valueOf(displayName
-                .substring(displayName.indexOf("=") + 1).toUpperCase());
+                .substring(displayName.indexOf("=") + 1).toUpperCase().trim());
     }
 
 }
