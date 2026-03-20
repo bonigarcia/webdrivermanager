@@ -40,7 +40,7 @@ jobs:
         "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge" -version
     - name: Run tests on Linux
       if: matrix.os == 'ubuntu-latest'
-      uses: nick-invision/retry@v3.0.2
+      uses: nick-invision/retry@v4.0.0
       with:
         timeout_minutes: 30
         max_attempts: 3
@@ -48,7 +48,7 @@ jobs:
           mvn -B test
     - name: Run tests on Windows and macOS
       if: matrix.os != 'ubuntu-latest'
-      uses: nick-invision/retry@v3.0.2
+      uses: nick-invision/retry@v4.0.0
       with:
         timeout_minutes: 30
         max_attempts: 3
