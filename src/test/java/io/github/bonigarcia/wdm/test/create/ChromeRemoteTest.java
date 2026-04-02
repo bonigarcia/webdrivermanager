@@ -22,12 +22,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.grid.Main;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
+@Disabled("Broken in Selenium 4.41")
 class ChromeRemoteTest {
 
     WebDriver driver;
