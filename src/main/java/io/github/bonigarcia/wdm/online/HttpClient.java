@@ -28,7 +28,6 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 import java.io.Closeable;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
@@ -40,6 +39,7 @@ import java.util.LinkedHashMap;
 import java.util.Optional;
 import java.util.StringTokenizer;
 import java.util.concurrent.TimeUnit;
+import java.util.zip.GZIPInputStream;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
@@ -50,8 +50,7 @@ import org.apache.hc.client5.http.auth.UsernamePasswordCredentials;
 import org.apache.hc.client5.http.classic.methods.HttpGet;
 import org.apache.hc.client5.http.config.ConnectionConfig;
 import org.apache.hc.client5.http.config.RequestConfig;
-import org.apache.hc.client5.http.entity.DeflateInputStreamFactory;
-import org.apache.hc.client5.http.entity.GZIPInputStreamFactory;
+import org.apache.hc.client5.http.entity.DeflateInputStream;
 import org.apache.hc.client5.http.entity.InputStreamFactory;
 import org.apache.hc.client5.http.impl.auth.BasicCredentialsProvider;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
@@ -113,18 +112,14 @@ public class HttpClient implements Closeable {
 
             // Add decompression handlers
             final LinkedHashMap<String, InputStreamFactory> contentDecoderMap = new LinkedHashMap<>();
-            contentDecoderMap.put("br", new InputStreamFactory() {
-                @Override
-                public InputStream create(InputStream inStream)
-                        throws IOException {
-                    return new BrotliInputStream(inStream);
-                }
-            });
-            contentDecoderMap.put("gzip", GZIPInputStreamFactory.getInstance());
+            contentDecoderMap.put("br",
+                    inStream -> new BrotliInputStream(inStream));
+            contentDecoderMap.put("gzip",
+                    inStream -> new GZIPInputStream(inStream));
             contentDecoderMap.put("x-gzip",
-                    GZIPInputStreamFactory.getInstance());
+                    inStream -> new GZIPInputStream(inStream));
             contentDecoderMap.put("deflate",
-                    DeflateInputStreamFactory.getInstance());
+                    inStream -> new DeflateInputStream(inStream));
             builder.setContentDecoderRegistry(contentDecoderMap);
 
             builder.setConnectionManager(cm);
