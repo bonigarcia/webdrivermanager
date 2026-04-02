@@ -1,5 +1,11 @@
 # Changelog
 
+## [6.3.4] - 2026-04-02
+
+### Changed
+- Bump to org.apache.httpcomponents.client5:httpclient5 5.6 (prevents #1574)
+
+
 ## [6.3.3] - 2025-11-08
 
 ### Changed
