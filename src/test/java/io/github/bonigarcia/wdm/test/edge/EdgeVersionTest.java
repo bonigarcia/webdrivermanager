@@ -37,5 +37,4 @@ class EdgeVersionTest extends VersionTestParent {
         os = WIN;
         specificVersions = new String[] { "125.0.2535.92" };
     }
-
 }

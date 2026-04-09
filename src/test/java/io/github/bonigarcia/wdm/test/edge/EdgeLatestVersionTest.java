@@ -78,4 +78,22 @@ class EdgeLatestVersionTest {
         }
     }
 
+    @Test
+    void testAvoidExternalConnections() {
+        WebDriverManager wdm = WebDriverManager.edgedriver()
+                .forceDownload() // force download to prevent caches
+                .avoidExternalConnections()
+                .win()
+                .avoidBrowserDetection();
+
+        wdm.setup();
+
+        assertThat(wdm.getDownloadedDriverVersion()).isNotNull();
+        log.debug("Downloaded EdgeDriver version: {}",
+                wdm.getDownloadedDriverVersion());
+
+        List<String> driverVersions = wdm.getDriverVersions();
+        assertThat(driverVersions).isNotEmpty();
+        log.debug("Driver versions from listing: {}", driverVersions);
+    }
 }
