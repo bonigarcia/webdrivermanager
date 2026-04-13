@@ -23,7 +23,7 @@ jobs:
         mvn versions:set -DnewVersion=${{ inputs.release_version }}
         mvn compile assembly:single
     - name: Make release in GitHub
-      uses: softprops/action-gh-release@v2
+      uses: softprops/action-gh-release@v3
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         tag_name: webdrivermanager-${{ inputs.release_version }}
