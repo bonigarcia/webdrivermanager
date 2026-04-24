@@ -192,7 +192,6 @@ A significant aspect of the browser containers presented so far is that WebDrive
 Nevertheless, we can force a given browser version in Docker using the method `browserVersion()` of the WebDriverManager API. This method accepts a `String` parameter specifying the version. This version can be fixed (e.g., `132.0`), and it also accepts the following wildcards:
 
 * `"latest"` : To specify the latest version explicitly (default option).
-* `"latest-N"` : Where `N` is an integer value to be subtracted from the current stable version. For example, if we specify `latest-1` (i.e., _latest version minus one_), the previous version to the stable release will be used (see an example https://github.com/bonigarcia/webdrivermanager/blob/master/src/test/java/io/github/bonigarcia/wdm/test/docker/DockerChromeVersionsTest.java[here]).
 * `"beta"`: To use the beta version.
 * `"dev"`: To use the development version.
 
