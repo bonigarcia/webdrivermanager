@@ -21,7 +21,7 @@
 
         <!-- test -->
         <logback.version>1.5.18</logback.version>
-        <junit.version>6.1.0</junit.version>
+        <junit.version>6.1.1</junit.version>
         <assertj.version>3.27.7</assertj.version>
         <mockserver.version>7.2.0</mockserver.version>
         <mockito-junit-jupiter.version>5.23.0</mockito-junit-jupiter.version>
