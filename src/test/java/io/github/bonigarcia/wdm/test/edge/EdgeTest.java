@@ -27,7 +27,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.edge.EdgeDriver;
-import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
@@ -53,10 +52,7 @@ class EdgeTest {
 
     @BeforeEach
     void setupTest() {
-        EdgeOptions options = new EdgeOptions();
-        options.addArguments("--disable-dev-shm-usage"); // reduces memory issues
-
-        driver = new EdgeDriver(options);
+        driver = new EdgeDriver();
     }
 
     @AfterEach

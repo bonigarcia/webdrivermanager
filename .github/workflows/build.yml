@@ -8,7 +8,6 @@ on:
   workflow_dispatch:
 
 env:
-  DISPLAY: :99
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
 jobs:
@@ -17,71 +16,113 @@ jobs:
       matrix:
         os: [ ubuntu-latest, windows-latest, macos-latest ]
         java: [ 17 ]
+
     runs-on: ${{ matrix.os }}
+
     steps:
     - name: Checkout GitHub repo
       uses: actions/checkout@v7
+
     - name: Set up Java
       uses: actions/setup-java@v5.5.0
       with:
-        distribution: 'temurin'
+        distribution: temurin
         java-version: ${{ matrix.java }}
-        cache: 'maven'
-    - name: Start Xvfb
+        cache: maven
+
+    - name: Prepare browser environment on Linux
       if: matrix.os == 'ubuntu-latest'
+      shell: bash
       run: |
-        Xvfb $DISPLAY &
+        if sysctl kernel.apparmor_restrict_unprivileged_userns \
+            > /dev/null 2>&1; then
+          sudo sysctl -w \
+            kernel.apparmor_restrict_unprivileged_userns=0
+        fi
+
+        echo "Installed browser versions:"
+
+        if command -v google-chrome > /dev/null 2>&1; then
+          google-chrome --version
+        fi
+
+        if command -v microsoft-edge > /dev/null 2>&1; then
+          microsoft-edge --version
+        fi
+
+        if command -v firefox > /dev/null 2>&1; then
+          firefox --version
+        fi
+
     - name: Install browsers in macOS
       if: matrix.os == 'macos-latest'
+      shell: bash
       run: |
         brew install --cask firefox
         /Applications/Firefox.app/Contents/MacOS/firefox --version
+
         brew install --cask microsoft-edge
-        "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge" -version
+        "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge" \
+          --version
+
     - name: Run tests on Linux
       if: matrix.os == 'ubuntu-latest'
       uses: nick-invision/retry@v4.0.0
       with:
         timeout_minutes: 30
         max_attempts: 3
-        command: |
+        command: >
+          xvfb-run
+          --auto-servernum
+          --server-args="-screen 0 1920x1080x24 -ac"
           mvn -B test
+
     - name: Run tests on Windows and macOS
       if: matrix.os != 'ubuntu-latest'
       uses: nick-invision/retry@v4.0.0
       with:
         timeout_minutes: 30
         max_attempts: 3
-        command: |
-          mvn -B test -Dtest=!Docker*
+        command: mvn -B test -Dtest=!Docker*
+
     - name: Upload analysis to SonarCloud
-      if: success() && matrix.os == 'ubuntu-latest' && !contains(github.ref, 'pull')
+      if: >
+        success()
+        && matrix.os == 'ubuntu-latest'
+        && github.event_name != 'pull_request'
       run: >
         mvn -B sonar:sonar
         -Dsonar.host.url=https://sonarcloud.io
         -Dsonar.organization=bonigarcia-github
         -Dsonar.projectKey=io.github.bonigarcia:webdrivermanager
+
     - name: Upload coverage to Codecov
-      if: success() && matrix.os == 'ubuntu-latest' && !contains(github.ref, 'pull')
+      if: >
+        success()
+        && matrix.os == 'ubuntu-latest'
+        && github.event_name != 'pull_request'
       uses: codecov/codecov-action@v7.0.0
+
     - name: Store recordings on Linux
       if: always() && matrix.os == 'ubuntu-latest'
       uses: actions/upload-artifact@v7.0.1
       with:
         name: linux-recordings
-        path: |
-          *.webm
+        path: "*.webm"
+        if-no-files-found: ignore
+
     - name: Store recordings on Windows
       if: always() && matrix.os == 'windows-latest'
       uses: actions/upload-artifact@v7.0.1
       with:
         name: win-recordings
-        path: |
-          *.webm
+        path: "*.webm"
+        if-no-files-found: ignore
+
     - name: Store recordings on macOS
       if: always() && matrix.os == 'macos-latest'
       uses: actions/upload-artifact@v7.0.1
       with:
         name: macos-recordings
-        path: |
-          *.webm
+        path: "*.webm"
+        if-no-files-found: ignore
