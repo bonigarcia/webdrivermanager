@@ -54,9 +54,7 @@ class EdgeTest {
     @BeforeEach
     void setupTest() {
         EdgeOptions options = new EdgeOptions();
-        options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage"); // reduces memory issues
-        options.addArguments("--disable-gpu");
 
         driver = new EdgeDriver(options);
     }
