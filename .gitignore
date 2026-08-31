@@ -10,3 +10,4 @@ phantomjsdriver.log
 *.mp4
 .DS_Store
 bin/
+.vscode
