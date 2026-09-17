@@ -101,7 +101,7 @@ jobs:
         success()
         && matrix.os == 'ubuntu-latest'
         && github.event_name != 'pull_request'
-      uses: codecov/codecov-action@v7.0.0
+      uses: codecov/codecov-action@v7.1.0
 
     - name: Store recordings on Linux
       if: always() && matrix.os == 'ubuntu-latest'
