@@ -37,7 +37,9 @@ class ChromeArmTest {
 
     @Test
     void testChromeArm() {
-        WebDriverManager wdm = WebDriverManager.chromedriver();
+        WebDriverManager wdm = WebDriverManager.chromedriver()
+        		.clearResolutionCache()
+        		.driverVersion("latest");
 
         // 1. Force downloading
         wdm.forceDownload();
@@ -46,6 +48,7 @@ class ChromeArmTest {
 
         // 2. Using cache
         wdm.reset();
+        wdm.driverVersion("latest");
         checkArmOnMac(wdm);
         checkArmOnLinux(wdm);
     }
