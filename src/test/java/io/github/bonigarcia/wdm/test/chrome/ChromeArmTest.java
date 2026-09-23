@@ -37,27 +37,44 @@ class ChromeArmTest {
 
     @Test
     void testChromeArm() {
-        WebDriverManager wdm = WebDriverManager.chromedriver();
+        WebDriverManager wdm = WebDriverManager.chromedriver()
+        		.clearResolutionCache()
+        		.driverVersion("latest");
 
         // 1. Force downloading
         wdm.forceDownload();
-        checkArm(wdm);
+        checkArmOnMac(wdm);
+        checkArmOnLinux(wdm);
 
         // 2. Using cache
         wdm.reset();
-        checkArm(wdm);
+        wdm.driverVersion("latest");
+        checkArmOnMac(wdm);
+        checkArmOnLinux(wdm);
     }
 
-    private void checkArm(WebDriverManager wdm) {
+    private void checkArmOnMac(WebDriverManager wdm) {
         wdm.avoidBrowserDetection().mac().arch64().setup();
         String driverPath = wdm.getDownloadedDriverPath();
-        log.debug("Driver path (X64) {}", driverPath);
+        log.debug("Driver path (Mac X64) {}", driverPath);
 
         wdm.avoidBrowserDetection().mac().arm64().setup();
         String driverPathArm64 = wdm.getDownloadedDriverPath();
-        log.debug("Driver path (ARM64) {}", driverPathArm64);
+        log.debug("Driver path (Mac ARM64) {}", driverPathArm64);
 
         assertThat(driverPath).isNotEqualTo(driverPathArm64);
+    }
+    
+    private void checkArmOnLinux(WebDriverManager wdm) {
+    	wdm.avoidBrowserDetection().linux().arch64().setup();
+    	String driverPath = wdm.getDownloadedDriverPath();
+    	log.debug("Driver path (Linux X64) {}", driverPath);
+    	
+    	wdm.avoidBrowserDetection().linux().arm64().setup();
+    	String driverPathArm64 = wdm.getDownloadedDriverPath();
+    	log.debug("Driver path (Linux ARM64) {}", driverPathArm64);
+    	
+    	assertThat(driverPath).isNotEqualTo(driverPathArm64);
     }
 
 }

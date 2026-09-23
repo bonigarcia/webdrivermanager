@@ -168,17 +168,24 @@ public class ChromeDriverManager extends WebDriverManager {
             String downloadUrlPattern = config.getChromeDownloadUrlPattern();
             OperatingSystem os = config.getOperatingSystem();
             Architecture arch = config.getArchitecture();
-            String archLabel = os.isLinux() ? "64"
-                    : arch.toString().toLowerCase(ROOT);
-            if (os.isWin() && !X32.equals(arch)) {
-                archLabel = "64";
+            String archLabel = arch.toString().toLowerCase(ROOT);
+            String separator = "";
+            switch(os) {
+	            case WIN:
+	            	archLabel = arch == X32 ? "32" : "64";
+	            	separator = "";
+	            	break;
+	            case MAC:
+	            	archLabel = arch == ARM64 ? "arm64" : "x64";
+	            	separator = "-";
+	            	break;
+	            case LINUX:
+	            	archLabel = arch == ARM64 ? "arm64" : "64";
+	            	separator = arch == ARM64 ? "-" : "";
+	            	break;
             }
-            if (os.isMac() && !ARM64.equals(arch)) {
-                archLabel = "x64";
-            }
-            String separator = os.isMac() ? "-" : "";
+            
             String label = os.getName() + separator + archLabel;
-
             String builtUrl = String.format(downloadUrlPattern, driverVersion,
                     label, label);
             if (!VersionDetector.isCfT(driverVersion)) {

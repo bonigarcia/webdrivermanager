@@ -48,7 +48,7 @@ class ChromeDriverManagerTest {
                         VERSION)));
         assertThat(chromeDriverManager.buildUrl(VERSION, new DummyConfig(LINUX,
                 ARM64))).hasValue(new URL(String.format(
-                        "https://storage.googleapis.com/chrome-for-testing-public/%s/linux64/chromedriver-linux64.zip",
+                        "https://storage.googleapis.com/chrome-for-testing-public/%s/linux-arm64/chromedriver-linux-arm64.zip",
                         VERSION)));
         assertThat(chromeDriverManager.buildUrl(VERSION, new DummyConfig(LINUX,
                 DEFAULT))).hasValue(new URL(String.format(
