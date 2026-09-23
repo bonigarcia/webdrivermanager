@@ -1,5 +1,11 @@
 # Changelog
 
+## [6.4.0] - 2026-09-23
+
+### Added
+- Add Linux arm64 driver URL for Chrome (#1630)
+
+
 ## [6.3.4] - 2026-04-02
 
 ### Changed
