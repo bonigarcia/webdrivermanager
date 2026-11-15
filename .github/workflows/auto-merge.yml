@@ -44,6 +44,7 @@ jobs:
       github.event.pull_request.user.login == 'dependabot[bot]'
     steps:
       - name: Delete Dependabot branch
-        run: gh api repos/${{ github.repository }}/git/refs/heads/${{ github.event.pull_request.head.ref }} -X DELETE
+        run: gh api "repos/${{ github.repository }}/git/refs/heads/$BRANCH" -X DELETE
         env:
+          BRANCH: ${{ github.event.pull_request.head.ref }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
