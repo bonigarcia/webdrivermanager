@@ -1,0 +1,21 @@
+name: Dependabot branch cleanup
+on:
+  pull_request_target:
+    types: [closed]
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    if: >
+      github.event.pull_request.merged == true &&
+      github.event.pull_request.user.login == 'dependabot[bot]' &&
+      startsWith(github.event.pull_request.head.ref, 'dependabot/')
+    steps:
+      - name: Delete Dependabot branch
+        run: gh api "repos/${{ github.repository }}/git/refs/heads/$BRANCH" -X DELETE
+        env:
+          BRANCH: ${{ github.event.pull_request.head.ref }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
