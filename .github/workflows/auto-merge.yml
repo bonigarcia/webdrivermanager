@@ -1,18 +1,22 @@
 name: Dependabot auto-merge
-on: pull_request
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, closed]
 
 permissions:
   contents: write
   pull-requests: write
 
 jobs:
-  dependabot:
+  enable_auto_merge:
     runs-on: ubuntu-latest
-    if: ${{ github.actor == 'dependabot[bot]' }}
+    if: >
+      github.event.action != 'closed' &&
+      github.actor == 'dependabot[bot]'
     steps:
       - name: Dependabot metadata
         id: metadata
-        uses: dependabot/fetch-metadata@v3.1.0
+        uses: dependabot/fetch-metadata@v2
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       - name: Enable auto-merge for Dependabot PRs
@@ -20,7 +24,7 @@ jobs:
           max_retries=10
           retry_count=0
           sleep_duration=1
-          while ! gh pr merge "$PR_URL" --auto --squash --body="Co-authored-by: Boni Garcia <boni.garcia@uc3m.es>"; do
+          while ! gh pr merge "$PR_URL" --auto --squash; do
               retry_count=$((retry_count+1))
               if [ $retry_count -ge $max_retries ]; then
                   echo "Command failed after $retry_count attempts."
@@ -28,9 +32,24 @@ jobs:
               fi
               echo "Command failed. Retrying in $sleep_duration seconds..."
               sleep $sleep_duration
-              sleep_duration=$((sleep_duration * 2)) # Exponential backoff
+              sleep_duration=$((sleep_duration * 2))
           done
           echo "Command succeeded after $retry_count attempts."
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+  cleanup:
+    runs-on: ubuntu-latest
+    if: >
+      github.event.action == 'closed' &&
+      github.event.pull_request.merged == true &&
+      github.event.pull_request.user.login == 'dependabot[bot]'
+    steps:
+      - name: Delete Dependabot branch
+        run: |
+          BRANCH="${{ github.event.pull_request.head.ref }}"
+          echo "Deleting branch: $BRANCH"
+          gh api "repos/${{ github.repository }}/git/refs/heads/$BRANCH" -X DELETE
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
