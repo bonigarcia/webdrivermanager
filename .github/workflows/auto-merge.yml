@@ -1,7 +1,7 @@
 name: Dependabot auto-merge
 on:
   pull_request:
-    types: [opened, synchronize, reopened, closed]
+    types: [opened, synchronize, reopened]
 
 permissions:
   contents: write
@@ -10,13 +10,11 @@ permissions:
 jobs:
   enable_auto_merge:
     runs-on: ubuntu-latest
-    if: >
-      github.event.action != 'closed' &&
-      github.actor == 'dependabot[bot]'
+    if: ${{ github.actor == 'dependabot[bot]' }}
     steps:
       - name: Dependabot metadata
         id: metadata
-        uses: dependabot/fetch-metadata@v3
+        uses: dependabot/fetch-metadata@v2
         with:
           github-token: "${{ secrets.GITHUB_TOKEN }}"
       - name: Enable auto-merge for Dependabot PRs
@@ -38,18 +36,3 @@ jobs:
         env:
           PR_URL: ${{github.event.pull_request.html_url}}
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-
-  cleanup:
-    runs-on: ubuntu-latest
-    if: >
-      github.event.action == 'closed' &&
-      github.event.pull_request.merged == true &&
-      github.event.pull_request.user.login == 'dependabot[bot]'
-    steps:
-      - name: Delete Dependabot branch
-        run: |
-          BRANCH="${{ github.event.pull_request.head.ref }}"
-          echo "Deleting branch: $BRANCH"
-          gh api "repos/${{ github.repository }}/git/refs/heads/$BRANCH" -X DELETE
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

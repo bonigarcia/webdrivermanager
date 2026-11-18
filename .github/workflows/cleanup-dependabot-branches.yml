@@ -1,0 +1,30 @@
+name: Dependabot branch cleanup
+on:
+  push:
+    branches: [main, master]
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete stale Dependabot branches
+        run: |
+          RESP=$(gh api "repos/${{ github.repository }}/compare/${{ github.event.before }}...${{ github.event.after }}" --jq '.commits[].commit.message' 2>/dev/null) || exit 0
+          echo "$RESP" | grep -oP '(?<=\(#)\d+(?=\))' | sort -u | while IFS= read -r pr; do
+            [ -z "$pr" ] && continue
+            PR_JSON=$(gh api "repos/${{ github.repository }}/pulls/$pr" --jq '{state: .state, merged: .merged, user: .user.login, headRef: .head.ref}' 2>/dev/null) || continue
+            STATE=$(echo "$PR_JSON" | jq -r '.state')
+            MERGED=$(echo "$PR_JSON" | jq -r '.merged')
+            USER=$(echo "$PR_JSON" | jq -r '.user')
+            HEAD_REF=$(echo "$PR_JSON" | jq -r '.headRef')
+            if [ "$STATE" = "closed" ] && [ "$MERGED" = "true" ] && [ "$USER" = "dependabot[bot]" ]; then
+              echo "Deleting branch: $HEAD_REF"
+              gh api "repos/${{ github.repository }}/git/refs/heads/$HEAD_REF" -X DELETE || true
+            fi
+          done
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
