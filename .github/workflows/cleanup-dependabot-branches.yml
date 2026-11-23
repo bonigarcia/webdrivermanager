@@ -1,0 +1,31 @@
+name: Dependabot branch cleanup
+on:
+  schedule:
+    - cron: '0 12 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete branches of closed Dependabot PRs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          gh api "repos/$REPO/branches" --paginate --jq '.[].name | select(startswith("dependabot/"))' |
+          while IFS= read -r branch; do
+            summary=$(gh pr list --repo "$REPO" --head "$branch" --state all --json state \
+              --jq '"\(length) \([.[] | select(.state == "OPEN")] | length)"')
+            read -r total open <<< "$summary"
+            if [ "$total" -gt 0 ] && [ "$open" -eq 0 ]; then
+              echo "Deleting $branch"
+              gh api -X DELETE "repos/$REPO/git/refs/heads/$branch" || echo "Could not delete $branch"
+            else
+              echo "Keeping $branch (PRs: $total, open: $open)"
+            fi
+          done
